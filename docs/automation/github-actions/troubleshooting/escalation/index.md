@@ -112,9 +112,11 @@ Downloading logs for run 8472651...
 ```
 
 !!! warning "Common errors"
-    **`authentication required`** — Run `gh auth login` first to authenticate with GitHub.
-    **`HTTP 404: Not Found`** — Verify the run ID exists and you have access to the repository with `gh run list`.
-    **`permission denied while trying to connect to the Docker daemon`** — This is a workflow runtime issue, not a CLI issue; check the run logs with `gh run view <run-id> --log` to see the actual failure in the Actions environment.
+    | Error | Fix |
+    |---|---|
+    | `authentication required` | Run `gh auth login` first to authenticate with GitHub. |
+    | `HTTP 404: Not Found` | Verify the run ID exists and you have access to the repository with `gh run list`. |
+    | `permission denied while trying to connect to the Docker daemon` | This is a workflow runtime issue, not a CLI issue; check the run logs with `gh run view <run-id> --log` to see the actual failure in the Actions environment. |
 ### 2. Collect self-hosted runner diagnostics
 
 ```bash
@@ -164,9 +166,11 @@ drwxr-xr-x  5 runner runner    4096 Jan 10 09:15 ..
 ```
 
 !!! warning "Common errors"
-    **`cat: /opt/actions-runner/.runner: No such file or directory`** — Verify the runner is installed in /opt/actions-runner and re-run the installation script if the directory is missing.
-    **`sudo: systemctl: command not found`** — Use `launchctl list | grep actions.runner` on macOS instead, or verify systemd is available on Linux systems.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Ensure /opt/actions-runner/package.json exists and is valid JSON; reinstall the runner if the file is corrupted.
+    | Error | Fix |
+    |---|---|
+    | `cat: /opt/actions-runner/.runner: No such file or directory` | Verify the runner is installed in /opt/actions-runner and re-run the installation script if the directory is missing. |
+    | `sudo: systemctl: command not found` | Use `launchctl list | grep actions.runner` on macOS instead, or verify systemd is available on Linux systems. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Ensure /opt/actions-runner/package.json exists and is valid JSON; reinstall the runner if the file is corrupted. |
 ### 3. Collect OIDC configuration (for OIDC/cloud auth issues)
 
 ```bash
@@ -201,8 +205,10 @@ permissions:
 ```
 
 !!! warning "Common errors"
-    **`HTTP 404: Not Found`** — Verify the repository slug format is correct and the repo exists with `gh repo view {owner}/{repo}`.
-    **`Error: Not enough permissions to access this endpoint`** — Ensure your GitHub token has `admin:org_hook` and `repo` scopes by running `gh auth status`.
+    | Error | Fix |
+    |---|---|
+    | `HTTP 404: Not Found` | Verify the repository slug format is correct and the repo exists with `gh repo view {owner}/{repo}`. |
+    | `Error: Not enough permissions to access this endpoint` | Ensure your GitHub token has `admin:org_hook` and `repo` scopes by running `gh auth status`. |
 ### 4. Export audit log (Enterprise only)
 
 ```bash
@@ -223,9 +229,11 @@ gh api "/orgs/{org}/audit-log?phrase=action:workflows&per_page=100" \
 ```
 
 !!! warning "Common errors"
-    **`gh: Unauthorized (HTTP 403)`** — Verify your GitHub token has `admin:org_hook` and `read:org` scopes, or request org admin to grant audit log access.
-    **`jq: parse error: Invalid JSON text at line 1`** — Remove the `python3` JSON processor and use `gh api --jq '.[] | @json'` instead for cleaner parsing.
-    **`No such file or directory`** — Ensure the output directory exists and you have write permissions; create it with `mkdir -p logs/` before running the command.
+    | Error | Fix |
+    |---|---|
+    | `gh: Unauthorized (HTTP 403)` | Verify your GitHub token has `admin:org_hook` and `read:org` scopes, or request org admin to grant audit log access. |
+    | `jq: parse error: Invalid JSON text at line 1` | Remove the `python3` JSON processor and use `gh api --jq '.[] | @json'` instead for cleaner parsing. |
+    | `No such file or directory` | Ensure the output directory exists and you have write permissions; create it with `mkdir -p logs/` before running the command. |
 ### 5. Write the timeline
 
 Create a plain text file:
@@ -402,9 +410,11 @@ Codespaces: operational
 ```
 
 !!! warning "Common errors"
-    **`gh: command not found`** — Install GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`.
-    **`HTTP 401: Bad credentials`** — Verify your GitHub token is valid and has `repo` and `admin:org_hook` scopes by running `gh auth status`.
-    **`jq: command not found`** — Install jq with `brew install jq` (macOS) or `apt-get install jq` (Linux) for JSON filtering support.
+    | Error | Fix |
+    |---|---|
+    | `gh: command not found` | Install GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`. |
+    | `HTTP 401: Bad credentials` | Verify your GitHub token is valid and has `repo` and `admin:org_hook` scopes by running `gh auth status`. |
+    | `jq: command not found` | Install jq with `brew install jq` (macOS) or `apt-get install jq` (Linux) for JSON filtering support. |
 ---
 
 ## See also

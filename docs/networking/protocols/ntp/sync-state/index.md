@@ -119,9 +119,11 @@ NTP is enabled
 ```
 
 !!! warning "Common errors"
-    **`Clock is unsynchronized`** — Verify NTP server reachability with `ping <ntp-server>` and check that NTP is enabled with `ntp enable` on Arista or `ntp enable` on Cisco IOS.
-    **`stratum 16 (unsynchronized)`** — Confirm the NTP server is reachable and responding; check firewall rules allowing UDP port 123 bidirectionally.
-    **`reach 0`** — Verify the NTP server IP address is correct and the network path is not blocked; check `show ntp associations detail` for timeout or authentication errors.
+    | Error | Fix |
+    |---|---|
+    | `Clock is unsynchronized` | Verify NTP server reachability with `ping <ntp-server>` and check that NTP is enabled with `ntp enable` on Arista or `ntp enable` on Cisco IOS. |
+    | `stratum 16 (unsynchronized)` | Confirm the NTP server is reachable and responding; check firewall rules allowing UDP port 123 bidirectionally. |
+    | `reach 0` | Verify the NTP server IP address is correct and the network path is not blocked; check `show ntp associations detail` for timeout or authentication errors. |
 ## States and Meanings
 
 | State | Meaning | Action |
@@ -152,5 +154,7 @@ ntpdate -u <ntp-server>
 ```
 
 !!! warning "Common errors"
-    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `systemctl start chronyd` before executing makestep.
-    **`ntpdate[3124]: no server suitable for synchronization found`** — Verify the NTP server is reachable and responsive with `ntpdate -q <ntp-server>` first, and confirm network connectivity.
+    | Error | Fix |
+    |---|---|
+    | `506 Cannot talk to daemon` | Ensure chronyd is running with `systemctl start chronyd` before executing makestep. |
+    | `ntpdate[3124]: no server suitable for synchronization found` | Verify the NTP server is reachable and responsive with `ntpdate -q <ntp-server>` first, and confirm network connectivity. |

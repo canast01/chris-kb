@@ -116,9 +116,11 @@ Total Splitters: 4 | Connected: 4 | Disconnected: 0
 ```
 
 !!! warning "Common errors"
-    **`boxmgmt: command not found`** — Ensure you are running this command on a RecoverPoint appliance with boxmgmt CLI installed, or source the appropriate environment setup script.
-    **`Error: Unable to connect to splitter splitter-vplex-01.prod.local - Connection timeout`** — Verify network connectivity and that the VPLEX splitter is powered on and reachable from the RecoverPoint appliance.
-    **`Error: Authentication failed - Invalid credentials`** — Confirm your boxmgmt user account has sufficient privileges; re-authenticate or check the RecoverPoint user role permissions.
+    | Error | Fix |
+    |---|---|
+    | `boxmgmt: command not found` | Ensure you are running this command on a RecoverPoint appliance with boxmgmt CLI installed, or source the appropriate environment setup script. |
+    | `Error: Unable to connect to splitter splitter-vplex-01.prod.local - Connection timeout` | Verify network connectivity and that the VPLEX splitter is powered on and reachable from the RecoverPoint appliance. |
+    | `Error: Authentication failed - Invalid credentials` | Confirm your boxmgmt user account has sufficient privileges; re-authenticate or check the RecoverPoint user role permissions. |
 !!! warning "VPLEX Splitter Auto-Attach"
     VPLEX splitters attach to all eligible RPA clusters automatically when zoning and masking are configured. Verify that only the intended RPA clusters are attached to avoid unexpected replication paths.
 
@@ -162,9 +164,11 @@ RecoverPoint                                    5.4.2.1                PartnerSu
 ```
 
 !!! warning "Common errors"
-    **`VIB signature verification failed. Use --no-sig-check to override.`** — Add the `--no-sig-check` flag to the esxcli command as shown in the documentation.
-    **`Error: Could not find a matching VIB package at /tmp/RecoverPoint-*.vib`** — Verify the VIB file exists in /tmp/ by running `ls -la /tmp/RecoverPoint*.vib` and confirm the filename matches the glob pattern.
-    **`HTTP 403 Forbidden` when accessing the vRPA cluster VIB URL`** — Ensure the vRPA cluster IP is correct and reachable from vCenter, and verify network connectivity with `ping <vRPA-cluster-IP>`.
+    | Error | Fix |
+    |---|---|
+    | `VIB signature verification failed. Use --no-sig-check to override.` | Add the `--no-sig-check` flag to the esxcli command as shown in the documentation. |
+    | `Error: Could not find a matching VIB package at /tmp/RecoverPoint-*.vib` | Verify the VIB file exists in /tmp/ by running `ls -la /tmp/RecoverPoint*.vib` and confirm the filename matches the glob pattern. |
+    | `HTTP 403 Forbidden` when accessing the vRPA cluster VIB URL` | Ensure the vRPA cluster IP is correct and reachable from vCenter, and verify network connectivity with `ping <vRPA-cluster-IP>`. |
 After VIB installation, trust the splitter from the vRPA cluster UI or via REST API:
 
 ```bash
@@ -189,9 +193,11 @@ curl -sk -X POST "https://<vRPA-IP>/api/splitters/trust" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify vRPA IP is correct and accessible).
-    **`curl: (7) Failed to connect to <vRPA-IP> port 443: Connection refused`** — Confirm vRPA management interface is running and listening on port 443 with `netstat -tlnp | grep 443` on the vRPA appliance.
-    **`{"status":"error","message":"Invalid credentials"}`** — Verify the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u admin:password https://<vRPA-IP>/api/health` first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify vRPA IP is correct and accessible). |
+    | `curl: (7) Failed to connect to <vRPA-IP> port 443: Connection refused` | Confirm vRPA management interface is running and listening on port 443 with `netstat -tlnp | grep 443` on the vRPA appliance. |
+    | `{"status":"error","message":"Invalid credentials"}` | Verify the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u admin:password https://<vRPA-IP>/api/health` first. |
 ---
 
 ## Consistency Group Configuration
@@ -272,9 +278,11 @@ All journals: OPERATIONAL
 ```
 
 !!! warning "Common errors"
-    **`boxmgmt: command not found`** — Ensure the RecoverPoint management CLI is installed and the PATH includes the boxmgmt binary directory (typically `/opt/RecoverPoint/bin`).
-    **`Error: Unable to connect to cluster — Connection refused on port 7225`** — Verify the RecoverPoint cluster is running and accessible; check network connectivity and firewall rules for the management port.
-    **`CG-PROD-DB-01: FAIL — Journal write error detected`** — Run `boxmgmt journal repair` on the affected journal volume and verify storage array connectivity before proceeding with upgrade.
+    | Error | Fix |
+    |---|---|
+    | `boxmgmt: command not found` | Ensure the RecoverPoint management CLI is installed and the PATH includes the boxmgmt binary directory (typically `/opt/RecoverPoint/bin`). |
+    | `Error: Unable to connect to cluster — Connection refused on port 7225` | Verify the RecoverPoint cluster is running and accessible; check network connectivity and firewall rules for the management port. |
+    | `CG-PROD-DB-01: FAIL — Journal write error detected` | Run `boxmgmt journal repair` on the affected journal volume and verify storage array connectivity before proceeding with upgrade. |
 ### Rolling Upgrade Sequence
 
 RecoverPoint upgrades use EasyInstaller and are performed in a rolling fashion — one RPA node at a time within each cluster, maintaining replication continuity throughout.
@@ -365,9 +373,11 @@ Exiting maintenance mode...
 ```
 
 !!! warning "Common errors"
-    **`VIB RecoverPoint-splitter not installed`** — Verify the VIB name matches the installed package using `esxcli software vib list | grep -i recoverpoint` before removal.
-    **`[Errno 2] No such file or directory: /tmp/RecoverPoint-<new-version>.vib`** — Confirm the VIB file exists and the version placeholder is replaced with the actual version number (e.g., `RecoverPoint-8.2.1.0.vib`).
-    **`Host has running virtual machines`** — Complete vMotion of all VMs to other hosts before entering maintenance mode, or use `esxcli vm process list` to verify the host is empty.
+    | Error | Fix |
+    |---|---|
+    | `VIB RecoverPoint-splitter not installed` | Verify the VIB name matches the installed package using `esxcli software vib list | grep -i recoverpoint` before removal. |
+    | `[Errno 2] No such file or directory: /tmp/RecoverPoint-<new-version>.vib` | Confirm the VIB file exists and the version placeholder is replaced with the actual version number (e.g., `RecoverPoint-8.2.1.0.vib`). |
+    | `Host has running virtual machines` | Complete vMotion of all VMs to other hosts before entering maintenance mode, or use `esxcli vm process list` to verify the host is empty. |
 !!! warning "Minimum Splitter Redundancy"
     Keep at least 2 ESXi hosts per cluster with a working splitter active at all times. Single-host splitter maintenance is safe only if at least one other host in the cluster still has an active splitter.
 
@@ -432,9 +442,11 @@ All splitters healthy and communicating.
 ```
 
 !!! warning "Common errors"
-    **`ERROR: RPA cluster unreachable — verify network connectivity to the RPA management IP and confirm firewall rules allow port 7225.`**
-    **`WARNING: Journal utilization above 85% on Journal 2 — increase journal size or reduce replication load to prevent RPO violations.`**
-    **`ERROR: Splitter splitter-emc-02 status DISCONNECTED — check physical network cable, verify splitter IP configuration, and restart the splitter management service.`**
+    | Error | Fix |
+    |---|---|
+    | `ERROR: RPA cluster unreachable` | verify network connectivity to the RPA management IP and confirm firewall rules allow port 7225. |
+    | `WARNING: Journal utilization above 85% on Journal 2` | increase journal size or reduce replication load to prevent RPO violations. |
+    | `ERROR: Splitter splitter-emc-02 status DISCONNECTED` | check physical network cable, verify splitter IP configuration, and restart the splitter management service. |
 Validation checklist after upgrade:
 
 - [ ] All RPA nodes show correct new software version
@@ -468,8 +480,10 @@ Cleanup completed. Snapshot unmounted from /mnt/recoverpoint/prod-db-cg-snapshot
 ```
 
 !!! warning "Common errors"
-    **`Error: Consistency group 'prod-db-cg' not found or offline`** — Verify the CG name matches exactly and check cluster connectivity with `boxmgmt cluster status`.
-    **`Error: Image access already enabled for this CG. Disable existing access before enabling new access.`** — Run `boxmgmt cg disable_image_access <CG-name>` first, then retry the enable command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Consistency group 'prod-db-cg' not found or offline` | Verify the CG name matches exactly and check cluster connectivity with `boxmgmt cluster status`. |
+    | `Error: Image access already enabled for this CG. Disable existing access before enabling new access.` | Run `boxmgmt cg disable_image_access <CG-name>` first, then retry the enable command. |
 ---
 
 ## Refresh Planning

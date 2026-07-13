@@ -81,9 +81,11 @@ Connection 'bond0.100' (5c9a1f3e-7b2d-4a8c-6e1b-9f3a2c5d8b7e) successfully added
 ```
 
 !!! warning "Common errors"
-    **`Error: invalid bond option 'mode=802.3ad,miimon=100': unknown option`** — Use `mode=active-backup` or `mode=balance-alb` instead; 802.3ad requires `mode=balance-alb` in nmcli syntax.
-    **`Error: Connection activation failed: Device 'eth0' is already managed by another connection`** — Remove conflicting connections with `nmcli con delete ethernet-eth0` before adding to bond.
-    **`Error: unknown or ambiguous command 'ipv4.addresses'`** — Use `ipv4.addresses "192.168.1.10/24"` with quotes around the IP/prefix value.
+    | Error | Fix |
+    |---|---|
+    | `Error: invalid bond option 'mode=802.3ad,miimon=100': unknown option` | Use `mode=active-backup` or `mode=balance-alb` instead; 802.3ad requires `mode=balance-alb` in nmcli syntax. |
+    | `Error: Connection activation failed: Device 'eth0' is already managed by another connection` | Remove conflicting connections with `nmcli con delete ethernet-eth0` before adding to bond. |
+    | `Error: unknown or ambiguous command 'ipv4.addresses'` | Use `ipv4.addresses "192.168.1.10/24"` with quotes around the IP/prefix value. |
 ## Key CLI Commands
 
 ```bash

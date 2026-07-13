@@ -91,9 +91,11 @@ Content-Length: 4521
 ```
 
 !!! warning "Common errors"
-    **`VLAN <vlan_id> does not exist`** — Verify the VLAN ID is correct and exists on the target switch using `show vlan brief`.
-    **`nslookup: can't resolve '<planned-hostname>.example.com': No address associated with hostname`** — Create the DNS A record in your DNS management system before proceeding with environment readiness.
-    **`Connection refused`** — Confirm the firewall rule exists in your security policy and the destination service is listening on the specified port using `netstat -tlnp` on the target host.
+    | Error | Fix |
+    |---|---|
+    | `VLAN <vlan_id> does not exist` | Verify the VLAN ID is correct and exists on the target switch using `show vlan brief`. |
+    | `nslookup: can't resolve '<planned-hostname>.example.com': No address associated with hostname` | Create the DNS A record in your DNS management system before proceeding with environment readiness. |
+    | `Connection refused` | Confirm the firewall rule exists in your security policy and the destination service is listening on the specified port using `netstat -tlnp` on the target host. |
 | Network Check | Status |
 |---|---|
 | VLAN provisioned | ☐ |
@@ -145,9 +147,11 @@ Results written to /tmp/oscap-results.xml
 ```
 
 !!! warning "Common errors"
-    **`command not found: oscap`** — Install openscap-scanner package with `sudo yum install openscap-scanner` or `sudo apt install libopenscap8`.
-    **`No such file or directory: /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml`** — Install scap-security-guide package with `sudo yum install scap-security-guide` to populate SCAP content files.
-    **`aa-status: command not found`** — Install apparmor-utils with `sudo apt install apparmor-utils` on Debian/Ubuntu systems, or use `getenforce` alone on SELinux-only systems.
+    | Error | Fix |
+    |---|---|
+    | `command not found: oscap` | Install openscap-scanner package with `sudo yum install openscap-scanner` or `sudo apt install libopenscap8`. |
+    | `No such file or directory: /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml` | Install scap-security-guide package with `sudo yum install scap-security-guide` to populate SCAP content files. |
+    | `aa-status: command not found` | Install apparmor-utils with `sudo apt install apparmor-utils` on Debian/Ubuntu systems, or use `getenforce` alone on SELinux-only systems. |
 | Security Check | Status |
 |---|---|
 | PAM / CyberArk account created | ☐ |
@@ -186,9 +190,11 @@ Running
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to localhost port 9100: Connection refused`** — Verify node_exporter is installed and running with `systemctl start node_exporter && systemctl enable node_exporter`.
-    **`'data' KeyError`** — Confirm the Prometheus instance is accessible and the target host has been scraped at least once by checking `http://prometheus:9090/targets` in the UI.
-    **`Get-Service : Cannot find any service with service name 'Prometheus Windows Exporter'`** — Install the Windows exporter MSI or verify the exact service name with `Get-Service | findstr -i prometheus`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to localhost port 9100: Connection refused` | Verify node_exporter is installed and running with `systemctl start node_exporter && systemctl enable node_exporter`. |
+    | `'data' KeyError` | Confirm the Prometheus instance is accessible and the target host has been scraped at least once by checking `http://prometheus:9090/targets` in the UI. |
+    | `Get-Service : Cannot find any service with service name 'Prometheus Windows Exporter'` | Install the Windows exporter MSI or verify the exact service name with `Get-Service | findstr -i prometheus`. |
 | Monitoring Check | Status |
 |---|---|
 | Monitoring agent installed and running | ☐ |
@@ -232,9 +238,11 @@ StartTime             : 2024-01-15 14:32:18
 ```
 
 !!! warning "Common errors"
-    **`Get-VBRJob : The term 'Get-VBRJob' is not recognized`** — Import the Veeam PowerShell snapin with `Add-PSSnapin VeeamPSSnapin` before running the command.
-    **`qlist: command not found`** — Ensure the Commvault client is installed and the `qlogin` command has been executed to authenticate the session.
-    **`Get-VBRSession : No matching jobs found for filter`** — Verify the job name matches exactly (case-sensitive) and wait 10-15 seconds after `Start-VBRJob` for the session to appear in the list.
+    | Error | Fix |
+    |---|---|
+    | `Get-VBRJob : The term 'Get-VBRJob' is not recognized` | Import the Veeam PowerShell snapin with `Add-PSSnapin VeeamPSSnapin` before running the command. |
+    | `qlist: command not found` | Ensure the Commvault client is installed and the `qlogin` command has been executed to authenticate the session. |
+    | `Get-VBRSession : No matching jobs found for filter` | Verify the job name matches exactly (case-sensitive) and wait 10-15 seconds after `Start-VBRJob` for the session to appear in the list. |
 | Backup Check | Status |
 |---|---|
 | Backup job includes new system | ☐ |

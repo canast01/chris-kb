@@ -154,7 +154,9 @@ java     1923  0.1  2.1 1024567 678234     ?  Sl   14:25   0:12 /usr/lib/jvm/jav
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to localhost port 8090: Connection refused`** — Verify Confluence service is running with `systemctl status confluence` and check if the port binding changed in `confluence.cfg.xml`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to localhost port 8090: Connection refused` | Verify Confluence service is running with `systemctl status confluence` and check if the port binding changed in `confluence.cfg.xml`. |
     **`grep: /var/atlassian/application-
 ---
 
@@ -191,9 +193,11 @@ jstat -gc "$CONF_PID" 5000 3
 ```
 
 !!! warning "Common errors"
-    **`12345: No such process`** — Verify Confluence is running with `systemctl status confluence` and check the correct process name with `ps aux | grep confluence`.
-    **`jstat: command not found`** — Install the JDK (not just JRE) on the system, as jstat is part of the JDK tools package.
-    **`Permission denied`** — Run the command with `sudo` or as the confluence system user to access the JVM process statistics.
+    | Error | Fix |
+    |---|---|
+    | `12345: No such process` | Verify Confluence is running with `systemctl status confluence` and check the correct process name with `ps aux | grep confluence`. |
+    | `jstat: command not found` | Install the JDK (not just JRE) on the system, as jstat is part of the JDK tools package. |
+    | `Permission denied` | Run the command with `sudo` or as the confluence system user to access the JVM process statistics. |
 ### Capture an on-demand heap dump
 
 ```bash
@@ -210,9 +214,11 @@ Heap dump: /tmp/confluence-heap-202401151430.hprof (2.3G)
 ```
 
 !!! warning "Common errors"
-    **`jmap: command not found`** — Install the JDK (not just JRE) on the system, as jmap is part of the JDK tools.
-    **`Error attaching to process: sun.jvm.hotspot.debugger.DebuggerException: Cannot open socket file`** — Ensure Confluence is running as the same user executing jmap, or run jmap with sudo.
-    **`No such file or directory`** — Verify the Confluence PID exists with `pgrep -f "atlassian-confluence"` before running jmap, as the process may have stopped.
+    | Error | Fix |
+    |---|---|
+    | `jmap: command not found` | Install the JDK (not just JRE) on the system, as jmap is part of the JDK tools. |
+    | `Error attaching to process: sun.jvm.hotspot.debugger.DebuggerException: Cannot open socket file` | Ensure Confluence is running as the same user executing jmap, or run jmap with sudo. |
+    | `No such file or directory` | Verify the Confluence PID exists with `pgrep -f "atlassian-confluence"` before running jmap, as the process may have stopped. |
 ### Analyse heap dump with Eclipse MAT
 
 1. Download [Eclipse Memory Analyzer (MAT)](https://www.eclipse.org/mat/)
@@ -262,9 +268,11 @@ Captured: /tmp/threaddump_3_143042.txt
 ```
 
 !!! warning "Common errors"
-    **`jstack: command not found`** — Install the JDK (not just JRE) on the system, as jstack is only included in JDK distributions.
-    **`Could not attach to <PID>: Permission denied`** — Run the script with sudo or as the same user that started the Confluence process (typically the confluence system user).
-    **`pgrep: command not found`** — Install the procps package (`apt-get install procps` on Debian/Ubuntu or `yum install procps-ng` on RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `jstack: command not found` | Install the JDK (not just JRE) on the system, as jstack is only included in JDK distributions. |
+    | `Could not attach to <PID>: Permission denied` | Run the script with sudo or as the same user that started the Confluence process (typically the confluence system user). |
+    | `pgrep: command not found` | Install the procps package (`apt-get install procps` on Debian/Ubuntu or `yum install procps-ng` on RHEL/CentOS). |
 ### Thread dump quick analysis
 
 ```bash
@@ -375,9 +383,11 @@ SELECT 1
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "$DB_HOST" to address: Name or service not known`** — Replace `$DB_HOST` with the actual PostgreSQL server hostname or IP address, or ensure the environment variable is exported before running the script.
-    **`psql: error: FATAL:  Ident authentication failed for user "postgres"`** — Configure PostgreSQL to accept password authentication in `pg_hba.conf` or use a `.pgpass` file with credentials for the postgres user.
-    **`tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory`** — Verify the PostgreSQL log directory path matches your installation (check `log_directory` in `postgresql.conf`) and ensure the user running the command has read permissions.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "$DB_HOST" to address: Name or service not known` | Replace `$DB_HOST` with the actual PostgreSQL server hostname or IP address, or ensure the environment variable is exported before running the script. |
+    | `psql: error: FATAL:  Ident authentication failed for user "postgres"` | Configure PostgreSQL to accept password authentication in `pg_hba.conf` or use a `.pgpass` file with credentials for the postgres user. |
+    | `tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory` | Verify the PostgreSQL log directory path matches your installation (check `log_directory` in `postgresql.conf`) and ensure the user running the command has read permissions. |
 ### Table bloat check
 
 ```bash
@@ -418,9 +428,11 @@ Type "help" for help.
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "$DB_HOST" to address: Name or service not known`** — Verify the `$DB_HOST` environment variable is set correctly with `echo $DB_HOST` and confirm the hostname resolves via `nslookup` or `ping`.
-    **`psql: error: FATAL: Ident authentication failed for user "$DB_USER"`** — Ensure the PostgreSQL `pg_hba.conf` file permits the connection method for your user and host, or use a `.pgpass` file with proper permissions (600).
-    **`ERROR: relation "pg_stat_user_tables" does not exist`** — Confirm you are connecting to the correct database with `-d "$DB_NAME"` and that the PostgreSQL server version supports this system catalog view (available in PostgreSQL 8.4+).
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "$DB_HOST" to address: Name or service not known` | Verify the `$DB_HOST` environment variable is set correctly with `echo $DB_HOST` and confirm the hostname resolves via `nslookup` or `ping`. |
+    | `psql: error: FATAL: Ident authentication failed for user "$DB_USER"` | Ensure the PostgreSQL `pg_hba.conf` file permits the connection method for your user and host, or use a `.pgpass` file with proper permissions (600). |
+    | `ERROR: relation "pg_stat_user_tables" does not exist` | Confirm you are connecting to the correct database with `-d "$DB_NAME"` and that the PostgreSQL server version supports this system catalog view (available in PostgreSQL 8.4+). |
 High `dead_tuples` → run `VACUUM ANALYZE <tablename>;`
 
 ### EXPLAIN ANALYZE a suspicious query
@@ -497,9 +509,11 @@ Support zip: /tmp/confluence-support-20240115.zip
 ```
 
 !!! warning "Common errors"
-    **`pgrep: no process found`** — Ensure Confluence is running with `systemctl status confluence` before collecting diagnostics.
-    **`jstack: command not found`** — Install the JDK (not just JRE) with `apt-get install openjdk-11-jdk` or equivalent for your OS.
-    **`Permission denied`** — Run the script with `sudo` or as the confluence system user to access logs and process memory.
+    | Error | Fix |
+    |---|---|
+    | `pgrep: no process found` | Ensure Confluence is running with `systemctl status confluence` before collecting diagnostics. |
+    | `jstack: command not found` | Install the JDK (not just JRE) with `apt-get install openjdk-11-jdk` or equivalent for your OS. |
+    | `Permission denied` | Run the script with `sudo` or as the confluence system user to access logs and process memory. |
 ### What support will ask for
 
 | Artifact | Collected By |

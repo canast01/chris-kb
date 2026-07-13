@@ -67,8 +67,10 @@ Export list for 192.168.10.45:
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: access denied by server while mounting 192.168.10.45:/export/lcm-data`** — Verify the NFS server firewall allows port 2049 from the LCM appliance IP and check /etc/exports permissions on the NFS server.
-    **`showmount: clnt_create: RPC: Port mapper failure - Unable to receive`** — Ensure the NFS server's portmapper (rpcbind) is running with `systemctl status rpcbind` and that port 111 is accessible.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: access denied by server while mounting 192.168.10.45:/export/lcm-data` | Verify the NFS server firewall allows port 2049 from the LCM appliance IP and check /etc/exports permissions on the NFS server. |
+    | `showmount: clnt_create: RPC: Port mapper failure - Unable to receive` | Ensure the NFS server's portmapper (rpcbind) is running with `systemctl status rpcbind` and that port 111 is accessible. |
 Backup options:
 - **NFS server snapshot**: if the NFS server supports snapshots (NetApp, Pure, vSAN File Services), schedule daily snapshots of the export volume
 - **rsync to secondary storage**:
@@ -99,9 +101,11 @@ total size is 4,421,834,156  speedup is 1.00
 ```
 
 !!! warning "Common errors"
-    **`rsync: change_dir "/exports/lcm-repo" failed: No such file or directory (2)`** — Verify the source path exists and is mounted on the current host with `ls -la /exports/lcm-repo`.
-    **`Permission denied (13)`** — Ensure the user running rsync has read permissions on the source directory and write permissions on the destination with `chmod 755 /exports/lcm-repo` and `chmod 755 /backup/`.
-    **`No space left on device (28)`** — Check available disk space on the destination with `df -h /backup/` and ensure sufficient free space exists for the full backup.
+    | Error | Fix |
+    |---|---|
+    | `rsync: change_dir "/exports/lcm-repo" failed: No such file or directory (2)` | Verify the source path exists and is mounted on the current host with `ls -la /exports/lcm-repo`. |
+    | `Permission denied (13)` | Ensure the user running rsync has read permissions on the source directory and write permissions on the destination with `chmod 755 /exports/lcm-repo` and `chmod 755 /backup/`. |
+    | `No space left on device (28)` | Check available disk space on the destination with `df -h /backup/` and ensure sufficient free space exists for the full backup. |
 ---
 
 ## Exporting LCM Environment Configuration via API
@@ -180,8 +184,10 @@ curl -sk -H "x-xenon-auth-token: $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands to skip SSL verification, or import the LCM server's CA certificate into your system trust store.
-    **`jq: parse error: (null) is not defined at line 1, column 0`** — Verify the authentication token is valid by checking the login response; the API likely returned an error
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands to skip SSL verification, or import the LCM server's CA certificate into your system trust store. |
+    | `jq: parse error: (null) is not defined at line 1, column 0` | Verify the authentication token is valid by checking the login response; the API likely returned an error |
 Store these JSON exports alongside the backup job output in a version-controlled location.
 
 ---
@@ -228,9 +234,11 @@ Build: 8.13.1.20240110-1
 ```
 
 !!! warning "Common errors"
-    **`sudo: no tty present and no -S option was specified`** — Add `-t` flag to ssh command: `ssh -t admin@lcm-prod-01.example.local`
-    **`Connection refused`** — Verify LCM appliance is reachable and SSH service is running; check firewall rules and DNS resolution for lcm-prod-01.example.local
-    **`vracli: command not found`** — Source the vracli environment or use full path `/opt/vmware/vracli/bin/vracli status`
+    | Error | Fix |
+    |---|---|
+    | `sudo: no tty present and no -S option was specified` | Add `-t` flag to ssh command: `ssh -t admin@lcm-prod-01.example.local` |
+    | `Connection refused` | Verify LCM appliance is reachable and SSH service is running; check firewall rules and DNS resolution for lcm-prod-01.example.local |
+    | `vracli: command not found` | Source the vracli environment or use full path `/opt/vmware/vracli/bin/vracli status` |
 5. Open the LCM UI and verify:
    - Environments show correct products and versions
    - Locker contains all expected certificates and passwords
@@ -260,9 +268,11 @@ nfs-server.corp.local:/lcm-repo  500G  245G  255G  49% /data
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: mount point /data does not exist`** — Create the mount point directory with `mkdir -p /data` before running `mount -a`.
-    **`mount.nfs: access denied by server while mounting nfs-server.corp.local:/lcm-repo`** — Verify NFS server exports the path and firewall allows NFS traffic (ports 111, 2049); check `/etc/exports` on the NFS server.
-    **`mount: /etc/fstab: parse error at line X`** — Ensure the fstab entry has exactly 6 whitespace-separated fields with no trailing characters.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: mount point /data does not exist` | Create the mount point directory with `mkdir -p /data` before running `mount -a`. |
+    | `mount.nfs: access denied by server while mounting nfs-server.corp.local:/lcm-repo` | Verify NFS server exports the path and firewall allows NFS traffic (ports 111, 2049); check `/etc/exports` on the NFS server. |
+    | `mount: /etc/fstab: parse error at line X` | Ensure the fstab entry has exactly 6 whitespace-separated fields with no trailing characters. |
 3. Re-download required product bundles from Broadcom Support Portal
 4. Re-map binaries: **Lifecycle Operations → Settings → Binary Mapping → Map Binaries**
 

@@ -122,8 +122,10 @@ monitoring-token              2024-01-20T16:45:00Z     2025-01-20T16:45:00Z     
 ```
 
 !!! warning "Common errors"
-    **`error: invalid credentials for user '<username>'`** — Verify the username exists and you have sufficient permissions to create API tokens.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification, or configure proper CA certificates for your array's HTTPS endpoint.
+    | Error | Fix |
+    |---|---|
+    | `error: invalid credentials for user '<username>'` | Verify the username exists and you have sufficient permissions to create API tokens. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification, or configure proper CA certificates for your array's HTTPS endpoint. |
 The REST API supports all array operations available in the GUI and CLI. Use API version 2.x for new integrations — version 1.x is deprecated. Pure1 also provides a fleet-level REST API for subscription and capacity data.
 
 ---

@@ -172,9 +172,11 @@ worker-2            Ready    worker   45d   v1.27.8+4fab27b
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to the server: dial tcp: lookup api.example.com on 8.8.8.8:53: no such host`** — Verify your KUBECONFIG is set correctly and the cluster API endpoint is reachable.
-    **`Error from server (BadRequest): error when creating "STDIN": MachineConfig.machineconfiguration.openshift.io "99-worker-sysctl" is invalid: spec.config.storage.files[0].contents.source: Invalid value: "data:,net.ipv4.ip_forward%3D1...": must be a valid data URL`** — Ensure the data URL is properly percent-encoded and the ignition version matches your OpenShift release.
-    **`error: nodes "worker-1" not found`** — Verify the node name with `oc get nodes` and use the exact name from the output.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to the server: dial tcp: lookup api.example.com on 8.8.8.8:53: no such host` | Verify your KUBECONFIG is set correctly and the cluster API endpoint is reachable. |
+    | `Error from server (BadRequest): error when creating "STDIN": MachineConfig.machineconfiguration.openshift.io "99-worker-sysctl" is invalid: spec.config.storage.files[0].contents.source: Invalid value: "data:,net.ipv4.ip_forward%3D1...": must be a valid data URL` | Ensure the data URL is properly percent-encoded and the ignition version matches your OpenShift release. |
+    | `error: nodes "worker-1" not found` | Verify the node name with `oc get nodes` and use the exact name from the output. |
 ## Compliance Operator
 
 The Compliance Operator runs OpenSCAP-based scans against CIS, PCI-DSS, FedRAMP, and STIG profiles.
@@ -258,9 +260,11 @@ complianceremediation.compliance.openshift.io/ocp4-cis-node-kubelet-streaming-co
 ```
 
 !!! warning "Common errors"
-    **`error: resource mapping not found for name: "cis-compliance" namespace: "openshift-compliance" from "": no matches for kind "ScanSettingBinding" in version "compliance.openshift.io/v1alpha1"`** — Verify the Compliance Operator is installed in openshift-compliance namespace with `oc get deployment -n openshift-compliance`.
-    **`Error from server (NotFound): complianceremediations.compliance.openshift.io "<name>" not found`** — Confirm the remediation name matches output from `oc get complianceremediations -n openshift-compliance` and wait for scans to complete.
-    **`error: no matches for kind "ScanSetting" in version "compliance.openshift.io/v1alpha1"`** — Create the default ScanSetting resource first with `oc apply -f - <<EOF` using the ScanSetting template from the Compliance Operator documentation.
+    | Error | Fix |
+    |---|---|
+    | `error: resource mapping not found for name: "cis-compliance" namespace: "openshift-compliance" from "": no matches for kind "ScanSettingBinding" in version "compliance.openshift.io/v1alpha1"` | Verify the Compliance Operator is installed in openshift-compliance namespace with `oc get deployment -n openshift-compliance`. |
+    | `Error from server (NotFound): complianceremediations.compliance.openshift.io "<name>" not found` | Confirm the remediation name matches output from `oc get complianceremediations -n openshift-compliance` and wait for scans to complete. |
+    | `error: no matches for kind "ScanSetting" in version "compliance.openshift.io/v1alpha1"` | Create the default ScanSetting resource first with `oc apply -f - <<EOF` using the ScanSetting template from the Compliance Operator documentation. |
 ## Pod Security Admission Labels
 
 ```bash
@@ -304,9 +308,11 @@ LAST SEEN   TYPE     REASON           OBJECT                    MESSAGE
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): namespaces "my-project" not found`** — Verify the namespace exists with `oc get namespaces` and use the correct name.
-    **`error: unable to recognize "": no matches for kind "PodSecurityPolicy" in version "policy/v1beta1"`** — Pod Security Policies are deprecated; use Pod Security Admission (PSA) labels on namespaces instead.
-    **`Warning: pod-security.kubernetes.io/enforce: restricted is not a valid label value`** — Ensure the label value is exactly `restricted`, `baseline`, or `privileged` with no typos or extra whitespace.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): namespaces "my-project" not found` | Verify the namespace exists with `oc get namespaces` and use the correct name. |
+    | `error: unable to recognize "": no matches for kind "PodSecurityPolicy" in version "policy/v1beta1"` | Pod Security Policies are deprecated; use Pod Security Admission (PSA) labels on namespaces instead. |
+    | `Warning: pod-security.kubernetes.io/enforce: restricted is not a valid label value` | Ensure the label value is exactly `restricted`, `baseline`, or `privileged` with no typos or extra whitespace. |
 ## NetworkPolicy Defaults
 
 ```yaml
@@ -382,8 +388,10 @@ namespace/openshift-ingress labeled
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): namespaces "my-project" not found`** — Verify the project exists with `oc get projects` and create it if needed using `oc new-project my-project`.
-    **`Error from server (AlreadyExists): networkpolicies.networking.k8s.io "deny-all-ingress-egress" already exists`** — Delete the existing policy first with `oc delete networkpolicy deny-all-ingress-egress -n my-project` or use `oc apply --force-conflicts=true`.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): namespaces "my-project" not found` | Verify the project exists with `oc get projects` and create it if needed using `oc new-project my-project`. |
+    | `Error from server (AlreadyExists): networkpolicies.networking.k8s.io "deny-all-ingress-egress" already exists` | Delete the existing policy first with `oc delete networkpolicy deny-all-ingress-egress -n my-project` or use `oc apply --force-conflicts=true`. |
 ## Image Security
 
 ```bash
@@ -438,8 +446,10 @@ registry.redhat.com/openshift4/ose-oauth@sha256:9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "imagepruner"`** — Ensure the image-registry operator is installed and running with `oc get operator image-registry -o wide`.
-    **`error: unable to connect to quay.io/myorg/myapp:latest: unauthorized`** — Verify the image pull secret exists in the namespace with `oc get secrets -n my-project | grep pull-secret` and that credentials have pull access to the registry.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "imagepruner"` | Ensure the image-registry operator is installed and running with `oc get operator image-registry -o wide`. |
+    | `error: unable to connect to quay.io/myorg/myapp:latest: unauthorized` | Verify the image pull secret exists in the namespace with `oc get secrets -n my-project | grep pull-secret` and that credentials have pull access to the registry. |
 ## Audit Logging
 
 ```bash
@@ -479,9 +489,11 @@ Nov 15 14:32:22 ip-10-0-45-12 kube-apiserver[2847]: audit: level=RequestResponse
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "apiserver"`** — Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc api-resources | grep apiserver`.
-    **`journalctl: command not found`** — Run `chroot /host` first before executing journalctl to access the host filesystem.
-    **`No such file or directory: /var/log/kube-apiserver/audit.log`** — Check the actual audit log path with `find /var/log -name "*audit*"` or verify the audit profile has been applied with `oc get apiserver cluster -o yaml`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "apiserver"` | Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc api-resources | grep apiserver`. |
+    | `journalctl: command not found` | Run `chroot /host` first before executing journalctl to access the host filesystem. |
+    | `No such file or directory: /var/log/kube-apiserver/audit.log` | Check the actual audit log path with `find /var/log -name "*audit*"` or verify the audit profile has been applied with `oc get apiserver cluster -o yaml`. |
 ## CIS OCP 4 Benchmark — Key Controls
 
 | Category | Control | Command / Action |

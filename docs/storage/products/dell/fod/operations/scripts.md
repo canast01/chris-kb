@@ -167,9 +167,11 @@ Report saved to: fod_usage_report_20240115.csv
 ```
 
 !!! warning "Common errors"
-    **`'python' is not recognized as an internal or external command`** — Install Python or use the full path to python.exe, or ensure Python is in your system PATH environment variable.
-    **`Invalid or expired CLOUDIQ_TOKEN`** — Regenerate the token in CloudIQ console and re-run the set command before executing the script.
-    **`FileNotFoundError: [Errno 2] No such file or directory: 'fod_usage_reporter.py'`** — Verify the script exists in C:\Users\YourName\Desktop or provide the correct file path.
+    | Error | Fix |
+    |---|---|
+    | `'python' is not recognized as an internal or external command` | Install Python or use the full path to python.exe, or ensure Python is in your system PATH environment variable. |
+    | `Invalid or expired CLOUDIQ_TOKEN` | Regenerate the token in CloudIQ console and re-run the set command before executing the script. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: 'fod_usage_reporter.py'` | Verify the script exists in C:\Users\YourName\Desktop or provide the correct file path. |
 **What you should see**
 
 A table listing each storage system with its committed tier, current usage, burst amount (how much over the committed tier), and status. Systems in burst are marked BURST, systems near the limit (90% of committed) are marked NEAR LIMIT, and healthy systems are OK. The final line shows how many systems are currently in burst.
@@ -231,9 +233,11 @@ OK: System PS-001234 within committed baseline. Used=42.5 TiB, Committed=50 TiB
 ```
 
 !!! warning "Common errors"
-    **`ERROR: CLOUDIQ_TOKEN and SYSTEM_ID must be set.`** — Export both variables before running the script: `export CLOUDIQ_TOKEN=your_token SYSTEM_ID=PS-001234`.
-    **`command not found: jq`** — Install jq on the system: `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS).
-    **`curl: (401) Unauthorized`** — Verify the CloudIQ API token is valid and has not expired by checking the token in your CloudIQ console.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: CLOUDIQ_TOKEN and SYSTEM_ID must be set.` | Export both variables before running the script: `export CLOUDIQ_TOKEN=your_token SYSTEM_ID=PS-001234`. |
+    | `command not found: jq` | Install jq on the system: `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS). |
+    | `curl: (401) Unauthorized` | Verify the CloudIQ API token is valid and has not expired by checking the token in your CloudIQ console. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -289,9 +293,11 @@ Analysis complete. Report saved to: /home/user/Desktop/fod_burst_report_20250310
 ```
 
 !!! warning "Common errors"
-    **`command not found: ./fod_burst_detect.sh`** — Verify the script exists in ~/Desktop with `ls -la fod_burst_detect.sh` and re-run `chmod +x fod_burst_detect.sh`.
-    **`Error: Invalid or expired CLOUDIQ_TOKEN`** — Regenerate the token from the CloudIQ portal and re-export it before running the script.
-    **`Error: System PS-001234 not found in CloudIQ`** — Confirm the SYSTEM_ID matches your actual PowerStore system ID by checking CloudIQ's system inventory.
+    | Error | Fix |
+    |---|---|
+    | `command not found: ./fod_burst_detect.sh` | Verify the script exists in ~/Desktop with `ls -la fod_burst_detect.sh` and re-run `chmod +x fod_burst_detect.sh`. |
+    | `Error: Invalid or expired CLOUDIQ_TOKEN` | Regenerate the token from the CloudIQ portal and re-export it before running the script. |
+    | `Error: System PS-001234 not found in CloudIQ` | Confirm the SYSTEM_ID matches your actual PowerStore system ID by checking CloudIQ's system inventory. |
 **What you should see**
 
 A single line: either `OK: System PS-001234 within committed baseline. Used=45.3 TiB, Committed=50 TiB` or `WARNING: System PS-001234 is in burst.` with the overage shown. Exit code 0 means OK, exit code 1 means burst.
@@ -421,9 +427,11 @@ fod-tertiary-01.dell.local     : ok=2    changed=0    unreachable=0    failed=0
 ```
 
 !!! warning "Common errors"
-    **`fatal: [fod-primary-01.dell.local]: FAILED! => {"msg": "Unexpected failure in module execution."}`** — Verify the CLOUDIQ_TOKEN environment variable is set correctly and has not expired by regenerating it in the CloudIQ console.
-    **`[WARNING]: Unable to parse /etc/ansible/hosts as an inventory source`** — Ensure the inventory file path in ansible.cfg points to a valid hosts file or use `-i` flag to specify the correct inventory location.
-    **`fatal: [fod-secondary-01.dell.local]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey,password)."}`** — Verify SSH key permissions (600) and that the ansible user has passwordless sudo access configured on the target FOD nodes.
+    | Error | Fix |
+    |---|---|
+    | `fatal: [fod-primary-01.dell.local]: FAILED! => {"msg": "Unexpected failure in module execution."}` | Verify the CLOUDIQ_TOKEN environment variable is set correctly and has not expired by regenerating it in the CloudIQ console. |
+    | `[WARNING]: Unable to parse /etc/ansible/hosts as an inventory source` | Ensure the inventory file path in ansible.cfg points to a valid hosts file or use `-i` flag to specify the correct inventory location. |
+    | `fatal: [fod-secondary-01.dell.local]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey,password)."}` | Verify SSH key permissions (600) and that the ansible user has passwordless sudo access configured on the target FOD nodes. |
 **What you should see**
 
 Ansible lists all storage systems from CloudIQ and then fetches capacity details for each one. The final task prints a notice reminding you to check any system where `used_tib` is greater than `committed_tib` — those systems are in FOD burst and may incur additional charges.
@@ -575,9 +583,11 @@ Summary: 2 licenses active, 0 expired, 0 expiring within 90 days
 ```
 
 !!! warning "Common errors"
-    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to allow local script execution.
-    **`The term '.\fod_license_status.ps1' is not recognized`** — Verify the script exists in the current directory with `ls *.ps1` and check the correct filename spelling.
-    **`License Server: lic-dell-prod-01.corp.local - Connection failed`** — Ensure network connectivity to the license server and verify firewall rules allow port 27000 outbound.
+    | Error | Fix |
+    |---|---|
+    | `cannot be loaded because running scripts is disabled on this system` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to allow local script execution. |
+    | `The term '.\fod_license_status.ps1' is not recognized` | Verify the script exists in the current directory with `ls *.ps1` and check the correct filename spelling. |
+    | `License Server: lic-dell-prod-01.corp.local - Connection failed` | Ensure network connectivity to the license server and verify firewall rules allow port 27000 outbound. |
 **What you should see**
 
 An array information block showing model, total usable capacity, and used capacity. Then a license features list — each feature shows ENABLED or DISABLED. Features related to Flex on Demand are marked with `<-- FOD related` to make them easy to spot.
@@ -666,9 +676,11 @@ else:
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Could not retrieve capacity from Unisphere at 192.168.1.50`** — Verify UNISPHERE_HOST is reachable, Unisphere service is running on port 8443, and network connectivity exists from the script host.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the Unisphere CA certificate into the system trust store to avoid the `-sk` workaround.
-    **`jq: command not found` or `python3: command not found`** — Ensure python3 is installed on the host; the script uses python3 for JSON parsing and does not require jq.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Could not retrieve capacity from Unisphere at 192.168.1.50` | Verify UNISPHERE_HOST is reachable, Unisphere service is running on port 8443, and network connectivity exists from the script host. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the Unisphere CA certificate into the system trust store to avoid the `-sk` workaround. |
+    | `jq: command not found` or `python3: command not found` | Ensure python3 is installed on the host; the script uses python3 for JSON parsing and does not require jq. |
 ---
 
 ## Incident Triage Script
@@ -784,9 +796,11 @@ Output saved to: /tmp/fod_triage_000297123456_20240115_143247.txt
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the Unisphere certificate into your system CA bundle.
-    **`UNISPHERE_HOST: unset or null`** — Export the environment variable before running the script: `export UNISPHERE_HOST=192.168.1.100`.
-    **`Parse error`** — Verify the REST endpoint is accessible and returning valid JSON by testing manually: `curl -sk -H "Authorization: Basic $AUTH" "${BASE_URL}/system/symmetrix/${SID}/system_capacity" | head -20`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the Unisphere certificate into your system CA bundle. |
+    | `UNISPHERE_HOST: unset or null` | Export the environment variable before running the script: `export UNISPHERE_HOST=192.168.1.100`. |
+    | `Parse error` | Verify the REST endpoint is accessible and returning valid JSON by testing manually: `curl -sk -H "Authorization: Basic $AUTH" "${BASE_URL}/system/symmetrix/${SID}/system_capacity" | head -20`. |
 ---
 
 ## Change Pre-Check Script
@@ -892,9 +906,11 @@ fi
 ```
 
 !!! warning "Common errors"
-    **`unisphere_host: unbound variable`** — Ensure UNISPHERE_HOST environment variable is set before running the script.
-    **`Unisphere not reachable (HTTP 000)`** — Verify the Unisphere hostname/IP is correct, the REST API port 8443 is accessible, and credentials are valid.
-    **`[FAIL] Burst budget 94.2% consumed — insufficient headroom for workload increase`** — Wait for the billing cycle to reset or reduce existing workload before proceeding.
+    | Error | Fix |
+    |---|---|
+    | `unisphere_host: unbound variable` | Ensure UNISPHERE_HOST environment variable is set before running the script. |
+    | `Unisphere not reachable (HTTP 000)` | Verify the Unisphere hostname/IP is correct, the REST API port 8443 is accessible, and credentials are valid. |
+    | `[FAIL] Burst budget 94.2% consumed — insufficient headroom for workload increase` | Wait for the billing cycle to reset or reduce existing workload before proceeding. |
 ---
 
 ## Post-Change Validation Script
@@ -1003,9 +1019,11 @@ exit 1
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to unisphere.example.com port 8443: Connection refused`** — Verify UNISPHERE_HOST is correct and the Unisphere management server is reachable on port 8443.
-    **`[FAIL] Set UNISPHERE_HOST`** — Ensure all required environment variables (UNISPHERE_HOST, SID, UNISPHERE_USER, UNISPHERE_PASS) are exported before running the script.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Check that the Unisphere API credentials are valid and the SID exists; an authentication failure returns empty JSON.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to unisphere.example.com port 8443: Connection refused` | Verify UNISPHERE_HOST is correct and the Unisphere management server is reachable on port 8443. |
+    | `[FAIL] Set UNISPHERE_HOST` | Ensure all required environment variables (UNISPHERE_HOST, SID, UNISPHERE_USER, UNISPHERE_PASS) are exported before running the script. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Check that the Unisphere API credentials are valid and the SID exists; an authentication failure returns empty JSON. |
 ---
 
 ## Health Check Script
@@ -1069,9 +1087,11 @@ FOD_HEALTH SID=000297900111 total_tb=487.5 used_tb=521.3 subscribed_tb=600.0 bur
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the Unisphere CA certificate into your system trust store.
-    **`jq: command not found`** — Install `python3` (script uses Python for JSON parsing, not jq); verify with `python3 --version`.
-    **`Set UNISPHERE_HOST`** — Export required environment variables before running: `export UNISPHERE_HOST=192.168.1.100 SID=000297900111 UNISPHERE_USER=admin UNISPHERE_PASS=password`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the Unisphere CA certificate into your system trust store. |
+    | `jq: command not found` | Install `python3` (script uses Python for JSON parsing, not jq); verify with `python3 --version`. |
+    | `Set UNISPHERE_HOST` | Export required environment variables before running: `export UNISPHERE_HOST=192.168.1.100 SID=000297900111 UNISPHERE_USER=admin UNISPHERE_PASS=password`. |
 ---
 
 ## Verify

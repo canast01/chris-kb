@@ -74,9 +74,11 @@ services:
 ```
 
 !!! warning "Common errors"
-    **`cluster status: UNSTABLE`** — Check node connectivity with `get cluster nodes` and verify network connectivity between cluster members.
-    **`service <service-name> status: stopped`** — Restart the service with `restart service <service-name>` and check logs with `get service <service-name> logs`.
-    **`Connection refused`** — Verify SSH access to NSX Manager and confirm the management IP is reachable with `ping <nsx-mgr-ip>`.
+    | Error | Fix |
+    |---|---|
+    | `cluster status: UNSTABLE` | Check node connectivity with `get cluster nodes` and verify network connectivity between cluster members. |
+    | `service <service-name> status: stopped` | Restart the service with `restart service <service-name>` and check logs with `get service <service-name> logs`. |
+    | `Connection refused` | Verify SSH access to NSX Manager and confirm the management IP is reachable with `ping <nsx-mgr-ip>`. |
 ## SDDC Manager Access (VCF)
 
 ```bash
@@ -116,9 +118,11 @@ curl -k -u admin@local:password https://sddc-manager.example.local/v1/health-sum
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if error persists, verify SDDC Manager hostname matches certificate CN).
-    **`curl: (7) Failed to connect to sddc-manager.example.local port 443: Name or service not known`** — Verify DNS resolution with `nslookup sddc-manager.example.local` and confirm the SDDC Manager FQDN is correct.
-    **`401 Unauthorized`** — Confirm credentials are correct and the admin@local user has API access permissions in SDDC Manager.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if error persists, verify SDDC Manager hostname matches certificate CN). |
+    | `curl: (7) Failed to connect to sddc-manager.example.local port 443: Name or service not known` | Verify DNS resolution with `nslookup sddc-manager.example.local` and confirm the SDDC Manager FQDN is correct. |
+    | `401 Unauthorized` | Confirm credentials are correct and the admin@local user has API access permissions in SDDC Manager. |
 ## Aria Operations Access
 
 Confirm Aria Ops is receiving telemetry:
@@ -156,8 +160,10 @@ matchedDN: dc=corp,dc=local
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked; check Active Directory for failed login attempts.
-    **`Can't contact LDAP server (-1)`** — Confirm the DC hostname resolves (use `nslookup dc1.example.local`), port 636 is open (use `nc -zv dc1.example.local 636`), and the firewall allows LDAPS from your admin host.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account is not locked; check Active Directory for failed login attempts. |
+    | `Can't contact LDAP server (-1)` | Confirm the DC hostname resolves (use `nslookup dc1.example.local`), port 636 is open (use `nc -zv dc1.example.local 636`), and the firewall allows LDAPS from your admin host. |
 ## Access Control Review
 
 Run monthly (in addition to weekly connectivity checks):
@@ -189,8 +195,10 @@ grep "AuthenticationException\|failed.*login\|InvalidCredentials" /var/log/vmwar
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vmware/sso/vmware-sts-idmd.log: No such file or directory`** — Verify the correct log path on your vCenter version (may be `/var/log/vmware/sso/` or `/storage/log/vmware/sso/`) and check that the vCenter appliance is running.
-    **`Permission denied`** — Run the command with `sudo` or as root, since SSO logs typically require elevated privileges to read.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vmware/sso/vmware-sts-idmd.log: No such file or directory` | Verify the correct log path on your vCenter version (may be `/var/log/vmware/sso/` or `/storage/log/vmware/sso/`) and check that the vCenter appliance is running. |
+    | `Permission denied` | Run the command with `sudo` or as root, since SSO logs typically require elevated privileges to read. |
 Alert on > 5 failed logins for any account in a 15-minute window.
 
 ---

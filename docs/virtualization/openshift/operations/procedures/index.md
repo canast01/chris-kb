@@ -118,9 +118,11 @@ redis-cache-0                         1/1     Running   0          1m        10.
 ```
 
 !!! warning "Common errors"
-    **`error: unable to drain node "worker-01", aborting command [DaemonSet-managed Pods (use --ignore-daemonsets to ignore): openshift-sdn/sdn-xxxxx]`** — Add the `--ignore-daemonsets` flag to the drain command to skip DaemonSet pods.
-    **`error: cannot delete Pods with local storage (use --delete-emptydir-data to override): [namespace/pod-name]`** — Add the `--delete-emptydir-data` flag to allow eviction of pods using emptyDir volumes.
-    **`error: timed out waiting for pod "app-xyz" to be evicted`** — Increase the `--timeout` value (e.g., `--timeout=600s`) or manually delete the problematic pod with `oc delete pod <pod-name> -n <namespace> --grace-period=0 --force`.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to drain node "worker-01", aborting command [DaemonSet-managed Pods (use --ignore-daemonsets to ignore): openshift-sdn/sdn-xxxxx]` | Add the `--ignore-daemonsets` flag to the drain command to skip DaemonSet pods. |
+    | `error: cannot delete Pods with local storage (use --delete-emptydir-data to override): [namespace/pod-name]` | Add the `--delete-emptydir-data` flag to allow eviction of pods using emptyDir volumes. |
+    | `error: timed out waiting for pod "app-xyz" to be evicted` | Increase the `--timeout` value (e.g., `--timeout=600s`) or manually delete the problematic pod with `oc delete pod <pod-name> -n <namespace> --grace-period=0 --force`. |
 ## Scale Workers via MachineSet
 
 ```bash
@@ -175,9 +177,11 @@ machineset.machine.openshift.io/worker-us-east-1a scaled
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): machinesets.machine.openshift.io "<machineset-name>" not found`** — Replace `<machineset-name>` with an actual MachineSet name from the `oc get machineset` output.
-    **`error: no objects passed to approve`** — Ensure pending CSRs exist before running the approve command; check with `oc get csr | grep Pending` first.
-    **`Error: unable to drain node "worker-1.example": cannot delete Pods not managed by ReplicationController, ReplicaSet, Job, DaemonSet or StatefulSet`** — Add `--ignore-daemonsets --delete-emptydir-data` flags to the drain command if scaling down encounters pod eviction issues.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): machinesets.machine.openshift.io "<machineset-name>" not found` | Replace `<machineset-name>` with an actual MachineSet name from the `oc get machineset` output. |
+    | `error: no objects passed to approve` | Ensure pending CSRs exist before running the approve command; check with `oc get csr | grep Pending` first. |
+    | `Error: unable to drain node "worker-1.example": cannot delete Pods not managed by ReplicationController, ReplicaSet, Job, DaemonSet or StatefulSet` | Add `--ignore-daemonsets --delete-emptydir-data` flags to the drain command if scaling down encounters pod eviction issues. |
 ## Add New MachineSet
 
 ```bash
@@ -227,8 +231,10 @@ worker-us-east-1c       3         3         3       3           8d
 ```
 
 !!! warning "Common errors"
-    **`error: failed to create new MachineSet: machinesets.machine.openshift.io "worker-us-east-1a" already exists`** — Change the metadata.name field in new-ms.yaml to a unique value that doesn't already exist in the cluster.
-    **`error validating data: data[spec.selector.matchLabels.machine.openshift.io/cluster-api-machineset]: Invalid value: "worker-us-east-1a": does not match spec.template.metadata.labels`** — Ensure the selector matchLabels and template metadata labels both reference the same MachineSet name.
+    | Error | Fix |
+    |---|---|
+    | `error: failed to create new MachineSet: machinesets.machine.openshift.io "worker-us-east-1a" already exists` | Change the metadata.name field in new-ms.yaml to a unique value that doesn't already exist in the cluster. |
+    | `error validating data: data[spec.selector.matchLabels.machine.openshift.io/cluster-api-machineset]: Invalid value: "worker-us-east-1a": does not match spec.template.metadata.labels` | Ensure the selector matchLabels and template metadata labels both reference the same MachineSet name. |
 ## Add Infra Node Role
 
 ```bash
@@ -277,8 +283,10 @@ configmap/cluster-monitoring-config created
 ```
 
 !!! warning "Common errors"
-    **`error: taint "node-role.kubernetes.io/infra=reserved:NoSchedule" must have one of the following effects: NoSchedule, PreferNoSchedule, NoExecute`** — Change the taint effect to `NoSchedule` (remove `reserved:` prefix, as it is not a valid taint key component).
-    **`Error from server (NotFound): ingresscontrollers.operator.openshift.io "default" not found`** — Verify the IngressController exists with `oc get ingresscontroller -n openshift-ingress-operator` and use the correct name.
+    | Error | Fix |
+    |---|---|
+    | `error: taint "node-role.kubernetes.io/infra=reserved:NoSchedule" must have one of the following effects: NoSchedule, PreferNoSchedule, NoExecute` | Change the taint effect to `NoSchedule` (remove `reserved:` prefix, as it is not a valid taint key component). |
+    | `Error from server (NotFound): ingresscontrollers.operator.openshift.io "default" not found` | Verify the IngressController exists with `oc get ingresscontroller -n openshift-ingress-operator` and use the correct name. |
 ## Scale Deployment and Rollout Management
 
 ```bash
@@ -326,9 +334,11 @@ deployment.apps/api-service restarted
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): deployments.apps "<name>" not found`** — Verify the deployment name is correct and exists in the specified namespace with `oc get deploy -n <ns>`.
-    **`error: the server doesn't have a resource type "deploy"`** — Use the full resource name `deployment` instead of the alias `deploy`, or ensure your OpenShift CLI version supports the shorthand.
-    **`Error from server (Forbidden): deployments.apps "<name>" is forbidden: User "<user>" cannot patch resource "deployments" in API group "apps"`** — Ensure your user has sufficient RBAC permissions to modify deployments in the target namespace.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): deployments.apps "<name>" not found` | Verify the deployment name is correct and exists in the specified namespace with `oc get deploy -n <ns>`. |
+    | `error: the server doesn't have a resource type "deploy"` | Use the full resource name `deployment` instead of the alias `deploy`, or ensure your OpenShift CLI version supports the shorthand. |
+    | `Error from server (Forbidden): deployments.apps "<name>" is forbidden: User "<user>" cannot patch resource "deployments" in API group "apps"` | Ensure your user has sufficient RBAC permissions to modify deployments in the target namespace. |
 ## Emergency etcd Member Recovery
 
 Use when one etcd member has failed but quorum (2 of 3) is still intact.
@@ -389,9 +399,11 @@ member 9c2e7f3a1d5b4c89: name=master-2 peerURLs=https://10.0.1.45:2380 clientURL
 ```
 
 !!! warning "Common errors"
-    **`Error: context deadline exceeded`** — Increase the timeout with `--command-timeout=30s` flag or verify etcd pod is fully running before executing etcdctl commands.
-    **`Error: certificate signed by unknown authority`** — Verify the cacert path is correct and matches the current etcd CA; check `/etc/kubernetes/static-pod-resources/etcd-certs/configmaps/etcd-serving-ca/` exists in the pod.
-    **`Error: etcdctl: command not found`** — The etcdctl binary is located at `/usr/bin/etcdctl` in the etcd pod; use the full path or check the pod image version supports the command.
+    | Error | Fix |
+    |---|---|
+    | `Error: context deadline exceeded` | Increase the timeout with `--command-timeout=30s` flag or verify etcd pod is fully running before executing etcdctl commands. |
+    | `Error: certificate signed by unknown authority` | Verify the cacert path is correct and matches the current etcd CA; check `/etc/kubernetes/static-pod-resources/etcd-certs/configmaps/etcd-serving-ca/` exists in the pod. |
+    | `Error: etcdctl: command not found` | The etcdctl binary is located at `/usr/bin/etcdctl` in the etcd pod; use the full path or check the pod image version supports the command. |
 ## Certificate Expiry Check
 
 ```bash
@@ -436,9 +448,11 @@ enddate=Jan 14 08:23:45 2026 GMT
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "secret" in API group ""`** — Verify the secret exists in the correct namespace with `oc get secrets -n openshift-config-managed | grep kube-controller-manager`.
-    **`unable to load certificate`** — Ensure the base64-decoded output is valid by checking the secret data field contains a properly formatted PEM certificate.
-    **`No resources found`** — Run `oc get csr` first to confirm pending CSRs exist before attempting approval with xargs.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "secret" in API group ""` | Verify the secret exists in the correct namespace with `oc get secrets -n openshift-config-managed | grep kube-controller-manager`. |
+    | `unable to load certificate` | Ensure the base64-decoded output is valid by checking the secret data field contains a properly formatted PEM certificate. |
+    | `No resources found` | Run `oc get csr` first to confirm pending CSRs exist before attempting approval with xargs. |
 ## Rotating kubeadmin
 
 Remove the kubeadmin emergency credential after configuring a proper identity provider with at least one cluster-admin user. This is a one-way operation.
@@ -476,9 +490,11 @@ Error from server (NotFound): secrets "kubeadmin" not found
 ```
 
 !!! warning "Common errors"
-    **`error: unable to read client-cert /home/user/.kube/config from disk`** — Ensure your kubeconfig file exists and is readable with `ls -la ~/.kube/config`.
-    **`Error from server (Forbidden): clusterrolebindings.rbac.authorization.k8s.io "cluster-admin" is forbidden: User "idp-admin" cannot get resource "clusterrolebindings"`** — Verify the IDP user has cluster-admin role assigned before attempting deletion by checking `oc describe clusterrolebinding cluster-admin`.
-    **`Error from server (Forbidden): secrets is forbidden: User "kubeadmin" cannot delete resource "secrets" in API group "" in the namespace "kube-system"`** — Log in with your IDP admin account instead of kubeadmin; kubeadmin cannot delete itself.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to read client-cert /home/user/.kube/config from disk` | Ensure your kubeconfig file exists and is readable with `ls -la ~/.kube/config`. |
+    | `Error from server (Forbidden): clusterrolebindings.rbac.authorization.k8s.io "cluster-admin" is forbidden: User "idp-admin" cannot get resource "clusterrolebindings"` | Verify the IDP user has cluster-admin role assigned before attempting deletion by checking `oc describe clusterrolebinding cluster-admin`. |
+    | `Error from server (Forbidden): secrets is forbidden: User "kubeadmin" cannot delete resource "secrets" in API group "" in the namespace "kube-system"` | Log in with your IDP admin account instead of kubeadmin; kubeadmin cannot delete itself. |
 ## Image Pull Secret Rotation
 
 ```bash
@@ -519,9 +535,11 @@ worker-gpu                                 2       1         0          1
 ```
 
 !!! warning "Common errors"
-    **`error: no objects matched "pull-secret"`** — Verify the secret exists in openshift-config namespace with `oc get secrets -n openshift-config | grep pull-secret`.
-    **`command not found: jq`** — Install jq on the bastion host with `sudo yum install -y jq` or use `python3 -m json.tool` instead.
-    **`base64: invalid input`** — Ensure the pull-secret file path is correct and the secret data is not corrupted; re-download from console.redhat.com.
+    | Error | Fix |
+    |---|---|
+    | `error: no objects matched "pull-secret"` | Verify the secret exists in openshift-config namespace with `oc get secrets -n openshift-config | grep pull-secret`. |
+    | `command not found: jq` | Install jq on the bastion host with `sudo yum install -y jq` or use `python3 -m json.tool` instead. |
+    | `base64: invalid input` | Ensure the pull-secret file path is correct and the secret data is not corrupted; re-download from console.redhat.com. |
 ## Certificate Rotation
 
 ```bash
@@ -558,8 +576,10 @@ certificatesigningrequest.certificates.k8s.io/csr-8k4m2 approved
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "secret" in group "core" in the namespace "openshift-kube-apiserver-operator"`** — Verify the secret name matches your cluster version with `oc get secret -n openshift-kube-apiserver-operator | grep signer`.
-    **`error: unable to decode base64`** — Ensure the certificate data exists in the secret; if the secret was recently deleted, restore it from etcd backup or re-run the cert rotation procedure.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "secret" in group "core" in the namespace "openshift-kube-apiserver-operator"` | Verify the secret name matches your cluster version with `oc get secret -n openshift-kube-apiserver-operator | grep signer`. |
+    | `error: unable to decode base64` | Ensure the certificate data exists in the secret; if the secret was recently deleted, restore it from etcd backup or re-run the cert rotation procedure. |
 ## Apply MachineConfig (OS Configuration)
 
 ```bash
@@ -598,9 +618,11 @@ master-node-03.ocp.example.com         Ready                    control-plane   
 ```
 
 !!! warning "Common errors"
-    **`error: unable to recognize "STDIN": no matches for kind "MachineConfig" in version "machineconfiguration.openshift.io/v1"`** — Verify the Machine Config Operator is installed with `oc get operator machine-config` and check your OpenShift version supports this API.
-    **`Error from server (BadRequest): error when creating "STDIN": MachineConfig.machineconfiguration.openshift.io "99-worker-custom-kernel-arg" is invalid: spec.kernelArguments: Invalid value: "hugepagesz=1G": kernel argument format must be key=value`** — Use proper kernel argument syntax; some arguments like hugepagesz require specific formatting or may need to be set via GRUB instead.
-    **`The MachineConfigPool "worker" is degraded`** — Check node status with `oc describe node <node-name>` and MCO logs with `oc logs -n openshift-machine-config-operator -l k8s-app=machine-config-operator -f` to identify why the config failed to apply.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to recognize "STDIN": no matches for kind "MachineConfig" in version "machineconfiguration.openshift.io/v1"` | Verify the Machine Config Operator is installed with `oc get operator machine-config` and check your OpenShift version supports this API. |
+    | `Error from server (BadRequest): error when creating "STDIN": MachineConfig.machineconfiguration.openshift.io "99-worker-custom-kernel-arg" is invalid: spec.kernelArguments: Invalid value: "hugepagesz=1G": kernel argument format must be key=value` | Use proper kernel argument syntax; some arguments like hugepagesz require specific formatting or may need to be set via GRUB instead. |
+    | `The MachineConfigPool "worker" is degraded` | Check node status with `oc describe node <node-name>` and MCO logs with `oc logs -n openshift-machine-config-operator -l k8s-app=machine-config-operator -f` to identify why the config failed to apply. |
 ---
 
 ## See also

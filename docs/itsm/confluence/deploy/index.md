@@ -134,9 +134,11 @@ postgres=# \q
 ```
 
 !!! warning "Common errors"
-    **`ERROR:  role "confluence" already exists`** — Drop the existing role with `DROP ROLE confluence;` before recreating it, or skip user creation if the role already exists.
-    **`ERROR:  database "confluence" already exists`** — Drop the existing database with `DROP DATABASE confluence;` before recreating it, or connect to an existing database and verify its configuration.
-    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed`** — Ensure PostgreSQL service is running with `sudo systemctl start postgresql` and the socket directory exists.
+    | Error | Fix |
+    |---|---|
+    | `ERROR:  role "confluence" already exists` | Drop the existing role with `DROP ROLE confluence;` before recreating it, or skip user creation if the role already exists. |
+    | `ERROR:  database "confluence" already exists` | Drop the existing database with `DROP DATABASE confluence;` before recreating it, or connect to an existing database and verify its configuration. |
+    | `psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed` | Ensure PostgreSQL service is running with `sudo systemctl start postgresql` and the socket directory exists. |
 **Run the Confluence setup wizard:**
 
 1. Open a browser to `http://<confluence-server>:8090`.
@@ -167,8 +169,10 @@ CATALINA_OPTS="-Xms2g -Xmx8g ${CATALINA_OPTS}"
 ```
 
 !!! warning "Common errors"
-    **`bash: CATALINA_OPTS: command not found`** — Ensure you're running this in a shell context (not pasting into a non-shell environment); use `export CATALINA_OPTS=...` if setting for child processes.
-    **`-bash: CATALINA_OPTS=-Xms2g: No such file or directory`** — Remove spaces around the `=` operator; the correct syntax is `CATALINA_OPTS="-Xms2g -Xmx8g ${CATALINA_OPTS}"` with no spaces.
+    | Error | Fix |
+    |---|---|
+    | `bash: CATALINA_OPTS: command not found` | Ensure you're running this in a shell context (not pasting into a non-shell environment); use `export CATALINA_OPTS=...` if setting for child processes. |
+    | `-bash: CATALINA_OPTS=-Xms2g: No such file or directory` | Remove spaces around the `=` operator; the correct syntax is `CATALINA_OPTS="-Xms2g -Xmx8g ${CATALINA_OPTS}"` with no spaces. |
 Restart: `sudo systemctl restart confluence`
 
 ---
@@ -293,9 +297,11 @@ WARNING: errors ignored on restore.  This may be related to the view definitions
 ```
 
 !!! warning "Common errors"
-    **`pg_dump: [archiver] could not execute query: ERROR:  relation "public.spaces" does not exist`** — Ensure the Confluence database is fully initialized and running before executing pg_dump, or use `pg_dump -U confluence -h localhost confluence 2>/dev/null | head -20` to verify connectivity first.
-    **`rsync: change_dir "/var/atlassian/application-data/confluence/" failed: Permission denied (13)`** — Run the rsync command with `sudo` or ensure the user running the script has read permissions on the Confluence home directory.
-    **`Job for confluence.service failed because the control process exited with error code.`** — Check Confluence logs with `sudo tail -100 /var/atlassian/confluence/logs/catalina.out` to identify startup failures, often caused by insufficient heap memory or port conflicts.
+    | Error | Fix |
+    |---|---|
+    | `pg_dump: [archiver] could not execute query: ERROR:  relation "public.spaces" does not exist` | Ensure the Confluence database is fully initialized and running before executing pg_dump, or use `pg_dump -U confluence -h localhost confluence 2>/dev/null | head -20` to verify connectivity first. |
+    | `rsync: change_dir "/var/atlassian/application-data/confluence/" failed: Permission denied (13)` | Run the rsync command with `sudo` or ensure the user running the script has read permissions on the Confluence home directory. |
+    | `Job for confluence.service failed because the control process exited with error code.` | Check Confluence logs with `sudo tail -100 /var/atlassian/confluence/logs/catalina.out` to identify startup failures, often caused by insufficient heap memory or port conflicts. |
 ---
 
 ## Validate Deployment
@@ -336,8 +342,10 @@ Date: Mon, 15 Jan 2024 09:45:03 GMT
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to localhost port 8090: Connection refused`** — Verify Confluence service is running with `sudo systemctl start confluence` and wait 30 seconds for the application to fully initialize.
-    **`grep: /opt/atlassian/confluence/logs/catalina.out: No such file or directory`** — Confirm the Confluence installation path is correct; use `find / -name catalina.out 2>/dev/null` to locate the actual log file path.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to localhost port 8090: Connection refused` | Verify Confluence service is running with `sudo systemctl start confluence` and wait 30 seconds for the application to fully initialize. |
+    | `grep: /opt/atlassian/confluence/logs/catalina.out: No such file or directory` | Confirm the Confluence installation path is correct; use `find / -name catalina.out 2>/dev/null` to locate the actual log file path. |
 **Web UI:**
 
 - Log in as admin — dashboard loads with the first space visible

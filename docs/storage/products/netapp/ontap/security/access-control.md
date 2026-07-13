@@ -90,9 +90,11 @@ security login create -username svc-monitor -application ssh -authmethod publick
 ```
 
 !!! warning "Common errors"
-    **`Error: "monitor-role" already exists.`** — Delete the existing role first with `security login role delete -role monitor-role` or use a different role name.
-    **`Error: Command directory "snapmirror show" not found.`** — Verify the exact command directory name using `security login role show -role admin` and use the correct command path (e.g., `snapmirror` instead of `snapmirror show`).
-    **`Error: User "svc-monitor" already exists.`** — Remove the existing user with `security login delete -username svc-monitor -application ssh` before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `Error: "monitor-role" already exists.` | Delete the existing role first with `security login role delete -role monitor-role` or use a different role name. |
+    | `Error: Command directory "snapmirror show" not found.` | Verify the exact command directory name using `security login role show -role admin` and use the correct command path (e.g., `snapmirror` instead of `snapmirror show`). |
+    | `Error: User "svc-monitor" already exists.` | Remove the existing user with `security login delete -username svc-monitor -application ssh` before recreating it. |
 ## User Login Management
 
 ```bash
@@ -163,9 +165,11 @@ cluster1::> security login unlock -username netops_user -vserver svm_prod
 ```
 
 !!! warning "Common errors"
-    **`Error: "netops_user" does not exist.`** — Verify the username exists with `security login show` before attempting to modify or delete it.
-    **`Error: Role "admin" does not exist for Vserver "svm_prod".`** — Use `security login role show -vserver svm_prod` to list valid roles and specify an existing role name.
-    **`Error: This operation is not permitted: User "admin" cannot be locked.`** — Built-in system accounts cannot be locked; only custom user accounts can be locked for security purposes.
+    | Error | Fix |
+    |---|---|
+    | `Error: "netops_user" does not exist.` | Verify the username exists with `security login show` before attempting to modify or delete it. |
+    | `Error: Role "admin" does not exist for Vserver "svm_prod".` | Use `security login role show -vserver svm_prod` to list valid roles and specify an existing role name. |
+    | `Error: This operation is not permitted: User "admin" cannot be locked.` | Built-in system accounts cannot be locked; only custom user accounts can be locked for security purposes. |
 ## Audit Logging
 
 **Admin action auditing**: All CLI, API, and System Manager operations by authenticated users are captured in the ONTAP audit log:
@@ -195,8 +199,10 @@ cluster1    admin     192.168.1.50    security ssl modify              success 2
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: security audit log show`** — Verify you are connected to a NetApp ONTAP cluster (not a different storage system) using `system node show`.
-    **`Error: Access denied. Insufficient privileges to view audit logs`** — Ensure your user account has admin or audit-admin role by running `security login show -user <username>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: security audit log show` | Verify you are connected to a NetApp ONTAP cluster (not a different storage system) using `system node show`. |
+    | `Error: Access denied. Insufficient privileges to view audit logs` | Ensure your user account has admin or audit-admin role by running `security login show -user <username>`. |
 **File access auditing via ONTAP Audit Framework**: Captures NFS and SMB file access events to an EVTX audit log on a designated NAS volume:
 
 ```bash
@@ -212,9 +218,11 @@ vserver audit enable -vserver <svm>
 ```
 
 !!! warning "Common errors"
-    **`Error: "audit" is not a recognized command.`** — Ensure you are connected to the ONTAP cluster management interface and have sufficient privileges; use `security audit` instead of `vserver audit` depending on your ONTAP version.
-    **`Error: destination "/audit_logs" does not exist`** — Create the audit log destination directory first using `volume create -vserver <svm> -volume audit_logs -aggregate <aggr> -size 10GB` or specify an existing path.
-    **`Error: vserver <svm> does not exist or access is denied`** — Verify the SVM name is correct and you have cluster administrator or SVM administrator credentials with audit permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: "audit" is not a recognized command.` | Ensure you are connected to the ONTAP cluster management interface and have sufficient privileges; use `security audit` instead of `vserver audit` depending on your ONTAP version. |
+    | `Error: destination "/audit_logs" does not exist` | Create the audit log destination directory first using `volume create -vserver <svm> -volume audit_logs -aggregate <aggr> -size 10GB` or specify an existing path. |
+    | `Error: vserver <svm> does not exist or access is denied` | Verify the SVM name is correct and you have cluster administrator or SVM administrator credentials with audit permissions. |
 **FPolicy for file access control and monitoring**: FPolicy intercepts file operations and can send them to an external FPolicy server (DLP, ransomware detection, archiving):
 
 ```bash
@@ -248,8 +256,10 @@ svm-dev         basic-monitoring     dev-scope       vol_dev_01
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: fpolicy`** — Ensure you are connected to a NetApp ONTAP cluster with admin privileges and run the command from the ONTAP CLI, not the local shell.
-    **`Error: This operation is not permitted: insufficient privileges`** — Verify your user account has the "security" or "admin" role assigned in ONTAP.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: fpolicy` | Ensure you are connected to a NetApp ONTAP cluster with admin privileges and run the command from the ONTAP CLI, not the local shell. |
+    | `Error: This operation is not permitted: insufficient privileges` | Verify your user account has the "security" or "admin" role assigned in ONTAP. |
 ---
 
 ## See also

@@ -203,9 +203,11 @@ Summary: All audit log checks passed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: NCC not found in PATH`** — Install NCC on the Nutanix cluster or add its installation directory to your PATH environment variable.
-    **`Error: Connection refused to Prism (10.x.x.x:9440)`** — Verify cluster connectivity and that Prism Central/Element is running with `curl -k https://<prism-ip>:9440/api/nutanix/v3/clusters`.
-    **`Error: Insufficient permissions for audit_log_check`** — Run the command with cluster admin credentials or ensure your user has the "Audit" role assigned in Prism.
+    | Error | Fix |
+    |---|---|
+    | `Error: NCC not found in PATH` | Install NCC on the Nutanix cluster or add its installation directory to your PATH environment variable. |
+    | `Error: Connection refused to Prism (10.x.x.x:9440)` | Verify cluster connectivity and that Prism Central/Element is running with `curl -k https://<prism-ip>:9440/api/nutanix/v3/clusters`. |
+    | `Error: Insufficient permissions for audit_log_check` | Run the command with cluster admin credentials or ensure your user has the "Audit" role assigned in Prism. |
 ---
 
 ## Verify Access Controls

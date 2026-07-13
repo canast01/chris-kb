@@ -109,9 +109,11 @@ grep "^$(date +%Y-%m-%d)" /opt/atlassian/jira/logs/atlassian-jira.log \
 ```
 
 !!! warning "Common errors"
-    **`grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory`** — Verify JIRA is installed at `/opt/atlassian/jira` or adjust the log path to match your installation directory.
-    **`grep: /opt/atlassian/jira/logs/catalina.out: Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the Tomcat catalina logs.
-    **`date: invalid date format`** — Ensure your system's `date` command supports `+%H` and `+%Y-%m-%d` format specifiers (standard on Linux/macOS).
+    | Error | Fix |
+    |---|---|
+    | `grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory` | Verify JIRA is installed at `/opt/atlassian/jira` or adjust the log path to match your installation directory. |
+    | `grep: /opt/atlassian/jira/logs/catalina.out: Permission denied` | Run the command with `sudo` or ensure your user has read permissions on the Tomcat catalina logs. |
+    | `date: invalid date format` | Ensure your system's `date` command supports `+%H` and `+%Y-%m-%d` format specifiers (standard on Linux/macOS). |
 ### Key Error Patterns
 
 | Pattern | Severity | Meaning |
@@ -172,9 +174,11 @@ Filesystem     Type     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`find: '/var/atlassian/application-data/jira/shared': No such file or directory`** — Verify JIRA installation path with `ls -la /var/atlassian/application-data/` and adjust the path if using a custom installation directory.
-    **`df: /var/atlassian: No such file or directory`** — Mount the shared storage volume or check that `/var/atlassian` exists; confirm with `mount | grep atlassian`.
-    **`du: cannot access '/opt/atlassian/jira/logs/': Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the logs directory with `sudo chmod o+rx /opt/atlassian/jira/logs/`.
+    | Error | Fix |
+    |---|---|
+    | `find: '/var/atlassian/application-data/jira/shared': No such file or directory` | Verify JIRA installation path with `ls -la /var/atlassian/application-data/` and adjust the path if using a custom installation directory. |
+    | `df: /var/atlassian: No such file or directory` | Mount the shared storage volume or check that `/var/atlassian` exists; confirm with `mount | grep atlassian`. |
+    | `du: cannot access '/opt/atlassian/jira/logs/': Permission denied` | Run the command with `sudo` or ensure your user has read permissions on the logs directory with `sudo chmod o+rx /opt/atlassian/jira/logs/`. |
 ### Disk Usage Thresholds
 
 | Mount Point | Warning | Critical | Action |
@@ -235,9 +239,11 @@ You are connected to database "jiradb" as user "jira" via socket in "/var/run/po
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "db.example.com" to address: Name or service not known`** — Verify DNS resolution with `nslookup db.example.com` or update the hostname in your connection string to match your actual database server.
-    **`psql: error: FATAL: password authentication failed for user "jira"`** — Confirm the jira user password is correct and check that the `.pgpass` file has the correct credentials in format `hostname:port:database:username:password`.
-    **`psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections`** — Increase PostgreSQL's `max_connections` parameter or terminate idle connections with `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state='idle' AND query_start < now() - interval '10 minutes'`.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "db.example.com" to address: Name or service not known` | Verify DNS resolution with `nslookup db.example.com` or update the hostname in your connection string to match your actual database server. |
+    | `psql: error: FATAL: password authentication failed for user "jira"` | Confirm the jira user password is correct and check that the `.pgpass` file has the correct credentials in format `hostname:port:database:username:password`. |
+    | `psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections` | Increase PostgreSQL's `max_connections` parameter or terminate idle connections with `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state='idle' AND query_start < now() - interval '10 minutes'`. |
 ### Connection Pool Health (via REST)
 
 ```bash
@@ -266,9 +272,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.company.internal port 443: Connection refused`** — Verify the JIRA_URL environment variable is correct and the JIRA instance is running and accessible from this host.
-    **`curl: (401) Unauthorized`** — Ensure JIRA_USER and JIRA_TOKEN environment variables are set correctly and the API token has not expired.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Check that the JIRA REST API endpoint is correct; the response may be HTML error page instead of JSON if the URL path is wrong.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.company.internal port 443: Connection refused` | Verify the JIRA_URL environment variable is correct and the JIRA instance is running and accessible from this host. |
+    | `curl: (401) Unauthorized` | Ensure JIRA_USER and JIRA_TOKEN environment variables are set correctly and the API token has not expired. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Check that the JIRA REST API endpoint is correct; the response may be HTML error page instead of JSON if the URL path is wrong. |
 Via UI: `Admin → System → Database → Connection Pool Monitoring`
 
 | Metric | Warning | Critical |
@@ -303,9 +311,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify JIRA_URL is correct and the Jira instance is running and accessible from your network.
-    **`{"errorMessages":["User does not have permission to administer Jira"]}`** — Ensure JIRA_USER has the Jira Administrators global permission or System Administrators group membership.
-    **`curl: (6) Could not resolve host: ${JIRA_URL}`** — Check that JIRA_URL environment variable is set and contains a valid hostname (e.g., `export JIRA_URL=https://jira.example.com`).
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify JIRA_URL is correct and the Jira instance is running and accessible from your network. |
+    | `{"errorMessages":["User does not have permission to administer Jira"]}` | Ensure JIRA_USER has the Jira Administrators global permission or System Administrators group membership. |
+    | `curl: (6) Could not resolve host: ${JIRA_URL}` | Check that JIRA_URL environment variable is set and contains a valid hostname (e.g., `export JIRA_URL=https://jira.example.com`). |
 Expected response when healthy:
 
 ```json
@@ -332,8 +342,10 @@ du -sh /var/atlassian/application-data/jira/caches/indexes/
 ```
 
 !!! warning "Common errors"
-    **`du: cannot access '/var/atlassian/application-data/jira/caches/indexes/': Permission denied`** — Run the command with `sudo` or as the `jira` user to access the directory.
-    **`du: cannot access '/var/atlassian/application-data/jira/caches/indexes/': No such file or directory`** — Verify the JIRA installation path matches your environment; check `$JIRA_HOME` or review the JIRA installation documentation for your version.
+    | Error | Fix |
+    |---|---|
+    | `du: cannot access '/var/atlassian/application-data/jira/caches/indexes/': Permission denied` | Run the command with `sudo` or as the `jira` user to access the directory. |
+    | `du: cannot access '/var/atlassian/application-data/jira/caches/indexes/': No such file or directory` | Verify the JIRA installation path matches your environment; check `$JIRA_HOME` or review the JIRA installation documentation for your version. |
 Signs of index problems:
 
 - JQL searches returning 0 results for known issues
@@ -365,9 +377,11 @@ node_id | node_name | status |      ip      |       last_heartbeat       | secon
 ```
 
 !!! warning "Common errors"
-    **`psql: error: FATAL: Ident authentication failed for user "jira"`** — Verify the `.pgpass` file exists at `~/.pgpass` with correct credentials and permissions (chmod 600), or use password prompt with `-W` flag.
-    **`psql: error: could not translate host name "db.example.com" to address: Name or service not known`** — Confirm the database hostname is correct and resolvable by running `nslookup db.example.com` or checking your `/etc/hosts` file.
-    **`ERROR: relation "clusternodeinfo" does not exist`** — Verify you are connected to the correct JIRA database and the table name matches your JIRA version (may be `jiraclusternode` in older versions).
+    | Error | Fix |
+    |---|---|
+    | `psql: error: FATAL: Ident authentication failed for user "jira"` | Verify the `.pgpass` file exists at `~/.pgpass` with correct credentials and permissions (chmod 600), or use password prompt with `-W` flag. |
+    | `psql: error: could not translate host name "db.example.com" to address: Name or service not known` | Confirm the database hostname is correct and resolvable by running `nslookup db.example.com` or checking your `/etc/hosts` file. |
+    | `ERROR: relation "clusternodeinfo" does not exist` | Verify you are connected to the correct JIRA database and the table name matches your JIRA version (may be `jiraclusternode` in older versions). |
 Via UI: `Admin → System → Clustering`
 
 All expected nodes should appear with:
@@ -414,9 +428,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify the JIRA_URL environment variable is correct and the Jira instance is running and accessible from your network.
-    **`401 Unauthorized`** — Ensure JIRA_USER and JIRA_TOKEN environment variables are set correctly and the API token has not expired.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Check that the Jira REST API endpoint is correct; the response may be HTML error page instead of JSON if the URL path is wrong.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify the JIRA_URL environment variable is correct and the Jira instance is running and accessible from your network. |
+    | `401 Unauthorized` | Ensure JIRA_USER and JIRA_TOKEN environment variables are set correctly and the API token has not expired. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Check that the Jira REST API endpoint is correct; the response may be HTML error page instead of JSON if the URL path is wrong. |
 ---
 
 ## 7. Key Metrics Reference
@@ -505,9 +521,11 @@ Health check passed: Wed Jan 15 02:30:45 UTC 2025
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "db.example.com" (10.42.8.15), port 5432 failed: Connection refused`** — Verify PostgreSQL is running on db.example.com and the network route is accessible; check `psql -h db.example.com -U jira -d jiradb -c "SELECT 1"` manually.
-    **`grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory`** — Confirm the Jira installation path and log file location match your deployment; adjust the path in the script or verify the Jira service is running.
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection timed out`** — Check that the JIRA_URL is correct, the Jira service is running, and firewall/network rules allow outbound HTTPS from the monitoring host.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "db.example.com" (10.42.8.15), port 5432 failed: Connection refused` | Verify PostgreSQL is running on db.example.com and the network route is accessible; check `psql -h db.example.com -U jira -d jiradb -c "SELECT 1"` manually. |
+    | `grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory` | Confirm the Jira installation path and log file location match your deployment; adjust the path in the script or verify the Jira service is running. |
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection timed out` | Check that the JIRA_URL is correct, the Jira service is running, and firewall/network rules allow outbound HTTPS from the monitoring host. |
 Schedule:
 
 ```cron

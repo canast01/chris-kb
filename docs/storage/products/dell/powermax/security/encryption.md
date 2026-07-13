@@ -87,9 +87,11 @@ Storage Resource Pool (SRP): SRP_002
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the Unisphere certificate into your system's CA bundle.
-    **`symcfg: Command not found`** — Install the EMC Solutions Enabler (SE) package or ensure the SYMCLI bin directory is in your PATH environment variable.
-    **`Authentication failed: Invalid credentials`** — Verify the admin username and password are correct and the account has not been locked after failed login attempts.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the Unisphere certificate into your system's CA bundle. |
+    | `symcfg: Command not found` | Install the EMC Solutions Enabler (SE) package or ensure the SYMCLI bin directory is in your PATH environment variable. |
+    | `Authentication failed: Invalid credentials` | Verify the admin username and password are correct and the account has not been locked after failed login attempts. |
 ### Key Management Modes
 
 | Mode | Description | Use Case |
@@ -163,9 +165,11 @@ Last Updated: 2024-01-15 14:35:18
 ```
 
 !!! warning "Common errors"
-    **`Error: Drive DA.10B.0 is in use by RAID group RG_001`** — Remove the drive from the RAID group or hot-spare pool using `symrdf` or Unisphere before initiating cryptographic erase.
-    **`Error: Insufficient privileges. User does not have StorageAdmin role`** — Request StorageAdmin or Administrator role assignment from your Unisphere security administrator.
-    **`Error: Physical drive DA.10B.0 not found in array <SID>`** — Verify the SID and drive name are correct using `sympd list -sid <SID>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Drive DA.10B.0 is in use by RAID group RG_001` | Remove the drive from the RAID group or hot-spare pool using `symrdf` or Unisphere before initiating cryptographic erase. |
+    | `Error: Insufficient privileges. User does not have StorageAdmin role` | Request StorageAdmin or Administrator role assignment from your Unisphere security administrator. |
+    | `Error: Physical drive DA.10B.0 not found in array <SID>` | Verify the SID and drive name are correct using `sympd list -sid <SID>`. |
 After cryptographic erase, drives can be returned to Dell or disposed of via standard e-waste without additional physical destruction. Document the erase event for compliance records.
 
 ## Data in Flight Encryption — SRDF Encryption
@@ -218,9 +222,11 @@ RDF Group ID: 001, Symmetrix ID: 000123456789012
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI ERROR: RDF group 001 is not in a valid state for this operation`** — Suspend the RDF group with `symrdf -sid <SID> -rdfg <rdfg_id> suspend -noprompt` before attempting to enable encryption.
-    **`SYMCLI ERROR: Remote array code level incompatible for encryption`** — Upgrade both the local and remote array to the same compatible firmware level before enabling SRDF encryption.
-    **`SYMCLI ERROR: Encryption key server unreachable or not configured`** — Configure a valid KMIP key server in Unisphere under System → Security → Key Servers before enabling encryption.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI ERROR: RDF group 001 is not in a valid state for this operation` | Suspend the RDF group with `symrdf -sid <SID> -rdfg <rdfg_id> suspend -noprompt` before attempting to enable encryption. |
+    | `SYMCLI ERROR: Remote array code level incompatible for encryption` | Upgrade both the local and remote array to the same compatible firmware level before enabling SRDF encryption. |
+    | `SYMCLI ERROR: Encryption key server unreachable or not configured` | Configure a valid KMIP key server in Unisphere under System → Security → Key Servers before enabling encryption. |
 ### SRDF Encryption Scope
 
 | SRDF Mode | Encryption Support | Notes |
@@ -296,9 +302,11 @@ Subject Alternative Name: DNS:unisphere-prod.lab.local, DNS:*.lab.local, IP:192.
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the Unisphere host is reachable and port 8443 is open with `telnet <unisphere-host> 8443` or check firewall rules.
-    **`unable to load client cert`** — Ensure you have network connectivity to the Unisphere host and it is not blocking the management host's IP address.
-    **`no protocols available`** — Confirm nmap is installed with `nmap --version` and that the ssl-enum-ciphers script is present in `/usr/share/nmap/scripts/`.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the Unisphere host is reachable and port 8443 is open with `telnet <unisphere-host> 8443` or check firewall rules. |
+    | `unable to load client cert` | Ensure you have network connectivity to the Unisphere host and it is not blocking the management host's IP address. |
+    | `no protocols available` | Confirm nmap is installed with `nmap --version` and that the ssl-enum-ciphers script is present in `/usr/share/nmap/scripts/`. |
 ### SYMAPI Daemon TLS (Solutions Enabler)
 
 The SYMAPI network daemon supports TLS for client-to-daemon communication. Enable in the `netcnfg` file:
@@ -322,9 +330,11 @@ Cipher    : ECDHE-RSA-AES256-GCM-SHA384
 ```
 
 !!! warning "Common errors"
-    **`netstat: command not found`** — Use `ss -tlnp | grep 2707` on modern Linux distributions where netstat is deprecated.
-    **`connect: Connection refused`** — Verify the SYMAPI daemon is running with `systemctl status symapid` and check that port 2707 is not blocked by firewall rules.
-    **`CERTIFICATE_VERIFY_FAILED`** — Add `-CAfile /var/symapi/config/ca.pem` to the openssl command or use `-insecure` flag for testing self-signed certificates.
+    | Error | Fix |
+    |---|---|
+    | `netstat: command not found` | Use `ss -tlnp | grep 2707` on modern Linux distributions where netstat is deprecated. |
+    | `connect: Connection refused` | Verify the SYMAPI daemon is running with `systemctl status symapid` and check that port 2707 is not blocked by firewall rules. |
+    | `CERTIFICATE_VERIFY_FAILED` | Add `-CAfile /var/symapi/config/ca.pem` to the openssl command or use `-insecure` flag for testing self-signed certificates. |
 ## Encryption Key Rotation
 
 Regular key rotation limits the exposure window of any compromised key.
@@ -364,9 +374,11 @@ Estimated Time Remaining: 18 minutes
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Ensure Symmetrix CLI tools are installed and the `$PATH` includes the Unisphere installation directory (typically `/opt/emc/SYMCLI/bin`).
-    **`No such Symmetrix: <SID>`** — Verify the SID value is correct and the array is discoverable by running `symcfg discover` first.
-    **`Key rotation already in progress`** — Wait for the current rotation to complete before initiating a new one, or contact EMC support if the rotation is stalled beyond the estimated time window.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Ensure Symmetrix CLI tools are installed and the `$PATH` includes the Unisphere installation directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `No such Symmetrix: <SID>` | Verify the SID value is correct and the array is discoverable by running `symcfg discover` first. |
+    | `Key rotation already in progress` | Wait for the current rotation to complete before initiating a new one, or contact EMC support if the rotation is stalled beyond the estimated time window. |
 ### External KMIP Key Rotation
 
 When using an external KMIP server, key rotation is initiated from the KMIP server's management interface:

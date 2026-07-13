@@ -126,9 +126,11 @@ ESTAB     0    0    192.168.1.50:2049    192.168.1.102:45632    users:(("nfsd",p
 ```
 
 !!! warning "Common errors"
-    **`grep: /proc/mounts: No such file or directory`** — Use `mount | grep nfs` instead, or verify /proc is mounted with `mount | grep proc`.
-    **`command not found: nfsstat`** — Install nfs-utils package with `apt-get install nfs-utils` (Debian/Ubuntu) or `yum install nfs-utils` (RHEL/CentOS).
-    **`cat: /proc/fs/nfsd/versions: No such file or directory`** — Ensure NFS server is running with `systemctl start nfs-server` and the nfsd module is loaded.
+    | Error | Fix |
+    |---|---|
+    | `grep: /proc/mounts: No such file or directory` | Use `mount | grep nfs` instead, or verify /proc is mounted with `mount | grep proc`. |
+    | `command not found: nfsstat` | Install nfs-utils package with `apt-get install nfs-utils` (Debian/Ubuntu) or `yum install nfs-utils` (RHEL/CentOS). |
+    | `cat: /proc/fs/nfsd/versions: No such file or directory` | Ensure NFS server is running with `systemctl start nfs-server` and the nfsd module is loaded. |
 ## Configuring NFS Version
 
 ### Mount — Client Side
@@ -152,9 +154,11 @@ mount -t nfs -o vers=3,tcp <server>:<export> /mnt/data
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: mount point /mnt/data does not exist`** — Create the mount point directory with `mkdir -p /mnt/data` before running the mount command.
-    **`mount.nfs: access denied by server while mounting <server>:<export>`** — Verify the NFS export is configured on the server and the client IP is listed in `/etc/exports`, then run `exportfs -ra` on the server.
-    **`mount.nfs: No such file or directory`** — Confirm the export path `<export>` exists on the server and the `<server>` hostname/IP is resolvable; check with `showmount -e <server>`.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: mount point /mnt/data does not exist` | Create the mount point directory with `mkdir -p /mnt/data` before running the mount command. |
+    | `mount.nfs: access denied by server while mounting <server>:<export>` | Verify the NFS export is configured on the server and the client IP is listed in `/etc/exports`, then run `exportfs -ra` on the server. |
+    | `mount.nfs: No such file or directory` | Confirm the export path `<export>` exists on the server and the `<server>` hostname/IP is resolvable; check with `showmount -e <server>`. |
 ### NFS Server — Enable/Disable Versions (RHEL/Rocky)
 
 ```bash
@@ -177,9 +181,11 @@ NFSD version support:
 ```
 
 !!! warning "Common errors"
-    **`systemctl restart nfs-server: Unit nfs-server.service not found.`** — Install the NFS server package with `apt install nfs-kernel-server` (Debian/Ubuntu) or `dnf install nfs-utils` (RHEL/CentOS).
-    **`cat: /proc/fs/nfsd/versions: No such file or directory`** — The nfsd module is not loaded; run `modprobe nfsd` before restarting the service.
-    **`Job for nfs-server.service failed because the control process exited with error code.`** — Check `/var/log/syslog` or `journalctl -xe` for syntax errors in `/etc/nfs.conf` (e.g., missing `[nfsd]` section header or invalid key names).
+    | Error | Fix |
+    |---|---|
+    | `systemctl restart nfs-server: Unit nfs-server.service not found.` | Install the NFS server package with `apt install nfs-kernel-server` (Debian/Ubuntu) or `dnf install nfs-utils` (RHEL/CentOS). |
+    | `cat: /proc/fs/nfsd/versions: No such file or directory` | The nfsd module is not loaded; run `modprobe nfsd` before restarting the service. |
+    | `Job for nfs-server.service failed because the control process exited with error code.` | Check `/var/log/syslog` or `journalctl -xe` for syntax errors in `/etc/nfs.conf` (e.g., missing `[nfsd]` section header or invalid key names). |
 ## NFSv4 ID Mapping
 
 NFSv4 maps file ownership using `user@domain` strings instead of raw UID/GID. Misconfigured ID mapping causes files to appear as `nobody`.
@@ -213,9 +219,11 @@ nfsidmap -c
 ```
 
 !!! warning "Common errors"
-    **`systemctl status rpcidmapd`** — Start the service with `systemctl start rpcidmapd` and enable it with `systemctl enable rpcidmapd`.
-    **`nfsidmap: error: unable to open /etc/idmapd.conf`** — Verify the idmapd.conf file exists at `/etc/idmapd.conf` and is readable by the rpcidmapd process.
-    **`Domain mismatch: server domain 'example.com' does not match client domain 'internal.local'`** — Ensure the Domain parameter in `/etc/idmapd.conf` is identical on both NFS client and server, then restart rpcidmapd with `systemctl restart rpcidmapd`.
+    | Error | Fix |
+    |---|---|
+    | `systemctl status rpcidmapd` | Start the service with `systemctl start rpcidmapd` and enable it with `systemctl enable rpcidmapd`. |
+    | `nfsidmap: error: unable to open /etc/idmapd.conf` | Verify the idmapd.conf file exists at `/etc/idmapd.conf` and is readable by the rpcidmapd process. |
+    | `Domain mismatch: server domain 'example.com' does not match client domain 'internal.local'` | Ensure the Domain parameter in `/etc/idmapd.conf` is identical on both NFS client and server, then restart rpcidmapd with `systemctl restart rpcidmapd`. |
 ## Common Version-Related Issues
 
 | Symptom | Cause | Check |

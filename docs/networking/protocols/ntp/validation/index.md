@@ -97,9 +97,11 @@ active
 ```
 
 !!! warning "Common errors"
-    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `systemctl start chronyd` and listening on localhost.
-    **`Stratum : 16` and `Reach : 0`** — Check network connectivity to NTP servers and verify firewall allows UDP port 123 outbound.
-    **`system time : X seconds fast/slow of NTP time` (consistently >1 second)** — Run `chronyc makestep` to force immediate clock correction, or check for hardware clock drift.
+    | Error | Fix |
+    |---|---|
+    | `506 Cannot talk to daemon` | Ensure chronyd is running with `systemctl start chronyd` and listening on localhost. |
+    | `Stratum : 16` and `Reach : 0` | Check network connectivity to NTP servers and verify firewall allows UDP port 123 outbound. |
+    | `system time : X seconds fast/slow of NTP time` (consistently >1 second)` | Run `chronyc makestep` to force immediate clock correction, or check for hardware clock drift. |
 ### Linux — systemd-timesyncd
 
 ```bash
@@ -133,8 +135,10 @@ Root distance: 47.619ms (max: 5s)
 ```
 
 !!! warning "Common errors"
-    **`Failed to get properties: Unit systemd-timesyncd.service not found.`** — Install systemd-timesyncd with `apt install systemd-timesyncd` or enable an alternative NTP daemon like chrony.
-    **`System clock synchronized: no`** — Wait 5+ minutes for NTP synchronization to complete, or manually sync with `ntpdate -s <ntp-server>` if available.
+    | Error | Fix |
+    |---|---|
+    | `Failed to get properties: Unit systemd-timesyncd.service not found.` | Install systemd-timesyncd with `apt install systemd-timesyncd` or enable an alternative NTP daemon like chrony. |
+    | `System clock synchronized: no` | Wait 5+ minutes for NTP synchronization to complete, or manually sync with `ntpdate -s <ntp-server>` if available. |
 ### Windows
 
 ```powershell
@@ -194,9 +198,11 @@ Root dispersion is 16.234 msec, Peer dispersion is 2.891 msec
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the exact command syntax for your device OS version; use `show ntp ?` to list available subcommands.
-    **`NTP is disabled`** — Enable NTP with `ntp enable` (Arista) or `ntp enable` (Cisco) and configure at least one server.
-    **`Clock is unsynchronized, Stratum 16`** — Verify NTP server reachability with `ping <ntp-server>` and check that the reach value is non-zero in the associations table.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the exact command syntax for your device OS version; use `show ntp ?` to list available subcommands. |
+    | `NTP is disabled` | Enable NTP with `ntp enable` (Arista) or `ntp enable` (Cisco) and configure at least one server. |
+    | `Clock is unsynchronized, Stratum 16` | Verify NTP server reachability with `ping <ntp-server>` and check that the reach value is non-zero in the associations table. |
 ## Post-Config Convergence
 
 After adding NTP sources, allow up to 5 minutes for chrony to:
@@ -222,8 +228,10 @@ System time : 0.000000000 seconds fast of NTP time
 ```
 
 !!! warning "Common errors"
-    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `systemctl start chronyd` and listening on the local socket.
-    **`System time : [large offset] seconds fast of NTP time`** — The makestep command failed to correct the offset; check that chronyd has NTP sources available with `chronyc sources` and verify network connectivity.
+    | Error | Fix |
+    |---|---|
+    | `506 Cannot talk to daemon` | Ensure chronyd is running with `systemctl start chronyd` and listening on the local socket. |
+    | `System time : [large offset] seconds fast of NTP time` | The makestep command failed to correct the offset; check that chronyd has NTP sources available with `chronyc sources` and verify network connectivity. |
 ## Validating NTP on Multiple Hosts
 
 ```bash
@@ -276,9 +284,11 @@ server10.example.com: Leap status     : Normal
 ```
 
 !!! warning "Common errors"
-    **`500 EEE Command failed`** — Verify chrony daemon is running on the target host with `systemctl status chronyd` and restart if necessary.
-    **`ssh: connect to host server04.example.com port 22: Connection timed out`** — Check network connectivity and SSH access to the host with `ping server04.example.com` and verify firewall rules allow port 22.
-    **`Permission denied (publickey,password)`** — Ensure your SSH key is deployed to the target host or add `-u <username>` to the Ansible command if using a non-default user account.
+    | Error | Fix |
+    |---|---|
+    | `500 EEE Command failed` | Verify chrony daemon is running on the target host with `systemctl status chronyd` and restart if necessary. |
+    | `ssh: connect to host server04.example.com port 22: Connection timed out` | Check network connectivity and SSH access to the host with `ping server04.example.com` and verify firewall rules allow port 22. |
+    | `Permission denied (publickey,password)` | Ensure your SSH key is deployed to the target host or add `-u <username>` to the Ansible command if using a non-default user account. |
 ## Common Validation Failures
 
 | Failure | Cause | Fix |

@@ -68,8 +68,10 @@ array-dr-01                   6.3.8.998         FA-x70r2
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Install the Pure CLI tools or add the installation directory to your PATH environment variable.
-    **`Error: Unable to connect to array. Connection refused`** — Verify the array management IP is reachable and purecli credentials are configured in ~/.purerc or via environment variables.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Install the Pure CLI tools or add the installation directory to your PATH environment variable. |
+    | `Error: Unable to connect to array. Connection refused` | Verify the array management IP is reachable and purecli credentials are configured in ~/.purerc or via environment variables. |
 ## Drive Replacement
 
 Drives are monitored by Pure1 and replaced proactively before failure:
@@ -101,8 +103,10 @@ drive.5             SN-PUR-2852-F6Q8    1.92TB    degraded  45°C
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Verify the Pure Storage CLI is installed and the PATH includes its bin directory, or use the full path to the purecli executable.
-    **`Error: Authentication failed. Invalid credentials.`** — Ensure your Pure Storage array credentials are configured in ~/.purerc or set PURE_API_TOKEN environment variable with a valid token.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Verify the Pure Storage CLI is installed and the PATH includes its bin directory, or use the full path to the purecli executable. |
+    | `Error: Authentication failed. Invalid credentials.` | Ensure your Pure Storage array credentials are configured in ~/.purerc or set PURE_API_TOKEN environment variable with a valid token. |
 ## Controller Refresh (Evergreen//Forever)
 
 Under Evergreen//Forever, controllers are refreshed when new generations are available:

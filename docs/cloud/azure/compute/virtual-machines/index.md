@@ -95,9 +95,11 @@ az vm create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group exists in your subscription with `az group list` and use the correct `--resource-group` name.
-    **`InvalidImageName`** — Use `az vm image list --output table` to find valid image names for your region, as image availability varies by location.
-    **`PrivateIPAddressNotAvailable`** — Ensure the static IP address 10.0.1.10 is within the subnet range and not already assigned to another resource.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group exists in your subscription with `az group list` and use the correct `--resource-group` name. |
+    | `InvalidImageName` | Use `az vm image list --output table` to find valid image names for your region, as image availability varies by location. |
+    | `PrivateIPAddressNotAvailable` | Ensure the static IP address 10.0.1.10 is within the subnet range and not already assigned to another resource. |
 ---
 
 ## VM Sizing
@@ -143,9 +145,11 @@ Standard_E4s_v3        4                 32768        65536
 ```
 
 !!! warning "Common errors"
-    **`The resource group '<rg>' could not be found.`** — Verify the resource group name with `az group list` and ensure you're using the correct subscription with `az account set --subscription <id>`.
-    **`The virtual machine '<vm-name>' does not exist in the resource group '<rg>'.`** — Confirm the VM name with `az vm list --resource-group <rg>` and check that the VM is in the correct resource group.
-    **`Operation failed with status: 'Conflict'. Details: The VM '<vm-name>' is currently in a running state. Please deallocate the VM before resizing.`** — Stop the VM first with `az vm deallocate --resource-group <rg> --name <vm-name>`, then retry the resize command.
+    | Error | Fix |
+    |---|---|
+    | `The resource group '<rg>' could not be found.` | Verify the resource group name with `az group list` and ensure you're using the correct subscription with `az account set --subscription <id>`. |
+    | `The virtual machine '<vm-name>' does not exist in the resource group '<rg>'.` | Confirm the VM name with `az vm list --resource-group <rg>` and check that the VM is in the correct resource group. |
+    | `Operation failed with status: 'Conflict'. Details: The VM '<vm-name>' is currently in a running state. Please deallocate the VM before resizing.` | Stop the VM first with `az vm deallocate --resource-group <rg> --name <vm-name>`, then retry the resize command. |
 Common VM size families:
 
 | Family | Use Case | Example SKUs |
@@ -219,9 +223,11 @@ web-vm-03
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound : Resource group '<rg>' could not be found.`** — Verify the resource group name with `az group list` and use the correct spelling and subscription context.
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Confirm the VM name exists in the resource group using `az vm list --resource-group <rg>`.
-    **`AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/start/action' over scope '<resource-id>'.`** — Ensure your Azure account has Contributor or Virtual Machine Contributor role on the resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound : Resource group '<rg>' could not be found.` | Verify the resource group name with `az group list` and use the correct spelling and subscription context. |
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Confirm the VM name exists in the resource group using `az vm list --resource-group <rg>`. |
+    | `AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/start/action' over scope '<resource-id>'.` | Ensure your Azure account has Contributor or Virtual Machine Contributor role on the resource group. |
 ---
 
 ## Disk Operations
@@ -278,8 +284,10 @@ datadisk-backup-512   2      512       Premium_LRS
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the resource group name and VM name are correct with `az vm list --resource-group <rg>`.
-    **`The disk '<disk-name>' cannot be attached because it is already managed by another virtual machine.`** — Detach the disk from its current VM first using `az vm disk detach` before attaching it to a different VM.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the resource group name and VM name are correct with `az vm list --resource-group <rg>`. |
+    | `The disk '<disk-name>' cannot be attached because it is already managed by another virtual machine.` | Detach the disk from its current VM first using `az vm disk detach` before attaching it to a different VM. |
 ---
 
 ## Networking
@@ -334,9 +342,11 @@ vm-prod-01        203.0.113.45         10.0.1.42
 ```
 
 !!! warning "Common errors"
-    **`The NIC 'nic-name' does not exist in the resource group 'rg'.`** — Verify the NIC name with `az network nic list --resource-group <rg>` and use the correct name.
-    **`The public IP address 'pip-name' does not exist in the resource group 'rg'.`** — Create the public IP first with `az network public-ip create --resource-group <rg> --name <pip-name>` or use an existing one.
-    **`(ResourceNotFound) No virtual machines found with name 'vm-name' in resource group 'rg'.`** — Confirm the VM name and resource group are correct using `az vm list --resource-group <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `The NIC 'nic-name' does not exist in the resource group 'rg'.` | Verify the NIC name with `az network nic list --resource-group <rg>` and use the correct name. |
+    | `The public IP address 'pip-name' does not exist in the resource group 'rg'.` | Create the public IP first with `az network public-ip create --resource-group <rg> --name <pip-name>` or use an existing one. |
+    | `(ResourceNotFound) No virtual machines found with name 'vm-name' in resource group 'rg'.` | Confirm the VM name and resource group are correct using `az vm list --resource-group <rg>`. |
 ---
 
 ## Running Commands on a VM
@@ -380,8 +390,10 @@ az vm run-command invoke \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the resource group name and VM name are correct using `az vm list --resource-group <rg>`.
-    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/runCommands/action' over scope '<subscription-id>'.`** — Ensure your Azure account has the Virtual Machine Contributor role or higher on the target VM or resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the resource group name and VM name are correct using `az vm list --resource-group <rg>`. |
+    | `AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/runCommands/action' over scope '<subscription-id>'.` | Ensure your Azure account has the Virtual Machine Contributor role or higher on the target VM or resource group. |
 ---
 
 ## Monitoring and Health
@@ -432,6 +444,8 @@ staging-app-01    staging-rg         Standard_D4s   VM running   centralus
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure you have access to the subscription.
-    **`ResourceNotFound`** — Confirm the VM name is correct and exists in the specified resource group using `az vm list --resource-group <rg>`.
-    **`AuthorizationFailed`** — Ensure your Azure CLI session is authenticated with `az login` and has Reader or higher permissions on the target subscription.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure you have access to the subscription. |
+    | `ResourceNotFound` | Confirm the VM name is correct and exists in the specified resource group using `az vm list --resource-group <rg>`. |
+    | `AuthorizationFailed` | Ensure your Azure CLI session is authenticated with `az login` and has Reader or higher permissions on the target subscription. |

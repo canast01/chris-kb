@@ -105,9 +105,11 @@ vol_dr_replica      svm-dr      ks-standard
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already in the command) or import the cluster's CA certificate into the collector VM's trust store.
-    **`qos policy-group show: command not found`** — Ensure you are logged into the ONTAP cluster CLI via SSH, not running the command on the collector VM.
-    **`Connection refused` or `No route to host`** — Verify the cluster management LIF IP is correct and reachable from the collector VM using `ping` or `nc -zv <cluster-mgmt-lif> 443`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already in the command) or import the cluster's CA certificate into the collector VM's trust store. |
+    | `qos policy-group show: command not found` | Ensure you are logged into the ONTAP cluster CLI via SSH, not running the command on the collector VM. |
+    | `Connection refused` or `No route to host` | Verify the cluster management LIF IP is correct and reachable from the collector VM using `ping` or `nc -zv <cluster-mgmt-lif> 443`. |
 ## Change Readiness
 
 - [ ] Keystone Collector is running and last reported telemetry within the expected interval
@@ -206,8 +208,10 @@ qos_burst_premium            vol_snapshot_reserve 720               2.4         
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: volume show`** — Ensure you are connected to the NetApp cluster management interface (SSH to the cluster IP) and not a local shell.
-    **`Error: No matching Vserver found`** — Verify that Vservers exist on the cluster using `vserver show` and confirm the cluster is in healthy state.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: volume show` | Ensure you are connected to the NetApp cluster management interface (SSH to the cluster IP) and not a local shell. |
+    | `Error: No matching Vserver found` | Verify that Vservers exist on the cluster using `vserver show` and confirm the cluster is in healthy state. |
 ### Reporting Discrepancies
 
 ![Reporting Discrepancies](../../../../../assets/keystone-proc-reporting-discrepancies.svg)

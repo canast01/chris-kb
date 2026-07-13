@@ -90,9 +90,11 @@ Phone Home Status — FlashBlade (FB-2000):
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Install the Pure Storage Python SDK with `pip install purestorage` or ensure the Pure CLI is in your PATH.
-    **`Error: Unable to connect to array at 192.168.1.100`** — Verify network connectivity to the FlashArray management IP and confirm credentials are set via `purecli login` or environment variables.
-    **`Error: Phone Home is disabled on this array`** — Enable phone-home on the array via the management console or use `purecli phone-home enable` if supported by your Pure OS version.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Install the Pure Storage Python SDK with `pip install purestorage` or ensure the Pure CLI is in your PATH. |
+    | `Error: Unable to connect to array at 192.168.1.100` | Verify network connectivity to the FlashArray management IP and confirm credentials are set via `purecli login` or environment variables. |
+    | `Error: Phone Home is disabled on this array` | Enable phone-home on the array via the management console or use `purecli phone-home enable` if supported by your Pure OS version. |
 ## Role-Based Access in Pure1
 
 Pure1 supports multiple roles:
@@ -148,9 +150,11 @@ curl -H "Authorization: Bearer <token>" \
 ```
 
 !!! warning "Common errors"
-    **`{"error_description":"invalid_client","error":"invalid_grant"}`** — Verify that client_id and client_secret are correct and URL-encoded if they contain special characters.
-    **`{"error_description":"The access token expired","error":"invalid_token"}`** — Regenerate a fresh token using the POST /oauth2/1.0/token endpoint before making API calls.
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Add `-k` flag to bypass certificate verification in test environments, or ensure your system's CA bundle is up to date.
+    | Error | Fix |
+    |---|---|
+    | `{"error_description":"invalid_client","error":"invalid_grant"}` | Verify that client_id and client_secret are correct and URL-encoded if they contain special characters. |
+    | `{"error_description":"The access token expired","error":"invalid_token"}` | Regenerate a fresh token using the POST /oauth2/1.0/token endpoint before making API calls. |
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Add `-k` flag to bypass certificate verification in test environments, or ensure your system's CA bundle is up to date. |
 ---
 
 ## Verify

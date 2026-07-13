@@ -74,9 +74,11 @@ myERCircuit    myRG             eastus      Succeeded            NotProvisioned
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Network/expressRouteCircuits/myERCircuit' under resource group 'myRG' was not found.`** — Verify the resource group name and circuit name match exactly, and ensure the circuit was successfully created in the previous step.
-    **`InvalidSkuFamily: The SKU family 'MeteredData' is not valid for the specified tier 'Standard'.`** — Use `--sku-family MeteredData` with `--sku-tier Standard`, or switch to `--sku-family UnlimitedData` if required.
-    **`ServiceProviderNotFound: The service provider 'Equinix' is not available at peering location 'Washington DC'.`** — Run `az network express-route list-service-providers` to verify available providers and peering locations in your region.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Network/expressRouteCircuits/myERCircuit' under resource group 'myRG' was not found.` | Verify the resource group name and circuit name match exactly, and ensure the circuit was successfully created in the previous step. |
+    | `InvalidSkuFamily: The SKU family 'MeteredData' is not valid for the specified tier 'Standard'.` | Use `--sku-family MeteredData` with `--sku-tier Standard`, or switch to `--sku-family UnlimitedData` if required. |
+    | `ServiceProviderNotFound: The service provider 'Equinix' is not available at peering location 'Washington DC'.` | Run `az network express-route list-service-providers` to verify available providers and peering locations in your region. |
 After creation, share the `ServiceKey` with your connectivity provider so they can configure the physical circuit. The `CircuitProvisioningState` moves from `NotProvisioned` to `Provisioned` when the provider completes their side.
 
 ## Peering Types
@@ -148,9 +150,11 @@ az network express-route peering show \
 ```
 
 !!! warning "Common errors"
-    **`InvalidArgumentsUsage: unrecognized arguments: --advertised-public-prefixes`** — Use `--advertised-public-prefixes 203.0.113.0/24` only with MicrosoftPeering; remove it from AzurePrivatePeering commands.
-    **`ResourceNotFound: The Resource 'Microsoft.Network/expressRouteCircuits/myERCircuit' under resource group 'myRG' was not found.`** — Verify the circuit name and resource group exist by running `az network express-route circuit list --resource-group myRG`.
-    **`BadRequest: Peering AzurePrivatePeering already exists on circuit myERCircuit.`** — Delete the existing peering with `az network express-route peering delete --circuit-name myERCircuit --resource-group myRG --name AzurePrivatePeering` before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `InvalidArgumentsUsage: unrecognized arguments: --advertised-public-prefixes` | Use `--advertised-public-prefixes 203.0.113.0/24` only with MicrosoftPeering; remove it from AzurePrivatePeering commands. |
+    | `ResourceNotFound: The Resource 'Microsoft.Network/expressRouteCircuits/myERCircuit' under resource group 'myRG' was not found.` | Verify the circuit name and resource group exist by running `az network express-route circuit list --resource-group myRG`. |
+    | `BadRequest: Peering AzurePrivatePeering already exists on circuit myERCircuit.` | Delete the existing peering with `az network express-route peering delete --circuit-name myERCircuit --resource-group myRG --name AzurePrivatePeering` before recreating it. |
 ## Connecting to a Virtual Network Gateway
 
 ```bash
@@ -257,8 +261,10 @@ TimeStamp                     Name                Aggregation    Value
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Network/expressRouteCircuits/myERCircuit' under resource group 'myRG' was not found.`** — Verify the circuit name and resource group name are correct using `az network express-route list --resource-group myRG`.
-    **`AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Network/expressRouteCircuits/read' over scope '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Network/expressRouteCircuits/myERCircuit'.`** — Ensure your Azure account has at least Reader role on the resource group or subscription.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Network/expressRouteCircuits/myERCircuit' under resource group 'myRG' was not found.` | Verify the circuit name and resource group name are correct using `az network express-route list --resource-group myRG`. |
+    | `AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Network/expressRouteCircuits/read' over scope '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Network/expressRouteCircuits/myERCircuit'.` | Ensure your Azure account has at least Reader role on the resource group or subscription. |
 ## SKU and Bandwidth Options
 
 | SKU Tier   | Geographic Scope                    |
@@ -325,5 +331,7 @@ az monitor diagnostic-settings create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Network/expressRouteCircuits/myERCircuit' could not be found.`** — Verify the subscription ID, resource group name, and ExpressRoute circuit name are correct and exist in your subscription.
-    **`InvalidResourceId: The provided resource ID is invalid or the resource does not have permission to send diagnostics to the workspace.`** — Ensure the Log Analytics workspace exists and the ExpressRoute circuit's managed identity has the "Log Analytics Contributor" role on the workspace resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Network/expressRouteCircuits/myERCircuit' could not be found.` | Verify the subscription ID, resource group name, and ExpressRoute circuit name are correct and exist in your subscription. |
+    | `InvalidResourceId: The provided resource ID is invalid or the resource does not have permission to send diagnostics to the workspace.` | Ensure the Log Analytics workspace exists and the ExpressRoute circuit's managed identity has the "Log Analytics Contributor" role on the workspace resource group. |

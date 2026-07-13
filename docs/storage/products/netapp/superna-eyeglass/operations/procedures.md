@@ -116,9 +116,11 @@ Address: 192.168.1.51
 ```
 
 !!! warning "Common errors"
-    **`egcli: command not found`** — Ensure Eyeglass CLI is installed and added to PATH, or use the full path `/opt/eyeglass/bin/egcli`.
-    **`SERVFAIL`** — Verify the internal DNS server IP is reachable and the zone delegation NS records point to the correct Eyeglass or DR cluster IP address.
-    **`connection timed out; no servers could be reached`** — Confirm the DNS server specified in the dig/nslookup command is accessible and listening on port 53.
+    | Error | Fix |
+    |---|---|
+    | `egcli: command not found` | Ensure Eyeglass CLI is installed and added to PATH, or use the full path `/opt/eyeglass/bin/egcli`. |
+    | `SERVFAIL` | Verify the internal DNS server IP is reachable and the zone delegation NS records point to the correct Eyeglass or DR cluster IP address. |
+    | `connection timed out; no servers could be reached` | Confirm the DNS server specified in the dig/nslookup command is accessible and listening on port 53. |
 ### Failover State Reference
 
 ![Failover State Reference](../../../../../assets/superna-eyeglass-proc-failover-state-reference.svg)
@@ -151,9 +153,11 @@ Next Scheduled Sync: 2024-01-15 15:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy '<policy_name>' not found`** — Verify the policy name with `egcli drpolicy list` and use the exact policy name from the output.
-    **`Error: Connection refused to Eyeglass server at <ip>:8443`** — Ensure the Eyeglass management server is running and reachable; check network connectivity and firewall rules.
-    **`Error: Authentication failed - invalid credentials`** — Verify your Eyeglass API credentials are configured correctly in `~/.egcli/config` or via environment variables.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy '<policy_name>' not found` | Verify the policy name with `egcli drpolicy list` and use the exact policy name from the output. |
+    | `Error: Connection refused to Eyeglass server at <ip>:8443` | Ensure the Eyeglass management server is running and reachable; check network connectivity and firewall rules. |
+    | `Error: Authentication failed - invalid credentials` | Verify your Eyeglass API credentials are configured correctly in `~/.egcli/config` or via environment variables. |
 ---
 
 ## Failback
@@ -236,9 +240,11 @@ Eyeglass DR Preflight Check: PASS
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the PowerScale OneFS CLI tools are installed and the PATH includes the OneFS bin directory, or run commands directly on the cluster.
-    **`Error: Unable to connect to cluster <production-cluster>`** — Verify the cluster hostname/IP is correct, network connectivity exists, and credentials are configured in the Eyeglass instance.
-    **`Error: SyncIQ service is not running`** — Start the SyncIQ service with `isi sync service start` on the production cluster before proceeding with DR validation.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the PowerScale OneFS CLI tools are installed and the PATH includes the OneFS bin directory, or run commands directly on the cluster. |
+    | `Error: Unable to connect to cluster <production-cluster>` | Verify the cluster hostname/IP is correct, network connectivity exists, and credentials are configured in the Eyeglass instance. |
+    | `Error: SyncIQ service is not running` | Start the SyncIQ service with `isi sync service start` on the production cluster before proceeding with DR validation. |
 ### Initiating Failback via Eyeglass
 
 ![Initiating Failback via Eyeglass](../../../../../assets/superna-eyeglass-proc-initiating-failback-via-eyeglass.svg)
@@ -289,9 +295,11 @@ Last Status Update: 2024-01-15 14:53:22 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy 'backup-archive-policy' is not in FAILED_OVER state`** — Verify the policy is actually in a failed-over state using `egcli drpolicy status --all` before attempting failback.
-    **`Error: Authentication failed. Invalid credentials for user 'admin'`** — Ensure you are logged into Eyeglass with valid credentials using `egcli login` before running DR commands.
-    **`Error: Failback operation already in progress for policy 'backup-archive-policy'`** — Wait for the current failback to complete or cancel it with `egcli drfailback cancel --policy <policy_name>` before retrying.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy 'backup-archive-policy' is not in FAILED_OVER state` | Verify the policy is actually in a failed-over state using `egcli drpolicy status --all` before attempting failback. |
+    | `Error: Authentication failed. Invalid credentials for user 'admin'` | Ensure you are logged into Eyeglass with valid credentials using `egcli login` before running DR commands. |
+    | `Error: Failback operation already in progress for policy 'backup-archive-policy'` | Wait for the current failback to complete or cancel it with `egcli drfailback cancel --policy <policy_name>` before retrying. |
 ### Reversing SyncIQ Replication
 
 ![Reversing SyncIQ Replication](../../../../../assets/superna-eyeglass-proc-reversing-synciq-replication.svg)
@@ -347,9 +355,11 @@ ID     Policy Name              State      Progress  Duration
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy '<reverse_policy_name>' not found`** — Verify the exact policy name with `isi sync policies list` and ensure it exists on the DR cluster.
-    **`Error: Job start failed: Policy is disabled`** — Enable the reverse policy first using `isi sync policies modify <reverse_policy_name> --enabled=true`.
-    **`Error: Connection refused to cluster 192.168.10.45`** — Confirm network connectivity and cluster credentials are configured correctly with `isi status`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy '<reverse_policy_name>' not found` | Verify the exact policy name with `isi sync policies list` and ensure it exists on the DR cluster. |
+    | `Error: Job start failed: Policy is disabled` | Enable the reverse policy first using `isi sync policies modify <reverse_policy_name> --enabled=true`. |
+    | `Error: Connection refused to cluster 192.168.10.45` | Confirm network connectivity and cluster credentials are configured correctly with `isi status`. |
 ### Access Zone Cutover Back to Production
 
 ![Access Zone Cutover Back to Production](../../../../../assets/superna-eyeglass-proc-access-zone-cutover-back-to-production.svg)
@@ -411,9 +421,11 @@ backup_share            /ifs/zone-prod-02/backups       DOMAIN\Backup: Change
 ```
 
 !!! warning "Common errors"
-    **`[ERROR] Access zone 'zone-prod-01' is already ACTIVE on cluster 'prod-cluster-01'`** — Verify the zone status with `egcli accesszone status --cluster <cluster> --zone <zone_name>` before attempting re-activation.
-    **`SERVFAIL: query response code returned by server, possible causes: NXDOMAIN, SERVFAIL`** — Confirm DNS delegation records point to the correct production VIP pool and that the DNS server is reachable and responding.
-    **`[ERROR] Permission denied: User does not have privileges to list NFS exports`** — Run the command with appropriate admin credentials or ensure your user account has read access to the ISI cluster configuration.
+    | Error | Fix |
+    |---|---|
+    | `[ERROR] Access zone 'zone-prod-01' is already ACTIVE on cluster 'prod-cluster-01'` | Verify the zone status with `egcli accesszone status --cluster <cluster> --zone <zone_name>` before attempting re-activation. |
+    | `SERVFAIL: query response code returned by server, possible causes: NXDOMAIN, SERVFAIL` | Confirm DNS delegation records point to the correct production VIP pool and that the DNS server is reachable and responding. |
+    | `[ERROR] Permission denied: User does not have privileges to list NFS exports` | Run the command with appropriate admin credentials or ensure your user account has read access to the ISI cluster configuration. |
 ### Post-Failback Validation
 
 ![Post-Failback Validation](../../../../../assets/superna-eyeglass-proc-post-failback-validation.svg)
@@ -451,8 +463,10 @@ Policy 'dr-to-prod-sync-policy' disabled successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to cluster <production-cluster>`** — Verify the cluster hostname/IP is correct and network connectivity exists from the Eyeglass appliance to the production cluster.
-    **`Error: Policy '<reverse_policy_name>' not found`** — Confirm the exact policy name using `isi sync policies list` and ensure you are connected to the correct cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to cluster <production-cluster>` | Verify the cluster hostname/IP is correct and network connectivity exists from the Eyeglass appliance to the production cluster. |
+    | `Error: Policy '<reverse_policy_name>' not found` | Confirm the exact policy name using `isi sync policies list` and ensure you are connected to the correct cluster. |
 ---
 
 ## Configure Replication Job Schedule
@@ -489,8 +503,10 @@ job-20240113-091203       hourly_sync          COMPLETED   100%      2024-01-13T
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy '<policy_name>' not found`** — Verify the policy name exists by running `isi sync policies list` and use the exact policy name.
-    **`Error: Job already running for policy '<policy_name>'`** — Wait for the current job to complete or cancel it with `isi sync jobs cancel <job_id>` before starting a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy '<policy_name>' not found` | Verify the policy name exists by running `isi sync policies list` and use the exact policy name. |
+    | `Error: Job already running for policy '<policy_name>'` | Wait for the current job to complete or cancel it with `isi sync jobs cancel <job_id>` before starting a new one. |
 7. In the Eyeglass web UI (`https://<eyeglass-ip>:8443`), navigate to **SyncIQ > Policies** and confirm the updated policy appears with the correct RPO display.
 8. Verify Eyeglass RPO compliance status turns green within one replication cycle.
 
@@ -536,9 +552,11 @@ Preflight check completed successfully. Ready for disaster recovery operations.
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy '<policy_name>' not found in configuration`** — Verify the policy name exists by running `egcli policy list` and use the exact policy name.
-    **`Error: Unable to connect to NetApp cluster at <ip>: Connection refused`** — Confirm the cluster management IP is reachable and the Eyeglass service account has network access to port 443.
-    **`Error: Insufficient permissions for user 'eyeglass_user': Access denied`** — Ensure the Eyeglass service account has the required ONTAP roles (backup-admin or equivalent) assigned in System Manager.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy '<policy_name>' not found in configuration` | Verify the policy name exists by running `egcli policy list` and use the exact policy name. |
+    | `Error: Unable to connect to NetApp cluster at <ip>: Connection refused` | Confirm the cluster management IP is reachable and the Eyeglass service account has network access to port 443. |
+    | `Error: Insufficient permissions for user 'eyeglass_user': Access denied` | Ensure the Eyeglass service account has the required ONTAP roles (backup-admin or equivalent) assigned in System Manager. |
 6. After all checks pass, the policy is marked **DR Ready** in the Eyeglass DR Assistant dashboard — document the test result and timestamp in the DR log.
 7. No production traffic is interrupted during this procedure.
 
@@ -571,8 +589,10 @@ ID    Name                  Source Cluster        Target Cluster        State   
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to Eyeglass cluster at 192.168.1.50:8443`** — Verify Eyeglass management IP is reachable and the service is running with `systemctl status eyeglass-api`.
-    **`Error: Authentication failed - invalid credentials`** — Ensure your Eyeglass API credentials are set in environment variables or config file with `egcli config set`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to Eyeglass cluster at 192.168.1.50:8443` | Verify Eyeglass management IP is reachable and the service is running with `systemctl status eyeglass-api`. |
+    | `Error: Authentication failed - invalid credentials` | Ensure your Eyeglass API credentials are set in environment variables or config file with `egcli config set`. |
 2. Schedule a maintenance window and notify all stakeholders.
 3. Quiesce production NFS/SMB clients where possible — coordinate with application teams to stop active writes.
 4. In the Eyeglass web UI, navigate to **DR Assistant > DR Policies** and select the policy to fail over.
@@ -618,9 +638,11 @@ HA Status: ENABLED
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host 192.168.1.50 port 22: Connection timed out`** — Verify network connectivity and that the management IP is correct; check firewall rules allow SSH on port 22.
-    **`Permission denied (publickey,password)`** — Ensure the admin user credentials are correct and SSH key is properly configured or use password authentication.
-    **`isi: command not found`** — Confirm you are connecting to an Isilon cluster (not a generic Linux host) and that the OneFS CLI is available on the target system.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host 192.168.1.50 port 22: Connection timed out` | Verify network connectivity and that the management IP is correct; check firewall rules allow SSH on port 22. |
+    | `Permission denied (publickey,password)` | Ensure the admin user credentials are correct and SSH key is properly configured or use password authentication. |
+    | `isi: command not found` | Confirm you are connecting to an Isilon cluster (not a generic Linux host) and that the OneFS CLI is available on the target system. |
 2. Declare a DR event in the ITSM tool and notify the SAN/Storage team lead.
 3. Log in to the Eyeglass web UI on the **DR cluster's Eyeglass instance** (if Eyeglass is deployed at DR) or the same Eyeglass appliance if it remains reachable.
 4. Navigate to **DR Assistant > DR Policies**, select the affected policy, and note the last successful replication timestamp — this is the effective RPO.
@@ -651,9 +673,11 @@ Proceed with caution.
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy '<policy_name>' not found`** — Verify the policy name exists by running `egcli drpolicy list` and use the exact policy name.
-    **`Error: Source cluster is unreachable`** — Confirm network connectivity to the source cluster and verify cluster credentials are valid.
-    **`Error: Failover already in progress for this policy`** — Wait for the current failover to complete or use `egcli drfailover --cancel --policy <policy_name>` to abort it first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy '<policy_name>' not found` | Verify the policy name exists by running `egcli drpolicy list` and use the exact policy name. |
+    | `Error: Source cluster is unreachable` | Confirm network connectivity to the source cluster and verify cluster credentials are valid. |
+    | `Error: Failover already in progress for this policy` | Wait for the current failover to complete or use `egcli drfailover --cancel --policy <policy_name>` to abort it first. |
 6. Eyeglass breaks the SyncIQ mirror, activates DR access zones, reconfigures NFS/SMB, and updates DNS.
 7. Monitor failover job completion in **DR Assistant > Active Jobs**; escalate to Superna Support if the job stalls.
 8. Validate client access at DR, document the declared RPO (last replication timestamp), and begin planning failback once production is restored.
@@ -704,9 +728,11 @@ Overall Status: READY FOR DEPLOYMENT
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the PATH includes the OneFS bin directory, or run commands directly on the cluster.
-    **`Error: Unable to connect to cluster <production-cluster>`** — Verify the cluster hostname/IP is correct, network connectivity exists, and the Eyeglass service account has appropriate credentials configured.
-    **`Error: SyncIQ license not found or expired`** — Confirm a valid SyncIQ license is installed on the cluster using `isi license list`.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the PATH includes the OneFS bin directory, or run commands directly on the cluster. |
+    | `Error: Unable to connect to cluster <production-cluster>` | Verify the cluster hostname/IP is correct, network connectivity exists, and the Eyeglass service account has appropriate credentials configured. |
+    | `Error: SyncIQ license not found or expired` | Confirm a valid SyncIQ license is installed on the cluster using `isi license list`. |
 2. In the Eyeglass web UI, navigate to **DR Assistant > DR Policies** and confirm the policy state is **Failed Over**.
 3. Click **Failback** and review the pre-failback checklist displayed by Eyeglass — confirm all items pass.
 4. Eyeglass creates a reverse SyncIQ policy (DR → production) to sync changes made during the DR period:
@@ -739,9 +765,11 @@ e5f6a7b8-c9d0-1234-ef12-345678901234      cluster-01          cluster-02        
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the PATH includes the OneFS bin directory, or run commands directly on the cluster.
-    **`Error: Unable to connect to cluster`** — Verify network connectivity to the cluster and that your credentials are valid using `isi auth status`.
-    **`Error: Permission denied`** — Confirm your user account has the required sync job monitoring privileges; request elevated permissions from your cluster administrator.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the PATH includes the OneFS bin directory, or run commands directly on the cluster. |
+    | `Error: Unable to connect to cluster` | Verify network connectivity to the cluster and that your credentials are valid using `isi auth status`. |
+    | `Error: Permission denied` | Confirm your user account has the required sync job monitoring privileges; request elevated permissions from your cluster administrator. |
 5. Wait for the reverse SyncIQ job to complete — do not initiate access zone cutback until all data is synced.
 6. Once sync is complete, click **Complete Failback** in Eyeglass — this re-activates access zones on production, remaps NFS/SMB shares, and returns DNS to production SmartConnect VIP pool.
 7. Validate production client access: mount a test share, confirm SMB connectivity, write a test file.
@@ -765,8 +793,10 @@ Started: 2024-01-15T09:42:33
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy 'reverse_policy_name' not found`** — Verify the exact policy name with `isi sync policies list` and use the correct spelling.
-    **`Error: Job already running for policy 'normal_policy_name'`** — Wait for the existing job to complete or use `isi sync jobs cancel <job_id>` before starting a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy 'reverse_policy_name' not found` | Verify the exact policy name with `isi sync policies list` and use the correct spelling. |
+    | `Error: Job already running for policy 'normal_policy_name'` | Wait for the existing job to complete or use `isi sync jobs cancel <job_id>` before starting a new one. |
 ---
 
 ## Update Cluster Credentials in Eyeglass
@@ -799,9 +829,11 @@ Total Policies: 6 | Active: 4 | Inactive: 1 | Disabled: 1
 ```
 
 !!! warning "Common errors"
-    **`egcli: command not found`** — Ensure Superna Eyeglass CLI is installed and the installation directory is in your PATH environment variable.
-    **`Error: Unable to connect to Eyeglass server at <hostname>:8443`** — Verify the Eyeglass appliance is running and reachable, and check your network connectivity and firewall rules.
-    **`Error: Authentication failed - Invalid credentials`** — Confirm your Eyeglass API credentials are correct by running `egcli login` and re-authenticating.
+    | Error | Fix |
+    |---|---|
+    | `egcli: command not found` | Ensure Superna Eyeglass CLI is installed and the installation directory is in your PATH environment variable. |
+    | `Error: Unable to connect to Eyeglass server at <hostname>:8443` | Verify the Eyeglass appliance is running and reachable, and check your network connectivity and firewall rules. |
+    | `Error: Authentication failed - Invalid credentials` | Confirm your Eyeglass API credentials are correct by running `egcli login` and re-authenticating. |
 7. Run a preflight check on each DR policy to confirm end-to-end access is intact after the credential update:
 
 ```bash
@@ -825,9 +857,11 @@ Preflight check completed successfully. Policy is ready for disaster recovery te
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy 'backup_prod_daily' not found`** — Verify the policy name exists with `egcli policy list` and use the exact name.
-    **`Error: Unable to connect to NetApp cluster (timeout after 30s)`** — Confirm network connectivity to the cluster and that firewall rules permit Eyeglass access on port 443.
-    **`Error: Insufficient permissions for service account 'eyeglass_svc'`** — Grant the service account the required ONTAP roles using `security login role create` with appropriate privileges.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy 'backup_prod_daily' not found` | Verify the policy name exists with `egcli policy list` and use the exact name. |
+    | `Error: Unable to connect to NetApp cluster (timeout after 30s)` | Confirm network connectivity to the cluster and that firewall rules permit Eyeglass access on port 443. |
+    | `Error: Insufficient permissions for service account 'eyeglass_svc'` | Grant the service account the required ONTAP roles using `security login role create` with appropriate privileges. |
 8. Update the credentials record in the team password manager and document the rotation date in the change log.
 
 ---

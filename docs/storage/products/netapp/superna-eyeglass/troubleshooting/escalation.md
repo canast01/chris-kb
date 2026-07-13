@@ -113,8 +113,10 @@ superna-bundle-20250115-143245.zip                    100%  287MB   8.2MB/s   00
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and that the admin user exists; check firewall rules allowing port 22 to the Eyeglass appliance.
-    **`scp: /opt/superna/support/superna-bundle-*.zip: No such file or directory`** — Confirm the bundle generation completed successfully by running `igls support bundle` again and check the exact filename in `/opt/superna/support/` using SSH.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and that the admin user exists; check firewall rules allowing port 22 to the Eyeglass appliance. |
+    | `scp: /opt/superna/support/superna-bundle-*.zip: No such file or directory` | Confirm the bundle generation completed successfully by running `igls support bundle` again and check the exact filename in `/opt/superna/support/` using SSH. |
 ### 2. Collect igls status output
 
 ```bash
@@ -206,9 +208,11 @@ Status report saved to /tmp/eyeglass-status-2025-01-15-143401.txt
 ```
 
 !!! warning "Common errors"
-    **`igls: command not found`** — Verify Eyeglass is running with `systemctl status eyeglass` and confirm you're logged into the correct appliance hostname.
-    **`Connection refused` or `ssh: connect to host <eyeglass-hostname> port 22: Connection refused`** — Confirm the Eyeglass appliance IP/hostname is reachable with `ping` and that SSH is enabled in Eyeglass admin console.
-    **`Permission denied (publickey,password)`** — Verify your SSH credentials and that the admin user exists; reset the password via
+    | Error | Fix |
+    |---|---|
+    | `igls: command not found` | Verify Eyeglass is running with `systemctl status eyeglass` and confirm you're logged into the correct appliance hostname. |
+    | `Connection refused` or `ssh: connect to host <eyeglass-hostname> port 22: Connection refused` | Confirm the Eyeglass appliance IP/hostname is reachable with `ping` and that SSH is enabled in Eyeglass admin console. |
+    | `Permission denied (publickey,password)` | Verify your SSH credentials and that the admin user exists; reset the password via |
 ### 3. Collect PowerScale SyncIQ status (from both clusters)
 
 ```bash
@@ -302,9 +306,11 @@ Status: MATCHED
 ```
 
 !!! warning "Common errors"
-    **`igls: command not found`** — Verify Eyeglass is installed and /opt/superna/bin is in your PATH, or use the full path /opt/superna/bin/igls.
-    **`License Status: UNLICENSED`** — Confirm the UUID in the Superna licensing portal matches the UUID shown in Eyeglass Admin UI → About, then re-register the license.
-    **`isi: command not found`** — Run this command directly on an OneFS cluster node (SSH to the cluster), not from the Eyeglass appliance.
+    | Error | Fix |
+    |---|---|
+    | `igls: command not found` | Verify Eyeglass is installed and /opt/superna/bin is in your PATH, or use the full path /opt/superna/bin/igls. |
+    | `License Status: UNLICENSED` | Confirm the UUID in the Superna licensing portal matches the UUID shown in Eyeglass Admin UI → About, then re-register the license. |
+    | `isi: command not found` | Run this command directly on an OneFS cluster node (SSH to the cluster), not from the Eyeglass appliance. |
 ### 5. Write the timeline
 
 ```text
@@ -469,9 +475,11 @@ ID      Policy                  State       Progress    Bytes Transferred
 ```
 
 !!! warning "Common errors"
-    **`[ERROR] Failed to replicate access zone 'az-finance' — connection timeout`** — Verify network connectivity between Eyeglass and secondary cluster; check firewall rules for port 8080 and 3218.
-    **`Connection refused to secondary cluster dr-isilon-02:8080`** — Confirm the secondary cluster is online and accessible; run `ping dr-isilon-02` and `isi status` on the target cluster.
-    **`SyncIQ job 'policy-backup-daily' exceeded retry limit`** — Check the SyncIQ job logs on PowerScale with `isi sync jobs view <job-id>` and resolve the underlying replication failure before manual
+    | Error | Fix |
+    |---|---|
+    | `[ERROR] Failed to replicate access zone 'az-finance' — connection timeout` | Verify network connectivity between Eyeglass and secondary cluster; check firewall rules for port 8080 and 3218. |
+    | `Connection refused to secondary cluster dr-isilon-02:8080` | Confirm the secondary cluster is online and accessible; run `ping dr-isilon-02` and `isi status` on the target cluster. |
+    | `SyncIQ job 'policy-backup-daily' exceeded retry limit` | Check the SyncIQ job logs on PowerScale with `isi sync jobs view <job-id>` and resolve the underlying replication failure before manual |
 ---
 
 ## License Issues

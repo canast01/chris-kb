@@ -169,9 +169,11 @@ web01.prod.internal | SUCCESS => {
 ```
 
 !!! warning "Common errors"
-    **`ERROR! Syntax Error while loading YAML.`** — Review the file at the line number provided in the error message for indentation, quotes, or bracket mismatches.
-    **`[WARNING]: Unable to parse /etc/ansible/inventory/ as an inventory source`** — Verify the inventory path exists and is readable, or specify individual inventory files with `-i inventory/hosts.ini`.
-    **`fatal: [web01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure the SSH key specified in ansible.cfg or `-e ansible_private_key_file=` is deployed to the target host's authorized_keys.
+    | Error | Fix |
+    |---|---|
+    | `ERROR! Syntax Error while loading YAML.` | Review the file at the line number provided in the error message for indentation, quotes, or bracket mismatches. |
+    | `[WARNING]: Unable to parse /etc/ansible/inventory/ as an inventory source` | Verify the inventory path exists and is readable, or specify individual inventory files with `-i inventory/hosts.ini`. |
+    | `fatal: [web01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Ensure the SSH key specified in ansible.cfg or `-e ansible_private_key_file=` is deployed to the target host's authorized_keys. |
 ---
 
 ## Step 2 — Test connectivity
@@ -224,9 +226,11 @@ Connection to web01.example.com 22 port [tcp/ssh] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the private key path matches the public key on the target and check file permissions with `ls -la ~/.ssh/ansible_ed25519` (should be 600).
-    **`web01: name or service not known`** — Add the target hostname and IP to `/etc/hosts` or ensure DNS resolution is working with `nslookup web01.example.com`.
-    **`ansible@web01: Permission denied`** — Confirm the ansible user exists on the target with `id ansible` and that the SSH key is in `/home/ansible/.ssh/authorized_keys`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the private key path matches the public key on the target and check file permissions with `ls -la ~/.ssh/ansible_ed25519` (should be 600). |
+    | `web01: name or service not known` | Add the target hostname and IP to `/etc/hosts` or ensure DNS resolution is working with `nslookup web01.example.com`. |
+    | `ansible@web01: Permission denied` | Confirm the ansible user exists on the target with `id ansible` and that the SSH key is in `/home/ansible/.ssh/authorized_keys`. |
 ---
 
 ## Step 3 — Increase verbosity
@@ -278,9 +282,11 @@ db-01.prod.local           : ok=1    changed=0    unreachable=0    failed=0    s
 ```
 
 !!! warning "Common errors"
-    **`[Errno 2] No such file or directory: b'inventory/'`** — Verify the inventory directory path exists and contains valid inventory files (hosts, hosts.yml, or similar).
-    **`fatal: [web-01.prod.local]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure SSH keys are properly configured in `~/.ssh/` and the remote user has passwordless sudo access, or add `-u <username> -k` flags.
-    **`ERROR! the playbook: site.yml could not be found`** — Confirm site.yml exists in the current working directory or provide the full path to the playbook file.
+    | Error | Fix |
+    |---|---|
+    | `[Errno 2] No such file or directory: b'inventory/'` | Verify the inventory directory path exists and contains valid inventory files (hosts, hosts.yml, or similar). |
+    | `fatal: [web-01.prod.local]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Ensure SSH keys are properly configured in `~/.ssh/` and the remote user has passwordless sudo access, or add `-u <username> -k` flags. |
+    | `ERROR! the playbook: site.yml could not be found` | Confirm site.yml exists in the current working directory or provide the full path to the playbook file. |
 ---
 
 ## Step 4 — Inspect variables and facts
@@ -371,9 +377,11 @@ Playbook run took 0.45s
 ```
 
 !!! warning "Common errors"
-    **`[WARNING]: Unable to parse /etc/ansible/hosts as an inventory source`** — Verify the inventory path with `-i inventory/` matches your directory structure and contains valid YAML or INI syntax.
-    **`fatal: [web01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure SSH key is loaded (`ssh-add ~/.ssh/id_rsa`) and the remote user has passwordless sudo configured or use `-u username -k` flags.
-    **`ERROR! The inventory directory /tmp/ansible_facts/ does not exist`** — Create the cache directory first with `mkdir -p /tmp/ansible_facts/` before running playbooks with fact caching enabled.
+    | Error | Fix |
+    |---|---|
+    | `[WARNING]: Unable to parse /etc/ansible/hosts as an inventory source` | Verify the inventory path with `-i inventory/` matches your directory structure and contains valid YAML or INI syntax. |
+    | `fatal: [web01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Ensure SSH key is loaded (`ssh-add ~/.ssh/id_rsa`) and the remote user has passwordless sudo configured or use `-u username -k` flags. |
+    | `ERROR! The inventory directory /tmp/ansible_facts/ does not exist` | Create the cache directory first with `mkdir -p /tmp/ansible_facts/` before running playbooks with fact caching enabled. |
 ---
 
 ## Step 5 — Dry run and diff
@@ -427,9 +435,11 @@ db01                       : ok=2    changed=0    unreachable=0    failed=0    s
 ```
 
 !!! warning "Common errors"
-    **`[WARNING]: Unable to parse /etc/ansible/inventory/ as an inventory source`** — Verify the inventory path exists and contains valid YAML/INI files with proper syntax.
-    **`fatal: [web01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure SSH keys are configured correctly and the ansible_user has passwordless access to target hosts.
-    **`ERROR! the playbook: site.yml could not be found`** — Confirm the playbook filename and path are correct relative to your current working directory.
+    | Error | Fix |
+    |---|---|
+    | `[WARNING]: Unable to parse /etc/ansible/inventory/ as an inventory source` | Verify the inventory path exists and contains valid YAML/INI files with proper syntax. |
+    | `fatal: [web01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Ensure SSH keys are configured correctly and the ansible_user has passwordless access to target hosts. |
+    | `ERROR! the playbook: site.yml could not be found` | Confirm the playbook filename and path are correct relative to your current working directory. |
 ---
 
 ## Step 6 — AWX / AAP job diagnostics
@@ -492,9 +502,11 @@ awx-task-5d8c9f2b-7k4m2 awx-task [2024-01-15 14:33:02,789] awx.main.tasks INFO T
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or configure proper SSL certificates on the AWX server.
-    **`{"detail":"Invalid token","status":401}`** — Verify the AWX_TOKEN is correct and has not expired by regenerating it in the AWX UI.
-    **`error: the server doesn't have a resource type "logs"`** — Ensure kubectl is connected to the correct cluster and the awx namespace exists with `kubectl get ns awx`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl or configure proper SSL certificates on the AWX server. |
+    | `{"detail":"Invalid token","status":401}` | Verify the AWX_TOKEN is correct and has not expired by regenerating it in the AWX UI. |
+    | `error: the server doesn't have a resource type "logs"` | Ensure kubectl is connected to the correct cluster and the awx namespace exists with `kubectl get ns awx`. |
 ---
 
 ## Step 7 — Collect full debug output for escalation
@@ -553,9 +565,11 @@ INJECT_FACTS_AS_VARS(/etc/ansible/ansible.cfg) = False
 ```
 
 !!! warning "Common errors"
-    **`[Errno 2] No such file or directory: 'inventory/'`** — Verify the inventory path is correct and relative to your working directory, or use an absolute path like `/opt/ansible/inventory/`.
-    **`fatal: [web01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure the SSH key specified in `ansible_ssh_private_key_file` is readable and the public key is authorized on the target host.
-    **`ERROR! the playbook: site.yml could not be found`** — Confirm `site.yml` exists in the current directory and check for typos in the filename.
+    | Error | Fix |
+    |---|---|
+    | `[Errno 2] No such file or directory: 'inventory/'` | Verify the inventory path is correct and relative to your working directory, or use an absolute path like `/opt/ansible/inventory/`. |
+    | `fatal: [web01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Ensure the SSH key specified in `ansible_ssh_private_key_file` is readable and the public key is authorized on the target host. |
+    | `ERROR! the playbook: site.yml could not be found` | Confirm `site.yml` exists in the current directory and check for typos in the filename. |
 ---
 
 ## Common error patterns
@@ -604,9 +618,11 @@ UNREACHABLE - host2.staging.internal: Failed to connect via SSH (port 22)
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/ansible/ansible.log: No such file or directory`** — Ensure the log_path directive is uncommented in ansible.cfg and the /var/log/ansible/ directory exists with write permissions.
-    **`Permission denied`** — Run the grep command with sudo or verify that the current user has read access to /var/log/ansible/ansible.log.
-    **`command not found: uniq`** — Install the coreutils package (apt-get install coreutils on Debian/Ubuntu or yum install coreutils on RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/ansible/ansible.log: No such file or directory` | Ensure the log_path directive is uncommented in ansible.cfg and the /var/log/ansible/ directory exists with write permissions. |
+    | `Permission denied` | Run the grep command with sudo or verify that the current user has read access to /var/log/ansible/ansible.log. |
+    | `command not found: uniq` | Install the coreutils package (apt-get install coreutils on Debian/Ubuntu or yum install coreutils on RHEL/CentOS). |
 ---
 
 ## See also

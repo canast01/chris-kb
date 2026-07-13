@@ -220,9 +220,11 @@ Report saved to: ontap_health_report_20240115_143218.txt
 ```
 
 !!! warning "Common errors"
-    **`Can't open perl script "ontap_health.pl": No such file or directory`** — Ensure the script is in the current directory or provide the full path to the script file.
-    **`Can't locate NetApp/Ontapi.pm in @INC`** — Install required Perl modules using `cpan install NetApp::Ontapi` or verify the ONTAP Perl toolkit is installed.
-    **`Connection refused at ontap_health.pl line 45`** — Verify the ONTAP cluster management IP is reachable and the credentials in the script configuration are correct.
+    | Error | Fix |
+    |---|---|
+    | `Can't open perl script "ontap_health.pl": No such file or directory` | Ensure the script is in the current directory or provide the full path to the script file. |
+    | `Can't locate NetApp/Ontapi.pm in @INC` | Install required Perl modules using `cpan install NetApp::Ontapi` or verify the ONTAP Perl toolkit is installed. |
+    | `Connection refused at ontap_health.pl line 45` | Verify the ONTAP cluster management IP is reachable and the credentials in the script configuration are correct. |
 **What you should see**
 
 The script connects to your ONTAP cluster and prints a line for each check (broken disks, aggregate capacity, HA failover, health alerts). Each line is prefixed with `[OK]`, `[WARNING]`, or `[CRITICAL]`. At the end it prints `Overall status: OK` (or WARNING/CRITICAL).
@@ -329,9 +331,11 @@ ERROR: sshpass required. Install with: brew install hudochenkov/sshpass/sshpass
 ```
 
 !!! warning "Common errors"
-    **`sshpass: command not found`** — Install sshpass using your package manager (brew, apt, yum) or download from https://sourceforge.net/projects/sshpass/.
-    **`Permission denied (publickey,password).`** — Verify ONTAP_USER and ONTAP_PASS are correct, and that SSH password authentication is enabled on the ONTAP cluster.
-    **`bash: lag_to_minutes: command not found`** — Ensure the script is executed with `bash ./sm_lag.sh` rather than `sh ./sm_lag.sh`, as the function uses bash-specific syntax.
+    | Error | Fix |
+    |---|---|
+    | `sshpass: command not found` | Install sshpass using your package manager (brew, apt, yum) or download from https://sourceforge.net/projects/sshpass/. |
+    | `Permission denied (publickey,password).` | Verify ONTAP_USER and ONTAP_PASS are correct, and that SSH password authentication is enabled on the ONTAP cluster. |
+    | `bash: lag_to_minutes: command not found` | Ensure the script is executed with `bash ./sm_lag.sh` rather than `sh ./sm_lag.sh`, as the function uses bash-specific syntax. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -393,9 +397,11 @@ Monitoring interval: 300 seconds
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to 192.168.1.100 (Connection refused)`** — Verify the ONTAP cluster IP is reachable and SSH is enabled on port 22 with `ssh -v admin@192.168.1.100`.
-    **`Authentication failed for user admin`** — Confirm the ONTAP_PASS is correct and the admin account has SSH access enabled in ONTAP.
-    **`sm_lag.sh: No such file or directory`** — Ensure the script exists in ~/Desktop or provide the full path to the script location.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to 192.168.1.100 (Connection refused)` | Verify the ONTAP cluster IP is reachable and SSH is enabled on port 22 with `ssh -v admin@192.168.1.100`. |
+    | `Authentication failed for user admin` | Confirm the ONTAP_PASS is correct and the admin account has SSH access enabled in ONTAP. |
+    | `sm_lag.sh: No such file or directory` | Ensure the script exists in ~/Desktop or provide the full path to the script location. |
 **What you should see**
 
 A table listing every SnapMirror relationship with columns for lag time in minutes, whether it is healthy, and a colour-coded status (green OK, yellow WARNING, red CRITICAL). A summary line at the bottom shows the overall worst status.
@@ -585,8 +591,10 @@ Successfully installed paramiko-3.4.0 tabulate-0.9.0 bcrypt-4.1.2 pynacl-1.5.0
 ```
 
 !!! warning "Common errors"
-    **`pip: command not found`** — Install pip with `apt-get install python3-pip` (Debian/Ubuntu) or `yum install python3-pip` (RHEL/CentOS).
-    **`Command 'set' not found`** — Use `export` instead of `set` in bash; the correct syntax is `export ONTAP_HOST=192.168.1.100`.
+    | Error | Fix |
+    |---|---|
+    | `pip: command not found` | Install pip with `apt-get install python3-pip` (Debian/Ubuntu) or `yum install python3-pip` (RHEL/CentOS). |
+    | `Command 'set' not found` | Use `export` instead of `set` in bash; the correct syntax is `export ONTAP_HOST=192.168.1.100`. |
 **Step 5 — Run the script**
 
 ```bash
@@ -613,9 +621,11 @@ Execution time: 2.34 seconds
 ```
 
 !!! warning "Common errors"
-    **`python: command not found`** — Ensure Python is installed and added to your system PATH, or use the full path to the Python executable (e.g., `C:\Python311\python.exe`).
-    **`FileNotFoundError: [Errno 2] No such file or directory: 'config.yaml'`** — Create the required config.yaml file in the same directory as vol_reporter.py with valid ONTAP cluster credentials and connection details.
-    **`ConnectionRefusedError: [Errno 111] Connection refused to 192.168.1.50:443`** — Verify the cluster IP address in config.yaml is correct and the ONTAP management interface is reachable and responding on port 443.
+    | Error | Fix |
+    |---|---|
+    | `python: command not found` | Ensure Python is installed and added to your system PATH, or use the full path to the Python executable (e.g., `C:\Python311\python.exe`). |
+    | `FileNotFoundError: [Errno 2] No such file or directory: 'config.yaml'` | Create the required config.yaml file in the same directory as vol_reporter.py with valid ONTAP cluster credentials and connection details. |
+    | `ConnectionRefusedError: [Errno 111] Connection refused to 192.168.1.50:443` | Verify the cluster IP address in config.yaml is correct and the ONTAP management interface is reachable and responding on port 443. |
 To also save results to a CSV file:
 ```bash
 python vol_reporter.py --csv volumes.csv
@@ -636,9 +646,11 @@ Output saved to: /root/volumes.csv (245 KB)
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to cluster at 192.168.1.42:443`** — Verify the cluster IP in `/etc/ontap/config.yaml` and ensure the ONTAP management interface is reachable.
-    **`Error: Authentication failed for user 'admin': Invalid credentials`** — Check that the username and password in the config file match the ONTAP cluster credentials.
-    **`Error: Permission denied writing to volumes.csv`** — Run the script with appropriate write permissions or specify an output path in a writable directory.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to cluster at 192.168.1.42:443` | Verify the cluster IP in `/etc/ontap/config.yaml` and ensure the ONTAP management interface is reachable. |
+    | `Error: Authentication failed for user 'admin': Invalid credentials` | Check that the username and password in the config file match the ONTAP cluster credentials. |
+    | `Error: Permission denied writing to volumes.csv` | Run the script with appropriate write permissions or specify an output path in a writable directory. |
 **What you should see**
 
 A table listing every ONTAP volume, sorted from most-used to least-used. Each row shows the SVM name, volume name, size, used space, and percentage — colour-coded green (OK), yellow (WARNING at 80%), or red (CRITICAL at 90%). A summary line shows how many volumes are in each state.
@@ -830,9 +842,11 @@ PLAY RECAP *********************************************************************
 ```
 
 !!! warning "Common errors"
-    **`fatal: [192.168.1.100]: FAILED! => {"msg": "Unable to connect to ONTAP cluster at 192.168.1.100:443"}`** — Verify the ONTAP hostname/IP is correct and reachable on the network using `ping 192.168.1.100`.
-    **`fatal: [192.168.1.100]: FAILED! => {"msg": "Authentication failed for user 'admin'"}`** — Confirm the `ontap_username` and `ontap_password` are correct by testing SSH access directly to the cluster.
-    **`ERROR! the playbook: ontap_health.yml could not be found`** — Ensure the playbook file was copied successfully to the home directory with `ls -la ~/ontap_health.yml`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: [192.168.1.100]: FAILED! => {"msg": "Unable to connect to ONTAP cluster at 192.168.1.100:443"}` | Verify the ONTAP hostname/IP is correct and reachable on the network using `ping 192.168.1.100`. |
+    | `fatal: [192.168.1.100]: FAILED! => {"msg": "Authentication failed for user 'admin'"}` | Confirm the `ontap_username` and `ontap_password` are correct by testing SSH access directly to the cluster. |
+    | `ERROR! the playbook: ontap_health.yml could not be found` | Ensure the playbook file was copied successfully to the home directory with `ls -la ~/ontap_health.yml`. |
 **What you should see**
 
 Ansible runs each task in sequence, printing `ok` or `failed` next to each step. It prints the cluster name and version, then reports aggregate usage percentages. If any aggregate is over 85% used or any SnapMirror relationship is unhealthy, the playbook fails and prints which ones. If everything is fine, it prints `All ONTAP health checks passed.`
@@ -975,9 +989,11 @@ Report complete. 3 aggregates monitored. 1 warning(s) detected.
 ```
 
 !!! warning "Common errors"
-    **`Can't open perl script "agg_alert.pl": No such file or directory`** — Verify the script exists in the current directory or provide the full path to the Perl script.
-    **`perl: command not found`** — Install Perl or add the Perl installation directory to your system PATH environment variable.
-    **`Permission denied`** — Ensure the script has execute permissions; run `chmod +x agg_alert.pl` on Unix-like systems or verify file permissions on Windows.
+    | Error | Fix |
+    |---|---|
+    | `Can't open perl script "agg_alert.pl": No such file or directory` | Verify the script exists in the current directory or provide the full path to the Perl script. |
+    | `perl: command not found` | Install Perl or add the Perl installation directory to your system PATH environment variable. |
+    | `Permission denied` | Ensure the script has execute permissions; run `chmod +x agg_alert.pl` on Unix-like systems or verify file permissions on Windows. |
 **What you should see**
 
 A report showing every data aggregate (skipping root aggregates like `aggr0_*`), with the used percentage and a status of OK, WARNING (80%+), or CRITICAL (90%+). A summary line at the bottom shows counts. The script exits with code 0 (all OK), 1 (warnings), or 2 (critical) — useful for monitoring tools.
@@ -1131,9 +1147,11 @@ Report saved to: C:\Users\YourName\Desktop\ontap_health_20240115.html
 ```
 
 !!! warning "Common errors"
-    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
-    **`The term '.\ontap_health_rest.ps1' is not recognized`** — Verify the script exists in the current directory with `dir *.ps1` and check the filename spelling.
-    **`Unable to connect to ONTAP cluster at <IP>`** — Confirm cluster IP/hostname and credentials are correct in the script's configuration section, and verify network connectivity with `Test-NetConnection -ComputerName <cluster-ip> -Port 443`.
+    | Error | Fix |
+    |---|---|
+    | `cannot be loaded because running scripts is disabled on this system` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script. |
+    | `The term '.\ontap_health_rest.ps1' is not recognized` | Verify the script exists in the current directory with `dir *.ps1` and check the filename spelling. |
+    | `Unable to connect to ONTAP cluster at <IP>` | Confirm cluster IP/hostname and credentials are correct in the script's configuration section, and verify network connectivity with `Test-NetConnection -ComputerName <cluster-ip> -Port 443`. |
 **What you should see**
 
 The script prints a formatted report showing the cluster name, ONTAP version, and location. Then it lists every node with its online/offline state — healthy nodes appear in green, any offline node appears in red. Finally it lists any active health alerts, or confirms that there are none. Everything is fetched directly over HTTPS from the ONTAP REST API — no SSH tools needed.
@@ -1244,9 +1262,11 @@ Report generated: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`'ontap_vol_check.bat' is not recognized as an internal or external command`** — Verify the script exists in the current directory or add its full path (e.g., `C:\Scripts\ontap_vol_check.bat`).
-    **`Error: Failed to connect to cluster. Authentication failed.`** — Ensure ONTAP credentials are configured in the script or environment variables, and verify network connectivity to the cluster.
-    **`Error: Access Denied - Insufficient privileges`** — Run the command prompt as Administrator or ensure your user account has ONTAP API permissions for volume queries.
+    | Error | Fix |
+    |---|---|
+    | `'ontap_vol_check.bat' is not recognized as an internal or external command` | Verify the script exists in the current directory or add its full path (e.g., `C:\Scripts\ontap_vol_check.bat`). |
+    | `Error: Failed to connect to cluster. Authentication failed.` | Ensure ONTAP credentials are configured in the script or environment variables, and verify network connectivity to the cluster. |
+    | `Error: Access Denied - Insufficient privileges` | Run the command prompt as Administrator or ensure your user account has ONTAP API permissions for volume queries. |
 ---
 
 ## Daily Check Script (Bash/SSH)
@@ -1401,9 +1421,11 @@ node            monitor         alert-id        severity
 ```
 
 !!! warning "Common errors"
-    **`sshpass: command not found`** — Install sshpass with `apt install sshpass` on Linux or `brew install sshpass` on macOS before running the script.
-    **`Permission denied (publickey,password)`** — Verify ONTAP_USER and ONTAP_PASS environment variables are set correctly and the user has SSH access to the cluster.
-    **`ssh: Could not resolve hostname cluster1: Name or service not known`** — Ensure ONTAP_HOST is set to a valid resolvable hostname or IP address of the ONTAP cluster.
+    | Error | Fix |
+    |---|---|
+    | `sshpass: command not found` | Install sshpass with `apt install sshpass` on Linux or `brew install sshpass` on macOS before running the script. |
+    | `Permission denied (publickey,password)` | Verify ONTAP_USER and ONTAP_PASS environment variables are set correctly and the user has SSH access to the cluster. |
+    | `ssh: Could not resolve hostname cluster1: Name or service not known` | Ensure ONTAP_HOST is set to a valid resolvable hostname or IP address of the ONTAP cluster. |
 ---
 
 ## Incident Triage Script (Bash/SSH)
@@ -1638,9 +1660,11 @@ PRE-CHECK PASSED — safe to proceed with maintenance.
 ```
 
 !!! warning "Common errors"
-    **`ERROR: sshpass required. Install: apt install sshpass / brew install sshpass`** — Install sshpass using your system package manager (apt/brew/yum depending on OS).
-    **`Permission denied (publickey,password).`** — Verify ONTAP_USER and ONTAP_PASS environment variables are set correctly and the user has SSH access to the cluster.
-    **`ssh: Could not resolve hostname cluster1: Name or service not known`** — Ensure ONTAP_HOST is set to a valid resolvable hostname or IP address of the ONTAP cluster management interface.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: sshpass required. Install: apt install sshpass / brew install sshpass` | Install sshpass using your system package manager (apt/brew/yum depending on OS). |
+    | `Permission denied (publickey,password).` | Verify ONTAP_USER and ONTAP_PASS environment variables are set correctly and the user has SSH access to the cluster. |
+    | `ssh: Could not resolve hostname cluster1: Name or service not known` | Ensure ONTAP_HOST is set to a valid resolvable hostname or IP address of the ONTAP cluster management interface. |
 ---
 
 ## Post-Change Validation Script (Bash/SSH)
@@ -1735,9 +1759,11 @@ POST-CHECK PASSED — change completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`ERROR: sshpass required. Install: apt install sshpass / brew install sshpass`** — Install sshpass using your system package manager (apt/brew/yum) before running the script.
-    **`Permission denied (publickey,password).`** — Verify ONTAP_USER and ONTAP_PASS environment variables are set correctly and the user has SSH access to the cluster.
-    **`ssh: Could not resolve hostname cluster1: Name or service not known`** — Ensure ONTAP_HOST is set to a valid resolvable hostname or IP address and the cluster is reachable on the network.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: sshpass required. Install: apt install sshpass / brew install sshpass` | Install sshpass using your system package manager (apt/brew/yum) before running the script. |
+    | `Permission denied (publickey,password).` | Verify ONTAP_USER and ONTAP_PASS environment variables are set correctly and the user has SSH access to the cluster. |
+    | `ssh: Could not resolve hostname cluster1: Name or service not known` | Ensure ONTAP_HOST is set to a valid resolvable hostname or IP address and the cluster is reachable on the network. |
 ---
 
 ## Health Check Script (Python)

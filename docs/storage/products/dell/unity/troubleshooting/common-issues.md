@@ -256,9 +256,11 @@ rep_session_prod_02  Idle      10.0.0.50        10.0.0.52          2024-01-15 14
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed: Invalid credentials`** — Verify the admin account password and ensure the user has sufficient privileges on the array.
-    **`Connection refused: Unable to reach <ip>`** — Confirm the array IP address is correct, the management interface is online, and network connectivity exists from your management station.
-    **`Command not found: uemcli`** — Install the EMC CLI tools package or add the uemcli binary directory to your system PATH.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed: Invalid credentials` | Verify the admin account password and ensure the user has sufficient privileges on the array. |
+    | `Connection refused: Unable to reach <ip>` | Confirm the array IP address is correct, the management interface is online, and network connectivity exists from your management station. |
+    | `Command not found: uemcli` | Install the EMC CLI tools package or add the uemcli binary directory to your system PATH. |
 ### Incident Data Collection Form
 
 | Question | Answer |

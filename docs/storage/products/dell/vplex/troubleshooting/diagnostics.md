@@ -195,8 +195,10 @@ service@vplex-vms-01:~> vplexcli -q -e "ll /clusters/*/exports/storage-views/"
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify VMS IP address is correct and SSH service is running on the VMS with `systemctl status ssh`.
-    **`vplexcli: command not found`** — Ensure you are logged in as the `service` user and the VPLEX CLI environment is sourced with `source /opt/vplex/bin/env.sh`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify VMS IP address is correct and SSH service is running on the VMS with `systemctl status ssh`. |
+    | `vplexcli: command not found` | Ensure you are logged in as the `service` user and the VPLEX CLI environment is sourced with `source /opt/vplex/bin/env.sh`. |
     **`Permission denied (publickey,
 Record the output of each command with a timestamp before making any changes.
 
@@ -262,9 +264,11 @@ service-status: rebuilding
 ```
 
 !!! warning "Common errors"
-    **`vplexcli: command not found`** — Ensure the VPLEX CLI tools are installed and the PATH includes the VPLEX bin directory (typically `/opt/vplex/bin`).
-    **`Error: Invalid device name '<device_name>'`** — Replace `<device_name>` with an actual device name from the first command output (e.g., `device-001`).
-    **`Error: Inter-cluster communication link down`** — Verify network connectivity between clusters and check physical cable connections and switch configurations.
+    | Error | Fix |
+    |---|---|
+    | `vplexcli: command not found` | Ensure the VPLEX CLI tools are installed and the PATH includes the VPLEX bin directory (typically `/opt/vplex/bin`). |
+    | `Error: Invalid device name '<device_name>'` | Replace `<device_name>` with an actual device name from the first command output (e.g., `device-001`). |
+    | `Error: Inter-cluster communication link down` | Verify network connectivity between clusters and check physical cable connections and switch configurations. |
 **Resolution sequence:**
 
 1. Confirm the ICL is healthy (see Step 4 — ICL Diagnostics).
@@ -288,9 +292,11 @@ Current rebuild rate: 125 MB/s
 ```
 
 !!! warning "Common errors"
-    **`Error: Device not found: /distributed-storage/distributed-devices/<device_name>`** — Replace `<device_name>` with the actual device identifier (e.g., `vplx-dev-prod-001`) from `vplexcli -e "device list"`.
-    **`Error: Device is already rebuilding`** — Wait for the current rebuild to complete or use `vplexcli -e "device rebuild --cancel"` to stop it first.
-    **`Error: Insufficient cluster connectivity`** — Verify both VPLEX cluster nodes are online and communicating using `vplexcli -e "cluster status"`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Device not found: /distributed-storage/distributed-devices/<device_name>` | Replace `<device_name>` with the actual device identifier (e.g., `vplx-dev-prod-001`) from `vplexcli -e "device list"`. |
+    | `Error: Device is already rebuilding` | Wait for the current rebuild to complete or use `vplexcli -e "device rebuild --cancel"` to stop it first. |
+    | `Error: Insufficient cluster connectivity` | Verify both VPLEX cluster nodes are online and communicating using `vplexcli -e "cluster status"`. |
 ### Degraded distributed device (one leg unreachable)
 
 A degraded device means one cluster leg is unreachable — I/O continues on the surviving leg only.
@@ -327,9 +333,11 @@ engine-2/director-2/hw-status     OK          31C
 ```
 
 !!! warning "Common errors"
-    **`Error: Device '<device_name>' not found in distributed-storage`** — Verify the exact device name matches the output of `vplexcli -q -e "ll /distributed-storage/distributed-devices/"` and check for typos.
-    **`Error: Connection refused to VPLEX management console`** — Ensure the VPLEX cluster is reachable and vplexcli credentials are configured via `vplexcli -u <user> -p <password>` or environment variables.
-    **`Error: Insufficient privileges to query health-indications`** — Confirm your vplexcli user account has administrative or read-access permissions on the affected cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error: Device '<device_name>' not found in distributed-storage` | Verify the exact device name matches the output of `vplexcli -q -e "ll /distributed-storage/distributed-devices/"` and check for typos. |
+    | `Error: Connection refused to VPLEX management console` | Ensure the VPLEX cluster is reachable and vplexcli credentials are configured via `vplexcli -u <user> -p <password>` or environment variables. |
+    | `Error: Insufficient privileges to query health-indications` | Confirm your vplexcli user account has administrative or read-access permissions on the affected cluster. |
 If the cluster is unreachable due to a site failure and the Witness has granted quorum to the surviving cluster, I/O continues normally. After site recovery: restore ICL, confirm Witness connectivity, then allow the distributed device to rebuild automatically.
 
 ### Suspended distributed device (I/O halted)
@@ -388,9 +396,11 @@ packets-received              45821847
 ```
 
 !!! warning "Common errors"
-    **`Error: device '<device_name>' not found`** — Verify the device name spelling and that the device exists using `vplexcli -q -e "ll /distributed-storage/distributed-devices/"`
-    **`Error: Connection refused to vplexcli management interface`** — Ensure the VPLEX management IP is reachable and vplexcli service is running with `systemctl status vplexcli`
-    **`Error: witness-unavailable: ICL communication failure detected`** — Check network connectivity between clusters and verify inter-cluster link status with `vplexcli -q -e "ll /clusters/cluster-1/communication/inter-cluster-links/"`
+    | Error | Fix |
+    |---|---|
+    | `Error: device '<device_name>' not found` | Verify the device name spelling and that the device exists using `vplexcli -q -e "ll /distributed-storage/distributed-devices/"` |
+    | `Error: Connection refused to vplexcli management interface` | Ensure the VPLEX management IP is reachable and vplexcli service is running with `systemctl status vplexcli` |
+    | `Error: witness-unavailable: ICL communication failure detected` | Check network connectivity between clusters and verify inter-cluster link status with `vplexcli -q -e "ll /clusters/cluster-1/communication/inter-cluster-links/"` |
 **Do not manually resume I/O until the cause of suspension is understood.** Resuming a suspended distributed device without verifying which leg has the most recent writes risks data divergence.
 
 Recovery procedure:
@@ -412,9 +422,11 @@ Device /distributed-storage/distributed-devices/device-001 is now in RUNNING sta
 ```
 
 !!! warning "Common errors"
-    **`Error: Device not found: /distributed-storage/distributed-devices/<device_name>`** — Verify the device name exists by running `vplexcli -e "device list"` and use the correct device identifier.
-    **`Error: Device is already in RUNNING state`** — Check the current device status with `vplexcli -e "device status --device /distributed-storage/distributed-devices/<device_name>"` before attempting resume.
-    **`Error: Authentication failed`** — Ensure you have valid VPLEX credentials configured or run the command with appropriate sudo privileges.
+    | Error | Fix |
+    |---|---|
+    | `Error: Device not found: /distributed-storage/distributed-devices/<device_name>` | Verify the device name exists by running `vplexcli -e "device list"` and use the correct device identifier. |
+    | `Error: Device is already in RUNNING state` | Check the current device status with `vplexcli -e "device status --device /distributed-storage/distributed-devices/<device_name>"` before attempting resume. |
+    | `Error: Authentication failed` | Ensure you have valid VPLEX credentials configured or run the command with appropriate sudo privileges. |
 ---
 
 ## Step 3 — Director diagnostics
@@ -473,9 +485,11 @@ enabled                                 true
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid path /engines/engine-1-1/directors/director-1-1-A/hardware/ports/A0-FC00/`** — Verify the port name exists by running the list command without the trailing slash first.
-    **`Error: Connection refused to VPLEX management server`** — Ensure the VPLEX cluster is reachable and vplexcli is configured with the correct management IP address.
-    **`Error: Permission denied: insufficient privileges for this operation`** — Confirm your user account has administrative rights on the VPLEX cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid path /engines/engine-1-1/directors/director-1-1-A/hardware/ports/A0-FC00/` | Verify the port name exists by running the list command without the trailing slash first. |
+    | `Error: Connection refused to VPLEX management server` | Ensure the VPLEX cluster is reachable and vplexcli is configured with the correct management IP address. |
+    | `Error: Permission denied: insufficient privileges for this operation` | Confirm your user account has administrative rights on the VPLEX cluster. |
 ### Director health states
 
 | State | Meaning | Action |
@@ -545,9 +559,11 @@ rtt min/avg/max/stddev = 2.08/2.14/2.31/0.06 ms
 ```
 
 !!! warning "Common errors"
-    **`vplexcli: command not found`** — Ensure you are running this command on a VPLEX management station or add the VPLEX CLI tools to your PATH.
-    **`PING: unknown host <cluster-2-mgmt-IP>`** — Replace the placeholder with the actual cluster-2 management IP address (e.g., 192.168.100.45).
-    **`100% packet loss`** — Verify inter-cluster link connectivity and firewall rules allow ICMP traffic between cluster management interfaces.
+    | Error | Fix |
+    |---|---|
+    | `vplexcli: command not found` | Ensure you are running this command on a VPLEX management station or add the VPLEX CLI tools to your PATH. |
+    | `PING: unknown host <cluster-2-mgmt-IP>` | Replace the placeholder with the actual cluster-2 management IP address (e.g., 192.168.100.45). |
+    | `100% packet loss` | Verify inter-cluster link connectivity and firewall rules allow ICMP traffic between cluster management interfaces. |
 **ICL RTT threshold**: Metro requires ≤5ms round-trip latency. If RTT consistently exceeds this:
 
 1. Check for network congestion on the WAN or dark fibre segment.
@@ -611,9 +627,11 @@ thin-enabled                  false
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to VPLEX cluster`** — Verify the VPLEX management IP is reachable and vplexcli is properly configured with correct credentials.
-    **`Error: storage-view-prod-01 not found`** — Confirm the storage view name is correct and exists by running the first `ls` command without the view name filter.
-    **`Error: virtual-volumes not found in storage-view`** — Check that volumes have been properly assigned to the storage view and that the view is not in a degraded state.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to VPLEX cluster` | Verify the VPLEX management IP is reachable and vplexcli is properly configured with correct credentials. |
+    | `Error: storage-view-prod-01 not found` | Confirm the storage view name is correct and exists by running the first `ls` command without the view name filter. |
+    | `Error: virtual-volumes not found in storage-view` | Check that volumes have been properly assigned to the storage view and that the view is not in a degraded state. |
 ### Host-side verification
 
 ```bash
@@ -656,9 +674,11 @@ Number of paths: 4
 ```
 
 !!! warning "Common errors"
-    **`multipath: command not found`** — Install device-mapper-multipath package with `apt-get install device-mapper-multipath` or `yum install device-mapper-multipath`.
-    **`No such file or directory`** — Verify the scsi_host directory exists with `ls /sys/class/scsi_host/` before running the rescan loop.
-    **`powermt: command not found`** — Install EMC PowerPath client software or verify the PowerPath daemon is running with `systemctl status powerpath`.
+    | Error | Fix |
+    |---|---|
+    | `multipath: command not found` | Install device-mapper-multipath package with `apt-get install device-mapper-multipath` or `yum install device-mapper-multipath`. |
+    | `No such file or directory` | Verify the scsi_host directory exists with `ls /sys/class/scsi_host/` before running the rescan loop. |
+    | `powermt: command not found` | Install EMC PowerPath client software or verify the PowerPath daemon is running with `systemctl status powerpath`. |
 ---
 
 ## Step 6 — Log analysis
@@ -737,9 +757,11 @@ support_bundle.tar.gz                                    100%  487MB   8.2MB/s  
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey)`** — Verify the service account SSH key is loaded in ssh-agent or use `-i` flag to specify the correct private key path.
-    **`vplexcli: command not found`** — Ensure you are connecting to the correct VMS IP address and that the VPLEX management software is installed and running on that host.
-    **`No space left on device`** — Check available disk space on the VMS with `df -h` and free up space in `/var/log` or specify an alternate output path with `-f`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey)` | Verify the service account SSH key is loaded in ssh-agent or use `-i` flag to specify the correct private key path. |
+    | `vplexcli: command not found` | Ensure you are connecting to the correct VMS IP address and that the VPLEX management software is installed and running on that host. |
+    | `No space left on device` | Check available disk space on the VMS with `df -h` and free up space in `/var/log` or specify an alternate output path with `-f`. |
 ### Pre-support-call data collection checklist
 
 Gather all of the following before opening a Dell Support case:

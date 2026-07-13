@@ -95,8 +95,10 @@ Disk Read Bytes/sec            None          Average, Maximum
 ```
 
 !!! warning "Common errors"
-    **`The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM' could not be found.`** — Verify the subscription ID, resource group name, and VM name are correct, and that the resource exists in the current subscription context.
-    **`Metric 'Percentage CPU' does not have a definition for the specified resource.`** — Run `az monitor metrics list-definitions` on the resource to confirm the exact metric name (e.g., it may be "Percentage CPU" vs "% Processor Time" depending on resource type).
+    | Error | Fix |
+    |---|---|
+    | `The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM' could not be found.` | Verify the subscription ID, resource group name, and VM name are correct, and that the resource exists in the current subscription context. |
+    | `Metric 'Percentage CPU' does not have a definition for the specified resource.` | Run `az monitor metrics list-definitions` on the resource to confirm the exact metric name (e.g., it may be "Percentage CPU" vs "% Processor Time" depending on resource type). |
 ## Common Dashboard Tile Types
 
 | Tile Type              | Description                                       |
@@ -151,9 +153,11 @@ az role assignment create \
 ```
 
 !!! warning "Common errors"
-    **`The user, group or service principal does not exist in the directory`** — Verify the user email exists in your Azure AD tenant with `az ad user show --id user@example.com`.
-    **`The scope provided is invalid`** — Ensure the subscription ID is correct and the dashboard resource path exists by running `az portal dashboard list --resource-group myRG`.
-    **`Authorization failed: User does not have permission to perform action 'Microsoft.Authorization/roleAssignments/write'`** — Confirm your account has Owner or User Access Administrator role on the target scope with `az role assignment list --assignee <your-id>`.
+    | Error | Fix |
+    |---|---|
+    | `The user, group or service principal does not exist in the directory` | Verify the user email exists in your Azure AD tenant with `az ad user show --id user@example.com`. |
+    | `The scope provided is invalid` | Ensure the subscription ID is correct and the dashboard resource path exists by running `az portal dashboard list --resource-group myRG`. |
+    | `Authorization failed: User does not have permission to perform action 'Microsoft.Authorization/roleAssignments/write'` | Confirm your account has Owner or User Access Administrator role on the target scope with `az role assignment list --assignee <your-id>`. |
 ## Exporting and Importing Dashboard JSON
 
 Dashboards can be exported as JSON for version control or cross-environment deployment.
@@ -215,8 +219,10 @@ Dashboard updated successfully.
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Portal/dashboards/ops-overview-dashboard' under resource group 'myRG' was not found.`** — Verify the dashboard name and resource group exist using `az portal dashboard list --resource-group myRG`.
-    **`InvalidTemplate : The template is invalid.`** — Ensure the JSON file is valid and contains all required properties by validating the exported JSON structure before modification.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Portal/dashboards/ops-overview-dashboard' under resource group 'myRG' was not found.` | Verify the dashboard name and resource group exist using `az portal dashboard list --resource-group myRG`. |
+    | `InvalidTemplate : The template is invalid.` | Ensure the JSON file is valid and contains all required properties by validating the exported JSON structure before modification. |
 ## Dashboard Governance
 
 ```bash
@@ -241,5 +247,7 @@ Deleting dashboard 'old-dashboard' in resource group 'myRG'...
 ```
 
 !!! warning "Common errors"
-    **`The resource with id /subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Portal/dashboards/ops-overview-dashboard does not exist.`** — Verify the subscription ID, resource group name, and dashboard name are correct using `az portal dashboard list --resource-group myRG`.
-    **`(ResourceNotFound) The resource 'old-dashboard' does not exist in the resource group 'myRG'.`** — Confirm the dashboard exists and check the exact name with `az portal dashboard list --resource-group myRG --query "[].name"`.
+    | Error | Fix |
+    |---|---|
+    | `The resource with id /subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Portal/dashboards/ops-overview-dashboard does not exist.` | Verify the subscription ID, resource group name, and dashboard name are correct using `az portal dashboard list --resource-group myRG`. |
+    | `(ResourceNotFound) The resource 'old-dashboard' does not exist in the resource group 'myRG'.` | Confirm the dashboard exists and check the exact name with `az portal dashboard list --resource-group myRG --query "[].name"`. |

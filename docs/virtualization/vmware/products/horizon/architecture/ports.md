@@ -174,9 +174,11 @@ Connection to 10.20.30.15 636 (ldaps) open
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the Connection Server's CA certificate into your system trust store.
-    **`nc: connect to 192.168.1.50 port 22443 (udp) failed: Connection refused`** — Verify the Horizon Agent is running on the VM, the firewall allows UDP 22443 inbound, and the correct agent IP address is specified.
-    **`nc: getaddrinfo for name/port failed: Name or service not known`** — Confirm the hostname or IP address is correct and resolvable from the client workstation (test with `nslookup` or `ping` first).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the Connection Server's CA certificate into your system trust store. |
+    | `nc: connect to 192.168.1.50 port 22443 (udp) failed: Connection refused` | Verify the Horizon Agent is running on the VM, the firewall allows UDP 22443 inbound, and the correct agent IP address is specified. |
+    | `nc: getaddrinfo for name/port failed: Name or service not known` | Confirm the hostname or IP address is correct and resolvable from the client workstation (test with `nslookup` or `ping` first). |
 ---
 
 ## See also

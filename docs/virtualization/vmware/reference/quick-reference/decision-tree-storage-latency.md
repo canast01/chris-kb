@@ -63,8 +63,10 @@ DAVG   KAVG   GAVG  CMD
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Ensure you are running this command directly on an ESXi host (not a vCenter server) with SSH access enabled.
-    **`grep: (standard input) is empty`** — The esxtop batch mode may have timed out; try increasing the `-n` value or running esxtop interactively to verify the host is responsive.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Ensure you are running this command directly on an ESXi host (not a vCenter server) with SSH access enabled. |
+    | `grep: (standard input) is empty` | The esxtop batch mode may have timed out; try increasing the `-n` value or running esxtop interactively to verify the host is responsive. |
 Via Aria Operations: vSphere → Datastores → select datastore → Performance → I/O Latency.
 
 ## Step 2 — Is vSAN Resync Active?
@@ -87,8 +89,10 @@ Disk format version: 13
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the vSAN service`** — Ensure vSAN is enabled on the cluster and the ESXi host is properly configured with vSAN networking.
-    **`Error: Unknown command or namespace`** — Verify the ESXi version supports vSAN debugging commands (vSAN 6.6+) and that vSAN is licensed on this host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the vSAN service` | Ensure vSAN is enabled on the cluster and the ESXi host is properly configured with vSAN networking. |
+    | `Error: Unknown command or namespace` | Verify the ESXi version supports vSAN debugging commands (vSAN 6.6+) and that vSAN is licensed on this host. |
 **Active resync causing latency:**
 → Throttle resync: `esxcli vsan debug resync throttle -p 25`
 → Wait for resync to complete before performing additional storage changes
@@ -116,8 +120,10 @@ vmhba3                                 Healthy     0
 ```
 
 !!! warning "Common errors"
-    **`esxcli: Unknown command or namespace vsan`** — Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm VSAN is active.
-    **`grep: command not found`** — Ensure you are running this command directly on an ESXi host shell, not through a remote SSH session with restricted PATH; use full path `/usr/bin/grep` if needed.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: Unknown command or namespace vsan` | Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm VSAN is active. |
+    | `grep: command not found` | Ensure you are running this command directly on an ESXi host shell, not through a remote SSH session with restricted PATH; use full path `/usr/bin/grep` if needed. |
 **For external storage (NFS/iSCSI/FC):**
 - Log in to array management (Unisphere, ONTAP, Pure FlashArray)
 - Check array-level latency, queue depth, and controller CPU utilisation
@@ -154,9 +160,11 @@ purearray get   # Throughput and latency summary
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (Connection refused)`** — Verify the array management IP is reachable and the REST API service is running with `purearray list --controllers`.
-    **`Error: Invalid credentials (401 Unauthorized)`** — Ensure your API token is valid and not expired; regenerate credentials in the Pure Storage management console.
-    **`Error: Command not found: purearray`** — Install the Pure Storage CLI tools or add the installation directory to your system PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (Connection refused)` | Verify the array management IP is reachable and the REST API service is running with `purearray list --controllers`. |
+    | `Error: Invalid credentials (401 Unauthorized)` | Ensure your API token is valid and not expired; regenerate credentials in the Pure Storage management console. |
+    | `Error: Command not found: purearray` | Install the Pure Storage CLI tools or add the installation directory to your system PATH environment variable. |
 ## Step 4 — Check Network / Fabric
 
 For vSAN: high network latency on the vSAN VMkernel can cause I/O latency:
@@ -180,9 +188,11 @@ round-trip min/avg/max = 0.218/0.231/0.241 ms
 ```
 
 !!! warning "Common errors"
-    **`Unknown interface vmk1`** — Verify the vmkernel interface name with `esxcli network ip interface list` and use the correct interface (e.g., vmk0, vmk2).
-    **`No route to host`** — Ensure the vSAN network is properly configured and the target host's vSAN vmkernel IP is reachable; check vSAN cluster membership with `esxcli vsan cluster get`.
-    **`100% packet loss`** — Confirm the vSAN vmkernel interface is enabled and the network switch/VLAN is properly configured for vSAN traffic.
+    | Error | Fix |
+    |---|---|
+    | `Unknown interface vmk1` | Verify the vmkernel interface name with `esxcli network ip interface list` and use the correct interface (e.g., vmk0, vmk2). |
+    | `No route to host` | Ensure the vSAN network is properly configured and the target host's vSAN vmkernel IP is reachable; check vSAN cluster membership with `esxcli vsan cluster get`. |
+    | `100% packet loss` | Confirm the vSAN vmkernel interface is enabled and the network switch/VLAN is properly configured for vSAN traffic. |
 For FC (iSCSI/FC block storage): check HBA port statistics:
 ```bash
 esxcli storage san fc stats get
@@ -219,8 +229,10 @@ HBA Name: vmhba1
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not get HBA statistics`** — Verify the HBA is properly detected with `esxcli storage san fc list` and check that FC drivers are loaded.
-    **`Permission denied`** — Run the command with root privileges or as a user with administrator role on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not get HBA statistics` | Verify the HBA is properly detected with `esxcli storage san fc list` and check that FC drivers are loaded. |
+    | `Permission denied` | Run the command with root privileges or as a user with administrator role on the ESXi host. |
 ## Step 5 — Check for Hot-Spot VMs
 
 High I/O from a single VM can saturate a datastore or disk group:

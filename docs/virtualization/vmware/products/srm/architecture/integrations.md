@@ -43,8 +43,10 @@ Password updated for user srmuser
 ```
 
 !!! warning "Common errors"
-    **`Error: User srmuser already exists`** — Delete the existing user with `purecli user delete srmuser` before recreating it.
-    **`Error: Password does not meet complexity requirements`** — Ensure the password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters.
+    | Error | Fix |
+    |---|---|
+    | `Error: User srmuser already exists` | Delete the existing user with `purecli user delete srmuser` before recreating it. |
+    | `Error: Password does not meet complexity requirements` | Ensure the password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters. |
 ### SRA for Dell PowerStore / EMC
 
 Dell provides SRAs for multiple product lines.
@@ -77,9 +79,11 @@ root@srm-appliance:/tmp#
 ```
 
 !!! warning "Common errors"
-    **`tar: Dell_SRA_for_PowerStore_<version>.tar.gz: No such file or directory`** — Verify the exact filename with `ls -la /tmp/` and replace `<version>` with the actual version number in the filename.
-    **`./install.sh: Permission denied`** — Run `chmod +x install.sh` before executing the script.
-    **`Failed to restart unit vmware-dr.service: Unit vmware-dr.service not found.`** — Confirm the SRM service name with `systemctl list-units --type=service | grep vmware` and use the correct service name.
+    | Error | Fix |
+    |---|---|
+    | `tar: Dell_SRA_for_PowerStore_<version>.tar.gz: No such file or directory` | Verify the exact filename with `ls -la /tmp/` and replace `<version>` with the actual version number in the filename. |
+    | `./install.sh: Permission denied` | Run `chmod +x install.sh` before executing the script. |
+    | `Failed to restart unit vmware-dr.service: Unit vmware-dr.service not found.` | Confirm the SRM service name with `systemctl list-units --type=service | grep vmware` and use the correct service name. |
 **PowerStore SRA credentials:**
 
 | Field | Value |
@@ -126,9 +130,11 @@ Power state: poweredOff
 ```
 
 !!! warning "Common errors"
-    **`Error: datastore 'vsanDatastore' not found`** — Verify the datastore name with `govc datastore.ls` and ensure it is accessible from the current vCenter connection.
-    **`Error: network 'Management' not found`** — Confirm the port group name exists with `govc network.ls` and use the full network path if it's in a folder.
-    **`Error: failed to parse OVA: invalid manifest`** — Verify the OVA file is not corrupted by checking its integrity with `tar -tzf vSphere_Replication_OVF10.ova` and re-download if necessary.
+    | Error | Fix |
+    |---|---|
+    | `Error: datastore 'vsanDatastore' not found` | Verify the datastore name with `govc datastore.ls` and ensure it is accessible from the current vCenter connection. |
+    | `Error: network 'Management' not found` | Confirm the port group name exists with `govc network.ls` and use the full network path if it's in a folder. |
+    | `Error: failed to parse OVA: invalid manifest` | Verify the OVA file is not corrupted by checking its integrity with `tar -tzf vSphere_Replication_OVF10.ova` and re-download if necessary. |
 After deployment:
 - Access VR Appliance VAMI at `https://<vr-ip>:5480`
 - Configure: network, NTP, password
@@ -222,9 +228,11 @@ total 2.1M
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname vr-appliance.example.com: Name or service not known`** — Verify the VR appliance hostname/IP is correct and resolvable in your DNS or /etc/hosts file.
-    **`Unit vmware-hbrsrv.service could not be found.`** — Confirm the SRM VR appliance is properly deployed and the hbrsrv service package is installed.
-    **`hbr-configure: command not found`** — Ensure you are logged in as root or with sudo privileges, as hbr-configure
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname vr-appliance.example.com: Name or service not known` | Verify the VR appliance hostname/IP is correct and resolvable in your DNS or /etc/hosts file. |
+    | `Unit vmware-hbrsrv.service could not be found.` | Confirm the SRM VR appliance is properly deployed and the hbrsrv service package is installed. |
+    | `hbr-configure: command not found` | Ensure you are logged in as root or with sudo privileges, as hbr-configure |
 ---
 
 ## NSX-T Integration for Network Mapping

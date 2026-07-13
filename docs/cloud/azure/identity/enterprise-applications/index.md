@@ -72,9 +72,11 @@ my-api-app                    a1b2c3d4-e5f6-47a8-9b0c-1d2e3f4a5b6c  f7g8h9i0-j1k
 ```
 
 !!! warning "Common errors"
-    **`The following arguments are required: --id`** — Provide the app ID or object ID using `--id <app-id>` instead of `<app-id>` placeholder.
-    **`Service principal not found with id '<app-id>'.`** — Verify the app ID is correct by listing all service principals with `az ad sp list --all` and confirm the ID exists in your tenant.
-    **`Authorization_RequestDenied: Insufficient privileges to complete the operation.`** — Ensure your Azure AD account has Application Administrator or Global Administrator role assigned.
+    | Error | Fix |
+    |---|---|
+    | `The following arguments are required: --id` | Provide the app ID or object ID using `--id <app-id>` instead of `<app-id>` placeholder. |
+    | `Service principal not found with id '<app-id>'.` | Verify the app ID is correct by listing all service principals with `az ad sp list --all` and confirm the ID exists in your tenant. |
+    | `Authorization_RequestDenied: Insufficient privileges to complete the operation.` | Ensure your Azure AD account has Application Administrator or Global Administrator role assigned. |
 ## SSO Configuration
 
 Single Sign-On (SSO) for enterprise applications can be configured as SAML, OIDC, or password-based. SAML SSO and OIDC are managed through the portal or Microsoft Graph.
@@ -114,9 +116,11 @@ az rest \
 ```
 
 !!! warning "Common errors"
-    **`Authorization_RequestDenied: Insufficient privileges to complete the operation.`** — Ensure the service principal running the command has Directory.ReadWrite.All or Application.ReadWrite.All permissions in Azure AD.
-    **`Invalid object identifier '<sp-object-id>'.`** — Replace `<sp-object-id>` with the actual service principal object ID from `az ad sp list --display-name "AppName" --query "[0].id"`.
-    **`Unsupported patch document. The property 'preferredSingleSignOnMode' cannot be patched.`** — Use the Azure Portal or `az ad app update` command instead, as some SSO properties are read-only via Graph API PATCH.
+    | Error | Fix |
+    |---|---|
+    | `Authorization_RequestDenied: Insufficient privileges to complete the operation.` | Ensure the service principal running the command has Directory.ReadWrite.All or Application.ReadWrite.All permissions in Azure AD. |
+    | `Invalid object identifier '<sp-object-id>'.` | Replace `<sp-object-id>` with the actual service principal object ID from `az ad sp list --display-name "AppName" --query "[0].id"`. |
+    | `Unsupported patch document. The property 'preferredSingleSignOnMode' cannot be patched.` | Use the Azure Portal or `az ad app update` command instead, as some SSO properties are read-only via Graph API PATCH. |
 ### SSO Mode Comparison
 
 | SSO Mode | Protocol | Typical Use |
@@ -174,9 +178,11 @@ carol.white@contoso.com        00000000-0000-0000-0000-000000000000
 ```
 
 !!! warning "Common errors"
-    **`Request_BadRequest: Invalid object identifier '<app-id>'.`** — Verify the app-id is a valid UUID and exists in your Azure AD tenant using `az ad sp list --filter "appId eq '<app-id>'"`.
-    **`Authorization_RequestDenied: Insufficient privileges to complete the operation.`** — Ensure your Azure CLI account has Application Administrator or Global Administrator role in the tenant.
-    **`Request_ResourceNotFound: Resource '<sp-object-id>' does not exist or one of its queried reference properties is not available.`** — Confirm the service principal object ID is correct by running `az ad sp show --id <app-id> --query id`.
+    | Error | Fix |
+    |---|---|
+    | `Request_BadRequest: Invalid object identifier '<app-id>'.` | Verify the app-id is a valid UUID and exists in your Azure AD tenant using `az ad sp list --filter "appId eq '<app-id>'"`. |
+    | `Authorization_RequestDenied: Insufficient privileges to complete the operation.` | Ensure your Azure CLI account has Application Administrator or Global Administrator role in the tenant. |
+    | `Request_ResourceNotFound: Resource '<sp-object-id>' does not exist or one of its queried reference properties is not available.` | Confirm the service principal object ID is correct by running `az ad sp show --id <app-id> --query id`. |
 ## Provisioning
 
 Entra ID supports automatic user provisioning (SCIM) to SaaS applications. Provisioning configuration is managed through the portal but can be monitored via CLI.
@@ -206,8 +212,10 @@ az rest \
 ```
 
 !!! warning "Common errors"
-    **`Authorization_RequestDenied`** — Ensure the service principal has `Directory.Read.All` or `Application.ReadWrite.All` permissions in Microsoft Graph API.
-    **`ResourceNotFound`** — Verify the `<sp-object-id>` is correct by running `az ad sp list --query "[].{name:displayName, id:id}"` to confirm the object ID exists.
+    | Error | Fix |
+    |---|---|
+    | `Authorization_RequestDenied` | Ensure the service principal has `Directory.Read.All` or `Application.ReadWrite.All` permissions in Microsoft Graph API. |
+    | `ResourceNotFound` | Verify the `<sp-object-id>` is correct by running `az ad sp list --query "[].{name:displayName, id:id}"` to confirm the object ID exists. |
 ### Provisioning Modes
 
 | Mode | Description |
@@ -245,9 +253,11 @@ ID                                   DisplayName              Value             
 ```
 
 !!! warning "Common errors"
-    **`Application with identifier '<app-id>' was not found in the directory`** — Verify the app ID exists in your tenant with `az ad app list --query "[].appId"` and use the correct value.
-    **`Invalid JSON in file 'app-roles.json': Expecting value: line 1 column 1`** — Ensure the JSON file is valid and properly formatted; validate with `jq . app-roles.json` before applying.
-    **`Insufficient privileges to complete the operation`** — Request Application Administrator or Global Administrator role to modify app roles.
+    | Error | Fix |
+    |---|---|
+    | `Application with identifier '<app-id>' was not found in the directory` | Verify the app ID exists in your tenant with `az ad app list --query "[].appId"` and use the correct value. |
+    | `Invalid JSON in file 'app-roles.json': Expecting value: line 1 column 1` | Ensure the JSON file is valid and properly formatted; validate with `jq . app-roles.json` before applying. |
+    | `Insufficient privileges to complete the operation` | Request Application Administrator or Global Administrator role to modify app roles. |
 ## Audit Logs
 
 All sign-in and provisioning activity for enterprise applications is recorded in Entra ID audit logs.
@@ -286,5 +296,7 @@ Date                          User                        Status  IP
 ```
 
 !!! warning "Common errors"
-    **`Authorization_RequestDenied: Insufficient privileges to complete the operation.`** — Ensure your Azure account has the Directory.Read.All or AuditLog.Read.All permission in Microsoft Graph.
-    **`Invalid filter clause syntax: Invalid expression`** — Replace `<sp-object-id>` and `<app-id>` with actual values and verify the filter syntax matches Microsoft Graph API documentation.
+    | Error | Fix |
+    |---|---|
+    | `Authorization_RequestDenied: Insufficient privileges to complete the operation.` | Ensure your Azure account has the Directory.Read.All or AuditLog.Read.All permission in Microsoft Graph. |
+    | `Invalid filter clause syntax: Invalid expression` | Replace `<sp-object-id>` and `<app-id>` with actual values and verify the filter syntax matches Microsoft Graph API documentation. |

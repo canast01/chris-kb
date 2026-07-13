@@ -65,8 +65,10 @@ stanza: main-db-prod
 ```
 
 !!! warning "Common errors"
-    **`ERROR: stanza 'main-db-prod' not found`** — Verify the stanza name matches your pgBackRest configuration in `/etc/pgbackrest.conf`.
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed`** — Ensure PostgreSQL is running with `systemctl status postgresql` and the postgres user has correct permissions.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: stanza 'main-db-prod' not found` | Verify the stanza name matches your pgBackRest configuration in `/etc/pgbackrest.conf`. |
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed` | Ensure PostgreSQL is running with `systemctl status postgresql` and the postgres user has correct permissions. |
 ```bash
 # PostgreSQL — verify backup with pgBackRest
 pgbackrest --stanza=<stanza-name> check
@@ -97,9 +99,11 @@ RESTORE VERIFYONLY successfully processed 1245 pages in 8.342 seconds (1.48 MB/s
 ```
 
 !!! warning "Common errors"
-    **`pgbackrest: ERROR: backup path does not exist`** — Verify the stanza name matches your pgBackRest configuration and the backup directory exists at the configured path.
-    **`xtrabackup: error: cannot access '/backup/mysql/latest/': No such file or directory`** — Ensure the backup target directory path is correct and the xtrabackup process has read permissions on the backup files.
-    **`Msg 3201, Level 16, State 2: Cannot open backup device '/backup/mssql/mydb_full.bak'. Operating system error 2(The system cannot find the file specified.)`** — Verify the backup file path is correct and the SQL Server service account has read permissions on the backup file location.
+    | Error | Fix |
+    |---|---|
+    | `pgbackrest: ERROR: backup path does not exist` | Verify the stanza name matches your pgBackRest configuration and the backup directory exists at the configured path. |
+    | `xtrabackup: error: cannot access '/backup/mysql/latest/': No such file or directory` | Ensure the backup target directory path is correct and the xtrabackup process has read permissions on the backup files. |
+    | `Msg 3201, Level 16, State 2: Cannot open backup device '/backup/mssql/mydb_full.bak'. Operating system error 2(The system cannot find the file specified.)` | Verify the backup file path is correct and the SQL Server service account has read permissions on the backup file location. |
 ```bash
 # Restore to test instance
 pgbackrest --stanza=<stanza-name> --pg1-path=/var/lib/pgsql/test-restore restore
@@ -125,9 +129,11 @@ server started
 ```
 
 !!! warning "Common errors"
-    **`FATAL: could not create shared memory segment: No space left on device`** — Increase shared_buffers in postgresql.conf or reduce the value to fit available system memory.
-    **`ERROR: could not connect to server: Connection refused`** — Verify pg_ctl started successfully and the port 5433 is not already in use by another PostgreSQL instance.
-    **`FATAL: directory "/var/lib/pgsql/test-restore" does not exist`** — Create the restore directory with `mkdir -p /var/lib/pgsql/test-restore` and ensure proper ownership before running pgbackrest restore.
+    | Error | Fix |
+    |---|---|
+    | `FATAL: could not create shared memory segment: No space left on device` | Increase shared_buffers in postgresql.conf or reduce the value to fit available system memory. |
+    | `ERROR: could not connect to server: Connection refused` | Verify pg_ctl started successfully and the port 5433 is not already in use by another PostgreSQL instance. |
+    | `FATAL: directory "/var/lib/pgsql/test-restore" does not exist` | Create the restore directory with `mkdir -p /var/lib/pgsql/test-restore` and ensure proper ownership before running pgbackrest restore. |
 ```bash
 # Copy backup to test directory
 xtrabackup --prepare --target-dir=/restore/mysql-test/

@@ -215,9 +215,11 @@ purged osd.4
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: osd.99 does not exist`** — Verify the OSD ID exists with `ceph osd ls` before running commands against it.
-    **`Error EINVAL: invalid weight`** — Ensure reweight values are between 0.0 and 1.0, or use `ceph osd crush reweight-all` to auto-reweight based on capacity.
-    **`Error EPERM: insufficient permissions`** — Run ceph commands with appropriate privileges (typically as root or with sudo) or ensure your user is in the ceph group.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: osd.99 does not exist` | Verify the OSD ID exists with `ceph osd ls` before running commands against it. |
+    | `Error EINVAL: invalid weight` | Ensure reweight values are between 0.0 and 1.0, or use `ceph osd crush reweight-all` to auto-reweight based on capacity. |
+    | `Error EPERM: insufficient permissions` | Run ceph commands with appropriate privileges (typically as root or with sudo) or ensure your user is in the ceph group. |
 ## Pool Management
 
 ```bash
@@ -258,9 +260,11 @@ pg_autoscale_mode on
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: pool 'rbd' does not exist`** — Verify the pool name with `ceph osd pool ls` before running pool commands.
-    **`Error EINVAL: pg_num 256 <= current pg_num 256`** — Only increase pg_num to a higher value; decreasing PGs is not allowed.
-    **`Error EPERM: pool deletion not confirmed; use --yes-i-really-really-mean-it flag`** — Include both pool name arguments and the confirmation flag exactly as shown in the command.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: pool 'rbd' does not exist` | Verify the pool name with `ceph osd pool ls` before running pool commands. |
+    | `Error EINVAL: pg_num 256 <= current pg_num 256` | Only increase pg_num to a higher value; decreasing PGs is not allowed. |
+    | `Error EPERM: pool deletion not confirmed; use --yes-i-really-really-mean-it flag` | Include both pool name arguments and the confirmation flag exactly as shown in the command. |
 ## PG Management
 
 ```bash
@@ -317,9 +321,11 @@ cephfs_metadata         8            8  1.0   512 MiB         0.80           512
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: pg 1.2a3 does not exist`** — Verify the PG ID format is correct (use `ceph pg ls` to list valid PGs) and the PG exists in the cluster.
-    **`Error EPERM: pool 'mypool' does not exist`** — Confirm the pool name is spelled correctly with `ceph osd pool ls`.
-    **`Error EBUSY: scrub already in progress on pg 2.1f`** — Wait for the current scrub to complete before triggering another one, or check `ceph pg stat` for PG state.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: pg 1.2a3 does not exist` | Verify the PG ID format is correct (use `ceph pg ls` to list valid PGs) and the PG exists in the cluster. |
+    | `Error EPERM: pool 'mypool' does not exist` | Confirm the pool name is spelled correctly with `ceph osd pool ls`. |
+    | `Error EBUSY: scrub already in progress on pg 2.1f` | Wait for the current scrub to complete before triggering another one, or check `ceph pg stat` for PG state. |
 ## rados (Object-Level)
 
 ```bash
@@ -369,9 +375,11 @@ $ rados cleanup -p rbd
 ```
 
 !!! warning "Common errors"
-    **`Error: pool <pool> does not exist`** — Verify the pool name with `ceph osd pool ls` and ensure the pool has been created.
-    **`Error: object not found`** — Confirm the object exists in the pool using `rados ls -p <pool>` before attempting stat or get operations.
-    **`Error: permission denied`** — Ensure your user has read/write permissions to the pool by checking `ceph auth list` and applying appropriate capabilities.
+    | Error | Fix |
+    |---|---|
+    | `Error: pool <pool> does not exist` | Verify the pool name with `ceph osd pool ls` and ensure the pool has been created. |
+    | `Error: object not found` | Confirm the object exists in the pool using `rados ls -p <pool>` before attempting stat or get operations. |
+    | `Error: permission denied` | Ensure your user has read/write permissions to the pool by checking `ceph auth list` and applying appropriate capabilities. |
 ## RBD (Block Storage)
 
 ```bash
@@ -442,9 +450,11 @@ id pool      image        snap dev
 ```
 
 !!! warning "Common errors"
-    **`rbd: error opening image volume-001: (2) No such file or directory`** — Verify the pool name and image name are correct with `rbd ls -p <pool>`.
-    **`rbd: snap 'daily-backup' is not protected`** — Protect the snapshot before cloning with `rbd snap protect <pool>/<image>@<snapname>`.
-    **`rbd: error: image still has 2 snapshots`** — Delete all snapshots before removing the image using `rbd snap rm <pool>/<image>@<snapname>` for each snapshot.
+    | Error | Fix |
+    |---|---|
+    | `rbd: error opening image volume-001: (2) No such file or directory` | Verify the pool name and image name are correct with `rbd ls -p <pool>`. |
+    | `rbd: snap 'daily-backup' is not protected` | Protect the snapshot before cloning with `rbd snap protect <pool>/<image>@<snapname>`. |
+    | `rbd: error: image still has 2 snapshots` | Delete all snapshots before removing the image using `rbd snap rm <pool>/<image>@<snapname>` for each snapshot. |
 ## radosgw-admin (Object Gateway)
 
 ```bash
@@ -561,8 +571,10 @@ radosgw-admin bucket rm --bucket=<name> --purge-objects
 ```
 
 !!! warning "Common errors"
-    **`error: bucket '<name>' does not exist`** — Verify the bucket name is correct and exists by running `radosgw-admin bucket list`.
-    **`error: unable to remove bucket, it is not empty`** — Remove the `--purge-objects` flag if you want to keep objects, or ensure the bucket truly has no versioned/deleted object markers with `radosgw-admin bucket check --bucket=<name>`.
+    | Error | Fix |
+    |---|---|
+    | `error: bucket '<name>' does not exist` | Verify the bucket name is correct and exists by running `radosgw-admin bucket list`. |
+    | `error: unable to remove bucket, it is not empty` | Remove the `--purge-objects` flag if you want to keep objects, or ensure the bucket truly has no versioned/deleted object markers with `radosgw-admin bucket check --bucket=<name>`. |
 ## cephadm Orchestration
 
 ```bash
@@ -620,9 +632,11 @@ ID                                    TIMESTAMP           ENTITY      MESSAGE
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: unrecognized service 'osd'`** — Verify the service name matches exactly (e.g., `osd.0` for a specific daemon) or use `ceph orch ls` to list available services.
-    **`Error EINVAL: host 'new-node' is not in the cluster`** — Ensure the hostname is resolvable and the host has been bootstrapped with `ceph orch host add` before deploying daemons to it.
-    **`Error EBUSY: host 'ceph-node-02' still has running daemons`** — Run `ceph orch host drain <hostname>` before removing the host to gracefully
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: unrecognized service 'osd'` | Verify the service name matches exactly (e.g., `osd.0` for a specific daemon) or use `ceph orch ls` to list available services. |
+    | `Error EINVAL: host 'new-node' is not in the cluster` | Ensure the hostname is resolvable and the host has been bootstrapped with `ceph orch host add` before deploying daemons to it. |
+    | `Error EBUSY: host 'ceph-node-02' still has running daemons` | Run `ceph orch host drain <hostname>` before removing the host to gracefully |
 ## Auth Management
 
 ```bash
@@ -660,9 +674,11 @@ imported keyring
 ```
 
 !!! warning "Common errors"
-    **`Error EACCES: permission denied`** — Ensure you have admin privileges (run with `sudo` or as the ceph user) and the Ceph cluster is accessible.
-    **`Error EINVAL: invalid value`** — Verify the pool name exists and the capability syntax is correct (e.g., `'allow rwx pool=poolname'` with proper quoting).
-    **`Error ENOENT: No such file or directory`** — Check that the keyring file path is correct and readable before importing with `ceph auth import`.
+    | Error | Fix |
+    |---|---|
+    | `Error EACCES: permission denied` | Ensure you have admin privileges (run with `sudo` or as the ceph user) and the Ceph cluster is accessible. |
+    | `Error EINVAL: invalid value` | Verify the pool name exists and the capability syntax is correct (e.g., `'allow rwx pool=poolname'` with proper quoting). |
+    | `Error ENOENT: No such file or directory` | Check that the keyring file path is correct and readable before importing with `ceph auth import`. |
 ---
 
 ## See also

@@ -62,8 +62,10 @@ jobs:
 ```
 
 !!! warning "Common errors"
-    **`Error: Workflow file is invalid`** — Ensure the reusable workflow path `./.github/workflows/reusable-deploy.yml` exists and the calling workflow is in `.github/workflows/` directory.
-    **`Error: Secret 'STAGING_DEPLOY_KEY' is not available`** — Add the `STAGING_DEPLOY_KEY` secret to the repository settings under Settings > Secrets and variables > Actions.
+    | Error | Fix |
+    |---|---|
+    | `Error: Workflow file is invalid` | Ensure the reusable workflow path `./.github/workflows/reusable-deploy.yml` exists and the calling workflow is in `.github/workflows/` directory. |
+    | `Error: Secret 'STAGING_DEPLOY_KEY' is not available` | Add the `STAGING_DEPLOY_KEY` secret to the repository settings under Settings > Secrets and variables > Actions. |
 ### Concurrency Control
 
 Prevent duplicate workflow runs for the same branch or PR.
@@ -128,9 +130,11 @@ https://github.com/acme-corp/infrastructure/actions/runs/8547291634
 ```
 
 !!! warning "Common errors"
-    **`gh: the specified workflow file was not found in the repository`** — Verify the workflow file exists at `.github/workflows/deploy.yml` and the path is correct.
-    **`Error: input 'version' is not defined for this workflow`** — Check that the workflow file has `on: workflow_dispatch:` with matching input names defined in the `inputs:` section.
-    **`fatal: not a git repository`** — Run the command from within a cloned Git repository directory where the `.github/workflows/` folder exists.
+    | Error | Fix |
+    |---|---|
+    | `gh: the specified workflow file was not found in the repository` | Verify the workflow file exists at `.github/workflows/deploy.yml` and the path is correct. |
+    | `Error: input 'version' is not defined for this workflow` | Check that the workflow file has `on: workflow_dispatch:` with matching input names defined in the `inputs:` section. |
+    | `fatal: not a git repository` | Run the command from within a cloned Git repository directory where the `.github/workflows/` folder exists. |
 ### Workflow Feature Reference
 
 | Feature | Syntax | Purpose |
@@ -518,9 +522,11 @@ Status: Downloaded newer image for rhysd/actionlint:latest
 ```
 
 !!! warning "Common errors"
-    **`actionlint: command not found`** — Run `brew install actionlint` on macOS or download the binary from the GitHub releases page for your OS.
-    **`.github/workflows/ci.yml:12:5: expression syntax error: unexpected token "}"`** — Check the GitHub Actions expression syntax in that workflow file; common causes are mismatched braces or incorrect variable interpolation.
-    **`Unable to find image 'rhysd/actionlint:latest' locally`** — Ensure Docker is running and you have internet connectivity to pull the image, or pre-pull it with `docker pull rhysd/actionlint:latest`.
+    | Error | Fix |
+    |---|---|
+    | `actionlint: command not found` | Run `brew install actionlint` on macOS or download the binary from the GitHub releases page for your OS. |
+    | `.github/workflows/ci.yml:12:5: expression syntax error: unexpected token "}"` | Check the GitHub Actions expression syntax in that workflow file; common causes are mismatched braces or incorrect variable interpolation. |
+    | `Unable to find image 'rhysd/actionlint:latest' locally` | Ensure Docker is running and you have internet connectivity to pull the image, or pre-pull it with `docker pull rhysd/actionlint:latest`. |
 ### Schema Validation
 
 VS Code and JetBrains IDEs provide schema-based validation when the schema URL is declared.
@@ -555,9 +561,11 @@ added 47 packages, and audited 48 packages in 2.3s
 ```
 
 !!! warning "Common errors"
-    **`ajv: command not found`** — Ensure npm install completed successfully and /usr/local/lib/node_modules/.bin is in your $PATH, or use `npx ajv` instead.
-    **`Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'`** — Verify the workflow file exists at the correct path relative to your current working directory.
-    **`Error: Failed to compile schema`** — Check that the schema URL is accessible and valid; try downloading it manually with `curl` to confirm network connectivity.
+    | Error | Fix |
+    |---|---|
+    | `ajv: command not found` | Ensure npm install completed successfully and /usr/local/lib/node_modules/.bin is in your $PATH, or use `npx ajv` instead. |
+    | `Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'` | Verify the workflow file exists at the correct path relative to your current working directory. |
+    | `Error: Failed to compile schema` | Check that the schema URL is accessible and valid; try downloading it manually with `curl` to confirm network connectivity. |
 ### Required Status Checks
 
 Configure branch protection to require workflow jobs to pass before merging.
@@ -603,9 +611,11 @@ EOF
 ```
 
 !!! warning "Common errors"
-    **`HTTP 404: Not Found`** — Verify the repository exists and OWNER/REPO values are correct.
-    **`HTTP 403: Forbidden`** — Ensure your GitHub token has `admin:repo_hook` and `repo` scopes, or use a PAT with full repo access.
-    **`HTTP 422: Unprocessable Entity`** — Confirm all status check contexts in the `contexts` array match exactly the names configured in your CI/CD workflows.
+    | Error | Fix |
+    |---|---|
+    | `HTTP 404: Not Found` | Verify the repository exists and OWNER/REPO values are correct. |
+    | `HTTP 403: Forbidden` | Ensure your GitHub token has `admin:repo_hook` and `repo` scopes, or use a PAT with full repo access. |
+    | `HTTP 422: Unprocessable Entity` | Confirm all status check contexts in the `contexts` array match exactly the names configured in your CI/CD workflows. |
 ### Validating Workflows in CI
 
 Run actionlint automatically as part of the CI pipeline.
@@ -714,9 +724,11 @@ Runner Architecture: x64
 ```
 
 !!! warning "Common errors"
-    **`./config.sh: line 1: ./bin/Runner.Listener: cannot execute binary file`** — Verify the downloaded runner matches your system architecture (x64 vs arm64) and OS (linux vs macos vs win).
-    **`Error: Not Found`** — Confirm the registration token is valid and hasn't expired; generate a fresh token from Settings → Actions → Runners → New runner.
-    **`sudo: ./svc.sh: command not found`** — Ensure you are in the actions-runner directory and have run `tar xzf` to extract all files before attempting service installation.
+    | Error | Fix |
+    |---|---|
+    | `./config.sh: line 1: ./bin/Runner.Listener: cannot execute binary file` | Verify the downloaded runner matches your system architecture (x64 vs arm64) and OS (linux vs macos vs win). |
+    | `Error: Not Found` | Confirm the registration token is valid and hasn't expired; generate a fresh token from Settings → Actions → Runners → New runner. |
+    | `sudo: ./svc.sh: command not found` | Ensure you are in the actions-runner directory and have run `tar xzf` to extract all files before attempting service installation. |
 | Step | Command / Location |
 |---|---|
 | Get registration token | Settings → Actions → Runners → New self-hosted runner |
@@ -895,8 +907,10 @@ completed   success      scheduled-report.yml 4518     scheduled-report.yml  202
 ```
 
 !!! warning "Common errors"
-    **`Error: workflow not found`** — Verify the workflow file exists in `.github/workflows/` and use the exact filename with `.yml` extension.
-    **`Error: authentication failed`** — Ensure you are authenticated with `gh auth login` and have `workflow` scope permissions on your GitHub token.
+    | Error | Fix |
+    |---|---|
+    | `Error: workflow not found` | Verify the workflow file exists in `.github/workflows/` and use the exact filename with `.yml` extension. |
+    | `Error: authentication failed` | Ensure you are authenticated with `gh auth login` and have `workflow` scope permissions on your GitHub token. |
 | Cron field order | `minute hour day-of-month month day-of-week` |
 |---|---|
 | `0 6 * * 1` | Every Monday at 06:00 UTC |

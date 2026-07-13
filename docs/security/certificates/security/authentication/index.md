@@ -124,8 +124,10 @@ X509v3 CT Precertificate SCTs:
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input): No such file or directory`** — Verify the certificate file exists at the specified path and use the correct filename (e.g., `openssl x509 -in /path/to/cert.pem`).
-    **`jq: parse error: Invalid numeric literal at line 1 column 7`** — Ensure the crt.sh API response is valid JSON by checking your domain name spelling and network connectivity with `curl -s "https://crt.sh/?q=corp.example.com&output=json" | head -c 200`.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input): No such file or directory` | Verify the certificate file exists at the specified path and use the correct filename (e.g., `openssl x509 -in /path/to/cert.pem`). |
+    | `jq: parse error: Invalid numeric literal at line 1 column 7` | Ensure the crt.sh API response is valid JSON by checking your domain name spelling and network connectivity with `curl -s "https://crt.sh/?q=corp.example.com&output=json" | head -c 200`. |
 ## See also
 
 - [Certificates — Access Control](../access-control/)

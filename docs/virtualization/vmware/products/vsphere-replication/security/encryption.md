@@ -110,9 +110,11 @@ curl -sk -X PUT "https://vra-london.example.local/api/rest/vr/ssl/certificate" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or install the CA certificate in your system trust store.
-    **`{"error": "Invalid certificate format", "code": "CERT_INVALID"}`** — Ensure certificate and key files are PEM-encoded and base64 encoding succeeded without newlines using `tr -d '\n'`.
-    **`curl: (401) Unauthorized`** — Verify the Bearer token in `$TOKEN` is valid and has not expired by checking vSphere Replication authentication logs.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or install the CA certificate in your system trust store. |
+    | `{"error": "Invalid certificate format", "code": "CERT_INVALID"}` | Ensure certificate and key files are PEM-encoded and base64 encoding succeeded without newlines using `tr -d '\n'`. |
+    | `curl: (401) Unauthorized` | Verify the Bearer token in `$TOKEN` is valid and has not expired by checking vSphere Replication authentication logs. |
 After replacing the VRA certificate, update the thumbprint stored in the site pair:
 ```text
 Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
@@ -150,8 +152,10 @@ vra-london:~>
 ```
 
 !!! warning "Common errors"
-    **`sudo: vim: command not found`** — Use `sudo nano /opt/vmware/etc/nginx/nginx.conf` or install vim with `sudo yum install vim`.
-    **`Job for nginx.service failed because the control process exited with error code`** — Validate nginx syntax with `sudo nginx -t` before reloading to identify configuration errors.
+    | Error | Fix |
+    |---|---|
+    | `sudo: vim: command not found` | Use `sudo nano /opt/vmware/etc/nginx/nginx.conf` or install vim with `sudo yum install vim`. |
+    | `Job for nginx.service failed because the control process exited with error code` | Validate nginx syntax with `sudo nginx -t` before reloading to identify configuration errors. |
 ## See also
 
 - [vSphere Replication — Hardening](../hardening/)

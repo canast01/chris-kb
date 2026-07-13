@@ -64,8 +64,10 @@ Authenticated to 192.168.10.50 as admin
 ```
 
 !!! warning "Common errors"
-    **`ERROR: PSTORE_PASS must be set`** — Set the PSTORE_PASS environment variable before sourcing the script: `export PSTORE_PASS="your_password"`.
-    **`ERROR: Authentication failed — check PSTORE_HOST, PSTORE_USER, PSTORE_PASS`** — Verify credentials are correct and the PowerStore array is reachable at the PSTORE_HOST IP address with `ping` or `curl -k https://${PSTORE_HOST}`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: PSTORE_PASS must be set` | Set the PSTORE_PASS environment variable before sourcing the script: `export PSTORE_PASS="your_password"`. |
+    | `ERROR: Authentication failed — check PSTORE_HOST, PSTORE_USER, PSTORE_PASS` | Verify credentials are correct and the PowerStore array is reachable at the PSTORE_HOST IP address with `ping` or `curl -k https://${PSTORE_HOST}`. |
 ---
 
 ## Daily Health Check Script
@@ -192,9 +194,11 @@ exit "$STATE"
 ```
 
 !!! warning "Common errors"
-    **`CRIT: Authentication failed`** — Verify PSTORE_HOST is reachable, PSTORE_USER exists, and PSTORE_PASS is correct.
-    **`jq: parse error: Invalid numeric literal at line 1 column 5`** — Ensure the PowerStore API is responding with valid JSON; check network connectivity and API endpoint availability.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands (already present) or import the PowerStore's CA certificate into your system trust store.
+    | Error | Fix |
+    |---|---|
+    | `CRIT: Authentication failed` | Verify PSTORE_HOST is reachable, PSTORE_USER exists, and PSTORE_PASS is correct. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 5` | Ensure the PowerStore API is responding with valid JSON; check network connectivity and API endpoint availability. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands (already present) or import the PowerStore's CA certificate into your system trust store. |
 ---
 
 ## Volume Inventory Report
@@ -271,9 +275,11 @@ Total volumes: 5
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Auth failed`** — Verify PSTORE_PASS is correct and the user account is not locked; check that the PowerStore API is responding with `curl -ks https://<ip>/api/rest/login_session`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands (already present) or import the PowerStore certificate into your system CA bundle with `update-ca-certificates`.
-    **`jq: parse error: Invalid numeric literal at line 1 column 5`** — Ensure the API response is valid JSON by testing the token endpoint directly; the PowerStore API may be unreachable or returning an error page instead of JSON.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Auth failed` | Verify PSTORE_PASS is correct and the user account is not locked; check that the PowerStore API is responding with `curl -ks https://<ip>/api/rest/login_session`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands (already present) or import the PowerStore certificate into your system CA bundle with `update-ca-certificates`. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 5` | Ensure the API response is valid JSON by testing the token endpoint directly; the PowerStore API may be unreachable or returning an error page instead of JSON. |
 ---
 
 ## Replication Status Reporter
@@ -443,9 +449,11 @@ Dry run: true | Deleted: 0
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Auth failed`** — Verify PSTORE_HOST is reachable and PSTORE_PASS credentials are correct.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands or import the PowerStore certificate into your system trust store.
-    **`jq: parse error: Invalid numeric literal at line 1 column 5`** — Ensure the PowerStore API is responding with valid JSON; check that PSTORE_HOST points to the management IP and the API endpoint is accessible.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Auth failed` | Verify PSTORE_HOST is reachable and PSTORE_PASS credentials are correct. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands or import the PowerStore certificate into your system trust store. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 5` | Ensure the PowerStore API is responding with valid JSON; check that PSTORE_HOST points to the management IP and the API endpoint is accessible. |
 ---
 
 ## Capacity Forecast Report
@@ -596,9 +604,11 @@ exit 0
 ```
 
 !!! warning "Common errors"
-    **`FAIL: Authentication failed`** — Verify PSTORE_HOST is reachable and PSTORE_PASS credentials are correct; check network connectivity with `ping ${PSTORE_HOST}`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the PowerStore CA certificate into your system trust store.
-    **`jq: parse error: Invalid numeric literal at line 1 column 5`** — Ensure the PowerStore API is responding with valid JSON; verify the API endpoint version matches your PowerStore firmware with `curl -ks https://${PSTORE_HOST}/api/rest/system`.
+    | Error | Fix |
+    |---|---|
+    | `FAIL: Authentication failed` | Verify PSTORE_HOST is reachable and PSTORE_PASS credentials are correct; check network connectivity with `ping ${PSTORE_HOST}`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the PowerStore CA certificate into your system trust store. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 5` | Ensure the PowerStore API is responding with valid JSON; verify the API endpoint version matches your PowerStore firmware with `curl -ks https://${PSTORE_HOST}/api/rest/system`. |
 ---
 
 ## Verify

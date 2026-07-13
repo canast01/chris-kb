@@ -82,9 +82,11 @@ curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl commands to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`jq: command not found`** — Use `python3 -m json.tool` instead of `jq` for JSON formatting, or install jq with `apt-get install jq` / `yum install jq`.
-    **`grep: X-SDS-AUTH-TOKEN: No such file or directory`** — Ensure the `-D -` flag is present in the login curl command to write headers to stdout; verify the ECS node hostname/IP is correct and port 4443 is accessible.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl commands to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `jq: command not found` | Use `python3 -m json.tool` instead of `jq` for JSON formatting, or install jq with `apt-get install jq` / `yum install jq`. |
+    | `grep: X-SDS-AUTH-TOKEN: No such file or directory` | Ensure the `-D -` flag is present in the login curl command to write headers to stdout; verify the ECS node hostname/IP is correct and port 4443 is accessible. |
 ## LDAP / Active Directory
 
 ECS can delegate management user authentication to an external LDAP or Active Directory service for namespace-level access. This is configured per namespace and enables existing AD groups to be mapped to ECS roles without creating individual local accounts.
@@ -167,8 +169,10 @@ Secret key deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: user 'svc-spark-prod' not found in namespace 'analytics-prod'`** — Verify the namespace and username exist by running `ecscli user list --namespace analytics-prod`.
-    **`Error: secret key <old-key-id> is currently in use and cannot be deleted`** — Confirm the new key is actively being used by the application before attempting deletion, or wait for in-flight requests to complete.
+    | Error | Fix |
+    |---|---|
+    | `Error: user 'svc-spark-prod' not found in namespace 'analytics-prod'` | Verify the namespace and username exist by running `ecscli user list --namespace analytics-prod`. |
+    | `Error: secret key <old-key-id> is currently in use and cannot be deleted` | Confirm the new key is actively being used by the application before attempting deletion, or wait for in-flight requests to complete. |
 **Object user restrictions:**
 
 | Restriction | Detail |

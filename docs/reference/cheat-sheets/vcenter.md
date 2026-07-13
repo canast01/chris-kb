@@ -109,9 +109,11 @@ Memory Usage:       512 GB / 768 GB (66.7%)
 ```
 
 !!! warning "Common errors"
-    **`Error: Post "https://vcenter.lab.local/sdk": dial tcp: lookup vcenter.lab.local: no such host`** — Verify the vCenter hostname is resolvable and reachable, or update GOVC_URL to the correct IP address.
-    **`Error: Login failed with error: Invalid credentials`** — Confirm GOVC_USERNAME and GOVC_PASSWORD are correct and the account has not been locked due to failed login attempts.
-    **`Error: The object 'vm' of type 'VirtualMachine' was not found`** — Verify the VM path is correct by running `govc ls /DC/vm` to list available VMs and check for typos in the path.
+    | Error | Fix |
+    |---|---|
+    | `Error: Post "https://vcenter.lab.local/sdk": dial tcp: lookup vcenter.lab.local: no such host` | Verify the vCenter hostname is resolvable and reachable, or update GOVC_URL to the correct IP address. |
+    | `Error: Login failed with error: Invalid credentials` | Confirm GOVC_USERNAME and GOVC_PASSWORD are correct and the account has not been locked due to failed login attempts. |
+    | `Error: The object 'vm' of type 'VirtualMachine' was not found` | Verify the VM path is correct by running `govc ls /DC/vm` to list available VMs and check for typos in the path. |
 ## Appliance (VCSA shell)
 
 ```bash
@@ -154,9 +156,11 @@ Tag: maintenance (ID: urn:vmomi:InventoryServiceTag:8b2f4e9c-1a7d-3f5e-9b6c-4d8a
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to service-control. Is VCSA running?`** — Ensure you are connected via SSH to the VCSA appliance itself, not a vCenter Server running on Windows.
-    **`Error: Unknown service 'vpxd'. Run 'service-control --list' to see available services.`** — Use the exact service name from `service-control --list` output; service names are case-sensitive.
-    **`Error: Authentication failed for dcli command.`** — Run `dcli +server localhost +username administrator@vsphere.local` first to authenticate, or ensure your VCSA credentials are correct.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to service-control. Is VCSA running?` | Ensure you are connected via SSH to the VCSA appliance itself, not a vCenter Server running on Windows. |
+    | `Error: Unknown service 'vpxd'. Run 'service-control --list' to see available services.` | Use the exact service name from `service-control --list` output; service names are case-sensitive. |
+    | `Error: Authentication failed for dcli command.` | Run `dcli +server localhost +username administrator@vsphere.local` first to authenticate, or ensure your VCSA credentials are correct. |
 ## See also
 
 - [vCenter Operations](../../../virtualization/vmware/products/vcenter/operations/procedures/)

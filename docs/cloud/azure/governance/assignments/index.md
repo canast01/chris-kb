@@ -113,7 +113,9 @@ audit-storage-https   /providers/Microsoft.Management/managementGroups/mg-platfo
 ```
 
 !!! warning "Common errors"
-    **`Invalid scope: The provided scope '/subscriptions/<subscription-id>' is invalid.`** — Replace `<subscription-id>` and `<sub-id>` placeholders with your actual Azure subscription ID.
+    | Error | Fix |
+    |---|---|
+    | `Invalid scope: The provided scope '/subscriptions/<subscription-id>' is invalid.` | Replace `<subscription-id>` and `<sub-id>` placeholders with your actual Azure subscription ID. |
     **`Policy definition not found: '9daedab3-fb2d-461e-b861-71790eead4f6'.`**
 ## Assignment Scope
 
@@ -186,9 +188,11 @@ az policy assignment show \
 ```
 
 !!! warning "Common errors"
-    **`The policy definition with ID 'e56962a6-4747-49cd-b67b-bf8b01975c4f' cannot be found.`** — Verify the policy definition ID exists in your subscription or use `az policy definition list` to find the correct ID.
-    **`Invalid scope provided. Scope must be a valid subscription, resource group, or management group path.`** — Replace `<subscription-id>` with your actual subscription ID from `az account show --query id`.
-    **`The parameter 'listOfAllowedLocations' is not defined in the policy definition.`** — Check the policy definition's parameter names using `az policy definition show --name <policy-name> --query parameters` and adjust the JSON accordingly.
+    | Error | Fix |
+    |---|---|
+    | `The policy definition with ID 'e56962a6-4747-49cd-b67b-bf8b01975c4f' cannot be found.` | Verify the policy definition ID exists in your subscription or use `az policy definition list` to find the correct ID. |
+    | `Invalid scope provided. Scope must be a valid subscription, resource group, or management group path.` | Replace `<subscription-id>` with your actual subscription ID from `az account show --query id`. |
+    | `The parameter 'listOfAllowedLocations' is not defined in the policy definition.` | Check the policy definition's parameter names using `az policy definition show --name <policy-name> --query parameters` and adjust the JSON accordingly. |
 ## Exemptions
 
 Specific resources or resource groups can be excluded from an assignment using exclusions (set at assignment time) or exemptions (created post-assignment).
@@ -246,7 +250,9 @@ az policy exemption create \
 ```
 
 !!! warning "Common errors"
-    **`Policy definition not found with id '9daedab3-fb2d-461e-b861-71790eead4f6'.`** — Verify the policy definition ID exists in your subscription using `az policy
+    | Error | Fix |
+    |---|---|
+    | `Policy definition not found with id '9daedab3-fb2d-461e-b861-71790eead4f6'.` | Verify the policy definition ID exists in your subscription using `az policy |
 ## Assignment Managed Identity
 
 Policies with the `deployIfNotExists` or `modify` effect require a managed identity to perform remediation actions.
@@ -288,9 +294,11 @@ audit-vm-encryption    UserAssigned
 ```
 
 !!! warning "Common errors"
-    **`Policy definition not found with id '<policy-definition-id>'.`** — Replace `<policy-definition-id>` with a valid policy definition ID from `az policy definition list`.
-    **`The scope '/subscriptions/<subscription-id>' is invalid.`** — Verify the subscription ID exists and you have access by running `az account show --query id`.
-    **`The operation failed because the managed identity does not have the required permissions.`** — Assign the Contributor or Policy Insights Data Writer role to the system-assigned identity using `az role assignment create`.
+    | Error | Fix |
+    |---|---|
+    | `Policy definition not found with id '<policy-definition-id>'.` | Replace `<policy-definition-id>` with a valid policy definition ID from `az policy definition list`. |
+    | `The scope '/subscriptions/<subscription-id>' is invalid.` | Verify the subscription ID exists and you have access by running `az account show --query id`. |
+    | `The operation failed because the managed identity does not have the required permissions.` | Assign the Contributor or Policy Insights Data Writer role to the system-assigned identity using `az role assignment create`. |
 ## Common Assignment Patterns
 
 | Pattern | Description |

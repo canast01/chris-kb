@@ -114,9 +114,11 @@ disabled_modules: [dashboard, influx, insights, iostat, nfs, orchestrator, rbd_s
 ```
 
 !!! warning "Common errors"
-    **`HEALTH_WARN`** — Address the warning with `ceph health detail` and resolve underlying issues (e.g., slow requests, misplaced objects) before proceeding.
-    **`error: (2) No such file or directory`** — Verify the Ceph cluster is initialized and the monitor is running with `ceph -s`; check `/etc/ceph/ceph.conf` exists and `CEPH_ARGS` environment variable is not overriding the cluster name.
-    **`require_osd_release mismatch detected`** — Set the require-osd-release flag to match the current cluster version with `ceph osd set-require-osd-release <version>` before upgrading OSDs.
+    | Error | Fix |
+    |---|---|
+    | `HEALTH_WARN` | Address the warning with `ceph health detail` and resolve underlying issues (e.g., slow requests, misplaced objects) before proceeding. |
+    | `error: (2) No such file or directory` | Verify the Ceph cluster is initialized and the monitor is running with `ceph -s`; check `/etc/ceph/ceph.conf` exists and `CEPH_ARGS` environment variable is not overriding the cluster name. |
+    | `require_osd_release mismatch detected` | Set the require-osd-release flag to match the current cluster version with `ceph osd set-require-osd-release <version>` before upgrading OSDs. |
 ## Upgrade with cephadm
 
 ### Step 1 — Update cephadm itself
@@ -146,9 +148,11 @@ cephadm                           on  ceph-mgr.node-01.abc123def456
 ```
 
 !!! warning "Common errors"
-    **`Error: No module named 'cephadm'`** — Ensure cephadm is installed on the bootstrap node with `curl --silent --remote-name --location https://github.com/ceph/ceph/raw/octopus/src/cephadm/cephadm && chmod +x cephadm`.
-    **`Error: mgr module 'cephadm' is not available`** — Verify the Ceph cluster is healthy with `ceph health` and check that the mgr daemon is running with `ceph mgr stat`.
-    **`command not found: cephadm`** — Add cephadm to your PATH or use the full path `/usr/sbin/cephadm` if installed via package manager.
+    | Error | Fix |
+    |---|---|
+    | `Error: No module named 'cephadm'` | Ensure cephadm is installed on the bootstrap node with `curl --silent --remote-name --location https://github.com/ceph/ceph/raw/octopus/src/cephadm/cephadm && chmod +x cephadm`. |
+    | `Error: mgr module 'cephadm' is not available` | Verify the Ceph cluster is healthy with `ceph health` and check that the mgr daemon is running with `ceph mgr stat`. |
+    | `command not found: cephadm` | Add cephadm to your PATH or use the full path `/usr/sbin/cephadm` if installed via package manager. |
 ### Step 2 — Start the rolling upgrade
 
 ```bash
@@ -183,9 +187,11 @@ Overall progress: 16/20 daemons complete (80%)
 ```
 
 !!! warning "Common errors"
-    **`Error: invalid ceph version '18.2.4'`** — Use the full semantic version format (e.g., `18.2.4`) or verify the version exists on quay.io/ceph/ceph.
-    **`Error: unable to pull image quay.io/ceph/ceph:v18.2.4: connection timeout`** — Ensure the Ceph cluster nodes have outbound HTTPS access to quay.io or use a private registry mirror.
-    **`Error: upgrade already in progress`** — Wait for the current upgrade to complete or use `ceph orch upgrade pause` then `ceph orch upgrade resume` to restart.
+    | Error | Fix |
+    |---|---|
+    | `Error: invalid ceph version '18.2.4'` | Use the full semantic version format (e.g., `18.2.4`) or verify the version exists on quay.io/ceph/ceph. |
+    | `Error: unable to pull image quay.io/ceph/ceph:v18.2.4: connection timeout` | Ensure the Ceph cluster nodes have outbound HTTPS access to quay.io or use a private registry mirror. |
+    | `Error: upgrade already in progress` | Wait for the current upgrade to complete or use `ceph orch upgrade pause` then `ceph orch upgrade resume` to restart. |
 ### Step 3 — Monitor upgrade progress
 
 ```bash
@@ -253,8 +259,10 @@ Every 5.0s: ceph -s | head -20                                                  
 ```
 
 !!! warning "Common errors"
-    **`Error: No orchestrator backend found`** — Ensure Cephadm is deployed with `ceph orch status` and that the mgr orchestrator module is enabled.
-    **`Error: upgrade already in progress`** — Wait for the current upgrade to complete or check `ceph orch upgrade pause` to pause and resume safely.
+    | Error | Fix |
+    |---|---|
+    | `Error: No orchestrator backend found` | Ensure Cephadm is deployed with `ceph orch status` and that the mgr orchestrator module is enabled. |
+    | `Error: upgrade already in progress` | Wait for the current upgrade to complete or check `ceph orch upgrade pause` to pause and resume safely. |
 ### Step 4 — Pause and resume if needed
 
 ```bash
@@ -295,8 +303,10 @@ Upgrade stopped
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: no upgrade in progress`** — Ensure an upgrade was actually initiated with `ceph orch upgrade start` before attempting to pause or resume.
-    **`Error EINVAL: cannot pause: upgrade is already paused`** — Check current upgrade state with `ceph orch upgrade status` before issuing pause/resume commands.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: no upgrade in progress` | Ensure an upgrade was actually initiated with `ceph orch upgrade start` before attempting to pause or resume. |
+    | `Error EINVAL: cannot pause: upgrade is already paused` | Check current upgrade state with `ceph orch upgrade status` before issuing pause/resume commands. |
 ## Rolling Upgrade Behaviour
 
 - cephadm pulls the new container image on each host before restarting the daemon.
@@ -364,8 +374,10 @@ nodeep-scrub is unset
 ```
 
 !!! warning "Common errors"
-    **`Error EPERM: insufficient caps`** — Run the commands with appropriate admin privileges (e.g., as root or with `sudo ceph`) and ensure your keyring has `osd` capability.
-    **`Error EINVAL: invalid release name 'quincy'`** — Verify the release codename matches your target version exactly (e.g., `reef`, `squid`) and that all daemons have already been upgraded to that version.
+    | Error | Fix |
+    |---|---|
+    | `Error EPERM: insufficient caps` | Run the commands with appropriate admin privileges (e.g., as root or with `sudo ceph`) and ensure your keyring has `osd` capability. |
+    | `Error EINVAL: invalid release name 'quincy'` | Verify the release codename matches your target version exactly (e.g., `reef`, `squid`) and that all daemons have already been upgraded to that version. |
 ## Post-Upgrade Validation
 
 | Check | Command | Expected Result |
@@ -473,9 +485,11 @@ Scheduled mgr.ceph-node1 redeploy with image quay.io/ceph/ceph:v18.2.2
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: unknown daemon type <daemon-type>`** — Replace `<daemon-type>` with a valid daemon type (mon, mgr, osd, mds, rgw, etc.).
-    **`Error: No such daemon mgr.ceph-node1`** — Verify the daemon exists by running `ceph orch ps` and use the correct daemon name from the output.
-    **`Error pulling image quay.io/ceph/ceph:v18.2.2: image not found`** — Ensure the image tag exists in the registry and the host has network access to quay.io.
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: unknown daemon type <daemon-type>` | Replace `<daemon-type>` with a valid daemon type (mon, mgr, osd, mds, rgw, etc.). |
+    | `Error: No such daemon mgr.ceph-node1` | Verify the daemon exists by running `ceph orch ps` and use the correct daemon name from the output. |
+    | `Error pulling image quay.io/ceph/ceph:v18.2.2: image not found` | Ensure the image tag exists in the registry and the host has network access to quay.io. |
 - Major version rollback (e.g., Reef → Quincy) is not supported and will corrupt OSD data if attempted after `ceph osd require-osd-release` has been updated.
 
 ---

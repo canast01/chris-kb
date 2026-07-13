@@ -132,9 +132,11 @@ Replication Jobs: 12 active, 0 failed
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster via SSH or run commands from a system with the OneFS CLI installed.
-    **`Error: Authentication failed`** — Verify your credentials and that your user account has administrative privileges on the cluster.
-    **`Error: SyncIQ service is not running`** — Restart the SyncIQ service using `isi sync service start` and verify replication jobs are queued.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are logged into the PowerScale cluster via SSH or run commands from a system with the OneFS CLI installed. |
+    | `Error: Authentication failed` | Verify your credentials and that your user account has administrative privileges on the cluster. |
+    | `Error: SyncIQ service is not running` | Restart the SyncIQ service using `isi sync service start` and verify replication jobs are queued. |
 ---
 
 ## Weekly DR Readiness Check
@@ -175,9 +177,11 @@ DR cluster dr-cluster-02 is ready for failover operations.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to cluster dr-cluster — connection refused`** — Verify the DR cluster hostname/IP is reachable and Eyeglass has network connectivity on port 443.
-    **`Error: SyncIQ policy 'policy-backup-03' not running — status: paused`** — Resume all paused SyncIQ policies on the DR cluster before proceeding with failover.
-    **`Error: 3 NFS exports missing on DR site — replication incomplete`** — Wait for SyncIQ replication to complete or manually sync missing exports before running preflight again.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to cluster dr-cluster — connection refused` | Verify the DR cluster hostname/IP is reachable and Eyeglass has network connectivity on port 443. |
+    | `Error: SyncIQ policy 'policy-backup-03' not running — status: paused` | Resume all paused SyncIQ policies on the DR cluster before proceeding with failover. |
+    | `Error: 3 NFS exports missing on DR site — replication incomplete` | Wait for SyncIQ replication to complete or manually sync missing exports before running preflight again. |
 ---
 
 ## Health Check Summary Table
@@ -275,9 +279,11 @@ Preflight check completed: 10/10 PASS, 0 WARN, 0 FAIL
 ```
 
 !!! warning "Common errors"
-    **`[FAIL] Unable to connect to DR cluster dr-cluster-01`** — Verify the DR cluster hostname/IP is correct and reachable from the Eyeglass appliance using `ping` or `ssh`.
-    **`[WARN] SyncIQ policy last run: 2 hours ago`** — Manually trigger the SyncIQ policy on the source cluster or check for policy scheduling issues before proceeding with DR operations.
-    **`[FAIL] Eyeglass connectivity to both clusters confirmed: FAILED`** — Confirm Eyeglass has network connectivity and valid credentials configured for both clusters in the web UI settings.
+    | Error | Fix |
+    |---|---|
+    | `[FAIL] Unable to connect to DR cluster dr-cluster-01` | Verify the DR cluster hostname/IP is correct and reachable from the Eyeglass appliance using `ping` or `ssh`. |
+    | `[WARN] SyncIQ policy last run: 2 hours ago` | Manually trigger the SyncIQ policy on the source cluster or check for policy scheduling issues before proceeding with DR operations. |
+    | `[FAIL] Eyeglass connectivity to both clusters confirmed: FAILED` | Confirm Eyeglass has network connectivity and valid credentials configured for both clusters in the web UI settings. |
 ### DR Test (Rehearsal)
 
 ![DR Test (Rehearsal)](../../../../../assets/storage-netapp-superna-eyeglass-hc-dr-test-rehearsal.svg)
@@ -362,9 +368,11 @@ Next Sync: 2024-03-15 10:15:22 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy 'prod-cluster-dr' not found or not accessible`** — Verify the policy name matches exactly and your Eyeglass user has read permissions on the policy.
-    **`ssh: connect to host <dr-cluster> port 22: Connection timed out`** — Confirm the DR cluster hostname/IP is reachable and SSH is enabled; check firewall rules between your admin host and DR cluster.
-    **`drtest status: Test rollback failed — manual intervention required`** — Check Eyeglass logs for replication errors and ensure the primary cluster is still reachable before attempting rollback again.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy 'prod-cluster-dr' not found or not accessible` | Verify the policy name matches exactly and your Eyeglass user has read permissions on the policy. |
+    | `ssh: connect to host <dr-cluster> port 22: Connection timed out` | Confirm the DR cluster hostname/IP is reachable and SSH is enabled; check firewall rules between your admin host and DR cluster. |
+    | `drtest status: Test rollback failed — manual intervention required` | Check Eyeglass logs for replication errors and ensure the primary cluster is still reachable before attempting rollback again. |
 ### Post-Failover Validation
 
 ![Post-Failover Validation](../../../../../assets/storage-netapp-superna-eyeglass-hc-post-failover-validation.svg)
@@ -443,9 +451,11 @@ Last Run: 2024-01-15T14:32:18Z
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: access denied by server while mounting <dr-smartconnect-ip>:/<export_path>`** — Verify the NFS export exists on the DR cluster and client IP is in the allowed clients list using `isi nfs exports view <export_id>`.
-    **`ssh: connect to host <dr-cluster> port 22: Connection refused`** — Confirm the DR cluster management IP is correct and SSH is enabled; check network connectivity with `ping <dr-cluster>`.
-    **`egcli: command not found`** — Ensure you are running commands from the Superna Eyeglass appliance or have the egcli tools installed and in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: access denied by server while mounting <dr-smartconnect-ip>:/<export_path>` | Verify the NFS export exists on the DR cluster and client IP is in the allowed clients list using `isi nfs exports view <export_id>`. |
+    | `ssh: connect to host <dr-cluster> port 22: Connection refused` | Confirm the DR cluster management IP is correct and SSH is enabled; check network connectivity with `ping <dr-cluster>`. |
+    | `egcli: command not found` | Ensure you are running commands from the Superna Eyeglass appliance or have the egcli tools installed and in your PATH. |
 ### Post-Failback Validation
 
 ![Post-Failback Validation](../../../../../assets/storage-netapp-superna-eyeglass-hc-post-failback-validation.svg)
@@ -502,9 +512,11 @@ Address: 10.50.20.45
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to drpolicy service`** — Verify Superna Eyeglass service is running with `systemctl status eyeglass` and check network connectivity to the Eyeglass appliance.
-    **`ssh: Could not resolve hostname <production-cluster>: Name or service not known`** — Replace `<production-cluster>` with the actual FQDN or IP address of your production cluster (e.g., `prod-cluster-1.example.com`).
-    **`nslookup: can't resolve '<production-smartconnect-zone>': No address associated with hostname`** — Confirm the SmartConnect zone name is correct and DNS is properly configured; verify with `isi network smartconnect list` on the production cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to drpolicy service` | Verify Superna Eyeglass service is running with `systemctl status eyeglass` and check network connectivity to the Eyeglass appliance. |
+    | `ssh: Could not resolve hostname <production-cluster>: Name or service not known` | Replace `<production-cluster>` with the actual FQDN or IP address of your production cluster (e.g., `prod-cluster-1.example.com`). |
+    | `nslookup: can't resolve '<production-smartconnect-zone>': No address associated with hostname` | Confirm the SmartConnect zone name is correct and DNS is properly configured; verify with `isi network smartconnect list` on the production cluster. |
 ### Validation Record Template
 
 ![Validation Record Template](../../../../../assets/storage-netapp-superna-eyeglass-hc-validation-record-template.svg)

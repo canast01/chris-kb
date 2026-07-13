@@ -177,9 +177,11 @@ az role definition delete --name "VM Operator (Read + Start/Stop)"
 ```
 
 !!! warning "Common errors"
-    **`File not found: custom-role.json`** — Verify the JSON definition file exists in the current directory and use the correct relative or absolute path.
-    **`Invalid role definition schema`** — Ensure the JSON file contains required fields (roleName, description, type, assignableScopes, permissions) with valid syntax.
-    **`Role definition not found`** — Confirm the exact role name exists by running `az role definition list --custom-role-only` to view all custom roles.
+    | Error | Fix |
+    |---|---|
+    | `File not found: custom-role.json` | Verify the JSON definition file exists in the current directory and use the correct relative or absolute path. |
+    | `Invalid role definition schema` | Ensure the JSON file contains required fields (roleName, description, type, assignableScopes, permissions) with valid syntax. |
+    | `Role definition not found` | Confirm the exact role name exists by running `az role definition list --custom-role-only` to view all custom roles. |
 ## Data Plane vs Control Plane
 
 Control plane (management) and data plane (data) are separate in Azure RBAC.

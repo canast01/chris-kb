@@ -124,9 +124,11 @@ Backup Size: 18.7 GB
 ```
 
 !!! warning "Common errors"
-    **`df: cannot access '/var': No such file or directory`** — Verify the mount point exists or adjust the command to check only mounted filesystems with `df -h /`.
-    **`error: unable to connect to the server: dial tcp: lookup kubernetes.default on 10.0.2.2:53: no such host`** — Ensure kubectl is configured with the correct kubeconfig context using `kubectl config use-context <context-name>`.
-    **`vracli: command not found`** — Add the vracli binary path to your shell environment with `export PATH=$PATH:/opt/vmware/vra/bin` or use the full path `/opt/vmware/vra/bin/vracli`.
+    | Error | Fix |
+    |---|---|
+    | `df: cannot access '/var': No such file or directory` | Verify the mount point exists or adjust the command to check only mounted filesystems with `df -h /`. |
+    | `error: unable to connect to the server: dial tcp: lookup kubernetes.default on 10.0.2.2:53: no such host` | Ensure kubectl is configured with the correct kubeconfig context using `kubectl config use-context <context-name>`. |
+    | `vracli: command not found` | Add the vracli binary path to your shell environment with `export PATH=$PATH:/opt/vmware/vra/bin` or use the full path `/opt/vmware/vra/bin/vracli`. |
 ---
 
 ## Post-Upgrade Validation
@@ -169,9 +171,11 @@ Last health check: 2024-01-18 14:32:15 UTC
 ```
 
 !!! warning "Common errors"
-    **`bash: vracli: command not found`** — Ensure you are logged into the vRA appliance via SSH and vracli is in the PATH; check that vRA is fully initialized with `systemctl status vra-server`.
-    **`error: You must be logged in to the server`** — Authenticate to the Kubernetes cluster with `kubectl config use-context vra-admin` or verify kubeconfig permissions.
-    **`Cluster Health Status: UNHEALTHY - Node vra-prod-03.example.local: UNREACHABLE`** — Check network connectivity to the unreachable node and verify the vRA cluster service is running with `systemctl status vra-cluster` on that node.
+    | Error | Fix |
+    |---|---|
+    | `bash: vracli: command not found` | Ensure you are logged into the vRA appliance via SSH and vracli is in the PATH; check that vRA is fully initialized with `systemctl status vra-server`. |
+    | `error: You must be logged in to the server` | Authenticate to the Kubernetes cluster with `kubectl config use-context vra-admin` or verify kubeconfig permissions. |
+    | `Cluster Health Status: UNHEALTHY - Node vra-prod-03.example.local: UNREACHABLE` | Check network connectivity to the unreachable node and verify the vRA cluster service is running with `systemctl status vra-cluster` on that node. |
 Via UI validation:
 
 - [ ] Log into Aria Automation UI — authentication works (VIDM redirect succeeds)

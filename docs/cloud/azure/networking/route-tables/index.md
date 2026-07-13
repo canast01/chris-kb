@@ -104,8 +104,10 @@ az network route-table route create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Network/routeTables/myRouteTable' under resource group 'myRG' was not found.`** — Verify the route table exists in the correct resource group with `az network route-table show --resource-group myRG --name myRouteTable`.
-    **`InvalidNextHopIpAddress : The next hop IP address '10.0.0.4' is not valid for the next hop type 'VirtualAppliance'.`** — Ensure the NVA IP address exists within your VNet address space and the NVA is deployed and running
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Network/routeTables/myRouteTable' under resource group 'myRG' was not found.` | Verify the route table exists in the correct resource group with `az network route-table show --resource-group myRG --name myRouteTable`. |
+    | `InvalidNextHopIpAddress : The next hop IP address '10.0.0.4' is not valid for the next hop type 'VirtualAppliance'.` | Ensure the NVA IP address exists within your VNet address space and the NVA is deployed and running |
 ## Next Hop Types
 
 | Next Hop Type          | Description                                          |
@@ -142,8 +144,10 @@ true
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure you are in the correct subscription.
-    **`RouteTableNotFound`** — Confirm the route table exists in the specified resource group using `az network route-table list --resource-group myRG`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure you are in the correct subscription. |
+    | `RouteTableNotFound` | Confirm the route table exists in the specified resource group using `az network route-table list --resource-group myRG`. |
 ## Associating a Route Table with a Subnet
 
 ```bash
@@ -186,8 +190,10 @@ az network vnet subnet update \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Network/routeTables/myRouteTable' under resource group 'myRG' was not found.`** — Verify the route table name and resource group are correct using `az network route-table list --resource-group myRG`.
-    **`(InvalidResourceReference) The resource '/subscriptions/.../routeTables/myRouteTable' does not exist.`** — Ensure the route table exists in the same resource group and region as the virtual network before associating it.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Network/routeTables/myRouteTable' under resource group 'myRG' was not found.` | Verify the route table name and resource group are correct using `az network route-table list --resource-group myRG`. |
+    | `(InvalidResourceReference) The resource '/subscriptions/.../routeTables/myRouteTable' does not exist.` | Ensure the route table exists in the same resource group and region as the virtual network before associating it. |
 ## Viewing Effective Routes
 
 ```bash
@@ -220,8 +226,10 @@ devRoute         172.16.0.0/12     Internet                            Succeeded
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Network/networkInterfaces/myVM-nic' under resource group 'myRG' was not found.`** — Verify the NIC name matches the actual network interface attached to the VM using `az network nic list --resource-group myRG`.
-    **`ResourceNotFound: The Resource 'Microsoft.Network/routeTables/myRouteTable' under resource group 'myRG' was not found.`** — Confirm the route table name and resource group are correct with `az network route-table list --resource-group myRG`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Network/networkInterfaces/myVM-nic' under resource group 'myRG' was not found.` | Verify the NIC name matches the actual network interface attached to the VM using `az network nic list --resource-group myRG`. |
+    | `ResourceNotFound: The Resource 'Microsoft.Network/routeTables/myRouteTable' under resource group 'myRG' was not found.` | Confirm the route table name and resource group are correct with `az network route-table list --resource-group myRG`. |
 ## Forced Tunnelling Design
 
 Forced tunnelling routes all internet-bound traffic from a subnet through an on-premises network or NVA for inspection. The VPN or ExpressRoute gateway subnet must NOT have a UDR with 0.0.0.0/0 — only workload subnets should have that route.
@@ -290,5 +298,7 @@ az network vnet subnet update \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Network/virtualNetworks/myVNet' under resource group 'myRG' was not found.`** — Verify the VNet name and resource group exist using `az network vnet list --resource-group myRG`.
-    **`(InvalidNextHopIpAddress) The next hop IP address '10.0.0.4' is not valid for the specified next hop type.`** — Ensure the next-hop IP address exists on a network interface in the VNet and is reachable from the subnet.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Network/virtualNetworks/myVNet' under resource group 'myRG' was not found.` | Verify the VNet name and resource group exist using `az network vnet list --resource-group myRG`. |
+    | `(InvalidNextHopIpAddress) The next hop IP address '10.0.0.4' is not valid for the specified next hop type.` | Ensure the next-hop IP address exists on a network interface in the VNet and is reachable from the subnet. |

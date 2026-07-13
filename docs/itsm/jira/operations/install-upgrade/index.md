@@ -31,9 +31,11 @@ com.atlassian.plugins.atlassian-whitelist-api	1.2.3	Atlassian Whitelist API
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify JIRA_URL is correct and the Jira instance is running and accessible from this host.
-    **`jq: parse error: Invalid JSON at line 1`** — Confirm JIRA_USER and JIRA_TOKEN are valid; invalid credentials may return an HTML error page instead of JSON.
-    **`python3: No module named 'json'`** — Install python3-minimal or ensure python3 is properly configured on the system.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify JIRA_URL is correct and the Jira instance is running and accessible from this host. |
+    | `jq: parse error: Invalid JSON at line 1` | Confirm JIRA_USER and JIRA_TOKEN are valid; invalid credentials may return an HTML error page instead of JSON. |
+    | `python3: No module named 'json'` | Install python3-minimal or ensure python3 is properly configured on the system. |
 ```bash
 # Download installer (replace version as appropriate)
 JIRA_VERSION="9.12.0"
@@ -146,9 +148,11 @@ total size is 2,847,392,156  speedup is 1.00
 ```
 
 !!! warning "Common errors"
-    **`pg_dump: error: connection to server at "db.example.com" (10.45.12.8), port 5432 failed: Connection refused`** — Verify the PostgreSQL server is running and accessible from the Jira host using `psql -h db.example.com -U jira -d jiradb -c "SELECT 1"`.
-    **`rsync: change_dir "/var/atlassian/application-data/jira/shared" failed: No such file or directory (2)`** — Confirm the Jira shared home path is correct and mounted; check with `ls -ld /var/atlassian/application-data/jira/shared`.
-    **`FATAL: password authentication failed for user "jira"`** — Verify the JIRA_DB_PASSWORD environment variable is set correctly and matches the database user credentials.
+    | Error | Fix |
+    |---|---|
+    | `pg_dump: error: connection to server at "db.example.com" (10.45.12.8), port 5432 failed: Connection refused` | Verify the PostgreSQL server is running and accessible from the Jira host using `psql -h db.example.com -U jira -d jiradb -c "SELECT 1"`. |
+    | `rsync: change_dir "/var/atlassian/application-data/jira/shared" failed: No such file or directory (2)` | Confirm the Jira shared home path is correct and mounted; check with `ls -ld /var/atlassian/application-data/jira/shared`. |
+    | `FATAL: password authentication failed for user "jira"` | Verify the JIRA_DB_PASSWORD environment variable is set correctly and matches the database user credentials. |
 ```bash
 NEW_VERSION="9.12.3"
 wget "https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-${NEW_VERSION}-x64.bin" \
@@ -168,9 +172,11 @@ jira-upgrade-9.12.3.bin    45%[=========>          ] 382.4M  8.92MB/s  eta 52s
 ```
 
 !!! warning "Common errors"
-    **`wget: unable to resolve host address 'www.atlassian.com'`** — Verify network connectivity and DNS resolution; check firewall rules blocking outbound HTTPS traffic.
-    **`Permission denied`** — Ensure the user running the script has write permissions to `/tmp` directory; check disk space with `df -h /tmp`.
-    **`HTTP Error 404 Not Found`** — Verify the exact version number exists on Atlassian's download page and the URL format matches the current release structure.
+    | Error | Fix |
+    |---|---|
+    | `wget: unable to resolve host address 'www.atlassian.com'` | Verify network connectivity and DNS resolution; check firewall rules blocking outbound HTTPS traffic. |
+    | `Permission denied` | Ensure the user running the script has write permissions to `/tmp` directory; check disk space with `df -h /tmp`. |
+    | `HTTP Error 404 Not Found` | Verify the exact version number exists on Atlassian's download page and the URL format matches the current release structure. |
 ```bash
 # HAProxy — mark backend server as drain
 echo "set server jira_backend/jira-app-01 state drain" \
@@ -210,8 +216,10 @@ jira_backend,BACKEND,23
 ```
 
 !!! warning "Common errors"
-    **`socat: E Connection refused`** — Verify HAProxy is running with `systemctl status haproxy` and the admin socket exists at `/var/run/haproxy/admin.sock`.
-    **`socat: E Cannot open file "/var/run/haproxy/admin.sock"`** — Ensure HAProxy is configured with `stats socket /var/run/haproxy/admin.sock mode 660 level admin` in the global section and the socket has read permissions.
+    | Error | Fix |
+    |---|---|
+    | `socat: E Connection refused` | Verify HAProxy is running with `systemctl status haproxy` and the admin socket exists at `/var/run/haproxy/admin.sock`. |
+    | `socat: E Cannot open file "/var/run/haproxy/admin.sock"` | Ensure HAProxy is configured with `stats socket /var/run/haproxy/admin.sock mode 660 level admin` in the global section and the socket has read permissions. |
 ```bash
 systemctl stop jira
 # Verify stopped
@@ -235,8 +243,10 @@ Jan 18 14:32:15 jira-prod-01 systemd[1]: Stopped Atlassian JIRA.
 ```
 
 !!! warning "Common errors"
-    **`Failed to stop jira.service: Unit jira.service not loaded.`** — Verify the service file exists at `/etc/systemd/system/jira.service` and run `systemctl daemon-reload`.
-    **`Failed to stop jira.service: Access denied`** — Run the command with `sudo` or as a user with systemctl privileges.
+    | Error | Fix |
+    |---|---|
+    | `Failed to stop jira.service: Unit jira.service not loaded.` | Verify the service file exists at `/etc/systemd/system/jira.service` and run `systemctl daemon-reload`. |
+    | `Failed to stop jira.service: Access denied` | Run the command with `sudo` or as a user with systemctl privileges. |
 ```bash
 /tmp/jira-upgrade-${NEW_VERSION}.bin -q
 
@@ -260,9 +270,11 @@ Installation complete. JIRA 8.20.6 ready at http://localhost:8080
 ```
 
 !!! warning "Common errors"
-    **`Permission denied`** — Run the installer with `sudo` or as the `jira` system user who owns the installation directory.
-    **`No space left on device`** — Ensure at least 5GB free disk space in `/opt/atlassian/jira` and `/var/backups` before running the upgrade.
-    **`Database connection refused`** — Verify the database service is running and accessible with `systemctl status postgresql` (or your DB engine) before starting the upgrade.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied` | Run the installer with `sudo` or as the `jira` system user who owns the installation directory. |
+    | `No space left on device` | Ensure at least 5GB free disk space in `/opt/atlassian/jira` and `/var/backups` before running the upgrade. |
+    | `Database connection refused` | Verify the database service is running and accessible with `systemctl status postgresql` (or your DB engine) before starting the upgrade. |
 ```bash
 # Schema upgrade progress (during startup)
 tail -f /opt/atlassian/jira/logs/atlassian-jira.log \
@@ -279,8 +291,10 @@ tail -f /opt/atlassian/jira/logs/atlassian-jira.log \
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/opt/atlassian/jira/logs/atlassian-jira.log' for reading: No such file or directory`** — Verify JIRA is installed at `/opt/atlassian/jira` and the logs directory exists, or adjust the path to match your installation.
-    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the log file.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/opt/atlassian/jira/logs/atlassian-jira.log' for reading: No such file or directory` | Verify JIRA is installed at `/opt/atlassian/jira` and the logs directory exists, or adjust the path to match your installation. |
+    | `grep: (standard input): Permission denied` | Run the command with `sudo` or ensure your user has read permissions on the log file. |
 ```bash
 systemctl start jira
 
@@ -317,9 +331,11 @@ tail: cannot open '/opt/atlassian/jira/logs/catalina.out' for reading: No such f
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/opt/atlassian/jira/logs/catalina.out' for reading: No such file or directory`** — Check the actual JIRA_HOME location with `find / -name catalina.out 2>/dev/null` and adjust the path accordingly.
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify JIRA is fully started with `systemctl status jira` and that the hostname/port in the URL matches your deployment.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip certificate verification, or configure proper SSL certificates in your JIRA server.xml.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/opt/atlassian/jira/logs/catalina.out' for reading: No such file or directory` | Check the actual JIRA_HOME location with `find / -name catalina.out 2>/dev/null` and adjust the path accordingly. |
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify JIRA is fully started with `systemctl status jira` and that the hostname/port in the URL matches your deployment. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl to skip certificate verification, or configure proper SSL certificates in your JIRA server.xml. |
 ```bash
 echo "set server jira_backend/jira-app-01 state ready" \
   | socat stdio /var/run/haproxy/admin.sock
@@ -330,8 +346,10 @@ echo "set server jira_backend/jira-app-01 state ready" \
 ```
 
 !!! warning "Common errors"
-    **`socat: E connect() failed: No such file or directory`** — Verify HAProxy is running with `systemctl status haproxy` and the admin socket path is correct in `/etc/haproxy/haproxy.cfg`.
-    **`socat: E open() failed: Permission denied`** — Run the command with `sudo` or ensure your user is in the `haproxy` group with `usermod -a -G haproxy $USER`.
+    | Error | Fix |
+    |---|---|
+    | `socat: E connect() failed: No such file or directory` | Verify HAProxy is running with `systemctl status haproxy` and the admin socket path is correct in `/etc/haproxy/haproxy.cfg`. |
+    | `socat: E open() failed: Permission denied` | Run the command with `sudo` or ensure your user is in the `haproxy` group with `usermod -a -G haproxy $USER`. |
 ```bash
 # Verify all apps (plugins) re-enabled
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
@@ -356,9 +374,11 @@ curl -u "${JIRA_USER}:${JIRA_TOKEN}" -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify JIRA_URL is correct and the Jira instance is running with `systemctl status jira` or equivalent.
-    **`{"errorMessages":["Authentication failed"]}`** — Confirm JIRA_USER and JIRA_TOKEN are valid and have API access permissions in Jira.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Ensure the Jira REST API endpoint is accessible; check firewall rules and that the `/rest/api/2/plugins/1.0/plugin` path exists in your Jira version.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify JIRA_URL is correct and the Jira instance is running with `systemctl status jira` or equivalent. |
+    | `{"errorMessages":["Authentication failed"]}` | Confirm JIRA_USER and JIRA_TOKEN are valid and have API access permissions in Jira. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Ensure the Jira REST API endpoint is accessible; check firewall rules and that the `/rest/api/2/plugins/1.0/plugin` path exists in your Jira version. |
 ```bash
 # 1. Stop Jira
 systemctl stop jira
@@ -403,9 +423,11 @@ pg_restore: error: could not execute query: ERROR:  role "jira" does not exist
 ```
 
 !!! warning "Common errors"
-    **`pg_restore: error: could not execute query: ERROR:  role "jira" does not exist`** — Create the jira database role with `psql -h db.example.com -U postgres -c "CREATE ROLE jira WITH LOGIN PASSWORD 'password';"` before restoring.
-    **`psql: error: connection to server at "db.example.com" (10.45.12.8), port 5432 failed`** — Verify database connectivity and that `db.example.com` is resolvable; check firewall rules and PostgreSQL service status on the remote host.
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Wait 30–60 seconds for Jira to fully start, then retry the curl command; check `systemctl status jira` and `/opt/atlassian/jira/logs/catalina.out` for startup errors.
+    | Error | Fix |
+    |---|---|
+    | `pg_restore: error: could not execute query: ERROR:  role "jira" does not exist` | Create the jira database role with `psql -h db.example.com -U postgres -c "CREATE ROLE jira WITH LOGIN PASSWORD 'password';"` before restoring. |
+    | `psql: error: connection to server at "db.example.com" (10.45.12.8), port 5432 failed` | Verify database connectivity and that `db.example.com` is resolvable; check firewall rules and PostgreSQL service status on the remote host. |
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Wait 30–60 seconds for Jira to fully start, then retry the curl command; check `systemctl status jira` and `/opt/atlassian/jira/logs/catalina.out` for startup errors. |
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

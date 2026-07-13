@@ -53,9 +53,11 @@ iso.org.dod.internet.mgmt.mib-2.system.sysDescr.0 = STRING: "Brocade G620 Fabric
 ```
 
 !!! warning "Common errors"
-    **`snmpwalk: Unknown user name`** — Verify the SNMP username exists on the switch and matches the `-u` parameter exactly.
-    **`snmpwalk: Authentication failure (incorrect password)`** — Confirm the auth-password and priv-password are correct by testing with `snmpget` on a known OID first.
-    **`Timeout: No Response from <switch-ip>`** — Check that SNMP v3 is enabled on the switch, the switch IP is reachable via `ping`, and firewall rules allow UDP 161 from the monitoring server.
+    | Error | Fix |
+    |---|---|
+    | `snmpwalk: Unknown user name` | Verify the SNMP username exists on the switch and matches the `-u` parameter exactly. |
+    | `snmpwalk: Authentication failure (incorrect password)` | Confirm the auth-password and priv-password are correct by testing with `snmpget` on a known OID first. |
+    | `Timeout: No Response from <switch-ip>` | Check that SNMP v3 is enabled on the switch, the switch IP is reachable via `ping`, and firewall rules allow UDP 161 from the monitoring server. |
 ---
 
 ## SSH Configuration
@@ -93,8 +95,10 @@ Telnetd State: disabled
 ```
 
 !!! warning "Common errors"
-    **`sshutil: command not found`** — Verify you are logged into the Brocade switch fabric OS CLI (not the Linux shell) and have administrative privileges.
-    **`Error: Cannot generate key while SSH is disabled`** — Enable SSH first using `sshutil --enable` before attempting to generate new host keys.
+    | Error | Fix |
+    |---|---|
+    | `sshutil: command not found` | Verify you are logged into the Brocade switch fabric OS CLI (not the Linux shell) and have administrative privileges. |
+    | `Error: Cannot generate key while SSH is disabled` | Enable SSH first using `sshutil --enable` before attempting to generate new host keys. |
 ### Disable Telnet
 
 ```bash
@@ -127,8 +131,10 @@ Rebooting...
 ```
 
 !!! warning "Common errors"
-    **`Error: You do not have permission to run this command`** — Ensure your user account has admin role privileges using `userconfig --change <username> -r admin`.
-    **`Error: Configuration locked by another session`** — Wait for any active configuration sessions to complete or use `configshow` to verify no other admin is currently in configure mode.
+    | Error | Fix |
+    |---|---|
+    | `Error: You do not have permission to run this command` | Ensure your user account has admin role privileges using `userconfig --change <username> -r admin`. |
+    | `Error: Configuration locked by another session` | Wait for any active configuration sessions to complete or use `configshow` to verify no other admin is currently in configure mode. |
 Verify Telnet is disabled by attempting a Telnet connection from a management workstation — the connection should be refused.
 
 ### SSH Host Key Rotation
@@ -155,9 +161,11 @@ Generation time: 3.2 seconds
 ```
 
 !!! warning "Common errors"
-    **`sshutil: command not found`** — Verify you are running this command on the Brocade switch itself (via telnet/SSH console), not from a management workstation.
-    **`Permission denied`** — Ensure you have administrative or root-level privileges on the switch before attempting key generation.
-    **`RSA host key generation failed: Insufficient disk space`** — Free up space on the switch's persistent storage and retry the command.
+    | Error | Fix |
+    |---|---|
+    | `sshutil: command not found` | Verify you are running this command on the Brocade switch itself (via telnet/SSH console), not from a management workstation. |
+    | `Permission denied` | Ensure you have administrative or root-level privileges on the switch before attempting key generation. |
+    | `RSA host key generation failed: Insufficient disk space` | Free up space on the switch's persistent storage and retry the command. |
 ---
 
 ## HTTPS / TLS Configuration
@@ -199,9 +207,11 @@ Certificate Information:
 ```
 
 !!! warning "Common errors"
-    **`httpcfg: command not found`** — Verify you are logged in with admin credentials and the switch firmware supports the httpcfg utility (typically FOS 8.0+).
-    **`seccertmgmt: Invalid certificate type specified`** — Use `-type https` or `-type ssh` (note the exact spelling); omit `-type` to show all certificates.
-    **`Certificate has expired`** — Replace the expired certificate using `seccertmgmt --install -type https -cert <cert_file> -key <key_file>` before HTTPS connections will succeed.
+    | Error | Fix |
+    |---|---|
+    | `httpcfg: command not found` | Verify you are logged in with admin credentials and the switch firmware supports the httpcfg utility (typically FOS 8.0+). |
+    | `seccertmgmt: Invalid certificate type specified` | Use `-type https` or `-type ssh` (note the exact spelling); omit `-type` to show all certificates. |
+    | `Certificate has expired` | Replace the expired certificate using `seccertmgmt --install -type https -cert <cert_file> -key <key_file>` before HTTPS connections will succeed. |
 ### TLS Certificate Management
 
 Brocade FOS supports self-signed certificates (default) and CA-signed certificates. Use CA-signed certificates in environments with automated certificate validation.
@@ -238,9 +248,11 @@ Checksum: a3f7e2c9d1b4f6a8
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid FQDN format in CN parameter`** — Ensure the CN value is a fully qualified domain name (e.g., `switch.fabric.example.com`) without spaces or special characters.
-    **`Error: SCP connection failed — authentication denied`** — Verify SSH credentials and that the remote server's SSH key is trusted; add the switch's public key to the remote server's `~/.ssh/authorized_keys` if using key-based auth.
-    **`Error: /flash directory full — cannot write CSR`** — Delete old certificate files or logs from `/flash` using `firmwaredownload --delete` to free space before retrying the CSR generation.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid FQDN format in CN parameter` | Ensure the CN value is a fully qualified domain name (e.g., `switch.fabric.example.com`) without spaces or special characters. |
+    | `Error: SCP connection failed — authentication denied` | Verify SSH credentials and that the remote server's SSH key is trusted; add the switch's public key to the remote server's `~/.ssh/authorized_keys` if using key-based auth. |
+    | `Error: /flash directory full — cannot write CSR` | Delete old certificate files or logs from `/flash` using `firmwaredownload --delete` to free space before retrying the CSR generation. |
 #### Import a Signed Certificate
 
 ```bash
@@ -282,9 +294,11 @@ Fingerprint: SHA256:a7f3e9c2b1d4f8e6c9a2b5d7f1e3c5a8b0d2f4e6c8a0b2d4f6e8a0c2e4f6
 ```
 
 !!! warning "Common errors"
-    **`seccertmgmt: error: unable to connect to <username>@<server>`** — Verify SSH connectivity to the remote server and ensure the username/server path is correct.
-    **`seccertmgmt: error: certificate validation failed - untrusted root`** — Import the complete CA certificate chain before importing the end-entity certificate, or verify the CA chain file path is correct.
-    **`seccertmgmt: error: certificate is already active`** — Deactivate the current certificate first using `seccertmgmt --deactivate -type https` before activating a new one.
+    | Error | Fix |
+    |---|---|
+    | `seccertmgmt: error: unable to connect to <username>@<server>` | Verify SSH connectivity to the remote server and ensure the username/server path is correct. |
+    | `seccertmgmt: error: certificate validation failed - untrusted root` | Import the complete CA certificate chain before importing the end-entity certificate, or verify the CA chain file path is correct. |
+    | `seccertmgmt: error: certificate is already active` | Deactivate the current certificate first using `seccertmgmt --deactivate -type https` before activating a new one. |
 #### Certificate Expiry Monitoring
 
 Track certificate expiry dates in CMDB. MAPS does not natively alert on certificate expiry — monitor via SANnav or an external certificate monitoring tool.
@@ -308,9 +322,11 @@ Certificate Information:
 ```
 
 !!! warning "Common errors"
-    **`seccertmgmt: command not found`** — Verify you are logged into the Brocade switch via SSH/telnet and have admin privileges; the command runs on the switch itself, not your local machine.
-    **`Permission denied`** — Ensure your user account has admin or security-admin role; use `userconfig --show` to verify your current permissions.
-    **`No matching certificate found`** — The HTTPS certificate may not be installed; use `seccertmgmt --show` without filters to list all available certificates.
+    | Error | Fix |
+    |---|---|
+    | `seccertmgmt: command not found` | Verify you are logged into the Brocade switch via SSH/telnet and have admin privileges; the command runs on the switch itself, not your local machine. |
+    | `Permission denied` | Ensure your user account has admin or security-admin role; use `userconfig --show` to verify your current permissions. |
+    | `No matching certificate found` | The HTTPS certificate may not be installed; use `seccertmgmt --show` without filters to list all available certificates. |
 ---
 
 ## Disable Unused Protocols
@@ -354,9 +370,11 @@ Configuration saved.
 ```
 
 !!! warning "Common errors"
-    **`sshutil: command not found`** — Verify you are logged into the Brocade switch's management interface (telnet/SSH to the switch IP), not a Linux host; this utility is FOS-specific.
-    **`RSH service [0=disable, 1=enable] [current: 1]: Invalid input`** — Enter only `0` or `1` at the prompt; do not include extra characters or press Enter twice.
-    **`Configuration saved. (Error: Configuration lock held by admin)`** — Wait for any active configuration sessions to complete or use `configdiscard` to release the lock, then retry the configure command.
+    | Error | Fix |
+    |---|---|
+    | `sshutil: command not found` | Verify you are logged into the Brocade switch's management interface (telnet/SSH to the switch IP), not a Linux host; this utility is FOS-specific. |
+    | `RSH service [0=disable, 1=enable] [current: 1]: Invalid input` | Enter only `0` or `1` at the prompt; do not include extra characters or press Enter twice. |
+    | `Configuration saved. (Error: Configuration lock held by admin)` | Wait for any active configuration sessions to complete or use `configdiscard` to release the lock, then retry the configure command. |
 ### Protocol Compliance Table
 
 | Protocol | Required State | Verification |

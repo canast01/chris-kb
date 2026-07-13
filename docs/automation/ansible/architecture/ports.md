@@ -138,9 +138,11 @@ Ethernet adapter Ethernet:
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the ansible user SSH key is in the target host's ~/.ssh/authorized_keys and SSH key permissions are 600.
-    **`HTTPError: 401 Client Error: Unauthorized for url`** — Confirm WinRM credentials are correct and the user has local administrator privileges on the Windows host.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if using a valid certificate, or ensure your CA bundle includes the vCenter certificate.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the ansible user SSH key is in the target host's ~/.ssh/authorized_keys and SSH key permissions are 600. |
+    | `HTTPError: 401 Client Error: Unauthorized for url` | Confirm WinRM credentials are correct and the user has local administrator privileges on the Windows host. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag if using a valid certificate, or ensure your CA bundle includes the vCenter certificate. |
 ---
 
 ## See also

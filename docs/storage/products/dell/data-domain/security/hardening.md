@@ -47,8 +47,10 @@ banner-display-timeout: 30
 ```
 
 !!! warning "Common errors"
-    **`adminaccess: command not found`** — Ensure you are logged into the Data Domain management interface (via SSH to the system's management IP) or use the correct CLI tool for your DD OS version.
-    **`Error: Login banner exceeds maximum length of 256 characters`** — Reduce the banner text to 256 characters or fewer, including spaces and punctuation.
+    | Error | Fix |
+    |---|---|
+    | `adminaccess: command not found` | Ensure you are logged into the Data Domain management interface (via SSH to the system's management IP) or use the correct CLI tool for your DD OS version. |
+    | `Error: Login banner exceeds maximum length of 256 characters` | Reduce the banner text to 256 characters or fewer, including spaces and punctuation. |
 ### Protocol Restrictions
 
 Disable protocols that are not in use on the specific appliance. An unused protocol is an unnecessary attack surface.
@@ -98,8 +100,10 @@ NFS disabled successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Cannot disable NFS - active mount sessions detected (2 sessions)`** — Disconnect all NFS clients before disabling the protocol with `nfs disconnect all` or wait for sessions to complete.
-    **`Error: CIFS disable failed - operation not permitted (insufficient privileges)`** — Ensure you are logged in with administrative credentials or use `sudo` if required by your system configuration.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cannot disable NFS - active mount sessions detected (2 sessions)` | Disconnect all NFS clients before disabling the protocol with `nfs disconnect all` or wait for sessions to complete. |
+    | `Error: CIFS disable failed - operation not permitted (insufficient privileges)` | Ensure you are logged in with administrative credentials or use `sudo` if required by your system configuration. |
 Only disable protocols after confirming with backup application teams that no backup jobs depend on them.
 
 ### Network Access Restrictions
@@ -133,8 +137,10 @@ Management interface: eth0 (VLAN 100, 10.50.10.45/24)
 ```
 
 !!! warning "Common errors"
-    **`adminaccess: invalid subnet format`** — Ensure the subnet is specified in CIDR notation (e.g., 10.50.0.0/24) with a valid prefix length between /1 and /32.
-    **`Error: Management interface not on dedicated VLAN`** — Configure the management interface on a separate VLAN from data traffic using `net config mgmt-vlan <vlan-id>`.
+    | Error | Fix |
+    |---|---|
+    | `adminaccess: invalid subnet format` | Ensure the subnet is specified in CIDR notation (e.g., 10.50.0.0/24) with a valid prefix length between /1 and /32. |
+    | `Error: Management interface not on dedicated VLAN` | Configure the management interface on a separate VLAN from data traffic using `net config mgmt-vlan <vlan-id>`. |
 **Network architecture recommendations:**
 
 | Traffic Type | Recommended Configuration |
@@ -191,9 +197,11 @@ Audit Log (last 20 entries):
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid IP address format`** — Verify the syslog server IP is in valid dotted-decimal notation (e.g., 192.168.100.50).
-    **`Error: Connection refused on port 514`** — Confirm the syslog server is running and listening on the specified port, and that network connectivity exists between Data Domain and the syslog server.
-    **`Error: Log host already exists`** — Remove the duplicate entry using `log host remove <syslog-server-ip>` before re-adding it with different parameters.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid IP address format` | Verify the syslog server IP is in valid dotted-decimal notation (e.g., 192.168.100.50). |
+    | `Error: Connection refused on port 514` | Confirm the syslog server is running and listening on the specified port, and that network connectivity exists between Data Domain and the syslog server. |
+    | `Error: Log host already exists` | Remove the duplicate entry using `log host remove <syslog-server-ip>` before re-adding it with different parameters. |
 ### Audit Log Content
 
 The DDOS audit log captures:
@@ -249,9 +257,11 @@ SNMP access restricted to: 192.168.45.12
 ```
 
 !!! warning "Common errors"
-    **`Error: User 'monitoring_user' already exists`** — Delete the existing user with `snmp remove user <username>` before recreating it.
-    **`Error: Invalid IP address '<monitor-server-ip>'`** — Verify the IP address format is valid (e.g., 192.168.45.12) and rerun the command.
-    **`Error: Trap destination already exists for host <monitor-host>`** — Use `snmp remove trapdest <monitor-host>` to delete the duplicate before adding a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: User 'monitoring_user' already exists` | Delete the existing user with `snmp remove user <username>` before recreating it. |
+    | `Error: Invalid IP address '<monitor-server-ip>'` | Verify the IP address format is valid (e.g., 192.168.45.12) and rerun the command. |
+    | `Error: Trap destination already exists for host <monitor-host>` | Use `snmp remove trapdest <monitor-host>` to delete the duplicate before adding a new one. |
 Disable SNMP entirely if the monitoring platform supports REST API polling instead:
 
 ```bash
@@ -264,8 +274,10 @@ snmp disable
 ```
 
 !!! warning "Common errors"
-    **`snmp: command not found`** — Verify you are logged into the Data Domain management interface (SSH/Telnet) and not a standard Linux shell; use `sysconfig` or `ndu` commands instead.
-    **`Permission denied`** — Ensure your user account has administrative privileges; log in as `sysadmin` or a user with root-equivalent Data Domain permissions.
+    | Error | Fix |
+    |---|---|
+    | `snmp: command not found` | Verify you are logged into the Data Domain management interface (SSH/Telnet) and not a standard Linux shell; use `sysconfig` or `ndu` commands instead. |
+    | `Permission denied` | Ensure your user account has administrative privileges; log in as `sysadmin` or a user with root-equivalent Data Domain permissions. |
 ---
 
 ## Certificate Management
@@ -325,9 +337,11 @@ Current Certificate Information:
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate file not found at <path-to-signed-cert.pem>`** — Verify the certificate file path is correct and the file exists with read permissions for the admin user.
-    **`Error: Certificate validation failed - certificate does not match CSR`** — Ensure the signed certificate from your CA matches the CSR that was generated (check the common name and organization fields).
-    **`Error: HTTPS service restart failed - certificate already in use`** — Wait 30 seconds for the previous HTTPS session to fully close, then retry the restart command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate file not found at <path-to-signed-cert.pem>` | Verify the certificate file path is correct and the file exists with read permissions for the admin user. |
+    | `Error: Certificate validation failed - certificate does not match CSR` | Ensure the signed certificate from your CA matches the CSR that was generated (check the common name and organization fields). |
+    | `Error: HTTPS service restart failed - certificate already in use` | Wait 30 seconds for the previous HTTPS session to fully close, then retry the restart command. |
 ---
 
 ## Encryption Hardening
@@ -368,9 +382,11 @@ Encryption Configuration:
 ```
 
 !!! warning "Common errors"
-    **`encryption: command not found`** — Verify you are logged into the Data Domain management interface (SSH to the system's management IP) and have appropriate admin privileges.
-    **`FIPS Mode: Disabled`** — Enable FIPS mode via the Data Domain web UI under System > Security > FIPS, or contact your security team to verify compliance requirements.
-    **`Key Manager Type: Internal (No Backup)`** — Configure an external key manager (HSM) or enable encrypted backup of the internal key immediately to meet security policy requirements.
+    | Error | Fix |
+    |---|---|
+    | `encryption: command not found` | Verify you are logged into the Data Domain management interface (SSH to the system's management IP) and have appropriate admin privileges. |
+    | `FIPS Mode: Disabled` | Enable FIPS mode via the Data Domain web UI under System > Security > FIPS, or contact your security team to verify compliance requirements. |
+    | `Key Manager Type: Internal (No Backup)` | Configure an external key manager (HSM) or enable encrypted backup of the internal key immediately to meet security policy requirements. |
 **Internal key manager warning:** If using the internal key manager, the encryption keys are stored on the DD appliance itself. If the appliance is destroyed in a disaster without a key backup, encrypted data cannot be recovered. Export and securely vault the internal key backup as part of the commissioning process:
 
 ```bash
@@ -390,8 +406,10 @@ Key backup exported successfully. Store offline in secure location.
 ```
 
 !!! warning "Common errors"
-    **`Error: Embedded Key Manager not initialized`** — Run `encryption embedded-key-manager init` to initialize the EKM before exporting backups.
-    **`Error: Insufficient permissions to export key backup`** — Ensure your user account has sysadmin or security-admin role privileges.
+    | Error | Fix |
+    |---|---|
+    | `Error: Embedded Key Manager not initialized` | Run `encryption embedded-key-manager init` to initialize the EKM before exporting backups. |
+    | `Error: Insufficient permissions to export key backup` | Ensure your user account has sysadmin or security-admin role privileges. |
 ---
 
 ## Firmware and Software Currency
@@ -420,8 +438,10 @@ Last Configuration Backup: 2024-01-15 14:32:15 UTC
 ```
 
 !!! warning "Common errors"
-    **`system: command not found`** — Ensure you are connected to the Data Domain CLI (SSH to the management IP) rather than a local shell.
-    **`Permission denied`** — Verify your user account has administrative privileges; contact your Data Domain administrator to grant CLI access.
+    | Error | Fix |
+    |---|---|
+    | `system: command not found` | Ensure you are connected to the Data Domain CLI (SSH to the management IP) rather than a local shell. |
+    | `Permission denied` | Verify your user account has administrative privileges; contact your Data Domain administrator to grant CLI access. |
 ---
 
 ## Vulnerability Scanning and Penetration Testing
@@ -563,9 +583,11 @@ dns servers: 8.8.8.8, 8.8.4.4
 ```
 
 !!! warning "Common errors"
-    **`adminaccess: command not found`** — Verify you are logged in as root or with sufficient administrative privileges; some Data Domain models require `sysconfig` prefix.
-    **`LDAP connection failed: Connection refused`** — Check that the LDAP server is reachable on the configured port (389) and that firewall rules allow outbound connections from the Data Domain appliance.
-    **`certificate: expiry date within 30 days`** — Renew the SSL certificate immediately through the administrative interface to prevent authentication failures on client connections.
+    | Error | Fix |
+    |---|---|
+    | `adminaccess: command not found` | Verify you are logged in as root or with sufficient administrative privileges; some Data Domain models require `sysconfig` prefix. |
+    | `LDAP connection failed: Connection refused` | Check that the LDAP server is reachable on the configured port (389) and that firewall rules allow outbound connections from the Data Domain appliance. |
+    | `certificate: expiry date within 30 days` | Renew the SSL certificate immediately through the administrative interface to prevent authentication failures on client connections. |
 ---
 
 ## Hardening Reference Table

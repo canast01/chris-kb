@@ -49,9 +49,11 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`sudo: service: command not found`** — Use `sudo systemctl status insightiq` instead of `sudo service insightiq status` on systemd-based systems.
-    **`Permission denied (publickey,password)`** — Verify the administrator account credentials and ensure SSH key-based authentication is configured if password auth is disabled.
-    **`tail: cannot open '/var/log/insightiq/insightiq.log' for reading: No such file or directory`** — Confirm the InsightIQ service is running and check the actual log path with `sudo find /var/log -name "*insightiq*"`.
+    | Error | Fix |
+    |---|---|
+    | `sudo: service: command not found` | Use `sudo systemctl status insightiq` instead of `sudo service insightiq status` on systemd-based systems. |
+    | `Permission denied (publickey,password)` | Verify the administrator account credentials and ensure SSH key-based authentication is configured if password auth is disabled. |
+    | `tail: cannot open '/var/log/insightiq/insightiq.log' for reading: No such file or directory` | Confirm the InsightIQ service is running and check the actual log path with `sudo find /var/log -name "*insightiq*"`. |
 ```bash
 # Get capacity summary for a cluster
 curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/clusters/<guid>/capacity"
@@ -90,9 +92,11 @@ curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/clusters/<guid
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the InsightIQ certificate into your system's trusted store.
-    **`curl: (401) Unauthorized`** — Verify the admin credentials are correct and URL-encoded if they contain special characters; use `-u "admin:$(echo -n 'password' | jq -sRr @uri)"` for special chars.
-    **`curl: (404) Not Found`** — Confirm the cluster GUID and node_id are correct by listing clusters with `/api/json/v2/clusters` endpoint first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the InsightIQ certificate into your system's trusted store. |
+    | `curl: (401) Unauthorized` | Verify the admin credentials are correct and URL-encoded if they contain special characters; use `-u "admin:$(echo -n 'password' | jq -sRr @uri)"` for special chars. |
+    | `curl: (404) Not Found` | Confirm the cluster GUID and node_id are correct by listing clusters with `/api/json/v2/clusters` endpoint first. |
 ```bash
 # List available reports
 curl -k -u "admin:<pass>"   https://<insightiq_fqdn>/api/json/v2/reports

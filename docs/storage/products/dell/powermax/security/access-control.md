@@ -99,9 +99,11 @@ curl -sk -u admin:password \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if error persists, verify Unisphere host is reachable on port 8443).
-    **`curl: (7) Failed to connect to <unisphere-host>:8443: Connection refused`** — Confirm the Unisphere hostname/IP is correct and the REST API service is running with `systemctl status unisphere-api` on the Unisphere appliance.
-    **`jq: parse error: Invalid JSON`** — Ensure `python3 -m json.tool` is available; if not, pipe to `jq .` instead or remove the formatter to see raw response for debugging.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if error persists, verify Unisphere host is reachable on port 8443). |
+    | `curl: (7) Failed to connect to <unisphere-host>:8443: Connection refused` | Confirm the Unisphere hostname/IP is correct and the REST API service is running with `systemctl status unisphere-api` on the Unisphere appliance. |
+    | `jq: parse error: Invalid JSON` | Ensure `python3 -m json.tool` is available; if not, pipe to `jq .` instead or remove the formatter to see raw response for debugging. |
 ### LDAP Group to Role Mapping
 
 Map Active Directory groups to Unisphere roles so that group membership in AD automatically confers the appropriate role:
@@ -149,8 +151,10 @@ root         Administrator  127.0.0.1
 ```
 
 !!! warning "Common errors"
-    **`Permission denied`** — Ensure you have root or sudo privileges before editing `/var/symapi/config/daemon_users`.
-    **`File not found: /var/symapi/config/daemon_users`** — Verify the Symmetrix daemon is installed and the symapi package is properly initialized with `symcfg discover`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied` | Ensure you have root or sudo privileges before editing `/var/symapi/config/daemon_users`. |
+    | `File not found: /var/symapi/config/daemon_users` | Verify the Symmetrix daemon is installed and the symapi package is properly initialized with `symcfg discover`. |
 Best practices:
 - Never grant `Administrator` role to generic or shared accounts.
 - Restrict by source IP where the SE host is accessed from known management subnets.
@@ -201,9 +205,11 @@ Symmetrix ID           Symmetrix Version  Local Dir Version
 ```
 
 !!! warning "Common errors"
-    **`symcfg: error: Cannot connect to SYMAPI server at 192.168.1.10:2707`** — Verify the IP address and port are correct in `/var/symapi/config/netcnfg`, and confirm the PowerMax SE service is running with `systemctl status symapi`.
-    **`symcfg: error: Invalid Symmetrix ID 000123456789 in configuration`** — Ensure the SID matches the actual array identifier by running `symcfg discover` without the netcnfg file to auto-detect arrays, then update the configuration.
-    **`Permission denied: /var/symapi/config/netcnfg`** — Run the command with appropriate privileges (`sudo symcfg discover`) or verify the file permissions with `ls -l /var/symapi/config/netcnfg`.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: error: Cannot connect to SYMAPI server at 192.168.1.10:2707` | Verify the IP address and port are correct in `/var/symapi/config/netcnfg`, and confirm the PowerMax SE service is running with `systemctl status symapi`. |
+    | `symcfg: error: Invalid Symmetrix ID 000123456789 in configuration` | Ensure the SID matches the actual array identifier by running `symcfg discover` without the netcnfg file to auto-detect arrays, then update the configuration. |
+    | `Permission denied: /var/symapi/config/netcnfg` | Run the command with appropriate privileges (`sudo symcfg discover`) or verify the file permissions with `ls -l /var/symapi/config/netcnfg`. |
 ### Sudo Configuration for SYMCLI
 
 On multi-user management hosts, restrict SYMCLI execution using sudo:
@@ -226,8 +232,10 @@ On multi-user management hosts, restrict SYMCLI execution using sudo:
 ```
 
 !!! warning "Common errors"
-    **`sudoers: parse error near line 7`** — Check for trailing whitespace or missing newline at end of file, and ensure each line uses tabs (not spaces) for indentation between fields.
-    **`user is not in the sudoers file. This incident will be reported.`** — Verify the user's group membership with `id username` and confirm the group name in the sudoers file matches exactly (groups are case-sensitive).
+    | Error | Fix |
+    |---|---|
+    | `sudoers: parse error near line 7` | Check for trailing whitespace or missing newline at end of file, and ensure each line uses tabs (not spaces) for indentation between fields. |
+    | `user is not in the sudoers file. This incident will be reported.` | Verify the user's group membership with `id username` and confirm the group name in the sudoers file matches exactly (groups are case-sensitive). |
 ## Data Plane Access Control — Masking Views
 
 LUN visibility is controlled by **masking views**. A host can only read or write to a device if that device's storage group is part of a masking view that includes the host's initiator (WWN or IQN) and an appropriate array port. No masking view = no LUN visibility, regardless of physical connectivity.
@@ -318,9 +326,11 @@ Masking View: <hostname>_FABRIC_A_MV
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI_C_ARRAY_NOT_FOUND (M20101401401)`** — Verify the SID is correct and the array is online with `symcfg list`.
-    **`SYMAPI_C_INVALID_INPUT (M20101400001)`** — Ensure WWN format is correct (10:00:xx:xx:xx:xx:xx:xx) and the HBA port exists on the host.
-    **`SYMAPI_C_OBJECT_ALREADY_EXISTS (M20101401409)`** — Check if the initiator group or masking view already exists with `symaccess show view -sid <SID>` and use a unique name or delete the existing object first.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI_C_ARRAY_NOT_FOUND (M20101401401)` | Verify the SID is correct and the array is online with `symcfg list`. |
+    | `SYMAPI_C_INVALID_INPUT (M20101400001)` | Ensure WWN format is correct (10:00:xx:xx:xx:xx:xx:xx) and the HBA port exists on the host. |
+    | `SYMAPI_C_OBJECT_ALREADY_EXISTS (M20101401409)` | Check if the initiator group or masking view already exists with `symaccess show view -sid <SID>` and use a unique name or delete the existing object first. |
 ### Cluster Access (Cascaded Initiator Groups)
 
 ```bash
@@ -368,9 +378,11 @@ Masking view ORACLE_RAC_MV created successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Initiator group rac01_IG already exists`** — Delete the existing initiator group with `symaccess delete -sid <SID> -name rac01_IG -type initiator` before recreating it.
-    **`Error: WWN 50:00:14:40:5a:2c:d1:e0 is already assigned to another initiator group`** — Verify the WWN is not already in use with `symaccess list -sid <SID> -name <existing_IG> -type initiator` and remove it first if needed.
-    **`Error: Masking view ORACLE_RAC_MV already exists`** — Delete the existing masking view with `symaccess delete view -sid <SID> -name ORACLE_RAC_MV` before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Initiator group rac01_IG already exists` | Delete the existing initiator group with `symaccess delete -sid <SID> -name rac01_IG -type initiator` before recreating it. |
+    | `Error: WWN 50:00:14:40:5a:2c:d1:e0 is already assigned to another initiator group` | Verify the WWN is not already in use with `symaccess list -sid <SID> -name <existing_IG> -type initiator` and remove it first if needed. |
+    | `Error: Masking view ORACLE_RAC_MV already exists` | Delete the existing masking view with `symaccess delete view -sid <SID> -name ORACLE_RAC_MV` before recreating it. |
 ### Auditing LUN Access
 
 ```bash
@@ -454,8 +466,10 @@ FA-7E:0 Logins
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_ERROR_DB (191): Could not open the database file`** — Ensure Symmetrix Metadata Server (SMD) is running and accessible with `sudo service emc-smd status`.
-    **`Error: Masking View '<view_name>' not found`** — Verify the masking view name spelling and that you are querying the correct SID with `symcfg list -sid <SID>`.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_ERROR_DB (191): Could not open the database file` | Ensure Symmetrix Metadata Server (SMD) is running and accessible with `sudo service emc-smd status`. |
+    | `Error: Masking View '<view_name>' not found` | Verify the masking view name spelling and that you are querying the correct SID with `symcfg list -sid <SID>`. |
     **`SYMCLI_ERROR_
 ### Removing Access
 
@@ -503,9 +517,11 @@ Cleanup complete
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_ERROR (4) : The specified masking view is in use`** — Delete all dependent masking views before attempting to remove the initiator group.
-    **`SYMCLI_ERROR (6) : Device not found in storage group`** — Verify the device name and storage group name are correct using `symsg list -sid <SID>`.
-    **`SYMCLI_ERROR (12) : Initiator group is referenced by masking view`** — Remove the initiator group from all masking views using `symaccess delete view` before deleting the group itself.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_ERROR (4) : The specified masking view is in use` | Delete all dependent masking views before attempting to remove the initiator group. |
+    | `SYMCLI_ERROR (6) : Device not found in storage group` | Verify the device name and storage group name are correct using `symsg list -sid <SID>`. |
+    | `SYMCLI_ERROR (12) : Initiator group is referenced by masking view` | Remove the initiator group from all masking views using `symaccess delete view` before deleting the group itself. |
 ## Access Control Reviews
 
 Periodic access reviews should validate that masking views reflect current host connectivity and that no stale or unauthorized access grants exist.
@@ -574,9 +590,11 @@ LEGACY-APP-MV-04
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_C_ARRAY_CONNECTIVITY_ERROR: Cannot connect to Symmetrix array`** — Verify the Symmetrix ID is correct and the management port is reachable with `ping` and `telnet <array_ip> 5988`.
-    **`SYMCLI_C_INVALID_INITIATOR_GROUP: Initiator group <ig_name> not found`** — Confirm the initiator group name spelling and that it exists on this array using `symaccess list -sid <SID> -type initiator`.
-    **`SYMCLI_C_INSUFFICIENT_PRIVILEGES: User does not have permission to execute this command`** — Request elevated privileges or run commands as the `symadmin` user with appropriate role-based access control.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_C_ARRAY_CONNECTIVITY_ERROR: Cannot connect to Symmetrix array` | Verify the Symmetrix ID is correct and the management port is reachable with `ping` and `telnet <array_ip> 5988`. |
+    | `SYMCLI_C_INVALID_INITIATOR_GROUP: Initiator group <ig_name> not found` | Confirm the initiator group name spelling and that it exists on this array using `symaccess list -sid <SID> -type initiator`. |
+    | `SYMCLI_C_INSUFFICIENT_PRIVILEGES: User does not have permission to execute this command` | Request elevated privileges or run commands as the `symadmin` user with appropriate role-based access control. |
 ### Quarterly Access Review Export
 
 ```bash
@@ -642,9 +660,11 @@ Director 3:  No active logins
 ```
 
 !!! warning "Common errors"
-    **`symaccess: Command not found`** — Ensure the PowerMax CLI tools are installed and the PATH includes the Symmetrix bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`Error: Invalid SID <SID>`** — Replace `<SID>` with an actual Symmetrix ID (e.g., `000297900001`) or verify the array is reachable via `symcfg list`.
-    **`Permission denied`** — Run the command with appropriate credentials or sudo; the user must have read access to the Symmetrix configuration files in `/var/symapi/db`.
+    | Error | Fix |
+    |---|---|
+    | `symaccess: Command not found` | Ensure the PowerMax CLI tools are installed and the PATH includes the Symmetrix bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `Error: Invalid SID <SID>` | Replace `<SID>` with an actual Symmetrix ID (e.g., `000297900001`) or verify the array is reachable via `symcfg list`. |
+    | `Permission denied` | Run the command with appropriate credentials or sudo; the user must have read access to the Symmetrix configuration files in `/var/symapi/db`. |
 ## Service Account Management
 
 | Account | Purpose | Minimum Required Role | Notes |

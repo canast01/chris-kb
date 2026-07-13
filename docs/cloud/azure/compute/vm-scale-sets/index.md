@@ -108,9 +108,11 @@ win-vmss-01    prod-rg          eastus               Uniform                2
 ```
 
 !!! warning "Common errors"
-    **`The image 'Ubuntu2204' could not be found.`** — Use a valid image URN like `UbuntuLTS` or `Ubuntu2204` with the full publisher format, or run `az vm image list --output table` to verify available images.
-    **`The resource 'Microsoft.Network/loadBalancers/<lb-name>' under resource group '<rg>' was not found.`** — Create the load balancer first with `az network lb create` or verify the `--load-balancer` parameter references an existing resource in the same resource group.
-    **`The password does not meet complexity requirements.`** — Ensure the Windows admin password is at least 12 characters and includes uppercase, lowercase, numbers, and special characters.
+    | Error | Fix |
+    |---|---|
+    | `The image 'Ubuntu2204' could not be found.` | Use a valid image URN like `UbuntuLTS` or `Ubuntu2204` with the full publisher format, or run `az vm image list --output table` to verify available images. |
+    | `The resource 'Microsoft.Network/loadBalancers/<lb-name>' under resource group '<rg>' was not found.` | Create the load balancer first with `az network lb create` or verify the `--load-balancer` parameter references an existing resource in the same resource group. |
+    | `The password does not meet complexity requirements.` | Ensure the Windows admin password is at least 12 characters and includes uppercase, lowercase, numbers, and special characters. |
 ---
 
 ## Scaling Operations
@@ -165,8 +167,10 @@ InstanceId    ProvisioningState    PowerState      VmId
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure it exists in your subscription.
-    **`ResourceNotFound`** — Confirm the VMSS name is correct by running `az vmss list --resource-group <rg>` to list all scale sets in the resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure it exists in your subscription. |
+    | `ResourceNotFound` | Confirm the VMSS name is correct by running `az vmss list --resource-group <rg>` to list all scale sets in the resource group. |
 ---
 
 ## Autoscale Rules
@@ -259,7 +263,9 @@ vmss-autoscale-prod       prod-rg          True       2           10          2
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachineScaleSets/<vmss-resource-id>' under resource group '<rg>' was not found.`** — Verify the VMSS resource ID is correct and exists in the specified resource group using `az vmss
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachineScaleSets/<vmss-resource-id>' under resource group '<rg>' was not found.` | Verify the VMSS resource ID is correct and exists in the specified resource group using `az vmss |
 ---
 
 ## Upgrade Policies
@@ -322,9 +328,11 @@ az vmss update-instances \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound: Resource group '<rg>' could not be found.`** — Verify the resource group name matches exactly and exists in the current subscription using `az group list`.
-    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachineScaleSets/<vmss-name>' under resource group '<rg>' was not found.`** — Confirm the VMSS name is correct and exists in the specified resource group with `az vmss list --resource-group <rg>`.
-    **`InvalidParameter: Instance IDs '0 1 2' are invalid. Valid instance IDs must be integers between 0 and <max-capacity>.`** — Ensure instance IDs do not exceed the current capacity of the scale set; check with `az vmss show --resource-group <rg> --name <vmss-name> --query 'sku.capacity'`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound: Resource group '<rg>' could not be found.` | Verify the resource group name matches exactly and exists in the current subscription using `az group list`. |
+    | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachineScaleSets/<vmss-name>' under resource group '<rg>' was not found.` | Confirm the VMSS name is correct and exists in the specified resource group with `az vmss list --resource-group <rg>`. |
+    | `InvalidParameter: Instance IDs '0 1 2' are invalid. Valid instance IDs must be integers between 0 and <max-capacity>.` | Ensure instance IDs do not exceed the current capacity of the scale set; check with `az vmss show --resource-group <rg> --name <vmss-name> --query 'sku.capacity'`. |
 ---
 
 ## Health Probes and Automatic Repairs
@@ -371,9 +379,11 @@ az vmss update \
 ```
 
 !!! warning "Common errors"
-    **`Extension with name ApplicationHealthLinux already exists`** — Remove the existing extension with `az vmss extension delete` before re-running the set command.
-    **`The resource group '<rg>' could not be found`** — Verify the resource group name with `az group list` and ensure you are using the correct subscription.
-    **`Invalid requestPath: must start with /`** — Ensure the health check path in the settings JSON begins with a forward slash (e.g., `"/health"` not `"health"`).
+    | Error | Fix |
+    |---|---|
+    | `Extension with name ApplicationHealthLinux already exists` | Remove the existing extension with `az vmss extension delete` before re-running the set command. |
+    | `The resource group '<rg>' could not be found` | Verify the resource group name with `az group list` and ensure you are using the correct subscription. |
+    | `Invalid requestPath: must start with /` | Ensure the health check path in the settings JSON begins with a forward slash (e.g., `"/health"` not `"health"`). |
 ---
 
 ## Instance Operations
@@ -455,9 +465,11 @@ az vmss run-command invoke \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure it exists in your subscription.
-    **`ResourceNotFound`** — Confirm the VMSS name is correct using `az vmss list --resource-group <rg>` and check the spelling.
-    **`InvalidInstanceId`** — Ensure the instance ID exists in the scale set; retrieve valid IDs with `az vmss list-instances --resource-group <rg> --name <vmss-name>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure it exists in your subscription. |
+    | `ResourceNotFound` | Confirm the VMSS name is correct using `az vmss list --resource-group <rg>` and check the spelling. |
+    | `InvalidInstanceId` | Ensure the instance ID exists in the scale set; retrieve valid IDs with `az vmss list-instances --resource-group <rg> --name <vmss-name>`. |
 ---
 
 ## Scale Set Reference Table

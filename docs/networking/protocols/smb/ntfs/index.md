@@ -104,9 +104,11 @@ Successfully processed 1 files; 0 Failed: 0 Access Denied: 0
 ```
 
 !!! warning "Common errors"
-    **`Access Denied`** — Run the command prompt as Administrator or use an account with ownership of the resource.
-    **`The system cannot find the path specified.`** — Verify the folder path exists and is accessible; use `dir "C:\Shares\Finance"` to confirm.
-    **`Invalid parameter`** — Check syntax of ACE flags (OI=Object Inherit, CI=Container Inherit, M=Modify); ensure quotes are balanced.
+    | Error | Fix |
+    |---|---|
+    | `Access Denied` | Run the command prompt as Administrator or use an account with ownership of the resource. |
+    | `The system cannot find the path specified.` | Verify the folder path exists and is accessible; use `dir "C:\Shares\Finance"` to confirm. |
+    | `Invalid parameter` | Check syntax of ACE flags (OI=Object Inherit, CI=Container Inherit, M=Modify); ensure quotes are balanced. |
 Inheritance flags: `(OI)` = object inherit, `(CI)` = container inherit, `(NP)` = no propagate, `(IO)` = inherit only.
 
 ## Inheritance

@@ -87,8 +87,10 @@ remote: Receiving objects: 100% (1247/1247), done.
 ```
 
 !!! warning "Common errors"
-    **`Error: hashicorp/tap/terraform: no bottle found for the requested macOS version`** — Upgrade Homebrew with `brew update` and try again, or install from the official HashiCorp releases page.
-    **`Error: Failed to download resource "terraform_resource"`** — Check your internet connection and verify HashiCorp's download servers are accessible; try `brew install terraform` from the core tap instead.
+    | Error | Fix |
+    |---|---|
+    | `Error: hashicorp/tap/terraform: no bottle found for the requested macOS version` | Upgrade Homebrew with `brew update` and try again, or install from the official HashiCorp releases page. |
+    | `Error: Failed to download resource "terraform_resource"` | Check your internet connection and verify HashiCorp's download servers are accessible; try `brew install terraform` from the core tap instead. |
 **Linux (apt):**
 
 ```bash
@@ -117,8 +119,10 @@ Processing triggers for man-db (2.10.2-1) ...
 ```
 
 !!! warning "Common errors"
-    **`gpg: can't connect to the agent: IPC connect call failed`** — Run `gpg-connect-agent /bye` to reset the GPG agent, then retry the command.
-    **`E: Could not get lock /var/lib/apt/lists/lock - open (11: Resource temporarily unavailable)`** — Wait for any running `apt` or `apt-get` processes to complete, or run `sudo lsof /var/lib/apt/lists/lock` to identify blocking processes.
+    | Error | Fix |
+    |---|---|
+    | `gpg: can't connect to the agent: IPC connect call failed` | Run `gpg-connect-agent /bye` to reset the GPG agent, then retry the command. |
+    | `E: Could not get lock /var/lib/apt/lists/lock - open (11: Resource temporarily unavailable)` | Wait for any running `apt` or `apt-get` processes to complete, or run `sudo lsof /var/lib/apt/lists/lock` to identify blocking processes. |
 **Linux (binary download):**
 
 ```bash
@@ -136,9 +140,11 @@ Archive:  terraform.zip
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Update your CA certificates with `sudo update-ca-certificates` or use `curl -k` to skip verification (not recommended for production).
-    **`unzip: command not found`** — Install unzip with `sudo apt-get install unzip` (Debian/Ubuntu) or `sudo yum install unzip` (RHEL/CentOS).
-    **`sudo: no password is available`** — Run the commands without `sudo` if your user has write permissions to `/usr/local/bin/`, or configure passwordless sudo for this command.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Update your CA certificates with `sudo update-ca-certificates` or use `curl -k` to skip verification (not recommended for production). |
+    | `unzip: command not found` | Install unzip with `sudo apt-get install unzip` (Debian/Ubuntu) or `sudo yum install unzip` (RHEL/CentOS). |
+    | `sudo: no password is available` | Run the commands without `sudo` if your user has write permissions to `/usr/local/bin/`, or configure passwordless sudo for this command. |
 Verify installation:
 
 ```bash
@@ -155,8 +161,10 @@ is 1.6.4. You can update by downloading from https://www.terraform.io/downloads.
 ```
 
 !!! warning "Common errors"
-    **`command not found: terraform`** — Install Terraform or add its binary directory to your PATH environment variable.
-    **`Error: Failed to query available provider packages`** — Ensure you have internet connectivity and that your firewall allows access to registry.terraform.io.
+    | Error | Fix |
+    |---|---|
+    | `command not found: terraform` | Install Terraform or add its binary directory to your PATH environment variable. |
+    | `Error: Failed to query available provider packages` | Ensure you have internet connectivity and that your firewall allows access to registry.terraform.io. |
 Expected output: `Terraform v1.8.x` or higher.
 
 Install `tfenv` if you need to manage multiple Terraform versions across projects:
@@ -185,9 +193,11 @@ Switching to v1.8.5
 ```
 
 !!! warning "Common errors"
-    **`tfenv: command not found`** — Add `/opt/homebrew/bin` to your `$PATH` or restart your shell after installation.
-    **`Error: terraform v1.8.5 not found in remote`** — Verify the version exists on releases.hashicorp.com or use `tfenv list-remote` to see available versions.
-    **`permission denied: /Users/admin/.tfenv/versions`** — Run `mkdir -p ~/.tfenv/versions` and ensure your user owns the directory with `chmod 755`.
+    | Error | Fix |
+    |---|---|
+    | `tfenv: command not found` | Add `/opt/homebrew/bin` to your `$PATH` or restart your shell after installation. |
+    | `Error: terraform v1.8.5 not found in remote` | Verify the version exists on releases.hashicorp.com or use `tfenv list-remote` to see available versions. |
+    | `permission denied: /Users/admin/.tfenv/versions` | Run `mkdir -p ~/.tfenv/versions` and ensure your user owns the directory with `chmod 755`. |
 ---
 
 ## Configure Backend (Remote State)
@@ -236,9 +246,11 @@ aws dynamodb create-table \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (BucketAlreadyExists) when calling the CreateBucket operation: The requested bucket name is not available. The bucket namespace is shared by all AWS accounts.`** — Choose a globally unique bucket name by appending a timestamp or random suffix (e.g., `tf-state-prod-<account-id>-$(date +%s)`).
-    **`An error occurred (AccessDenied) when calling the CreateBucket operation: User: arn:aws:iam::123456789012:user/terraform is not authorized to perform: s3:CreateBucket`** — Attach the `AmazonS3FullAccess` policy (or a custom S3 policy) to the IAM user/role running these commands.
-    **`An error occurred (ResourceInUseException) when calling the CreateTable operation: Requested resource already exists`** — Delete the existing DynamoDB table with `aws dynamodb delete-table --table-name tf-state-lock` before rerunning, or skip creation if the table is already in use.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (BucketAlreadyExists) when calling the CreateBucket operation: The requested bucket name is not available. The bucket namespace is shared by all AWS accounts.` | Choose a globally unique bucket name by appending a timestamp or random suffix (e.g., `tf-state-prod-<account-id>-$(date +%s)`). |
+    | `An error occurred (AccessDenied) when calling the CreateBucket operation: User: arn:aws:iam::123456789012:user/terraform is not authorized to perform: s3:CreateBucket` | Attach the `AmazonS3FullAccess` policy (or a custom S3 policy) to the IAM user/role running these commands. |
+    | `An error occurred (ResourceInUseException) when calling the CreateTable operation: Requested resource already exists` | Delete the existing DynamoDB table with `aws dynamodb delete-table --table-name tf-state-lock` before rerunning, or skip creation if the table is already in use. |
 In `main.tf`:
 
 ```hcl
@@ -323,8 +335,10 @@ az storage container create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound: Resource group 'rg-platform-terraform' could not be found.`** — Create the resource group first with `az group create --name rg-platform-terraform --location eastus`.
-    **`StorageAccountAlreadyTaken: The storage account named 'tfstateprod<suffix>' is already taken.`** — Replace `<suffix>` with a unique numeric or alphanumeric string (storage account names must be globally unique).
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound: Resource group 'rg-platform-terraform' could not be found.` | Create the resource group first with `az group create --name rg-platform-terraform --location eastus`. |
+    | `StorageAccountAlreadyTaken: The storage account named 'tfstateprod<suffix>' is already taken.` | Replace `<suffix>` with a unique numeric or alphanumeric string (storage account names must be globally unique). |
     **`AuthorizationFailed: The client 'user@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/xxx/resourceGroups/
 In `main.tf`:
 
@@ -360,8 +374,10 @@ You may now begin working with Terraform. Try running "terraform plan" next.
 ```
 
 !!! warning "Common errors"
-    **`Error: error reading the backend configuration: unsupported argument "region"`** — Remove or correct the invalid argument in your backend block in the Terraform configuration.
-    **`Error: Failed to download module: error downloading "git::https://github.com/org/repo.git": git not found in PATH`** — Install git on your system or add it to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Error: error reading the backend configuration: unsupported argument "region"` | Remove or correct the invalid argument in your backend block in the Terraform configuration. |
+    | `Error: Failed to download module: error downloading "git::https://github.com/org/repo.git": git not found in PATH` | Install git on your system or add it to your PATH environment variable. |
 On success: `Backend "s3" (or "azurerm") initialised successfully.`
 
 ---
@@ -395,9 +411,11 @@ Default output format [None]: json
 ```
 
 !!! warning "Common errors"
-    **`Unable to locate credentials`** — Ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are exported before running Terraform, or run `aws configure` to store credentials in `~/.aws/credentials`.
-    **`The security token included in the request is invalid`** — Verify the AWS_SECRET_ACCESS_KEY value is correct and not truncated; regenerate credentials in the AWS IAM console if needed.
-    **`InvalidParameterValue: Invalid region`** — Set AWS_DEFAULT_REGION to a valid AWS region name such as `us-east-1`, `eu-west-1`, or `ap-southeast-1`.
+    | Error | Fix |
+    |---|---|
+    | `Unable to locate credentials` | Ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are exported before running Terraform, or run `aws configure` to store credentials in `~/.aws/credentials`. |
+    | `The security token included in the request is invalid` | Verify the AWS_SECRET_ACCESS_KEY value is correct and not truncated; regenerate credentials in the AWS IAM console if needed. |
+    | `InvalidParameterValue: Invalid region` | Set AWS_DEFAULT_REGION to a valid AWS region name such as `us-east-1`, `eu-west-1`, or `ap-southeast-1`. |
 In `providers.tf`:
 
 ```hcl
@@ -442,8 +460,10 @@ To sign in, use a web browser to open the page https://microsoft.com/devicelogin
 ```
 
 !!! warning "Common errors"
-    **`ERROR: AADSTS700016: Application with identifier 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' was not found in the directory`** — Verify the ARM_CLIENT_ID is correct and the service principal exists in the target Azure AD tenant.
-    **`ERROR: AADSTS7000215: Invalid client secret is provided`** — Regenerate the service principal secret in Azure Portal and update ARM_CLIENT_SECRET with the new value.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: AADSTS700016: Application with identifier 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' was not found in the directory` | Verify the ARM_CLIENT_ID is correct and the service principal exists in the target Azure AD tenant. |
+    | `ERROR: AADSTS7000215: Invalid client secret is provided` | Regenerate the service principal secret in Azure Portal and update ARM_CLIENT_SECRET with the new value. |
 In `providers.tf`:
 
 ```hcl
@@ -466,8 +486,10 @@ export VSPHERE_SERVER="vcenter.corp.local"
 ```
 
 !!! warning "Common errors"
-    **`bash: export: `administrator@vsphere.local': not a valid identifier`** — Remove or escape the `@` symbol in the username, or use quotes: `export VSPHERE_USER="administrator@vsphere.local"` (ensure the entire string is quoted).
-    **`bash: VSPHERE_PASSWORD: command not found`** — Ensure the password value is not left empty or contains unquoted special characters; use `export VSPHERE_PASSWORD="your_actual_password"` with proper quoting.
+    | Error | Fix |
+    |---|---|
+    | `bash: export: `administrator@vsphere.local': not a valid identifier` | Remove or escape the `@` symbol in the username, or use quotes: `export VSPHERE_USER="administrator@vsphere.local"` (ensure the entire string is quoted). |
+    | `bash: VSPHERE_PASSWORD: command not found` | Ensure the password value is not left empty or contains unquoted special characters; use `export VSPHERE_PASSWORD="your_actual_password"` with proper quoting. |
 In `providers.tf`:
 
 ```hcl
@@ -503,8 +525,10 @@ Providers required by the state:
 ```
 
 !!! warning "Common errors"
-    **`Error: No configuration files`** — Run `terraform init` first to initialize the working directory and create the `.terraform` folder.
-    **`Error: Incompatible provider version`** — Update your provider constraints in the configuration or run `terraform init -upgrade` to fetch compatible versions.
+    | Error | Fix |
+    |---|---|
+    | `Error: No configuration files` | Run `terraform init` first to initialize the working directory and create the `.terraform` folder. |
+    | `Error: Incompatible provider version` | Update your provider constraints in the configuration or run `terraform init -upgrade` to fetch compatible versions. |
 All required providers should be listed with their versions.
 
 ---
@@ -523,8 +547,10 @@ mkdir infra && cd infra
 ```
 
 !!! warning "Common errors"
-    **`mkdir: cannot create directory 'infra': File exists`** — Remove or rename the existing `infra` directory with `rm -rf infra` before running the command again.
-    **`mkdir: cannot create directory 'infra': Permission denied`** — Ensure you have write permissions in the current directory by checking with `ls -ld .` and requesting access from your administrator if needed.
+    | Error | Fix |
+    |---|---|
+    | `mkdir: cannot create directory 'infra': File exists` | Remove or rename the existing `infra` directory with `rm -rf infra` before running the command again. |
+    | `mkdir: cannot create directory 'infra': Permission denied` | Ensure you have write permissions in the current directory by checking with `ls -ld .` and requesting access from your administrator if needed. |
 Create the standard file layout:
 
 ![Terraform — Environment Setup — Diagram](../../../assets/automation-terraform-deploy-diagram.svg)
@@ -581,9 +607,11 @@ Your configuration is valid.
 ```
 
 !!! warning "Common errors"
-    **`Error: Terraform Core does not support this state file format`** — Delete the `.terraform` directory and re-run `terraform init` to reinitialize with the current Terraform version.
-    **`Error: Failed to query available provider packages`** — Verify internet connectivity and check that your Terraform provider registry is accessible (or configure a private registry in `.terraformrc`).
-    **`Error: Error reading schema from remote state`** — Run `terraform state pull > backup.tfstate` to backup state, then `terraform state rm` to clear problematic resources before re-initializing.
+    | Error | Fix |
+    |---|---|
+    | `Error: Terraform Core does not support this state file format` | Delete the `.terraform` directory and re-run `terraform init` to reinitialize with the current Terraform version. |
+    | `Error: Failed to query available provider packages` | Verify internet connectivity and check that your Terraform provider registry is accessible (or configure a private registry in `.terraformrc`). |
+    | `Error: Error reading schema from remote state` | Run `terraform state pull > backup.tfstate` to backup state, then `terraform state rm` to clear problematic resources before re-initializing. |
 `terraform validate` should return `Success! The configuration is valid.`
 
 ---
@@ -606,8 +634,10 @@ Created and switched to workspace "prod"
 ```
 
 !!! warning "Common errors"
-    **`Error: Workspace "dev" already exists`** — Delete the existing workspace with `terraform workspace delete dev` or use `terraform workspace select dev` to switch to it instead.
-    **`Error: Invalid workspace name "dev-test"`** — Use only alphanumeric characters, hyphens, and underscores in workspace names; rename to a valid format like `dev_test`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Workspace "dev" already exists` | Delete the existing workspace with `terraform workspace delete dev` or use `terraform workspace select dev` to switch to it instead. |
+    | `Error: Invalid workspace name "dev-test"` | Use only alphanumeric characters, hyphens, and underscores in workspace names; rename to a valid format like `dev_test`. |
 List workspaces:
 
 ```bash
@@ -623,8 +653,10 @@ default
 ```
 
 !!! warning "Common errors"
-    **`Error: Not a valid terraform directory`** — Run `terraform init` in the directory containing your Terraform configuration files first.
-    **`Error: workspace not found`** — Ensure you are in the correct Terraform working directory where `.terraform/` exists.
+    | Error | Fix |
+    |---|---|
+    | `Error: Not a valid terraform directory` | Run `terraform init` in the directory containing your Terraform configuration files first. |
+    | `Error: workspace not found` | Ensure you are in the correct Terraform working directory where `.terraform/` exists. |
 Switch to an environment:
 
 ```bash
@@ -637,8 +669,10 @@ terraform workspace select prod
 ```
 
 !!! warning "Common errors"
-    **`Error: workspace "prod" does not exist`** — Run `terraform workspace new prod` to create the workspace before selecting it.
-    **`Error: No default backend configured`** — Initialize the Terraform working directory with `terraform init` first to configure the backend.
+    | Error | Fix |
+    |---|---|
+    | `Error: workspace "prod" does not exist` | Run `terraform workspace new prod` to create the workspace before selecting it. |
+    | `Error: No default backend configured` | Initialize the Terraform working directory with `terraform init` first to configure the backend. |
 Reference the workspace name in resource names to avoid collisions:
 
 ```hcl
@@ -694,9 +728,11 @@ instance_ip = "10.42.8.15"
 ```
 
 !!! warning "Common errors"
-    **`Error: error reading envs/prod.tfvars: open envs/prod.tfvars: no such file or directory`** — Verify the tfvars file path is correct and the file exists in the working directory.
-    **`Error: Insufficient IAM permissions to perform: ec2:RunInstances`** — Ensure the AWS credentials in use have the required IAM policies attached for the resources being created.
-    **`Error: resource already exists in state`** — Run `terraform refresh` to sync the state file with actual infrastructure, or manually remove the conflicting resource from state.
+    | Error | Fix |
+    |---|---|
+    | `Error: error reading envs/prod.tfvars: open envs/prod.tfvars: no such file or directory` | Verify the tfvars file path is correct and the file exists in the working directory. |
+    | `Error: Insufficient IAM permissions to perform: ec2:RunInstances` | Ensure the AWS credentials in use have the required IAM policies attached for the resources being created. |
+    | `Error: resource already exists in state` | Run `terraform refresh` to sync the state file with actual infrastructure, or manually remove the conflicting resource from state. |
 ---
 
 ## Set Up CI/CD Integration

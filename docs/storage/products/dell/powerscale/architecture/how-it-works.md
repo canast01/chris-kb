@@ -185,9 +185,11 @@ Jobs:
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster via SSH or the OneFS CLI is installed in your PATH.
-    **`Error: Permission denied`** — Verify your user account has cluster administrator or read-only admin privileges via `isi auth roles view`.
-    **`Connection refused on port 8080`** — Confirm the cluster management interface is accessible and OneFS services are running with `isi_services_status`.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are logged into the PowerScale cluster via SSH or the OneFS CLI is installed in your PATH. |
+    | `Error: Permission denied` | Verify your user account has cluster administrator or read-only admin privileges via `isi auth roles view`. |
+    | `Connection refused on port 8080` | Confirm the cluster management interface is accessible and OneFS services are running with `isi_services_status`. |
 ---
 
 ## See also

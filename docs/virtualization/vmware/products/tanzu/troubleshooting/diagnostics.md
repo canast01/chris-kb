@@ -243,7 +243,9 @@ workload-ns-02        dev-cluster-02    Running   12d
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey)`** — Verify the SSH key file has 600 permissions (`chmod 600
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey)` | Verify the SSH key file has 600 permissions (`chmod 600 |
 ---
 
 ## Step 3 — Collect the diagnostics bundle
@@ -295,9 +297,11 @@ prod-cluster  tanzu-system   running   3/3            8/8       v1.28.2      v0.
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to management cluster: connection refused`** — Verify the management cluster kubeconfig is set correctly with `kubectl config current-context` and the cluster is accessible.
-    **`error: diagnostics collection timed out after 5m0s`** — Increase the timeout with `--timeout=10m` flag or check if the management cluster is experiencing resource exhaustion with `kubectl top nodes`.
-    **`error: cluster-dump directory already exists`** — Remove the existing directory with `rm -rf /tmp/cluster-dump` before running the dump command again.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to management cluster: connection refused` | Verify the management cluster kubeconfig is set correctly with `kubectl config current-context` and the cluster is accessible. |
+    | `error: diagnostics collection timed out after 5m0s` | Increase the timeout with `--timeout=10m` flag or check if the management cluster is experiencing resource exhaustion with `kubectl top nodes`. |
+    | `error: cluster-dump directory already exists` | Remove the existing directory with `rm -rf /tmp/cluster-dump` before running the dump command again. |
 ---
 
 ## Step 4 — Diagnose CSI driver and PVC issues
@@ -445,9 +449,11 @@ Audience:     pinniped-cluster-prod-01
 ```
 
 !!! warning "Common errors"
-    **`error: failed to validate issuer certificate: x509: certificate signed by unknown authority`** — Add the identity provider's CA certificate to the Pinniped supervisor's trusted CA bundle in the PinnipedConfig or update the issuer URL to use a publicly trusted certificate.
-    **`error: failed to authenticate user: invalid token signature`** — Verify the JWT signing key in the JWTAuthenticator matches the key used by your identity provider, and check that the issuer URL in the authenticator configuration is correct.
-    **`error: Unauthorized`** — Confirm the user's identity provider group membership matches the Tanzu role bindings, and verify Pinniped concierge can reach the identity provider endpoint by checking network policies and firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `error: failed to validate issuer certificate: x509: certificate signed by unknown authority` | Add the identity provider's CA certificate to the Pinniped supervisor's trusted CA bundle in the PinnipedConfig or update the issuer URL to use a publicly trusted certificate. |
+    | `error: failed to authenticate user: invalid token signature` | Verify the JWT signing key in the JWTAuthenticator matches the key used by your identity provider, and check that the issuer URL in the authenticator configuration is correct. |
+    | `error: Unauthorized` | Confirm the user's identity provider group membership matches the Tanzu role bindings, and verify Pinniped concierge can reach the identity provider endpoint by checking network policies and firewall rules. |
 ---
 
 ## Step 6 — Check Harbor registry logs
@@ -522,9 +528,11 @@ harbor-redis-0                      1/1     Running   0          2d
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the Harbor CA certificate into your system trust store.
-    **`error: the server doesn't have a resource type "pods"`** — Ensure you are connected to the correct Kubernetes cluster with `kubectl cluster-info` and that the harbor namespace exists with `kubectl get ns | grep harbor`.
-    **`jq: command not found`** — Replace `python3 -m json.tool` with `jq '.'` if jq is installed, or install python3-minimal if using the python formatter.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the Harbor CA certificate into your system trust store. |
+    | `error: the server doesn't have a resource type "pods"` | Ensure you are connected to the correct Kubernetes cluster with `kubectl cluster-info` and that the harbor namespace exists with `kubectl get ns | grep harbor`. |
+    | `jq: command not found` | Replace `python3 -m json.tool` with `jq '.'` if jq is installed, or install python3-minimal if using the python formatter. |
 ---
 
 ## Step 7 — Enable verbose CLI logging for escalation
@@ -577,9 +585,11 @@ kube-system            kube-controller-manager-tanzu-cp-node-1 1/1     Running  
 ```
 
 !!! warning "Common errors"
-    **`error: unable to read cluster.yaml: no such file or directory`** — Verify the cluster.yaml file exists in the current directory or provide the full path with `--file /path/to/cluster.yaml`.
-    **`error: invalid credentials for vSphere provider`** — Ensure GOVC_USERNAME, GOVC_PASSWORD, and GOVC_URL environment variables are set correctly for your vCenter instance.
-    **`error: insufficient resources in resource pool`** — Check vSphere resource pool has adequate CPU, memory, and storage available using the vSphere client or `govc pool.info` command.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to read cluster.yaml: no such file or directory` | Verify the cluster.yaml file exists in the current directory or provide the full path with `--file /path/to/cluster.yaml`. |
+    | `error: invalid credentials for vSphere provider` | Ensure GOVC_USERNAME, GOVC_PASSWORD, and GOVC_URL environment variables are set correctly for your vCenter instance. |
+    | `error: insufficient resources in resource pool` | Check vSphere resource pool has adequate CPU, memory, and storage available using the vSphere client or `govc pool.info` command. |
 ---
 
 ## Log locations

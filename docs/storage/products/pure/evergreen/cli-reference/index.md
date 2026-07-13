@@ -59,9 +59,11 @@ eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJwdXJlMTphcGlrZXk6YWJjMTIzIiwic3V
 ```
 
 !!! warning "Common errors"
-    **`ModuleNotFoundError: No module named 'pypureclient'`** — Install the required package with `pip install py-pure-client`.
-    **`FileNotFoundError: [Errno 2] No such file or directory: '/path/to/private.pem'`** — Verify the private key file path is correct and the file exists at the specified location.
-    **`ValueError: Invalid app_id format`** — Ensure the app_id follows the format `pure1:apikey:<your_api_key>` with valid credentials from your Pure1 account.
+    | Error | Fix |
+    |---|---|
+    | `ModuleNotFoundError: No module named 'pypureclient'` | Install the required package with `pip install py-pure-client`. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: '/path/to/private.pem'` | Verify the private key file path is correct and the file exists at the specified location. |
+    | `ValueError: Invalid app_id format` | Ensure the app_id follows the format `pure1:apikey:<your_api_key>` with valid credentials from your Pure1 account. |
 ### Arrays
 
 ```bash
@@ -111,9 +113,11 @@ backup-array-03               model=FlashArray//X50R3      version=6.2.5
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution; check if your firewall allows HTTPS egress to Pure1 API endpoints.
-    **`{"error_code":"401","message":"Unauthorized"}`** — Ensure the `$TOKEN` environment variable is set with a valid Pure1 API token and has not expired.
-    **`jq: parse error: Invalid UTF-8 in string`** — Verify the API response is valid JSON by testing with `curl -s <url> | head -c 500` to inspect raw output.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.pure1.purestorage.com` | Verify network connectivity and DNS resolution; check if your firewall allows HTTPS egress to Pure1 API endpoints. |
+    | `{"error_code":"401","message":"Unauthorized"}` | Ensure the `$TOKEN` environment variable is set with a valid Pure1 API token and has not expired. |
+    | `jq: parse error: Invalid UTF-8 in string` | Verify the API response is valid JSON by testing with `curl -s <url> | head -c 500` to inspect raw output. |
 ### Fleet Management
 
 ```bash
@@ -176,9 +180,11 @@ curl -s "https://api.pure1.purestorage.com/api/1.x/fleet-assets?filter=fleet.id%
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution; check firewall rules allowing outbound HTTPS to Pure1 API endpoints.
-    **`{"error_code":"INVALID_TOKEN","message":"Invalid or expired authentication token"}`** — Regenerate the API token in Pure1 console and ensure `$TOKEN` variable is set correctly with `export TOKEN="your-token-here"`.
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Update your CA certificate bundle or use `curl -k` flag (not recommended for production); verify your system's certificate store is current.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.pure1.purestorage.com` | Verify network connectivity and DNS resolution; check firewall rules allowing outbound HTTPS to Pure1 API endpoints. |
+    | `{"error_code":"INVALID_TOKEN","message":"Invalid or expired authentication token"}` | Regenerate the API token in Pure1 console and ensure `$TOKEN` variable is set correctly with `export TOKEN="your-token-here"`. |
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Update your CA certificate bundle or use `curl -k` flag (not recommended for production); verify your system's certificate store is current. |
 ### Subscriptions
 
 ```bash
@@ -244,9 +250,11 @@ Evergreen//Forever-FlashBlade  status=active        expires=2099-12-31T23:59:59Z
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution; check if your firewall allows outbound HTTPS to Pure1 API endpoints.
-    **`{"error_code":"401","message":"Unauthorized"}`** — Ensure the `$TOKEN` environment variable is set with a valid Pure1 API token and has not expired.
-    **`jq: command not found`** — Install `python3-json` or use `python3 -m json.tool` as shown in the example (already included in the script).
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.pure1.purestorage.com` | Verify network connectivity and DNS resolution; check if your firewall allows outbound HTTPS to Pure1 API endpoints. |
+    | `{"error_code":"401","message":"Unauthorized"}` | Ensure the `$TOKEN` environment variable is set with a valid Pure1 API token and has not expired. |
+    | `jq: command not found` | Install `python3-json` or use `python3 -m json.tool` as shown in the example (already included in the script). |
 ### Metrics (Historical Performance)
 
 ```bash
@@ -320,9 +328,11 @@ array_used_capacity
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution; check if the Pure1 API endpoint is accessible from your network.
-    **`{"error_code":"INVALID_TOKEN","message":"Invalid or expired bearer token"}`** — Regenerate a valid API token in Pure1 and export it to `$TOKEN` before running the command.
-    **`jq: command not found`** — Install `jq` package or use `python3 -m json.tool` as shown in the example to parse JSON output.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.pure1.purestorage.com` | Verify network connectivity and DNS resolution; check if the Pure1 API endpoint is accessible from your network. |
+    | `{"error_code":"INVALID_TOKEN","message":"Invalid or expired bearer token"}` | Regenerate a valid API token in Pure1 and export it to `$TOKEN` before running the command. |
+    | `jq: command not found` | Install `jq` package or use `python3 -m json.tool` as shown in the example to parse JSON output. |
 ---
 
 ## FlashArray CLI (per-array)
@@ -345,9 +355,11 @@ pureuser@flasharray01>
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname flasharray01.example.com: Name or service not known`** — Verify the hostname is correct and resolvable via DNS or add an entry to /etc/hosts.
-    **`Permission denied (publickey,password).`** — Confirm the pureuser account exists on the array and the password is correct, or configure SSH key authentication.
-    **`ssh: connect to host flasharray01.example.com port 22: Connection timed out`** — Check network connectivity to the array and verify the SSH service is running on port 22.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname flasharray01.example.com: Name or service not known` | Verify the hostname is correct and resolvable via DNS or add an entry to /etc/hosts. |
+    | `Permission denied (publickey,password).` | Confirm the pureuser account exists on the array and the password is correct, or configure SSH key authentication. |
+    | `ssh: connect to host flasharray01.example.com port 22: Connection timed out` | Check network connectivity to the array and verify the SSH service is running on port 22. |
 | Command | Purpose |
 |---|---|
 | `purearray list` | Array identity, model, Purity version |
@@ -410,9 +422,11 @@ Non-disruptive upgrade completed successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to array management interface at <ip>:443`** — Verify array hostname/IP is reachable and management services are running with `ping` and `ssh` tests.
-    **`Error: Upgrade check failed - Active alerts prevent upgrade`** — Acknowledge or resolve all critical and error-level alerts before attempting upgrade with `purealert acknowledge <alert-id>`.
-    **`Error: Insufficient free space for upgrade (requires 15 TiB, available 8 TiB)`** — Free up array capacity by deleting snapshots or data, or add additional storage before retrying upgrade.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to array management interface at <ip>:443` | Verify array hostname/IP is reachable and management services are running with `ping` and `ssh` tests. |
+    | `Error: Upgrade check failed - Active alerts prevent upgrade` | Acknowledge or resolve all critical and error-level alerts before attempting upgrade with `purealert acknowledge <alert-id>`. |
+    | `Error: Insufficient free space for upgrade (requires 15 TiB, available 8 TiB)` | Free up array capacity by deleting snapshots or data, or add additional storage before retrying upgrade. |
 ### Space Breakdown
 
 ```bash
@@ -438,8 +452,10 @@ Total                          100.0TB        2.3x           2.8x
 ```
 
 !!! warning "Common errors"
-    **`purevol: command not found`** — Ensure the Pure Storage CLI is installed and the `purearray` package is in your PATH, or source the Pure environment setup script.
-    **`Error: Array not reachable at <ip>`** — Verify network connectivity to the array and that your `PURE_ARRAY` environment variable or CLI credentials are correctly configured.
+    | Error | Fix |
+    |---|---|
+    | `purevol: command not found` | Ensure the Pure Storage CLI is installed and the `purearray` package is in your PATH, or source the Pure environment setup script. |
+    | `Error: Array not reachable at <ip>` | Verify network connectivity to the array and that your `PURE_ARRAY` environment variable or CLI credentials are correctly configured. |
 ---
 
 ## Alerts
@@ -496,9 +512,11 @@ Alert 123 acknowledged successfully.
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution, or check if the Pure1 API endpoint is accessible from your network.
-    **`Error: Invalid token or authentication failed`** — Ensure the `$TOKEN` environment variable is set to a valid Pure1 API token with appropriate permissions.
-    **`Error: Alert ID 123 not found`** — Verify the alert ID exists by running `purealert list` first and use the correct ID from the output.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.pure1.purestorage.com` | Verify network connectivity and DNS resolution, or check if the Pure1 API endpoint is accessible from your network. |
+    | `Error: Invalid token or authentication failed` | Ensure the `$TOKEN` environment variable is set to a valid Pure1 API token with appropriate permissions. |
+    | `Error: Alert ID 123 not found` | Verify the alert ID exists by running `purealert list` first and use the correct ID from the output. |
 ## See also
 
 - [Evergreen — Overview](../../)

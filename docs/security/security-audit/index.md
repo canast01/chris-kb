@@ -85,9 +85,11 @@ active
 ```
 
 !!! warning "Common errors"
-    **`grep: /etc/ssh/sshd_config: No such file or directory`** — Verify SSH is installed with `apt install openssh-server` or `yum install openssh-server` and the sshd_config file exists.
-    **`cat: /etc/security/pwquality.conf: No such file or directory`** — Install libpam-pwquality with `apt install libpam-pwquality` or `yum install libpam-pwquality`.
-    **`find: '/proc/sys/kernel/debug': Permission denied`** — Run the command with `sudo` to avoid permission errors on restricted directories.
+    | Error | Fix |
+    |---|---|
+    | `grep: /etc/ssh/sshd_config: No such file or directory` | Verify SSH is installed with `apt install openssh-server` or `yum install openssh-server` and the sshd_config file exists. |
+    | `cat: /etc/security/pwquality.conf: No such file or directory` | Install libpam-pwquality with `apt install libpam-pwquality` or `yum install libpam-pwquality`. |
+    | `find: '/proc/sys/kernel/debug': Permission denied` | Run the command with `sudo` to avoid permission errors on restricted directories. |
 **Windows server hardening:**
 ```powershell
 # Audit policy settings
@@ -162,9 +164,11 @@ curl -k -X GET "https://<scanner>/scans/<scan_id>/hosts" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed in production variants).
-    **`jq: parse error: Invalid JSON`** — Verify the API key credentials are correct and the scan_id exists by testing with `curl -k -H "X-ApiKey: ..." https://<scanner>/scans` first.
-    **`curl: (401) Unauthorized`** — Confirm the accessKey and secretKey values are URL-encoded and match the active API credentials in the Tenable console.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed in production variants). |
+    | `jq: parse error: Invalid JSON` | Verify the API key credentials are correct and the scan_id exists by testing with `curl -k -H "X-ApiKey: ..." https://<scanner>/scans` first. |
+    | `curl: (401) Unauthorized` | Confirm the accessKey and secretKey values are URL-encoded and match the active API credentials in the Tenable console. |
 Review cadence:
 - **Critical findings** — remediate within 15 days
 - **High findings** — remediate within 30 days

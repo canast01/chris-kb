@@ -95,9 +95,11 @@ vmware-fdm (pid 4628) is running
 ```
 
 !!! warning "Common errors"
-    **`vmware-fdm: unrecognized service`** — Verify the host is running ESXi and HA is configured; FDM only exists on HA-enabled clusters.
-    **`Permission denied`** — Run the commands with root privileges using `sudo` or log in as root.
-    **`vmware-fdm (pid XXXX) is running, but subsystem locked`** — Wait 30–60 seconds for the previous restart to fully complete before issuing another restart command.
+    | Error | Fix |
+    |---|---|
+    | `vmware-fdm: unrecognized service` | Verify the host is running ESXi and HA is configured; FDM only exists on HA-enabled clusters. |
+    | `Permission denied` | Run the commands with root privileges using `sudo` or log in as root. |
+    | `vmware-fdm (pid XXXX) is running, but subsystem locked` | Wait 30–60 seconds for the previous restart to fully complete before issuing another restart command. |
 Look for: `Restart Status = Completed` means HA already acted — verify VMs are accessible before doing anything else.
 
 ---
@@ -153,9 +155,11 @@ UUID: 5b6c7d8e-9f0a-1b2c-3d4e-5f6g7h8i9j0k
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Ensure you are running this command directly on an ESXi host via SSH or local console, not from a vCenter Server.
-    **`No such file or directory`** — Verify vSAN is enabled and properly configured on the cluster; this command only works on vSAN-enabled hosts.
-    **`Permission denied`** — Run the command as root or with appropriate ESXi host privileges; standard user accounts cannot access esxcli storage or vsan debug commands.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Ensure you are running this command directly on an ESXi host via SSH or local console, not from a vCenter Server. |
+    | `No such file or directory` | Verify vSAN is enabled and properly configured on the cluster; this command only works on vSAN-enabled hosts. |
+    | `Permission denied` | Run the command as root or with appropriate ESXi host privileges; standard user accounts cannot access esxcli storage or vsan debug commands. |
 Look for: `State: APD` means wait for path recovery; `State: PDL` means VMCP should trigger immediately — confirm VMCP policy at **Cluster → Configure → vSphere Availability → Failures and Responses**.
 
 ---
@@ -198,8 +202,10 @@ FailedObjects: 0
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace path: vsan`** — Verify VSAN is licensed and enabled on the cluster, or run `esxcli vsan cluster get` first to confirm VSAN is active.
-    **`Error: Unknown command or namespace path: debug`** — Update ESXi to a supported version (6.5+) that includes the vsan debug namespace, or use `esxcli vsan resync get` as an alternative on older builds.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace path: vsan` | Verify VSAN is licensed and enabled on the cluster, or run `esxcli vsan cluster get` first to confirm VSAN is active. |
+    | `Error: Unknown command or namespace path: debug` | Update ESXi to a supported version (6.5+) that includes the vsan debug namespace, or use `esxcli vsan resync get` as an alternative on older builds. |
 Look for: any VM showing `Policy Status = Non-compliant` with `ResyncType = REPAIR` means it has a live protection gap — do not place additional hosts in maintenance until resync completes.
 
 ---

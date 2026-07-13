@@ -103,8 +103,10 @@ RELEASE_NOTES_URL=https://docs.vmware.com/en/VMware-Cloud-Foundation/5.2/rn/vmwa
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the SSH key is loaded or use password authentication; confirm vcf-admin account exists on the SDDC Manager appliance.
-    **`cat: /etc/vmware/vcf/domainManagerApp/vcf-version.properties: No such file or directory`** — SSH to the correct SDDC Manager node (primary, not secondary); the file path is appliance-specific and may differ if VCF is not fully initialized.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the SSH key is loaded or use password authentication; confirm vcf-admin account exists on the SDDC Manager appliance. |
+    | `cat: /etc/vmware/vcf/domainManagerApp/vcf-version.properties: No such file or directory` | SSH to the correct SDDC Manager node (primary, not secondary); the file path is appliance-specific and may differ if VCF is not fully initialized. |
 ### 2. Run the SOS health summary (quick — takes ~2 minutes)
 
 ```bash
@@ -150,9 +152,11 @@ Report saved to: /tmp/sos-health-2024-01-15.txt
 ```
 
 !!! warning "Common errors"
-    **`Permission denied: /opt/vmware/sddc-support/sos`** — Verify you are logged in as vcf-admin and have execute permissions on the SOS script with `ls -la /opt/vmware/sddc-support/sos`.
-    **`ModuleNotFoundError: No module named 'vmware'`** — Ensure the Python environment is correctly initialized by running `source /opt/vmware/sddc-support/bin/activate` before executing the script.
-    **`/tmp: Read-only file system`** — Use an alternative writable directory such as `/var/tmp` or `/home/vcf-admin/logs` for the tee output redirection.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied: /opt/vmware/sddc-support/sos` | Verify you are logged in as vcf-admin and have execute permissions on the SOS script with `ls -la /opt/vmware/sddc-support/sos`. |
+    | `ModuleNotFoundError: No module named 'vmware'` | Ensure the Python environment is correctly initialized by running `source /opt/vmware/sddc-support/bin/activate` before executing the script. |
+    | `/tmp: Read-only file system` | Use an alternative writable directory such as `/var/tmp` or `/home/vcf-admin/logs` for the tee output redirection. |
 Look for any line containing `ERROR` or `FAILED`. These are the items to include in your SR description.
 
 ### 3. Run the full SOS bundle (takes 15–30 minutes)
@@ -188,9 +192,11 @@ sos-bundle-2025-01-16.tar.gz created successfully (2.1 GB)
 ```
 
 !!! warning "Common errors"
-    **`python3: command not found`** — Install Python 3 with `apt-get install python3` or `yum install python3` depending on your OS.
-    **`Permission denied`** — Run the command with `sudo` or ensure your user has read access to `/opt/vmware/sddc-support/sos` and write access to `/tmp` and `/var/log/vmware/vcf/sddc-support/`.
-    **`No such file or directory: /opt/vmware/sddc-support/sos`** — Verify VMware Cloud Foundation support tools are installed; reinstall the SDDC support bundle if the path is missing.
+    | Error | Fix |
+    |---|---|
+    | `python3: command not found` | Install Python 3 with `apt-get install python3` or `yum install python3` depending on your OS. |
+    | `Permission denied` | Run the command with `sudo` or ensure your user has read access to `/opt/vmware/sddc-support/sos` and write access to `/tmp` and `/var/log/vmware/vcf/sddc-support/`. |
+    | `No such file or directory: /opt/vmware/sddc-support/sos` | Verify VMware Cloud Foundation support tools are installed; reinstall the SDDC support bundle if the path is missing. |
 ### 4. Collect the SDDC Manager support bundle
 
 ```bash
@@ -214,9 +220,11 @@ Bundle size: 487 MB
 ```
 
 !!! warning "Common errors"
-    **`vcf-support-bundle: command not found`** — Verify the VCF management package is installed with `rpm -qa | grep vcf-manager` and install it if missing.
-    **`Permission denied: /var/log/vmware/vcf/sddc-support/`** — Run the command with sudo or ensure your user is in the vcf group with `sudo usermod -aG vcf $USER`.
-    **`Insufficient disk space available (required: 2GB, available: 512MB)`** — Free up space on the root filesystem or mount a larger volume before generating the bundle.
+    | Error | Fix |
+    |---|---|
+    | `vcf-support-bundle: command not found` | Verify the VCF management package is installed with `rpm -qa | grep vcf-manager` and install it if missing. |
+    | `Permission denied: /var/log/vmware/vcf/sddc-support/` | Run the command with sudo or ensure your user is in the vcf group with `sudo usermod -aG vcf $USER`. |
+    | `Insufficient disk space available (required: 2GB, available: 512MB)` | Free up space on the root filesystem or mount a larger volume before generating the bundle. |
 ### 5. Collect the failed task ID
 
 In the SDDC Manager UI: go to **Lifecycle** → **Tasks** (or **Administration** → **Tasks** depending on VCF version). Find the failed task. Copy the Task ID (a long UUID string like `d2c8a4f1-...`). Paste it into your SR description.

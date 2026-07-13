@@ -113,9 +113,11 @@ State: Ready
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid resource ID <lun_id>`** — Verify the LUN ID exists using `uemcli -d <ip> -u admin /stor/lun show` and use the correct resource identifier format.
-    **`Error: Connection refused to <ip>:443`** — Confirm the Unity array IP address is correct, reachable on the network, and the management interface is responding.
-    **`Error: Authentication failed for user admin`** — Ensure the password is correct and the admin account has not been locked due to failed login attempts.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid resource ID <lun_id>` | Verify the LUN ID exists using `uemcli -d <ip> -u admin /stor/lun show` and use the correct resource identifier format. |
+    | `Error: Connection refused to <ip>:443` | Confirm the Unity array IP address is correct, reachable on the network, and the management interface is responding. |
+    | `Error: Authentication failed for user admin` | Ensure the password is correct and the admin account has not been locked due to failed login attempts. |
 ### Creating Snapshots
 
 ```bash
@@ -156,9 +158,11 @@ Consistency group snapshot created (4 LUNs included, crash-consistent)
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid resource ID <lun_id>`** — Verify the LUN ID exists by running `uemcli -d <ip> -u admin /stor/lun list` and use the correct ID from the output.
-    **`Error: Authentication failed for user 'admin'`** — Ensure the password is correct and the admin user has snapshot creation privileges; use `-p` flag to provide password interactively if needed.
-    **`Error: Snapshot name 'prod-oracle-lun01.20260507' already exists`** — Change the snapshot name to be unique or delete the existing snapshot with `uemcli -d <ip> -u admin /prot/snap delete -id <snap_id>` before retrying.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid resource ID <lun_id>` | Verify the LUN ID exists by running `uemcli -d <ip> -u admin /stor/lun list` and use the correct ID from the output. |
+    | `Error: Authentication failed for user 'admin'` | Ensure the password is correct and the admin user has snapshot creation privileges; use `-p` flag to provide password interactively if needed. |
+    | `Error: Snapshot name 'prod-oracle-lun01.20260507' already exists` | Change the snapshot name to be unique or delete the existing snapshot with `uemcli -d <ip> -u admin /prot/snap delete -id <snap_id>` before retrying. |
 ### Restoring from Snapshot
 
 **LUN restore — full restore to point-in-time state:**
@@ -191,9 +195,11 @@ Duration: 2m 34s
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid snapshot ID <snap_id>`** — Verify the snapshot ID exists using `uemcli -d <ip> -u admin /prot/snap list` and replace `<snap_id>` with the correct identifier.
-    **`Error: LUN is in use or I/O is still active`** — Ensure the host application is quiesced and all I/O to the LUN has stopped before initiating the restore operation.
-    **`Error: Insufficient space for backup snapshot`** — Free up storage pool capacity or use the restore command without `-backupSnap` if a pre-restore backup is not required.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid snapshot ID <snap_id>` | Verify the snapshot ID exists using `uemcli -d <ip> -u admin /prot/snap list` and replace `<snap_id>` with the correct identifier. |
+    | `Error: LUN is in use or I/O is still active` | Ensure the host application is quiesced and all I/O to the LUN has stopped before initiating the restore operation. |
+    | `Error: Insufficient space for backup snapshot` | Free up storage pool capacity or use the restore command without `-backupSnap` if a pre-restore backup is not required. |
 **LUN restore — attach snapshot for partial recovery:**
 
 ```bash
@@ -219,9 +225,11 @@ Snapshot snap_12345678 successfully detached from host esx-prod-01
 ```
 
 !!! warning "Common errors"
-    **`Error: Snapshot snap_12345678 is already attached to host esx-prod-01`** — Detach the snapshot from the host first using the detach command before attempting to re-attach it.
-    **`Error: Host esx-prod-01 not found or not configured`** — Verify the host ID exists in the Unity array and is properly registered using `uemcli -d <ip> -u admin /host list`.
-    **`Error: Access denied for user admin on array 192.168.1.100`** — Confirm the admin credentials are correct and the user has sufficient permissions to manage snapshots on the array.
+    | Error | Fix |
+    |---|---|
+    | `Error: Snapshot snap_12345678 is already attached to host esx-prod-01` | Detach the snapshot from the host first using the detach command before attempting to re-attach it. |
+    | `Error: Host esx-prod-01 not found or not configured` | Verify the host ID exists in the Unity array and is properly registered using `uemcli -d <ip> -u admin /host list`. |
+    | `Error: Access denied for user admin on array 192.168.1.100` | Confirm the admin credentials are correct and the user has sufficient permissions to manage snapshots on the array. |
 **File system snapshot — recover individual files:**
 
 ```bash
@@ -246,8 +254,10 @@ drwxr-xr-x   3 user1 group1  4096 Nov 15 09:55 reports/
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/mnt/nfs-mount/.ckpt/<snapshot_name>/': No such file or directory`** — Verify the NFS mount point is active with `mount | grep nfs` and confirm the snapshot name is correct and exists on the Unity array.
-    **`Permission denied`** — Ensure your user has read permissions on the snapshot directory; check with `getfacl /mnt/nfs-mount/.ckpt/<snapshot_name>/` and request access from the storage administrator if needed.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/mnt/nfs-mount/.ckpt/<snapshot_name>/': No such file or directory` | Verify the NFS mount point is active with `mount | grep nfs` and confirm the snapshot name is correct and exists on the Unity array. |
+    | `Permission denied` | Ensure your user has read permissions on the snapshot directory; check with `getfacl /mnt/nfs-mount/.ckpt/<snapshot_name>/` and request access from the storage administrator if needed. |
 **File system restore — full restore:**
 
 ```bash
@@ -266,9 +276,11 @@ Current progress: 23%
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid snapshot ID format`** — Verify the snapshot ID exists by running `uemcli -d <ip> -u admin /prot/snap list` and use the exact ID from the output.
-    **`Error: Authentication failed for user admin`** — Confirm the Unity array IP is reachable, credentials are correct, and the admin user has restore permissions on the array.
-    **`Error: Snapshot not found or already deleted`** — Check that the snapshot still exists and has not expired; restore operations cannot proceed on deleted or purged snapshots.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid snapshot ID format` | Verify the snapshot ID exists by running `uemcli -d <ip> -u admin /prot/snap list` and use the exact ID from the output. |
+    | `Error: Authentication failed for user admin` | Confirm the Unity array IP is reachable, credentials are correct, and the admin user has restore permissions on the array. |
+    | `Error: Snapshot not found or already deleted` | Check that the snapshot still exists and has not expired; restore operations cannot proceed on deleted or purged snapshots. |
 ### Deleting Snapshots
 
 ```bash
@@ -302,9 +314,11 @@ Bulk delete completed: 3 snapshots removed.
 ```
 
 !!! warning "Common errors"
-    **`Error: The snapshot ID <snap_id> does not exist or is invalid`** — Verify the snapshot ID exists by running `uemcli -d <ip> -u admin /prot/snap show` and confirm the exact ID format.
-    **`Error: Authentication failed for user admin`** — Ensure the admin credentials are correct and the user has delete permissions on the storage array.
-    **`Error: The snapshot cannot be deleted because it is locked by a clone or replication session`** — Check for dependent clones or active replication with `uemcli -d <ip> -u admin /prot/snap -id <snap_id> show` and remove dependencies before deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: The snapshot ID <snap_id> does not exist or is invalid` | Verify the snapshot ID exists by running `uemcli -d <ip> -u admin /prot/snap show` and confirm the exact ID format. |
+    | `Error: Authentication failed for user admin` | Ensure the admin credentials are correct and the user has delete permissions on the storage array. |
+    | `Error: The snapshot cannot be deleted because it is locked by a clone or replication session` | Check for dependent clones or active replication with `uemcli -d <ip> -u admin /prot/snap -id <snap_id> show` and remove dependencies before deletion. |
 ## Snapshot Schedules
 
 Automate snapshot creation with schedules. Unity supports daily, weekly, and interval-based schedules with configurable retention.
@@ -381,9 +395,11 @@ Schedule id_0x789ghi deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Cannot delete schedule. Schedule is currently assigned to 1 resource(s).`** — Remove all resource assignments using `set -snapSchedule ""` before deleting the schedule.
-    **`Error: Invalid hour value '25'. Hour must be between 0 and 23.`** — Correct the `-hour` parameter to a value between 0 and 23.
-    **`Error: Connection failed to <ip>. Check credentials and network connectivity.`** — Verify the IP address is reachable, admin credentials are correct, and the Unity array is online.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cannot delete schedule. Schedule is currently assigned to 1 resource(s).` | Remove all resource assignments using `set -snapSchedule ""` before deleting the schedule. |
+    | `Error: Invalid hour value '25'. Hour must be between 0 and 23.` | Correct the `-hour` parameter to a value between 0 and 23. |
+    | `Error: Connection failed to <ip>. Check credentials and network connectivity.` | Verify the IP address is reachable, admin credentials are correct, and the Unity array is online. |
 ### Recommended Snapshot Schedule
 
 | Protection Tier | Schedule | Retention | Use Case |
@@ -466,9 +482,11 @@ State: Ready
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed`** — Verify the Unity array IP is reachable and credentials are correct with `uemcli -d <ip> -u admin /sys show`.
-    **`Command: show not found`** — Ensure you are using the correct uemcli syntax; try `/prot/snap show` without additional flags first to confirm the command structure.
-    **`No snapshots found`** — Confirm that Veeam backup jobs have completed and snapshots were created by checking Veeam job logs and Unity array event logs.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed` | Verify the Unity array IP is reachable and credentials are correct with `uemcli -d <ip> -u admin /sys show`. |
+    | `Command: show not found` | Ensure you are using the correct uemcli syntax; try `/prot/snap show` without additional flags first to confirm the command structure. |
+    | `No snapshots found` | Confirm that Veeam backup jobs have completed and snapshots were created by checking Veeam job logs and Unity array event logs. |
 Veeam should delete its Unity snapshots after transferring the data to the backup repository. If Veeam snapshots accumulate, investigate the Veeam job logs for errors during snapshot deletion.
 
 ## CommVault IntelliSnap Integration
@@ -521,9 +539,11 @@ ID: ndmp_1
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials for admin user`** — Verify the admin password is correct and the user account has not been locked after failed login attempts.
-    **`Error: NAS server <nas_id> not found`** — Confirm the NAS server ID exists by running `uemcli -d <ip> -u admin /net/nas show` and use the correct server identifier.
-    **`Error: Port 10000 is already in use`** — Change the NDMP port to an available port number (e.g., 10001) or verify no other NDMP instance is using that port.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials for admin user` | Verify the admin password is correct and the user account has not been locked after failed login attempts. |
+    | `Error: NAS server <nas_id> not found` | Confirm the NAS server ID exists by running `uemcli -d <ip> -u admin /net/nas show` and use the correct server identifier. |
+    | `Error: Port 10000 is already in use` | Change the NDMP port to an available port number (e.g., 10001) or verify no other NDMP instance is using that port. |
 Point the NDMP backup application to the NAS server IP and port 10000. Supported NDMP backup applications include Veritas NetBackup, IBM Tivoli Storage Manager, and Commvault (NDMP mode).
 
 ## Replication Failover and Failback Flow
@@ -577,9 +597,11 @@ Last Sync Time: 2024-01-15 14:35:47
 ```
 
 !!! warning "Common errors"
-    **`Error: Session <session_id> not found`** — Verify the session ID exists by running the show command without filters and confirm the exact session identifier.
-    **`Error: Authentication failed for user admin`** — Ensure the admin credentials are correct and the user has replication management privileges on the Unity array.
-    **`Error: Replication session is in Failed state and cannot sync`** — Check array event logs for the failure cause and resolve the underlying issue (network connectivity, storage capacity, or licensing) before retrying the sync.
+    | Error | Fix |
+    |---|---|
+    | `Error: Session <session_id> not found` | Verify the session ID exists by running the show command without filters and confirm the exact session identifier. |
+    | `Error: Authentication failed for user admin` | Ensure the admin credentials are correct and the user has replication management privileges on the Unity array. |
+    | `Error: Replication session is in Failed state and cannot sync` | Check array event logs for the failure cause and resolve the underlying issue (network connectivity, storage capacity, or licensing) before retrying the sync. |
 For DR procedures including planned failover, failback, and reverse replication, see the [Procedures](procedures.md) page.
 
 ## Restore Validation
@@ -650,9 +672,11 @@ Size: 356.4 GB
 ```
 
 !!! warning "Common errors"
-    **`uemcli: command not found`** — Install the Dell EMC CLI package or add its installation directory to your PATH environment variable.
-    **`Authentication failed for user 'admin'`** — Verify the IP address is correct and the admin credentials are valid; use `-u <username> -p` to provide a password interactively if needed.
-    **`Connection timeout to <ip>:443`** — Confirm the Unity array is reachable on the network and that port 443 is not blocked by a firewall.
+    | Error | Fix |
+    |---|---|
+    | `uemcli: command not found` | Install the Dell EMC CLI package or add its installation directory to your PATH environment variable. |
+    | `Authentication failed for user 'admin'` | Verify the IP address is correct and the admin credentials are valid; use `-u <username> -p` to provide a password interactively if needed. |
+    | `Connection timeout to <ip>:443` | Confirm the Unity array is reachable on the network and that port 443 is not blocked by a firewall. |
 ### Pool Capacity Alerts for Snapshots
 
 | Pool Free Space | Action |

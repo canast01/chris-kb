@@ -125,9 +125,11 @@ curl -sk -X GET "https://<snapcenter-server>:8146/api/3.0/resourcegroups" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's included if removed).
-    **`{"Error":"Invalid token or token expired"}`** — Regenerate the auth token by re-running the login command and ensure the token value is copied exactly without extra whitespace.
-    **`{"Error":"User 'admin' does not have permission to access resourcegroups"}`** — Verify the user account has the SnapCenter Admin role assigned in the SnapCenter UI under Settings > Users.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's included if removed). |
+    | `{"Error":"Invalid token or token expired"}` | Regenerate the auth token by re-running the login command and ensure the token value is copied exactly without extra whitespace. |
+    | `{"Error":"User 'admin' does not have permission to access resourcegroups"}` | Verify the user account has the SnapCenter Admin role assigned in the SnapCenter UI under Settings > Users. |
 ## Oracle Plugin Integration
 
 The SnapCenter Plug-in for Oracle communicates with the Oracle database via OS authentication (SYSDBA) to quiesce the database before snapshot. Requirements:

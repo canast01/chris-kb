@@ -117,8 +117,10 @@ GET /api/snapmirror/relationships/550e8400-e29b-41d4-a716-446655440000/transfers
 ```
 
 !!! warning "Common errors"
-    **`Error: 13001 - Relationship does not exist`** — Verify the UUID is correct by listing all relationships with `GET /api/snapmirror/relationships`.
-    **`Error: 14002 - Source volume is offline`** — Check source cluster health and ensure the source volume is online before creating or updating the relationship.
+    | Error | Fix |
+    |---|---|
+    | `Error: 13001 - Relationship does not exist` | Verify the UUID is correct by listing all relationships with `GET /api/snapmirror/relationships`. |
+    | `Error: 14002 - Source volume is offline` | Check source cluster health and ensure the source volume is online before creating or updating the relationship. |
 Authenticate with HTTP Basic or cluster-scoped API tokens. Use the ONTAP REST API documentation at `https://<cluster-mgmt>/docs/api` for interactive exploration.
 
 ---

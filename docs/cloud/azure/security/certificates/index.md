@@ -110,9 +110,11 @@ az keyvault certificate create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource 'myKeyVault' does not exist in the subscription`** — Verify the Key Vault name exists in your subscription with `az keyvault list` and use the correct vault name.
-    **`InvalidJsonFile: Invalid JSON in cert-policy.json at line X`** — Validate the JSON syntax using `jq . cert-policy.json` before running the certificate create command.
-    **`Forbidden: The user does not have permission to create certificates in this Key Vault`** — Ensure your Azure account has the "Certificate Officer" or equivalent RBAC role assigned on the Key Vault resource.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource 'myKeyVault' does not exist in the subscription` | Verify the Key Vault name exists in your subscription with `az keyvault list` and use the correct vault name. |
+    | `InvalidJsonFile: Invalid JSON in cert-policy.json at line X` | Validate the JSON syntax using `jq . cert-policy.json` before running the certificate create command. |
+    | `Forbidden: The user does not have permission to create certificates in this Key Vault` | Ensure your Azure account has the "Certificate Officer" or equivalent RBAC role assigned on the Key Vault resource. |
 ## Importing Certificates
 
 ```bash
@@ -193,8 +195,10 @@ myCert                True       2025-06-15 08:30:00 2023-06-15 08:30:00 2024-01
 ```
 
 !!! warning "Common errors"
-    **`KeyVaultErrorException: (BadParameter) The certificate file is invalid or corrupted.`** — Verify the PFX/PEM file is valid and not corrupted by testing it locally with `openssl x509 -in mycert.pem -text -noout`.
-    **`ResourceNotFound: The vault 'myKeyVault' does not exist or you do not have permission to access it.`** — Ensure the Key Vault name is correct and your Azure account has the `Microsoft.KeyVault/vaults/certificates/create` permission on that vault.
+    | Error | Fix |
+    |---|---|
+    | `KeyVaultErrorException: (BadParameter) The certificate file is invalid or corrupted.` | Verify the PFX/PEM file is valid and not corrupted by testing it locally with `openssl x509 -in mycert.pem -text -noout`. |
+    | `ResourceNotFound: The vault 'myKeyVault' does not exist or you do not have permission to access it.` | Ensure the Key Vault name is correct and your Azure account has the `Microsoft.KeyVault/vaults/certificates/create` permission on that vault. |
     **`BadParameter: The password
 ## Certificate Versions and Rotation
 
@@ -236,9 +240,11 @@ myCert  5k4j3i2h1g0f9e8d7c6b5a4z3y2x1w  2023-11-05T09:47:11Z  2023-11-05T09:47:1
 ```
 
 !!! warning "Common errors"
-    **`The specified vault myKeyVault does not exist or you do not have permission to access it.`** — Verify the vault name is correct and your Azure credentials have Keyvault access permissions via `az account show`.
-    **`Certificate myCert not found in vault myKeyVault.`** — Confirm the certificate name exists by running `az keyvault certificate list --vault-name myKeyVault` to list all available certificates.
-    **`The file 'downloaded-cert.pem' cannot be created because the directory does not exist.`** — Create the target directory first with `mkdir -p <directory>` or specify a valid existing path for the output file.
+    | Error | Fix |
+    |---|---|
+    | `The specified vault myKeyVault does not exist or you do not have permission to access it.` | Verify the vault name is correct and your Azure credentials have Keyvault access permissions via `az account show`. |
+    | `Certificate myCert not found in vault myKeyVault.` | Confirm the certificate name exists by running `az keyvault certificate list --vault-name myKeyVault` to list all available certificates. |
+    | `The file 'downloaded-cert.pem' cannot be created because the directory does not exist.` | Create the target directory first with `mkdir -p <directory>` or specify a valid existing path for the output file. |
 ## Auto-Rotation with Lifetime Actions
 
 | Action Type     | Trigger                  | Effect                                   |
@@ -295,9 +301,11 @@ az keyvault certificate set-attributes \
 ```
 
 !!! warning "Common errors"
-    **`jq: command not found`** — Install jq with `apt-get install jq` (Linux) or `brew install jq` (macOS).
-    **`The user, group or application 'appId=...' does not have certificates permissions to perform action 'Microsoft.KeyVault/vaults/certificates/update/action'`** — Grant the service principal certificate management permissions via `az keyvault set-policy --name myKeyVault --object-id <objectId> --certificate-permissions update`.
-    **`Keyvault 'myKeyVault' not found`** — Verify the vault name is correct and exists in the current subscription with `az keyvault list`.
+    | Error | Fix |
+    |---|---|
+    | `jq: command not found` | Install jq with `apt-get install jq` (Linux) or `brew install jq` (macOS). |
+    | `The user, group or application 'appId=...' does not have certificates permissions to perform action 'Microsoft.KeyVault/vaults/certificates/update/action'` | Grant the service principal certificate management permissions via `az keyvault set-policy --name myKeyVault --object-id <objectId> --certificate-permissions update`. |
+    | `Keyvault 'myKeyVault' not found` | Verify the vault name is correct and exists in the current subscription with `az keyvault list`. |
 ## App Gateway Integration
 
 App Gateway can reference Key Vault certificates directly via a managed identity, avoiding manual certificate uploads.
@@ -349,9 +357,11 @@ Key vault secret permissions have been updated.
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.ManagedIdentity/userAssignedIdentities/myAppGWIdentity' under resource group 'myRG' was not found.`** — Verify the managed identity exists in the same resource group and region, or create it with `az identity create --resource-group myRG --name myAppGWIdentity`.
-    **`(InvalidKeyVaultSecretId) The key vault secret ID format is invalid or the secret does not exist.`** — Ensure the secret exists in Key Vault by running `az keyvault secret show --vault-name myKeyVault --name myCert` and verify the URI format matches exactly.
-    **`(AuthorizationFailed) The client does not have permission to perform action 'Microsoft.KeyVault/vaults/secrets/get' on resource.`** — Confirm the managed identity's object ID in the set-policy command matches the principalId from the identity assign output.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.ManagedIdentity/userAssignedIdentities/myAppGWIdentity' under resource group 'myRG' was not found.` | Verify the managed identity exists in the same resource group and region, or create it with `az identity create --resource-group myRG --name myAppGWIdentity`. |
+    | `(InvalidKeyVaultSecretId) The key vault secret ID format is invalid or the secret does not exist.` | Ensure the secret exists in Key Vault by running `az keyvault secret show --vault-name myKeyVault --name myCert` and verify the URI format matches exactly. |
+    | `(AuthorizationFailed) The client does not have permission to perform action 'Microsoft.KeyVault/vaults/secrets/get' on resource.` | Confirm the managed identity's object ID in the set-policy command matches the principalId from the identity assign output. |
 ## Certificate Expiry Monitoring
 
 ```bash
@@ -379,6 +389,8 @@ Certificate attributes updated successfully.
 ```
 
 !!! warning "Common errors"
-    **`The workspace specified in the --workspace argument is invalid or does not exist.`** — Verify the subscription ID and resource group name match your Key Vault workspace, and confirm the workspace exists in the Azure portal.
-    **`The specified certificate 'myCert' does not exist in the vault 'myKeyVault'.`** — List certificates with `az keyvault certificate list --vault-name myKeyVault` to confirm the exact certificate name.
-    **`Operation failed with status: 'Unauthorized'. The user, group or application does not have the 'set' permission for certificates on this vault.`** — Grant the user or service principal the "Certificate Officer" or "Key Vault Administrator" role on the Key Vault resource.
+    | Error | Fix |
+    |---|---|
+    | `The workspace specified in the --workspace argument is invalid or does not exist.` | Verify the subscription ID and resource group name match your Key Vault workspace, and confirm the workspace exists in the Azure portal. |
+    | `The specified certificate 'myCert' does not exist in the vault 'myKeyVault'.` | List certificates with `az keyvault certificate list --vault-name myKeyVault` to confirm the exact certificate name. |
+    | `Operation failed with status: 'Unauthorized'. The user, group or application does not have the 'set' permission for certificates on this vault.` | Grant the user or service principal the "Certificate Officer" or "Key Vault Administrator" role on the Key Vault resource. |

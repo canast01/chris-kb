@@ -139,9 +139,11 @@ filesys show log
 ```
 
 !!! warning "Common errors"
-    **`filesys: command not found`** — Ensure you are logged into the Data Domain CLI (via SSH or console) and have appropriate admin privileges; the `filesys` command is not available in standard Linux shells.
-    **`Permission denied`** — Verify your user account has Data Domain administrator role; use `user show` to check current permissions and contact your system administrator if needed.
-    **`filesys status: Error retrieving state`** — Check that the filesystem is not in a failed state by running `system show status` and verify all disks are healthy with `disk show`.
+    | Error | Fix |
+    |---|---|
+    | `filesys: command not found` | Ensure you are logged into the Data Domain CLI (via SSH or console) and have appropriate admin privileges; the `filesys` command is not available in standard Linux shells. |
+    | `Permission denied` | Verify your user account has Data Domain administrator role; use `user show` to check current permissions and contact your system administrator if needed. |
+    | `filesys status: Error retrieving state` | Check that the filesystem is not in a failed state by running `system show status` and verify all disks are healthy with `disk show`. |
 ### Interpret `filesys show space` output
 
 | Field | Meaning |
@@ -181,8 +183,10 @@ Total issues found: 0
 ```
 
 !!! warning "Common errors"
-    **`filesys check: operation already in progress`** — Wait for the current check to complete or use `filesys check abort` to stop it, then retry.
-    **`filesys show log: permission denied`** — Ensure you are logged in with administrative credentials or use `sudo` if available on your Data Domain system.
+    | Error | Fix |
+    |---|---|
+    | `filesys check: operation already in progress` | Wait for the current check to complete or use `filesys check abort` to stop it, then retry. |
+    | `filesys show log: permission denied` | Ensure you are logged in with administrative credentials or use `sudo` if available on your Data Domain system. |
 `filesys check` is a non-destructive read-only integrity scan. It may take hours on large arrays. Run it only when integrity is suspected, not as a routine check.
 
 ---
@@ -273,9 +277,11 @@ Replication Errors:
 ```
 
 !!! warning "Common errors"
-    **`Error: replication context 'prod-backup-01' not found`** — Verify the context name with `replication show` and ensure it was created with `replication create`.
-    **`Error: destination unreachable at 10.42.20.88:7144`** — Check network connectivity between source and destination systems, and confirm the Data Domain replication service is running on the destination with `service replication status`.
-    **`Error: insufficient bandwidth available for replication`** — Reduce the bandwidth limit in the replication configuration or wait for competing jobs to complete, then resume with `replication resume <context-name>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: replication context 'prod-backup-01' not found` | Verify the context name with `replication show` and ensure it was created with `replication create`. |
+    | `Error: destination unreachable at 10.42.20.88:7144` | Check network connectivity between source and destination systems, and confirm the Data Domain replication service is running on the destination with `service replication status`. |
+    | `Error: insufficient bandwidth available for replication` | Reduce the bandwidth limit in the replication configuration or wait for competing jobs to complete, then resume with `replication resume <context-name>`. |
 ### Interpreting replication state
 
 | State | Meaning | Urgency |
@@ -311,9 +317,11 @@ Replication status: In Progress
 ```
 
 !!! warning "Common errors"
-    **`command not found: replication`** — Ensure you are logged into the Data Domain CLI (via SSH or console) and not a standard Linux shell; the `replication` command is Data Domain–specific.
-    **`grep: (standard input) is empty`** — The replication process may not be active or configured; run `replication show` without filters first to verify replication is enabled and has a configured target.
-    **`Permission denied`** — Your Data Domain user account lacks replication monitoring privileges; request admin rights or use an account with appropriate role-based access control (RBAC) permissions.
+    | Error | Fix |
+    |---|---|
+    | `command not found: replication` | Ensure you are logged into the Data Domain CLI (via SSH or console) and not a standard Linux shell; the `replication` command is Data Domain–specific. |
+    | `grep: (standard input) is empty` | The replication process may not be active or configured; run `replication show` without filters first to verify replication is enabled and has a configured target. |
+    | `Permission denied` | Your Data Domain user account lacks replication monitoring privileges; request admin rights or use an account with appropriate role-based access control (RBAC) permissions. |
 Convert bytes to time: if pre-comp remaining is 500 GB and throughput is 100 MB/s, estimated catchup is approximately 84 minutes (500 × 1024 / 100 / 60). A growing lag when throughput is non-zero means the source ingest rate exceeds replication drain rate.
 
 ### Network path verification
@@ -364,9 +372,11 @@ Routing Table:
 ```
 
 !!! warning "Common errors"
-    **`PING: sendto: No route to host`** — Verify the destination hostname resolves correctly and check routing table with `net route show` to ensure a path exists to the destination network.
-    **`net: command not found`** — Use the correct Data Domain CLI command prefix; if in system shell, enter the Data Domain CLI with `ssh admin@<dd-hostname>` or access the management interface directly.
-    **`RX dropped: X  TX dropped: Y`** — Check interface MTU settings and bandwidth saturation with `net show stats` in detail; consider increasing buffer sizes or reducing replication load if drops exceed 10 per interface.
+    | Error | Fix |
+    |---|---|
+    | `PING: sendto: No route to host` | Verify the destination hostname resolves correctly and check routing table with `net route show` to ensure a path exists to the destination network. |
+    | `net: command not found` | Use the correct Data Domain CLI command prefix; if in system shell, enter the Data Domain CLI with `ssh admin@<dd-hostname>` or access the management interface directly. |
+    | `RX dropped: X  TX dropped: Y` | Check interface MTU settings and bandwidth saturation with `net show stats` in detail; consider increasing buffer sizes or reducing replication load if drops exceed 10 per interface. |
 ---
 
 ## Step 3 — DD Boost diagnostics
@@ -439,9 +449,11 @@ dist-seg-processing-mode = adaptive
 ```
 
 !!! warning "Common errors"
-    **`ddboost: command not found`** — Verify DD Boost is installed and the binary path is in your $PATH, or use the full path `/opt/ddboost/bin/ddboost`.
-    **`Error: DD Boost service is not running`** — Start the DD Boost service with `systemctl start ddboost` or `/etc/init.d/ddboost start` depending on your system.
-    **`Error: Authentication failed - invalid credentials`** — Ensure you are running the command as root or with appropriate sudo privileges, or check DD Boost user credentials with `ddboost user list`.
+    | Error | Fix |
+    |---|---|
+    | `ddboost: command not found` | Verify DD Boost is installed and the binary path is in your $PATH, or use the full path `/opt/ddboost/bin/ddboost`. |
+    | `Error: DD Boost service is not running` | Start the DD Boost service with `systemctl start ddboost` or `/etc/init.d/ddboost start` depending on your system. |
+    | `Error: Authentication failed - invalid credentials` | Ensure you are running the command as root or with appropriate sudo privileges, or check DD Boost user credentials with `ddboost user list`. |
 ### Diagnosing a DDBoost authentication failure
 
 ```bash
@@ -481,8 +493,10 @@ backup-server-01.corp.local        192.168.10.45    Active       Data: 2.3TB, De
 ```
 
 !!! warning "Common errors"
-    **`user not found`** — Verify the username spelling and run `ddboost user list` to confirm the user exists on the Data Domain system.
-    **`grep: (standard input): Permission denied`** — Run the commands with appropriate privileges (use `sudo` or log in as the admin user with audit log access).
+    | Error | Fix |
+    |---|---|
+    | `user not found` | Verify the username spelling and run `ddboost user list` to confirm the user exists on the Data Domain system. |
+    | `grep: (standard input): Permission denied` | Run the commands with appropriate privileges (use `sudo` or log in as the admin user with audit log access). |
 ---
 
 ## Step 4 — Disk and hardware diagnostics
@@ -533,8 +547,10 @@ Slot 7: Errors: 0 Reallocated Sectors: 0
 ```
 
 !!! warning "Common errors"
-    **`disk: command not found`** — Verify you are logged into the Data Domain management interface (SSH to the system's IP) rather than a local shell.
-    **`grep: (standard input) is empty`** — Run `disk show detail` alone first to confirm the disk subsystem is responding; if empty, check system boot status with `system show`.
+    | Error | Fix |
+    |---|---|
+    | `disk: command not found` | Verify you are logged into the Data Domain management interface (SSH to the system's IP) rather than a local shell. |
+    | `grep: (standard input) is empty` | Run `disk show detail` alone first to confirm the disk subsystem is responding; if empty, check system boot status with `system show`. |
 ### Disk states reference
 
 | State | Meaning | Action |
@@ -596,8 +612,10 @@ Rebuild Progress:
 ```
 
 !!! warning "Common errors"
-    **`raid: command not found`** — Verify you are logged into the Data Domain CLI (via SSH or console) and have appropriate administrative privileges.
-    **`Error: RAID group rg2 is critical — rebuild failed`** — Check system logs with `syslog show` and verify the replacement disk is properly seated and recognized with `disk show all`.
+    | Error | Fix |
+    |---|---|
+    | `raid: command not found` | Verify you are logged into the Data Domain CLI (via SSH or console) and have appropriate administrative privileges. |
+    | `Error: RAID group rg2 is critical — rebuild failed` | Check system logs with `syslog show` and verify the replacement disk is properly seated and recognized with `disk show all`. |
 ### Enclosure health
 
 ```bash
@@ -632,8 +650,10 @@ Enclosure ID: ENC-002 | State: ONLINE | Model: DD9900 | Serial: DD9900-67890DEF
 ```
 
 !!! warning "Common errors"
-    **`enclosure: command not found`** — Verify you are logged into the Data Domain management interface (SSH to the system's management IP) rather than a local shell.
-    **`Permission denied`** — Ensure your user account has administrative privileges; request sysadmin role from your Data Domain administrator.
+    | Error | Fix |
+    |---|---|
+    | `enclosure: command not found` | Verify you are logged into the Data Domain management interface (SSH to the system's management IP) rather than a local shell. |
+    | `Permission denied` | Ensure your user account has administrative privileges; request sysadmin role from your Data Domain administrator. |
 ---
 
 ## Step 5 — Network diagnostics
@@ -684,9 +704,11 @@ Domain: corp.local
 ```
 
 !!! warning "Common errors"
-    **`net: command not found`** — Verify you are running this on a Data Domain system; this command is specific to DD OS and may not exist on other platforms.
-    **`Permission denied`** — Run the command with appropriate privileges (use `sudo` or log in as root/admin user).
-    **`Connection timeout on interface eth0`** — Check physical cable connections and switch port status; restart the interface with `net set interface eth0 state up`.
+    | Error | Fix |
+    |---|---|
+    | `net: command not found` | Verify you are running this on a Data Domain system; this command is specific to DD OS and may not exist on other platforms. |
+    | `Permission denied` | Run the command with appropriate privileges (use `sudo` or log in as root/admin user). |
+    | `Connection timeout on interface eth0` | Check physical cable connections and switch port status; restart the interface with `net set interface eth0 state up`. |
 ### Connectivity testing
 
 ```bash
@@ -729,9 +751,11 @@ Search Domains: corp.local, backup.corp.local
 ```
 
 !!! warning "Common errors"
-    **`net: command not found`** — Ensure you are logged into the Data Domain CLI (ssh to the device) and not a standard Linux shell; use `ssh admin@<data-domain-ip>` to connect.
-    **`Destination Host Unreachable`** — Verify the target IP/hostname is reachable and on the same network segment; check firewall rules and network routing on the Data Domain.
-    **`Name or service not known`** — Confirm DNS servers are configured correctly via `net show settings | grep -i dns` and that the hostname resolves in your DNS infrastructure.
+    | Error | Fix |
+    |---|---|
+    | `net: command not found` | Ensure you are logged into the Data Domain CLI (ssh to the device) and not a standard Linux shell; use `ssh admin@<data-domain-ip>` to connect. |
+    | `Destination Host Unreachable` | Verify the target IP/hostname is reachable and on the same network segment; check firewall rules and network routing on the Data Domain. |
+    | `Name or service not known` | Confirm DNS servers are configured correctly via `net show settings | grep -i dns` and that the hostname resolves in your DNS infrastructure. |
 ### Bonding and LACP
 
 ```bash
@@ -760,8 +784,10 @@ Partner MAC: 00:1a:4b:2c:3d:4e
 ```
 
 !!! warning "Common errors"
-    **`net: command not found`** — Install the Data Domain networking utilities package or verify the correct command syntax for your DD OS version (use `sysconfig` or `ifconfig` as alternatives).
-    **`grep: (standard input) is empty`** — The bond interface name is incorrect or the interface is down; verify the exact bond name with `net config bond show` first.
+    | Error | Fix |
+    |---|---|
+    | `net: command not found` | Install the Data Domain networking utilities package or verify the correct command syntax for your DD OS version (use `sysconfig` or `ifconfig` as alternatives). |
+    | `grep: (standard input) is empty` | The bond interface name is incorrect or the interface is down; verify the exact bond name with `net config bond show` first. |
 If a bonded interface is degraded (one link down), throughput is reduced by 50% and the interface will appear as active but with fewer physical links in `net config bond show`.
 
 ---
@@ -815,9 +841,11 @@ log view <log-filename>
 ```
 
 !!! warning "Common errors"
-    **`log: command not found`** — Verify you are logged into the Data Domain management interface (SSH to the system's IP address) rather than a local shell.
-    **`No such file or directory`** — Confirm the log filename exists by running `log view` without filters first to see available log names.
-    **`Permission denied`** — Ensure your user account has administrative or operator privileges; contact your system administrator to grant log-viewing permissions.
+    | Error | Fix |
+    |---|---|
+    | `log: command not found` | Verify you are logged into the Data Domain management interface (SSH to the system's IP address) rather than a local shell. |
+    | `No such file or directory` | Confirm the log filename exists by running `log view` without filters first to see available log names. |
+    | `Permission denied` | Ensure your user account has administrative or operator privileges; contact your system administrator to grant log-viewing permissions. |
 ### Common log patterns
 
 | Log Pattern | Meaning |
@@ -955,9 +983,11 @@ AutoSupport transmission completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Bundle generation failed - insufficient disk space (required: 3.5 GB, available: 1.2 GB)`** — Free up space on the Data Domain system or configure bundle output to an external mount with adequate capacity.
-    **`Error: SSH key authentication failed for user@jump-host`** — Verify SSH key is installed on the jump host and the user account has write permissions to the destination directory.
-    **`Error: Case number <case-number> not found or inactive`** — Confirm the case number is correct and the support case is still open in the Dell support portal.
+    | Error | Fix |
+    |---|---|
+    | `Error: Bundle generation failed - insufficient disk space (required: 3.5 GB, available: 1.2 GB)` | Free up space on the Data Domain system or configure bundle output to an external mount with adequate capacity. |
+    | `Error: SSH key authentication failed for user@jump-host` | Verify SSH key is installed on the jump host and the user account has write permissions to the destination directory. |
+    | `Error: Case number <case-number> not found or inactive` | Confirm the case number is correct and the support case is still open in the Dell support portal. |
 The support bundle is saved to `/ddr/var/support/` on the DD. For large arrays, the bundle can be several gigabytes. Transfer via SCP from a host with network access to the DD management interface.
 
 ### Incident type quick reference

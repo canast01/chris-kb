@@ -112,9 +112,11 @@ Firmware Version: T10.2.0.0.5978.669.669
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Ensure Solutions Enabler is installed and the `$PATH` includes the SE installation directory (typically `/opt/emc/SYMCLI/bin`).
-    **`Symmetrix ID: <SID> -- Not Found`** — Verify the SID is correct and the array is properly discovered by running `symcfg list` first to see all available arrays.
-    **`Permission denied`** — Run the command with appropriate privileges (use `sudo` or ensure your user is in the `symcli` or `root` group).
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Ensure Solutions Enabler is installed and the `$PATH` includes the SE installation directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `Symmetrix ID: <SID> -- Not Found` | Verify the SID is correct and the array is properly discovered by running `symcfg list` first to see all available arrays. |
+    | `Permission denied` | Run the command with appropriate privileges (use `sudo` or ensure your user is in the `symcli` or `root` group). |
 ### 2. Collect current license state
 
 ```bash
@@ -155,9 +157,11 @@ Preview License File: /path/to/cod-key.lic
 ```
 
 !!! warning "Common errors"
-    **`symlicense: command not found`** — Ensure the Dell EMC Symmetrix CLI tools are installed and the PATH includes the bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`Error: Invalid SID <SID> — SID not found in configuration`** — Replace `<SID>` with an actual Symmetrix array ID from `symcfg list` output.
-    **`Error: License file not found: /path/to/cod-key.lic`** — Verify the license key file path exists and is readable by the user running the command.
+    | Error | Fix |
+    |---|---|
+    | `symlicense: command not found` | Ensure the Dell EMC Symmetrix CLI tools are installed and the PATH includes the bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `Error: Invalid SID <SID> — SID not found in configuration` | Replace `<SID>` with an actual Symmetrix array ID from `symcfg list` output. |
+    | `Error: License file not found: /path/to/cod-key.lic` | Verify the license key file path exists and is readable by the user running the command. |
 ### 3. Capture the error from a failed key import
 
 ```bash
@@ -186,9 +190,11 @@ Output saved to: /tmp/cod-install-2024-01-15.txt
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI_C_INVALID_LICENSE: License key file is invalid or serial number mismatch`** — Verify the license file path is correct and the serial number in the key matches your array's SN using `symlicense -sid <SID> query`.
-    **`SYMAPI_C_LICENSE_CONFLICT: A conflicting license is already active on this array`** — Remove the existing license with `symlicense -sid <SID> remove -id <LICENSE_ID>` before installing the new key.
-    **`SYMAPI_C_NO_LICENSE: Feature requires additional license entitlement`** — Confirm your CoD key file includes the required feature codes and contact Dell EMC support if the key is incomplete.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI_C_INVALID_LICENSE: License key file is invalid or serial number mismatch` | Verify the license file path is correct and the serial number in the key matches your array's SN using `symlicense -sid <SID> query`. |
+    | `SYMAPI_C_LICENSE_CONFLICT: A conflicting license is already active on this array` | Remove the existing license with `symlicense -sid <SID> remove -id <LICENSE_ID>` before installing the new key. |
+    | `SYMAPI_C_NO_LICENSE: Feature requires additional license entitlement` | Confirm your CoD key file includes the required feature codes and contact Dell EMC support if the key is incomplete. |
 ### 4. Collect Unisphere events and SYMAPI logs
 
 ```bash
@@ -219,9 +225,11 @@ Symaudit audit list completed - 100 events retrieved
 ```
 
 !!! warning "Common errors"
-    **`cat: /var/symapi/log/symapi_log.txt: No such file or directory`** — Verify Solutions Enabler is installed and running with `symcfg list`, or check the correct log path for your SE version.
-    **`symaudit: command not found`** — Add Solutions Enabler bin directory to PATH with `export PATH=$PATH:/opt/emc/symapi/bin` or use the full path `/opt/emc/symapi/bin/symaudit`.
-    **`ERROR: Invalid SID <SID>`** — Replace `<SID>` with an actual array serial number from `symcfg list` output (e.g., `000296900001`).
+    | Error | Fix |
+    |---|---|
+    | `cat: /var/symapi/log/symapi_log.txt: No such file or directory` | Verify Solutions Enabler is installed and running with `symcfg list`, or check the correct log path for your SE version. |
+    | `symaudit: command not found` | Add Solutions Enabler bin directory to PATH with `export PATH=$PATH:/opt/emc/symapi/bin` or use the full path `/opt/emc/symapi/bin/symaudit`. |
+    | `ERROR: Invalid SID <SID>` | Replace `<SID>` with an actual array serial number from `symcfg list` output (e.g., `000296900001`). |
 ### 5. Check key file fields (do not share key file publicly)
 
 ```bash
@@ -249,9 +257,11 @@ PERMANENT=FALSE
 ```
 
 !!! warning "Common errors"
-    **`grep: /path/to/cod-key.lic: No such file or directory`** — Replace `/path/to/cod-key.lic` with the actual path to your license file (typically `/opt/dell/storage/cod-key.lic` or similar).
-    **`grep: (standard input): No such file or directory`** — Ensure the file path is quoted correctly and the file exists; verify with `ls -la /path/to/cod-key.lic` first.
-    **`VENDOR_SN field not found or does not match array SID`** — Confirm the SID from your array's management interface matches the VENDOR_SN in the key file; contact Dell licensing if they differ.
+    | Error | Fix |
+    |---|---|
+    | `grep: /path/to/cod-key.lic: No such file or directory` | Replace `/path/to/cod-key.lic` with the actual path to your license file (typically `/opt/dell/storage/cod-key.lic` or similar). |
+    | `grep: (standard input): No such file or directory` | Ensure the file path is quoted correctly and the file exists; verify with `ls -la /path/to/cod-key.lic` first. |
+    | `VENDOR_SN field not found or does not match array SID` | Confirm the SID from your array's management interface matches the VENDOR_SN in the key file; contact Dell licensing if they differ. |
 ### 6. Write the timeline
 
 ```text
@@ -395,9 +405,11 @@ Build: 1221
 ```
 
 !!! warning "Common errors"
-    **`symlicense: Cannot connect to SYMAPI daemon`** — Verify SYMAPI is running with `service symapi status` and restart if needed with `service symapi restart`.
-    **`Preview: License key expired or invalid`** — Confirm the .lic file path is correct and the key has not passed its expiration date by checking with Dell EMC support.
-    **`symaudit: SID not found in configuration`** — Ensure the SID is correct and the array is discovered by running `symcfg discover` first.
+    | Error | Fix |
+    |---|---|
+    | `symlicense: Cannot connect to SYMAPI daemon` | Verify SYMAPI is running with `service symapi status` and restart if needed with `service symapi restart`. |
+    | `Preview: License key expired or invalid` | Confirm the .lic file path is correct and the key has not passed its expiration date by checking with Dell EMC support. |
+    | `symaudit: SID not found in configuration` | Ensure the SID is correct and the array is discovered by running `symcfg discover` first. |
 ---
 
 ## Verify resolution

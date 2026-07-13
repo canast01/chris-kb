@@ -84,8 +84,10 @@ stagingstg003            staging-rg         eastus      Premium_LRS   Succeeded
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Please run 'az login' first.`** — Run `az login` to authenticate before executing other Azure CLI commands.
-    **`ERROR: The subscription of <subscription-id> doesn't have authorization to perform action 'Microsoft.Compute/virtualMachines/read' on resource '<resource-id>'.`** — Ensure your Azure account has the required Reader or Contributor role assigned to the subscription via Azure Portal IAM settings.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Please run 'az login' first.` | Run `az login` to authenticate before executing other Azure CLI commands. |
+    | `ERROR: The subscription of <subscription-id> doesn't have authorization to perform action 'Microsoft.Compute/virtualMachines/read' on resource '<resource-id>'.` | Ensure your Azure account has the required Reader or Contributor role assigned to the subscription via Azure Portal IAM settings. |
 ## Renewal Notes
 
 Azure certifications typically require renewal annually through online assessment.

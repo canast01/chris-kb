@@ -189,9 +189,11 @@ AutoSupport invoke successful for node cluster1-02
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused`** — Verify the cluster management IP is correct and the ONTAP cluster is online and accessible from your workstation network.
-    **`ssh: connect to host 192.168.1.100 port 22: No route to host`** — Confirm the management network routing and firewall rules allow SSH (port 22) from your admin workstation to the cluster management LIF.
-    **`iscsiadm: No records found`** — Ensure the iSCSI data LIF IP is correct, the iSCSI service is enabled on the SVM, and the portal is listening on port 3260.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused` | Verify the cluster management IP is correct and the ONTAP cluster is online and accessible from your workstation network. |
+    | `ssh: connect to host 192.168.1.100 port 22: No route to host` | Confirm the management network routing and firewall rules allow SSH (port 22) from your admin workstation to the cluster management LIF. |
+    | `iscsiadm: No records found` | Ensure the iSCSI data LIF IP is correct, the iSCSI service is enabled on the SVM, and the portal is listening on port 3260. |
 ---
 
 ## See also

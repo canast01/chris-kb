@@ -71,9 +71,11 @@ pg_dump -U iiq iiq | gzip | gpg --cipher-algo AES256 \
 ```
 
 !!! warning "Common errors"
-    **`gpg: problem with the agent: Permission denied`** — Ensure the GPG agent has proper permissions by running `gpg-connect-agent /bye` or set `export GPG_TTY=$(tty)` before the command.
-    **`pg_dump: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory`** — Verify the PostgreSQL service is running with `systemctl status postgresql` and the IIQ database is accessible.
-    **`bash: /backup: Permission denied`** — Create the backup directory with write permissions using `mkdir -p /backup && chmod 755 /backup` or run the command with appropriate sudo privileges.
+    | Error | Fix |
+    |---|---|
+    | `gpg: problem with the agent: Permission denied` | Ensure the GPG agent has proper permissions by running `gpg-connect-agent /bye` or set `export GPG_TTY=$(tty)` before the command. |
+    | `pg_dump: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory` | Verify the PostgreSQL service is running with `systemctl status postgresql` and the IIQ database is accessible. |
+    | `bash: /backup: Permission denied` | Create the backup directory with write permissions using `mkdir -p /backup && chmod 755 /backup` or run the command with appropriate sudo privileges. |
 Store the backup passphrase in the secrets manager. Backup files should be stored on an encrypted backup target or an encrypted datastore.
 
 ## Audit Logging
@@ -93,8 +95,10 @@ sudo systemctl restart rsyslog
 ```
 
 !!! warning "Common errors"
-    **`Job for rsyslog.service failed because the control process exited with error code.`** — Validate the rsyslog.conf syntax with `sudo rsyslogd -N1` before restarting to identify configuration errors.
-    **`Failed to restart rsyslog.service: Unit rsyslog.service not found.`** — Ensure rsyslog is installed with `sudo apt-get install rsyslog` (Debian/Ubuntu) or `sudo yum install rsyslog` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `Job for rsyslog.service failed because the control process exited with error code.` | Validate the rsyslog.conf syntax with `sudo rsyslogd -N1` before restarting to identify configuration errors. |
+    | `Failed to restart rsyslog.service: Unit rsyslog.service not found.` | Ensure rsyslog is installed with `sudo apt-get install rsyslog` (Debian/Ubuntu) or `sudo yum install rsyslog` (RHEL/CentOS). |
 Key events to monitor in SIEM:
 - User login failures
 - Admin configuration changes

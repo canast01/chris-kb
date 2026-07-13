@@ -115,9 +115,11 @@ OneFS 9.4.0.0 (Build 9.4.0.0_1234567890)
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present in examples above; verify flag is included).
-    **`ldapsearch: error (49) Invalid Credentials`** — Verify AD service account credentials and ensure the bind DN format matches your domain structure (e.g., `cn=Eyeglass-Service,ou=ServiceAccounts,dc=domain,dc=com`).
-    **`ssh: connect to host <powerscale-mgmt> port 22: Connection refused`** — Confirm SSH is enabled on PowerScale cluster and the management IP is reachable; check firewall rules allowing port 22 from Eyeglass appliance.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification (already present in examples above; verify flag is included). |
+    | `ldapsearch: error (49) Invalid Credentials` | Verify AD service account credentials and ensure the bind DN format matches your domain structure (e.g., `cn=Eyeglass-Service,ou=ServiceAccounts,dc=domain,dc=com`). |
+    | `ssh: connect to host <powerscale-mgmt> port 22: Connection refused` | Confirm SSH is enabled on PowerScale cluster and the management IP is reachable; check firewall rules allowing port 22 from Eyeglass appliance. |
 ## See also
 
 - [Superna Eyeglass — Architecture](../how-it-works/)

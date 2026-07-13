@@ -105,8 +105,10 @@ Timestamp: 2024-01-15T14:32:20Z
 ```
 
 !!! warning "Common errors"
-    **`vsan cluster get: Unknown command or namespace`** — Ensure vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster info` if the command is unavailable.
-    **`Health check failed: Unable to contact cluster members`** — Verify network connectivity between ESXi hosts and check that all hosts in the cluster are in a healthy state with `esxcli network ip interface list`.
+    | Error | Fix |
+    |---|---|
+    | `vsan cluster get: Unknown command or namespace` | Ensure vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster info` if the command is unavailable. |
+    | `Health check failed: Unable to contact cluster members` | Verify network connectivity between ESXi hosts and check that all hosts in the cluster are in a healthy state with `esxcli network ip interface list`. |
 ## Resource Utilisation
 
 ```powershell

@@ -120,9 +120,11 @@ curl -s "https://api.pure1.purestorage.com/api/1.x/arrays?filter=model%3D%27Flas
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Add `-k` flag to skip certificate verification or update your CA bundle with `update-ca-certificates`.
-    **`jq: command not found`** — Install `python3-json.tool` or use `python3 -m json.tool` instead of piping to `jq`.
-    **`{"error_code":"401000","message":"Unauthorized"}`** — Verify `$TOKEN` is set with a valid Pure1 API token using `echo $TOKEN` and regenerate if expired.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Add `-k` flag to skip certificate verification or update your CA bundle with `update-ca-certificates`. |
+    | `jq: command not found` | Install `python3-json.tool` or use `python3 -m json.tool` instead of piping to `jq`. |
+    | `{"error_code":"401000","message":"Unauthorized"}` | Verify `$TOKEN` is set with a valid Pure1 API token using `echo $TOKEN` and regenerate if expired. |
 ### Subscriptions
 
 ```bash
@@ -166,9 +168,11 @@ Evergreen//One-DR-Cluster      status=active        expires=2025-06-30T23:59:59Z
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution; check if the Pure1 API endpoint is accessible from your network.
-    **`{"error_code":"401","message":"Unauthorized"}`** — Ensure the `$TOKEN` environment variable is set to a valid Pure1 API token and has not expired.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the API response is valid JSON; check for HTTP errors (e.g., 403, 500) by adding `-v` flag to curl to inspect response headers.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.pure1.purestorage.com` | Verify network connectivity and DNS resolution; check if the Pure1 API endpoint is accessible from your network. |
+    | `{"error_code":"401","message":"Unauthorized"}` | Ensure the `$TOKEN` environment variable is set to a valid Pure1 API token and has not expired. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify the API response is valid JSON; check for HTTP errors (e.g., 403, 500) by adding `-v` flag to curl to inspect response headers. |
 ---
 
 ## FlashArray CLI (per-array)
@@ -193,9 +197,11 @@ flasharray01>
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname flasharray01.example.com: Name or service not known`** — Verify the hostname is correct and resolvable via DNS or add an entry to /etc/hosts.
-    **`Permission denied (publickey,password).`** — Confirm the pureuser credentials are correct and the account exists on the Pure Storage array.
-    **`ssh: connect to host flasharray01.example.com port 22: Connection timed out`** — Check network connectivity to the array and verify the management IP address is reachable and SSH service is running.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname flasharray01.example.com: Name or service not known` | Verify the hostname is correct and resolvable via DNS or add an entry to /etc/hosts. |
+    | `Permission denied (publickey,password).` | Confirm the pureuser credentials are correct and the account exists on the Pure Storage array. |
+    | `ssh: connect to host flasharray01.example.com port 22: Connection timed out` | Check network connectivity to the array and verify the management IP address is reachable and SSH service is running. |
 | Command | Purpose |
 |---|---|
 | `purearray list` | Array identity, model, Purity version |
@@ -252,9 +258,11 @@ Upgrade initiated on purearray-prod-01. Phase 1/3: Controller A firmware update 
 ```
 
 !!! warning "Common errors"
-    **`purealert: command not found`** — Ensure the Pure Storage CLI toolkit is installed and the PATH includes the installation directory.
-    **`Error: Array purearray-prod-01 has unacknowledged critical alerts. Resolve before upgrade.`** — Acknowledge or resolve all critical alerts using `purealert acknowledge <alert_id>` before retrying the upgrade.
-    **`Error: Insufficient free space (8.5 TiB required, 6.2 TiB available)`** — Free up additional capacity by removing snapshots or replicating data off-array before attempting the upgrade.
+    | Error | Fix |
+    |---|---|
+    | `purealert: command not found` | Ensure the Pure Storage CLI toolkit is installed and the PATH includes the installation directory. |
+    | `Error: Array purearray-prod-01 has unacknowledged critical alerts. Resolve before upgrade.` | Acknowledge or resolve all critical alerts using `purealert acknowledge <alert_id>` before retrying the upgrade. |
+    | `Error: Insufficient free space (8.5 TiB required, 6.2 TiB available)` | Free up additional capacity by removing snapshots or replicating data off-array before attempting the upgrade. |
 ### Space Breakdown
 
 ```bash
@@ -279,8 +287,10 @@ Total                 50.0TB    2.1x            8.3TB      2.1TB
 ```
 
 !!! warning "Common errors"
-    **`purevol: command not found`** — Install the Pure Storage CLI tools or source the environment setup script (typically `/opt/purearray/bin/setup.sh`).
-    **`Error: Array connection failed - unable to authenticate`** — Verify your Pure array credentials are set in `$PURE_API_TOKEN` or re-authenticate using `purearray login`.
+    | Error | Fix |
+    |---|---|
+    | `purevol: command not found` | Install the Pure Storage CLI tools or source the environment setup script (typically `/opt/purearray/bin/setup.sh`). |
+    | `Error: Array connection failed - unable to authenticate` | Verify your Pure array credentials are set in `$PURE_API_TOKEN` or re-authenticate using `purearray login`. |
 ---
 
 ## Alerts
@@ -331,9 +341,11 @@ ID: alert-5c3a9f7b
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Add `-k` flag to skip certificate validation or ensure your CA bundle is current: `curl -sk "https://api.pure1.purestorage.com/..."`
-    **`Error: Invalid token or insufficient permissions`** — Verify the `$TOKEN` environment variable is set and the API token has alert read/write scope in Pure1.
-    **`purealert: command not found`** — Install or source the Pure Storage CLI tools, or use the full path to the purealert binary if installed in a non-standard location.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Add `-k` flag to skip certificate validation or ensure your CA bundle is current: `curl -sk "https://api.pure1.purestorage.com/..."` |
+    | `Error: Invalid token or insufficient permissions` | Verify the `$TOKEN` environment variable is set and the API token has alert read/write scope in Pure1. |
+    | `purealert: command not found` | Install or source the Pure Storage CLI tools, or use the full path to the purealert binary if installed in a non-standard location. |
 ---
 
 ## Verify

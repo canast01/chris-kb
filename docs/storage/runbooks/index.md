@@ -88,8 +88,10 @@ Latest snapshot age: 6h 32m (Schedule interval: 1h — ALERT: snapshot is 6.5× 
 ```
 
 !!! warning "Common errors"
-    **`purenetwork: command not found`** — Ensure Pure Storage CLI tools are installed and added to $PATH, or use the array's REST API directly.
-    **`symsnap: Invalid SID format`** — Verify the correct SymID with `symcfg list` and use the 12-digit format without leading zeros (e.g., `-sid 000297900001`).
+    | Error | Fix |
+    |---|---|
+    | `purenetwork: command not found` | Ensure Pure Storage CLI tools are installed and added to $PATH, or use the array's REST API directly. |
+    | `symsnap: Invalid SID format` | Verify the correct SymID with `symcfg list` and use the 12-digit format without leading zeros (e.g., `-sid 000297900001`). |
 ## Replication Failover Runbook (Generic)
 
 ```text title="Failover steps"
@@ -146,9 +148,11 @@ The filesystem on /dev/mapper/vg0-lv_data is now 524288000 (4k) blocks long.
 ```
 
 !!! warning "Common errors"
-    **`pvresize: Device /dev/sdX not found`** — Verify the correct device name with `lsblk` and ensure the array presented the LUN to the host.
-    **`resize2fs: Bad magic number in super-block`** — Confirm the logical volume path is correct and the filesystem exists with `lvdisplay` before attempting resize.
-    **`Logical volume vg0/lv_data not found`** — Check volume group and logical volume names with `vgdisplay` and `lvdisplay` to use correct paths.
+    | Error | Fix |
+    |---|---|
+    | `pvresize: Device /dev/sdX not found` | Verify the correct device name with `lsblk` and ensure the array presented the LUN to the host. |
+    | `resize2fs: Bad magic number in super-block` | Confirm the logical volume path is correct and the filesystem exists with `lvdisplay` before attempting resize. |
+    | `Logical volume vg0/lv_data not found` | Check volume group and logical volume names with `vgdisplay` and `lvdisplay` to use correct paths. |
 ## Host Connectivity Validation
 
 ```bash
@@ -191,6 +195,8 @@ test: io=1024.0MiB, bw=287.4MiB/s, iops=73,523, runt= 3567msec
 ```
 
 !!! warning "Common errors"
-    **`dd: failed to open '/mnt/data/test' for writing: Permission denied`** — Ensure the user running the command has write permissions on /mnt/data or run with sudo.
-    **`fio: engine libaio not available`** — Install libaio development libraries with `apt-get install libaio-dev` (Debian/Ubuntu) or `yum install libaio-devel` (RHEL/CentOS).
-    **`multipath: command not found`** — Install the device-mapper-multipath package using your distribution's package manager.
+    | Error | Fix |
+    |---|---|
+    | `dd: failed to open '/mnt/data/test' for writing: Permission denied` | Ensure the user running the command has write permissions on /mnt/data or run with sudo. |
+    | `fio: engine libaio not available` | Install libaio development libraries with `apt-get install libaio-dev` (Debian/Ubuntu) or `yum install libaio-devel` (RHEL/CentOS). |
+    | `multipath: command not found` | Install the device-mapper-multipath package using your distribution's package manager. |

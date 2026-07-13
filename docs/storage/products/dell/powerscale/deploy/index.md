@@ -120,8 +120,10 @@ Press Enter to continue or 'q' to quit:
 ```
 
 !!! warning "Common errors"
-    **`isi_setup: command not found`** — Ensure you are logged in as root or a user with administrative privileges, or run the command from the correct OneFS node.
-    **`Error: Cluster already initialized`** — Run `isi_setup --reset` to reconfigure an existing cluster, or use `isi config` for modifications instead.
+    | Error | Fix |
+    |---|---|
+    | `isi_setup: command not found` | Ensure you are logged in as root or a user with administrative privileges, or run the command from the correct OneFS node. |
+    | `Error: Cluster already initialized` | Run `isi_setup --reset` to reconfigure an existing cluster, or use `isi config` for modifications instead. |
 4. When prompted:
    - **Cluster name:** Enter the cluster name (e.g., `pscale-prod`).
    - **Internal network:** Select the InfiniBand or backend interface. Accept the factory defaults for internal IP range.
@@ -176,8 +178,10 @@ pool-mgmt                     172.16.0.0/24   172.16.0.10-172.16.0.100
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster via SSH or the OneFS CLI is installed on your local system.
-    **`Error: Permission denied`** — Verify your user account has sufficient privileges; use an account with cluster administrator or network administrator role.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are logged into the PowerScale cluster via SSH or the OneFS CLI is installed on your local system. |
+    | `Error: Permission denied` | Verify your user account has sufficient privileges; use an account with cluster administrator or network administrator role. |
 ---
 
 ## Add Nodes to Cluster
@@ -224,9 +228,11 @@ Apply configuration? (yes/no):
 ```
 
 !!! warning "Common errors"
-    **`isi_setup: command not found`** — Ensure you are logged into the PowerScale cluster console or SSH session with appropriate permissions.
-    **`ERROR: Failed to apply network configuration - Address already in use`** — Verify the IP address is not already assigned to another device on the network before proceeding.
-    **`ERROR: Setup wizard interrupted - incomplete configuration detected`** — Run `isi_setup` again and complete all required steps without interruption.
+    | Error | Fix |
+    |---|---|
+    | `isi_setup: command not found` | Ensure you are logged into the PowerScale cluster console or SSH session with appropriate permissions. |
+    | `ERROR: Failed to apply network configuration - Address already in use` | Verify the IP address is not already assigned to another device on the network before proceeding. |
+    | `ERROR: Setup wizard interrupted - incomplete configuration detected` | Run `isi_setup` again and complete all required steps without interruption. |
 4. At the join prompt, select **Join existing cluster**.
 5. Enter the existing cluster's internal IP (the first node's internal backend IP).
 6. Enter the cluster's join password (set during cluster creation).
@@ -254,9 +260,11 @@ Last Updated: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run the command from a system with OneFS SDK installed.
-    **`Error: Unable to connect to cluster at <IP>`** — Verify network connectivity to the cluster management IP and confirm the cluster is powered on and fully booted.
-    **`Error: Authentication failed`** — Confirm you have valid OneFS credentials configured and the user account has sufficient privileges to query cluster status.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run the command from a system with OneFS SDK installed. |
+    | `Error: Unable to connect to cluster at <IP>` | Verify network connectivity to the cluster management IP and confirm the cluster is powered on and fully booted. |
+    | `Error: Authentication failed` | Confirm you have valid OneFS credentials configured and the user account has sufficient privileges to query cluster status. |
 ---
 
 ## Configure NFS and SMB
@@ -284,9 +292,11 @@ pscale.example.com:/ifs/data/nfs_share01  50T   12T   38T  24% /mnt/pscale_nfs
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: access denied by server while mounting pscale.example.com:/ifs/data/nfs_share01`** — Verify the PowerScale export policy allows the client IP and check firewall rules between client and PowerScale cluster.
-    **`mount.nfs: No such file or directory`** — Ensure the mount point `/mnt/pscale_nfs` exists; create it with `mkdir -p /mnt/pscale_nfs` if needed.
-    **`mount.nfs: Connection timed out`** — Confirm DNS resolves `pscale.example.com` correctly and that network connectivity exists to the PowerScale cluster on port 2049.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: access denied by server while mounting pscale.example.com:/ifs/data/nfs_share01` | Verify the PowerScale export policy allows the client IP and check firewall rules between client and PowerScale cluster. |
+    | `mount.nfs: No such file or directory` | Ensure the mount point `/mnt/pscale_nfs` exists; create it with `mkdir -p /mnt/pscale_nfs` if needed. |
+    | `mount.nfs: Connection timed out` | Confirm DNS resolves `pscale.example.com` correctly and that network connectivity exists to the PowerScale cluster on port 2049. |
 **SMB share (Active Directory integration):**
 
 1. Join the cluster to Active Directory:
@@ -306,9 +316,11 @@ Joined: true
 ```
 
 !!! warning "Common errors"
-    **`Error: Authentication failed for user 'Administrator'`** — Verify the password is correct and the user account has sufficient privileges to join the domain.
-    **`Error: Cannot resolve domain 'CORP.EXAMPLE.COM'`** — Ensure DNS is configured correctly on the PowerScale cluster and can resolve the Active Directory domain name.
-    **`Error: Active Directory provider 'CORP.EXAMPLE.COM' already exists`** — Remove the existing provider with `isi auth ads delete --name CORP.EXAMPLE.COM` before creating a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: Authentication failed for user 'Administrator'` | Verify the password is correct and the user account has sufficient privileges to join the domain. |
+    | `Error: Cannot resolve domain 'CORP.EXAMPLE.COM'` | Ensure DNS is configured correctly on the PowerScale cluster and can resolve the Active Directory domain name. |
+    | `Error: Active Directory provider 'CORP.EXAMPLE.COM' already exists` | Remove the existing provider with `isi auth ads delete --name CORP.EXAMPLE.COM` before creating a new one. |
 2. Verify AD join:
 
 ```bash
@@ -327,8 +339,10 @@ LEGACY.DOMAIN           disconnected    legacy.domain
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are running this command on a PowerScale cluster node with the OneFS CLI installed, or SSH to the cluster management IP first.
-    **`Error: Permission denied`** — Run the command with appropriate privileges; use `sudo isi auth ads list` or ensure your user account has cluster administrator role.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are running this command on a PowerScale cluster node with the OneFS CLI installed, or SSH to the cluster management IP first. |
+    | `Error: Permission denied` | Run the command with appropriate privileges; use `sudo isi auth ads list` or ensure your user account has cluster administrator role. |
 3. Navigate to **Protocols > Windows Sharing (SMB) > SMB Shares > Create Share**.
 4. Set:
    - Share name: `data01`
@@ -379,9 +393,11 @@ Bytes Remaining: 847.3 GB
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run the command from the cluster management node.
-    **`Error: Policy 'replicate_data01' not found`** — Verify the policy name exists by running `isi sync policies list` and confirm the exact spelling and case.
-    **`Error: Access denied`** — Confirm your user account has administrative privileges on the PowerScale cluster or request elevated permissions from your storage administrator.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run the command from the cluster management node. |
+    | `Error: Policy 'replicate_data01' not found` | Verify the policy name exists by running `isi sync policies list` and confirm the exact spelling and case. |
+    | `Error: Access denied` | Confirm your user account has administrative privileges on the PowerScale cluster or request elevated permissions from your storage administrator. |
 **Monitor sync progress:**
 
 ```bash
@@ -400,9 +416,11 @@ ID    State      Policy Name              Progress  Bytes Transferred  ETA
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run from the PowerScale management node.
-    **`Error: Authentication failed`** — Verify your credentials are valid and you have sufficient permissions; use `isi auth status` to check your current session.
-    **`Error: Connection refused on 192.168.1.100:8080`** — Confirm the PowerScale cluster is reachable and the management interface is running; check network connectivity and firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run from the PowerScale management node. |
+    | `Error: Authentication failed` | Verify your credentials are valid and you have sufficient permissions; use `isi auth status` to check your current session. |
+    | `Error: Connection refused on 192.168.1.100:8080` | Confirm the PowerScale cluster is reachable and the management interface is running; check network connectivity and firewall rules. |
 **On the target cluster**, verify the directory is populated:
 
 ```bash
@@ -419,8 +437,10 @@ drwxr-xr-x  2 root  wheel   4096 Nov 12 22:33 temp_sync
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/ifs/replica/data': No such file or directory`** — Verify the /ifs mount point is accessible and the replica dataset exists using `isi filesystem list`.
-    **`ls: cannot open directory '/ifs/replica/data': Permission denied`** — Check that your user has read permissions on the directory with `isi auth access /ifs/replica/data`.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/ifs/replica/data': No such file or directory` | Verify the /ifs mount point is accessible and the replica dataset exists using `isi filesystem list`. |
+    | `ls: cannot open directory '/ifs/replica/data': Permission denied` | Check that your user has read permissions on the directory with `isi auth access /ifs/replica/data`. |
 ---
 
 ## Validate
@@ -446,9 +466,11 @@ Last Updated: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are connected to the PowerScale cluster via SSH or have the OneFS CLI tools installed in your PATH.
-    **`Connection refused on 192.168.1.100:8080`** — Verify network connectivity to the cluster management IP and confirm the OneFS API service is running with `systemctl status isi-api`.
-    **`Authentication failed: Invalid credentials`** — Confirm your user account has appropriate permissions and re-authenticate using `isi auth login` or check your SSH key configuration.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are connected to the PowerScale cluster via SSH or have the OneFS CLI tools installed in your PATH. |
+    | `Connection refused on 192.168.1.100:8080` | Verify network connectivity to the cluster management IP and confirm the OneFS API service is running with `systemctl status isi-api`. |
+    | `Authentication failed: Invalid credentials` | Confirm your user account has appropriate permissions and re-authenticate using `isi auth login` or check your SSH key configuration. |
 2. Check the cluster's drive health:
 
 ```bash
@@ -470,8 +492,10 @@ Drive ID          Slot  Status    Capacity  Model                Serial Number
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or insufficient permissions`** — Ensure your OneFS admin account has cluster administration privileges or run the command with appropriate sudo access.
-    **`Error: Connection refused to cluster management interface`** — Verify the cluster is online and accessible by running `ping <cluster-ip>` and checking network connectivity to port 8080.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or insufficient permissions` | Ensure your OneFS admin account has cluster administration privileges or run the command with appropriate sudo access. |
+    | `Error: Connection refused to cluster management interface` | Verify the cluster is online and accessible by running `ping <cluster-ip>` and checking network connectivity to port 8080. |
 3. Verify NFS mounts from multiple clients to confirm SmartConnect is distributing connections across nodes.
 4. Run a write test to confirm throughput meets expectations:
 
@@ -487,9 +511,11 @@ dd if=/dev/zero of=/mnt/pscale_nfs/test.bin bs=1M count=10240 oflag=direct
 ```
 
 !!! warning "Common errors"
-    **`dd: failed to open '/mnt/pscale_nfs/test.bin' for writing: Permission denied`** — Verify the NFS mount is writable and the user has sufficient permissions on the PowerScale export.
-    **`dd: failed to open '/mnt/pscale_nfs/test.bin' for writing: No space left on device`** — Check available capacity on the PowerScale cluster with `df -h /mnt/pscale_nfs` and ensure sufficient free space exists.
-    **`dd: opening '/mnt/pscale_nfs/test.bin': Stale file handle`** — Remount the NFS export with `umount /mnt/pscale_nfs && mount -t nfs <powerscale-ip>:/export /mnt/pscale_nfs` to refresh the connection.
+    | Error | Fix |
+    |---|---|
+    | `dd: failed to open '/mnt/pscale_nfs/test.bin' for writing: Permission denied` | Verify the NFS mount is writable and the user has sufficient permissions on the PowerScale export. |
+    | `dd: failed to open '/mnt/pscale_nfs/test.bin' for writing: No space left on device` | Check available capacity on the PowerScale cluster with `df -h /mnt/pscale_nfs` and ensure sufficient free space exists. |
+    | `dd: opening '/mnt/pscale_nfs/test.bin': Stale file handle` | Remount the NFS export with `umount /mnt/pscale_nfs && mount -t nfs <powerscale-ip>:/export /mnt/pscale_nfs` to refresh the connection. |
 5. Confirm SyncIQ policy ran successfully and shows **Finished** status under **Data Protection > SyncIQ > Reports**.
 6. Check no active alerts under **Cluster Management > Events**.
 

@@ -79,9 +79,11 @@ Staging              AzureCloud   5a6b7c8d-9e0f-1234-5678-9abcdef01234  12345678
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Please run 'az login' to setup account.`** — Run `az login` to authenticate before executing other commands.
-    **`ERROR: The subscription of '<subscription_id>' does not have a registered provider for namespace 'Microsoft.Compute'.`** — Register the required resource provider with `az provider register --namespace Microsoft.Compute`.
-    **`ERROR: AADSTS700016: Application with identifier '<app_id>' was not found in the directory.`** — Verify the app ID, password, and tenant ID are correct and the service principal exists in the target tenant.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Please run 'az login' to setup account.` | Run `az login` to authenticate before executing other commands. |
+    | `ERROR: The subscription of '<subscription_id>' does not have a registered provider for namespace 'Microsoft.Compute'.` | Register the required resource provider with `az provider register --namespace Microsoft.Compute`. |
+    | `ERROR: AADSTS700016: Application with identifier '<app_id>' was not found in the directory.` | Verify the app ID, password, and tenant ID are correct and the service principal exists in the target tenant. |
 ```bash
 az group list
 az group list --output table

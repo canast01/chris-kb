@@ -57,9 +57,11 @@ curl -k https://192.168.1.20/api/v1/cluster/status
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.20 port 443: Connection refused`** — Verify the NSX Manager VM is powered on and has finished booting by checking vCenter; wait additional 2-3 minutes if still initializing.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag is already present in the command; if still failing, verify you're using the correct IP address and that the management cluster initialization completed.
-    **`{"error":"Unauthorized","code":401}`** — Provide credentials using `-u admin:password` flag or configure API authentication token in the request header.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.20 port 443: Connection refused` | Verify the NSX Manager VM is powered on and has finished booting by checking vCenter; wait additional 2-3 minutes if still initializing. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag is already present in the command; if still failing, verify you're using the correct IP address and that the management cluster initialization completed. |
+    | `{"error":"Unauthorized","code":401}` | Provide credentials using `-u admin:password` flag or configure API authentication token in the request header. |
 Access the NSX Manager UI: `https://192.168.1.20` → login as `admin`.
 
 **1.4 Apply NSX license**
@@ -146,8 +148,10 @@ Port: ens192
 ```
 
 !!! warning "Common errors"
-    **`grep: command not found`** — Ensure you are running this command directly on the ESXi host via SSH, not from a remote shell where grep is unavailable.
-    **`nsxdp-cli: command not found`** — Verify NSX data plane VIBs are installed by running `esxcli software vib list | grep nsx-esx-dataplane` and reinstall if missing.
+    | Error | Fix |
+    |---|---|
+    | `grep: command not found` | Ensure you are running this command directly on the ESXi host via SSH, not from a remote shell where grep is unavailable. |
+    | `nsxdp-cli: command not found` | Verify NSX data plane VIBs are installed by running `esxcli software vib list | grep nsx-esx-dataplane` and reinstall if missing. |
 ---
 
 ## Phase 4 — Create an Overlay Segment

@@ -91,8 +91,10 @@ naa.6001407  Local SSD                       279.9GB   SSD          NMP         
 ```
 
 !!! warning "Common errors"
-    **`Unknown command at token esxcli`** — Verify esxcli is in PATH or run commands from an ESXi host shell, not a vCenter server.
-    **`Error: Unable to connect to the local hostd agent`** — Ensure the hostd service is running with `systemctl status hostd` and restart if needed.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command at token esxcli` | Verify esxcli is in PATH or run commands from an ESXi host shell, not a vCenter server. |
+    | `Error: Unable to connect to the local hostd agent` | Ensure the hostd service is running with `systemctl status hostd` and restart if needed. |
 ## Renewal Notes
 
 VMware certifications may require continuing education or recertification depending on level.

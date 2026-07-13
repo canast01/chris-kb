@@ -45,9 +45,11 @@ curl -sk -X POST \
 ```
 
 !!! warning "Common errors"
-    **`{"error":"Unauthorized","message":"Invalid or expired access token"}`** — Regenerate the access token using your CloudIQ API credentials and update the `<access_token>` placeholder.
-    **`{"error":"NotFound","message":"Alert alert-7f3c9e2a-b14d-4821-9f2e-d8c1a5b9e3f1 not found"}`** — Verify the `<alertId>` exists and is still active by listing alerts with a GET request to the `/alerts` endpoint.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if connecting to a trusted endpoint, or ensure your CA bundle is current with `curl --cacert /path/to/ca-bundle.crt`.
+    | Error | Fix |
+    |---|---|
+    | `{"error":"Unauthorized","message":"Invalid or expired access token"}` | Regenerate the access token using your CloudIQ API credentials and update the `<access_token>` placeholder. |
+    | `{"error":"NotFound","message":"Alert alert-7f3c9e2a-b14d-4821-9f2e-d8c1a5b9e3f1 not found"}` | Verify the `<alertId>` exists and is still active by listing alerts with a GET request to the `/alerts` endpoint. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag if connecting to a trusted endpoint, or ensure your CA bundle is current with `curl --cacert /path/to/ca-bundle.crt`. |
 ## Common AI Alert Issues
 
 | Issue | Likely Cause | Fix |

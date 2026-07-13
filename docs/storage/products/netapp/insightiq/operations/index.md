@@ -87,9 +87,11 @@ Jan 15 11:33:41 iiq-prod-01 iiq[4782]: ERROR: Database query exceeded 30s timeou
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "iiq"`** — Verify the PostgreSQL pg_hba.conf allows local connections for the iiq user, or run psql with `-h localhost` and ensure the iiq user exists.
-    **`Unit iiq.service could not be found.`** — Confirm the InsightIQ service file exists at `/etc/systemd/system/iiq.service` and run `sudo systemctl daemon-reload` to refresh systemd.
-    **`df: '/data': No such file or directory`** — Mount the data volume with `sudo mount /dev/sdX /data` or verify the mount point exists and is accessible.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "iiq"` | Verify the PostgreSQL pg_hba.conf allows local connections for the iiq user, or run psql with `-h localhost` and ensure the iiq user exists. |
+    | `Unit iiq.service could not be found.` | Confirm the InsightIQ service file exists at `/etc/systemd/system/iiq.service` and run `sudo systemctl daemon-reload` to refresh systemd. |
+    | `df: '/data': No such file or directory` | Mount the data volume with `sudo mount /dev/sdX /data` or verify the mount point exists and is accessible. |
 ## Alert Threshold Review (Monthly)
 
 - Review the past month's active alerts for noise patterns

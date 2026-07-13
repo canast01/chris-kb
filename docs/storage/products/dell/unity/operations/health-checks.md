@@ -143,9 +143,11 @@ lun_003         pool_1          2.0 TB          Ready
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused — Verify the Unity array management IP is reachable and uemcli is configured with correct credentials using 'uemcli -login' first.`** — Verify the Unity array management IP is reachable and uemcli is configured with correct credentials using 'uemcli -login' first.
-    **`Error: Invalid filter syntax in command — Check filter expression syntax; use 'uemcli /env/health show -help' to view supported filter operators and properties.`** — Check filter expression syntax; use 'uemcli /env/health show -help' to view supported filter operators and properties.
-    **`Error: The specified resource does not exist — Confirm the resource path (e.g., /stor/pool, /store/lun) is correct for your Unity software version by running 'uemcli -help' to list available resources.`**
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused — Verify the Unity array management IP is reachable and uemcli is configured with correct credentials using 'uemcli -login' first.` | Verify the Unity array management IP is reachable and uemcli is configured with correct credentials using 'uemcli -login' first. |
+    | `Error: Invalid filter syntax in command — Check filter expression syntax; use 'uemcli /env/health show -help' to view supported filter operators and properties.` | Check filter expression syntax; use 'uemcli /env/health show -help' to view supported filter operators and properties. |
+    | `Error: The specified resource does not exist` | Confirm the resource path (e.g., /stor/pool, /store/lun) is correct for your Unity software version by running 'uemcli -help' to list available resources. |
 ## System Status Commands
 
 ![System Status Commands](../../../../../assets/storage-dell-unity-hc-system-status-commands.svg)
@@ -201,9 +203,11 @@ Model: SP-400
 ```
 
 !!! warning "Common errors"
-    **`You are not authenticated. Please login first.`** — Add `-p <password>` flag or use `uemcli -d <ip> -u admin -p <password>` with credentials.
-    **`Connection refused`** — Verify the Unity array IP address is correct and reachable with `ping <ip>`, and confirm the management interface is accessible.
-    **`Invalid command`** — Ensure you are using the correct uemcli syntax; check the Unity CLI version compatibility with `uemcli -version`.
+    | Error | Fix |
+    |---|---|
+    | `You are not authenticated. Please login first.` | Add `-p <password>` flag or use `uemcli -d <ip> -u admin -p <password>` with credentials. |
+    | `Connection refused` | Verify the Unity array IP address is correct and reachable with `ping <ip>`, and confirm the management interface is accessible. |
+    | `Invalid command` | Ensure you are using the correct uemcli syntax; check the Unity CLI version compatibility with `uemcli -version`. |
 ## Alerts and Events
 
 ![Alerts and Events](../../../../../assets/storage-dell-unity-hc-alerts-and-events.svg)
@@ -238,9 +242,11 @@ Timestamp                   Severity        Source              Event
 ```
 
 !!! warning "Common errors"
-    **`Error: Authentication failed for user 'admin' on <ip>`** — Verify the IP address is correct and admin credentials are current; reset password if needed.
-    **`Error: Connection timeout — unable to reach <ip>:443`** — Confirm the storage array is powered on and reachable on the network; check firewall rules allowing management port access.
-    **`Error: uemcli: command not found`** — Install the EMC Unity CLI package or add its installation directory to your system PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Authentication failed for user 'admin' on <ip>` | Verify the IP address is correct and admin credentials are current; reset password if needed. |
+    | `Error: Connection timeout — unable to reach <ip>:443` | Confirm the storage array is powered on and reachable on the network; check firewall rules allowing management port access. |
+    | `Error: uemcli: command not found` | Install the EMC Unity CLI package or add its installation directory to your system PATH. |
 ## Hardware
 
 ![Hardware](../../../../../assets/storage-dell-unity-hc-hardware.svg)
@@ -284,9 +290,11 @@ Temperature                                   35C
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed: Invalid credentials`** — Verify the admin username and password are correct, or use `-p` flag to enter password interactively.
-    **`Error: Connection timeout to <ip>`** — Confirm the Dell Unity array IP is reachable and uemcli is installed; check network connectivity with `ping <ip>`.
-    **`Command not found: uemcli`** — Install the Dell EMC CLI tools or add the uemcli binary path to your system PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed: Invalid credentials` | Verify the admin username and password are correct, or use `-p` flag to enter password interactively. |
+    | `Error: Connection timeout to <ip>` | Confirm the Dell Unity array IP is reachable and uemcli is installed; check network connectivity with `ping <ip>`. |
+    | `Command not found: uemcli` | Install the Dell EMC CLI tools or add the uemcli binary path to your system PATH environment variable. |
 ## Storage Pool Capacity
 
 ![Storage Pool Capacity](../../../../../assets/storage-dell-unity-hc-storage-pool-capacity.svg)
@@ -312,9 +320,11 @@ WARNING: Pool near full: pool_3                     SSD_Pool_03       5.49 TB   
 ```
 
 !!! warning "Common errors"
-    **`uemcli: error: Unable to connect to <ip>:443`** — Verify the storage array IP address is reachable and the management interface is responding with `ping <ip>`.
-    **`uemcli: error: Authentication failed for user 'admin'`** — Confirm the admin password is correct and the user account has not been locked; reset credentials in Unisphere if needed.
-    **`uemcli: error: Command not found`** — Install the EMC CLI package or add the uemcli binary directory to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `uemcli: error: Unable to connect to <ip>:443` | Verify the storage array IP address is reachable and the management interface is responding with `ping <ip>`. |
+    | `uemcli: error: Authentication failed for user 'admin'` | Confirm the admin password is correct and the user account has not been locked; reset credentials in Unisphere if needed. |
+    | `uemcli: error: Command not found` | Install the EMC CLI package or add the uemcli binary directory to your PATH environment variable. |
 ## LUN Status
 
 ![LUN Status](../../../../../assets/storage-dell-unity-hc-lun-status.svg)
@@ -353,8 +363,10 @@ lun_archive_cold                 Degraded         500 GB
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (111)`** — Verify the Unity array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is accessible.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the admin password is correct and the user account has not been locked; reset credentials via the Unity web UI if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (111)` | Verify the Unity array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is accessible. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin password is correct and the user account has not been locked; reset credentials via the Unity web UI if needed. |
 ## Replication Sessions
 
 ![Replication Sessions](../../../../../assets/storage-dell-unity-hc-replication-sessions.svg)
@@ -382,9 +394,11 @@ rep_session_005                     FAILED      0                   2024-01-14 1
 ```
 
 !!! warning "Common errors"
-    **`uemcli: command not found`** — Install the EMC CLI tools package or add the uemcli binary directory to your PATH environment variable.
-    **`Authentication failed for user admin`** — Verify the Dell Unity array IP address is correct and the admin credentials are valid; check network connectivity to the management interface.
-    **`Connection refused on <ip>:443`** — Ensure the Dell Unity array management IP is reachable and the management service is running; verify firewall rules allow HTTPS access.
+    | Error | Fix |
+    |---|---|
+    | `uemcli: command not found` | Install the EMC CLI tools package or add the uemcli binary directory to your PATH environment variable. |
+    | `Authentication failed for user admin` | Verify the Dell Unity array IP address is correct and the admin credentials are valid; check network connectivity to the management interface. |
+    | `Connection refused on <ip>:443` | Ensure the Dell Unity array management IP is reachable and the management service is running; verify firewall rules allow HTTPS access. |
 ## Network Interfaces
 
 ![Network Interfaces](../../../../../assets/storage-dell-unity-hc-network-interfaces.svg)
@@ -405,9 +419,11 @@ mgmt0                                       OK                  192.168.100.10
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused`** — Verify the Unity array IP address is correct and reachable with `ping <ip>`, and ensure the management port is accessible.
-    **`Error: Authentication failed`** — Confirm the admin credentials are correct and the user account has sufficient privileges; try `uemcli -d <ip> -u admin -p` to enter the password interactively.
-    **`Error: uemcli: command not found`** — Install the EMC Unity CLI package or add its installation directory to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused` | Verify the Unity array IP address is correct and reachable with `ping <ip>`, and ensure the management port is accessible. |
+    | `Error: Authentication failed` | Confirm the admin credentials are correct and the user account has sufficient privileges; try `uemcli -d <ip> -u admin -p` to enter the password interactively. |
+    | `Error: uemcli: command not found` | Install the EMC Unity CLI package or add its installation directory to your PATH environment variable. |
 ## Health Check Summary
 
 ![Health Check Summary](../../../../../assets/storage-dell-unity-hc-health-check-summary.svg)

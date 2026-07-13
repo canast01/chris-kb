@@ -126,9 +126,11 @@ svm1:vol_logs  svm2:vol_logs_dp    Snapmirrored  0:12:47   true
 ```
 
 !!! warning "Common errors"
-    **`Error: No SnapMirror relationships found`** — Verify the SVMs exist and have SnapMirror licenses enabled with `system license show`.
-    **`Error: command not found: snapmirror`** — Ensure you are connected to a NetApp ONTAP cluster with admin privileges; use `cluster show` to verify cluster access.
-    **`Error: Invalid source-path or destination-path specified`** — Confirm the exact SVM and volume names with `volume show` and use the format `svm_name:volume_name` for both paths.
+    | Error | Fix |
+    |---|---|
+    | `Error: No SnapMirror relationships found` | Verify the SVMs exist and have SnapMirror licenses enabled with `system license show`. |
+    | `Error: command not found: snapmirror` | Ensure you are connected to a NetApp ONTAP cluster with admin privileges; use `cluster show` to verify cluster access. |
+    | `Error: Invalid source-path or destination-path specified` | Confirm the exact SVM and volume names with `volume show` and use the format `svm_name:volume_name` for both paths. |
 ### Diagnose and Resync
 
 ```bash
@@ -195,9 +197,11 @@ svm1     192.168.10.0/24  0.0.0.0          10      -
 ```
 
 !!! warning "Common errors"
-    **`Error: entry doesn't have a value for this field`** — Ensure the SnapMirror relationship exists and has completed at least one transfer; use `snapmirror show` without field filters to verify the relationship status.
-    **`Error: "svm1:vol_app" is not a valid SnapMirror relationship`** — Verify the source and destination paths are correct and the relationship has been initialized with `snapmirror initialize`.
-    **`PING: sendto: No route to host`** — Confirm the intercluster LIF is up, the destination IP is reachable, and firewall rules allow ICMP traffic between clusters on port 10666 for SnapMirror.
+    | Error | Fix |
+    |---|---|
+    | `Error: entry doesn't have a value for this field` | Ensure the SnapMirror relationship exists and has completed at least one transfer; use `snapmirror show` without field filters to verify the relationship status. |
+    | `Error: "svm1:vol_app" is not a valid SnapMirror relationship` | Verify the source and destination paths are correct and the relationship has been initialized with `snapmirror initialize`. |
+    | `PING: sendto: No route to host` | Confirm the intercluster LIF is up, the destination IP is reachable, and firewall rules allow ICMP traffic between clusters on port 10666 for SnapMirror. |
 ### SnapMirror Lag Threshold Table
 
 | Volume Tier | Schedule | Warning Lag | Critical (RPO Breach) |
@@ -264,9 +268,11 @@ Outgoing Rate: 45 MB/s
 ```
 
 !!! warning "Common errors"
-    **`Connection refused (111)`** — Verify RPA hostname/IP is correct and SSH service is running on port 22; check firewall rules allowing admin access.
-    **`get_group_status: command not found`** — Ensure you are in the RecoverPoint CLI shell (type `rpacli` if needed) and not in standard bash.
-    **`Permission denied: user 'admin' does not have access to consistency group PROD-CG-02`** — Confirm the admin account has appropriate RBAC permissions for the target consistency group in RecoverPoint.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused (111)` | Verify RPA hostname/IP is correct and SSH service is running on port 22; check firewall rules allowing admin access. |
+    | `get_group_status: command not found` | Ensure you are in the RecoverPoint CLI shell (type `rpacli` if needed) and not in standard bash. |
+    | `Permission denied: user 'admin' does not have access to consistency group PROD-CG-02` | Confirm the admin account has appropriate RBAC permissions for the target consistency group in RecoverPoint. |
 ---
 
 ## Replication Lag Threshold and RPO Breach Criteria
@@ -343,9 +349,11 @@ svm1:vol_backup      svm2:vol_backup_dp        25600
 ```
 
 !!! warning "Common errors"
-    **`iperf3: command not found`** — Install iperf3 on both servers using `apt-get install iperf3` (Ubuntu/Debian) or `yum install iperf3` (RHEL/CentOS).
-    **`symrdf: command not found`** — Ensure the EMC Solutions Enabler package is installed and the `symcli` environment is properly configured in your PATH.
-    **`Error: command not found at vserver "svm1"`** — Verify the source SVM name is correct and the cluster peer relationship is established with `cluster peer show`.
+    | Error | Fix |
+    |---|---|
+    | `iperf3: command not found` | Install iperf3 on both servers using `apt-get install iperf3` (Ubuntu/Debian) or `yum install iperf3` (RHEL/CentOS). |
+    | `symrdf: command not found` | Ensure the EMC Solutions Enabler package is installed and the `symcli` environment is properly configured in your PATH. |
+    | `Error: command not found at vserver "svm1"` | Verify the source SVM name is correct and the cluster peer relationship is established with `cluster peer show`. |
 ---
 
 ## vSphere Replication Troubleshooting

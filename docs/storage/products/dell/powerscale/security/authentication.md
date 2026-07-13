@@ -90,9 +90,11 @@ NetBIOS Name: CORP
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials for user 'svc-isilon-join'`** — Verify the service account password is correct and the account is not locked in Active Directory.
-    **`Error: Cannot resolve domain name CORP.EXAMPLE.COM`** — Ensure DNS is properly configured on the PowerScale cluster and can resolve the AD domain name.
-    **`Error: Zone 'ProdZone' does not exist`** — Confirm the access zone name exists by running `isi zones list` before attempting to join.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials for user 'svc-isilon-join'` | Verify the service account password is correct and the account is not locked in Active Directory. |
+    | `Error: Cannot resolve domain name CORP.EXAMPLE.COM` | Ensure DNS is properly configured on the PowerScale cluster and can resolve the AD domain name. |
+    | `Error: Zone 'ProdZone' does not exist` | Confirm the access zone name exists by running `isi zones list` before attempting to join. |
 > Use a dedicated service account for the AD join. The account only needs permissions to join computers to the specified OU. Revoke the password after the join is complete — the cluster uses the machine account for ongoing Kerberos operations.
 
 ### Managing AD Providers
@@ -152,9 +154,11 @@ AD provider CORP.EXAMPLE.COM removed from zone ProdZone
 ```
 
 !!! warning "Common errors"
-    **`Error: AD provider CORP.EXAMPLE.COM not found in zone ProdZone`** — Verify the AD provider exists in the specified zone using `isi auth ads list --zone ProdZone`.
-    **`Error: Cannot delete AD provider - still in use by authentication policies`** — Remove all authentication policies referencing this AD provider before deletion.
-    **`Error: Domain controller unreachable - connection timeout`** — Verify network connectivity to the domain controller and confirm firewall rules allow LDAP/Kerberos traffic on ports 389/636 and 88.
+    | Error | Fix |
+    |---|---|
+    | `Error: AD provider CORP.EXAMPLE.COM not found in zone ProdZone` | Verify the AD provider exists in the specified zone using `isi auth ads list --zone ProdZone`. |
+    | `Error: Cannot delete AD provider - still in use by authentication policies` | Remove all authentication policies referencing this AD provider before deletion. |
+    | `Error: Domain controller unreachable - connection timeout` | Verify network connectivity to the domain controller and confirm firewall rules allow LDAP/Kerberos traffic on ports 389/636 and 88. |
 ### AD Provider Settings
 
 ```bash
@@ -206,9 +210,11 @@ Zone: ProdZone
 ```
 
 !!! warning "Common errors"
-    **`Error: AD provider 'CORP.EXAMPLE.COM' not found`** — Verify the AD provider name matches exactly (case-sensitive) using `isi auth ads list`.
-    **`Error: Invalid zone 'ProdZone': zone does not exist`** — Create the zone first with `isi zone zones create --name ProdZone` or use an existing zone name.
-    **`Error: Cannot resolve domain controller 'dc01.corp.example.com'`** — Ensure DNS resolution is working and the DC hostname is reachable from the cluster using `nslookup dc01.corp.example.com`.
+    | Error | Fix |
+    |---|---|
+    | `Error: AD provider 'CORP.EXAMPLE.COM' not found` | Verify the AD provider name matches exactly (case-sensitive) using `isi auth ads list`. |
+    | `Error: Invalid zone 'ProdZone': zone does not exist` | Create the zone first with `isi zone zones create --name ProdZone` or use an existing zone name. |
+    | `Error: Cannot resolve domain controller 'dc01.corp.example.com'` | Ensure DNS resolution is working and the DC hostname is reachable from the cluster using `nslookup dc01.corp.example.com`. |
 ### AD Troubleshooting
 
 ```bash
@@ -260,9 +266,11 @@ Event ID 12798 | 2024-01-14T14:47:09Z | AD_LOOKUP | Success | Group resolution c
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to resolve user CORP\\testuser in zone ProdZone`** — Verify the user exists in Active Directory and that the AD provider is configured for the ProdZone using `isi auth providers view --zone ProdZone`.
-    **`Error: AD domain check failed - UNHEALTHY status detected`** — Reset the machine account password with `isi auth ads update CORP.EXAMPLE.COM --update-password yes` and verify network connectivity to domain controllers.
-    **`Error: Kerberos ticket not found for user`** — Ensure the user's password is synchronized and run `isi auth ads update CORP.EXAMPLE.COM --update-password yes` to refresh the machine account credentials.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to resolve user CORP\\testuser in zone ProdZone` | Verify the user exists in Active Directory and that the AD provider is configured for the ProdZone using `isi auth providers view --zone ProdZone`. |
+    | `Error: AD domain check failed - UNHEALTHY status detected` | Reset the machine account password with `isi auth ads update CORP.EXAMPLE.COM --update-password yes` and verify network connectivity to domain controllers. |
+    | `Error: Kerberos ticket not found for user` | Ensure the user's password is synchronized and run `isi auth ads update CORP.EXAMPLE.COM --update-password yes` to refresh the machine account credentials. |
 | Problem | Command | Action |
 |---|---|---|
 | AD provider shows `disconnected` | `isi auth ads check` | Verify DC connectivity; check DNS resolution from cluster nodes |
@@ -336,9 +344,11 @@ Modified LDAP provider 'ldap-prod'
 ```
 
 !!! warning "Common errors"
-    **`Error: LDAP server ldap.example.com is unreachable on port 389`** — Verify network connectivity to the LDAP server and confirm the hostname/IP and port are correct.
-    **`Error: Invalid bind credentials for cn=isilon-svc,ou=service-accounts,dc=example,dc=com`** — Confirm the bind DN and password are correct and the service account has permission to query the LDAP directory.
-    **`Error: Certificate verification failed for ldaps://ldap.example.com:636`** — Import the LDAP server's CA certificate into the PowerScale cluster trust store or set `--tls-revocation-check-level none` if appropriate for your environment.
+    | Error | Fix |
+    |---|---|
+    | `Error: LDAP server ldap.example.com is unreachable on port 389` | Verify network connectivity to the LDAP server and confirm the hostname/IP and port are correct. |
+    | `Error: Invalid bind credentials for cn=isilon-svc,ou=service-accounts,dc=example,dc=com` | Confirm the bind DN and password are correct and the service account has permission to query the LDAP directory. |
+    | `Error: Certificate verification failed for ldaps://ldap.example.com:636` | Import the LDAP server's CA certificate into the PowerScale cluster trust store or set `--tls-revocation-check-level none` if appropriate for your environment. |
 ### LDAP Configuration Options
 
 ```bash
@@ -392,9 +402,11 @@ User: testuser
 ```
 
 !!! warning "Common errors"
-    **`Error: LDAP provider 'ldap-prod' not found in zone 'ProdZone'`** — Verify the LDAP provider name matches exactly and exists in the specified zone using `isi auth ldap list --zone ProdZone`.
-    **`Error: User 'ldap-prod\testuser' not found`** — Confirm the user exists in LDAP, the search base is correct, and LDAP connectivity is working by checking `isi auth ldap view ldap-prod --zone ProdZone` for connection status.
-    **`Error: Invalid search scope 'subtree': valid values are 'base', 'onelevel', 'subtree'`** — Use one of the valid search scope values; 'subtree' is typically correct for most LDAP configurations.
+    | Error | Fix |
+    |---|---|
+    | `Error: LDAP provider 'ldap-prod' not found in zone 'ProdZone'` | Verify the LDAP provider name matches exactly and exists in the specified zone using `isi auth ldap list --zone ProdZone`. |
+    | `Error: User 'ldap-prod\testuser' not found` | Confirm the user exists in LDAP, the search base is correct, and LDAP connectivity is working by checking `isi auth ldap view ldap-prod --zone ProdZone` for connection status. |
+    | `Error: Invalid search scope 'subtree': valid values are 'base', 'onelevel', 'subtree'` | Use one of the valid search scope values; 'subtree' is typically correct for most LDAP configurations. |
 ### LDAP Troubleshooting
 
 ```bash
@@ -437,9 +449,11 @@ objectClass: posixAccount
 ```
 
 !!! warning "Common errors"
-    **`ldapsearch: No such object`** — Verify the base DN (dc=example,dc=com) matches your directory structure and that the bind user has search permissions.
-    **`ldapsearch: Can't contact LDAP server`** — Confirm the LDAP server hostname/IP is correct, the service is running on port 389 (or 636 for LDAPS), and cluster network connectivity is not blocked by firewall rules.
-    **`isi: command not found`** — Run commands directly on a PowerScale cluster node (SSH as root); these commands are not available on external management stations.
+    | Error | Fix |
+    |---|---|
+    | `ldapsearch: No such object` | Verify the base DN (dc=example,dc=com) matches your directory structure and that the bind user has search permissions. |
+    | `ldapsearch: Can't contact LDAP server` | Confirm the LDAP server hostname/IP is correct, the service is running on port 389 (or 636 for LDAPS), and cluster network connectivity is not blocked by firewall rules. |
+    | `isi: command not found` | Run commands directly on a PowerScale cluster node (SSH as root); these commands are not available on external management stations. |
 ---
 
 ## NIS
@@ -483,9 +497,11 @@ Deleted NIS provider 'nis-prod'
 ```
 
 !!! warning "Common errors"
-    **`Error: NIS provider 'nis-prod' already exists`** — Use `isi auth nis delete nis-prod --zone ProdZone` first, or choose a different provider name.
-    **`Error: Server 'nis.example.com' is not reachable`** — Verify network connectivity to the NIS server and ensure the hostname resolves correctly with `nslookup nis.example.com`.
-    **`Error: Zone 'ProdZone' does not exist`** — Confirm the zone name with `isi zone list` and use the correct zone identifier in the `--zone` parameter.
+    | Error | Fix |
+    |---|---|
+    | `Error: NIS provider 'nis-prod' already exists` | Use `isi auth nis delete nis-prod --zone ProdZone` first, or choose a different provider name. |
+    | `Error: Server 'nis.example.com' is not reachable` | Verify network connectivity to the NIS server and ensure the hostname resolves correctly with `nslookup nis.example.com`. |
+    | `Error: Zone 'ProdZone' does not exist` | Confirm the zone name with `isi zone list` and use the correct zone identifier in the `--zone` parameter. |
 NIS is not recommended for new deployments. Use LDAP or Active Directory instead; maintain NIS only if existing Unix clients rely on it.
 
 ---
@@ -585,9 +601,11 @@ Group 'monitoring-group' view:
 ```
 
 !!! warning "Common errors"
-    **`Error: User 'backupadmin' already exists`** — Use `isi auth users modify` instead of `create`, or delete the existing user first with `isi auth users delete backupadmin`.
-    **`Error: Invalid zone 'ProdZone': zone not found`** — Verify the zone name exists by running `isi zones list` and use the correct zone name.
-    **`Error: User 'backupadmin' is not found`** — Ensure the user was created successfully and check spelling; list all users with `isi auth users list` to confirm.
+    | Error | Fix |
+    |---|---|
+    | `Error: User 'backupadmin' already exists` | Use `isi auth users modify` instead of `create`, or delete the existing user first with `isi auth users delete backupadmin`. |
+    | `Error: Invalid zone 'ProdZone': zone not found` | Verify the zone name exists by running `isi zones list` and use the correct zone name. |
+    | `Error: User 'backupadmin' is not found` | Ensure the user was created successfully and check spelling; list all users with `isi auth users list` to confirm. |
 ### Local Account Security Practices
 
 | Practice | Detail |
@@ -663,9 +681,11 @@ Zone: ProdZone
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid zone 'ProdZone'. Valid zones are: System, Zone1, Zone2`** — Verify the zone name exists by running `isi auth zones list` and use the correct zone identifier.
-    **`Error: User 'CORP\jsmith' not found in authentication provider`** — Ensure the user exists in the configured Active Directory or LDAP provider and that the domain prefix matches the authentication source configuration.
-    **`Error: Mapping rule already exists for source 'CORP\jsmith'`** — Delete the existing rule with `isi auth mappings rules delete <rule_id>` before creating a duplicate mapping.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid zone 'ProdZone'. Valid zones are: System, Zone1, Zone2` | Verify the zone name exists by running `isi auth zones list` and use the correct zone identifier. |
+    | `Error: User 'CORP\jsmith' not found in authentication provider` | Ensure the user exists in the configured Active Directory or LDAP provider and that the domain prefix matches the authentication source configuration. |
+    | `Error: Mapping rule already exists for source 'CORP\jsmith'` | Delete the existing rule with `isi auth mappings rules delete <rule_id>` before creating a duplicate mapping. |
 ### Identity Mapping Modes
 
 | Mode | Behaviour |
@@ -692,8 +712,10 @@ Translate Windows names: true
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid zone name 'ProdZone'`** — Verify the zone exists with `isi zone zones list` and use the correct zone name.
-    **`Error: Permission denied`** — Ensure your user account has administrative privileges or is part of the appropriate role group.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid zone name 'ProdZone'` | Verify the zone exists with `isi zone zones list` and use the correct zone name. |
+    | `Error: Permission denied` | Ensure your user account has administrative privileges or is part of the appropriate role group. |
 ---
 
 ## Kerberos — NFSv4 and SMB
@@ -737,9 +759,11 @@ Kerberos Realm: CORP.EXAMPLE.COM
 ```
 
 !!! warning "Common errors"
-    **`Error: Export <export_id> not found`** — Verify the export ID exists with `isi nfs exports list` and use the correct numeric ID.
-    **`Error: Authentication provider CORP.EXAMPLE.COM is not configured`** — Ensure the Active Directory provider is joined and enabled with `isi auth ads view`.
-    **`Error: Cannot modify export while it is in use`** — Unmount all clients from the export before applying security flavor changes.
+    | Error | Fix |
+    |---|---|
+    | `Error: Export <export_id> not found` | Verify the export ID exists with `isi nfs exports list` and use the correct numeric ID. |
+    | `Error: Authentication provider CORP.EXAMPLE.COM is not configured` | Ensure the Active Directory provider is joined and enabled with `isi auth ads view`. |
+    | `Error: Cannot modify export while it is in use` | Unmount all clients from the export before applying security flavor changes. |
 NFS client requirements for Kerberos:
 - Client must have a valid Kerberos ticket (`kinit user@CORP.EXAMPLE.COM`).
 - The NFS client's hostname must resolve forward and reverse in DNS.
@@ -771,9 +795,11 @@ Signing required: yes
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid value for --server-signing. Valid values are: disabled, enabled, required`** — Use only `disabled`, `enabled`, or `required` as the signing parameter value.
-    **`Error: Share '<share_name>' does not exist`** — Verify the exact share name with `isi smb shares list` before running the modify command.
-    **`Error: Zone 'ProdZone' not found`** — Confirm the zone name exists by running `isi zones list` and use the correct zone identifier.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid value for --server-signing. Valid values are: disabled, enabled, required` | Use only `disabled`, `enabled`, or `required` as the signing parameter value. |
+    | `Error: Share '<share_name>' does not exist` | Verify the exact share name with `isi smb shares list` before running the modify command. |
+    | `Error: Zone 'ProdZone' not found` | Confirm the zone name exists by running `isi zones list` and use the correct zone identifier. |
 ---
 
 ## Authentication Provider Order
@@ -808,8 +834,10 @@ lsa-local-provider:local                ProdZone    Yes
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid zone name 'ProdZone'`** — Verify the zone exists with `isi zone zones list` and use the correct zone name.
-    **`Error: Provider 'lsa-activedirectory-provider:CORP.EXAMPLE.COM' not found`** — Ensure the provider is created and available before assigning it with `isi auth providers list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid zone name 'ProdZone'` | Verify the zone exists with `isi zone zones list` and use the correct zone name. |
+    | `Error: Provider 'lsa-activedirectory-provider:CORP.EXAMPLE.COM' not found` | Ensure the provider is created and available before assigning it with `isi auth providers list`. |
 ---
 
 ## Multi-Zone Authentication Reference
@@ -866,9 +894,11 @@ NTP Servers:
 ```
 
 !!! warning "Common errors"
-    **`Error: NTP server 'ntp.example.com' already exists`** — Use `isi ntp servers list` to verify the server isn't already configured, or use a different hostname.
-    **`Error: ntpq: command not found`** — Install the ntp client package with `apt-get install ntp` or `yum install ntp` depending on your OS.
-    **`Error: Permission denied`** — Run the command with `sudo` or ensure your user account has cluster administrator privileges.
+    | Error | Fix |
+    |---|---|
+    | `Error: NTP server 'ntp.example.com' already exists` | Use `isi ntp servers list` to verify the server isn't already configured, or use a different hostname. |
+    | `Error: ntpq: command not found` | Install the ntp client package with `apt-get install ntp` or `yum install ntp` depending on your OS. |
+    | `Error: Permission denied` | Run the command with `sudo` or ensure your user account has cluster administrator privileges. |
 Ensure all NFS clients with Kerberos mounts also use the same NTP source as the cluster and the domain controllers.
 ---
 

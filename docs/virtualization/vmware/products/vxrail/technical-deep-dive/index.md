@@ -127,9 +127,11 @@ tmpfs           32G  1.2G   31G   4% /dev/shm
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip certificate verification, or import the VxRail certificate into your system trust store.
-    **`Unit vmware-marvin.service not found.`** — Verify the VxRail management VM is running and the vmware-marvin service is installed with `systemctl list-units | grep marvin`.
-    **`Failed to get D-Bus connection: Operation not permitted`** — Run the command with `sudo` or as root, as systemctl requires elevated privileges to query service status.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip certificate verification, or import the VxRail certificate into your system trust store. |
+    | `Unit vmware-marvin.service not found.` | Verify the VxRail management VM is running and the vmware-marvin service is installed with `systemctl list-units | grep marvin`. |
+    | `Failed to get D-Bus connection: Operation not permitted` | Run the command with `sudo` or as root, as systemctl requires elevated privileges to query service status. |
 ## Common Failure Points
 
 - LCM pre-check failure

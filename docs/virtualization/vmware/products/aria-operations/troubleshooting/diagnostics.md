@@ -170,7 +170,9 @@ System clock synchronized: yes
 ```
 
 !!! warning "Common errors"
-    **`cluster-mgmt-cli: command not found`** — Verify you are logged into the vROps master node and the cluster management tools are installed in the PATH, or use the full path `/opt/vmware/vcops/bin/cluster-mgmt-cli`.
+    | Error | Fix |
+    |---|---|
+    | `cluster-mgmt-cli: command not found` | Verify you are logged into the vROps master node and the cluster management tools are installed in the PATH, or use the full path `/opt/vmware/vcops/bin/cluster-mgmt-cli`. |
     **`systemctl status vmware-vcops` returns `inactive (dead
 ---
 
@@ -251,9 +253,11 @@ Active alerts: 247
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the vROps certificate into your system trust store.
-    **`{"error":"Invalid token","status":401}`** — Verify the admin password is correct and the LOCAL authentication source is configured; re-run the token acquisition command.
-    **`jq: command not found`** — Install `python3-json` or use the provided `python3 -m json.tool` alternative instead of piping to `jq`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the vROps certificate into your system trust store. |
+    | `{"error":"Invalid token","status":401}` | Verify the admin password is correct and the LOCAL authentication source is configured; re-run the token acquisition command. |
+    | `jq: command not found` | Install `python3-json` or use the provided `python3 -m json.tool` alternative instead of piping to `jq`. |
 ---
 
 ## Step 3 — Inspect log files
@@ -295,9 +299,11 @@ VMware vCenter Adapter [vCenter-prod] - Retry attempt 3 of 5 scheduled for 2024-
 ```
 
 !!! warning "Common errors"
-    **`OutOfMemoryError: Java heap space`** — Increase JVM heap allocation in VAMI → Administration → System Configuration → JVM Memory Settings (typically 16GB minimum for production vROps nodes).
-    **`Connection timeout after 30000ms`** — Verify network connectivity to the target adapter endpoint, check firewall rules, and confirm the adapter credential account has not been locked or expired.
-    **`Certificate validation failed for adapter: PKIX path building failed`** — Import the missing or self-signed certificate into the vROps truststore using `keytool` or disable certificate verification in the adapter configuration if using internal CAs.
+    | Error | Fix |
+    |---|---|
+    | `OutOfMemoryError: Java heap space` | Increase JVM heap allocation in VAMI → Administration → System Configuration → JVM Memory Settings (typically 16GB minimum for production vROps nodes). |
+    | `Connection timeout after 30000ms` | Verify network connectivity to the target adapter endpoint, check firewall rules, and confirm the adapter credential account has not been locked or expired. |
+    | `Certificate validation failed for adapter: PKIX path building failed` | Import the missing or self-signed certificate into the vROps truststore using `keytool` or disable certificate verification in the adapter configuration if using internal CAs. |
 ---
 
 ## Step 4 — Check adapter collection status
@@ -344,9 +350,11 @@ grep "Start collection" /var/log/vmware/vcops/collector.log | \
 ```
 
 !!! warning "Common errors"
-    **`Connection timeout to <IP>:443`** — Verify network connectivity and firewall rules between the vROps collector and vCenter, then click "Test Connection" in the UI to retry.
-    **`End collection - FAILED (0 metrics)`** — Check adapter credentials in Administration → Solutions → Adapter Instances and re-enter the vCenter password if it was recently changed.
-    **`grep: /var/log/vmware/vcops/collector.log: No such file or directory`** — Verify the vROps collector service is running with `systemctl status vmware-vcops-collector` and check the correct log path for your vROps version.
+    | Error | Fix |
+    |---|---|
+    | `Connection timeout to <IP>:443` | Verify network connectivity and firewall rules between the vROps collector and vCenter, then click "Test Connection" in the UI to retry. |
+    | `End collection - FAILED (0 metrics)` | Check adapter credentials in Administration → Solutions → Adapter Instances and re-enter the vCenter password if it was recently changed. |
+    | `grep: /var/log/vmware/vcops/collector.log: No such file or directory` | Verify the vROps collector service is running with `systemctl status vmware-vcops-collector` and check the correct log path for your vROps version. |
 ---
 
 ## Step 5 — Check vROps cluster node health
@@ -394,9 +402,11 @@ Jan 10 14:26:45 vrops-node-01 vmware-vcops[2847]: [INFO] Service ready to accept
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host 192.168.1.102 port 22 refused`** — Verify the data node IP is correct and SSH is enabled; check firewall rules allowing admin access on port 22.
-    **`chronyc: command not found`** — Replace `chronyc` with `ntpq -p` or `timedatectl` depending on the NTP daemon installed on that node.
-    **`systemctl: command not found`** — Use `service vmware-vcops restart` instead if systemd is not available on this vROps deployment.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host 192.168.1.102 port 22 refused` | Verify the data node IP is correct and SSH is enabled; check firewall rules allowing admin access on port 22. |
+    | `chronyc: command not found` | Replace `chronyc` with `ntpq -p` or `timedatectl` depending on the NTP daemon installed on that node. |
+    | `systemctl: command not found` | Use `service vmware-vcops restart` instead if systemd is not available on this vROps deployment. |
 ---
 
 ## Step 6 — Check disk space and performance
@@ -444,8 +454,10 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`find: '/proc': Permission denied`** — Run the core dump search with `sudo` or redirect stderr with `2>/dev/null` (already included in the command).
-    **`du: cannot access '/storage/db/casa/': No such file or directory`** — Verify the CASA analytics store path exists with `ls -la /storage/db/` and adjust the path if using a different vROps version.
+    | Error | Fix |
+    |---|---|
+    | `find: '/proc': Permission denied` | Run the core dump search with `sudo` or redirect stderr with `2>/dev/null` (already included in the command). |
+    | `du: cannot access '/storage/db/casa/': No such file or directory` | Verify the CASA analytics store path exists with `ls -la /storage/db/` and adjust the path if using a different vROps version. |
 ---
 
 ## Step 7 — Collect support bundle for VMware SR
@@ -489,8 +501,10 @@ vcops-support-20240115-143218.zip                    100%  847MB   2.3MB/s   06:
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and ensure the admin user has SSH access enabled on the vROps master node.
-    **`scp: /tmp/vcops-support-*.zip: No such file or directory`** — Confirm the bundle generation completed successfully by checking `/tmp/` directly with `ssh admin@<vrops-master-ip> ls -lh /tmp/vcops-support-*.zip`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and ensure the admin user has SSH access enabled on the vROps master node. |
+    | `scp: /tmp/vcops-support-*.zip: No such file or directory` | Confirm the bundle generation completed successfully by checking `/tmp/` directly with `ssh admin@<vrops-master-ip> ls -lh /tmp/vcops-support-*.zip`. |
 ---
 
 ## Log locations

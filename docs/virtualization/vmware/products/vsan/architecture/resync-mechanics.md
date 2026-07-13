@@ -75,9 +75,11 @@ Current throughput: 12.5 MB/s
 ```
 
 !!! warning "Common errors"
-    **`Error: VSAN cluster is not enabled on this host`** — Verify VSAN is enabled on all hosts in the cluster using `esxcli vsan cluster get`.
-    **`Error: Rebalance operation already in progress`** — Wait for the current rebalance to complete or cancel it with `esxcli vsan cluster rebalance stop` before starting a new one.
-    **`Error: Insufficient resources to start rebalance`** — Ensure all hosts in the cluster are in maintenance mode is not active and have adequate free capacity (minimum 30% recommended).
+    | Error | Fix |
+    |---|---|
+    | `Error: VSAN cluster is not enabled on this host` | Verify VSAN is enabled on all hosts in the cluster using `esxcli vsan cluster get`. |
+    | `Error: Rebalance operation already in progress` | Wait for the current rebalance to complete or cancel it with `esxcli vsan cluster rebalance stop` before starting a new one. |
+    | `Error: Insufficient resources to start rebalance` | Ensure all hosts in the cluster are in maintenance mode is not active and have adequate free capacity (minimum 30% recommended). |
 ### Trigger 4 — Configuration Changes
 
 Certain cluster-wide changes force a full or partial resync of all objects:
@@ -185,9 +187,11 @@ Resync Queue Summary:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan debug resync`** — Verify vSAN is licensed and enabled on the host with `esxcli vsan cluster get`, and ensure you are running ESXi 6.5 or later.
-    **`Error: Permission denied`** — Run the command with root privileges or ensure your user account has vSAN administrator role assigned in vCenter.
-    **`Error: VSAN is not enabled on this host`** — Enable vSAN on the host through vCenter UI or confirm the host is part of an active vSAN cluster with `esxcli vsan cluster get`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan debug resync` | Verify vSAN is licensed and enabled on the host with `esxcli vsan cluster get`, and ensure you are running ESXi 6.5 or later. |
+    | `Error: Permission denied` | Run the command with root privileges or ensure your user account has vSAN administrator role assigned in vCenter. |
+    | `Error: VSAN is not enabled on this host` | Enable vSAN on the host through vCenter UI or confirm the host is part of an active vSAN cluster with `esxcli vsan cluster get`. |
 ---
 
 ## The Throttle: Trading Speed for VM Stability
@@ -213,8 +217,10 @@ Current resync throttle setting: 100 IOPS
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan debug resync`** — Verify the ESXi host is vSAN-enabled and running vSAN 6.6 or later; check with `esxcli vsan cluster get`.
-    **`Error: Invalid --throttle value: 500. Must be between 0 and 100000`** — Adjust the throttle value to fall within the valid range (typically 0–100000 IOPS depending on vSAN version).
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan debug resync` | Verify the ESXi host is vSAN-enabled and running vSAN 6.6 or later; check with `esxcli vsan cluster get`. |
+    | `Error: Invalid --throttle value: 500. Must be between 0 and 100000` | Adjust the throttle value to fall within the valid range (typically 0–100000 IOPS depending on vSAN version). |
 **Recommended schedule:**
 
 | Time | Throttle | Rationale |
@@ -260,8 +266,10 @@ Resync UUID                          Object UUID                      Type  Prog
 ```
 
 !!! warning "Common errors"
-    **`error: Unknown command or namespace`** — Ensure you are running this command on an ESXi host with vSAN enabled; the vsan namespace may not be available on non-vSAN clusters.
-    **`error: Unable to connect to the local vSAN cluster`** — Verify the host is part of an active vSAN cluster and has network connectivity to other cluster members.
+    | Error | Fix |
+    |---|---|
+    | `error: Unknown command or namespace` | Ensure you are running this command on an ESXi host with vSAN enabled; the vsan namespace may not be available on non-vSAN clusters. |
+    | `error: Unable to connect to the local vSAN cluster` | Verify the host is part of an active vSAN cluster and has network connectivity to other cluster members. |
 Delta-sync is why a host that returns from a short reboot syncs in minutes, while a replacement disk might take hours — even if the object sizes are identical.
 
 ---
@@ -295,5 +303,7 @@ RemoteSyncErrors: 0
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace vsan debug resync`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN status.
-    **`grep: (standard input) is empty`** — The command executed but returned no results; this typically means no active remote resync is occurring, which is normal during steady state.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace vsan debug resync` | Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN status. |
+    | `grep: (standard input) is empty` | The command executed but returned no results; this typically means no active remote resync is occurring, which is normal during steady state. |

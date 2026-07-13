@@ -153,9 +153,11 @@ host-3d0g5f4e2h7g8i6d          m5.2xlarge      RUNNING
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID format`** — Verify that `$ENV_ID` is set correctly with `echo $ENV_ID` and matches the format `env-xxxxxxxxxxxxxxxx`.
-    **`An error occurred (UnauthorizedOperation) when calling the DescribeInstanceStatus operation: You are not authorized to perform: ec2:DescribeInstanceStatus`** — Add `ec2:DescribeInstanceStatus` permission to your IAM user/role policy.
-    **`date: illegal time format`** — Use `date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ` on Linux systems instead of the BSD `-v` flag.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID format` | Verify that `$ENV_ID` is set correctly with `echo $ENV_ID` and matches the format `env-xxxxxxxxxxxxxxxx`. |
+    | `An error occurred (UnauthorizedOperation) when calling the DescribeInstanceStatus operation: You are not authorized to perform: ec2:DescribeInstanceStatus` | Add `ec2:DescribeInstanceStatus` permission to your IAM user/role policy. |
+    | `date: illegal time format` | Use `date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ` on Linux systems instead of the BSD `-v` flag. |
 For networking issues (HCX tunnel down, BGP failure), also include:
 
 ```bash
@@ -222,9 +224,11 @@ aws directconnect describe-connections \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The filter 'vpc-id' is invalid`** — Verify the filter name is correct; use `Name=vpc-id` (not `vpcId`) and ensure `$EVS_VPC_ID` variable is set with `echo $EVS_VPC_ID`.
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_PROFILE`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` environment variables.
-    **`An error occurred (InvalidSubnetID.NotFound) when calling the DescribeNetworkInterfaces operation: The subnet ID 'subnet-xxx' does not exist`** — Confirm the subnet ID in `$EVS_MGMT_SUBNET_ID` exists in the correct region with `aws ec2 describe-subnets --region <region>`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The filter 'vpc-id' is invalid` | Verify the filter name is correct; use `Name=vpc-id` (not `vpcId`) and ensure `$EVS_VPC_ID` variable is set with `echo $EVS_VPC_ID`. |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_PROFILE`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` environment variables. |
+    | `An error occurred (InvalidSubnetID.NotFound) when calling the DescribeNetworkInterfaces operation: The subnet ID 'subnet-xxx' does not exist` | Confirm the subnet ID in `$EVS_MGMT_SUBNET_ID` exists in the correct region with `aws ec2 describe-subnets --region <region>`. |
 ## VMware Support Case Requirements
 
 ```bash
@@ -269,9 +273,11 @@ curl -sk -u "$SDDC_USER:$SDDC_PASS" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present; verify NSX_URL and NSX_PASSWORD environment variables are set correctly).
-    **`jq: command not found`** — Install python3-json or use `python3 -m json.tool` instead of piping to `jq` for JSON formatting.
-    **`curl: (7) Failed to connect to sddc-manager.vcf.internal port 443: Name or service not known`** — Verify SDDC Manager hostname resolves and is reachable from the management network; check `/etc/hosts` or DNS configuration.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification (already present; verify NSX_URL and NSX_PASSWORD environment variables are set correctly). |
+    | `jq: command not found` | Install python3-json or use `python3 -m json.tool` instead of piping to `jq` for JSON formatting. |
+    | `curl: (7) Failed to connect to sddc-manager.vcf.internal port 443: Name or service not known` | Verify SDDC Manager hostname resolves and is reachable from the management network; check `/etc/hosts` or DNS configuration. |
 Additional data for VMware support cases:
 
 ```powershell
@@ -348,9 +354,11 @@ CloudTrail export attached. EC2 instance status attached."
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ValidationException) when calling the CreateCase operation: Invalid severity code 'critical' for service 'aws-elastic-vmware-service'`** — Use `--severity-code "urgent"` instead, as EVS support cases require the "urgent" severity level.
-    **`An error occurred (AccessDeniedException) when calling the CreateCase operation: User is not authorized to perform: support:CreateCase`** — Attach the `AWSSupportAccess` IAM policy to the user or role executing this command.
-    **`An error occurred (InvalidParameterException) when calling the CreateCase operation: Service code 'aws-elastic-vmware-service' is not valid`** — Verify the correct service code with `aws support describe-services --query 'services[?name==`VMware Cloud on AWS`]'` and use the returned serviceCode value.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ValidationException) when calling the CreateCase operation: Invalid severity code 'critical' for service 'aws-elastic-vmware-service'` | Use `--severity-code "urgent"` instead, as EVS support cases require the "urgent" severity level. |
+    | `An error occurred (AccessDeniedException) when calling the CreateCase operation: User is not authorized to perform: support:CreateCase` | Attach the `AWSSupportAccess` IAM policy to the user or role executing this command. |
+    | `An error occurred (InvalidParameterException) when calling the CreateCase operation: Service code 'aws-elastic-vmware-service' is not valid` | Verify the correct service code with `aws support describe-services --query 'services[?name==`VMware Cloud on AWS`]'` and use the returned serviceCode value. |
 Expected response times by support tier:
 
 | Plan | Critical | High | Medium |

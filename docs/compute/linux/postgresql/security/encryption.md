@@ -56,9 +56,11 @@ ssl
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "db.example.com" (10.45.67.89), port 5432 failed: SSL connection error: certificate verify failed`** — Ensure the PostgreSQL server certificate is signed by a trusted CA or add `sslmode=require` without verification only for testing (use `sslcert` and `sslkey` parameters for production client certificates).
-    **`psql: error: FATAL: no pg_hba.conf entry for host "10.45.67.89", user "appuser", database "app_prod", SSL off`** — Add an SSL-enabled entry to pg_hba.conf (e.g., `hostssl app_prod appuser 10.45.67.89/32 md5`) and reload the PostgreSQL configuration with `SELECT pg_reload_conf();`.
-    **`ERROR: relation "pg_stat_ssl" does not exist`** — Verify PostgreSQL version is 10+ (pg_stat_ssl was added in PostgreSQL 10) and that the `ssl` parameter is enabled in postgresql.conf with `ssl = on`.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "db.example.com" (10.45.67.89), port 5432 failed: SSL connection error: certificate verify failed` | Ensure the PostgreSQL server certificate is signed by a trusted CA or add `sslmode=require` without verification only for testing (use `sslcert` and `sslkey` parameters for production client certificates). |
+    | `psql: error: FATAL: no pg_hba.conf entry for host "10.45.67.89", user "appuser", database "app_prod", SSL off` | Add an SSL-enabled entry to pg_hba.conf (e.g., `hostssl app_prod appuser 10.45.67.89/32 md5`) and reload the PostgreSQL configuration with `SELECT pg_reload_conf();`. |
+    | `ERROR: relation "pg_stat_ssl" does not exist` | Verify PostgreSQL version is 10+ (pg_stat_ssl was added in PostgreSQL 10) and that the `ssl` parameter is enabled in postgresql.conf with `ssl = on`. |
 ## Require SSL for All Connections
 
 ```text

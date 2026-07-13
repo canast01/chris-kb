@@ -143,9 +143,11 @@ CRITICAL: One or more relationships are unhealthy or exceed the critical lag thr
 ```
 
 !!! warning "Common errors"
-    **`ERROR: sshpass is required (brew install hudochenkov/sshpass/sshpass)`** — Install sshpass via your package manager (apt-get install sshpass on Linux, or brew install hudochenkov/sshpass/sshpass on macOS).
-    **`Permission denied (publickey,password).`** — Verify ONTAP_USER and ONTAP_PASS are correct and the user has cluster admin or snapmirror admin privileges.
-    **`ssh: Could not resolve hostname dst-cluster.example.com: Name or service not known`** — Ensure ONTAP_HOST is set to a resolvable FQDN or IP address of the destination cluster management interface.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: sshpass is required (brew install hudochenkov/sshpass/sshpass)` | Install sshpass via your package manager (apt-get install sshpass on Linux, or brew install hudochenkov/sshpass/sshpass on macOS). |
+    | `Permission denied (publickey,password).` | Verify ONTAP_USER and ONTAP_PASS are correct and the user has cluster admin or snapmirror admin privileges. |
+    | `ssh: Could not resolve hostname dst-cluster.example.com: Name or service not known` | Ensure ONTAP_HOST is set to a resolvable FQDN or IP address of the destination cluster management interface. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -214,9 +216,11 @@ Monitor completed successfully. Next check in 300 seconds.
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused`** — Verify the ONTAP management IP is correct and the cluster API is accessible on port 443.
-    **`Error: Invalid credentials for user 'admin'`** — Confirm ONTAP_USER and ONTAP_PASS environment variables match the cluster admin account credentials.
-    **`bash: sm_lag_monitor.sh: No such file or directory`** — Ensure the script exists in the current directory (/mnt/c/Users/YourName/Desktop) or provide the full path to the script.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused` | Verify the ONTAP management IP is correct and the cluster API is accessible on port 443. |
+    | `Error: Invalid credentials for user 'admin'` | Confirm ONTAP_USER and ONTAP_PASS environment variables match the cluster admin account credentials. |
+    | `bash: sm_lag_monitor.sh: No such file or directory` | Ensure the script exists in the current directory (/mnt/c/Users/YourName/Desktop) or provide the full path to the script. |
 **What you should see**
 
 A table listing every SnapMirror relationship with source path, destination path, lag in minutes, healthy flag, and a colour-coded status: green OK, yellow WARNING, red CRITICAL. A summary line at the bottom shows the overall worst state.
@@ -319,9 +323,11 @@ Proceed with DR failover? This will make destination volumes read-write. [yes/NO
 ```
 
 !!! warning "Common errors"
-    **`ERROR: sshpass is required.`** — Install sshpass with `apt-get install sshpass` (Ubuntu/Debian) or `yum install sshpass` (RHEL/CentOS).
-    **`Permission denied (publickey,password).`** — Verify ONTAP_USER and ONTAP_PASS are correct and the user has SSH access to the destination cluster.
-    **`ERROR: Failed to break <destination-path> — manual intervention required`** — Check cluster connectivity and ensure the SnapMirror relationship exists; manually run `snapmirror break -destination-path <path> -force` on the destination cluster.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: sshpass is required.` | Install sshpass with `apt-get install sshpass` (Ubuntu/Debian) or `yum install sshpass` (RHEL/CentOS). |
+    | `Permission denied (publickey,password).` | Verify ONTAP_USER and ONTAP_PASS are correct and the user has SSH access to the destination cluster. |
+    | `ERROR: Failed to break <destination-path> — manual intervention required` | Check cluster connectivity and ensure the SnapMirror relationship exists; manually run `snapmirror break -destination-path <path> -force` on the destination cluster. |
 ---
 
 ## Relationship Health Report (Perl)

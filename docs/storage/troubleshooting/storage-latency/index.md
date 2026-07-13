@@ -134,9 +134,11 @@ FA-3D:0  (Online)  Link Speed: 8 Gbps   Utilization: 45%
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI Error: Cannot connect to the Symmetrix array (000123)`** — Verify the array SID is correct and the SYMCLI server daemon is running on the management host.
-    **`bash: symstat: command not found`** — Install the EMC SYMCLI package or add the SYMCLI bin directory to your PATH environment variable.
-    **`SYMCLI Error: Insufficient privileges to query array`** — Ensure your user account has appropriate SYMCLI permissions or run the command with sudo.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI Error: Cannot connect to the Symmetrix array (000123)` | Verify the array SID is correct and the SYMCLI server daemon is running on the management host. |
+    | `bash: symstat: command not found` | Install the EMC SYMCLI package or add the SYMCLI bin directory to your PATH environment variable. |
+    | `SYMCLI Error: Insufficient privileges to query array` | Ensure your user account has appropriate SYMCLI permissions or run the command with sudo. |
 ### Unisphere for PowerMax — Key Performance Views
 
 | View | Location in Unisphere | What to Check |
@@ -221,9 +223,11 @@ PWWN: 50:00:14:40:5a:2b:c1:e0  NWWN: 50:00:14:40:5a:2b:c1:e1  State: Online
 ```
 
 !!! warning "Common errors"
-    **`multipathd: command not found`** — Install device-mapper-multipath package with `apt-get install multipath-tools` or `yum install device-mapper-multipath`.
-    **`reinstate path sdd: path does not exist`** — Verify the path name with `multipathd show paths` and ensure the device is visible to the kernel before reinstatement.
-    **`systemctl status multipathd` shows inactive`** — Start the multipath daemon with `systemctl start multipathd && systemctl enable multipathd`.
+    | Error | Fix |
+    |---|---|
+    | `multipathd: command not found` | Install device-mapper-multipath package with `apt-get install multipath-tools` or `yum install device-mapper-multipath`. |
+    | `reinstate path sdd: path does not exist` | Verify the path name with `multipathd show paths` and ensure the device is visible to the kernel before reinstatement. |
+    | `systemctl status multipathd` shows inactive` | Start the multipath daemon with `systemctl start multipathd && systemctl enable multipathd`. |
 ---
 
 ## Snapshot and Replication Impact on Latency
@@ -282,9 +286,11 @@ Journal Utilization: 87%
 ```
 
 !!! warning "Common errors"
-    **`Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet`** — Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the command.
-    **`volume snapshot show: command not found`** — SSH into the ONTAP cluster management IP and authenticate with valid credentials before running ONTAP commands.
-    **`symsnap: command not found`** — Ensure the EMC Solutions Enabler (SE) package is installed and the `$PATH` includes `/opt/emc/SYMCLI/bin`.
+    | Error | Fix |
+    |---|---|
+    | `Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet` | Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the command. |
+    | `volume snapshot show: command not found` | SSH into the ONTAP cluster management IP and authenticate with valid credentials before running ONTAP commands. |
+    | `symsnap: command not found` | Ensure the EMC Solutions Enabler (SE) package is installed and the `$PATH` includes `/opt/emc/SYMCLI/bin`. |
 ---
 
 ## Storage Controller CPU and Cache Hit Rate
@@ -329,9 +335,11 @@ node01> statistics show -object aggr -instance aggr0 -counter total_ops,read_lat
 ```
 
 !!! warning "Common errors"
-    **`Error: object "wafl" is not valid`** — Verify the object name is correct for your ONTAP version; use `statistics show -objects` to list available objects.
-    **`Symmetrix ID 000123 not found`** — Confirm the array SID with `symcfg list` and ensure the Symmetrix is online and accessible.
-    **`statistics: unknown counter "read_latency"`** — Use `statistics show -object aggr -fields` to verify the exact counter name for your ONTAP release.
+    | Error | Fix |
+    |---|---|
+    | `Error: object "wafl" is not valid` | Verify the object name is correct for your ONTAP version; use `statistics show -objects` to list available objects. |
+    | `Symmetrix ID 000123 not found` | Confirm the array SID with `symcfg list` and ensure the Symmetrix is online and accessible. |
+    | `statistics: unknown counter "read_latency"` | Use `statistics show -object aggr -fields` to verify the exact counter name for your ONTAP release. |
 ---
 
 ## Queue Depth Analysis
@@ -373,9 +381,11 @@ Device: naa.6006016011602d00abcd
 ```
 
 !!! warning "Common errors"
-    **`cat: /sys/block/sdb/queue/nr_requests: No such file or directory`** — Verify the device exists with `lsblk` and use the correct device name (e.g., `/sys/block/sda` instead of `/sys/block/sdb`).
-    **`Error: Unknown option set for module lpfc`** — Check the exact parameter name with `modinfo lpfc | grep parm` and ensure the module is loaded before setting parameters.
-    **`Device naa.6006016011602d00abcd not found`** — Run `esxcli storage core device list` to retrieve the correct NAA identifier for your storage device.
+    | Error | Fix |
+    |---|---|
+    | `cat: /sys/block/sdb/queue/nr_requests: No such file or directory` | Verify the device exists with `lsblk` and use the correct device name (e.g., `/sys/block/sda` instead of `/sys/block/sdb`). |
+    | `Error: Unknown option set for module lpfc` | Check the exact parameter name with `modinfo lpfc | grep parm` and ensure the module is loaded before setting parameters. |
+    | `Device naa.6006016011602d00abcd not found` | Run `esxcli storage core device list` to retrieve the correct NAA identifier for your storage device. |
 ---
 
 ## Common Causes and Fixes

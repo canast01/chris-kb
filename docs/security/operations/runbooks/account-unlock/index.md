@@ -110,8 +110,10 @@ Login Failures after reset:
 ```
 
 !!! warning "Common errors"
-    **`pam_tally2: User not known`** — Verify the username exists with `id <username>` before running the command.
-    **`faillock: user '<username>' does not exist in /var/log/faillog`** — The user has no failed login attempts recorded; check spelling or confirm the user has attempted login.
+    | Error | Fix |
+    |---|---|
+    | `pam_tally2: User not known` | Verify the username exists with `id <username>` before running the command. |
+    | `faillock: user '<username>' does not exist in /var/log/faillog` | The user has no failed login attempts recorded; check spelling or confirm the user has attempted login. |
 ## Checklist
 
 - [ ] Requester identity confirmed

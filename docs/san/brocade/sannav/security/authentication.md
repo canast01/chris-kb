@@ -42,9 +42,11 @@ SANnav restart completed successfully
 ```
 
 !!! warning "Common errors"
-    **`keytool error: java.lang.Exception: Input not an X.509 certificate`** — Verify the CA cert is in PEM format (not DER) and contains the correct `-----BEGIN CERTIFICATE-----` header.
-    **`sudo: keytool: command not found`** — Run the keytool command with the full path `/opt/sannav/jre/bin/keytool` instead of relying on PATH.
-    **`Permission denied (publickey,password)`** — Ensure the admin user's SSH key is configured or password authentication is enabled on the SANnav appliance.
+    | Error | Fix |
+    |---|---|
+    | `keytool error: java.lang.Exception: Input not an X.509 certificate` | Verify the CA cert is in PEM format (not DER) and contains the correct `-----BEGIN CERTIFICATE-----` header. |
+    | `sudo: keytool: command not found` | Run the keytool command with the full path `/opt/sannav/jre/bin/keytool` instead of relying on PATH. |
+    | `Permission denied (publickey,password)` | Ensure the admin user's SSH key is configured or password authentication is enabled on the SANnav appliance. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

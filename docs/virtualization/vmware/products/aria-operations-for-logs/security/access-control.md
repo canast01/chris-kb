@@ -92,9 +92,11 @@ curl -sk -u 'svc-vrli-api:<password>' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present in example) or import the CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to vrli-prod-01.example.local port 443: Connection refused`** — Verify the VRLI hostname/IP is correct, the service is running (`systemctl status vrli` on the appliance), and network connectivity exists.
-    **`{"error":"Unauthorized","statusCode":401}`** — Confirm the password is correct and the service account `svc-vrli-api` exists; reset credentials in VRLI Administration > Users if needed.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present in example) or import the CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to vrli-prod-01.example.local port 443: Connection refused` | Verify the VRLI hostname/IP is correct, the service is running (`systemctl status vrli` on the appliance), and network connectivity exists. |
+    | `{"error":"Unauthorized","statusCode":401}` | Confirm the password is correct and the service account `svc-vrli-api` exists; reset credentials in VRLI Administration > Users if needed. |
 For service accounts: assign the minimum required role — use the `User` role for scripts that only query logs; use the `Admin` role for scripts that create or modify alert definitions.
 
 ---
@@ -127,8 +129,10 @@ grep -i "admin\|user\|alert\|content" /var/log/loginsight/runtime.log | \
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/loginsight/runtime.log: No such file or directory`** — Verify the Aria Operations for Logs service is running with `systemctl status loginsight` and confirm the correct log path for your deployment version.
-    **`grep: /var/log/loginsight/runtime.log: Permission denied`** — Run the command with `sudo` or ensure your user is in the `loginsight` group with `groups $USER`.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/loginsight/runtime.log: No such file or directory` | Verify the Aria Operations for Logs service is running with `systemctl status loginsight` and confirm the correct log path for your deployment version. |
+    | `grep: /var/log/loginsight/runtime.log: Permission denied` | Run the command with `sudo` or ensure your user is in the `loginsight` group with `groups $USER`. |
 Forward these logs to a SIEM or dedicated audit log store by configuring the appliance's syslog output:
 
 ```bash
@@ -143,8 +147,10 @@ systemctl restart rsyslog
 ```
 
 !!! warning "Common errors"
-    **`Permission denied`** — Run the commands with `sudo` or as the root user.
-    **`Unit rsyslog.service not found.`** — Verify rsyslog is installed with `apt install rsyslog` (Debian/Ubuntu) or `yum install rsyslog` (RHEL/CentOS), then retry the restart.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied` | Run the commands with `sudo` or as the root user. |
+    | `Unit rsyslog.service not found.` | Verify rsyslog is installed with `apt install rsyslog` (Debian/Ubuntu) or `yum install rsyslog` (RHEL/CentOS), then retry the restart. |
 ## See also
 
 - [Aria Ops for Logs — Authentication](../authentication/)

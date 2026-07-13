@@ -48,8 +48,10 @@ namespace/logging labeled
 ```
 
 !!! warning "Common errors"
-    **`error: namespaces "production" not found`** — Verify the namespace exists with `kubectl get namespaces` before applying labels.
-    **`error: label keys and values must be alphanumeric or -._`** — Ensure label keys use only alphanumeric characters, hyphens, dots, and underscores; the pod-security.kubernetes.io/ prefix is valid but custom labels cannot contain forward slashes outside the domain prefix.
+    | Error | Fix |
+    |---|---|
+    | `error: namespaces "production" not found` | Verify the namespace exists with `kubectl get namespaces` before applying labels. |
+    | `error: label keys and values must be alphanumeric or -._` | Ensure label keys use only alphanumeric characters, hyphens, dots, and underscores; the pod-security.kubernetes.io/ prefix is valid but custom labels cannot contain forward slashes outside the domain prefix. |
 ---
 
 ## Default Deny Network Policy
@@ -250,8 +252,10 @@ Entering debugger. Type 'help' for commands.
 ```
 
 !!! warning "Common errors"
-    **`error: unable to find node "<node-name>"`** — Verify the exact node name with `kubectl get nodes` and ensure you're querying the correct cluster context.
-    **`error: image "busybox" not found`** — Specify a valid debug image available in your registry, such as `--image=gcr.io/gke-release/gke-metrics-agent:latest` or check your cluster's image pull policy.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to find node "<node-name>"` | Verify the exact node name with `kubectl get nodes` and ensure you're querying the correct cluster context. |
+    | `error: image "busybox" not found` | Specify a valid debug image available in your registry, such as `--image=gcr.io/gke-release/gke-metrics-agent:latest` or check your cluster's image pull policy. |
 ---
 
 ## Rotate kubeconfig Credentials
@@ -281,9 +285,11 @@ Current context: supervisor.example.local
 ```
 
 !!! warning "Common errors"
-    **`Error: cluster 'my-cluster' not found`** — Verify the cluster name matches output from `tanzu cluster list` and you are in the correct management cluster context.
-    **`Error: unable to connect to supervisor.example.local: no such host`** — Ensure the supervisor hostname is resolvable and correct; check DNS or use the IP address instead.
-    **`Error: invalid credentials for user@corp.local`** — Confirm the username and domain are correct and the OIDC provider is reachable from the cluster network.
+    | Error | Fix |
+    |---|---|
+    | `Error: cluster 'my-cluster' not found` | Verify the cluster name matches output from `tanzu cluster list` and you are in the correct management cluster context. |
+    | `Error: unable to connect to supervisor.example.local: no such host` | Ensure the supervisor hostname is resolvable and correct; check DNS or use the IP address instead. |
+    | `Error: invalid credentials for user@corp.local` | Confirm the username and domain are correct and the OIDC provider is reachable from the cluster network. |
 ## See also
 
 - [Tanzu — Access Control](../access-control/)

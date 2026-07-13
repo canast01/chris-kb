@@ -138,9 +138,11 @@ size=1.0T features='0' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the target IP and port are correct, and that the iSCSI target daemon is running on the target system.
-    **`iscsiadm: No records found`** — Run discovery first with `iscsiadm -m discovery -t sendtargets -p <target-ip>:3260` before attempting to log in to sessions.
-    **`command not found: multipath`** — Install the device-mapper-multipath package with `apt-get install multipath-tools` or `yum install device-mapper-multipath`.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the target IP and port are correct, and that the iSCSI target daemon is running on the target system. |
+    | `iscsiadm: No records found` | Run discovery first with `iscsiadm -m discovery -t sendtargets -p <target-ip>:3260` before attempting to log in to sessions. |
+    | `command not found: multipath` | Install the device-mapper-multipath package with `apt-get install multipath-tools` or `yum install device-mapper-multipath`. |
 ## Common Issues Reference
 
 | Symptom | Probable cause | Resolution |
@@ -198,9 +200,11 @@ rtt min/avg/max/mdev = 0.756/0.829/0.891/0.055 ms
 ```
 
 !!! warning "Common errors"
-    **`PING: sendto: Message too long`** — Verify target iSCSI portal and intermediate switch ports support 9000 MTU; check with `ethtool -i <ethX>` for driver limitations.
-    **`Cannot find device "<ethX>"`** — Confirm the correct interface name with `ip link show` and replace `<ethX>` with the actual device (e.g., eth0, ens3).
-    **`RTNETLINK answers: Operation not permitted`** — Run the MTU configuration command with `sudo` or as root user.
+    | Error | Fix |
+    |---|---|
+    | `PING: sendto: Message too long` | Verify target iSCSI portal and intermediate switch ports support 9000 MTU; check with `ethtool -i <ethX>` for driver limitations. |
+    | `Cannot find device "<ethX>"` | Confirm the correct interface name with `ip link show` and replace `<ethX>` with the actual device (e.g., eth0, ens3). |
+    | `RTNETLINK answers: Operation not permitted` | Run the MTU configuration command with `sudo` or as root user. |
 ## Log Locations
 
 | Platform | Where to look |
@@ -236,9 +240,11 @@ dmesg | grep -i "Attached scsi"
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input): No such file or directory`** — Ensure dmesg and journalctl commands are properly piped; check that the kernel ring buffer is accessible with `sudo dmesg`.
-    **`Hint: You are currently not seeing messages from other users and the system.`** — Run journalctl with `sudo` to access full kernel logs: `sudo journalctl -k`.
-    **`(standard input): No such file or directory`** — Verify iSCSI modules are loaded with `lsmod | grep iscsi`; if empty, load them with `sudo modprobe iscsi_tcp`.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input): No such file or directory` | Ensure dmesg and journalctl commands are properly piped; check that the kernel ring buffer is accessible with `sudo dmesg`. |
+    | `Hint: You are currently not seeing messages from other users and the system.` | Run journalctl with `sudo` to access full kernel logs: `sudo journalctl -k`. |
+    | `(standard input): No such file or directory` | Verify iSCSI modules are loaded with `lsmod | grep iscsi`; if empty, load them with `sudo modprobe iscsi_tcp`. |
 ---
 
 ## Verify resolution

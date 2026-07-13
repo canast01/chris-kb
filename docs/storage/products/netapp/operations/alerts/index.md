@@ -90,9 +90,11 @@ Cluster                ok        -
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: system health alert show`** — Verify you are connected to the NetApp cluster with `cluster show` and have appropriate admin privileges.
-    **`Error: Access denied. Insufficient privileges for this command.`** — Ensure your user account has the "admin" or "security-admin" role assigned via `security login show`.
-    **`Error: No events found matching the specified criteria.`** — Adjust the time filter (e.g., use `-time ">7d"` for the last 7 days) or remove severity filters to broaden results.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: system health alert show` | Verify you are connected to the NetApp cluster with `cluster show` and have appropriate admin privileges. |
+    | `Error: Access denied. Insufficient privileges for this command.` | Ensure your user account has the "admin" or "security-admin" role assigned via `security login show`. |
+    | `Error: No events found matching the specified criteria.` | Adjust the time filter (e.g., use `-time ">7d"` for the last 7 days) or remove severity filters to broaden results. |
 ## AutoSupport Notifications
 
 AutoSupport triggers automatic case creation with NetApp support for critical events. Verify it is configured:
@@ -111,8 +113,10 @@ cluster1-02                            enabled    full       https          mail
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: system`** — Ensure you are connected to the NetApp cluster CLI (SSH to the cluster management IP) rather than a local shell.
-    **`Error: This operation is not permitted: insufficient access rights`** — Verify your user account has admin-level privileges; contact your NetApp administrator to grant the required role.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: system` | Ensure you are connected to the NetApp cluster CLI (SSH to the cluster management IP) rather than a local shell. |
+    | `Error: This operation is not permitted: insufficient access rights` | Verify your user account has admin-level privileges; contact your NetApp administrator to grant the required role. |
 Expected: `state: enable`, `support: true`.
 
 ## SNMP Alerting
@@ -146,8 +150,10 @@ Trap Host: 10.20.30.40
 ```
 
 !!! warning "Common errors"
-    **`Error: This command requires admin or vsadmin privileges`** — Run the command with appropriate cluster admin credentials or from a node with sufficient permissions.
-    **`Error: SNMP is not configured on this cluster`** — Enable SNMP first using `system snmp modify -enabled true` before querying trap hosts.
+    | Error | Fix |
+    |---|---|
+    | `Error: This command requires admin or vsadmin privileges` | Run the command with appropriate cluster admin credentials or from a node with sufficient permissions. |
+    | `Error: SNMP is not configured on this cluster` | Enable SNMP first using `system snmp modify -enabled true` before querying trap hosts. |
 Verify trap destinations are configured to route to your monitoring platform (SCOM, Zabbix, etc.).
 
 ## BlueXP Alerts (Keystone / Cloud Manager)
@@ -205,8 +211,10 @@ Alert DiskShelfPowerSupply.5.1a2b3c4d deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Node "<node>" not found in cluster`** — Verify the node name matches output from `cluster show` and use the correct node identifier.
-    **`Error: Alert ID "<id>" does not exist or has already been deleted`** — Confirm the alert ID is still active using `system health alert show` before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Node "<node>" not found in cluster` | Verify the node name matches output from `cluster show` and use the correct node identifier. |
+    | `Error: Alert ID "<id>" does not exist or has already been deleted` | Confirm the alert ID is still active using `system health alert show` before attempting deletion. |
 ## Common Alerts
 
 | Alert | Cause | Resolution |

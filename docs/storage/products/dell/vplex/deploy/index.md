@@ -128,9 +128,11 @@ Cluster: cluster-2
 ```
 
 !!! warning "Common errors"
-    **`Connection refused: Unable to connect to 10.50.12.45:443`** — Verify the director management IP is correct and the VPLEX management interface is reachable on port 443.
-    **`Authentication failed: Invalid credentials for user 'admin'`** — Confirm the admin password is correct and the user account has not been locked after failed login attempts.
-    **`Command not found: vplexcli`** — Ensure the VPLEX CLI tools are installed and the installation directory is in your system PATH.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused: Unable to connect to 10.50.12.45:443` | Verify the director management IP is correct and the VPLEX management interface is reachable on port 443. |
+    | `Authentication failed: Invalid credentials for user 'admin'` | Confirm the admin password is correct and the user account has not been locked after failed login attempts. |
+    | `Command not found: vplexcli` | Ensure the VPLEX CLI tools are installed and the installation directory is in your system PATH. |
 **Connect VMS to VPLEX directors:**
 
 ```bash
@@ -152,9 +154,11 @@ Session ID: 550e8400-e29b-41d4-a716-446655440001
 ```
 
 !!! warning "Common errors"
-    **`Connection refused: Unable to reach <director1_ip>:443`** — Verify the director IP address is correct and the management network is reachable with `ping <director1_ip>`.
-    **`Authentication failed: Invalid credentials for user admin`** — Confirm the password is correct and the admin account is not locked by checking director logs or resetting credentials via the local console.
-    **`Build mismatch: director1 (6.1.2.0) does not match director2 (6.1.1.0)`** — Upgrade both directors to the same firmware version before establishing the cluster connection.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused: Unable to reach <director1_ip>:443` | Verify the director IP address is correct and the management network is reachable with `ping <director1_ip>`. |
+    | `Authentication failed: Invalid credentials for user admin` | Confirm the password is correct and the admin account is not locked by checking director logs or resetting credentials via the local console. |
+    | `Build mismatch: director1 (6.1.2.0) does not match director2 (6.1.1.0)` | Upgrade both directors to the same firmware version before establishing the cluster connection. |
 Verify both directors appear:
 
 ```bash
@@ -178,9 +182,11 @@ Director: director-2 (Standby)
 ```
 
 !!! warning "Common errors"
-    **`Connection refused: Unable to connect to <director1_ip>:443`** — Verify the director IP is correct and reachable, and that the VPLEX management service is running with `systemctl status vplex-mgmt`.
-    **`Authentication failed: Invalid credentials for user 'admin'`** — Confirm the admin password is correct and the user account is not locked; reset credentials via the VPLEX console if needed.
-    **`Command not found: vplexcli`** — Ensure vplexcli is installed and in your PATH, or use the full path `/opt/vplex/bin/vplexcli`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused: Unable to connect to <director1_ip>:443` | Verify the director IP is correct and reachable, and that the VPLEX management service is running with `systemctl status vplex-mgmt`. |
+    | `Authentication failed: Invalid credentials for user 'admin'` | Confirm the admin password is correct and the user account is not locked; reset credentials via the VPLEX console if needed. |
+    | `Command not found: vplexcli` | Ensure vplexcli is installed and in your PATH, or use the full path `/opt/vplex/bin/vplexcli`. |
 ---
 
 ## Connect Backend Storage Arrays
@@ -203,8 +209,10 @@ vplexcli -q "ll /clusters/cluster-1/storage-elements/storage-arrays/*"
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (111)`** — Verify the VPLEX management IP is reachable and vplexcli service is running with `systemctl status vplex-cli`.
-    **`Error: Authentication failed for user 'admin'`** — Ensure your VPLEX credentials are correct and your user account has CLI access permissions in the VPLEX management console.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (111)` | Verify the VPLEX management IP is reachable and vplexcli service is running with `systemctl status vplex-cli`. |
+    | `Error: Authentication failed for user 'admin'` | Ensure your VPLEX credentials are correct and your user account has CLI access permissions in the VPLEX management console. |
 2. If the backend array does not appear, verify FC zoning between VPLEX BE ports and array FA/FC target ports.
 3. Register the backend array:
 
@@ -222,8 +230,10 @@ Status: READY
 ```
 
 !!! warning "Common errors"
-    **`Error: Array with name 'powermax_prod' already exists`** — Use a unique array name or unregister the existing array first with `vplexcli -q "array unregister --name powermax_prod"`.
-    **`Error: Invalid WWN format or array unreachable at <array_wwn>`** — Verify the WWN syntax matches the array's actual identifier and that network connectivity exists between VPLEX and the storage array.
+    | Error | Fix |
+    |---|---|
+    | `Error: Array with name 'powermax_prod' already exists` | Use a unique array name or unregister the existing array first with `vplexcli -q "array unregister --name powermax_prod"`. |
+    | `Error: Invalid WWN format or array unreachable at <array_wwn>` | Verify the WWN syntax matches the array's actual identifier and that network connectivity exists between VPLEX and the storage array. |
 4. Refresh storage discovery:
 
 ```bash
@@ -246,9 +256,11 @@ Total arrays processed: 2
 ```
 
 !!! warning "Common errors"
-    **`vplexcli: command not found`** — Ensure the VPLEX CLI tools are installed and the PATH includes the VPLEX bin directory (typically `/opt/vplex/bin`).
-    **`Error: Unable to connect to VPLEX cluster at localhost:443`** — Verify the VPLEX management console is running and accessible; check network connectivity and firewall rules for port 443.
-    **`Error: Invalid credentials for VPLEX authentication`** — Confirm your VPLEX user credentials are correct and have sufficient permissions to execute storage array commands.
+    | Error | Fix |
+    |---|---|
+    | `vplexcli: command not found` | Ensure the VPLEX CLI tools are installed and the PATH includes the VPLEX bin directory (typically `/opt/vplex/bin`). |
+    | `Error: Unable to connect to VPLEX cluster at localhost:443` | Verify the VPLEX management console is running and accessible; check network connectivity and firewall rules for port 443. |
+    | `Error: Invalid credentials for VPLEX authentication` | Confirm your VPLEX user credentials are correct and have sufficient permissions to execute storage array commands. |
 5. Verify backend LUNs are visible as storage volumes:
 
 ```bash
@@ -269,9 +281,11 @@ vplexcli -q "ll /clusters/cluster-1/storage-elements/storage-volumes/*"
 ```
 
 !!! warning "Common errors"
-    **`Error: cluster-1 not found`** — Verify the cluster name exists with `vplexcli -q "ll /clusters"` and correct the cluster identifier.
-    **`Error: Invalid path /clusters/cluster-1/storage-elements/storage-volumes`** — Ensure VPLEX management console is accessible and the cluster is online; check connectivity with `vplexcli -q "ping"`.
-    **`vplexcli: command not found`** — Add the VPLEX CLI installation directory to your PATH or use the full path to the vplexcli binary.
+    | Error | Fix |
+    |---|---|
+    | `Error: cluster-1 not found` | Verify the cluster name exists with `vplexcli -q "ll /clusters"` and correct the cluster identifier. |
+    | `Error: Invalid path /clusters/cluster-1/storage-elements/storage-volumes` | Ensure VPLEX management console is accessible and the cluster is online; check connectivity with `vplexcli -q "ping"`. |
+    | `vplexcli: command not found` | Add the VPLEX CLI installation directory to your PATH or use the full path to the vplexcli binary. |
 Each LUN on the backend array appears as a storage volume with its size and backend array identifier.
 
 ---
@@ -296,8 +310,10 @@ Status: Available
 ```
 
 !!! warning "Common errors"
-    **`Error: Storage volume not found: /clusters/cluster-1/storage-elements/storage-volumes/<vol_name>`** — Replace `<vol_name>` with the actual storage volume name (e.g., `pmax_vol_001`) and verify it exists with `vplexcli -q "storage-volume list"`.
-    **`Error: Extent 'ext_powermax_01' already exists`** — Use a unique extent name or delete the existing extent with `vplexcli -q "extent delete --name ext_powermax_01"` before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Storage volume not found: /clusters/cluster-1/storage-elements/storage-volumes/<vol_name>` | Replace `<vol_name>` with the actual storage volume name (e.g., `pmax_vol_001`) and verify it exists with `vplexcli -q "storage-volume list"`. |
+    | `Error: Extent 'ext_powermax_01' already exists` | Use a unique extent name or delete the existing extent with `vplexcli -q "extent delete --name ext_powermax_01"` before recreating it. |
 **Create a local device from the extent:**
 
 ```bash
@@ -316,9 +332,11 @@ Created local-device: ldev_prod_01
 ```
 
 !!! warning "Common errors"
-    **`Error: extent /clusters/cluster-1/storage-elements/extents/ext_powermax_01 not found`** — Verify the extent exists and the path is correct using `vplexcli -q "extent list"`.
-    **`Error: local-device ldev_prod_01 already exists`** — Choose a unique device name or delete the existing device with `vplexcli -q "local-device delete --name ldev_prod_01"` first.
-    **`Error: cluster-1 is not accessible`** — Ensure the cluster is online and reachable by running `vplexcli -q "cluster list"` to verify cluster status.
+    | Error | Fix |
+    |---|---|
+    | `Error: extent /clusters/cluster-1/storage-elements/extents/ext_powermax_01 not found` | Verify the extent exists and the path is correct using `vplexcli -q "extent list"`. |
+    | `Error: local-device ldev_prod_01 already exists` | Choose a unique device name or delete the existing device with `vplexcli -q "local-device delete --name ldev_prod_01"` first. |
+    | `Error: cluster-1 is not accessible` | Ensure the cluster is online and reachable by running `vplexcli -q "cluster list"` to verify cluster status. |
 For RAID-1 (mirrored local device from two extents):
 
 ```bash
@@ -337,9 +355,11 @@ Created local device: ldev_prod_01
 ```
 
 !!! warning "Common errors"
-    **`Error: Extent /clusters/cluster-1/storage-elements/extents/ext_a not found`** — Verify extent names exist using `vplexcli -q "extent list"` and correct the path syntax.
-    **`Error: Device ldev_prod_01 already exists`** — Use a unique device name or delete the existing device with `vplexcli -q "local-device delete --name ldev_prod_01"` first.
-    **`Error: Extents must be from the same storage element`** — Ensure both extents are provisioned from the same storage array and cluster path.
+    | Error | Fix |
+    |---|---|
+    | `Error: Extent /clusters/cluster-1/storage-elements/extents/ext_a not found` | Verify extent names exist using `vplexcli -q "extent list"` and correct the path syntax. |
+    | `Error: Device ldev_prod_01 already exists` | Use a unique device name or delete the existing device with `vplexcli -q "local-device delete --name ldev_prod_01"` first. |
+    | `Error: Extents must be from the same storage element` | Ensure both extents are provisioned from the same storage array and cluster path. |
 ---
 
 ## Create Virtual Volumes
@@ -362,8 +382,10 @@ Virtual Volume vvol_sql01_data created successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Local device /clusters/cluster-1/local-devices/ldev_prod_01 not found`** — Verify the local device exists and the path is correct using `vplexcli -q "local-device list"`.
-    **`Error: Virtual volume name vvol_sql01_data already exists`** — Choose a unique virtual volume name or delete the existing volume before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Local device /clusters/cluster-1/local-devices/ldev_prod_01 not found` | Verify the local device exists and the path is correct using `vplexcli -q "local-device list"`. |
+    | `Error: Virtual volume name vvol_sql01_data already exists` | Choose a unique virtual volume name or delete the existing volume before recreating it. |
 For Metro configurations, promote the virtual volume to a distributed device (mirrors the local device to the remote cluster):
 
 ```bash
@@ -384,9 +406,11 @@ Synchronization Status: IN_PROGRESS
 ```
 
 !!! warning "Common errors"
-    **`Error: Local device /clusters/cluster-1/local-devices/ldev_prod_01 not found`** — Verify the local device path exists using `vplexcli -q "local-device list"` and correct the path syntax.
-    **`Error: Virtual volume vvol_sql01_data is already in use`** — Choose a different virtual volume name or remove the existing mapping with `vplexcli -q "virtual-volume delete --name vvol_sql01_data"`.
-    **`Error: Cluster-2 is unreachable or not synchronized`** — Check cluster connectivity and witness status with `vplexcli -q "cluster status"` before retrying the command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Local device /clusters/cluster-1/local-devices/ldev_prod_01 not found` | Verify the local device path exists using `vplexcli -q "local-device list"` and correct the path syntax. |
+    | `Error: Virtual volume vvol_sql01_data is already in use` | Choose a different virtual volume name or remove the existing mapping with `vplexcli -q "virtual-volume delete --name vvol_sql01_data"`. |
+    | `Error: Cluster-2 is unreachable or not synchronized` | Check cluster connectivity and witness status with `vplexcli -q "cluster status"` before retrying the command. |
 Verify virtual volume:
 
 ```bash
@@ -407,9 +431,11 @@ vvol_sql01_data                2.0TB     cluster-1   cluster-1    storage-contai
 ```
 
 !!! warning "Common errors"
-    **`Error: Virtual volume 'vvol_sql01_data' not found`** — Verify the virtual volume name is correct and exists in the cluster using `vplexcli -q "ll /clusters/cluster-1/virtual-volumes"`.
-    **`Error: Connection refused to management server`** — Ensure the VPLEX management console is running and accessible; check network connectivity and VPLEX service status with `systemctl status vplex-mgmt`.
-    **`Error: Authentication failed for user`** — Verify your VPLEX credentials are valid and your user account has sufficient permissions to query virtual volumes.
+    | Error | Fix |
+    |---|---|
+    | `Error: Virtual volume 'vvol_sql01_data' not found` | Verify the virtual volume name is correct and exists in the cluster using `vplexcli -q "ll /clusters/cluster-1/virtual-volumes"`. |
+    | `Error: Connection refused to management server` | Ensure the VPLEX management console is running and accessible; check network connectivity and VPLEX service status with `systemctl status vplex-mgmt`. |
+    | `Error: Authentication failed for user` | Verify your VPLEX credentials are valid and your user account has sufficient permissions to query virtual volumes. |
 ---
 
 ## Expose to Host Clusters
@@ -430,9 +456,11 @@ Initiator port 'host_esxi01_b' registered successfully with WWN 10:00:00:90:fa:1
 ```
 
 !!! warning "Common errors"
-    **`Error: Initiator port 'host_esxi01_a' already exists`** — Use `initiator-port unregister --name host_esxi01_a` first, or choose a unique initiator port name.
-    **`Error: Invalid WWN format '10:00:00:90:fa:12:34:56'`** — Ensure WWN uses colons as separators and contains exactly 16 hexadecimal characters (8 pairs).
-    **`Error: VPLEX cluster unreachable or vplexcli not authenticated`** — Verify VPLEX management IP is reachable and run `vplexcli --login` to authenticate before executing commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: Initiator port 'host_esxi01_a' already exists` | Use `initiator-port unregister --name host_esxi01_a` first, or choose a unique initiator port name. |
+    | `Error: Invalid WWN format '10:00:00:90:fa:12:34:56'` | Ensure WWN uses colons as separators and contains exactly 16 hexadecimal characters (8 pairs). |
+    | `Error: VPLEX cluster unreachable or vplexcli not authenticated` | Verify VPLEX management IP is reachable and run `vplexcli --login` to authenticate before executing commands. |
 **Create an initiator group:**
 
 ```bash
@@ -450,9 +478,11 @@ Created initiator tag: IG_ESX01
 ```
 
 !!! warning "Common errors"
-    **`Error: Initiator port not found: /clusters/cluster-1/exports/initiator-ports/host_esxi01_a`** — Verify the initiator port paths exist by running `vplexcli -q "initiator-port list"` and use the correct URIs.
-    **`Error: Tag 'IG_ESX01' already exists`** — Either delete the existing tag with `vplexcli -q "initiator-port delete-tag --tag IG_ESX01"` or use a unique tag name.
-    **`Error: Invalid cluster reference: /clusters/cluster-1`** — Confirm the cluster name with `vplexcli -q "cluster list"` and update the path accordingly.
+    | Error | Fix |
+    |---|---|
+    | `Error: Initiator port not found: /clusters/cluster-1/exports/initiator-ports/host_esxi01_a` | Verify the initiator port paths exist by running `vplexcli -q "initiator-port list"` and use the correct URIs. |
+    | `Error: Tag 'IG_ESX01' already exists` | Either delete the existing tag with `vplexcli -q "initiator-port delete-tag --tag IG_ESX01"` or use a unique tag name. |
+    | `Error: Invalid cluster reference: /clusters/cluster-1` | Confirm the cluster name with `vplexcli -q "cluster list"` and update the path accordingly. |
 **Create a storage view:**
 
 ```bash
@@ -472,9 +502,11 @@ Created storage view: SV_ESX01
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid virtual volume path '/clusters/cluster-1/virtual-volumes/vvol_sql01_data'`** — Verify the virtual volume exists by running `vplexcli -q "virtual-volumes list"` and use the correct path.
-    **`Error: Initiator port not found: /clusters/cluster-1/exports/initiator-ports/host_esxi01_a`** — Confirm initiator ports are registered in VPLEX by running `vplexcli -q "initiator-ports list"` and correct the paths.
-    **`Error: Storage view 'SV_ESX01' already exists`** — Use a unique storage view name or delete the existing view with `vplexcli -q "storage-view delete --name SV_ESX01"` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid virtual volume path '/clusters/cluster-1/virtual-volumes/vvol_sql01_data'` | Verify the virtual volume exists by running `vplexcli -q "virtual-volumes list"` and use the correct path. |
+    | `Error: Initiator port not found: /clusters/cluster-1/exports/initiator-ports/host_esxi01_a` | Confirm initiator ports are registered in VPLEX by running `vplexcli -q "initiator-ports list"` and correct the paths. |
+    | `Error: Storage view 'SV_ESX01' already exists` | Use a unique storage view name or delete the existing view with `vplexcli -q "storage-view delete --name SV_ESX01"` first. |
 The virtual volume is now presented to the host. Rescan from the host:
 
 ```bash
@@ -506,8 +538,10 @@ size=500G features='0' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`rescan-scsi-bus.sh: command not found`** — Install sg3-utils package with `apt-get install sg3-utils` or `yum install sg3-utils`.
-    **`multipath: command not found`** — Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`.
+    | Error | Fix |
+    |---|---|
+    | `rescan-scsi-bus.sh: command not found` | Install sg3-utils package with `apt-get install sg3-utils` or `yum install sg3-utils`. |
+    | `multipath: command not found` | Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`. |
 ---
 
 ## Validate Metro/Local Configuration
@@ -538,8 +572,10 @@ Local Device: ldev_prod_01
 ```
 
 !!! warning "Common errors"
-    **`Error: Virtual volume 'vvol_sql01_data' not found`** — Verify the virtual volume name with `vplexcli -q "virtual-volumes"` and correct any typos in the name parameter.
-    **`Error: Connection refused to VPLEX management server`** — Ensure the VPLEX cluster is reachable and vplexcli is configured with the correct management IP address in `/etc/vplexcli.conf`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Virtual volume 'vvol_sql01_data' not found` | Verify the virtual volume name with `vplexcli -q "virtual-volumes"` and correct any typos in the name parameter. |
+    | `Error: Connection refused to VPLEX management server` | Ensure the VPLEX cluster is reachable and vplexcli is configured with the correct management IP address in `/etc/vplexcli.conf`. |
 **Metro configuration validation:**
 
 1. Verify the distributed device is synchronized between both clusters:
@@ -557,8 +593,10 @@ Operational state: "online", Rebuild status: "done"
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or insufficient permissions`** — Ensure your vplexcli session is authenticated with an account that has read access to the distributed-devices namespace.
-    **`Error: Device 'dd_sql01' not found`** — Verify the device name is correct and exists in the VPLEX cluster by running `vplexcli -q "ll /distributed-storage/distributed-devices"` to list all devices.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or insufficient permissions` | Ensure your vplexcli session is authenticated with an account that has read access to the distributed-devices namespace. |
+    | `Error: Device 'dd_sql01' not found` | Verify the device name is correct and exists in the VPLEX cluster by running `vplexcli -q "ll /distributed-storage/distributed-devices"` to list all devices. |
 2. Test Metro failover — disconnect the ICL link (simulate a site outage) and confirm the surviving cluster promotes to primary and hosts retain access.
 3. Reconnect the ICL and confirm the distributed device resynchronizes automatically.
 
@@ -578,9 +616,11 @@ dd if=/dev/zero of=/dev/mapper/<vplex_mpath_dev> bs=1M count=2048 oflag=direct
 ```
 
 !!! warning "Common errors"
-    **`dd: opening '/dev/mapper/<vplex_mpath_dev>': No such file or directory`** — Replace `<vplex_mpath_dev>` with the actual multipath device name from `multipath -ll` output.
-    **`dd: writing to '/dev/mapper/<vplex_mpath_dev>': Read-only file system`** — Verify the VPLEX virtual volume is not in read-only mode and check array-side access permissions.
-    **`dd: writing to '/dev/mapper/<vplex_mpath_dev>': Permission denied`** — Run the command with `sudo` or as root user.
+    | Error | Fix |
+    |---|---|
+    | `dd: opening '/dev/mapper/<vplex_mpath_dev>': No such file or directory` | Replace `<vplex_mpath_dev>` with the actual multipath device name from `multipath -ll` output. |
+    | `dd: writing to '/dev/mapper/<vplex_mpath_dev>': Read-only file system` | Verify the VPLEX virtual volume is not in read-only mode and check array-side access permissions. |
+    | `dd: writing to '/dev/mapper/<vplex_mpath_dev>': Permission denied` | Run the command with `sudo` or as root user. |
 4. Verify the VPLEX Management Console shows no active alerts under **Health Monitor > System Alerts**.
 
 ---

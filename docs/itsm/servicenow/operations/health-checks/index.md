@@ -140,9 +140,11 @@ tail -f /opt/servicenow/mid/agent/logs/agent0.log.0
 ```
 
 !!! warning "Common errors"
-    **`Unit mid-server.service could not be found.`** — Verify the MID Server service file exists at `/etc/systemd/system/mid-server.service` and run `sudo systemctl daemon-reload`.
-    **`sudo: systemctl: command not found`** — Ensure you are running the command on the MID Server host (not a container without systemd) or use the appropriate service manager for your environment.
-    **`tail: cannot open '/opt/servicenow/mid/agent/logs/agent0.log.0' for reading: No such file or directory`** — Check that the MID Server installation path is correct and the agent has started; verify with `ls -la /opt/servicenow/mid/agent/logs/`.
+    | Error | Fix |
+    |---|---|
+    | `Unit mid-server.service could not be found.` | Verify the MID Server service file exists at `/etc/systemd/system/mid-server.service` and run `sudo systemctl daemon-reload`. |
+    | `sudo: systemctl: command not found` | Ensure you are running the command on the MID Server host (not a container without systemd) or use the appropriate service manager for your environment. |
+    | `tail: cannot open '/opt/servicenow/mid/agent/logs/agent0.log.0' for reading: No such file or directory` | Check that the MID Server installation path is correct and the agent has started; verify with `ls -la /opt/servicenow/mid/agent/logs/`. |
 ### MID Server Service Check (Windows)
 
 ```powershell
@@ -179,9 +181,11 @@ curl -s -u "$SN_USER:$SN_PASS" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: <instance_url>`** — Verify the `$INSTANCE` variable is set correctly and the ServiceNow instance hostname is reachable from your network.
-    **`jq: parse error: Invalid JSON text at line 1`** — Confirm your ServiceNow credentials are correct; an authentication failure returns HTML instead of JSON.
-    **`curl: (7) Failed to connect to port 443: Connection refused`** — Check that your ServiceNow instance is running and accessible; if behind a proxy, add proxy settings to the curl command.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: <instance_url>` | Verify the `$INSTANCE` variable is set correctly and the ServiceNow instance hostname is reachable from your network. |
+    | `jq: parse error: Invalid JSON text at line 1` | Confirm your ServiceNow credentials are correct; an authentication failure returns HTML instead of JSON. |
+    | `curl: (7) Failed to connect to port 443: Connection refused` | Check that your ServiceNow instance is running and accessible; if behind a proxy, add proxy settings to the curl command. |
 **Resolution steps:**
 
 1. Identify the MID Server referenced in the error record

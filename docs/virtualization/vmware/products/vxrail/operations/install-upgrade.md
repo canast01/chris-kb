@@ -80,8 +80,10 @@ Path            : C:\Downloads\VxRail-7.0.401-bundle.bin
 ```
 
 !!! warning "Common errors"
-    **`sha256sum: VxRail-7.0.401-bundle.bin: No such file or directory`** — Verify the bundle file exists in the current directory using `ls -la` and navigate to the correct path.
-    **`Get-FileHash : Cannot find path 'C:\Downloads\VxRail-7.0.401-bundle.bin' because it does not exist.`** — Check the file path and ensure the bundle has been downloaded completely to the specified directory.
+    | Error | Fix |
+    |---|---|
+    | `sha256sum: VxRail-7.0.401-bundle.bin: No such file or directory` | Verify the bundle file exists in the current directory using `ls -la` and navigate to the correct path. |
+    | `Get-FileHash : Cannot find path 'C:\Downloads\VxRail-7.0.401-bundle.bin' because it does not exist.` | Check the file path and ensure the bundle has been downloaded completely to the specified directory. |
 Compare the hash against the value shown on the Dell support page.
 
 ---
@@ -114,9 +116,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example; if error persists, verify the VxM hostname matches the certificate CN).
-    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Confirm the VxM IP address is correct and the VxRail Manager REST API service is running with `systemctl status vxrail-rest-api`.
-    **`{"error":"Invalid credentials","code":401}`** — Verify the base64-encoded credentials are correct by decoding with `echo 'bXlzdGljOnBhc3N3b3Jk' | base64 -d` and confirm the VxM admin username and password.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example; if error persists, verify the VxM hostname matches the certificate CN). |
+    | `curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused` | Confirm the VxM IP address is correct and the VxRail Manager REST API service is running with `systemctl status vxrail-rest-api`. |
+    | `{"error":"Invalid credentials","code":401}` | Verify the base64-encoded credentials are correct by decoding with `echo 'bXlzdGljOnBhc3N3b3Jk' | base64 -d` and confirm the VxM admin username and password. |
 **Verify the bundle is listed after upload:**
 
 ```bash
@@ -159,9 +163,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`Authorization header missing or invalid`** — Verify the base64-encoded credentials are correct by testing `echo -n 'mystic:password' | base64` separately and confirm the VXM API user has proper permissions.
-    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Confirm the VXM IP address is correct, reachable from your network, and the VXM appliance is running and has completed initialization.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `Authorization header missing or invalid` | Verify the base64-encoded credentials are correct by testing `echo -n 'mystic:password' | base64` separately and confirm the VXM API user has proper permissions. |
+    | `curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused` | Confirm the VXM IP address is correct, reachable from your network, and the VXM appliance is running and has completed initialization. |
 ---
 
 ## Step 3 — Run Pre-Upgrade Checks
@@ -230,9 +236,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's included if removed).
-    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Verify the VXM IP address is correct and the VXM appliance is running and accessible on the network.
-    **`jq: parse error: Invalid JSON at line 1`** — Ensure the API endpoint is correct and the VXM service is responding; check VXM logs if the endpoint returns HTML error pages instead of JSON.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example, but ensure it's included if removed). |
+    | `curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused` | Verify the VXM IP address is correct and the VXM appliance is running and accessible on the network. |
+    | `jq: parse error: Invalid JSON at line 1` | Ensure the API endpoint is correct and the VXM service is responding; check VXM logs if the endpoint returns HTML error pages instead of JSON. |
 **Do not proceed if any pre-check item shows FAILED.** Resolve the listed issue and re-run the pre-check.
 
 ---
@@ -302,9 +310,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Verify the VXM IP address is correct and the VXM management interface is reachable on port 443.
-    **`jq: parse error: Invalid JSON at line 1`** — Ensure the VXM API is responding with valid JSON; check authentication credentials and that the endpoint is accessible.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused` | Verify the VXM IP address is correct and the VXM management interface is reachable on port 443. |
+    | `jq: parse error: Invalid JSON at line 1` | Ensure the VXM API is responding with valid JSON; check authentication credentials and that the endpoint is accessible. |
 Key fields in the API response:
 
 | Field | Meaning |
@@ -369,9 +379,11 @@ BIOS Version: 2.14.3 (Release Date: 04/15/2024)
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the VxRail Manager's certificate into your system's trusted store.
-    **`bash: racadm: command not found`** — Install Dell OMECLI tools or run this command directly on the iDRAC host; `racadm` is not available on VxRail Manager nodes.
-    **`Authorization header invalid or credentials incorrect`** — Verify the base64-encoded credentials are correct by testing `echo -n 'mystic:password' | base64` and confirm the VxRail Manager user has API access permissions.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the VxRail Manager's certificate into your system's trusted store. |
+    | `bash: racadm: command not found` | Install Dell OMECLI tools or run this command directly on the iDRAC host; `racadm` is not available on VxRail Manager nodes. |
+    | `Authorization header invalid or credentials incorrect` | Verify the base64-encoded credentials are correct by testing `echo -n 'mystic:password' | base64` and confirm the VxRail Manager user has API access permissions. |
 Post-upgrade checklist:
 
 - [ ] All nodes Online in VxRail Plugin

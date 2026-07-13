@@ -77,9 +77,11 @@ vra-london:~ #
 ```
 
 !!! warning "Common errors"
-    **`Unit hms.service not found.`** — Verify the VRA appliance version supports systemd; older versions may use service hms restart instead.
-    **`Failed to restart vrms.service: Access denied`** — Ensure you are logged in as the admin user with sudo privileges, or use sudo systemctl restart vrms.
-    **`Job for hms.service failed because the control process exited with error code.`** — Check /var/log/hms/hms.log for Java heap memory errors and increase -Xmx value if needed.
+    | Error | Fix |
+    |---|---|
+    | `Unit hms.service not found.` | Verify the VRA appliance version supports systemd; older versions may use service hms restart instead. |
+    | `Failed to restart vrms.service: Access denied` | Ensure you are logged in as the admin user with sudo privileges, or use sudo systemctl restart vrms. |
+    | `Job for hms.service failed because the control process exited with error code.` | Check /var/log/hms/hms.log for Java heap memory errors and increase -Xmx value if needed. |
 ---
 
 ## VRA REST API Authentication
@@ -101,9 +103,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwOTMxNjU0MCw
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it's not removed).
-    **`jq: command not found` or `python3: command not found`** — Install the required JSON parser (`apt-get install python3` or `yum install python3`) or replace the Python one-liner with `jq '.token'`.
-    **`{"error":"Invalid credentials","code":401}`** — Verify the username and password are correct and the VRA service is running and accessible at the specified hostname.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it's not removed). |
+    | `jq: command not found` or `python3: command not found` | Install the required JSON parser (`apt-get install python3` or `yum install python3`) or replace the Python one-liner with `jq '.token'`. |
+    | `{"error":"Invalid credentials","code":401}` | Verify the username and password are correct and the VRA service is running and accessible at the specified hostname. |
 ---
 
 ## Get Replication Status via REST API
@@ -165,9 +169,11 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the VRA's certificate into your system trust store.
-    **`curl: (7) Failed to connect to vra-london.example.local port 443: Connection refused`** — Verify the VRA hostname/IP is correct, the VRA service is running, and network connectivity exists from your client to the VRA appliance.
-    **`jq: error (at <stdin>:1): Cannot index object with string "replications"`** — Ensure the API token in `$TOKEN` is valid and has not expired; re-authenticate and export a fresh token.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the VRA's certificate into your system trust store. |
+    | `curl: (7) Failed to connect to vra-london.example.local port 443: Connection refused` | Verify the VRA hostname/IP is correct, the VRA service is running, and network connectivity exists from your client to the VRA appliance. |
+    | `jq: error (at <stdin>:1): Cannot index object with string "replications"` | Ensure the API token in `$TOKEN` is valid and has not expired; re-authenticate and export a fresh token. |
 ---
 
 ## PowerCLI — Replication Status
@@ -236,9 +242,11 @@ curl -sk https://vra-london.example.local/api/rest/vr/deployment | python3 -m js
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-    **`curl: (7) Failed to connect to vra-london.example.local port 443: Connection refused`** — Verify the VRA appliance is running and the hostname/IP is correct with `ping vra-london.example.local` or check network connectivity.
-    **`json.tool: error: JSON document is empty`** — Confirm the VRA API service is fully initialized; wait 2-3 minutes after appliance startup and retry the health check.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed). |
+    | `curl: (7) Failed to connect to vra-london.example.local port 443: Connection refused` | Verify the VRA appliance is running and the hostname/IP is correct with `ping vra-london.example.local` or check network connectivity. |
+    | `json.tool: error: JSON document is empty` | Confirm the VRA API service is fully initialized; wait 2-3 minutes after appliance startup and retry the health check. |
 ---
 
 ## Test Connectivity from Source ESXi to Target VRA
@@ -271,9 +279,11 @@ round-trip min/avg/max = 2.156/2.296/2.401 ms
 ```
 
 !!! warning "Common errors"
-    **`nc: getaddrinfo: Name or service not known`** — Verify the VRA hostname resolves correctly by running `nslookup vra-amsterdam.example.local` on the ESXi host.
-    **`Connection refused`** — Confirm the VRA appliance is powered on and the replication service is running by checking VRA status in the vSphere Client.
-    **`No route to host`** — Ensure the ESXi host has network connectivity to the VRA subnet and check firewall rules allow traffic on ports 31031 and 44046.
+    | Error | Fix |
+    |---|---|
+    | `nc: getaddrinfo: Name or service not known` | Verify the VRA hostname resolves correctly by running `nslookup vra-amsterdam.example.local` on the ESXi host. |
+    | `Connection refused` | Confirm the VRA appliance is powered on and the replication service is running by checking VRA status in the vSphere Client. |
+    | `No route to host` | Ensure the ESXi host has network connectivity to the VRA subnet and check firewall rules allow traffic on ports 31031 and 44046. |
 ---
 
 ## Force Replication Sync (Immediate Sync)
@@ -297,9 +307,11 @@ curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if error persists, verify the hostname matches the certificate CN).
-    **`curl: (7) Failed to connect to vra-london.example.local port 443: Name or service not known`** — Ensure the vRA hostname is resolvable and reachable; check DNS or update `/etc/hosts` with the correct IP address.
-    **`{"error":"Invalid or expired token","code":401}`** — Regenerate the Bearer token by re-authenticating to vRA and ensure `$TOKEN` variable is set correctly with `echo $TOKEN`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if error persists, verify the hostname matches the certificate CN). |
+    | `curl: (7) Failed to connect to vra-london.example.local port 443: Name or service not known` | Ensure the vRA hostname is resolvable and reachable; check DNS or update `/etc/hosts` with the correct IP address. |
+    | `{"error":"Invalid or expired token","code":401}` | Regenerate the Bearer token by re-authenticating to vRA and ensure `$TOKEN` variable is set correctly with `echo $TOKEN`. |
 ---
 
 ## See also

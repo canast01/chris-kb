@@ -49,9 +49,11 @@ Cipher   : TLS_AES_256_GCM_SHA384
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the LCM hostname resolves correctly and port 443 is accessible from your client using `ping lcm-prod-01.example.local` and `telnet lcm-prod-01.example.local 443`.
-    **`alert read:fatal, description = protocol_version`** — The LCM appliance does not support the requested TLS version; confirm your deployment's minimum TLS version with `openssl s_client -connect lcm-prod-01.example.local:443 2>&1 | grep "Protocol"`.
-    **`SSL_ERROR_ZERO_RETURN`** — The server closed the connection before completing the handshake; check that the LCM certificate is valid and not expired using `openssl s_client -connect lcm-prod-01.example.local:443 -showcerts 2>&1 | grep -A2 "Verify return code"`.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the LCM hostname resolves correctly and port 443 is accessible from your client using `ping lcm-prod-01.example.local` and `telnet lcm-prod-01.example.local 443`. |
+    | `alert read:fatal, description = protocol_version` | The LCM appliance does not support the requested TLS version; confirm your deployment's minimum TLS version with `openssl s_client -connect lcm-prod-01.example.local:443 2>&1 | grep "Protocol"`. |
+    | `SSL_ERROR_ZERO_RETURN` | The server closed the connection before completing the handshake; check that the LCM certificate is valid and not expired using `openssl s_client -connect lcm-prod-01.example.local:443 -showcerts 2>&1 | grep -A2 "Verify return code"`. |
 LCM 8.x ships with TLS 1.2+ enabled by default. Verify no legacy cipher suites are active using an external scanner such as `testssl.sh` or Qualys SSL Labs.
 
 ---

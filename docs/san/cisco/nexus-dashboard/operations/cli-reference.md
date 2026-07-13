@@ -50,9 +50,11 @@ Platform Version:
 ```
 
 !!! warning "Common errors"
-    **`acs: command not found`** — Ensure the ACS CLI is installed and the PATH includes the installation directory, or source the environment setup script.
-    **`Error: Unable to connect to cluster endpoint`** — Verify network connectivity to the cluster nodes and confirm the ACS_ENDPOINT environment variable is correctly set.
-    **`Error: Authentication failed - invalid credentials`** — Check that your ACS credentials are valid and the NEXUS_USER and NEXUS_PASSWORD environment variables are properly configured.
+    | Error | Fix |
+    |---|---|
+    | `acs: command not found` | Ensure the ACS CLI is installed and the PATH includes the installation directory, or source the environment setup script. |
+    | `Error: Unable to connect to cluster endpoint` | Verify network connectivity to the cluster nodes and confirm the ACS_ENDPOINT environment variable is correctly set. |
+    | `Error: Authentication failed - invalid credentials` | Check that your ACS credentials are valid and the NEXUS_USER and NEXUS_PASSWORD environment variables are properly configured. |
 ```bash
 # Upload an upgrade image
 acs upgrade upload /tmp/aci-nd-dk9.3.1.1.ova
@@ -102,9 +104,11 @@ Upgrade History:
 ```
 
 !!! warning "Common errors"
-    **`Error: Image file not found at /tmp/aci-nd-dk9.3.1.1.ova`** — Verify the image file path and ensure it exists with `ls -lh /tmp/aci-nd-dk9*.ova`.
-    **`Error: Upgrade already in progress. Job ID: upgrade-20240115-120000`** — Wait for the current upgrade to complete or cancel it with `acs upgrade cancel <job-id>` before starting a new one.
-    **`Error: Insufficient disk space. Required: 5GB, Available: 2.3GB`** — Free up disk space on the Nexus Dashboard nodes or remove older upgrade images with `acs upgrade images delete --version <old-version>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Image file not found at /tmp/aci-nd-dk9.3.1.1.ova` | Verify the image file path and ensure it exists with `ls -lh /tmp/aci-nd-dk9*.ova`. |
+    | `Error: Upgrade already in progress. Job ID: upgrade-20240115-120000` | Wait for the current upgrade to complete or cancel it with `acs upgrade cancel <job-id>` before starting a new one. |
+    | `Error: Insufficient disk space. Required: 5GB, Available: 2.3GB` | Free up disk space on the Nexus Dashboard nodes or remove older upgrade images with `acs upgrade images delete --version <old-version>`. |
 ```bash
 # Show node network configuration
 acs network show
@@ -147,9 +151,11 @@ Connectivity Test to 10.20.1.5:22
 ```
 
 !!! warning "Common errors"
-    **`Error: NTP service is not running`** — Enable NTP with `acs system ntp enable` and verify connectivity to the configured NTP server.
-    **`Error: DNS resolution failed for 10.20.1.5`** — Verify DNS servers are reachable and correctly configured with `acs system dns show`, or use IP addresses directly.
-    **`Error: Connection timeout to 10.20.1.5:22`** — Check network connectivity and firewall rules allow traffic from the Nexus Dashboard node to the target host on port 22.
+    | Error | Fix |
+    |---|---|
+    | `Error: NTP service is not running` | Enable NTP with `acs system ntp enable` and verify connectivity to the configured NTP server. |
+    | `Error: DNS resolution failed for 10.20.1.5` | Verify DNS servers are reachable and correctly configured with `acs system dns show`, or use IP addresses directly. |
+    | `Error: Connection timeout to 10.20.1.5:22` | Check network connectivity and firewall rules allow traffic from the Nexus Dashboard node to the target host on port 22. |
 ```bash
 # Show current TLS certificate details
 acs certificates show
@@ -187,9 +193,11 @@ Dashboard will restart to apply changes. This may take 2-3 minutes.
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate file not found: /tmp/nd.key`** — Verify the key file path exists and is readable with `ls -la /tmp/nd.key`.
-    **`Error: Certificate validation failed - certificate and key do not match`** — Ensure the certificate and key pair are from the same generation by re-exporting them together from your CA.
-    **`Error: Certificate nd-dc1-cert is already active`** — Skip the activate command if the certificate is already in use, or deactivate the current certificate first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate file not found: /tmp/nd.key` | Verify the key file path exists and is readable with `ls -la /tmp/nd.key`. |
+    | `Error: Certificate validation failed - certificate and key do not match` | Ensure the certificate and key pair are from the same generation by re-exporting them together from your CA. |
+    | `Error: Certificate nd-dc1-cert is already active` | Skip the activate command if the certificate is already in use, or deactivate the current certificate first. |
 ```bash
 # Show all pod status (run as ndadmin — kubectl is available)
 kubectl get pods --all-namespaces
@@ -241,8 +249,10 @@ monitoring  prometheus-pvc            Bound    pv-prometheus-004   200Gi      RW
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "pods" in API group ""`** — Verify kubectl is configured correctly with `kubectl cluster-info` and your kubeconfig points to the Nexus Dashboard cluster.
-    **`Error from server (Forbidden): pods is forbidden: User "ndadmin" cannot get resource "pods" in API group "" in the namespace "ndfc"`** — Add RBAC permissions for the ndadmin user with `kubectl create rolebinding ndadmin-pods --clusterrole=view --user=ndadmin -n ndfc`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "pods" in API group ""` | Verify kubectl is configured correctly with `kubectl cluster-info` and your kubeconfig points to the Nexus Dashboard cluster. |
+    | `Error from server (Forbidden): pods is forbidden: User "ndadmin" cannot get resource "pods" in API group "" in the namespace "ndfc"` | Add RBAC permissions for the ndadmin user with `kubectl create rolebinding ndadmin-pods --clusterrole=view --user=ndadmin -n ndfc`. |
 ```bash
 # Show system resource usage per node
 acs system resources
@@ -288,9 +298,11 @@ nd-support-20240115.tar.gz                    100%  847MB   12.4MB/s   01:08
 ```
 
 !!! warning "Common errors"
-    **`scp: /tmp/nd-support-*.tar.gz: No such file or directory`** — Verify the techsupport command completed successfully and check the actual filename with `ssh ndadmin@nd-dc1.corp.example.com ls -la /tmp/nd-support-*.tar.gz`.
-    **`Permission denied (publickey,password)`** — Ensure SSH key-based authentication is configured for the ndadmin user or add `-o PubkeyAuthentication=no` to use password authentication.
-    **`Disk quota exceeded`** — Free up space on the Nexus Dashboard node by archiving or deleting old support bundles, or redirect output to a different filesystem with more capacity.
+    | Error | Fix |
+    |---|---|
+    | `scp: /tmp/nd-support-*.tar.gz: No such file or directory` | Verify the techsupport command completed successfully and check the actual filename with `ssh ndadmin@nd-dc1.corp.example.com ls -la /tmp/nd-support-*.tar.gz`. |
+    | `Permission denied (publickey,password)` | Ensure SSH key-based authentication is configured for the ndadmin user or add `-o PubkeyAuthentication=no` to use password authentication. |
+    | `Disk quota exceeded` | Free up space on the Nexus Dashboard node by archiving or deleting old support bundles, or redirect output to a different filesystem with more capacity. |
 ```bash
 # Authenticate — returns a bearer token
 TOKEN=$(curl -sk -X POST https://nd-dc1.corp.example.com/login \
@@ -319,9 +331,11 @@ Token obtained
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the Nexus Dashboard CA certificate into your system trust store.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify the username, password, and domain are correct; check that the Nexus Dashboard API endpoint is reachable and responding with valid JSON.
-    **`curl: (7) Failed to connect to nd-dc1.corp.example.com port 443: Connection refused`** — Confirm the Nexus Dashboard hostname/IP and port are correct, and that the service is running and accessible from your network.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the Nexus Dashboard CA certificate into your system trust store. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify the username, password, and domain are correct; check that the Nexus Dashboard API endpoint is reachable and responding with valid JSON. |
+    | `curl: (7) Failed to connect to nd-dc1.corp.example.com port 443: Connection refused` | Confirm the Nexus Dashboard hostname/IP and port are correct, and that the service is running and accessible from your network. |
 ```bash
 ND="https://nd-dc1.corp.example.com"
 
@@ -648,9 +662,11 @@ curl -sk "${NDI_BASE}/san/flows?fabricName=DC1-SAN&timeRange=LAST_HOUR" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the Nexus Dashboard CA certificate into your system trust store.
-    **`{"error": "Invalid or expired token", "code": 401}`** — Regenerate the Bearer token in Nexus Dashboard UI (System > Settings > API Tokens) and ensure `$TOKEN` variable is set correctly.
-    **`curl: (7) Failed to connect to <host>: Connection refused`** — Verify the Nexus Dashboard hostname/IP in `$ND` variable is reachable and the API service is running with `curl -sk https://<nd-host>/appcenter/cisco/ndinsight/api/v1/health
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the Nexus Dashboard CA certificate into your system trust store. |
+    | `{"error": "Invalid or expired token", "code": 401}` | Regenerate the Bearer token in Nexus Dashboard UI (System > Settings > API Tokens) and ensure `$TOKEN` variable is set correctly. |
+    | `curl: (7) Failed to connect to <host>: Connection refused` | Verify the Nexus Dashboard hostname/IP in `$ND` variable is reachable and the API service is running with `curl -sk https://<nd-host>/appcenter/cisco/ndinsight/api/v1/health |
 ```bash
 # Count switches by management state
 curl -sk "${NDFC_BASE}/inventory/switches" \
@@ -697,9 +713,11 @@ border-01,10.200.1.80,N9K-C9504,10.1(2),unmanaged,DC1-Fabric
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command or configure proper CA certificates in your environment.
-    **`jq: command not found` or `python3: command not found`** — Install the required JSON parser (python3 or jq) on the Nexus Dashboard host or bastion server.
-    **`401 Unauthorized`** — Verify the Bearer token is valid and not expired by re-authenticating with `ndfc-login.sh` or checking token expiration time.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command or configure proper CA certificates in your environment. |
+    | `jq: command not found` or `python3: command not found` | Install the required JSON parser (python3 or jq) on the Nexus Dashboard host or bastion server. |
+    | `401 Unauthorized` | Verify the Bearer token is valid and not expired by re-authenticating with `ndfc-login.sh` or checking token expiration time. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

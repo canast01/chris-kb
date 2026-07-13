@@ -124,9 +124,11 @@ Connection closed.
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the RPA IP address is correct and the management interface is reachable with `ping <rpa-site-a-ip>`.
-    **`Authentication failed for user 'admin'`** — Confirm the admin password is correct and the account has not been locked after failed login attempts.
-    **`Command 'get cluster_info' not recognized`** — Ensure you are connected to an RPA CLI session (not a shell prompt) and the RecoverPoint version supports this command.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the RPA IP address is correct and the management interface is reachable with `ping <rpa-site-a-ip>`. |
+    | `Authentication failed for user 'admin'` | Confirm the admin password is correct and the account has not been locked after failed login attempts. |
+    | `Command 'get cluster_info' not recognized` | Ensure you are connected to an RPA CLI session (not a shell prompt) and the RecoverPoint version supports this command. |
 Collect from every RPA at both Site A and Site B. The version and serial must match (or a version mismatch may itself be the issue).
 
 ### 2. Capture consistency group state and lag
@@ -158,8 +160,10 @@ Replication-Standby-CG           ACTIVE             RPA-004
 ```
 
 !!! warning "Common errors"
-    **`Error: RPA connection failed — unable to reach management interface`** — Verify RPA management IP is reachable and SSH/CLI service is running with `ping <rpa-mgmt-ip>` and check firewall rules.
-    **`Error: Invalid command 'get cg_state' — command not recognized`** — Ensure you are connected to the RPA CLI console; exit and reconnect with `connect_rpa <rpa-ip>` or verify RPA firmware version supports this command.
+    | Error | Fix |
+    |---|---|
+    | `Error: RPA connection failed — unable to reach management interface` | Verify RPA management IP is reachable and SSH/CLI service is running with `ping <rpa-mgmt-ip>` and check firewall rules. |
+    | `Error: Invalid command 'get cg_state' — command not recognized` | Ensure you are connected to the RPA CLI console; exit and reconnect with `connect_rpa <rpa-ip>` or verify RPA firmware version supports this command. |
 ### 3. Check journal fill level and link state
 
 ```bash
@@ -216,9 +220,11 @@ Last Heartbeat: 2 seconds ago
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to RPA at <ip_address>. Connection refused.`** — Verify RPA IP address is correct and SSH connectivity exists; check firewall rules and RPA service status with `systemctl status recoverpoint`.
-    **`Error: Authentication failed for user 'admin'. Permission denied.`** — Confirm SSH credentials are correct and the user account has CLI access privileges; reset password via RPA web UI if needed.
-    **`Error: Command 'get journal_state' not recognized.`** — Ensure you are in the correct RecoverPoint CLI context; exit and re-authenticate with `connect <rpa_ip>` to establish proper session state.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to RPA at <ip_address>. Connection refused.` | Verify RPA IP address is correct and SSH connectivity exists; check firewall rules and RPA service status with `systemctl status recoverpoint`. |
+    | `Error: Authentication failed for user 'admin'. Permission denied.` | Confirm SSH credentials are correct and the user account has CLI access privileges; reset password via RPA web UI if needed. |
+    | `Error: Command 'get journal_state' not recognized.` | Ensure you are in the correct RecoverPoint CLI context; exit and re-authenticate with `connect <rpa_ip>` to establish proper session state. |
 ### 4. Collect RPA support bundles from all appliances
 
 ```bash
@@ -259,8 +265,10 @@ sftp> bye
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH access is enabled on the RPA; check firewall rules if connecting remotely.
-    **`support_bundle_*.tar: No such file or directory`** — Run `get support_bundle` command on the RPA first to generate the bundle before attempting to download it via SFTP.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the admin account credentials and ensure SSH access is enabled on the RPA; check firewall rules if connecting remotely. |
+    | `support_bundle_*.tar: No such file or directory` | Run `get support_bundle` command on the RPA first to generate the bundle before attempting to download it via SFTP. |
 Collect one bundle from each RPA appliance. For a 2-site setup with 2 RPAs per site: 4 bundles total.
 
 ### 5. Write the timeline
@@ -399,9 +407,11 @@ rpa_state:
 ```
 
 !!! warning "Common errors"
-    **`command not found: get`** — Verify you are connected to the RPA CLI console via SSH and have proper shell access; use `ssh admin@<rpa-ip>` if needed.
-    **`journal_2: 89% full (WARNING)`** — Initiate an immediate journal consistency check and consider expanding journal capacity or reducing RPO to prevent journal overflow.
-    **`rpa_node_3: DEGRADED (disk_usage: 94%)`** — Check `/var/log` and `/var/cache` for oversized files and purge old logs, or add storage capacity to the affected node.
+    | Error | Fix |
+    |---|---|
+    | `command not found: get` | Verify you are connected to the RPA CLI console via SSH and have proper shell access; use `ssh admin@<rpa-ip>` if needed. |
+    | `journal_2: 89% full (WARNING)` | Initiate an immediate journal consistency check and consider expanding journal capacity or reducing RPO to prevent journal overflow. |
+    | `rpa_node_3: DEGRADED (disk_usage: 94%)` | Check `/var/log` and `/var/cache` for oversized files and purge old logs, or add storage capacity to the affected node. |
 ---
 
 ## Support SLA Reference

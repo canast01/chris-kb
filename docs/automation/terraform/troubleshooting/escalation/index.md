@@ -149,8 +149,10 @@ Providers required by state:
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to query available provider packages`** — Run `terraform init` to download and cache the required providers before running diagnostics.
-    **`Error reading .terraform.lock.hcl: no such file or directory`** — Execute `terraform init` in the working directory to generate the lock file and download providers.
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to query available provider packages` | Run `terraform init` to download and cache the required providers before running diagnostics. |
+    | `Error reading .terraform.lock.hcl: no such file or directory` | Execute `terraform init` in the working directory to generate the lock file and download providers. |
 ### 2. Collect debug-level logs
 
 ```bash
@@ -178,8 +180,10 @@ Plan: 0 to add, 0 to change, 0 to destroy.
 ```
 
 !!! warning "Common errors"
-    **`Error: open /tmp/terraform-trace-*.log: permission denied`** — Verify `/tmp` is writable with `ls -ld /tmp` and check your user permissions.
-    **`Error: TF_LOG set to invalid log level "TRACE"`** — Use only valid levels: TRACE, DEBUG, INFO, WARN, ERROR; verify the export statement spelling.
+    | Error | Fix |
+    |---|---|
+    | `Error: open /tmp/terraform-trace-*.log: permission denied` | Verify `/tmp` is writable with `ls -ld /tmp` and check your user permissions. |
+    | `Error: TF_LOG set to invalid log level "TRACE"` | Use only valid levels: TRACE, DEBUG, INFO, WARN, ERROR; verify the export statement spelling. |
 ### 3. Collect state file safely
 
 ```bash
@@ -215,9 +219,11 @@ aws_s3_bucket.artifacts
 ```
 
 !!! warning "Common errors"
-    **`jq: command not found`** — Install `jq` or use the Python JSON parser as shown; if using Python, ensure `python3` is in PATH.
-    **`Error reading state file: stat /tmp/state-backup-*.tfstate: no such file or directory`** — Verify `/tmp` directory exists and has write permissions; check disk space with `df -h /tmp`.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Ensure `terraform show -json` runs successfully before piping to Python; run `terraform show -json` standalone to verify state is valid.
+    | Error | Fix |
+    |---|---|
+    | `jq: command not found` | Install `jq` or use the Python JSON parser as shown; if using Python, ensure `python3` is in PATH. |
+    | `Error reading state file: stat /tmp/state-backup-*.tfstate: no such file or directory` | Verify `/tmp` directory exists and has write permissions; check disk space with `df -h /tmp`. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Ensure `terraform show -json` runs successfully before piping to Python; run `terraform show -json` standalone to verify state is valid. |
 ### 4. Collect plan output in JSON format
 
 ```bash
@@ -274,8 +280,10 @@ Saved the plan to: /tmp/tfplan
 ```
 
 !!! warning "Common errors"
-    **`Error reading plan file: stat /tmp/tfplan: no such file or directory`** — Ensure `terraform plan -out=/tmp/tfplan` completes successfully before running `terraform show`; check disk space and write permissions on /tmp.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify the plan file is valid by running `terraform show -json /tmp/tfplan` manually; the plan may be corrupted or the file path incorrect.
+    | Error | Fix |
+    |---|---|
+    | `Error reading plan file: stat /tmp/tfplan: no such file or directory` | Ensure `terraform plan -out=/tmp/tfplan` completes successfully before running `terraform show`; check disk space and write permissions on /tmp. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify the plan file is valid by running `terraform show -json /tmp/tfplan` manually; the plan may be corrupted or the file path incorrect. |
 ### 5. Write the timeline
 
 ```text
@@ -488,9 +496,11 @@ Initializing provider plugins...
 ```
 
 !!! warning "Common errors"
-    **`Error: Error acquiring the state lock`** — Run `terraform force-unlock <LOCK_ID>` after verifying no other apply operations are running, then retry the command.
-    **`Error: error reading S3 Bucket in region <region>: AccessDenied: Access Denied`** — Verify IAM permissions include `s3:GetObject` and `s3:ListBucket` on the state bucket, and check the AWS credentials being used.
-    **`fatal: your current branch 'main' does not have any commits yet`** — Initialize the git repository with at least one commit before running git log commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: Error acquiring the state lock` | Run `terraform force-unlock <LOCK_ID>` after verifying no other apply operations are running, then retry the command. |
+    | `Error: error reading S3 Bucket in region <region>: AccessDenied: Access Denied` | Verify IAM permissions include `s3:GetObject` and `s3:ListBucket` on the state bucket, and check the AWS credentials being used. |
+    | `fatal: your current branch 'main' does not have any commits yet` | Initialize the git repository with at least one commit before running git log commands. |
 ---
 
 ## See also

@@ -109,8 +109,10 @@ CT0     1       OK        FlashArray//X      PUREARRAY123ABC   10Gb/s
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid controller name 'ct0'. Did you mean 'CT0'?`** — Use uppercase controller identifiers (CT0, CT1) in Pure Storage commands.
-    **`Error: Connection refused. Is the management IP reachable?`** — Verify network connectivity to the array management interface and check firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid controller name 'ct0'. Did you mean 'CT0'?` | Use uppercase controller identifiers (CT0, CT1) in Pure Storage commands. |
+    | `Error: Connection refused. Is the management IP reachable?` | Verify network connectivity to the array management interface and check firewall rules. |
 ## DirectFlash Modules (DFM)
 
 DirectFlash Modules are Pure Storage's proprietary NVMe flash storage units. Unlike commodity SSDs, they expose raw NAND flash directly to Purity OS, allowing Pure's software to manage wear levelling, garbage collection, and data placement at the array level.
@@ -148,8 +150,10 @@ Capacity(GB)  Data Reduction  Used(GB)  Free(GB)  Snapshots(GB)
 ```
 
 !!! warning "Common errors"
-    **`purehw: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the bin directory (typically `/opt/purearray/bin`).
-    **`Error: Unable to connect to array`** — Verify network connectivity to the array management IP and confirm authentication credentials are set via `pureauthtoken` or environment variables.
+    | Error | Fix |
+    |---|---|
+    | `purehw: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the bin directory (typically `/opt/purearray/bin`). |
+    | `Error: Unable to connect to array` | Verify network connectivity to the array management IP and confirm authentication credentials are set via `pureauthtoken` or environment variables. |
 ## NVRAM (Write Cache)
 
 Each controller contains NVRAM — a supercapacitor-backed write cache. Write acknowledged to NVRAM on CT0 **and** CT1 before host ACK — write is safe even if one controller fails immediately after. NVRAM drains to DFM within seconds under normal operation.
@@ -168,8 +172,10 @@ nvram-3                       Healthy   64GB      NVRAM-64G-FC
 ```
 
 !!! warning "Common errors"
-    **`purehw: command not found`** — Ensure you are logged into the Pure Storage array management interface or have the Pure CLI tools installed and in your PATH.
-    **`grep: (standard input) is empty`** — Run `purehw list` without grep to verify the command executes; if empty, the array may not have NVRAM components or the hardware inventory is not populated.
+    | Error | Fix |
+    |---|---|
+    | `purehw: command not found` | Ensure you are logged into the Pure Storage array management interface or have the Pure CLI tools installed and in your PATH. |
+    | `grep: (standard input) is empty` | Run `purehw list` without grep to verify the command executes; if empty, the array may not have NVRAM components or the hardware inventory is not populated. |
 ## Host Connectivity
 
 Each controller has host-facing connectivity ports and back-end storage ports:
@@ -218,9 +224,11 @@ nvme1                   NVMe      up        24.5 GB/s     372000    0.3ms
 ```
 
 !!! warning "Common errors"
-    **`pureport: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory.
-    **`Error: Unable to connect to array management interface`** — Verify network connectivity to the array's management IP and that credentials are properly configured.
-    **`Error: Insufficient permissions to list port information`** — Confirm your user account has the required read permissions for port monitoring on the array.
+    | Error | Fix |
+    |---|---|
+    | `pureport: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory. |
+    | `Error: Unable to connect to array management interface` | Verify network connectivity to the array's management IP and that credentials are properly configured. |
+    | `Error: Insufficient permissions to list port information` | Confirm your user account has the required read permissions for port monitoring on the array. |
 ## Replication
 
 - **ActiveCluster** — synchronous replication between two FlashArray systems; RPO=0, host-transparent failover via a Purity Mediator quorum service; requires ≤5 ms RTT between sites
@@ -251,8 +259,10 @@ flasharray-prod-03            flasharray-dr-01          Unidirectional   Connect
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or API token expired`** — Re-authenticate using `purepod login` with valid credentials.
-    **`Error: Pod 'pod-us-east-1' is unreachable`** — Verify network connectivity to the pod's management IP and check firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or API token expired` | Re-authenticate using `purepod login` with valid credentials. |
+    | `Error: Pod 'pod-us-east-1' is unreachable` | Verify network connectivity to the pod's management IP and check firewall rules. |
 ## Component Health Summary
 
 ```bash
@@ -285,8 +295,10 @@ AlertID  Severity  Component         Message                              Timest
 ```
 
 !!! warning "Common errors"
-    **`purehw: command not found`** — Ensure the Pure Storage management CLI is installed and the PATH includes the Pure bin directory.
-    **`purealert: command not found`** — Verify the Pure Storage CLI package is installed with `which purearray` to confirm the installation path.
+    | Error | Fix |
+    |---|---|
+    | `purehw: command not found` | Ensure the Pure Storage management CLI is installed and the PATH includes the Pure bin directory. |
+    | `purealert: command not found` | Verify the Pure Storage CLI package is installed with `which purearray` to confirm the installation path. |
 ---
 
 ## See also

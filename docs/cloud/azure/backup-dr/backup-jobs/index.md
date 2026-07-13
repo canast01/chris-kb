@@ -58,9 +58,11 @@ b2e1d9c8-7f4a-4b2c-9e3d-1a5c8f2b6e9d  Backup       Completed    vm-prod-02      
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure it exists in your subscription.
-    **`VaultNotFound`** — Confirm the vault name and resource group are correct using `az backup vault list --resource-group <rg>`.
-    **`InvalidDateFormat`** — Use ISO 8601 format (YYYY-MM-DDTHH:MM:SS) for `--start-date` and `--end-date` parameters.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure it exists in your subscription. |
+    | `VaultNotFound` | Confirm the vault name and resource group are correct using `az backup vault list --resource-group <rg>`. |
+    | `InvalidDateFormat` | Use ISO 8601 format (YYYY-MM-DDTHH:MM:SS) for `--start-date` and `--end-date` parameters. |
 ```bash
 ## Show full details for a job (job ID from list output)
 az backup job show \
@@ -101,11 +103,11 @@ Completed
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/<vault-name>/backupJobs/<job-id>' under resource group '<rg>' was not found.`** — Verify the job ID exists by running `az backup job list` and confirm the vault name and resource group are correct.
-    
-    **`InvalidResourceGroup: The resource group '<rg>' could not be found.`** — Ensure the resource group name is spelled correctly and exists in your subscription using `az group list`.
-    
-    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupJobs/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>'.`** — Grant the user or service principal the "Backup Reader" or "Backup Operator" role on the Recovery Services vault.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/<vault-name>/backupJobs/<job-id>' under resource group '<rg>' was not found.` | Verify the job ID exists by running `az backup job list` and confirm the vault name and resource group are correct. |
+    | `InvalidResourceGroup: The resource group '<rg>' could not be found.` | Ensure the resource group name is spelled correctly and exists in your subscription using `az group list`. |
+    | `AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupJobs/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>'.` | Grant the user or service principal the "Backup Reader" or "Backup Operator" role on the Recovery Services vault. |
 ```bash
 ## Wait for a specific job to complete (polls every 30 seconds)
 az backup job wait \
@@ -157,9 +159,11 @@ Waiting for job completion...
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The specified backup item could not be found.`** — Verify the container-name and item-name match the protected VM exactly using `az backup container list` and `az backup item list`.
-    **`InvalidParameterValue: The value of parameter 'retain-until' is invalid.`** — Ensure the retain-until date is in YYYY-MM-DD format and is at least 7 days in the future.
-    **`JobNotFound: The job with ID '<job-id>' was not found in the vault.`** — Confirm the job ID exists and belongs to the specified vault; check recent jobs with `az backup job list --resource-group <rg> --vault-name <vault-name>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The specified backup item could not be found.` | Verify the container-name and item-name match the protected VM exactly using `az backup container list` and `az backup item list`. |
+    | `InvalidParameterValue: The value of parameter 'retain-until' is invalid.` | Ensure the retain-until date is in YYYY-MM-DD format and is at least 7 days in the future. |
+    | `JobNotFound: The job with ID '<job-id>' was not found in the vault.` | Confirm the job ID exists and belongs to the specified vault; check recent jobs with `az backup job list --resource-group <rg> --vault-name <vault-name>`. |
 ```bash
 ## List all failed jobs with error messages
 az backup job list \
@@ -190,9 +194,11 @@ Backup job triggered with ID: 12345678-1234-1234-1234-123456789abc
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/<vault-name>' could not be found.`** — Verify the vault name and resource group name are correct and the vault exists in the specified region.
-    **`InvalidParameterValue: The container name '<container-name>' is not valid for this vault.`** — List available containers with `az backup container list --resource-group <rg> --vault-name <vault-name>` and use the exact container name.
-    **`BadRequest: The item '<vm-name>' is not protected or the protection policy is not configured.`** — Enable backup protection for the VM first using `az backup protection enable-for-vm` before attempting to trigger a backup.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/<vault-name>' could not be found.` | Verify the vault name and resource group name are correct and the vault exists in the specified region. |
+    | `InvalidParameterValue: The container name '<container-name>' is not valid for this vault.` | List available containers with `az backup container list --resource-group <rg> --vault-name <vault-name>` and use the exact container name. |
+    | `BadRequest: The item '<vm-name>' is not protected or the protection policy is not configured.` | Enable backup protection for the VM first using `az backup protection enable-for-vm` before attempting to trigger a backup. |
 ```bash
 ## Cancel a job that is currently in progress
 az backup job stop \
@@ -211,11 +217,11 @@ Resource Group: prod-backups
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The resource 'Microsoft.RecoveryServices/vaults/<vault-name>/backupJobs/<job-id>' does not exist.`** — Verify the job ID exists by running `az backup job list --resource-group <rg> --vault-name <vault-name>` and use the correct job ID from the output.
-    
-    **`(AuthorizationFailed) The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupJobs/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>'.`** — Ensure your user account has the "Backup Operator" or "Backup Administrator" role assigned on the Recovery Services vault.
-    
-    **`(InvalidOperation) Cannot cancel job in state 'Completed'.`** — Only jobs in "InProgress" or "Waiting" states can be cancelled; check the job status with `az backup job show` before attempting cancellation.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The resource 'Microsoft.RecoveryServices/vaults/<vault-name>/backupJobs/<job-id>' does not exist.` | Verify the job ID exists by running `az backup job list --resource-group <rg> --vault-name <vault-name>` and use the correct job ID from the output. |
+    | `(AuthorizationFailed) The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupJobs/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>'.` | Ensure your user account has the "Backup Operator" or "Backup Administrator" role assigned on the Recovery Services vault. |
+    | `(InvalidOperation) Cannot cancel job in state 'Completed'.` | Only jobs in "InProgress" or "Waiting" states can be cancelled; check the job status with `az backup job show` before attempting cancellation. |
 ```bash
 ## Query backup job alerts in Azure Monitor (requires diagnostic settings enabled)
 az monitor log-analytics query \
@@ -244,5 +250,7 @@ diagnostic-staging  staging-backup-rg    backup-vault-westus    True    False   
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (ResourceNotFound) The resource '<vault-resource-id>' could not be found.`** — Verify the vault resource ID is correct and the vault exists in the current subscription using `az backup vault list`.
-    **`ERROR: The workspace '<workspace-id>' does not exist or you do not have permission to access it.`** — Confirm the workspace ID is valid and your user account has Reader permissions on the Log Analytics workspace using `az role assignment list --scope <workspace-id>`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (ResourceNotFound) The resource '<vault-resource-id>' could not be found.` | Verify the vault resource ID is correct and the vault exists in the current subscription using `az backup vault list`. |
+    | `ERROR: The workspace '<workspace-id>' does not exist or you do not have permission to access it.` | Confirm the workspace ID is valid and your user account has Reader permissions on the Log Analytics workspace using `az role assignment list --scope <workspace-id>`. |

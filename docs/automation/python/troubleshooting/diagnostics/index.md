@@ -172,9 +172,11 @@ Required-by:
 ```
 
 !!! warning "Common errors"
-    **`which: python3: not found`** — Activate your virtual environment with `source /path/to/venv/bin/activate` before running which.
-    **`WARNING: pip is being invoked by an old script wrapper`** — Upgrade pip with `python3 -m pip install --upgrade pip` to use the modern invocation method.
-    **`ERROR: pip's dependency resolver does not currently take into account all the packages that are installed`** — Run `pip install --upgrade pip setuptools` to resolve resolver conflicts with older tool versions.
+    | Error | Fix |
+    |---|---|
+    | `which: python3: not found` | Activate your virtual environment with `source /path/to/venv/bin/activate` before running which. |
+    | `WARNING: pip is being invoked by an old script wrapper` | Upgrade pip with `python3 -m pip install --upgrade pip` to use the modern invocation method. |
+    | `ERROR: pip's dependency resolver does not currently take into account all the packages that are installed` | Run `pip install --upgrade pip setuptools` to resolve resolver conflicts with older tool versions. |
 ---
 
 ## Step 3 — Trace import failures
@@ -294,9 +296,11 @@ Output written to /tmp/debug.log
 ```
 
 !!! warning "Common errors"
-    **`PYTHONLOGLEVEL: command not found`** — Use `export PYTHONLOGLEVEL=DEBUG` or set it inline as `PYTHONLOGLEVEL=DEBUG python3 script.py` (ensure no typo in variable name).
-    **`ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/debug.log'>`** — Add explicit `close()` calls or use context managers (`with open()`) in your Python script to properly release file handles.
-    **`DeprecationWarning: ... is deprecated and will be removed in Python 3.13`** — Update the deprecated function call to its recommended replacement before the next Python version release, or suppress the warning with `-W ignore::DeprecationWarning` if the dependency hasn't updated yet.
+    | Error | Fix |
+    |---|---|
+    | `PYTHONLOGLEVEL: command not found` | Use `export PYTHONLOGLEVEL=DEBUG` or set it inline as `PYTHONLOGLEVEL=DEBUG python3 script.py` (ensure no typo in variable name). |
+    | `ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/debug.log'>` | Add explicit `close()` calls or use context managers (`with open()`) in your Python script to properly release file handles. |
+    | `DeprecationWarning: ... is deprecated and will be removed in Python 3.13` | Update the deprecated function call to its recommended replacement before the next Python version release, or suppress the warning with `-W ignore::DeprecationWarning` if the dependency hasn't updated yet. |
 ---
 
 ## Step 6 — Profile CPU and memory
@@ -352,9 +356,11 @@ Line #    Mem usage    Increment  Occurrences   Line Contents
 ```
 
 !!! warning "Common errors"
-    **`Permission denied: py-spy requires elevated privileges to attach to process <pid>`** — Run `py-spy top --pid <pid>` with `sudo` or ensure the user owns the target process.
-    **`ModuleNotFoundError: No module named 'memory_profiler'`** — Add `@profile` decorator to the function you want to analyze, or reinstall with `pip install memory_profiler` in the correct environment.
-    **`py-spy: could not attach to process <pid>: No such process`** — Verify the PID is correct with `ps aux | grep python` before running py-spy.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied: py-spy requires elevated privileges to attach to process <pid>` | Run `py-spy top --pid <pid>` with `sudo` or ensure the user owns the target process. |
+    | `ModuleNotFoundError: No module named 'memory_profiler'` | Add `@profile` decorator to the function you want to analyze, or reinstall with `pip install memory_profiler` in the correct environment. |
+    | `py-spy: could not attach to process <pid>: No such process` | Verify the PID is correct with `ps aux | grep python` before running py-spy. |
 ---
 
 ## Step 7 — Collect diagnostics for escalation
@@ -409,9 +415,11 @@ Diagnostic snapshot saved to /tmp/python-diag-2024-01-15-1432.txt
 ```
 
 !!! warning "Common errors"
-    **`ModuleNotFoundError: No module named '<package>'`** — Activate the virtual environment with `source /path/to/venv/bin/activate` and run `pip install <package>`.
-    **`VIRTUAL_ENV=` (empty output)`** — Activate the virtual environment before running diagnostics, or the wrong Python interpreter is being used.
-    **`pip: command not found`** — Install pip with `python3 -m ensurepip --upgrade` or use `python3 -m pip` instead of `pip`.
+    | Error | Fix |
+    |---|---|
+    | `ModuleNotFoundError: No module named '<package>'` | Activate the virtual environment with `source /path/to/venv/bin/activate` and run `pip install <package>`. |
+    | `VIRTUAL_ENV=` (empty output)` | Activate the virtual environment before running diagnostics, or the wrong Python interpreter is being used. |
+    | `pip: command not found` | Install pip with `python3 -m ensurepip --upgrade` or use `python3 -m pip` instead of `pip`. |
 ---
 
 ## Log locations

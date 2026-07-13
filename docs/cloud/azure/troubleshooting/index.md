@@ -106,9 +106,11 @@ true
 ```
 
 !!! warning "Common errors"
-    **`AuthorizationPermissionMismatch: The user, group or application does not have the correct permissions to access the storage account.`** — Verify the user or service principal has a Storage Blob Data Reader or Contributor role assigned at the storage account scope.
-    **`InvalidSasToken: The provided SAS token is invalid or has expired.`** — Regenerate the SAS token with a future expiration time and ensure it includes the required permissions (read, list, etc.).
-    **`StorageAccountNotFound: The storage account '<storage-account>' was not found within the specified resource group.`** — Verify the storage account name is correct and exists in the current subscription and resource group.
+    | Error | Fix |
+    |---|---|
+    | `AuthorizationPermissionMismatch: The user, group or application does not have the correct permissions to access the storage account.` | Verify the user or service principal has a Storage Blob Data Reader or Contributor role assigned at the storage account scope. |
+    | `InvalidSasToken: The provided SAS token is invalid or has expired.` | Regenerate the SAS token with a future expiration time and ensure it includes the required permissions (read, list, etc.). |
+    | `StorageAccountNotFound: The storage account '<storage-account>' was not found within the specified resource group.` | Verify the storage account name is correct and exists in the current subscription and resource group. |
 ## AKS Pod Not Starting
 
 ```bash
@@ -177,7 +179,9 @@ pod "test-pod" deleted
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "pod" (get pods)`** — Verify
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "pod" (get pods)` | Verify |
 **Expected output:** Node conditions show `Ready True`. `kubectl top nodes` shows CPU and memory below 80%. DNS test returns an address for `kubernetes.default`. Events show `Pulled` and `Started` rather than `BackOff` or `ErrImagePull`.
 
 ## App Service 502/503
@@ -203,5 +207,7 @@ az appservice plan update --name <plan-name> -g <rg> --sku P2V3
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Web/serverfarms/<plan-name>' under resource group '<rg>' was not found.`** — Verify the plan name and resource group name are correct with `az appservice plan list -g <rg>`.
-    **`AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Web/serverfarms/write' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Web/serverfarms/<plan-name>'.`** — Ensure your Azure account has Contributor or higher role on the resource group using `az role assignment list -g <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Web/serverfarms/<plan-name>' under resource group '<rg>' was not found.` | Verify the plan name and resource group name are correct with `az appservice plan list -g <rg>`. |
+    | `AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Web/serverfarms/write' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Web/serverfarms/<plan-name>'.` | Ensure your Azure account has Contributor or higher role on the resource group using `az role assignment list -g <rg>`. |

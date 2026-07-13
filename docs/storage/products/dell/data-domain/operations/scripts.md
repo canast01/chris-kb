@@ -117,9 +117,11 @@ STATUS: DEGRADED — 2 active alert(s) found.
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host dd01.example.com port 22: Connection refused`** — Verify the Data Domain appliance is reachable and SSH is enabled; check firewall rules and network connectivity.
-    **`Permission denied (publickey,password).`** — Ensure the SSH key is properly configured for the DD_USER account or add password authentication to the SSH command.
-    **`ERROR: DD_HOST is not set.`** — Export the DD_HOST environment variable before running the script: `export DD_HOST=dd01.example.com`.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host dd01.example.com port 22: Connection refused` | Verify the Data Domain appliance is reachable and SSH is enabled; check firewall rules and network connectivity. |
+    | `Permission denied (publickey,password).` | Ensure the SSH key is properly configured for the DD_USER account or add password authentication to the SSH command. |
+    | `ERROR: DD_HOST is not set.` | Export the DD_HOST environment variable before running the script: `export DD_HOST=dd01.example.com`. |
 ```bash
 #!/bin/bash
 # dd_ddboost_check.sh — Check DDBoost client connectivity on a Data Domain appliance
@@ -216,9 +218,11 @@ STATUS: DEGRADED — 1 disconnected DDBoost client(s).
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH key is loaded with `ssh-add` or configure password authentication; ensure `DD_USER` has SSH access to the Data Domain appliance.
-    **`ddboost: command not found`** — Confirm you are connected to a Data Domain CLI (not a standard Linux host) and that DDBoost is licensed and enabled with `ddboost show status`.
-    **`ERROR: DD_HOST is not set.`** — Export the environment variable before running the script: `export DD_HOST=dd01.example.com`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH key is loaded with `ssh-add` or configure password authentication; ensure `DD_USER` has SSH access to the Data Domain appliance. |
+    | `ddboost: command not found` | Confirm you are connected to a Data Domain CLI (not a standard Linux host) and that DDBoost is licensed and enabled with `ddboost show status`. |
+    | `ERROR: DD_HOST is not set.` | Export the environment variable before running the script: `export DD_HOST=dd01.example.com`. |
 ```bash
 cd ~/Desktop
 chmod +x dd_ddboost_check.sh
@@ -391,9 +395,11 @@ Script execution completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
-    **`The term '.\dd_health_rest.ps1' is not recognized`** — Verify the script file exists in the current directory and use the full path or ensure you are in the correct Desktop folder with `pwd`.
-    **`Unable to connect to Data Domain system at <IP>`** — Check network connectivity to the Data Domain appliance and verify the hostname/IP address is correct in the script configuration.
+    | Error | Fix |
+    |---|---|
+    | `cannot be loaded because running scripts is disabled on this system` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script. |
+    | `The term '.\dd_health_rest.ps1' is not recognized` | Verify the script file exists in the current directory and use the full path or ensure you are in the correct Desktop folder with `pwd`. |
+    | `Unable to connect to Data Domain system at <IP>` | Check network connectivity to the Data Domain appliance and verify the hostname/IP address is correct in the script configuration. |
 ```bash
 #!/bin/bash
 # dd_daily_check.sh — Daily operations check for Dell Data Domain
@@ -502,9 +508,11 @@ Compression statistics:
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname dd01.example.com: Name or service not known`** — Verify the DD_HOST value and ensure DNS resolution is working or use an IP address instead.
-    **`Permission denied (publickey,password).`** — Confirm SSH_USER has valid key-based authentication configured on the Data Domain system and the key is loaded in ssh-agent.
-    **`ddsh: command not found`** — Ensure the SSH user's shell profile includes the Data Domain CLI path (typically `/opt/dd/bin` or similar) in PATH.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname dd01.example.com: Name or service not known` | Verify the DD_HOST value and ensure DNS resolution is working or use an IP address instead. |
+    | `Permission denied (publickey,password).` | Confirm SSH_USER has valid key-based authentication configured on the Data Domain system and the key is loaded in ssh-agent. |
+    | `ddsh: command not found` | Ensure the SSH user's shell profile includes the Data Domain CLI path (typically `/opt/dd/bin` or similar) in PATH. |
 ```bash
 #!/bin/bash
 # dd_triage.sh — Incident triage data capture for Dell Data Domain
@@ -610,9 +618,11 @@ Triage data written to: dd_triage_20240115_143247.txt
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify SSH_USER has valid key-based authentication configured and the Data Domain SSH service is running.
-    **`ssh: connect to host dd01.example.com port 22: Connection timed out`** — Confirm DD_HOST is reachable on the network and SSH port 22 is not blocked by firewall rules.
-    **`ddsh: command not found`** — Ensure you are connecting to a Data Domain system (not a generic Linux host) where the ddsh shell is available.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify SSH_USER has valid key-based authentication configured and the Data Domain SSH service is running. |
+    | `ssh: connect to host dd01.example.com port 22: Connection timed out` | Confirm DD_HOST is reachable on the network and SSH port 22 is not blocked by firewall rules. |
+    | `ddsh: command not found` | Ensure you are connecting to a Data Domain system (not a generic Linux host) where the ddsh shell is available. |
 ```bash
 #!/bin/bash
 # dd_precheck.sh — Pre-change validation for Dell Data Domain
@@ -688,9 +698,11 @@ exit 0
 ```
 
 !!! warning "Common errors"
-    **`ERROR: DD_HOST is not set.`** — Export DD_HOST before running the script: `export DD_HOST=dd01.example.com`
-    **`ssh: connect to host dd01.example.com port 22: Connection timed out`** — Verify network connectivity and SSH access to the Data Domain appliance, and confirm the hostname/IP is correct.
-    **`Permission denied (publickey,password).`** — Ensure the SSH_USER account has passwordless SSH key authentication configured on the Data Domain, or use `ssh-copy-id` to install your public key.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: DD_HOST is not set.` | Export DD_HOST before running the script: `export DD_HOST=dd01.example.com` |
+    | `ssh: connect to host dd01.example.com port 22: Connection timed out` | Verify network connectivity and SSH access to the Data Domain appliance, and confirm the hostname/IP is correct. |
+    | `Permission denied (publickey,password).` | Ensure the SSH_USER account has passwordless SSH key authentication configured on the Data Domain, or use `ssh-copy-id` to install your public key. |
 ```bash
 #!/bin/bash
 # dd_postcheck.sh — Post-change validation for Dell Data Domain
@@ -779,9 +791,11 @@ exit 0
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host dd01.example.com port 22: Connection timed out`** — Verify DD_HOST is reachable and SSH service is running; check firewall rules and network connectivity.
-    **`Permission denied (publickey,password).`** — Ensure SSH_USER has valid credentials configured and public key authentication is set up on the Data Domain system.
-    **`ddsh: command not found`** — Confirm the SSH user has shell access to ddsh; verify the user is not restricted to a limited shell or that ddsh is in the PATH.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host dd01.example.com port 22: Connection timed out` | Verify DD_HOST is reachable and SSH service is running; check firewall rules and network connectivity. |
+    | `Permission denied (publickey,password).` | Ensure SSH_USER has valid credentials configured and public key authentication is set up on the Data Domain system. |
+    | `ddsh: command not found` | Confirm the SSH user has shell access to ddsh; verify the user is not restricted to a limited shell or that ddsh is in the PATH. |
 ```bash
 #!/bin/bash
 # dd_health.sh — Cron-safe health check for Dell Data Domain
@@ -859,9 +873,11 @@ OVERALL: OK
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host dd01.example.com port 22: Connection timed out`** — Verify DD_HOST is correct and SSH connectivity exists; check firewall rules and Data Domain network interface status.
-    **`Permission denied (publickey,password).`** — Ensure SSH_USER has valid key-based authentication configured on the Data Domain system and the public key is in the authorized_keys file.
-    **`ddsh: command not found`** — Confirm the SSH_USER account has shell access enabled on the Data Domain and ddsh is in the system PATH.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host dd01.example.com port 22: Connection timed out` | Verify DD_HOST is correct and SSH connectivity exists; check firewall rules and Data Domain network interface status. |
+    | `Permission denied (publickey,password).` | Ensure SSH_USER has valid key-based authentication configured on the Data Domain system and the public key is in the authorized_keys file. |
+    | `ddsh: command not found` | Confirm the SSH_USER account has shell access enabled on the Data Domain and ddsh is in the system PATH. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

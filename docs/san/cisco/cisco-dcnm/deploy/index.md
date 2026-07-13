@@ -117,9 +117,11 @@ Initial setup completed successfully. Web UI available at https://localhost:8443
 ```
 
 !!! warning "Common errors"
-    **`Error: Docker daemon is not running`** — Start the Docker service with `systemctl start docker` before running the setup script.
-    **`Error: Configuration file not found at /etc/dcnm/appmgr.conf`** — Create the configuration file or verify the path with `ls -la /etc/dcnm/` and update the script path accordingly.
-    **`Error: Insufficient disk space. Required: 100GB, Available: 45GB`** — Free up disk space on the target partition or mount an additional volume before retrying the setup.
+    | Error | Fix |
+    |---|---|
+    | `Error: Docker daemon is not running` | Start the Docker service with `systemctl start docker` before running the setup script. |
+    | `Error: Configuration file not found at /etc/dcnm/appmgr.conf` | Create the configuration file or verify the path with `ls -la /etc/dcnm/` and update the script path accordingly. |
+    | `Error: Insufficient disk space. Required: 100GB, Available: 45GB` | Free up disk space on the target partition or mount an additional volume before retrying the setup. |
 The wizard prompts for:
 
 - Management IP, subnet mask, gateway
@@ -260,9 +262,11 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch is running NX-OS with DCNM fabric mode enabled; older OS versions may not support `nv overlay` syntax.
-    **`BGP router ID not set`** — Configure a loopback interface and assign it as the BGP router ID before DCNM deploys the overlay configuration.
-    **`Neighbor ... Idle`** — Check physical connectivity and BGP timers on both spine and leaf; verify the neighbor IP addresses match DCNM's fabric topology definition.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch is running NX-OS with DCNM fabric mode enabled; older OS versions may not support `nv overlay` syntax. |
+    | `BGP router ID not set` | Configure a loopback interface and assign it as the BGP router ID before DCNM deploys the overlay configuration. |
+    | `Neighbor ... Idle` | Check physical connectivity and BGP timers on both spine and leaf; verify the neighbor IP addresses match DCNM's fabric topology definition. |
 **SNMP trap test:**
 
 1. On one of the managed switches, generate a link-down event by shutting down an access port.
@@ -288,8 +292,10 @@ Backup file verified: OK
 ```
 
 !!! warning "Common errors"
-    **`Error: Insufficient disk space for backup operation`** — Ensure at least 5 GB of free space is available in the /var/dcnm/backup directory before running the backup.
-    **`Error: Permission denied writing to backup directory`** — Verify the DCNM service account has read-write permissions on /var/dcnm/backup using `chmod 755` or `chown dcnm:dcnm`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Insufficient disk space for backup operation` | Ensure at least 5 GB of free space is available in the /var/dcnm/backup directory before running the backup. |
+    | `Error: Permission denied writing to backup directory` | Verify the DCNM service account has read-write permissions on /var/dcnm/backup using `chmod 755` or `chown dcnm:dcnm`. |
 ---
 
 ## Verify

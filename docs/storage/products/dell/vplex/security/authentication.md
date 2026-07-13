@@ -83,9 +83,11 @@ LAST_CHECK: 2024-01-15T09:47:33Z
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the public key was copied to `~service/.ssh/authorized_keys` on the VMS and check that SSH permissions are 600 on the key file and 700 on the .ssh directory.
-    **`ssh-copy-id: INFO: Source of key(s) to be installed: "/home/automation/.ssh/vplex_ed25519.pub" ... Permission denied (password).`** — Ensure the service account password is correct and SSH password authentication is enabled on the VMS (check `PasswordAuthentication yes` in `/etc/ssh/sshd_config`).
-    **`vplexcli: command not found`** — Confirm the vplexcli binary is installed and in the PATH on the VMS, or use the full path to the executable.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the public key was copied to `~service/.ssh/authorized_keys` on the VMS and check that SSH permissions are 600 on the key file and 700 on the .ssh directory. |
+    | `ssh-copy-id: INFO: Source of key(s) to be installed: "/home/automation/.ssh/vplex_ed25519.pub" ... Permission denied (password).` | Ensure the service account password is correct and SSH password authentication is enabled on the VMS (check `PasswordAuthentication yes` in `/etc/ssh/sshd_config`). |
+    | `vplexcli: command not found` | Confirm the vplexcli binary is installed and in the PATH on the VMS, or use the full path to the executable. |
 After SSH key authentication is confirmed to work for all operators and automation accounts, disable password-based SSH authentication on the VMS:
 
 ```bash
@@ -103,8 +105,10 @@ systemctl restart sshd
 ```
 
 !!! warning "Common errors"
-    **`Job for sshd.service failed because the control process exited with error code.`** — Check `/etc/ssh/sshd_config` for syntax errors using `sshd -t` before restarting.
-    **`Permission denied`** — Ensure you are running the commands with `sudo` or as the root user.
+    | Error | Fix |
+    |---|---|
+    | `Job for sshd.service failed because the control process exited with error code.` | Check `/etc/ssh/sshd_config` for syntax errors using `sshd -t` before restarting. |
+    | `Permission denied` | Ensure you are running the commands with `sudo` or as the root user. |
 Verify the change does not lock out any account before closing the session.
 
 ## LDAP / Active Directory Integration
@@ -183,9 +187,11 @@ systemctl restart rsyslog
 ```
 
 !!! warning "Common errors"
-    **`Job for rsyslog.service failed because the control process exited with error code.`** — Validate rsyslog syntax with `rsyslog -N1` before restarting, as malformed rules in vplex-siem.conf will prevent the service from starting.
-    **`Cannot assign requested address`** — Replace `<SIEM_IP>` with an actual IP address (e.g., `192.168.1.100`) and verify network connectivity to the SIEM server with `ping <SIEM_IP>`.
-    **`Permission denied`** — Run the entire configuration block with `sudo` or as the root user, since `/etc/rsyslog.d/` requires elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `Job for rsyslog.service failed because the control process exited with error code.` | Validate rsyslog syntax with `rsyslog -N1` before restarting, as malformed rules in vplex-siem.conf will prevent the service from starting. |
+    | `Cannot assign requested address` | Replace `<SIEM_IP>` with an actual IP address (e.g., `192.168.1.100`) and verify network connectivity to the SIEM server with `ping <SIEM_IP>`. |
+    | `Permission denied` | Run the entire configuration block with `sudo` or as the root user, since `/etc/rsyslog.d/` requires elevated privileges. |
 Verify log ingestion in the SIEM within 24 hours of configuration. Set up SIEM alerts for:
 
 - Multiple failed SSH login attempts to VMS (brute-force indicator)

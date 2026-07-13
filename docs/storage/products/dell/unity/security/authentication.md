@@ -97,9 +97,11 @@ role_1  | CN=Unity-StorageAdmins,OU=Groups,DC=corp,DC=local | storageadmin   | l
 ```
 
 !!! warning "Common errors"
-    **`Error: LDAP server is not reachable at 10.10.10.10:636`** — Verify the LDAP server IP address and port are correct, and that network connectivity exists from the Unity array to the LDAP server.
-    **`Error: Failed to bind with DN 'CN=unity-bind,OU=Service Accounts,DC=corp,DC=local': Invalid credentials`** — Confirm the bind account password is correct and the account has permission to query the directory.
-    **`Error: Base DN 'DC=corp,DC=local' does not exist on LDAP server`** — Verify the Base DN matches your Active Directory structure by querying the LDAP server directly with ldapsearch.
+    | Error | Fix |
+    |---|---|
+    | `Error: LDAP server is not reachable at 10.10.10.10:636` | Verify the LDAP server IP address and port are correct, and that network connectivity exists from the Unity array to the LDAP server. |
+    | `Error: Failed to bind with DN 'CN=unity-bind,OU=Service Accounts,DC=corp,DC=local': Invalid credentials` | Confirm the bind account password is correct and the account has permission to query the directory. |
+    | `Error: Base DN 'DC=corp,DC=local' does not exist on LDAP server` | Verify the Base DN matches your Active Directory structure by querying the LDAP server directly with ldapsearch. |
 ### Protocol Recommendations
 
 | Protocol | Port | Notes |
@@ -160,9 +162,11 @@ The operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: The specified domain controller is unreachable`** — Verify network connectivity to the domain controller and ensure the NAS server can resolve the domain name via DNS.
-    **`Error: Authentication failed for user <domain_admin_or_delegated_user>`** — Confirm the domain admin credentials are correct and the account has sufficient permissions to join computers to the specified organizational unit.
-    **`Error: The organizational unit does not exist`** — Verify the OU path syntax is correct (use `dsquery ou` on a domain controller to confirm the OU exists).
+    | Error | Fix |
+    |---|---|
+    | `Error: The specified domain controller is unreachable` | Verify network connectivity to the domain controller and ensure the NAS server can resolve the domain name via DNS. |
+    | `Error: Authentication failed for user <domain_admin_or_delegated_user>` | Confirm the domain admin credentials are correct and the account has sufficient permissions to join computers to the specified organizational unit. |
+    | `Error: The organizational unit does not exist` | Verify the OU path syntax is correct (use `dsquery ou` on a domain controller to confirm the OU exists). |
 ### Pre-requisites for AD Domain Join
 
 - The NAS server must have a file interface IP configured and reachable.
@@ -195,8 +199,10 @@ DNS Search Domains:     corp.internal, subsidiary.local
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused`** — Verify the Unity array IP address is correct and the management interface is reachable with `ping <ip>`.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the admin credentials are correct and the user has sufficient privileges to query system settings.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused` | Verify the Unity array IP address is correct and the management interface is reachable with `ping <ip>`. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin credentials are correct and the user has sufficient privileges to query system settings. |
 ## NAS Server — NFS with Kerberos
 
 NFS v4 with Kerberos provides strong identity verification for NFS mounts — the NFS client is authenticated by the KDC (AD domain controller) before access is granted. This is required for environments where NFS traffic crosses untrusted networks or where NFS root squash alone is insufficient.
@@ -233,11 +239,11 @@ Kerberos realm: CORP.LOCAL
 ```
 
 !!! warning "Common errors"
-    **`Error: NAS server <nas_id> is not joined to Active Directory`** — Verify the NAS server is domain-joined by running `uemcli -d <ip> -u admin /sys/domain show` and join to AD if needed before creating the export.
-    
-    **`Error: File system <fs_id> does not exist or is not accessible`** — Confirm the file system exists and is online using `uemcli -d <ip> -u admin /stor/pool show -pool <pool_id>` before attempting export creation.
-    
-    **`Error: Kerberos keytab not configured on NAS server`** — Generate and import the Kerberos keytab on the NAS server using `uemcli -d <ip> -u admin /prot/nfs/krb5 create -server <nas_id> -realm <realm_name>` before creating the export.
+    | Error | Fix |
+    |---|---|
+    | `Error: NAS server <nas_id> is not joined to Active Directory` | Verify the NAS server is domain-joined by running `uemcli -d <ip> -u admin /sys/domain show` and join to AD if needed before creating the export. |
+    | `Error: File system <fs_id> does not exist or is not accessible` | Confirm the file system exists and is online using `uemcli -d <ip> -u admin /stor/pool show -pool <pool_id>` before attempting export creation. |
+    | `Error: Kerberos keytab not configured on NAS server` | Generate and import the Kerberos keytab on the NAS server using `uemcli -d <ip> -u admin /prot/nfs/krb5 create -server <nas_id> -realm <realm_name>` before creating the export. |
 On the Linux NFS client side, install `krb5-user` and `nfs-common`, configure `/etc/krb5.conf` to point to the AD domain controllers, and obtain a Kerberos TGT (`kinit`) before mounting:
 
 ```bash
@@ -251,9 +257,11 @@ mount -t nfs4 -o sec=krb5i <nas-ip>:/export/path /mnt/target
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs4: access denied by server while mounting <nas-ip>:/export/path`** — Verify the NFS export permissions on the Dell Unity array and ensure the client's Kerberos principal is listed in the export ACL.
-    **`mount.nfs4: No such file or directory`** — Confirm the export path exists on the NAS and the mount target directory (`/mnt/target`) exists on the client with `mkdir -p /mnt/target`.
-    **`GSSAPI: Credentials have expired`** — Renew the Kerberos ticket on the client using `kinit <username>` before attempting the mount.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs4: access denied by server while mounting <nas-ip>:/export/path` | Verify the NFS export permissions on the Dell Unity array and ensure the client's Kerberos principal is listed in the export ACL. |
+    | `mount.nfs4: No such file or directory` | Confirm the export path exists on the NAS and the mount target directory (`/mnt/target`) exists on the client with `mkdir -p /mnt/target`. |
+    | `GSSAPI: Credentials have expired` | Renew the Kerberos ticket on the client using `kinit <username>` before attempting the mount. |
 ## LDAP for NFS UID/GID Mapping
 
 For NFS environments without Active Directory, Unity NAS servers can use LDAP for UID/GID resolution. This maps NFS client UIDs and GIDs to directory service identities.
@@ -288,9 +296,11 @@ LDAP Server Configuration:
 ```
 
 !!! warning "Common errors"
-    **`Error: LDAP connection failed - Invalid credentials for bind DN`** — Verify the bind account password is correct and the account has not been locked out in Active Directory.
-    **`Error: Cannot resolve LDAP server hostname <ldap_server_ip>`** — Confirm the LDAP server IP is reachable from the NAS and DNS/network routing is properly configured.
-    **`Error: Base DN "DC=corp,DC=local" does not exist on LDAP server`** — Validate the Base DN path matches your Active Directory structure by querying LDAP directly or checking AD Sites and Services.
+    | Error | Fix |
+    |---|---|
+    | `Error: LDAP connection failed - Invalid credentials for bind DN` | Verify the bind account password is correct and the account has not been locked out in Active Directory. |
+    | `Error: Cannot resolve LDAP server hostname <ldap_server_ip>` | Confirm the LDAP server IP is reachable from the NAS and DNS/network routing is properly configured. |
+    | `Error: Base DN "DC=corp,DC=local" does not exist on LDAP server` | Validate the Base DN path matches your Active Directory structure by querying LDAP directly or checking AD Sites and Services. |
 ## Local Authentication
 
 For environments without LDAP or AD, Unity management uses local accounts. Local authentication is always available as a fallback even when directory services are configured.
@@ -338,9 +348,11 @@ Created:                           2023-06-10 11:22:33
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed`** — Verify the management IP address is correct and the admin account credentials are valid.
-    **`User 'operator01' already exists`** — Use a different username or delete the existing user with `/user -name operator01 delete` before recreating it.
-    **`Password does not meet complexity requirements`** — Ensure the password contains at least 8 characters with uppercase, lowercase, numbers, and special characters.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed` | Verify the management IP address is correct and the admin account credentials are valid. |
+    | `User 'operator01' already exists` | Use a different username or delete the existing user with `/user -name operator01 delete` before recreating it. |
+    | `Password does not meet complexity requirements` | Ensure the password contains at least 8 characters with uppercase, lowercase, numbers, and special characters. |
 ## Audit Logging
 
 Unity OE records all administrative actions — login, logout, configuration changes, and alert acknowledgements — in an audit log available in the Unisphere event viewer and via syslog.
@@ -410,9 +422,11 @@ Source: 192.168.1.205
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused on <ip>:443`** — Verify the storage array IP is reachable and the management interface is responding with `ping <ip>` and check firewall rules.
-    **`Error: Authentication failed for user admin`** — Confirm the admin credentials are correct and the account is not locked by running `uemcli -d <ip> -u admin /user show`.
-    **`Error: Command not found: uemcli`** — Install the EMC CLI tools or verify the installation path is in your system PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused on <ip>:443` | Verify the storage array IP is reachable and the management interface is responding with `ping <ip>` and check firewall rules. |
+    | `Error: Authentication failed for user admin` | Confirm the admin credentials are correct and the account is not locked by running `uemcli -d <ip> -u admin /user show`. |
+    | `Error: Command not found: uemcli` | Install the EMC CLI tools or verify the installation path is in your system PATH environment variable. |
 ### Syslog Forwarding for SIEM Integration
 
 Forward Unity audit events to a central SIEM for long-term retention, correlation, and alerting:
@@ -454,9 +468,11 @@ The operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: The syslog server address is invalid or unreachable`** — Verify the syslog server IP address is correct and reachable from the storage array's management network.
-    **`Error: Authentication failed for user admin`** — Ensure the admin password is correct and the user account has sufficient privileges to modify syslog settings.
-    **`Error: Syslog ID <syslog_id> not found`** — Run `uemcli -d <ip> -u admin /sys/syslog show` to list valid syslog destination IDs before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: The syslog server address is invalid or unreachable` | Verify the syslog server IP address is correct and reachable from the storage array's management network. |
+    | `Error: Authentication failed for user admin` | Ensure the admin password is correct and the user account has sufficient privileges to modify syslog settings. |
+    | `Error: Syslog ID <syslog_id> not found` | Run `uemcli -d <ip> -u admin /sys/syslog show` to list valid syslog destination IDs before attempting deletion. |
 ### Audit Retention Requirements
 
 | Standard | Minimum Retention |
@@ -507,9 +523,11 @@ curl -k -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`curl: (401) Unauthorized`** — Verify the admin password is correct and URL-encoded if it contains special characters; use `-u admin:$(echo -n 'password' | jq -sRr @uri)` for special chars.
-    **`curl: (7) Failed to connect to <sp-ip> port 443: Connection refused`** — Confirm the Storage Processor IP is correct and reachable; test with `ping <sp-ip>` or verify the management network is configured.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `curl: (401) Unauthorized` | Verify the admin password is correct and URL-encoded if it contains special characters; use `-u admin:$(echo -n 'password' | jq -sRr @uri)` for special chars. |
+    | `curl: (7) Failed to connect to <sp-ip> port 443: Connection refused` | Confirm the Storage Processor IP is correct and reachable; test with `ping <sp-ip>` or verify the management network is configured. |
 **Session Authentication** — Recommended for scripts making multiple requests:
 
 ```bash
@@ -573,9 +591,11 @@ curl -b cookie.txt -k \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`grep: EMC-CSRF-TOKEN: No such file or directory`** — Verify the cookie.txt file was created successfully in Step 1 by checking `cat cookie.txt` and confirm the login credentials are correct.
-    **`"error": "The CSRF token is invalid or expired"`** — Ensure the CSRF token extraction uses the correct field position with `awk '{print $7}'` and re-run Step 1 to obtain a fresh token if the session has expired.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `grep: EMC-CSRF-TOKEN: No such file or directory` | Verify the cookie.txt file was created successfully in Step 1 by checking `cat cookie.txt` and confirm the login credentials are correct. |
+    | `"error": "The CSRF token is invalid or expired"` | Ensure the CSRF token extraction uses the correct field position with `awk '{print $7}'` and re-run Step 1 to obtain a fresh token if the session has expired. |
 REST API sessions expire after the configured session timeout (default 30 minutes of inactivity). Service accounts used for automation should use session authentication to avoid repeated credential transmission.
 ---
 

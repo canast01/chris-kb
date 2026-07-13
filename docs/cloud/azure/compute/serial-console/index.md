@@ -60,9 +60,11 @@ az vm boot-diagnostics get-boot-log-uris \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the VM name and resource group name are correct and the VM exists in that region.
-    **`AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.`** — Ensure your Azure account has at least Reader role on the VM or resource group.
-    **`InvalidParameter: Boot diagnostics is not enabled on this VM.`** — Enable boot diagnostics on the VM by running `az vm boot-diagnostics enable --resource-group <rg> --name <vm-name>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the VM name and resource group name are correct and the VM exists in that region. |
+    | `AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.` | Ensure your Azure account has at least Reader role on the VM or resource group. |
+    | `InvalidParameter: Boot diagnostics is not enabled on this VM.` | Enable boot diagnostics on the VM by running `az vm boot-diagnostics enable --resource-group <rg> --name <vm-name>`. |
 ---
 
 ## Linux Serial Console
@@ -119,9 +121,11 @@ network:
 ```
 
 !!! warning "Common errors"
-    **`fsck: /dev/sda1 is mounted`** — Run fsck only in single-user mode or from a recovery environment; reboot into single-user mode with `systemctl rescue`.
-    **`E325: ATTENTION: Found a swap file by the name "/etc/fstab.swp"`** — Delete the swap file with `rm /etc/fstab.swp` before editing, or use `vi -r` to recover unsaved changes.
-    **`Job for systemd-networkd.service failed because the control process exited with error code`** — Check for syntax errors in `/etc/netplan/*.yaml` with `netplan validate` and correct the YAML formatting.
+    | Error | Fix |
+    |---|---|
+    | `fsck: /dev/sda1 is mounted` | Run fsck only in single-user mode or from a recovery environment; reboot into single-user mode with `systemctl rescue`. |
+    | `E325: ATTENTION: Found a swap file by the name "/etc/fstab.swp"` | Delete the swap file with `rm /etc/fstab.swp` before editing, or use `vi -r` to recover unsaved changes. |
+    | `Job for systemd-networkd.service failed because the control process exited with error code` | Check for syntax errors in `/etc/netplan/*.yaml` with `netplan validate` and correct the YAML formatting. |
 To access GRUB on Linux via serial console, the VM must have `console=ttyS0` in its kernel command line. Most Azure marketplace images include this by default.
 
 ---
@@ -196,9 +200,11 @@ az vm run-command invoke \
 ```
 
 !!! warning "Common errors"
-    **`The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/runCommands/action'`** — Ensure your user account has the Contributor or Virtual Machine Contributor role on the resource group or VM.
-    **`The resource group '<rg>' could not be found.`** — Verify the resource group name is correct and exists in your current Azure subscription using `az group list`.
-    **`The virtual machine '<win-vm-name>' could not be found in resource group '<rg>'.`** — Confirm the VM name is spelled correctly and belongs to the specified resource group using `az vm list --resource-group <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/runCommands/action'` | Ensure your user account has the Contributor or Virtual Machine Contributor role on the resource group or VM. |
+    | `The resource group '<rg>' could not be found.` | Verify the resource group name is correct and exists in your current Azure subscription using `az group list`. |
+    | `The virtual machine '<win-vm-name>' could not be found in resource group '<rg>'.` | Confirm the VM name is spelled correctly and belongs to the specified resource group using `az vm list --resource-group <rg>`. |
 ---
 
 ## Troubleshooting Common Scenarios
@@ -227,5 +233,7 @@ VM restart initiated successfully.
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the resource group name and VM name are correct using `az vm list --resource-group <rg>`.
-    **`AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/restart/action' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.`** — Ensure your Azure account has Contributor or Virtual Machine Contributor role on the resource group or VM.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the resource group name and VM name are correct using `az vm list --resource-group <rg>`. |
+    | `AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/restart/action' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.` | Ensure your Azure account has Contributor or Virtual Machine Contributor role on the resource group or VM. |

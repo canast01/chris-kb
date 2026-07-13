@@ -100,9 +100,11 @@ result: 0 Success
 ```
 
 !!! warning "Common errors"
-    **`nc: getaddrinfo failed for dc01.corp.example.com: Name or service not known`** — Verify the hostname is correct and resolvable by running `nslookup dc01.corp.example.com` or update your DNS/hosts file.
-    **`ldap_bind: Invalid credentials (49)`** — Confirm the service account password is correct and the account is not locked; test with `ldapwhoami -H ldap://dc01.corp.example.com:389 -D "svc-ldap@corp.example.com" -w "password"`.
-    **`TLS: peer certificate cannot be authenticated with known CA certificates`** — Add the LDAPS server certificate to your system CA store or disable certificate verification by adding `-o LDAPTLS_REQCERT=never` to the ldapsearch command.
+    | Error | Fix |
+    |---|---|
+    | `nc: getaddrinfo failed for dc01.corp.example.com: Name or service not known` | Verify the hostname is correct and resolvable by running `nslookup dc01.corp.example.com` or update your DNS/hosts file. |
+    | `ldap_bind: Invalid credentials (49)` | Confirm the service account password is correct and the account is not locked; test with `ldapwhoami -H ldap://dc01.corp.example.com:389 -D "svc-ldap@corp.example.com" -w "password"`. |
+    | `TLS: peer certificate cannot be authenticated with known CA certificates` | Add the LDAPS server certificate to your system CA store or disable certificate verification by adding `-o LDAPTLS_REQCERT=never` to the ldapsearch command. |
 ## Global Catalog Ports (3268 and 3269)
 
 The Global Catalog contains a partial replica of all objects across all domains in the AD forest. Use these ports when queries must span multiple domains.
@@ -167,8 +169,10 @@ result: 0 Success
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked; check DC event logs for failed bind attempts.
-    **`Can't contact LDAP server`** — Confirm port 3268/3269 is open in firewall rules between the client and domain controller, and that the DC hostname resolves correctly.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account is not locked; check DC event logs for failed bind attempts. |
+    | `Can't contact LDAP server` | Confirm port 3268/3269 is open in firewall rules between the client and domain controller, and that the DC hostname resolves correctly. |
 ## Firewall Rules
 
 ```bash
@@ -195,9 +199,11 @@ Ok.
 ```
 
 !!! warning "Common errors"
-    **`iptables: No chain/target/match by that name`** — Ensure iptables is installed and the kernel module is loaded with `modprobe iptable_filter`.
-    **`netsh: The filename, directory name, or volume name syntax is not correct`** — Run the netsh command from an elevated (Administrator) PowerShell or Command Prompt window.
-    **`iptables: Bad rule (does a matching rule exist?)`** — Verify the OUTPUT chain exists and no conflicting DROP rules precede these ACCEPT rules with `iptables -L OUTPUT -n`.
+    | Error | Fix |
+    |---|---|
+    | `iptables: No chain/target/match by that name` | Ensure iptables is installed and the kernel module is loaded with `modprobe iptable_filter`. |
+    | `netsh: The filename, directory name, or volume name syntax is not correct` | Run the netsh command from an elevated (Administrator) PowerShell or Command Prompt window. |
+    | `iptables: Bad rule (does a matching rule exist?)` | Verify the OUTPUT chain exists and no conflicting DROP rules precede these ACCEPT rules with `iptables -L OUTPUT -n`. |
 ## StartTLS vs LDAPS
 
 ```bash
@@ -235,9 +241,11 @@ supportedExtension: 1.3.6.1.4.1.1466.20037.12
 ```
 
 !!! warning "Common errors"
-    **`ldap_start_tls: Connect error (-1)`** — Verify the LDAP server is listening on port 389 and StartTLS is enabled in the LDAP service configuration.
-    **`ldapsearch: Invalid credentials (49)`** — Confirm the service account password is correct and the account is not locked or expired in Active Directory.
-    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Add the CA certificate to your system's trusted store or use `openssl s_client -connect dc01.corp.example.com:636 -CAfile /path/to/ca.crt` to verify with a specific CA bundle.
+    | Error | Fix |
+    |---|---|
+    | `ldap_start_tls: Connect error (-1)` | Verify the LDAP server is listening on port 389 and StartTLS is enabled in the LDAP service configuration. |
+    | `ldapsearch: Invalid credentials (49)` | Confirm the service account password is correct and the account is not locked or expired in Active Directory. |
+    | `error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed` | Add the CA certificate to your system's trusted store or use `openssl s_client -connect dc01.corp.example.com:636 -CAfile /path/to/ca.crt` to verify with a specific CA bundle. |
 ## Port Troubleshooting
 
 ```powershell

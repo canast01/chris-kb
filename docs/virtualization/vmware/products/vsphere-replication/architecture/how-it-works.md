@@ -102,9 +102,11 @@ hbr 1.0.0 loaded
 ```
 
 !!! warning "Common errors"
-    **`hbrsvc is stopped.`** — Run `service hbrsvc start` or `/etc/init.d/hbrsvc start` to restart the replication service.
-    **`Error: Unknown command or invalid option`** — Verify the ESXi version supports the `esxcli hbr` command (requires vSphere Replication 8.0+) and check command syntax against your version's documentation.
-    **`No replication tasks found`** — Confirm that replication is configured for VMs on this host by checking the vSphere Replication appliance management interface and verifying target site connectivity.
+    | Error | Fix |
+    |---|---|
+    | `hbrsvc is stopped.` | Run `service hbrsvc start` or `/etc/init.d/hbrsvc start` to restart the replication service. |
+    | `Error: Unknown command or invalid option` | Verify the ESXi version supports the `esxcli hbr` command (requires vSphere Replication 8.0+) and check command syntax against your version's documentation. |
+    | `No replication tasks found` | Confirm that replication is configured for VMs on this host by checking the vSphere Replication appliance management interface and verifying target site connectivity. |
 ### Changed Block Tracking vs hbr Bitmap
 
 | Property | CBT (Backup) | hbr (VR) |
@@ -299,9 +301,11 @@ lighttpd.service                               loaded active running   Lightweig
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the VRA appliance hostname/IP is correct and SSH port 22 is accessible from your management network.
-    **`Unit hms.service not found`** — Confirm you are connected to a valid VRA appliance; this service only exists on vSphere Replication Appliance instances.
-    **`Permission denied`** — Use `sudo systemctl restart hms` or ensure the admin account has passwordless sudo configured in `/etc/sudoers.d/`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the VRA appliance hostname/IP is correct and SSH port 22 is accessible from your management network. |
+    | `Unit hms.service not found` | Confirm you are connected to a valid VRA appliance; this service only exists on vSphere Replication Appliance instances. |
+    | `Permission denied` | Use `sudo systemctl restart hms` or ensure the admin account has passwordless sudo configured in `/etc/sudoers.d/`. |
 ---
 
 ## VRS — vSphere Replication Server (Scale-Out)
@@ -386,9 +390,11 @@ tail -f /var/log/vmware/hms/hms.log
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the VRA's CA certificate into your system trust store.
-    **`ssh: connect to host <VRS-FQDN> port 22 refused`** — Verify the VRS appliance is powered on and SSH is enabled; check firewall rules between your admin host and the VRS management network.
-    **`tail: cannot open '/var/log/vmware/hms/hms.log' for reading: Permission denied`** — Run the tail command with `sudo` or ensure your user account has read permissions on the HMS log directory.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the VRA's CA certificate into your system trust store. |
+    | `ssh: connect to host <VRS-FQDN> port 22 refused` | Verify the VRS appliance is powered on and SSH is enabled; check firewall rules between your admin host and the VRS management network. |
+    | `tail: cannot open '/var/log/vmware/hms/hms.log' for reading: Permission denied` | Run the tail command with `sudo` or ensure your user account has read permissions on the HMS log directory. |
 ---
 
 ## Consistency Groups

@@ -131,9 +131,11 @@ dmesg: [2847.234521] EXT4-fs warning (device dm-0): ext4_mb_generate_buddy:805: 
 ```
 
 !!! warning "Common errors"
-    **`df: cannot access '/var/log/*': Permission denied`** — Run the command with `sudo` or as root to access all log directories.
-    **`iotop: command not found`** — Install iotop with `sudo apt-get install iotop` (Debian/Ubuntu) or `sudo yum install iotop` (RHEL/CentOS).
-    **`find: '/tmp': Permission denied`** — Run find with `sudo` or check that the /tmp directory is readable by your user account.
+    | Error | Fix |
+    |---|---|
+    | `df: cannot access '/var/log/*': Permission denied` | Run the command with `sudo` or as root to access all log directories. |
+    | `iotop: command not found` | Install iotop with `sudo apt-get install iotop` (Debian/Ubuntu) or `sudo yum install iotop` (RHEL/CentOS). |
+    | `find: '/tmp': Permission denied` | Run find with `sudo` or check that the /tmp directory is readable by your user account. |
 ## Network Connectivity Issues
 
 ```bash
@@ -195,9 +197,11 @@ tcpdump: listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host 192.168.1.1`** — Verify the default route exists with `ip route show default` and check DNS resolution is working.
-    **`ss: No such file or directory`** — Install `ss` via `apt install iproute2` (Ubuntu) or `yum install iproute` (RHEL), or use `netstat -tulnp` as fallback.
-    **`tcpdump: Permission denied`** — Run tcpdump with `sudo` or add your user to the `tcpdump` group with `sudo usermod -a -G tcpdump $USER`.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host 192.168.1.1` | Verify the default route exists with `ip route show default` and check DNS resolution is working. |
+    | `ss: No such file or directory` | Install `ss` via `apt install iproute2` (Ubuntu) or `yum install iproute` (RHEL), or use `netstat -tulnp` as fallback. |
+    | `tcpdump: Permission denied` | Run tcpdump with `sudo` or add your user to the `tcpdump` group with `sudo usermod -a -G tcpdump $USER`. |
 ## Service Not Starting
 
 ```bash
@@ -249,9 +253,11 @@ nginx: [emerg] bind() to [::]:80 failed (98: Address already in use)
 ```
 
 !!! warning "Common errors"
-    **`nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)`** — Stop the conflicting service (e.g., `sudo systemctl stop apache2`) or change nginx's listening port in `/etc/nginx/nginx.conf`.
-    **`systemd[1]: <service>: Main process exited, code=exited, status=1/FAILURE`** — Review the full journal output with `journalctl -u <service> -n 100` to identify the actual startup error in the logs.
-    **`Failed to parse command line argument`** — Verify the `ExecStart` command syntax in the unit file matches the actual binary's argument format using `man <binary>`.
+    | Error | Fix |
+    |---|---|
+    | `nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)` | Stop the conflicting service (e.g., `sudo systemctl stop apache2`) or change nginx's listening port in `/etc/nginx/nginx.conf`. |
+    | `systemd[1]: <service>: Main process exited, code=exited, status=1/FAILURE` | Review the full journal output with `journalctl -u <service> -n 100` to identify the actual startup error in the logs. |
+    | `Failed to parse command line argument` | Verify the `ExecStart` command syntax in the unit file matches the actual binary's argument format using `man <binary>`. |
 ## SSH Access Denied
 
 ```bash
@@ -313,9 +319,11 @@ type=AVC msg=audit(1705318800.123:4567): avc:  denied  { name_bind } for  pid=12
 ```
 
 !!! warning "Common errors"
-    **`grep: /etc/ssh/sshd_config: No such file or directory`** — Verify the SSH config path is correct; on some systems it may be `/etc/ssh/sshd_config.d/` or check if OpenSSH is installed with `rpm -q openssh-server`.
-    **`journalctl: command not found`** — Install systemd-devel or use `tail -f /var/log/auth.log` on systems without journalctl support.
-    **`ausearch: command not found`** — Install audit tools with `yum install audit` or `apt install auditd`, then ensure the audit daemon is running with `systemctl start auditd`.
+    | Error | Fix |
+    |---|---|
+    | `grep: /etc/ssh/sshd_config: No such file or directory` | Verify the SSH config path is correct; on some systems it may be `/etc/ssh/sshd_config.d/` or check if OpenSSH is installed with `rpm -q openssh-server`. |
+    | `journalctl: command not found` | Install systemd-devel or use `tail -f /var/log/auth.log` on systems without journalctl support. |
+    | `ausearch: command not found` | Install audit tools with `yum install audit` or `apt install auditd`, then ensure the audit daemon is running with `systemctl start auditd`. |
 ## Disk Full — Emergency
 
 ```bash
@@ -374,9 +382,11 @@ Vacuumed journals from /var/log/journal/abc123def456 (size now 498M)
 ```
 
 !!! warning "Common errors"
-    **`du: cannot read directory '/root': Permission denied`** — Run the du commands with `sudo` to access restricted directories.
-    **`lsof: command not found`** — Install lsof with `apt-get install lsof` (Debian/Ubuntu) or `yum install lsof` (RHEL/CentOS).
-    **`journalctl: Refusing to vacuum journal files, as this would result in less than the requested amount of free space`** — Lower the vacuum size target (e.g., `--vacuum-size=100M`) or free additional space first.
+    | Error | Fix |
+    |---|---|
+    | `du: cannot read directory '/root': Permission denied` | Run the du commands with `sudo` to access restricted directories. |
+    | `lsof: command not found` | Install lsof with `apt-get install lsof` (Debian/Ubuntu) or `yum install lsof` (RHEL/CentOS). |
+    | `journalctl: Refusing to vacuum journal files, as this would result in less than the requested amount of free space` | Lower the vacuum size target (e.g., `--vacuum-size=100M`) or free additional space first. |
 ## System Crash / Reboot Analysis
 
 ```bash
@@ -480,9 +490,11 @@ System time: 0.000234567 seconds slow of NTP time
 ```
 
 !!! warning "Common errors"
-    **`strace: attach: ptrace(PTRACE_SEIZE, <PID>): Operation not permitted`** — Run strace with `sudo` or ensure the process owner matches your user.
-    **`lsof: command not found`** — Install lsof with `apt-get install lsof` or `yum install lsof`.
-    **`journalctl: command not found`** — Ensure systemd is installed; on non-systemd systems use `tail -f /var/log/syslog` instead.
+    | Error | Fix |
+    |---|---|
+    | `strace: attach: ptrace(PTRACE_SEIZE, <PID>): Operation not permitted` | Run strace with `sudo` or ensure the process owner matches your user. |
+    | `lsof: command not found` | Install lsof with `apt-get install lsof` or `yum install lsof`. |
+    | `journalctl: command not found` | Ensure systemd is installed; on non-systemd systems use `tail -f /var/log/syslog` instead. |
 ---
 
 ## Verify

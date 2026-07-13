@@ -89,9 +89,11 @@ Address: 10.20.5.43
 ```
 
 !!! warning "Common errors"
-    **`nslookup: can't resolve 'aac.example.local': No address associated with hostname`** — Verify DNS server is reachable and the hostname is registered in your DNS zone; use `nslookup @<dns-ip> aac.example.local` to test a specific server.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the vIDM certificate into your system's CA bundle with `curl -cacert /path/to/cert.pem https://vidm.example.local/SAAS/auth/heartbeat`.
-    **`curl: (7) Failed to connect to vidm.example.local port 443: Connection refused`** — Verify vIDM appliance is running and accessible on port 443 using `telnet vidm.example.local 443` or check firewall rules between LCM and vIDM.
+    | Error | Fix |
+    |---|---|
+    | `nslookup: can't resolve 'aac.example.local': No address associated with hostname` | Verify DNS server is reachable and the hostname is registered in your DNS zone; use `nslookup @<dns-ip> aac.example.local` to test a specific server. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the vIDM certificate into your system's CA bundle with `curl -cacert /path/to/cert.pem https://vidm.example.local/SAAS/auth/heartbeat`. |
+    | `curl: (7) Failed to connect to vidm.example.local port 443: Connection refused` | Verify vIDM appliance is running and accessible on port 443 using `telnet vidm.example.local 443` or check firewall rules between LCM and vIDM. |
 TLS: generate a SAN cert covering all FQDNs above; upload to LCM Certificate Management before deployment.
 
 ---
@@ -125,9 +127,11 @@ Connected to lcm.example.local.
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Ensure SSH key is configured or use `ssh-keyscan` to add the host key, then verify root SSH access is enabled on the LCM appliance.
-    **`tail: cannot open '/var/log/vmware/lcm/lcm-debug.log' for reading: No such file or directory`** — Verify the LCM service is running with `systemctl status vmware-lcm` and check the correct log path with `find /var/log -name "*lcm*"`.
-    **`grep: (standard input): No such device or address`** — The log file may be rotating; use `tail -f /var/log/vmware/lcm/lcm-debug.log*` to follow all rotated logs or increase the buffer with `tail -f -n 100`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Ensure SSH key is configured or use `ssh-keyscan` to add the host key, then verify root SSH access is enabled on the LCM appliance. |
+    | `tail: cannot open '/var/log/vmware/lcm/lcm-debug.log' for reading: No such file or directory` | Verify the LCM service is running with `systemctl status vmware-lcm` and check the correct log path with `find /var/log -name "*lcm*"`. |
+    | `grep: (standard input): No such device or address` | The log file may be rotating; use `tail -f /var/log/vmware/lcm/lcm-debug.log*` to follow all rotated logs or increase the buffer with `tail -f -n 100`. |
 After the 60–90 minute deployment:
 
 ```bash
@@ -158,9 +162,11 @@ vRA Automation 8.11.2 Build 20231015.1234567
 ```
 
 !!! warning "Common errors"
-    **`vracli: command not found`** — Ensure you are logged in as root and the vRA CLI is installed in the PATH; check `/opt/vmware/vra/bin/vracli` exists.
-    **`Unable to connect to Kubernetes cluster`** — Verify kubectl is configured with the correct kubeconfig and the cluster API server is reachable from this node.
-    **`pod status shows CrashLoopBackOff or ImagePullBackOff`** — Check pod logs with `kubectl logs <pod-name> -n <namespace>` and verify container images are accessible in your registry.
+    | Error | Fix |
+    |---|---|
+    | `vracli: command not found` | Ensure you are logged in as root and the vRA CLI is installed in the PATH; check `/opt/vmware/vra/bin/vracli` exists. |
+    | `Unable to connect to Kubernetes cluster` | Verify kubectl is configured with the correct kubeconfig and the cluster API server is reachable from this node. |
+    | `pod status shows CrashLoopBackOff or ImagePullBackOff` | Check pod logs with `kubectl logs <pod-name> -n <namespace>` and verify container images are accessible in your registry. |
 ---
 
 ## Phase 3 — Cloud Account Configuration
@@ -193,9 +199,11 @@ Sync initiated successfully. Job ID: job-2024-01-15-08-42-5f7e9c
 ```
 
 !!! warning "Common errors"
-    **`Error: Cloud account not found: <id>`** — Verify the account ID with `vracli cloud-account list` and use the exact UUID from the ID column.
-    **`Error: Sync already in progress for this account`** — Wait for the previous sync job to complete or check status with `vracli cloud-account show --id <id>`.
-    **`Error: Authentication failed for cloud account`** — Re-validate the cloud account credentials in the Aria Automation UI under Infrastructure > Cloud Accounts.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cloud account not found: <id>` | Verify the account ID with `vracli cloud-account list` and use the exact UUID from the ID column. |
+    | `Error: Sync already in progress for this account` | Wait for the previous sync job to complete or check status with `vracli cloud-account show --id <id>`. |
+    | `Error: Authentication failed for cloud account` | Re-validate the cloud account credentials in the Aria Automation UI under Infrastructure > Cloud Accounts. |
 Create Cloud Zones — define per-cluster subsets available to projects:
 
 ```text
@@ -294,9 +302,11 @@ Cluster Health Status:
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify SSH is enabled on the AAC appliance and the hostname/IP is correct with `ping aac.example.local`.
-    **`vracli: command not found`** — Ensure you are logged in as root and the vracli binary is in the PATH; check `/opt/vmware/vra/bin/` exists.
-    **`CrashLoopBackOff` or `ImagePullBackOff` in pod status** — Check pod logs with `kubectl logs <pod-name> -n <namespace>` and verify image registry connectivity and disk space.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify SSH is enabled on the AAC appliance and the hostname/IP is correct with `ping aac.example.local`. |
+    | `vracli: command not found` | Ensure you are logged in as root and the vracli binary is in the PATH; check `/opt/vmware/vra/bin/` exists. |
+    | `CrashLoopBackOff` or `ImagePullBackOff` in pod status` | Check pod logs with `kubectl logs <pod-name> -n <namespace>` and verify image registry connectivity and disk space. |
 Submit a smoke-test deployment from Service Broker and confirm it reaches `DEPLOYMENT_SUCCESSFUL`, then delete it.
 
 | Check | Command / Location | Expected |

@@ -106,8 +106,10 @@ Zone Configuration:
 ```
 
 !!! warning "Common errors"
-    **`cfgsave: command not found`** — Verify you are logged into the Brocade switch CLI (not the Linux shell) by checking the prompt shows `switch>` or `switch#`.
-    **`Configuration save failed: Flash memory full`** — Free up flash space by removing old configuration backups using `cfgdelete` or contact support if persistent.
+    | Error | Fix |
+    |---|---|
+    | `cfgsave: command not found` | Verify you are logged into the Brocade switch CLI (not the Linux shell) by checking the prompt shows `switch>` or `switch#`. |
+    | `Configuration save failed: Flash memory full` | Free up flash space by removing old configuration backups using `cfgdelete` or contact support if persistent. |
 The zone database is included in the `configupload` archive. However, always run `cfgsave` immediately after any zoning change — before running `configupload` — so that the backup captures the latest zone state.
 
 ---
@@ -168,9 +170,11 @@ switch-03.san.local            : ok=3    changed=1    unreachable=0    failed=0
 ```
 
 !!! warning "Common errors"
-    **`[Errno 2] No such file or directory: 'inventory'`** — Verify the inventory file exists in the current directory or provide the full path with `-i /path/to/inventory`.
-    **`fatal: [switch-01.san.local]: UNREACHABLE! => {"msg": "Unable to open shell. SSH connection refused."}`** — Confirm SSH credentials are correct in the inventory file and that the switch management IP is reachable via `ping` or `ssh -v`.
-    **`fatal: [switch-02.san.local]: FAILED! => {"msg": "Unsupported parameters for module: brocade_config"}`** — Update the Ansible Brocade module to a compatible version using `ansible-galaxy collection install brocade.fos` or verify playbook syntax matches your installed module version.
+    | Error | Fix |
+    |---|---|
+    | `[Errno 2] No such file or directory: 'inventory'` | Verify the inventory file exists in the current directory or provide the full path with `-i /path/to/inventory`. |
+    | `fatal: [switch-01.san.local]: UNREACHABLE! => {"msg": "Unable to open shell. SSH connection refused."}` | Confirm SSH credentials are correct in the inventory file and that the switch management IP is reachable via `ping` or `ssh -v`. |
+    | `fatal: [switch-02.san.local]: FAILED! => {"msg": "Unsupported parameters for module: brocade_config"}` | Update the Ansible Brocade module to a compatible version using `ansible-galaxy collection install brocade.fos` or verify playbook syntax matches your installed module version. |
 Each switch backup is archived with a datestamp in the filename: `<switchname>_config_20250507.cfg`.
 
 ---
@@ -223,9 +227,11 @@ Upload Progress:
 ```
 
 !!! warning "Common errors"
-    **`cfgsave: Configuration save failed - insufficient flash space`** — Run `spaceshow` to verify available flash memory and delete old configs with `cfgdelete` if needed.
-    **`configupload: Connection timeout to 10.0.0.5`** — Verify network connectivity to the backup server and confirm the SCP service is running with `netstat -an | grep 22`.
-    **`configupload: Authentication failed for user svcbackup`** — Confirm the backup server credentials are correct and the svcbackup user has write permissions on the `/backups/brocade/` directory.
+    | Error | Fix |
+    |---|---|
+    | `cfgsave: Configuration save failed - insufficient flash space` | Run `spaceshow` to verify available flash memory and delete old configs with `cfgdelete` if needed. |
+    | `configupload: Connection timeout to 10.0.0.5` | Verify network connectivity to the backup server and confirm the SCP service is running with `netstat -an | grep 22`. |
+    | `configupload: Authentication failed for user svcbackup` | Confirm the backup server credentials are correct and the svcbackup user has write permissions on the `/backups/brocade/` directory. |
 ---
 
 ## Restore Validation
@@ -288,9 +294,11 @@ Devices Logged In: 47
 ```
 
 !!! warning "Common errors"
-    **`zone: <zoneset-name> not found`** — Verify the zone set name with `cfgshow` and use the exact name listed in the "Defined zone set" output.
-    **`Access denied: zone database is locked`** — Wait 30 seconds for any ongoing zone operations to complete, then retry `cfgenable`.
-    **`ISL port offline or degraded speed detected`** — Check physical cable connections and SFP transceivers on the offline ISL ports, then run `islshow` again to confirm recovery.
+    | Error | Fix |
+    |---|---|
+    | `zone: <zoneset-name> not found` | Verify the zone set name with `cfgshow` and use the exact name listed in the "Defined zone set" output. |
+    | `Access denied: zone database is locked` | Wait 30 seconds for any ongoing zone operations to complete, then retry `cfgenable`. |
+    | `ISL port offline or degraded speed detected` | Check physical cable connections and SFP transceivers on the offline ISL ports, then run `islshow` again to confirm recovery. |
 ---
 
 ## Switch Replacement — Config Restore
@@ -361,8 +369,10 @@ portname 0/3 "Host_Server_01"
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/backups/brocade/': No such file or directory`** — Verify the backup mount path is correct and the NFS/SMB share is mounted with `mount | grep backups`.
-    **`head: /backups/brocade/dc1-san-sw01_config_20250507.cfg: Permission denied`** — Check file permissions with `ls -l` and ensure the backup user has read access, or run with `sudo`.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/backups/brocade/': No such file or directory` | Verify the backup mount path is correct and the NFS/SMB share is mounted with `mount | grep backups`. |
+    | `head: /backups/brocade/dc1-san-sw01_config_20250507.cfg: Permission denied` | Check file permissions with `ls -l` and ensure the backup user has read access, or run with `sudo`. |
 A valid config backup file begins with a comment block identifying the switch hostname, serial number, FOS version, and backup timestamp. If the file is empty or contains only error messages, the backup failed and must be re-run.
 
 ---

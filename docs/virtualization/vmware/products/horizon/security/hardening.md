@@ -58,11 +58,11 @@ Protocol  : TLSv1.2
 ```
 
 !!! warning "Common errors"
-    **`Connection refused on port 9443`** — Verify the UAG Admin UI service is running with `systemctl status vmware-uag-admin` and that the management NIC binding is correctly configured in the network settings.
-    
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — Ensure the UAG's SSL certificate is valid and trusted; regenerate or import a valid certificate through Admin UI > Certificates if the cert has expired or is self-signed without proper CA chain.
-    
-    **`DoS protection blocking legitimate traffic`** — Increase the "Max connections per client" threshold in Admin UI > Advanced Settings > DoS Mitigation if legitimate admin sessions are being dropped.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused on port 9443` | Verify the UAG Admin UI service is running with `systemctl status vmware-uag-admin` and that the management NIC binding is correctly configured in the network settings. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | Ensure the UAG's SSL certificate is valid and trusted; regenerate or import a valid certificate through Admin UI > Certificates if the cert has expired or is self-signed without proper CA chain. |
+    | `DoS protection blocking legitimate traffic` | Increase the "Max connections per client" threshold in Admin UI > Advanced Settings > DoS Mitigation if legitimate admin sessions are being dropped. |
 ---
 
 ## USB Redirection Policy
@@ -136,9 +136,11 @@ Export completed successfully to: /var/log/horizon/audit_export_20240115_143218.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to Horizon Event Database — connection timeout after 30 seconds`** — Verify the Event Database service is running and accessible on the configured hostname/port in Horizon Administrator settings.
-    **`Error: Insufficient permissions to export events — user role does not have Audit:Read privilege`** — Grant the user the "Audit" role or add explicit "Audit:Read" permission in Horizon Administrator > Users and Groups.
-    **`Error: CSV export failed — disk space insufficient (required: 512MB, available: 128MB)`** — Free up disk space on the Horizon Connection Server or configure event export to an alternate location with adequate storage.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to Horizon Event Database — connection timeout after 30 seconds` | Verify the Event Database service is running and accessible on the configured hostname/port in Horizon Administrator settings. |
+    | `Error: Insufficient permissions to export events — user role does not have Audit:Read privilege` | Grant the user the "Audit" role or add explicit "Audit:Read" permission in Horizon Administrator > Users and Groups. |
+    | `Error: CSV export failed — disk space insufficient (required: 512MB, available: 128MB)` | Free up disk space on the Horizon Connection Server or configure event export to an alternate location with adequate storage. |
 For automated monitoring, configure Events Database (SQL Server) and query it with scheduled reports.
 
 ---

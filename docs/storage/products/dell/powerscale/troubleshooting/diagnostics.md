@@ -253,8 +253,10 @@ Jun 14 09:22:11 node4 kernel: [network] WARNING: Link down on eth3
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are running commands on the PowerScale cluster management node or install the OneFS CLI tools.
-    **`Event <event-id> not found`** — Verify the event ID exists by running `isi event list` first and confirm the ID matches exactly.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are running commands on the PowerScale cluster management node or install the OneFS CLI tools. |
+    | `Event <event-id> not found` | Verify the event ID exists by running `isi event list` first and confirm the ID matches exactly. |
     **
 ---
 
@@ -325,9 +327,11 @@ Schedule: Every day at 22:00
 ```
 
 !!! warning "Common errors"
-    **`Connection timeout to target cluster`** — Verify network connectivity and firewall rules allow ports 7722 and 8080 between source and target clusters.
-    **`nc: connect to 192.168.100.45 port 7722 (tcp) failed: Connection refused`** — Confirm SyncIQ service is running on the target cluster with `isi services -a | grep synciq`.
-    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster via SSH or have the OneFS CLI tools installed and in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `Connection timeout to target cluster` | Verify network connectivity and firewall rules allow ports 7722 and 8080 between source and target clusters. |
+    | `nc: connect to 192.168.100.45 port 7722 (tcp) failed: Connection refused` | Confirm SyncIQ service is running on the target cluster with `isi services -a | grep synciq`. |
+    | `isi: command not found` | Ensure you are logged into the PowerScale cluster via SSH or have the OneFS CLI tools installed and in your PATH. |
 ---
 
 ## Step 4 — Check quotas
@@ -383,8 +387,10 @@ Directories: 1523
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid path /ifs/data/dept/finance`** — Verify the quota path exists with `isi quota quotas list` and confirm the exact spelling and case.
-    **`Error: Insufficient privileges to modify quota`** — Ensure your user account has quota administration rights; contact your cluster administrator if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid path /ifs/data/dept/finance` | Verify the quota path exists with `isi quota quotas list` and confirm the exact spelling and case. |
+    | `Error: Insufficient privileges to modify quota` | Ensure your user account has quota administration rights; contact your cluster administrator if needed. |
 ---
 
 ## Step 5 — Check storage capacity and performance statistics
@@ -451,9 +457,11 @@ Timestamp                    cluster.disk.bytes.used    cluster.disk.bytes.free
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the PATH includes `/usr/local/bin` or the OneFS SDK installation directory.
-    **`Permission denied`** — Run the commands with appropriate credentials (use `isi auth login` or execute as a user with cluster admin privileges).
-    **`date: invalid date 'invalid date format'`** — Replace the date command with the correct format for your system (e.g., `date -d "24 hours ago" +%s` on GNU date or `date -v-24H +%s` on BSD date).
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the PATH includes `/usr/local/bin` or the OneFS SDK installation directory. |
+    | `Permission denied` | Run the commands with appropriate credentials (use `isi auth login` or execute as a user with cluster admin privileges). |
+    | `date: invalid date 'invalid date format'` | Replace the date command with the correct format for your system (e.g., `date -d "24 hours ago" +%s` on GNU date or `date -v-24H +%s` on BSD date). |
 ---
 
 ## Step 6 — Check network and SmartConnect
@@ -519,9 +527,11 @@ Log Retention:  90 days
 ```
 
 !!! warning "Common errors"
-    **`nslookup: can't resolve '<smartconnect-zone-fqdn>': No address associated with hostname`** — Verify the SmartConnect zone FQDN is correct and DNS A records exist for all pool IPs using `isi network pools list`.
-    **`showmount: clnt_create: RPC: Program not registered`** — Confirm NFS protocol is enabled on the cluster with `isi services -a | grep nfs` and verify network connectivity to the SmartConnect IP.
-    **`isi_err_EAUTH: Authentication failed`** — Ensure your admin account has sufficient privileges; run commands with `isi auth login` or check zone-specific AD connectivity with `isi auth ads view --zone=<zone-name>`.
+    | Error | Fix |
+    |---|---|
+    | `nslookup: can't resolve '<smartconnect-zone-fqdn>': No address associated with hostname` | Verify the SmartConnect zone FQDN is correct and DNS A records exist for all pool IPs using `isi network pools list`. |
+    | `showmount: clnt_create: RPC: Program not registered` | Confirm NFS protocol is enabled on the cluster with `isi services -a | grep nfs` and verify network connectivity to the SmartConnect IP. |
+    | `isi_err_EAUTH: Authentication failed` | Ensure your admin account has sufficient privileges; run commands with `isi auth login` or check zone-specific AD connectivity with `isi auth ads view --zone=<zone-name>`. |
 ---
 
 ## Step 7 — Collect support bundle for Dell case
@@ -579,9 +589,11 @@ policy-dr-secondary: Last run 2024-01-15 10:15:00 - 100% complete
 ```
 
 !!! warning "Common errors"
-    **`sudo: isi_gather_info: command not found`** — Verify OneFS is installed and the command is in the system PATH, or use the full path `/usr/bin/isi_gather_info`.
-    **`Permission denied (publickey,password)`** — Ensure the admin user has SSH key configured or password authentication enabled, and the PowerScale node's SSH service is running.
-    **`isi: command not found`** — Run the commands directly on a PowerScale cluster node where OneFS CLI tools are available, not from a remote workstation.
+    | Error | Fix |
+    |---|---|
+    | `sudo: isi_gather_info: command not found` | Verify OneFS is installed and the command is in the system PATH, or use the full path `/usr/bin/isi_gather_info`. |
+    | `Permission denied (publickey,password)` | Ensure the admin user has SSH key configured or password authentication enabled, and the PowerScale node's SSH service is running. |
+    | `isi: command not found` | Run the commands directly on a PowerScale cluster node where OneFS CLI tools are available, not from a remote workstation. |
 ---
 
 ## Log locations

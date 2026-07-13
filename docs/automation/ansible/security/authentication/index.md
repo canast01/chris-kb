@@ -36,8 +36,10 @@ SHA256:4aB9cD2eF5gH8iJ1kL3mN6oP9qR2sT5uV7wX0yZ3aB ansible-control@prod
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Ensure the public key is added to `~/.ssh/authorized_keys` on target hosts with correct permissions (644 for the file, 700 for ~/.ssh directory).
-    **`Permissions 0644 for '/home/ansible/.ssh/ansible_ed25519' are too open.`** — Run `chmod 600 ~/.ssh/ansible_ed25519` to restrict private key permissions to the owner only.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Ensure the public key is added to `~/.ssh/authorized_keys` on target hosts with correct permissions (644 for the file, 700 for ~/.ssh directory). |
+    | `Permissions 0644 for '/home/ansible/.ssh/ansible_ed25519' are too open.` | Run `chmod 600 ~/.ssh/ansible_ed25519` to restrict private key permissions to the owner only. |
 ```bash
 pip install pywinrm[kerberos]   # domain-joined hosts
 pip install pywinrm              # NTLM / basic
@@ -113,9 +115,11 @@ modified: 2024-01-15T09:47:22.341829Z
 ```
 
 !!! warning "Common errors"
-    **`Error: The provided token is invalid or expired`** — Regenerate the AWX API token using `awx login` or create a new token in the AWX web UI under User Settings > Tokens.
-    **`Error: Failed to connect to https://awx.example.com`** — Verify the AWX host is reachable and correct the `--conf.host` URL; check network connectivity and DNS resolution.
-    **`Error: username already exists`** — Choose a different username or delete the existing user with `awx users delete --username breakglass-admin` before recreating.
+    | Error | Fix |
+    |---|---|
+    | `Error: The provided token is invalid or expired` | Regenerate the AWX API token using `awx login` or create a new token in the AWX web UI under User Settings > Tokens. |
+    | `Error: Failed to connect to https://awx.example.com` | Verify the AWX host is reachable and correct the `--conf.host` URL; check network connectivity and DNS resolution. |
+    | `Error: username already exists` | Choose a different username or delete the existing user with `awx users delete --username breakglass-admin` before recreating. |
 ```bash
 echo "vault-password-here" > ~/.ansible_vault_pass
 chmod 600 ~/.ansible_vault_pass
@@ -157,8 +161,10 @@ db-prod-01.example.com         : ok=10   changed=2    unreachable=0    failed=0
 ```
 
 !!! warning "Common errors"
-    **`ERROR! Vault password file /home/admin/.vault_pass_prod is not readable by the current user`** — Ensure the vault password file exists and has read permissions (chmod 600 ~/.vault_pass_prod).
-    **`ERROR! Decryption failed (no vault secrets were found that could decrypt)`** — Verify the vault ID label matches the encrypted variable in the playbook and the correct password file is being used.
+    | Error | Fix |
+    |---|---|
+    | `ERROR! Vault password file /home/admin/.vault_pass_prod is not readable by the current user` | Ensure the vault password file exists and has read permissions (chmod 600 ~/.vault_pass_prod). |
+    | `ERROR! Decryption failed (no vault secrets were found that could decrypt)` | Verify the vault ID label matches the encrypted variable in the playbook and the correct password file is being used. |
 ```bash
 vault auth enable approle
 vault write auth/approle/role/ansible \

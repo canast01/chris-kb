@@ -164,9 +164,11 @@ Subject: CN=api.corp.example.com,O=Corp Inc,C=US
 ```
 
 !!! warning "Common errors"
-    **`Error: failed to authenticate: invalid token`** — Verify the `$VENAFI_TOKEN` environment variable is set and has not expired by running `echo $VENAFI_TOKEN`.
-    **`Error: zone "Production\\Web" not found`** — Confirm the zone path exists in TPP and use the correct escape sequence (try single quotes or double backslashes: `--zone 'Production\Web'`).
-    **`Error: certificate already exists for api.corp.example.com`** — Revoke the existing certificate in TPP or use `--force` flag to request a replacement.
+    | Error | Fix |
+    |---|---|
+    | `Error: failed to authenticate: invalid token` | Verify the `$VENAFI_TOKEN` environment variable is set and has not expired by running `echo $VENAFI_TOKEN`. |
+    | `Error: zone "Production\\Web" not found` | Confirm the zone path exists in TPP and use the correct escape sequence (try single quotes or double backslashes: `--zone 'Production\Web'`). |
+    | `Error: certificate already exists for api.corp.example.com` | Revoke the existing certificate in TPP or use `--force` flag to request a replacement. |
 ---
 
 ## Renew an Expiring Certificate
@@ -202,9 +204,11 @@ Next check in: 24 hours
 ```
 
 !!! warning "Common errors"
-    **`Error: invalid token or token expired`** — Refresh the VENAFI_TOKEN environment variable by re-authenticating with `vcert getcred` or your organization's token refresh process.
-    **`Error: certificate not found with thumbprint <certificate-thumbprint>`** — Verify the thumbprint value is correct by listing certificates with `vcert find --url https://tpp.corp.example.com --token $VENAFI_TOKEN` and matching the exact thumbprint.
-    **`Error: connection refused to https://tpp.corp.example.com`** — Confirm the TPP server is reachable and the URL is correct; test connectivity with `curl -k https://tpp.corp.example.com/vedsdk/` from your host.
+    | Error | Fix |
+    |---|---|
+    | `Error: invalid token or token expired` | Refresh the VENAFI_TOKEN environment variable by re-authenticating with `vcert getcred` or your organization's token refresh process. |
+    | `Error: certificate not found with thumbprint <certificate-thumbprint>` | Verify the thumbprint value is correct by listing certificates with `vcert find --url https://tpp.corp.example.com --token $VENAFI_TOKEN` and matching the exact thumbprint. |
+    | `Error: connection refused to https://tpp.corp.example.com` | Confirm the TPP server is reachable and the URL is correct; test connectivity with `curl -k https://tpp.corp.example.com/vedsdk/` from your host. |
 Confirm the application is serving the renewed certificate using `openssl s_client -connect <host>:443` and checking the `Not After` date.
 
 ---

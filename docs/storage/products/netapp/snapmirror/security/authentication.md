@@ -59,8 +59,10 @@ dst-cluster-02            4a3c5e8b-9f2d-11ed-a1eb-00505682f89e Available      ok
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Cluster peer create failed. Reason: Connection refused to peer address 192.168.1.50`** — Verify the destination intercluster LIF IP is correct and reachable by pinging it from the source cluster.
-    **`Error: command failed: Cluster peer create failed. Reason: Authentication failed. Invalid passphrase`** — Ensure the passphrase was copied exactly without whitespace and that it matches the one generated on the source cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Cluster peer create failed. Reason: Connection refused to peer address 192.168.1.50` | Verify the destination intercluster LIF IP is correct and reachable by pinging it from the source cluster. |
+    | `Error: command failed: Cluster peer create failed. Reason: Authentication failed. Invalid passphrase` | Ensure the passphrase was copied exactly without whitespace and that it matches the one generated on the source cluster. |
 ### Establishing an SVM Peer Relationship
 
 SVM peering is required before any volume-level relationship can be created. It uses the already-authenticated cluster peer channel and adds SVM-scope trust.
@@ -95,9 +97,11 @@ Vserver Peer: svm_prod
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Vserver peer relationship already exists.`** — Check existing peer relationships with `vserver peer show` and remove the old one using `vserver peer delete` if needed.
-    **`Error: command failed: Peer cluster dr-cluster is not reachable.`** — Verify cluster peering exists first with `cluster peer show` and ensure network connectivity between clusters on port 11104.
-    **`Error: command failed: Vserver svm_dr does not exist on peer cluster dr-cluster.`** — Confirm the SVM name and cluster name are correct, and create the SVM on the DR cluster if it doesn't exist.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Vserver peer relationship already exists.` | Check existing peer relationships with `vserver peer show` and remove the old one using `vserver peer delete` if needed. |
+    | `Error: command failed: Peer cluster dr-cluster is not reachable.` | Verify cluster peering exists first with `cluster peer show` and ensure network connectivity between clusters on port 11104. |
+    | `Error: command failed: Vserver svm_dr does not exist on peer cluster dr-cluster.` | Confirm the SVM name and cluster name are correct, and create the SVM on the DR cluster if it doesn't exist. |
 ### Reviewing and Rotating Peer Authentication
 
 Stale or unused cluster peer relationships should be reviewed annually and removed. Peer relationships persist indefinitely; removing an unused peer eliminates unnecessary trust scope.
@@ -125,8 +129,10 @@ cluster-test-sandbox       ok           available
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Cluster peer relationship cannot be deleted: SVM peer relationships exist`** — Delete all SVM peer relationships with `vserver peer delete -vserver <local-svm> -peer-vserver <remote-svm>` before removing the cluster peer.
-    **`Error: command failed: Cluster peer relationship cannot be deleted: SnapMirror relationships exist`** — Delete all SnapMirror relationships referencing this peer with `snapmirror delete -destination-path <dest-svm>:<vol>` before removing the cluster peer.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Cluster peer relationship cannot be deleted: SVM peer relationships exist` | Delete all SVM peer relationships with `vserver peer delete -vserver <local-svm> -peer-vserver <remote-svm>` before removing the cluster peer. |
+    | `Error: command failed: Cluster peer relationship cannot be deleted: SnapMirror relationships exist` | Delete all SnapMirror relationships referencing this peer with `snapmirror delete -destination-path <dest-svm>:<vol>` before removing the cluster peer. |
 ---
 
 ## ONTAP Credential Security for Replication Management
@@ -200,9 +206,11 @@ prod-cluster  svc-snapmirror         http        password               snapmirr
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: The role "snapmirror-ops" does not exist.`** — Create the role with the DEFAULT command first before assigning specific command permissions to it.
-    **`Error: command failed: Invalid vserver name "<cluster-name>"`** — Replace `<cluster-name>` with the actual cluster or SVM name (e.g., `cluster1` or `svm-dr`).
-    **`Error: command failed: User "svc-snapmirror" already exists.`** — Delete the existing user with `security login delete -username svc-snapmirror -vserver <cluster-name>` before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: The role "snapmirror-ops" does not exist.` | Create the role with the DEFAULT command first before assigning specific command permissions to it. |
+    | `Error: command failed: Invalid vserver name "<cluster-name>"` | Replace `<cluster-name>` with the actual cluster or SVM name (e.g., `cluster1` or `svm-dr`). |
+    | `Error: command failed: User "svc-snapmirror" already exists.` | Delete the existing user with `security login delete -username svc-snapmirror -vserver <cluster-name>` before recreating it. |
 ### Read-Only Monitoring Role
 
 Separate monitoring-only access from operational access. Monitoring tools (Prometheus ONTAP exporter, Zabbix, Nagios) only need `snapmirror show` and related read-only commands.
@@ -255,9 +263,11 @@ Public key added for user "svc-sm-monitor".
 ```
 
 !!! warning "Common errors"
-    **`Error: entry already exists`** — Drop the existing role with `security login role delete -role snapmirror-monitor -vserver <cluster-name>` before recreating it.
-    **`Error: Invalid public key format`** — Ensure the public key string is complete and valid; verify it starts with `ssh-ed25519` or `ssh-rsa` and contains no line breaks.
-    **`Error: User "svc-sm-monitor" already exists`** — Delete the existing user with `security login delete -username svc-sm-monitor -vserver <cluster-name>` before creating a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: entry already exists` | Drop the existing role with `security login role delete -role snapmirror-monitor -vserver <cluster-name>` before recreating it. |
+    | `Error: Invalid public key format` | Ensure the public key string is complete and valid; verify it starts with `ssh-ed25519` or `ssh-rsa` and contains no line breaks. |
+    | `Error: User "svc-sm-monitor" already exists` | Delete the existing user with `security login delete -username svc-sm-monitor -vserver <cluster-name>` before creating a new one. |
 ---
 
 ## REST API Authentication
@@ -317,9 +327,11 @@ c83f7e2a-9b4c-4d12-8f3a-2e1b5c7d9a6f http         2025-01-15
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid application "http". Valid applications are: ontapi, http, console, snmp`** — Use `http` (lowercase) or specify `ontapi` if using ZAPI instead of REST.
-    **`Error: REST API token not supported on this cluster. Minimum ONTAP version required: 9.12.0`** — Upgrade ONTAP to 9.12 or later, or use basic authentication with `-u username:password` in curl instead.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or install the cluster's CA certificate in your trust store.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid application "http". Valid applications are: ontapi, http, console, snmp` | Use `http` (lowercase) or specify `ontapi` if using ZAPI instead of REST. |
+    | `Error: REST API token not supported on this cluster. Minimum ONTAP version required: 9.12.0` | Upgrade ONTAP to 9.12 or later, or use basic authentication with `-u username:password` in curl instead. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or install the cluster's CA certificate in your trust store. |
 ---
 
 ## SMBC Mediator Authentication
@@ -355,9 +367,11 @@ Mediator "192.168.1.45" removed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Mediator address 192.168.1.45 is already configured`** — Remove the existing mediator entry first using `snapmirror mediator remove` before re-adding it.
-    **`Error: Failed to authenticate to mediator at 192.168.1.45: Connection refused`** — Verify the mediator IP address is correct, the mediator service is running, and network connectivity exists between the cluster and mediator host.
-    **`Error: Cannot remove mediator 192.168.1.45: mediator is in use by active SnapMirror relationships`** — Delete or quiesce all active SnapMirror relationships using this mediator before attempting removal.
+    | Error | Fix |
+    |---|---|
+    | `Error: Mediator address 192.168.1.45 is already configured` | Remove the existing mediator entry first using `snapmirror mediator remove` before re-adding it. |
+    | `Error: Failed to authenticate to mediator at 192.168.1.45: Connection refused` | Verify the mediator IP address is correct, the mediator service is running, and network connectivity exists between the cluster and mediator host. |
+    | `Error: Cannot remove mediator 192.168.1.45: mediator is in use by active SnapMirror relationships` | Delete or quiesce all active SnapMirror relationships using this mediator before attempting removal. |
 Mediator credentials are configured during Mediator VM installation. The Mediator VM password should be stored in a secrets vault and rotated per the password policy. Certificate trust between ONTAP and the Mediator is established at `snapmirror mediator add` time — certificates are not manually managed.
 
 ---

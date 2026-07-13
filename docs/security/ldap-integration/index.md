@@ -137,9 +137,11 @@ result: 0 Success
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked; check DC event logs for failed bind attempts.
-    **`ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)`** — Confirm dc01.corp.local resolves correctly, port 636 is open in firewall rules, and the DC is online using `ping` or `nslookup`.
-    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Add the DC's root CA certificate to the system trust store or use `ldapsearch -Z -o LDTLS_CACERT=/path/to/ca.crt` to specify the CA bundle explicitly.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account is not locked; check DC event logs for failed bind attempts. |
+    | `ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)` | Confirm dc01.corp.local resolves correctly, port 636 is open in firewall rules, and the DC is online using `ping` or `nslookup`. |
+    | `error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed` | Add the DC's root CA certificate to the system trust store or use `ldapsearch -Z -o LDTLS_CACERT=/path/to/ca.crt` to specify the CA bundle explicitly. |
 ---
 
 ## Synchronisation and Failover

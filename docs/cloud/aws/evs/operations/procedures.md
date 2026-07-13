@@ -90,9 +90,11 @@ BytesToSync RecoveryETA
 ```
 
 !!! warning "Common errors"
-    **`The host has 2 remaining hosts. Minimum 3 required for vSAN cluster.`** — Verify cluster size before removal or adjust FTT policy; use `aws evs describe-environment --environment-id $ENV_ID` to confirm host count.
-    **`Set-VMHost : The object 'evs-host-01.vcf.internal' cannot be found.`** — Verify the exact hostname with `Get-VMHost | Select Name` and ensure vCenter connectivity with `Test-VcenterConnection`.
-    **`An error occurred (ResourceNotFound) when calling the DeleteEnvironmentHost operation: Host host-xxx not found.`** — Confirm the correct host ID from `aws evs list-environment-hosts` output and ensure the host is in maintenance mode before deletion.
+    | Error | Fix |
+    |---|---|
+    | `The host has 2 remaining hosts. Minimum 3 required for vSAN cluster.` | Verify cluster size before removal or adjust FTT policy; use `aws evs describe-environment --environment-id $ENV_ID` to confirm host count. |
+    | `Set-VMHost : The object 'evs-host-01.vcf.internal' cannot be found.` | Verify the exact hostname with `Get-VMHost | Select Name` and ensure vCenter connectivity with `Test-VcenterConnection`. |
+    | `An error occurred (ResourceNotFound) when calling the DeleteEnvironmentHost operation: Host host-xxx not found.` | Confirm the correct host ID from `aws evs list-environment-hosts` output and ensure the host is in maintenance mode before deletion. |
 ## Add a Host
 
 ```bash
@@ -149,9 +151,11 @@ TimeRemaining : 67200
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidEnvironmentId) when calling the ListEnvironmentHosts operation: The environment ID 'env-prod-cluster-01' does not exist or you do not have access.`** — Verify the environment ID with `aws evs list-environments` and ensure your IAM role has `evs:ListEnvironmentHosts` permissions.
-    **`error: watch: command not found`** — Install `procps` package with `apt-get install procps` or use `while true; do ... sleep 30; done` as an alternative.
-    **`Get-VsanDiskGroup : The term 'Get-VsanDiskGroup' is not recognized`** — Load the vSAN PowerCLI module with `Import-Module VMware.VimAutomation.Vsan` before running PowerShell commands.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidEnvironmentId) when calling the ListEnvironmentHosts operation: The environment ID 'env-prod-cluster-01' does not exist or you do not have access.` | Verify the environment ID with `aws evs list-environments` and ensure your IAM role has `evs:ListEnvironmentHosts` permissions. |
+    | `error: watch: command not found` | Install `procps` package with `apt-get install procps` or use `while true; do ... sleep 30; done` as an alternative. |
+    | `Get-VsanDiskGroup : The term 'Get-VsanDiskGroup' is not recognized` | Load the vSAN PowerCLI module with `Import-Module VMware.VimAutomation.Vsan` before running PowerShell commands. |
 ## Host Replacement (AWS-Initiated)
 
 AWS performs the physical host replacement when a bare-metal host fails a hardware health check. AWS will notify you when the replacement host is available. Your responsibility is the VMware layer.
@@ -227,9 +231,11 @@ prod-db-02                                esx-prod-05.corp.local
 ```
 
 !!! warning "Common errors"
-    **`Get-VsanDiskGroup : The term 'Get-VsanDiskGroup' is not recognized`** — Load the VMware.VimAutomation.Vsan module with `Import-Module VMware.VimAutomation.Vsan` before running vSAN cmdlets.
-    **`curl: (7) Failed to connect to nsxmgr.corp.local port 443: Connection timed out`** — Verify NSX Manager IP/hostname in `$NSX_URL` and confirm network connectivity from the jump host to the NSX Manager management interface.
-    **`jq: command not found`** — Install `jq` with `apt-get install jq` or `yum install jq`, or use Python's json module as shown in the curl command for JSON parsing.
+    | Error | Fix |
+    |---|---|
+    | `Get-VsanDiskGroup : The term 'Get-VsanDiskGroup' is not recognized` | Load the VMware.VimAutomation.Vsan module with `Import-Module VMware.VimAutomation.Vsan` before running vSAN cmdlets. |
+    | `curl: (7) Failed to connect to nsxmgr.corp.local port 443: Connection timed out` | Verify NSX Manager IP/hostname in `$NSX_URL` and confirm network connectivity from the jump host to the NSX Manager management interface. |
+    | `jq: command not found` | Install `jq` with `apt-get install jq` or `yum install jq`, or use Python's json module as shown in the curl command for JSON parsing. |
 ## VCF Password Rotation
 
 Password rotation is required quarterly for most security policies. SDDC Manager manages all VCF component credentials.
@@ -290,9 +296,11 @@ COMPLETED 2024-01-15T14:32:18.456Z
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification, or import the SDDC Manager certificate into your system trust store.
-    **`jq: error (at <stdin>:1): Cannot index string with string "accessToken"`** — Verify the SDDC Manager credentials are correct and the `/v1/tokens` endpoint returned valid JSON; check the response with `curl -sk -X POST ... | python3 -m json.tool`.
-    **`Authorization header missing or invalid`** — Ensure the `${SDDC_TOKEN}` variable is populated by checking `echo ${SDDC_TOKEN}` before running subsequent curl commands; re-authenticate if the token is empty or expired.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip SSL verification, or import the SDDC Manager certificate into your system trust store. |
+    | `jq: error (at <stdin>:1): Cannot index string with string "accessToken"` | Verify the SDDC Manager credentials are correct and the `/v1/tokens` endpoint returned valid JSON; check the response with `curl -sk -X POST ... | python3 -m json.tool`. |
+    | `Authorization header missing or invalid` | Ensure the `${SDDC_TOKEN}` variable is populated by checking `echo ${SDDC_TOKEN}` before running subsequent curl commands; re-authenticate if the token is empty or expired. |
 After rotation completes, update any external automation or scripts that reference VCF credentials.
 
 ## NSX-T Edge Cluster Scale-Out
@@ -360,9 +368,11 @@ tn-edge-02-uuid-a1b2c3d4e5f6
 ```
 
 !!! warning "Common errors"
-    **`jq: error (at <stdin>:0): Cannot index array with string "results"`** — Verify NSX_URL is correct and the API endpoint is returning valid JSON; test with `curl -sk -u "admin:$NSX_PASS" "$NSX_URL/api/v1/edge-clusters" | head -20`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command or configure NSX Manager certificate in your CA bundle; the `-sk` flags should suppress this but verify NSX_URL uses https.
-    **`ValueError: No JSON object could be decoded`** — Ensure NSX_PASS is set correctly and the admin user has API permissions; test authentication with `curl -sk -u "admin:$NSX_PASS" "$NSX_URL/api/v1/transport-nodes" -w "\n%{http_code}\n"` to check for 401 responses.
+    | Error | Fix |
+    |---|---|
+    | `jq: error (at <stdin>:0): Cannot index array with string "results"` | Verify NSX_URL is correct and the API endpoint is returning valid JSON; test with `curl -sk -u "admin:$NSX_PASS" "$NSX_URL/api/v1/edge-clusters" | head -20`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command or configure NSX Manager certificate in your CA bundle; the `-sk` flags should suppress this but verify NSX_URL uses https. |
+    | `ValueError: No JSON object could be decoded` | Ensure NSX_PASS is set correctly and the admin user has API permissions; test authentication with `curl -sk -u "admin:$NSX_PASS" "$NSX_URL/api/v1/transport-nodes" -w "\n%{http_code}\n"` to check for 401 responses. |
 ## vSAN Storage Policy Update
 
 Storage policies (SPBM) control the data protection level for VM objects. Update policies when changing FTT, RAID type, or adding encryption requirements.
@@ -428,9 +438,11 @@ backup-staging-01              EVS-FTT2-RAID1             nonCompliant
 ```
 
 !!! warning "Common errors"
-    **`Get-SpbmCapability : The term 'Get-SpbmCapability' is not recognized`** — Load the VMware.VimAutomation.Storage module with `Import-Module VMware.VimAutomation.Storage` before running SPBM commands.
-    **`Set-SpbmEntityConfiguration : Cannot bind argument to parameter 'StoragePolicy' because it is null`** — Ensure the policy variable `$policy` was successfully created in Step 1 by running `$policy | Get-Member` to verify the object exists.
-    **`Get-VM : The specified VM 'myvm' was not found`** — Verify the VM name matches exactly (case-sensitive) using `Get-VM | Select Name` to list available VMs in the connected vCenter.
+    | Error | Fix |
+    |---|---|
+    | `Get-SpbmCapability : The term 'Get-SpbmCapability' is not recognized` | Load the VMware.VimAutomation.Storage module with `Import-Module VMware.VimAutomation.Storage` before running SPBM commands. |
+    | `Set-SpbmEntityConfiguration : Cannot bind argument to parameter 'StoragePolicy' because it is null` | Ensure the policy variable `$policy` was successfully created in Step 1 by running `$policy | Get-Member` to verify the object exists. |
+    | `Get-VM : The specified VM 'myvm' was not found` | Verify the VM name matches exactly (case-sensitive) using `Get-VM | Select Name` to list available VMs in the connected vCenter. |
 ## NSX-T Segment Management
 
 ```bash
@@ -472,9 +484,11 @@ curl -sk -u "admin:$NSX_PASSWORD" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command (already present in example) or import the NSX Manager certificate into your system trust store.
-    **`{"error_code":400,"error_message":"Invalid transport_zone_id"}`** — Replace `<overlay-tz-id>` with an actual transport zone UUID from your NSX deployment (retrieve via `curl -sk -u "admin:$NSX_PASSWORD" "$NSX_URL/api/v1/transport-zones"`).
-    **`curl: (7) Failed to connect to $NSX_URL port 443: Connection refused`** — Verify `$NSX_URL` environment variable is set correctly (e.g., `export NSX_URL=https://nsx-manager.example.com`) and NSX Manager is reachable on the network.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command (already present in example) or import the NSX Manager certificate into your system trust store. |
+    | `{"error_code":400,"error_message":"Invalid transport_zone_id"}` | Replace `<overlay-tz-id>` with an actual transport zone UUID from your NSX deployment (retrieve via `curl -sk -u "admin:$NSX_PASSWORD" "$NSX_URL/api/v1/transport-zones"`). |
+    | `curl: (7) Failed to connect to $NSX_URL port 443: Connection refused` | Verify `$NSX_URL` environment variable is set correctly (e.g., `export NSX_URL=https://nsx-manager.example.com`) and NSX Manager is reachable on the network. |
 ## vSAN Rebalance
 
 ```bash
@@ -513,8 +527,10 @@ BytesToSync                        ActiveTasks    RecoveryETA
 ```
 
 !!! warning "Common errors"
-    **`Get-VsanView : The term 'Get-VsanView' is not recognized`** — Import the VMware.VimAutomation.Vsan module with `Import-Module VMware.VimAutomation.Vsan` before running the script.
-    **`Invoke-VsanCommand : Cluster 'EVS-Management-Cluster' is not vSAN enabled`** — Verify the cluster name matches exactly and that vSAN is enabled on the cluster with `Get-Cluster | Get-VsanClusterConfiguration`.
+    | Error | Fix |
+    |---|---|
+    | `Get-VsanView : The term 'Get-VsanView' is not recognized` | Import the VMware.VimAutomation.Vsan module with `Import-Module VMware.VimAutomation.Vsan` before running the script. |
+    | `Invoke-VsanCommand : Cluster 'EVS-Management-Cluster' is not vSAN enabled` | Verify the cluster name matches exactly and that vSAN is enabled on the cluster with `Get-Cluster | Get-VsanClusterConfiguration`. |
 ## HCX Migration Procedure
 
 ```bash

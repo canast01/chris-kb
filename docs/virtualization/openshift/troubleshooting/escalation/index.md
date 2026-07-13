@@ -160,8 +160,10 @@ must-gather-2024-01-16-1430.tar.gz
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "clusterversion"`** — Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc cluster-info`.
-    **`error: Unable to connect to the server: dial tcp: lookup api.cluster.example.com on 8.8.8.8:53: no such host`** — Check your kubeconfig context with `oc config current
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "clusterversion"` | Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc cluster-info`. |
+    | `error: Unable to connect to the server: dial tcp: lookup api.cluster.example.com on 8.8.8.8:53: no such host` | Check your kubeconfig context with `oc config current |
 Case description must include:
 1. **OpenShift version**: exact version from `oc get clusterversion`
 2. **Infrastructure**: IPI/UPI, cloud/bare-metal/vSphere, network plugin (OVN-K/SDN)
@@ -246,9 +248,11 @@ All sos reports complete
 ```
 
 !!! warning "Common errors"
-    **`error: unable to find a match for "node/<node-name>"`** — Replace `<node-name>` with an actual node name from `oc get nodes`.
-    **`tar: /host/var/tmp/sosreport*.tar.xz: No such file or directory`** — The sosreport may still be running; wait a few seconds and verify the file exists with `oc debug node/<node-name> -- ls -lh /host/var/tmp/sosreport*.tar.xz`.
-    **`command not found: toolbox`** — Install toolbox on the node with `oc debug node/<node-name> -- chroot /host dnf install -y toolbox` or use Method 2 if sos is already available.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to find a match for "node/<node-name>"` | Replace `<node-name>` with an actual node name from `oc get nodes`. |
+    | `tar: /host/var/tmp/sosreport*.tar.xz: No such file or directory` | The sosreport may still be running; wait a few seconds and verify the file exists with `oc debug node/<node-name> -- ls -lh /host/var/tmp/sosreport*.tar.xz`. |
+    | `command not found: toolbox` | Install toolbox on the node with `oc debug node/<node-name> -- chroot /host dnf install -y toolbox` or use Method 2 if sos is already available. |
 ## Escalation Path
 
 ```text
@@ -305,8 +309,10 @@ Wrote inspect data to /tmp/inspect-ns
 ```
 
 !!! warning "Common errors"
-    **`grep: /tmp/must-gather/must-gather.local.*/: No such file or directory`** — Run `oc adm must-gather` first to generate the must-gather bundle in /tmp/must-gather/.
-    **`error: the server doesn't have a resource type "namespace"`** — Use `oc adm inspect namespace/my-project` (with lowercase "namespace") or specify the full resource path like `oc adm inspect ns/my-project`.
+    | Error | Fix |
+    |---|---|
+    | `grep: /tmp/must-gather/must-gather.local.*/: No such file or directory` | Run `oc adm must-gather` first to generate the must-gather bundle in /tmp/must-gather/. |
+    | `error: the server doesn't have a resource type "namespace"` | Use `oc adm inspect namespace/my-project` (with lowercase "namespace") or specify the full resource path like `oc adm inspect ns/my-project`. |
 ## Pre-Escalation Triage Checklist
 
 Run through this checklist before opening a case to rule out self-resolvable issues.

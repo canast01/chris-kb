@@ -109,9 +109,11 @@ curl -u admin:password -X PUT \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or configure proper certificates on confluence.example.local.
-    **`{"errorMessages":["User is not authenticated"],"statusCode":401}`** — Verify admin credentials are correct and base64-encoded properly; use `curl -u admin:password` with actual credentials or `-H "Authorization: Basic $(echo -n 'admin:password' | base64)"`.
-    **`{"errorMessages":["Directory with id 1 not found"],"statusCode":404}`** — Check the correct directory ID by querying `GET /rest/api/user-directory` first to list all configured directories.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or configure proper certificates on confluence.example.local. |
+    | `{"errorMessages":["User is not authenticated"],"statusCode":401}` | Verify admin credentials are correct and base64-encoded properly; use `curl -u admin:password` with actual credentials or `-H "Authorization: Basic $(echo -n 'admin:password' | base64)"`. |
+    | `{"errorMessages":["Directory with id 1 not found"],"statusCode":404}` | Check the correct directory ID by querying `GET /rest/api/user-directory` first to list all configured directories. |
 ```bash
 ## List System Administrators
 curl -u admin:password \
@@ -137,9 +139,11 @@ curl -u admin:password \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification, or import the self-signed certificate into your system's CA bundle.
-    **`jq: command not found`** — Install `jq` package (`apt-get install jq` or `yum install jq`) and pipe to `jq '.members[].username'` instead of using `python3 -m json.tool | grep`.
-    **`401 Unauthorized`** — Verify the admin credentials are correct and the user has API access enabled in Confluence user permissions.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip SSL verification, or import the self-signed certificate into your system's CA bundle. |
+    | `jq: command not found` | Install `jq` package (`apt-get install jq` or `yum install jq`) and pipe to `jq '.members[].username'` instead of using `python3 -m json.tool | grep`. |
+    | `401 Unauthorized` | Verify the admin credentials are correct and the user has API access enabled in Confluence user permissions. |
 ```bash
 ## Confluence audit log records permission changes, space creation, and admin actions
 ## Administration > Audit Log > Filter by category: Permissions
@@ -192,9 +196,11 @@ grep -i "403\|permission denied\|access denied" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or import the self-signed certificate into your system's CA bundle.
-    **`jq: parse error: Invalid JSON at line 1`** — Verify the Confluence REST API endpoint is accessible and the credentials are correct; check that `python3 -m json.tool` receives valid JSON from curl.
-    **`grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory`** — Confirm the Confluence logs directory path matches your installation (may be `/opt/atlassian/confluence/logs/` or check `$CONFLUENCE_HOME`).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl or import the self-signed certificate into your system's CA bundle. |
+    | `jq: parse error: Invalid JSON at line 1` | Verify the Confluence REST API endpoint is accessible and the credentials are correct; check that `python3 -m json.tool` receives valid JSON from curl. |
+    | `grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory` | Confirm the Confluence logs directory path matches your installation (may be `/opt/atlassian/confluence/logs/` or check `$CONFLUENCE_HOME`). |
 ---
 
 ## See also

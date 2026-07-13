@@ -139,8 +139,10 @@ switch#
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the device-alias names exist in the switch configuration using `show device-alias database`.
-    **`% Zone member already exists`** — Remove the duplicate member first with `no member device-alias <name>` before re-adding it.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the device-alias names exist in the switch configuration using `show device-alias database`. |
+    | `% Zone member already exists` | Remove the duplicate member first with `no member device-alias <name>` before re-adding it. |
 ### Zone Set Management
 
 ![Zone Set Management](../../../../assets/cisco-mds-proc-zone-set-management.svg)
@@ -180,9 +182,11 @@ Configuration saved successfully.
 ```
 
 !!! warning "Common errors"
-    **`% Invalid VSAN ID`** — Verify the VSAN exists with `show vsan` and use a valid VSAN number between 1–4094.
-    **`% Zone member not found`** — Confirm the zone member name exists in the fabric using `show flogi database vsan 10` before adding it to the zoneset.
-    **`% Zoneset activation failed: conflicting zones detected`** — Review existing zone configurations with `show zoneset active vsan 10` and resolve overlapping member definitions before reactivating.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid VSAN ID` | Verify the VSAN exists with `show vsan` and use a valid VSAN number between 1–4094. |
+    | `% Zone member not found` | Confirm the zone member name exists in the fabric using `show flogi database vsan 10` before adding it to the zoneset. |
+    | `% Zoneset activation failed: conflicting zones detected` | Review existing zone configurations with `show zoneset active vsan 10` and resolve overlapping member definitions before reactivating. |
 ### Enhanced Zoning (recommended)
 
 ![Enhanced Zoning (recommended)](../../../../assets/cisco-mds-proc-enhanced-zoning-recommended.svg)
@@ -214,9 +218,11 @@ Unicast Frames: 0
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the VSAN exists with `show vsan` and confirm you have zone admin privileges.
-    **`% VSAN 10 does not exist`** — Create the VSAN first using `vsan database` and `vsan 10 activate` commands.
-    **`% Zone mode change will activate after session exit`** — Exit the current session or use `no system session timeout` to apply changes immediately.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the VSAN exists with `show vsan` and confirm you have zone admin privileges. |
+    | `% VSAN 10 does not exist` | Create the VSAN first using `vsan database` and `vsan 10 activate` commands. |
+    | `% Zone mode change will activate after session exit` | Exit the current session or use `no system session timeout` to apply changes immediately. |
 ### Example: Zone a New Host to FlashArray
 
 ![Example: Zone a New Host to FlashArray](../../../../assets/cisco-mds-proc-example-zone-a-new-host-to-flasharray.svg)
@@ -271,9 +277,11 @@ Copy complete.
 ```
 
 !!! warning "Common errors"
-    **`Device-alias name web01_hba0 pwwn 10:00:00:90:fa:ab:cd:ef is in use.`** — Run `device-alias delete name web01_hba0` before re-adding, or use a unique device-alias name.
-    **`Zone member device-alias fa01_ct0_p0 not found.`** — Create the device-alias `fa01_ct0_p0` in the device-alias database before adding it to the zone.
-    **`Zoneset activation failed: conflicting zone configuration.`** — Run `zoneset deactivate name <current-zoneset> vsan 10` to deactivate the active zoneset before activating a new one.
+    | Error | Fix |
+    |---|---|
+    | `Device-alias name web01_hba0 pwwn 10:00:00:90:fa:ab:cd:ef is in use.` | Run `device-alias delete name web01_hba0` before re-adding, or use a unique device-alias name. |
+    | `Zone member device-alias fa01_ct0_p0 not found.` | Create the device-alias `fa01_ct0_p0` in the device-alias database before adding it to the zone. |
+    | `Zoneset activation failed: conflicting zone configuration.` | Run `zoneset deactivate name <current-zoneset> vsan 10` to deactivate the active zoneset before activating a new one. |
 ### VSAN Membership
 
 ![VSAN Membership](../../../../assets/cisco-mds-proc-vsan-membership.svg)
@@ -314,8 +322,10 @@ Copy complete.
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct mode; use `vsan database` to enter VSAN configuration mode before assigning ports.
-    **`% VSAN 10 does not exist`** — Create the VSAN first with `vsan 10` in VSAN database mode before assigning interfaces to it.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct mode; use `vsan database` to enter VSAN configuration mode before assigning ports. |
+    | `% VSAN 10 does not exist` | Create the VSAN first with `vsan 10` in VSAN database mode before assigning interfaces to it. |
 ### Zone Troubleshooting
 
 ![Zone Troubleshooting](../../../../assets/cisco-mds-proc-zone-troubleshooting.svg)
@@ -399,8 +409,10 @@ zoneset name prod_zoneset vsan 10
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify VSAN 10 exists with `show vsan` and confirm the switch supports zoning on that VSAN.
-    **`% No matching zones found`** — Confirm the pwwn format is correct (16 hex digits with colons) and the device is actually zoned in VSAN 10.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify VSAN 10 exists with `show vsan` and confirm the switch supports zoning on that VSAN. |
+    | `% No matching zones found` | Confirm the pwwn format is correct (16 hex digits with colons) and the device is actually zoned in VSAN 10. |
 ## Add a New Switch to an Existing VSAN
 
 Connect ISL → on existing switch: `vsan database; vsan <id> interface fc1/1` → on new switch: set domain ID to auto → `no shutdown` → verify `show topology` includes new switch.
@@ -443,9 +455,11 @@ fc2/1       fc2/2          [3]            Up
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the VSAN ID exists with `show vsan` before adding the interface.
-    **`Interface fc1/1 is not online`** — Ensure the ISL port is physically connected and the remote switch port is also enabled with `no shutdown`.
-    **`VSAN <id> not found in database`** — Create the VSAN first using `vsan <id>` in vsan database mode before assigning interfaces to it.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the VSAN ID exists with `show vsan` before adding the interface. |
+    | `Interface fc1/1 is not online` | Ensure the ISL port is physically connected and the remote switch port is also enabled with `no shutdown`. |
+    | `VSAN <id> not found in database` | Create the VSAN first using `vsan <id>` in vsan database mode before assigning interfaces to it. |
 ## Create a Device Alias
 
 `device-alias database; device-alias name host01_hba0 pwwn 10:00:00:00:00:00:00:01; device-alias commit` — simplifies zone membership management.
@@ -463,8 +477,10 @@ switch# device-alias commit
 ```
 
 !!! warning "Common errors"
-    **`% Invalid PWWN format`** — Ensure the PWWN is in the correct format (10 hexadecimal pairs separated by colons, e.g., 10:00:00:00:00:00:00:01).
-    **`% Device alias 'host01_hba0' already exists`** — Delete the existing device alias with `device-alias delete host01_hba0` before creating a new one with the same name.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid PWWN format` | Ensure the PWWN is in the correct format (10 hexadecimal pairs separated by colons, e.g., 10:00:00:00:00:00:00:01). |
+    | `% Device alias 'host01_hba0' already exists` | Delete the existing device alias with `device-alias delete host01_hba0` before creating a new one with the same name. |
 ## Create an IVR Zone (Inter-VSAN Routing)
 
 Configure IVR topology → `ivr zoneset name ivr_prod` → `ivr zone name zone_ivr_host01_array01` → add members from different VSANs → `ivr zoneset activate name ivr_prod`.
@@ -503,9 +519,11 @@ IVR zoneset 'ivr_prod' activated successfully
 ```
 
 !!! warning "Common errors"
-    **`% Invalid PWWN format`** — Verify the PWWN is in colon-separated hexadecimal format (16 characters total, e.g., 10:00:00:00:00:00:00:01).
-    **`% VSAN does not exist`** — Confirm both VSAN 10 and VSAN 20 are created and active on the switch before adding members.
-    **`% Zone does not exist`** — Ensure zone_ivr_host01_array01 is created before attempting to add it as a member to the zoneset.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid PWWN format` | Verify the PWWN is in colon-separated hexadecimal format (16 characters total, e.g., 10:00:00:00:00:00:00:01). |
+    | `% VSAN does not exist` | Confirm both VSAN 10 and VSAN 20 are created and active on the switch before adding members. |
+    | `% Zone does not exist` | Ensure zone_ivr_host01_array01 is created before attempting to add it as a member to the zoneset. |
 ## Check Fabric Login Table
 
 `show flogi database vsan <id>` — lists all logged-in devices with FCID and WWPN; confirm expected hosts and arrays present.
@@ -527,8 +545,10 @@ FLOGI Database for VSAN 1:
 ```
 
 !!! warning "Common errors"
-    **`Invalid VSAN ID <id>`** — Verify the VSAN exists with `show vsan` and use a valid numeric ID between 1 and 4094.
-    **`% Invalid command`** — Ensure you are in the correct command mode (exec or config) and the MDS switch supports FLOGI database queries.
+    | Error | Fix |
+    |---|---|
+    | `Invalid VSAN ID <id>` | Verify the VSAN exists with `show vsan` and use a valid numeric ID between 1 and 4094. |
+    | `% Invalid command` | Ensure you are in the correct command mode (exec or config) and the MDS switch supports FLOGI database queries. |
 ## Collect NX-OS Tech-Support for TAC
 
 `show tech-support` → save output to file; `copy running-config bootflash:switch-config-backup.cfg` for configuration backup.
@@ -550,8 +570,10 @@ Destination filename [switch-config-backup.cfg]?
 ```
 
 !!! warning "Common errors"
-    **`%Error: Invalid command`** — Ensure you are in the correct mode (exec mode, not config mode); use `exit` to return to the switch prompt if needed.
-    **`%Error: bootflash: is full`** — Delete old tech-support or backup files using `delete bootflash:filename` to free space before retrying.
+    | Error | Fix |
+    |---|---|
+    | `%Error: Invalid command` | Ensure you are in the correct mode (exec mode, not config mode); use `exit` to return to the switch prompt if needed. |
+    | `%Error: bootflash: is full` | Delete old tech-support or backup files using `delete bootflash:filename` to free space before retrying. |
 ## Replace a Failed Module (Line Card)
 
 `out-of-service module <slot>` → physically swap module → `no out-of-service module <slot>` → verify `show module` shows Online.
@@ -593,9 +615,11 @@ Mod  Sw              Fw              Hw    Status
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the slot number exists and use the correct syntax `out-of-service module <slot>` without additional parameters.
-    **`Module <slot> is not in a valid state for this operation`** — Wait for the module to complete its current state transition (check with `show module`) before issuing the command again.
-    **`% Incomplete command`** — Provide the slot number; the command requires a module slot argument (e.g., `out-of-service module 2`).
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the slot number exists and use the correct syntax `out-of-service module <slot>` without additional parameters. |
+    | `Module <slot> is not in a valid state for this operation` | Wait for the module to complete its current state transition (check with `show module`) before issuing the command again. |
+    | `% Incomplete command` | Provide the slot number; the command requires a module slot argument (e.g., `out-of-service module 2`). |
 ---
 
 ## Verify

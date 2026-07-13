@@ -103,9 +103,11 @@ Snapshot 'project1-20250101' at path '/ifs/data/project1' deleted successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Snapshot not found`** — Verify the snapshot ID or name exists with `isi snapshot snapshots list` before attempting deletion.
-    **`Error: Path does not exist or is not accessible`** — Ensure the path `/ifs/data/project1` exists and the user has read permissions on the parent filesystem.
-    **`Error: Invalid date format for --expires parameter`** — Use Unix timestamp format (seconds since epoch) or ensure the date command output matches the expected format.
+    | Error | Fix |
+    |---|---|
+    | `Error: Snapshot not found` | Verify the snapshot ID or name exists with `isi snapshot snapshots list` before attempting deletion. |
+    | `Error: Path does not exist or is not accessible` | Ensure the path `/ifs/data/project1` exists and the user has read permissions on the parent filesystem. |
+    | `Error: Invalid date format for --expires parameter` | Use Unix timestamp format (seconds since epoch) or ensure the date command output matches the expected format. |
 ### Snapshot Schedules
 
 Schedule automated snapshots per directory with retention periods:
@@ -170,9 +172,11 @@ Schedule 'daily-project1' deleted successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Path '/ifs/data/project1' does not exist`** — Verify the path exists on the cluster and use the correct absolute path starting with /ifs.
-    **`Error: Invalid retention format 'retention_value'`** — Use valid retention syntax such as '14D', '2W', or '30D' (days, weeks, or days only).
-    **`Error: Schedule 'daily-project1' not found`** — Confirm the schedule name is correct by running `isi snapshot schedules list` to view all existing schedules.
+    | Error | Fix |
+    |---|---|
+    | `Error: Path '/ifs/data/project1' does not exist` | Verify the path exists on the cluster and use the correct absolute path starting with /ifs. |
+    | `Error: Invalid retention format 'retention_value'` | Use valid retention syntax such as '14D', '2W', or '30D' (days, weeks, or days only). |
+    | `Error: Schedule 'daily-project1' not found` | Confirm the schedule name is correct by running `isi snapshot schedules list` to view all existing schedules. |
 ### Accessing Snapshots
 
 Snapshots are visible within the live filesystem under the `.snapshot` directory at the root of the snapshotted path:
@@ -216,8 +220,10 @@ Modify operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot open directory '/ifs/data/project1/.snapshot/': Permission denied`** — Run the command from the cluster shell with appropriate credentials, or verify the user has read access to the snapshot directory.
-    **`allow-snapshot-dirs: (not found)`** — The NFS export does not have snapshot visibility enabled; run `isi nfs exports modify <export_id> --allow-snapshot-dirs true` to enable it.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot open directory '/ifs/data/project1/.snapshot/': Permission denied` | Run the command from the cluster shell with appropriate credentials, or verify the user has read access to the snapshot directory. |
+    | `allow-snapshot-dirs: (not found)` | The NFS export does not have snapshot visibility enabled; run `isi nfs exports modify <export_id> --allow-snapshot-dirs true` to enable it. |
 ### Restoring Files from a Snapshot
 
 ```bash
@@ -262,9 +268,11 @@ Revert operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot stat '/ifs/data/project1/.snapshot/project1-20260101/report.xlsx': No such file or directory`** — Verify the snapshot name and file path exist using `isi snapshot snapshots list` and `ls -la /ifs/data/project1/.snapshot/`.
-    **`rsync: [Receiver] mkdir "/ifs/data/project1" failed: Permission denied (13)`** — Ensure the user running rsync has write permissions on the target directory with `chmod` or check SMB/NFS share ACLs.
-    **`Error: Invalid snapshot ID format`** — Use the full snapshot UUID from `isi snapshot snapshots list` instead of a partial or human-readable name.
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot stat '/ifs/data/project1/.snapshot/project1-20260101/report.xlsx': No such file or directory` | Verify the snapshot name and file path exist using `isi snapshot snapshots list` and `ls -la /ifs/data/project1/.snapshot/`. |
+    | `rsync: [Receiver] mkdir "/ifs/data/project1" failed: Permission denied (13)` | Ensure the user running rsync has write permissions on the target directory with `chmod` or check SMB/NFS share ACLs. |
+    | `Error: Invalid snapshot ID format` | Use the full snapshot UUID from `isi snapshot snapshots list` instead of a partial or human-readable name. |
 > Snapshot revert is destructive. All changes made after the snapshot timestamp are permanently discarded. Always confirm with the application and data owner before reverting.
 
 ### Snapshot Space Usage
@@ -300,8 +308,10 @@ Snapshot Reserve Percentage: 10%
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the system PATH includes the OneFS SDK bin directory.
-    **`Error: Invalid reserve value. Must be between 0 and 50.`** — Specify a reserve percentage between 0 and 50; values above 50% are not permitted.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the system PATH includes the OneFS SDK bin directory. |
+    | `Error: Invalid reserve value. Must be between 0 and 50.` | Specify a reserve percentage between 0 and 50; values above 50% are not permitted. |
 ---
 
 ## SyncIQ — Replication-Based Recovery
@@ -350,9 +360,11 @@ ID          Policy              Start Time              Status      Bytes Synced
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid target host '<dr-cluster-ip>'`** — Replace `<dr-cluster-ip>` with the actual IP address or hostname of your DR cluster (e.g., `192.168.1.50`).
-    **`Error: Source path '/ifs/data/project1' does not exist`** — Verify the source path exists on the local cluster using `isi ls /ifs/data/project1` before creating the policy.
-    **`Error: Policy 'backup-project1' already exists`** — Use a unique policy name or delete the existing policy with `isi sync policies delete backup-project1` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid target host '<dr-cluster-ip>'` | Replace `<dr-cluster-ip>` with the actual IP address or hostname of your DR cluster (e.g., `192.168.1.50`). |
+    | `Error: Source path '/ifs/data/project1' does not exist` | Verify the source path exists on the local cluster using `isi ls /ifs/data/project1` before creating the policy. |
+    | `Error: Policy 'backup-project1' already exists` | Use a unique policy name or delete the existing policy with `isi sync policies delete backup-project1` first. |
 ### SyncIQ Restore (Failback to Primary)
 
 When recovering from a DR failover, replicate data back from the DR cluster to the primary:
@@ -405,9 +417,11 @@ restore-project1-20240213-165301      restore-project1    2024-02-13 16:53:01  C
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy 'restore-project1' already exists`** — Delete the existing policy with `isi sync policies delete restore-project1` before recreating it.
-    **`Error: Unable to connect to target host 192.168.45.22`** — Verify the target cluster IP is correct and reachable by running `ping <primary-cluster-ip>` and confirm network connectivity.
-    **`Error: Job ID not found`** — Use `isi sync jobs list` to retrieve the correct job ID before running the view command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy 'restore-project1' already exists` | Delete the existing policy with `isi sync policies delete restore-project1` before recreating it. |
+    | `Error: Unable to connect to target host 192.168.45.22` | Verify the target cluster IP is correct and reachable by running `ping <primary-cluster-ip>` and confirm network connectivity. |
+    | `Error: Job ID not found` | Use `isi sync jobs list` to retrieve the correct job ID before running the view command. |
 ---
 
 ## NDMP — Network Data Management Protocol
@@ -446,8 +460,10 @@ Modify settings completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: NDMP service is not licensed on this cluster`** — Verify NDMP licensing is enabled via OneFS WebUI under Cluster > Licensing or contact Dell support for a license key.
-    **`Error: Invalid port number 10000: port already in use`** — Change the NDMP port to an available port (e.g., `--port 10001`) or stop the conflicting service using `netstat -tlnp | grep 10000`.
+    | Error | Fix |
+    |---|---|
+    | `Error: NDMP service is not licensed on this cluster` | Verify NDMP licensing is enabled via OneFS WebUI under Cluster > Licensing or contact Dell support for a license key. |
+    | `Error: Invalid port number 10000: port already in use` | Change the NDMP port to an available port (e.g., `--port 10001`) or stop the conflicting service using `netstat -tlnp | grep 10000`. |
 ### NDMP Users
 
 NDMP requires a dedicated backup account separate from the admin account:
@@ -485,9 +501,11 @@ User 'backup_user' deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: User 'backup_user' already exists`** — Use `isi ndmp users delete backup_user` first, or choose a different username.
-    **`Error: Invalid password. Password must be at least 8 characters`** — Provide a password meeting minimum length and complexity requirements.
-    **`Error: User 'backup_user' is currently in use by an active NDMP session`** — Wait for active backup jobs to complete or disconnect sessions before deleting the user.
+    | Error | Fix |
+    |---|---|
+    | `Error: User 'backup_user' already exists` | Use `isi ndmp users delete backup_user` first, or choose a different username. |
+    | `Error: Invalid password. Password must be at least 8 characters` | Provide a password meeting minimum length and complexity requirements. |
+    | `Error: User 'backup_user' is currently in use by an active NDMP session` | Wait for active backup jobs to complete or disconnect sessions before deleting the user. |
 ### NDMP Sessions and Diagnostics
 
 ```bash
@@ -534,9 +552,11 @@ Backup Success Rate:  99.2%
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster CLI or that the isi command is in your PATH.
-    **`Session <session_id> not found`** — Verify the session ID exists by running `isi ndmp sessions list` first before attempting to view or delete it.
-    **`Permission denied: NDMP operations require admin privileges`** — Run the command with appropriate admin credentials or use `sudo isi` if configured.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are logged into the PowerScale cluster CLI or that the isi command is in your PATH. |
+    | `Session <session_id> not found` | Verify the session ID exists by running `isi ndmp sessions list` first before attempting to view or delete it. |
+    | `Permission denied: NDMP operations require admin privileges` | Run the command with appropriate admin credentials or use `sudo isi` if configured. |
 ### NDMP Configuration Reference
 
 | Setting | Recommended Value | Notes |
@@ -617,9 +637,11 @@ drwxr-xr-x   3 root  wheel   4096 Jan 15 09:15 logs/
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the system PATH includes the OneFS bin directory (typically `/usr/local/bin`).
-    **`ls: cannot access '/ifs/data/project1/.snapshot/': No such file or directory`** — Verify that snapshots are enabled on the dataset and that the snapshot name extracted from the list command is correct; check with `isi snapshot snapshots list --path /ifs/data/project1` manually.
-    **`cp: /ifs/data/restore-test/project1/: Permission denied`** — Ensure the restore-test directory and parent paths have write permissions for the executing user (run as root or adjust ACLs).
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the system PATH includes the OneFS bin directory (typically `/usr/local/bin`). |
+    | `ls: cannot access '/ifs/data/project1/.snapshot/': No such file or directory` | Verify that snapshots are enabled on the dataset and that the snapshot name extracted from the list command is correct; check with `isi snapshot snapshots list --path /ifs/data/project1` manually. |
+    | `cp: /ifs/data/restore-test/project1/: Permission denied` | Ensure the restore-test directory and parent paths have write permissions for the executing user (run as root or adjust ACLs). |
 ### SyncIQ Validation
 
 ```bash
@@ -653,9 +675,11 @@ drwxr-xr-x   5 root  wheel  4096 Jan 15 02:47 archives/
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are running this command on the PowerScale cluster or have the OneFS CLI tools installed and in your PATH.
-    **`Error: Policy '<policy_name>' not found`** — Replace `<policy_name>` with the actual replication policy name; verify it exists with `isi sync policies list`.
-    **`Permission denied`** — Confirm your user account has read permissions on the replicated path and that the target cluster's firewall allows SSH access from your source cluster.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are running this command on the PowerScale cluster or have the OneFS CLI tools installed and in your PATH. |
+    | `Error: Policy '<policy_name>' not found` | Replace `<policy_name>` with the actual replication policy name; verify it exists with `isi sync policies list`. |
+    | `Permission denied` | Confirm your user account has read permissions on the replicated path and that the target cluster's firewall allows SSH access from your source cluster. |
 ### NDMP / Veeam Validation
 
 | Test Type | Frequency | Procedure |

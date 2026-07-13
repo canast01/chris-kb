@@ -73,9 +73,11 @@ Valid starting       Expires              Service principal
 ```
 
 !!! warning "Common errors"
-    **`id: 'jsmith@corp.local': no such user`** — Verify SSSD is running with `systemctl status sssd` and check domain name matches your AD configuration in `/etc/sssd/sssd.conf`.
-    **`Error: SSSD must be running to query users`** — Start SSSD with `systemctl start sssd` and wait 10–15 seconds for it to establish LDAP connections.
-    **`kinit: krb5_get_init_creds: Client not found in Kerberos database`** — Ensure the user exists in Active Directory and the Kerberos realm in `/etc/krb5.conf` matches your AD domain exactly (case-sensitive).
+    | Error | Fix |
+    |---|---|
+    | `id: 'jsmith@corp.local': no such user` | Verify SSSD is running with `systemctl status sssd` and check domain name matches your AD configuration in `/etc/sssd/sssd.conf`. |
+    | `Error: SSSD must be running to query users` | Start SSSD with `systemctl start sssd` and wait 10–15 seconds for it to establish LDAP connections. |
+    | `kinit: krb5_get_init_creds: Client not found in Kerberos database` | Ensure the user exists in Active Directory and the Kerberos realm in `/etc/krb5.conf` matches your AD domain exactly (case-sensitive). |
 ---
 
 ## Sudo Configuration for AD Groups
@@ -94,9 +96,11 @@ Valid starting       Expires              Service principal
 ```
 
 !!! warning "Common errors"
-    **`sudoers:1 syntax error near line 1`** — Verify the file was edited with `visudo` instead of a text editor, and check for trailing whitespace or missing spaces around the `@` symbol.
-    **`sudo: unable to resolve host <hostname>`** — Ensure the system's hostname is correctly set in `/etc/hostname` and `/etc/hosts`, and that DNS or local name resolution can reach the domain controller.
-    **`sudo: user is not in the sudoers file`** — Confirm the AD group membership with `id -G <username>` and verify the group name in sudoers matches exactly (including escaping spaces as `\ `).
+    | Error | Fix |
+    |---|---|
+    | `sudoers:1 syntax error near line 1` | Verify the file was edited with `visudo` instead of a text editor, and check for trailing whitespace or missing spaces around the `@` symbol. |
+    | `sudo: unable to resolve host <hostname>` | Ensure the system's hostname is correctly set in `/etc/hostname` and `/etc/hosts`, and that DNS or local name resolution can reach the domain controller. |
+    | `sudo: user is not in the sudoers file` | Confirm the AD group membership with `id -G <username>` and verify the group name in sudoers matches exactly (including escaping spaces as `\ `). |
 Note: AD group names with spaces require escaping the space with a backslash.
 
 ---
@@ -153,9 +157,11 @@ Last backup: 2024-11-13 22:15:00 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to download metadata for repo 'veeam': Cannot prepare internal mirrorlist: No URLs in mirrorlist.`** — Verify the baseurl in `/etc/yum.repos.d/veeam.repo` matches your RHEL version and check network connectivity to repository.veeam.com.
-    **`error: unpacking of archive failed on file /opt/veeam/agent: cpio: mkdir`** — Ensure `/opt/veeam` directory exists with proper permissions or run the installer with `sudo`.
-    **`veeam: command not found`** — Add `/opt/veeam/bin` to your PATH or use the full path `/opt/veeam/bin/veeam status` after installation completes.
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to download metadata for repo 'veeam': Cannot prepare internal mirrorlist: No URLs in mirrorlist.` | Verify the baseurl in `/etc/yum.repos.d/veeam.repo` matches your RHEL version and check network connectivity to repository.veeam.com. |
+    | `error: unpacking of archive failed on file /opt/veeam/agent: cpio: mkdir` | Ensure `/opt/veeam` directory exists with proper permissions or run the installer with `sudo`. |
+    | `veeam: command not found` | Add `/opt/veeam/bin` to your PATH or use the full path `/opt/veeam/bin/veeam status` after installation completes. |
 Registration to the Veeam Backup & Replication server is done from the VBR console: Protection Groups → Add Group → select the server by hostname.
 
 ---
@@ -204,9 +210,11 @@ LISTEN     0      128                 0.0.0.0:9100              0.0.0.0:*      u
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to find a match: golang-github-prometheus-node-exporter`** — Enable the EPEL repository first with `dnf install epel-release` before running the install command.
-    **`curl: (22) The requested URL returned error: 404`** — The release URL pattern may have changed; verify the correct download link at https://github.com/prometheus/node_exporter/releases and update the curl command accordingly.
-    **`Job for node_exporter.service failed because the control process exited with error code.`** — Check service logs with `journalctl -u node_exporter -n 20` to identify permission or configuration issues, then restart with `systemctl restart node_exporter`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to find a match: golang-github-prometheus-node-exporter` | Enable the EPEL repository first with `dnf install epel-release` before running the install command. |
+    | `curl: (22) The requested URL returned error: 404` | The release URL pattern may have changed; verify the correct download link at https://github.com/prometheus/node_exporter/releases and update the curl command accordingly. |
+    | `Job for node_exporter.service failed because the control process exited with error code.` | Check service logs with `journalctl -u node_exporter -n 20` to identify permission or configuration issues, then restart with `systemctl restart node_exporter`. |
 **Verify Prometheus can scrape the node:**
 
 ```bash
@@ -235,9 +243,11 @@ node_disk_io_now 0
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <server-ip> port 9100: Connection refused`** — Verify the Prometheus Node Exporter is running on the target host with `systemctl status node_exporter` and confirm port 9100 is listening.
-    **`curl: (6) Could not resolve host: <server-ip>`** — Replace `<server-ip>` with the actual IP address or hostname of the target server.
-    **`curl: (28) Operation timeout. The timeout was reached`** — Increase the timeout with `curl --max-time 10` or check network connectivity and firewall rules blocking port 9100.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <server-ip> port 9100: Connection refused` | Verify the Prometheus Node Exporter is running on the target host with `systemctl status node_exporter` and confirm port 9100 is listening. |
+    | `curl: (6) Could not resolve host: <server-ip>` | Replace `<server-ip>` with the actual IP address or hostname of the target server. |
+    | `curl: (28) Operation timeout. The timeout was reached` | Increase the timeout with `curl --max-time 10` or check network connectivity and firewall rules blocking port 9100. |
 ---
 
 ## iSCSI Storage Connectivity
@@ -306,8 +316,10 @@ Rescan of session [sid: 1, target: iqn.2024-01.com.storage:target.lun0, portal: 
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: No portals found`** — Verify the storage portal IP is reachable and the iSCSI target service is running on the storage array.
-    **`iscsiadm: initiator reported error (19 - encountered non-retryable iSCSI login failure)`** — Confirm the target IQN is correct and the initiator has network connectivity to the storage portal on port 3260.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: No portals found` | Verify the storage portal IP is reachable and the iSCSI target service is running on the storage array. |
+    | `iscsiadm: initiator reported error (19 - encountered non-retryable iSCSI login failure)` | Confirm the target IQN is correct and the initiator has network connectivity to the storage portal on port 3260. |
 ---
 
 ## SAN Multipath Data Path
@@ -381,9 +393,11 @@ active ready running
 ```
 
 !!! warning "Common errors"
-    **`multipathd.service does not have install section in [Install] block. Refusing.`** — Add `WantedBy=multi-user.target` to the multipathd unit file or use `systemctl enable multipathd` before `--now`.
-    **`multipath: command not found`** — Install the device-mapper-multipath package with `dnf install device-mapper-multipath` before running multipath commands.
-    **`sysfs: cannot open /etc/multipath.conf: Permission denied`** — Run mpathconf and multipath commands with `sudo` or as root user.
+    | Error | Fix |
+    |---|---|
+    | `multipathd.service does not have install section in [Install] block. Refusing.` | Add `WantedBy=multi-user.target` to the multipathd unit file or use `systemctl enable multipathd` before `--now`. |
+    | `multipath: command not found` | Install the device-mapper-multipath package with `dnf install device-mapper-multipath` before running multipath commands. |
+    | `sysfs: cannot open /etc/multipath.conf: Permission denied` | Run mpathconf and multipath commands with `sudo` or as root user. |
 Key `/etc/multipath.conf` settings for Dell/EMC and Pure Storage:
 
 ```text

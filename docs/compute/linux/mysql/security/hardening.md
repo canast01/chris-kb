@@ -64,8 +64,10 @@ Empty set (0.00 sec)
 ```
 
 !!! warning "Common errors"
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password you entered is correct and was set during mysql_secure_installation.
-    **`ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`** — Ensure the MySQL service is running with `sudo systemctl start mysql` or `sudo service mysql start`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)` | Verify the root password you entered is correct and was set during mysql_secure_installation. |
+    | `ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'` | Ensure the MySQL service is running with `sudo systemctl start mysql` or `sudo service mysql start`. |
 ## Configuration Hardening (`mysqld.cnf`)
 
 ```ini
@@ -121,8 +123,10 @@ drwxr-x---  2 mysql mysql  4096 Jan 15 10:30 performance_schema
 ```
 
 !!! warning "Common errors"
-    **`chmod: cannot access '/etc/mysql/mysql.conf.d/mysqld.cnf': No such file or directory`** — Verify the correct config path with `find /etc -name mysqld.cnf` as it may be in `/etc/mysql/conf.d/` or `/etc/my.cnf` depending on your distribution.
-    **`chown: changing ownership of '/etc/mysql/mysql.conf.d/mysqld.cnf': No such file or directory`** — Ensure the file exists and the parent directory is readable; check if MySQL is installed with `dpkg -l | grep mysql-server` or `rpm -qa | grep mysql`.
+    | Error | Fix |
+    |---|---|
+    | `chmod: cannot access '/etc/mysql/mysql.conf.d/mysqld.cnf': No such file or directory` | Verify the correct config path with `find /etc -name mysqld.cnf` as it may be in `/etc/mysql/conf.d/` or `/etc/my.cnf` depending on your distribution. |
+    | `chown: changing ownership of '/etc/mysql/mysql.conf.d/mysqld.cnf': No such file or directory` | Ensure the file exists and the parent directory is readable; check if MySQL is installed with `dpkg -l | grep mysql-server` or `rpm -qa | grep mysql`. |
 ## Audit Logging
 
 ```sql

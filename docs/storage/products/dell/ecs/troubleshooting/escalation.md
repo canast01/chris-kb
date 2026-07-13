@@ -189,8 +189,10 @@ Bucket: prod-data
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the ECS node's certificate into your CA bundle.
-    **`error: invalid_token or X-SDS-AUTH-TOKEN: Unauthorized`** — Regenerate the authentication token using `ecscli authentication login` and ensure the token has not expired.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the ECS node's certificate into your CA bundle. |
+    | `error: invalid_token or X-SDS-AUTH-TOKEN: Unauthorized` | Regenerate the authentication token using `ecscli authentication login` and ensure the token has not expired. |
     **`command not
 Also provide:
 - ECS Portal → Support → Collect Logs (per-node support bundle — mandatory for Severity 1/2 cases)

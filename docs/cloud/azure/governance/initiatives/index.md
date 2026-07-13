@@ -110,9 +110,11 @@ Team Tagging Standards                        Custom    team-tagging-initiative
 ```
 
 !!! warning "Common errors"
-    **`BadRequest: The file 'initiative-policies.json' does not exist or is not readable.`** — Verify the JSON file path is correct and readable with `cat initiative-policies.json` before running the command.
-    **`AuthorizationFailed: The client 'user@contoso.com' with object id '12345678-...' does not have authorization to perform action 'Microsoft.Authorization/policySetDefinitions/write' over scope '/providers/Microsoft.Management/managementGroups/contoso-mg'.`** — Ensure your account has the Policy Contributor or Owner role assigned at the management group scope.
-    **`BadRequest: Invalid policy definition reference ID 'require-environment-tag'. Policy definition reference IDs must be unique within the initiative.`** — Use distinct `policyDefinitionReferenceId` values for each policy in the definitions array.
+    | Error | Fix |
+    |---|---|
+    | `BadRequest: The file 'initiative-policies.json' does not exist or is not readable.` | Verify the JSON file path is correct and readable with `cat initiative-policies.json` before running the command. |
+    | `AuthorizationFailed: The client 'user@contoso.com' with object id '12345678-...' does not have authorization to perform action 'Microsoft.Authorization/policySetDefinitions/write' over scope '/providers/Microsoft.Management/managementGroups/contoso-mg'.` | Ensure your account has the Policy Contributor or Owner role assigned at the management group scope. |
+    | `BadRequest: Invalid policy definition reference ID 'require-environment-tag'. Policy definition reference IDs must be unique within the initiative.` | Use distinct `policyDefinitionReferenceId` values for each policy in the definitions array. |
 ## Parameter Mapping
 
 Initiative-level parameters allow a single assignment to pass values into multiple member policies. Define the initiative parameter once and reference it in member policy parameter values.
@@ -207,9 +209,11 @@ cis-benchmark                 Microsoft.Authorization   /subscriptions/a1b2c3d4-
 ```
 
 !!! warning "Common errors"
-    **`Policy set definition 'org-baseline-security' not found.`** — Verify the custom initiative exists in the subscription using `az policy set-definition list` and use the correct definition ID.
-    **`The policy assignment 'baseline-security-assignment' already exists.`** — Use a unique assignment name or delete the existing assignment with `az policy assignment delete --name baseline-security-assignment --scope <subscription-id>`.
-    **`Invalid scope format. Scope must start with '/subscriptions/' or '/providers/'.`** — Replace `<subscription-id>` with your actual subscription ID (e.g., `/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890`).
+    | Error | Fix |
+    |---|---|
+    | `Policy set definition 'org-baseline-security' not found.` | Verify the custom initiative exists in the subscription using `az policy set-definition list` and use the correct definition ID. |
+    | `The policy assignment 'baseline-security-assignment' already exists.` | Use a unique assignment name or delete the existing assignment with `az policy assignment delete --name baseline-security-assignment --scope <subscription-id>`. |
+    | `Invalid scope format. Scope must start with '/subscriptions/' or '/providers/'.` | Replace `<subscription-id>` with your actual subscription ID (e.g., `/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890`). |
 ### Common Built-in Initiatives
 
 | Initiative | ID | Purpose |
@@ -270,5 +274,7 @@ Resource                                                          MemberPolicy
 ```
 
 !!! warning "Common errors"
-    **`No matching assignment found for the given policyAssignmentId`** — Verify the subscription ID and policy assignment name are correct using `az policy assignment list --subscription <subscription-id>`.
-    **`The policy state data is not yet available. Please try again in a few moments.`** — Wait 5-10 minutes after assigning the policy for compliance evaluation to complete, then retry the command.
+    | Error | Fix |
+    |---|---|
+    | `No matching assignment found for the given policyAssignmentId` | Verify the subscription ID and policy assignment name are correct using `az policy assignment list --subscription <subscription-id>`. |
+    | `The policy state data is not yet available. Please try again in a few moments.` | Wait 5-10 minutes after assigning the policy for compliance evaluation to complete, then retry the command. |

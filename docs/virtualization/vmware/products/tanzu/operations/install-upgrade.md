@@ -110,9 +110,11 @@ Management cluster 'mgmt-cluster' is now active
 ```
 
 !!! warning "Common errors"
-    **`Error: invalid credentials for vCenter server vcenter.example.local`** — Verify VSPHERE_USERNAME and VSPHERE_PASSWORD are correct and the account has Administrator role on the vCenter instance.
-    **`Error: resource pool /DC01/host/Cluster01/Resources/TKG not found`** — Confirm the VSPHERE_RESOURCE_POOL path exists in vCenter and matches the exact folder hierarchy using the vSphere client.
-    **`Error: SSH public key format invalid`** — Ensure VSPHERE_SSH_AUTHORIZED_KEY contains a valid public key in OpenSSH format (starting with ssh-rsa, ssh-ed25519, etc.) without line breaks.
+    | Error | Fix |
+    |---|---|
+    | `Error: invalid credentials for vCenter server vcenter.example.local` | Verify VSPHERE_USERNAME and VSPHERE_PASSWORD are correct and the account has Administrator role on the vCenter instance. |
+    | `Error: resource pool /DC01/host/Cluster01/Resources/TKG not found` | Confirm the VSPHERE_RESOURCE_POOL path exists in vCenter and matches the exact folder hierarchy using the vSphere client. |
+    | `Error: SSH public key format invalid` | Ensure VSPHERE_SSH_AUTHORIZED_KEY contains a valid public key in OpenSSH format (starting with ssh-rsa, ssh-ed25519, etc.) without line breaks. |
 ---
 
 ## Deploy a TKG Workload Cluster
@@ -160,9 +162,11 @@ Kubeconfig written to ~/.kube/config
 ```
 
 !!! warning "Common errors"
-    **`Error: invalid credentials for vSphere server vcenter.example.local`** — Verify VSPHERE_USERNAME, VSPHERE_PASSWORD, and vCenter hostname are correct in the YAML file.
-    **`Error: resource pool /DC01/host/Cluster01/Resources/TKG not found`** — Confirm the VSPHERE_RESOURCE_POOL path exists in vSphere and matches the exact folder hierarchy.
-    **`Error: namespace 'production' does not exist`** — Create the namespace first with `kubectl create namespace production` on the management cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error: invalid credentials for vSphere server vcenter.example.local` | Verify VSPHERE_USERNAME, VSPHERE_PASSWORD, and vCenter hostname are correct in the YAML file. |
+    | `Error: resource pool /DC01/host/Cluster01/Resources/TKG not found` | Confirm the VSPHERE_RESOURCE_POOL path exists in vSphere and matches the exact folder hierarchy. |
+    | `Error: namespace 'production' does not exist` | Create the namespace first with `kubectl create namespace production` on the management cluster. |
 ---
 
 ## Harbor Deployment (OVA)
@@ -246,9 +250,11 @@ prod-workload-01-worker-3               Ready    <none>          187d    v1.28.2
 ```
 
 !!! warning "Common errors"
-    **`Error: cluster prod-workload-01 not found`** — Verify cluster name with `tanzu cluster list` and ensure you are targeting the correct management cluster context.
-    **`Error: upgrade already in progress for cluster prod-workload-01`** — Wait for the current upgrade to complete or check `tanzu cluster get prod-workload-01` for status before retrying.
-    **`Error: insufficient resources to drain node prod-workload-01-worker-1`** — Ensure PodDisruptionBudgets are not blocking evictions and that other nodes have capacity for pod migration.
+    | Error | Fix |
+    |---|---|
+    | `Error: cluster prod-workload-01 not found` | Verify cluster name with `tanzu cluster list` and ensure you are targeting the correct management cluster context. |
+    | `Error: upgrade already in progress for cluster prod-workload-01` | Wait for the current upgrade to complete or check `tanzu cluster get prod-workload-01` for status before retrying. |
+    | `Error: insufficient resources to drain node prod-workload-01-worker-1` | Ensure PodDisruptionBudgets are not blocking evictions and that other nodes have capacity for pod migration. |
 ---
 
 ## Version Compatibility

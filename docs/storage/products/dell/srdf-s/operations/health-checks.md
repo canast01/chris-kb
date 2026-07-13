@@ -248,9 +248,11 @@ Latency: 12.34 ms
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `--insecure` flag or import the Unisphere CA certificate into your system trust store.
-    **`symstat: Command not found`** — Ensure the Symmetrix CLI (Solutions Enabler) is installed and the `$PATH` includes `/opt/emc/SYMCLI/bin` or equivalent.
-    **`Authentication failed: Invalid credentials`** — Verify the SMC user credentials in the `AUTH` variable match the Unisphere account and that the account has RDF metrics API permissions.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `--insecure` flag or import the Unisphere CA certificate into your system trust store. |
+    | `symstat: Command not found` | Ensure the Symmetrix CLI (Solutions Enabler) is installed and the `$PATH` includes `/opt/emc/SYMCLI/bin` or equivalent. |
+    | `Authentication failed: Invalid credentials` | Verify the SMC user credentials in the `AUTH` variable match the Unisphere account and that the account has RDF metrics API permissions. |
 **Thresholds:**
 
 | Metric | Normal | Investigate | Escalate | Why |
@@ -309,9 +311,11 @@ Symmetrix ID: 000296802152
 ```
 
 !!! warning "Common errors"
-    **`RDFG 10 not found`** — Verify the RDFG number exists with `symrdf list` and confirm it matches your configuration.
-    **`RDF Link: RF-1A (Offline)`** — Check physical RDF cable connections and run `symrdf -g 10 check` to diagnose link failures.
-    **`Pair State: Out-of-Sync`** — Resume replication with `symrdf -g 10 resume` after verifying no data corruption occurred.
+    | Error | Fix |
+    |---|---|
+    | `RDFG 10 not found` | Verify the RDFG number exists with `symrdf list` and confirm it matches your configuration. |
+    | `RDF Link: RF-1A (Offline)` | Check physical RDF cable connections and run `symrdf -g 10 check` to diagnose link failures. |
+    | `Pair State: Out-of-Sync` | Resume replication with `symrdf -g 10 resume` after verifying no data corruption occurred. |
 ---
 
 ## Health Check Summary Table
@@ -408,9 +412,11 @@ RDFG 10 Configuration:
 ```
 
 !!! warning "Common errors"
-    **`SYMCFG-00001: Symmetrix ID not found or not responding`** — Verify the Symmetrix array is online and accessible by running `symcfg discover` and confirm the array ID matches your environment.
-    **`SYMRDF-00015: RDFG group 10 not found`** — Confirm the RDFG group number exists on this array by running `symcfg list -rdfg all` to list all configured groups.
-    **`Permission denied: /tmp/rdfg_inventory_*.txt`** — Ensure the user running the script has write permissions to /tmp or specify an alternate writable directory like `/var/tmp`.
+    | Error | Fix |
+    |---|---|
+    | `SYMCFG-00001: Symmetrix ID not found or not responding` | Verify the Symmetrix array is online and accessible by running `symcfg discover` and confirm the array ID matches your environment. |
+    | `SYMRDF-00015: RDFG group 10 not found` | Confirm the RDFG group number exists on this array by running `symcfg list -rdfg all` to list all configured groups. |
+    | `Permission denied: /tmp/rdfg_inventory_*.txt` | Ensure the user running the script has write permissions to /tmp or specify an alternate writable directory like `/var/tmp`. |
 ### Pair State and Data Consistency Validation
 
 ![Pair State and Data Consistency Validation](../../../../../assets/storage-dell-srdf-s-hc-pair-state-and-data-consistency-validation.svg)
@@ -445,9 +451,11 @@ SRDF Mode                                     Synchronous
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Command not found`** — Ensure the Symmetrix CLI tools are installed and the `$PATH` includes the Solutions Enabler bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`SRDF group 10 not found`** — Verify the RDF group number with `symrdf list` and confirm the group exists on both R1 and R2 arrays.
-    **`Device count mismatch between R1 and R2`** — Run `symrdf -g 10 query -detail` to identify which devices are out of sync, then resynchronize using `symrdf -g 10 -i set -state synchronized`.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Command not found` | Ensure the Symmetrix CLI tools are installed and the `$PATH` includes the Solutions Enabler bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `SRDF group 10 not found` | Verify the RDF group number with `symrdf list` and confirm the group exists on both R1 and R2 arrays. |
+    | `Device count mismatch between R1 and R2` | Run `symrdf -g 10 query -detail` to identify which devices are out of sync, then resynchronize using `symrdf -g 10 -i set -state synchronized`. |
 ### Simulated Failover Validation (Non-Disruptive)
 
 ![Simulated Failover Validation (Non-Disruptive)](../../../../../assets/storage-dell-srdf-s-hc-simulated-failover-validation-non-disruptive.svg)
@@ -492,9 +500,11 @@ Wait for Synchronized and confirm 0 tracks
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI_C_PROC_FAILURE (29) — Symmetrix device not responding`** — Verify the Symmetrix array is online and accessible via `symcfg list -v`, and confirm network connectivity to the array.
-    **`RDF pair(s) could not be suspended — Pair(s) in Invalid state`** — Check pair status with `symrdf -g 10 query` and resolve any failed pairs before attempting suspend operations.
-    **`symrdf: Command authorization failed`** — Ensure your user account has appropriate SYMAPI permissions; contact your storage administrator to grant RDF management privileges.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI_C_PROC_FAILURE (29) — Symmetrix device not responding` | Verify the Symmetrix array is online and accessible via `symcfg list -v`, and confirm network connectivity to the array. |
+    | `RDF pair(s) could not be suspended — Pair(s) in Invalid state` | Check pair status with `symrdf -g 10 query` and resolve any failed pairs before attempting suspend operations. |
+    | `symrdf: Command authorization failed` | Ensure your user account has appropriate SYMAPI permissions; contact your storage administrator to grant RDF management privileges. |
 For a full DR test failover, follow the DR test runbook and use the SRM test failover workflow to isolate impact to the test bubble network.
 
 ### Post-Change Validation
@@ -543,9 +553,11 @@ OLPAIRS Consistency: Maintained
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Command not found`** — Verify SymCLI is installed and the Symmetrix CLI bin directory is in your $PATH.
-    **`Group ID 10 not found`** — Confirm the RDF group number exists with `symrdf list` and verify you have permissions to access the Symmetrix array.
-    **`SYMAPI_CONNECT_ERROR: Cannot connect to the Symmetrix`** — Ensure the Symmetrix array is reachable and the SYMAPI_SERVER environment variable is correctly configured.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Command not found` | Verify SymCLI is installed and the Symmetrix CLI bin directory is in your $PATH. |
+    | `Group ID 10 not found` | Confirm the RDF group number exists with `symrdf list` and verify you have permissions to access the Symmetrix array. |
+    | `SYMAPI_CONNECT_ERROR: Cannot connect to the Symmetrix` | Ensure the Symmetrix array is reachable and the SYMAPI_SERVER environment variable is correctly configured. |
 ### Validation Checklist Table
 
 ![Validation Checklist Table](../../../../../assets/storage-dell-srdf-s-hc-validation-checklist-table.svg)

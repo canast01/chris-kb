@@ -211,9 +211,11 @@ nsshow | grep 50:00:09:73:a2:1b:4c:d1
 ```
 
 !!! warning "Common errors"
-    **`No matching entries found`** — Verify the WWPN is correctly formatted (with colons) and the HBA is actually logged into the fabric by running `nsshow` without grep first.
-    **`zone: <zone-name> not found`** — Confirm the zone name is spelled correctly and exists in the fabric configuration by running `zoneshow` to list all zones.
-    **`alias: <alias-name> not found`** — Check that the alias name matches exactly what is defined in the configuration; run `alishow` without grep to see all defined aliases.
+    | Error | Fix |
+    |---|---|
+    | `No matching entries found` | Verify the WWPN is correctly formatted (with colons) and the HBA is actually logged into the fabric by running `nsshow` without grep first. |
+    | `zone: <zone-name> not found` | Confirm the zone name is spelled correctly and exists in the fabric configuration by running `zoneshow` to list all zones. |
+    | `alias: <alias-name> not found` | Check that the alias name matches exactly what is defined in the configuration; run `alishow` without grep to see all defined aliases. |
 **Common causes and fixes:**
 
 | Cause | Fix |
@@ -254,9 +256,11 @@ portlogshow 0/5
 ```
 
 !!! warning "Common errors"
-    **`Invalid slot/port number`** — Verify the slot and port format matches your switch model (e.g., `0/5` for slot 0, port 5).
-    **`portlogshow: command not found`** — Ensure you are logged into the Brocade switch via SSH/telnet and have administrative privileges.
-    **`Port is Offline or No_Light`** — Check physical cable connections, SFP transceiver compatibility, and verify the host HBA is powered on and functional.
+    | Error | Fix |
+    |---|---|
+    | `Invalid slot/port number` | Verify the slot and port format matches your switch model (e.g., `0/5` for slot 0, port 5). |
+    | `portlogshow: command not found` | Ensure you are logged into the Brocade switch via SSH/telnet and have administrative privileges. |
+    | `Port is Offline or No_Light` | Check physical cable connections, SFP transceiver compatibility, and verify the host HBA is powered on and functional. |
 ---
 
 ## Port Flapping / High Error Counts
@@ -323,9 +327,11 @@ Port Configuration for slot 0, port 1:
 ```
 
 !!! warning "Common errors"
-    **`Invalid slot/port format`** — Use the format `<slot>/<port>` (e.g., `0/1`) and verify the port exists with `switchshow`.
-    **`SFP not present or not supported`** — Reseat the SFP transceiver or replace it with a supported model matching your fabric speed.
-    **`Port does not exist`** — Confirm the slot and port number are valid for your switch model using `switchshow` output.
+    | Error | Fix |
+    |---|---|
+    | `Invalid slot/port format` | Use the format `<slot>/<port>` (e.g., `0/1`) and verify the port exists with `switchshow`. |
+    | `SFP not present or not supported` | Reseat the SFP transceiver or replace it with a supported model matching your fabric speed. |
+    | `Port does not exist` | Confirm the slot and port number are valid for your switch model using `switchshow` output. |
 **Resolution steps:**
 
 1. Replace the SFP on the switch port first — SFPs are the most common cause of signal quality errors.
@@ -408,8 +414,10 @@ portlogshow 0
 ```
 
 !!! warning "Common errors"
-    **`Error: Fabric Segmented - Domain ID Mismatch`** — Run `fabricshow` to identify duplicate domain IDs and use `configure` to assign a unique domain ID to the isolated switch.
-    **`Error: E_Port Isolated (Incompatible)`** — Verify ISL cable connectivity and run `portcfgshow <isl-port>` to confirm port speed and settings match the remote switch.
+    | Error | Fix |
+    |---|---|
+    | `Error: Fabric Segmented - Domain ID Mismatch` | Run `fabricshow` to identify duplicate domain IDs and use `configure` to assign a unique domain ID to the isolated switch. |
+    | `Error: E_Port Isolated (Incompatible)` | Verify ISL cable connectivity and run `portcfgshow <isl-port>` to confirm port speed and settings match the remote switch. |
 **Common causes and fixes:**
 
 | Cause | Fix |
@@ -454,8 +462,10 @@ Domain ID  Switch Name          IP Address       Status
 ```
 
 !!! warning "Common errors"
-    **`Domain ID 42 is already in use by switch-prod-02`** — Choose a unique domain ID between 1–239 that is not already assigned in the fabric.
-    **`Failed to save configuration: Read-only mode`** — Exit configuration mode with `exit` and ensure you have admin privileges before running `configure` again.
+    | Error | Fix |
+    |---|---|
+    | `Domain ID 42 is already in use by switch-prod-02` | Choose a unique domain ID between 1–239 that is not already assigned in the fabric. |
+    | `Failed to save configuration: Read-only mode` | Exit configuration mode with `exit` and ensure you have admin privileges before running `configure` again. |
 ---
 
 ## Principal Switch Changed Unexpectedly
@@ -502,9 +512,11 @@ RAS Log (100 most recent events):
 ```
 
 !!! warning "Common errors"
-    **`fabricshow: command not found`** — Verify you are logged into the Brocade switch CLI (SSH/Telnet) and not a Linux shell; this command runs only on FOS devices.
-    **`Permission denied`** — Confirm your user account has admin or read-only fabric privileges; contact your fabric administrator to grant the required role.
-    **`rasshow: Invalid option -- l`** — Use the correct syntax `rasshow -l 100` (lowercase L for line count) or check FOS version compatibility with your command variant.
+    | Error | Fix |
+    |---|---|
+    | `fabricshow: command not found` | Verify you are logged into the Brocade switch CLI (SSH/Telnet) and not a Linux shell; this command runs only on FOS devices. |
+    | `Permission denied` | Confirm your user account has admin or read-only fabric privileges; contact your fabric administrator to grant the required role. |
+    | `rasshow: Invalid option -- l` | Use the correct syntax `rasshow -l 100` (lowercase L for line count) or check FOS version compatibility with your command variant. |
 **Cause:** The previous principal switch went offline (reboot, power loss, ISL failure), triggering a new principal election. The switch with the highest priority (lowest priority value) or lowest WWN becomes the new principal.
 
 **Resolution:**
@@ -565,8 +577,10 @@ Configuration saved successfully to flash.
 ```
 
 !!! warning "Common errors"
-    **`Error: Zoning configuration not found`** — Verify the zoneset name matches exactly with `cfgshow` output and check for typos in the zoneset-name parameter.
-    **`Error: Configuration save failed - flash memory full`** — Delete old configuration backups using `cfgdelete <old-config-name>` to free space before retrying cfgsave.
+    | Error | Fix |
+    |---|---|
+    | `Error: Zoning configuration not found` | Verify the zoneset name matches exactly with `cfgshow` output and check for typos in the zoneset-name parameter. |
+    | `Error: Configuration save failed - flash memory full` | Delete old configuration backups using `cfgdelete <old-config-name>` to free space before retrying cfgsave. |
 Prevent this in future: always include `cfgsave` in zoning SOPs and verify the zone database was saved before closing the change window.
 
 ---
@@ -626,9 +640,11 @@ MAPS Rule Thresholds:
 ```
 
 !!! warning "Common errors"
-    **`mapsdashboard: command not found`** — Verify MAPS is installed and enabled with `mapsadmin --status`, then source the Fabric OS environment with `. /etc/profile.d/brocade.sh`.
-    **`MAPS Database is not initialized`** — Initialize the MAPS database with `mapsdb --init` and wait 2-3 minutes for the first data collection cycle to complete.
-    **`Permission denied: insufficient privileges to view MAPS data`** — Run commands with admin credentials or add your user to the `maps` group with `usermod -a -G maps <username>`.
+    | Error | Fix |
+    |---|---|
+    | `mapsdashboard: command not found` | Verify MAPS is installed and enabled with `mapsadmin --status`, then source the Fabric OS environment with `. /etc/profile.d/brocade.sh`. |
+    | `MAPS Database is not initialized` | Initialize the MAPS database with `mapsdb --init` and wait 2-3 minutes for the first data collection cycle to complete. |
+    | `Permission denied: insufficient privileges to view MAPS data` | Run commands with admin credentials or add your user to the `maps` group with `usermod -a -G maps <username>`. |
 **Common MAPS alerts and actions:**
 
 | Alert | Meaning | Action |
@@ -706,9 +722,11 @@ Port 0/3: Throughput 0.3 Gbps, Frames/sec: 3847
 ```
 
 !!! warning "Common errors"
-    **`portbufshow: Invalid slot/port format`** — Use the format `portbufshow <slot>/<port>` (e.g., `portbufshow 0/1`).
-    **`bottleneckmon: command not found`** — Enable the bottleneck monitoring feature with `bottleneckmon --enable` first, or verify the switch supports this command (available on newer FOS versions).
-    **`porterrshow: No such file or directory`** — Run the command from the switch's admin CLI directly via SSH or serial console, not from a remote shell.
+    | Error | Fix |
+    |---|---|
+    | `portbufshow: Invalid slot/port format` | Use the format `portbufshow <slot>/<port>` (e.g., `portbufshow 0/1`). |
+    | `bottleneckmon: command not found` | Enable the bottleneck monitoring feature with `bottleneckmon --enable` first, or verify the switch supports this command (available on newer FOS versions). |
+    | `porterrshow: No such file or directory` | Run the command from the switch's admin CLI directly via SSH or serial console, not from a remote shell. |
 **Resolution:**
 
 1. Identify the specific port showing zero BB credits or highest C3 discards.
@@ -774,9 +792,11 @@ Temperature Summary:
 ```
 
 !!! warning "Common errors"
-    **`switchstatusshow: command not found`** — Verify you are logged into the Brocade switch CLI (not the host OS) and have admin privileges.
-    **`errshow: Access denied`** — Ensure your user account has read permissions for system logs; contact switch admin if needed.
-    **`sensorshow: No sensor data available`** — Restart the switch monitoring daemon with `sensormonitor restart` or reboot the switch if sensors are unresponsive.
+    | Error | Fix |
+    |---|---|
+    | `switchstatusshow: command not found` | Verify you are logged into the Brocade switch CLI (not the host OS) and have admin privileges. |
+    | `errshow: Access denied` | Ensure your user account has read permissions for system logs; contact switch admin if needed. |
+    | `sensorshow: No sensor data available` | Restart the switch monitoring daemon with `sensormonitor restart` or reboot the switch if sensors are unresponsive. |
 **Common causes:**
 
 | Cause | Action |

@@ -96,9 +96,11 @@ server 10.0.1.100, stratum 2, offset 0.012345, delay 0.04567
 ```
 
 !!! warning "Common errors"
-    **`** nslookup: can't resolve 'vrops-master.example.local': Non-existent domain`** — Verify DNS zone contains the FQDN record and confirm the correct DNS server IP is configured on the management workstation.
-    **`** nslookup: can't resolve '<planned-master-ip>': Non-existent domain`** — Ensure a PTR (reverse DNS) record exists for the IP address in the DNS server's reverse zone.
-    **`** ntpdate[12345]: the NTP socket is in use, exiting`** — Stop the ntpd or chronyd service with `systemctl stop ntpd` before running ntpdate, or use `chronyc waitsync` instead if using chrony.
+    | Error | Fix |
+    |---|---|
+    | `** nslookup: can't resolve 'vrops-master.example.local': Non-existent domain` | Verify DNS zone contains the FQDN record and confirm the correct DNS server IP is configured on the management workstation. |
+    | `** nslookup: can't resolve '<planned-master-ip>': Non-existent domain` | Ensure a PTR (reverse DNS) record exists for the IP address in the DNS server's reverse zone. |
+    | `** ntpdate[12345]: the NTP socket is in use, exiting` | Stop the ntpd or chronyd service with `systemctl stop ntpd` before running ntpdate, or use `chronyc waitsync` instead if using chrony. |
 vCenter service account minimum permissions:
 
 | Scope | Required Role |
@@ -182,9 +184,11 @@ Last Sync: 2024-01-17 14:32:15 UTC
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify SSH connectivity and that the vROps master node is reachable on port 22.
-    **`vcops-cli.sh: command not found`** — Confirm the vRealize Operations suite is installed in `/usr/lib/vmware-vcopssuite/` and the utilities package is present.
-    **`● vmware-vcops-analytics.service - VMware vRealize Operations Analytics Service ... Active: inactive (dead)`** — Start the service with `systemctl start vmware-vcops-analytics` and check logs with `journalctl -u vmware-vcops-analytics -n 50` for startup errors.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify SSH connectivity and that the vROps master node is reachable on port 22. |
+    | `vcops-cli.sh: command not found` | Confirm the vRealize Operations suite is installed in `/usr/lib/vmware-vcopssuite/` and the utilities package is present. |
+    | `● vmware-vcops-analytics.service - VMware vRealize Operations Analytics Service ... Active: inactive (dead)` | Start the service with `systemctl start vmware-vcops-analytics` and check logs with `journalctl -u vmware-vcops-analytics -n 50` for startup errors. |
 ---
 
 ## Phase 3 — Cluster Expansion
@@ -214,8 +218,10 @@ Last Updated: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Command not found: /usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh`** — Verify Aria Operations is installed on this node and the installation path is correct.
-    **`Error: Unable to connect to cluster database`** — Ensure the master node is running and network connectivity exists between all cluster nodes.
+    | Error | Fix |
+    |---|---|
+    | `Command not found: /usr/lib/vmware-vcopssuite/utilities/bin/vcops-cli.sh` | Verify Aria Operations is installed on this node and the installation path is correct. |
+    | `Error: Unable to connect to cluster database` | Ensure the master node is running and network connectivity exists between all cluster nodes. |
 Remote collectors for branch sites or DMZs — deploy a lightweight collector OVA:
 
 ```text
@@ -304,9 +310,11 @@ Agent Status:
 ```
 
 !!! warning "Common errors"
-    **`./vrops-agent-install.bin: Permission denied`** — Run `chmod +x vrops-agent-install.bin` before executing the installer.
-    **`Error: Unable to connect to server vrops-master.example.local:443`** — Verify network connectivity and that the Aria Operations master server hostname/IP is correct and reachable on port 443.
-    **`Agent Status: NOT_RUNNING - Failed to start epops-agent service`** — Check `/opt/vmware/epops-agent/log/wrapper.log` for startup errors and ensure the system has sufficient memory and disk space.
+    | Error | Fix |
+    |---|---|
+    | `./vrops-agent-install.bin: Permission denied` | Run `chmod +x vrops-agent-install.bin` before executing the installer. |
+    | `Error: Unable to connect to server vrops-master.example.local:443` | Verify network connectivity and that the Aria Operations master server hostname/IP is correct and reachable on port 443. |
+    | `Agent Status: NOT_RUNNING - Failed to start epops-agent service` | Check `/opt/vmware/epops-agent/log/wrapper.log` for startup errors and ensure the system has sufficient memory and disk space. |
 Configure notification plugins:
 
 ```text
@@ -373,9 +381,11 @@ All adapters: Collecting
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify SSH connectivity and that the vrops-master hostname resolves correctly with `nslookup vrops-master.example.local`.
-    **`vcops-cli.sh: command not found`** — Confirm the vRealize Operations Suite is installed and the utilities path exists with `ls -la /usr/lib/vmware-vcopssuite/utilities/bin/`.
-    **`Job for vmware-vcops-cassandra.service failed because the control process exited with error code`** — Restart the failed service with `service vmware-vcops-cassandra restart` and check logs via `journalctl -u vmware-vcops-cassandra -n 50`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify SSH connectivity and that the vrops-master hostname resolves correctly with `nslookup vrops-master.example.local`. |
+    | `vcops-cli.sh: command not found` | Confirm the vRealize Operations Suite is installed and the utilities path exists with `ls -la /usr/lib/vmware-vcopssuite/utilities/bin/`. |
+    | `Job for vmware-vcops-cassandra.service failed because the control process exited with error code` | Restart the failed service with `service vmware-vcops-cassandra restart` and check logs via `journalctl -u vmware-vcops-cassandra -n 50`. |
 Take CaSA backup before handing to operations:
 
 ```text

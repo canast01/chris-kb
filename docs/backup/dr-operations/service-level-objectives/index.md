@@ -97,8 +97,10 @@ az monitor metrics list \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '<app-resource-id>' could not be found.`** — Verify the resource ID is correct and exists in your subscription using `az resource show --ids <app-resource-id>`.
-    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'microsoft.insights/metrics/read' over scope '<resource-scope>'.`** — Assign the "Monitoring Reader" role to your user or service principal on the target resource.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '<app-resource-id>' could not be found.` | Verify the resource ID is correct and exists in your subscription using `az resource show --ids <app-resource-id>`. |
+    | `AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'microsoft.insights/metrics/read' over scope '<resource-scope>'.` | Assign the "Monitoring Reader" role to your user or service principal on the target resource. |
 ## SLO Dashboard Requirements
 
 Each SLO should have a dashboard panel showing:

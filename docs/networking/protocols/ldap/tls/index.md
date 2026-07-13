@@ -77,9 +77,11 @@ MIIDpDCCAoygAwIBAgIQK7m8Z5+...
 ```
 
 !!! warning "Common errors"
-    **`verify error:num=20:unable to get local issuer certificate`** — Add the DC's root CA certificate to your system's trusted CA store or use `-CAfile` to specify the CA bundle path.
-    **`connect: Connection refused`** — Verify the DC hostname/IP is correct, the LDAPS port (636) is open, and the DC is online with `nslookup dc01.corp.example.com` and `telnet dc01.corp.example.com 636`.
-    **`Timeout waiting for input`** — The command is waiting for stdin; ensure `</dev/null` is appended to close stdin immediately after the connection completes.
+    | Error | Fix |
+    |---|---|
+    | `verify error:num=20:unable to get local issuer certificate` | Add the DC's root CA certificate to your system's trusted CA store or use `-CAfile` to specify the CA bundle path. |
+    | `connect: Connection refused` | Verify the DC hostname/IP is correct, the LDAPS port (636) is open, and the DC is online with `nslookup dc01.corp.example.com` and `telnet dc01.corp.example.com 636`. |
+    | `Timeout waiting for input` | The command is waiting for stdin; ensure `</dev/null` is appended to close stdin immediately after the connection completes. |
 ## Configuring LDAPS on Active Directory
 
 ```powershell
@@ -126,9 +128,11 @@ supportedExtension: 1.3.6.1.4.1.1466.20037.2
 ```
 
 !!! warning "Common errors"
-    **`TLS certificate problem: self signed certificate`** — Add the DC's certificate to `/etc/ldap/cacerts/` and configure `TLS_CACERT /etc/ldap/cacerts/ca-cert.pem` in `/etc/ldap/ldap.conf`, or use `LDAPTLS_REQCERT=never` for testing only.
-    **`ldap_sasl_bind_s: Invalid credentials (49)`** — Verify the service account password is correct and the account exists in Active Directory with `ldapsearch -x -H ldaps://dc01.corp.example.com:636 -D "svc-ldap@corp.example.com" -w "PASSWORD"`.
-    **`Can't contact LDAP server (-1)`** — Confirm the LDAPS port 636 is open and reachable with `telnet dc01.corp.example.com 636` or `nc -zv dc01.corp.example.com 636`.
+    | Error | Fix |
+    |---|---|
+    | `TLS certificate problem: self signed certificate` | Add the DC's certificate to `/etc/ldap/cacerts/` and configure `TLS_CACERT /etc/ldap/cacerts/ca-cert.pem` in `/etc/ldap/ldap.conf`, or use `LDAPTLS_REQCERT=never` for testing only. |
+    | `ldap_sasl_bind_s: Invalid credentials (49)` | Verify the service account password is correct and the account exists in Active Directory with `ldapsearch -x -H ldaps://dc01.corp.example.com:636 -D "svc-ldap@corp.example.com" -w "PASSWORD"`. |
+    | `Can't contact LDAP server (-1)` | Confirm the LDAPS port 636 is open and reachable with `telnet dc01.corp.example.com 636` or `nc -zv dc01.corp.example.com 636`. |
 ## Channel Binding and LDAP Signing
 
 Enforced via Group Policy or registry. Required for security hardening (Microsoft guidance post-2020).
@@ -227,6 +231,8 @@ result: 0 Success
 ```
 
 !!! warning "Common errors"
-    **`ldap_start_tls: Connect error (-1)`** — Verify the LDAP server is listening on port 389 and firewall allows the connection; check with `netstat -tlnp | grep 389`.
-    **`Verify return code: 20 (unable to get local issuer certificate)`** — Add the DC's issuing CA certificate to the system trust store with `update-ca-certificates` or specify the correct CA bundle path.
-    **`ldap_bind: Invalid credentials (49)`** — Confirm the service account password is correct and the account is not locked; test with `ldapwhoami -H ldap://dc01.corp.example.com:389 -D "svc-ldap@corp.example.com" -w "password"`.
+    | Error | Fix |
+    |---|---|
+    | `ldap_start_tls: Connect error (-1)` | Verify the LDAP server is listening on port 389 and firewall allows the connection; check with `netstat -tlnp | grep 389`. |
+    | `Verify return code: 20 (unable to get local issuer certificate)` | Add the DC's issuing CA certificate to the system trust store with `update-ca-certificates` or specify the correct CA bundle path. |
+    | `ldap_bind: Invalid credentials (49)` | Confirm the service account password is correct and the account is not locked; test with `ldapwhoami -H ldap://dc01.corp.example.com:389 -D "svc-ldap@corp.example.com" -w "password"`. |

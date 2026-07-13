@@ -84,9 +84,11 @@ Token acquired. Expires in 3600s
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.dell.com`** — Verify network connectivity and that the Dell API endpoint is accessible from your environment; check firewall rules and DNS resolution.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Confirm CLIENT_ID and CLIENT_SECRET are valid and that the token endpoint is returning JSON; check credentials in your Dell API console.
-    **`curl: (35) error:1400D102:SSL routines:SSL_CTX_use_certificate:unsupported certificate type`** — Ensure your system's CA certificates are up to date by running `update-ca-certificates` or equivalent for your OS.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.dell.com` | Verify network connectivity and that the Dell API endpoint is accessible from your environment; check firewall rules and DNS resolution. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Confirm CLIENT_ID and CLIENT_SECRET are valid and that the token endpoint is returning JSON; check credentials in your Dell API console. |
+    | `curl: (35) error:1400D102:SSL routines:SSL_CTX_use_certificate:unsupported certificate type` | Ensure your system's CA certificates are up to date by running `update-ca-certificates` or equivalent for your OS. |
 **Token management:**
 
 | Field | Value |
@@ -224,9 +226,11 @@ curl -s -X GET "${BASE}/apex/block/v1/systems/${SYSTEM_ID}/volumes/${VOLUME_ID}"
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to apex.example.com port 443: Connection refused`** — Verify the BASE URL is correct and the APEX management API endpoint is reachable and listening on the configured port.
-    **`{"error": "Unauthorized", "code": 401}`** — Ensure the AUTH header contains a valid bearer token or API key; regenerate credentials in the APEX Console if expired.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip certificate verification in lab environments, or import the APEX CA certificate into your system trust store for production.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to apex.example.com port 443: Connection refused` | Verify the BASE URL is correct and the APEX management API endpoint is reachable and listening on the configured port. |
+    | `{"error": "Unauthorized", "code": 401}` | Ensure the AUTH header contains a valid bearer token or API key; regenerate credentials in the APEX Console if expired. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl to skip certificate verification in lab environments, or import the APEX CA certificate into your system trust store for production. |
 ---
 
 ## Subscription API
@@ -522,8 +526,10 @@ curl -s -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to apex-api.dell.local port 443: Connection refused`** — Verify the BASE URL is correct and the APEX API endpoint is reachable; check firewall rules and API service status.
-    **`{"error": "Unauthorized", "code": 401}`** — Ensure the AUTH header contains a valid bearer token or API key; regenerate credentials if expired.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to apex-api.dell.local port 443: Connection refused` | Verify the BASE URL is correct and the APEX API endpoint is reachable; check firewall rules and API service status. |
+    | `{"error": "Unauthorized", "code": 401}` | Ensure the AUTH header contains a valid bearer token or API key; regenerate credentials if expired. |
     **`{"error": "System not found", "code": 404}`
 ---
 
@@ -616,9 +622,11 @@ curl -s -X GET "${CIQ_BASE}/systems/${APEX_CIQ_ID}/capacity/forecast?days=90" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: cloudiq.apis.dell.com`** — Verify network connectivity and DNS resolution; check firewall rules for HTTPS egress to Dell CloudIQ endpoints.
-    **`{"error": "Unauthorized", "code": 401}`** — Regenerate the CloudIQ access token in the Dell EMC support portal and ensure it has not expired or been revoked.
-    **`{"error": "Not Found", "code": 404}`** — Confirm the APEX system ID exists in CloudIQ by running the first command to list all systems and copy the correct `id` value.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: cloudiq.apis.dell.com` | Verify network connectivity and DNS resolution; check firewall rules for HTTPS egress to Dell CloudIQ endpoints. |
+    | `{"error": "Unauthorized", "code": 401}` | Regenerate the CloudIQ access token in the Dell EMC support portal and ensure it has not expired or been revoked. |
+    | `{"error": "Not Found", "code": 404}` | Confirm the APEX system ID exists in CloudIQ by running the first command to list all systems and copy the correct `id` value. |
 > APEX systems appear in CloudIQ with the model of the underlying hardware (e.g. `PowerStore 3200T`). Filter by type `POWERSTORE`, `POWERMAX`, or `UNITY_XT` depending on which APEX SKU is deployed. See the [CloudIQ](../../cloudiq/index.md) section for full CloudIQ API coverage.
 
 ---

@@ -101,9 +101,11 @@ created client.myapp keyring at /etc/ceph/ceph.client.myapp.keyring
 ```
 
 !!! warning "Common errors"
-    **`Error EACCES: permission denied`** — Ensure the user running ceph commands has sudo privileges or is in the ceph group with `sudo usermod -a -G ceph $USER`.
-    **`Error EINVAL: invalid value for argument`** — Verify pool names exist with `ceph osd pool ls` and use correct capability syntax (e.g., `allow rw pool=poolname` not `allow rw poolname`).
-    **`Error ENOENT: No such file or directory`** — Create the target keyring directory with `sudo mkdir -p /etc/ceph` before exporting keyrings with the `-o` flag.
+    | Error | Fix |
+    |---|---|
+    | `Error EACCES: permission denied` | Ensure the user running ceph commands has sudo privileges or is in the ceph group with `sudo usermod -a -G ceph $USER`. |
+    | `Error EINVAL: invalid value for argument` | Verify pool names exist with `ceph osd pool ls` and use correct capability syntax (e.g., `allow rw pool=poolname` not `allow rw poolname`). |
+    | `Error ENOENT: No such file or directory` | Create the target keyring directory with `sudo mkdir -p /etc/ceph` before exporting keyrings with the `-o` flag. |
 ## Capability Syntax Reference
 
 | Capability String | Scope | Effect |
@@ -140,8 +142,10 @@ mds 'allow rw path=/exports/tenant1'  # directory-level restriction
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: invalid capability string`** — Verify syntax matches `allow|deny <action> [pool=<name>]` and check for typos in pool or namespace names.
-    **`Error EACCES: permission denied`** — Ensure the client key has `mon 'allow r'` capability before attempting OSD or MDS operations; add missing mon capability to the key definition.
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: invalid capability string` | Verify syntax matches `allow|deny <action> [pool=<name>]` and check for typos in pool or namespace names. |
+    | `Error EACCES: permission denied` | Ensure the client key has `mon 'allow r'` capability before attempting OSD or MDS operations; add missing mon capability to the key definition. |
 ## Service Account Patterns
 
 Never use `client.admin` in application configuration files. Create a dedicated keyring per application with the minimum required pool access.
@@ -183,9 +187,11 @@ ceph auth get-or-create client.backup \
 ```
 
 !!! warning "Common errors"
-    **`Error EACCES: permission denied`** — Ensure the user running the command has sudo privileges or is part of the ceph group; run `sudo ceph auth get-or-create` if needed.
-    **`Error: pool 'app-a-pool' does not exist`** — Create the pool first with `ceph osd pool create app-a-pool <pg_num>` before assigning capabilities to it.
-    **`Error EINVAL: invalid caps`** — Verify the OSD capability syntax uses commas without spaces between pool rules (e.g., `allow r pool=volumes, allow r pool=vms` is correct).
+    | Error | Fix |
+    |---|---|
+    | `Error EACCES: permission denied` | Ensure the user running the command has sudo privileges or is part of the ceph group; run `sudo ceph auth get-or-create` if needed. |
+    | `Error: pool 'app-a-pool' does not exist` | Create the pool first with `ceph osd pool create app-a-pool <pg_num>` before assigning capabilities to it. |
+    | `Error EINVAL: invalid caps` | Verify the OSD capability syntax uses commas without spaces between pool rules (e.g., `allow r pool=volumes, allow r pool=vms` is correct). |
 Quarterly rotation procedure: create new entity with `-new` suffix, distribute, verify, then delete old.
 
 ## Keyring File Management
@@ -224,8 +230,10 @@ ceph.client.cinder.keyring                                    100%  115     45.2
 ```
 
 !!! warning "Common errors"
-    **`scp: /etc/ceph/ceph.client.cinder.keyring: Permission denied`** — Ensure the destination directory exists and the app-node user has write permissions, or use `sudo scp` with passwordless SSH key authentication configured.
-    **`Error connecting to the cluster: (13) Permission denied`** — Verify the keyring file exists at the specified path and is readable by the cinder user; check that the key has appropriate Ceph capabilities assigned via `ceph auth get client.cinder`.
+    | Error | Fix |
+    |---|---|
+    | `scp: /etc/ceph/ceph.client.cinder.keyring: Permission denied` | Ensure the destination directory exists and the app-node user has write permissions, or use `sudo scp` with passwordless SSH key authentication configured. |
+    | `Error connecting to the cluster: (13) Permission denied` | Verify the keyring file exists at the specified path and is readable by the cinder user; check that the key has appropriate Ceph capabilities assigned via `ceph auth get client.cinder`. |
 ## RGW User Layers
 
 RGW authentication operates at two independent layers. Confusion between them is a common misconfiguration.
@@ -298,8 +306,10 @@ radosgw-admin caps add --uid=app-user --caps="buckets=read"
 ```
 
 !!! warning "Common errors"
-    **`error: ENOENT: couldn't find user app-user`** — Run `radosgw-admin user create` before attempting `radosgw-admin user info` or `radosgw-admin caps add`.
-    **`error: invalid access key format`** — Use a valid AWS-style access key (20+ alphanumeric characters) or omit `--access-key` to auto-generate one.
+    | Error | Fix |
+    |---|---|
+    | `error: ENOENT: couldn't find user app-user` | Run `radosgw-admin user create` before attempting `radosgw-admin user info` or `radosgw-admin caps add`. |
+    | `error: invalid access key format` | Use a valid AWS-style access key (20+ alphanumeric characters) or omit `--access-key` to auto-generate one. |
 ## Rook / Kubernetes Keyring Access
 
 Rook stores all cephx keyrings as Kubernetes Secrets in the `rook-ceph` namespace. Never copy them manually; retrieve via `oc get secret`.
@@ -343,9 +353,11 @@ secret/ceph-app-keyring created
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "secret" in group "" in the namespace "rook-ceph"`** — Verify the rook-ceph namespace exists with `oc get ns rook-ceph` and that the Rook operator is deployed.
-    **`error: resource name may not be empty`** — Replace `<id>` with the actual OSD number (e.g., `rook-ceph-osd-0-keyring`) in the OSD keyring retrieval command.
-    **`error: no such file or directory`** — Ensure the keyring file exists at `/etc/ceph/ceph.client.myapp.keyring` before creating the secret, or use `--from-literal=keyring=<key-content>` instead.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "secret" in group "" in the namespace "rook-ceph"` | Verify the rook-ceph namespace exists with `oc get ns rook-ceph` and that the Rook operator is deployed. |
+    | `error: resource name may not be empty` | Replace `<id>` with the actual OSD number (e.g., `rook-ceph-osd-0-keyring`) in the OSD keyring retrieval command. |
+    | `error: no such file or directory` | Ensure the keyring file exists at `/etc/ceph/ceph.client.myapp.keyring` before creating the secret, or use `--from-literal=keyring=<key-content>` instead. |
 ## Capability Audit
 
 Regularly audit which entities exist and what capabilities they hold. Remove unused entities; tighten capabilities that are wider than needed.
@@ -384,9 +396,11 @@ Exported auth state to /tmp/ceph-auth-audit-2024-01-15.txt
 ```
 
 !!! warning "Common errors"
-    **`Error connecting to cluster: [Errno 2] No such file or directory`** — Ensure the Ceph cluster is running and `/etc/ceph/ceph.conf` exists on the local system.
-    **`permission denied: user does not have caps: mon ['allow r']`** — Run these commands as root or with sudo, or use a client key with sufficient mon and auth capabilities.
-    **`grep: (standard input): No such file or directory`** — Verify the Ceph cluster is healthy with `ceph status` before running auth queries.
+    | Error | Fix |
+    |---|---|
+    | `Error connecting to cluster: [Errno 2] No such file or directory` | Ensure the Ceph cluster is running and `/etc/ceph/ceph.conf` exists on the local system. |
+    | `permission denied: user does not have caps: mon ['allow r']` | Run these commands as root or with sudo, or use a client key with sufficient mon and auth capabilities. |
+    | `grep: (standard input): No such file or directory` | Verify the Ceph cluster is healthy with `ceph status` before running auth queries. |
 ## Access Control Checklist
 
 | Check | Expected state | Command |
@@ -426,8 +440,10 @@ ceph auth get-or-create client.cinder \
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: invalid command`** — Verify the mon and osd capability strings are enclosed in single quotes and contain valid pool names that exist in your cluster.
-    **`Error EACCES: permission denied`** — Run the command with appropriate Ceph cluster permissions (typically as root or with `sudo ceph` on a monitor node).
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: invalid command` | Verify the mon and osd capability strings are enclosed in single quotes and contain valid pool names that exist in your cluster. |
+    | `Error EACCES: permission denied` | Run the command with appropriate Ceph cluster permissions (typically as root or with `sudo ceph` on a monitor node). |
 ## See also
 
 - [Ceph — Authentication](../authentication/)

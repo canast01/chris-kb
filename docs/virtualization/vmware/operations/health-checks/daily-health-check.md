@@ -89,8 +89,10 @@ Object Resync Status:
 ```
 
 !!! warning "Common errors"
-    **`esxcli: Unknown command or namespace vsan health cluster list`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN is active.
-    **`Unable to connect to the local host. Is the local host running?`** — Ensure you are running the command directly on an ESXi host with SSH enabled, not from a remote management station.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: Unknown command or namespace vsan health cluster list` | Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN is active. |
+    | `Unable to connect to the local host. Is the local host running?` | Ensure you are running the command directly on an ESXi host with SSH enabled, not from a remote management station. |
 ## 6. Critical VM Status
 
 ```powershell

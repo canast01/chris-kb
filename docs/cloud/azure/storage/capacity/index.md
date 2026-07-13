@@ -74,9 +74,11 @@ FileCapacity    Average        /subscriptions/a7f3c2e1-9b4d-4f8a-b2c5-1e8d9f3a4b
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01' does not exist.`** — Verify the subscription ID, resource group name, and storage account name are correct using `az storage account list`.
-    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Insights/metrics/read' over scope '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod'.`** — Assign the "Monitoring Reader" role to your user or service principal on the storage account or resource group.
-    **`InvalidMetricName: The metric 'BlobCapacity' is not supported for this resource type.`** — Confirm the metric name matches the resource type; use `az monitor metrics list-definitions --resource <resource-id>` to list available metrics.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01' does not exist.` | Verify the subscription ID, resource group name, and storage account name are correct using `az storage account list`. |
+    | `AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Insights/metrics/read' over scope '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod'.` | Assign the "Monitoring Reader" role to your user or service principal on the storage account or resource group. |
+    | `InvalidMetricName: The metric 'BlobCapacity' is not supported for this resource type.` | Confirm the metric name matches the resource type; use `az monitor metrics list-definitions --resource <resource-id>` to list available metrics. |
 Key storage capacity metrics:
 
 | Metric Name | Scope | Description |
@@ -154,8 +156,10 @@ egress-bandwidth-limit    rg-storage-prod       False      3
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01/blobServices/default' could not be found.`** — Verify the storage account name and subscription ID are correct, and that the blobServices/default resource exists.
-    **`InvalidActionGroup: The action group '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod/providers/microsoft.insights/actionGroups/ag-storage-ops' does not exist or is in a different resource group.`** — Ensure the action group exists in the same resource group and subscription as the alert.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01/blobServices/default' could not be found.` | Verify the storage account name and subscription ID are correct, and that the blobServices/default resource exists. |
+    | `InvalidActionGroup: The action group '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod/providers/microsoft.insights/actionGroups/ag-storage-ops' does not exist or is in a different resource group.` | Ensure the action group exists in the same resource group and subscription as the alert. |
 ## Container-Level Capacity
 
 ```bash
@@ -209,8 +213,10 @@ temp-restore-cache-20240115.tmp               53687091200
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The specified account does not exist.`** — Verify the storage account name is correct and exists in the current subscription with `az storage account list`.
-    **`AuthorizationPermissionMismatch: This request is not authorized to perform this operation.`** — Ensure your Azure CLI session has Storage Blob Data Reader or higher role assigned via `az role assignment list --assignee $(az account show --query user.name -o tsv)`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The specified account does not exist.` | Verify the storage account name is correct and exists in the current subscription with `az storage account list`. |
+    | `AuthorizationPermissionMismatch: This request is not authorized to perform this operation.` | Ensure your Azure CLI session has Storage Blob Data Reader or higher role assigned via `az role assignment list --assignee $(az account show --query user.name -o tsv)`. |
 ## Forecasting and Trend Analysis
 
 ```bash
@@ -251,8 +257,10 @@ for ts in data['value'][0]['timeseries'][0]['data']:
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01/blobServices/default' could not be found.`** — Verify the subscription ID, resource group name, and storage account name are correct and exist in your Azure tenant.
-    **`KeyError: 'timeseries'`** — Ensure the metric "BlobCapacity" returned data for the specified time range; if the storage account is new, metrics may not be available for the full 30-day window.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01/blobServices/default' could not be found.` | Verify the subscription ID, resource group name, and storage account name are correct and exist in your Azure tenant. |
+    | `KeyError: 'timeseries'` | Ensure the metric "BlobCapacity" returned data for the specified time range; if the storage account is new, metrics may not be available for the full 30-day window. |
 ## Storage Account Limits Reference
 
 | Resource | Limit | Notes |

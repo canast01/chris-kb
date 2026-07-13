@@ -93,8 +93,10 @@ dest_svm    dest_vol     online
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Relationship does not exist`** — Verify the destination path syntax matches `<svm_name>:<volume_name>` and confirm the SnapMirror relationship exists with `snapmirror show`.
-    **`Error: command failed: Volume is restricted`** — Wait for any ongoing SnapMirror transfers to complete or use `snapmirror abort` to stop an in-progress transfer before breaking the relationship.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Relationship does not exist` | Verify the destination path syntax matches `<svm_name>:<volume_name>` and confirm the SnapMirror relationship exists with `snapmirror show`. |
+    | `Error: command failed: Volume is restricted` | Wait for any ongoing SnapMirror transfers to complete or use `snapmirror abort` to stop an in-progress transfer before breaking the relationship. |
 Update client access (DNS, share paths, mount points) to point to the destination.
 
 ### Unplanned Failover (Primary Site Down)
@@ -118,8 +120,10 @@ dest_svm:dest_vol 00:15:32
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: relationship does not exist`** — Verify the destination path syntax matches exactly (SVM:volume format) and confirm the relationship exists with `snapmirror show`.
-    **`Error: command failed: relationship is not in a quiesced or idle state`** — Wait for any in-progress transfer to complete or use `snapmirror abort` before attempting to break the relationship.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: relationship does not exist` | Verify the destination path syntax matches exactly (SVM:volume format) and confirm the relationship exists with `snapmirror show`. |
+    | `Error: command failed: relationship is not in a quiesced or idle state` | Wait for any in-progress transfer to complete or use `snapmirror abort` before attempting to break the relationship. |
 Note: if replication was asynchronous, the `lag-time` value indicates the RPO gap.
 
 ### Failover Checklist
@@ -163,8 +167,10 @@ Operation is queued: snapmirror resync to destination "cluster2.svm_dr:vol_backu
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: snapmirror resync is not supported for this relationship type`** — Verify the SnapMirror relationship exists and is in a valid state using `snapmirror show -destination-path <dest_svm:dest_vol>`.
-    **`Error: command failed: source volume <src_svm:src_vol> does not exist or access denied`** — Confirm the source path is correctly formatted as `cluster_name.svm_name:volume_name` and the source cluster is reachable.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: snapmirror resync is not supported for this relationship type` | Verify the SnapMirror relationship exists and is in a valid state using `snapmirror show -destination-path <dest_svm:dest_vol>`. |
+    | `Error: command failed: source volume <src_svm:src_vol> does not exist or access denied` | Confirm the source path is correctly formatted as `cluster_name.svm_name:volume_name` and the source cluster is reachable. |
 Resync overwrites the destination with data from the source. Any writes to the destination since the break will be lost.
 
 ### Reverse Resync (After Failover)
@@ -212,8 +218,10 @@ Operation is queued: snapmirror resync to destination "cluster2://dr_svm/dr_vol"
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: SnapMirror relationship is not idle`** — Wait for the current transfer to complete using `snapmirror show` before attempting resync or break operations.
-    **`Error: SnapMirror relationship does not exist for destination path "cluster1://prod_svm/prod_vol"`** — Verify the destination path is correctly formatted as `svm_name:volume_name` and the relationship exists with `snapmirror show -all`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: SnapMirror relationship is not idle` | Wait for the current transfer to complete using `snapmirror show` before attempting resync or break operations. |
+    | `Error: SnapMirror relationship does not exist for destination path "cluster1://prod_svm/prod_vol"` | Verify the destination path is correctly formatted as `svm_name:volume_name` and the relationship exists with `snapmirror show -all`. |
 ---
 
 ## Initialize a SnapMirror Relationship
@@ -230,9 +238,11 @@ Operation is queued: snapmirror initialize of destination "cluster2.svm_dr:vol_b
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Snapmirror relationship does not exist.`** — Create the snapmirror relationship first using `snapmirror create` before initializing.
-    **`Error: command failed: Source volume is offline.`** — Verify the source volume is online with `volume show -vserver <vserver> -volume <volume>` and bring it online if needed.
-    **`Error: command failed: Destination volume is not empty.`** — Use `snapmirror initialize -S` to force initialization, or manually clear the destination volume first.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Snapmirror relationship does not exist.` | Create the snapmirror relationship first using `snapmirror create` before initializing. |
+    | `Error: command failed: Source volume is offline.` | Verify the source volume is online with `volume show -vserver <vserver> -volume <volume>` and bring it online if needed. |
+    | `Error: command failed: Destination volume is not empty.` | Use `snapmirror initialize -S` to force initialization, or manually clear the destination volume first. |
 Monitor initialization progress — the first transfer copies all data and can take hours depending on volume size:
 
 ```bash
@@ -250,8 +260,10 @@ cluster1://vol_test cluster2://vol_test_mirror Snapmirrored 00:05:21
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Ensure you are logged into the NetApp cluster CLI (ssh to cluster management IP) rather than a standard Linux shell.
-    **`Error: This command requires cluster administrator privileges`** — Run the command with appropriate cluster admin credentials or use `set -privilege advanced` if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Ensure you are logged into the NetApp cluster CLI (ssh to cluster management IP) rather than a standard Linux shell. |
+    | `Error: This command requires cluster administrator privileges` | Run the command with appropriate cluster admin credentials or use `set -privilege advanced` if needed. |
 Wait until the relationship state shows **Idle** and the lag-time reflects the time since the baseline transfer completed. The destination volume is read-only once initialization finishes.
 
 ---
@@ -270,9 +282,11 @@ Operation is queued: snapmirror update for destination "cluster2://svm_dr/vol_ba
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Snapmirror relationship does not exist.`** — Verify the destination volume exists and a SnapMirror relationship has been initialized with `snapmirror create` before attempting an update.
-    **`Error: command failed: Destination volume is not in SnapMirror mode.`** — Ensure the destination volume was created with `-type DP` (data protection) during volume creation.
-    **`Error: command failed: Source volume is offline or does not exist.`** — Confirm the source volume is online and accessible using `volume show -vserver <vserver>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Snapmirror relationship does not exist.` | Verify the destination volume exists and a SnapMirror relationship has been initialized with `snapmirror create` before attempting an update. |
+    | `Error: command failed: Destination volume is not in SnapMirror mode.` | Ensure the destination volume was created with `-type DP` (data protection) during volume creation. |
+    | `Error: command failed: Source volume is offline or does not exist.` | Confirm the source volume is online and accessible using `volume show -vserver <vserver>`. |
 Monitor the transfer until it completes:
 
 ```bash
@@ -290,8 +304,10 @@ test-cluster:vol_temp test-cluster-dr:vol_temp_mirror Broken-off 00:00:00
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Ensure you are logged into the NetApp cluster CLI or ONTAP system manager with appropriate credentials.
-    **`Error: This operation is not permitted: insufficient privileges`** — Request admin or SnapMirror administrator role permissions from your NetApp cluster administrator.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Ensure you are logged into the NetApp cluster CLI or ONTAP system manager with appropriate credentials. |
+    | `Error: This operation is not permitted: insufficient privileges` | Request admin or SnapMirror administrator role permissions from your NetApp cluster administrator. |
 Verify that lag-time drops to near-zero after the update completes, confirming the destination is current.
 
 ---
@@ -310,8 +326,10 @@ Operation succeeded: SnapMirror relationship between "cluster1://svm_prod/vol_da
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Relationship does not exist.`** — Verify the destination path exists and the SnapMirror relationship is initialized with `snapmirror show -destination-path <vserver:vol>`.
-    **`Error: command failed: Relationship is not in a quiesced state.`** — Quiesce the relationship first with `snapmirror quiesce -destination-path <vserver:vol>` before breaking it.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Relationship does not exist.` | Verify the destination path exists and the SnapMirror relationship is initialized with `snapmirror show -destination-path <vserver:vol>`. |
+    | `Error: command failed: Relationship is not in a quiesced state.` | Quiesce the relationship first with `snapmirror quiesce -destination-path <vserver:vol>` before breaking it. |
 The destination volume is now writable and can accept host I/O. Replication is suspended until the relationship is resynced.
 
 **Resync (reprotect):** re-establishes replication after a break. The destination is overwritten with data from the source; any writes made to the destination since the break will be lost.
@@ -326,8 +344,10 @@ Operation is queued: snapmirror resync to destination "cluster2://svm_dr:vol_bac
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Resync not allowed. SnapMirror relationship is not in a quiesced or idle state.`** — Quiesce the SnapMirror relationship first with `snapmirror quiesce -destination-path <vserver:vol>` before attempting resync.
-    **`Error: command failed: Resync not allowed. Destination volume is not a SnapMirror destination.`** — Verify the destination path is correct and that a SnapMirror relationship exists using `snapmirror show -destination-path <vserver:vol>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Resync not allowed. SnapMirror relationship is not in a quiesced or idle state.` | Quiesce the SnapMirror relationship first with `snapmirror quiesce -destination-path <vserver:vol>` before attempting resync. |
+    | `Error: command failed: Resync not allowed. Destination volume is not a SnapMirror destination.` | Verify the destination path is correct and that a SnapMirror relationship exists using `snapmirror show -destination-path <vserver:vol>`. |
 ---
 
 ## Change SnapMirror Schedule
@@ -346,8 +366,10 @@ Next scheduled transfer: 2024-01-15 14:00:00 EST
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Invalid destination path format`** — Ensure the destination path follows the format `vserver:volume` with a colon separator and no spaces.
-    **`Error: SnapMirror relationship does not exist for destination "svm-prod:vol_data"`** — Verify the destination volume exists and an active SnapMirror relationship is already established before modifying it.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Invalid destination path format` | Ensure the destination path follows the format `vserver:volume` with a colon separator and no spaces. |
+    | `Error: SnapMirror relationship does not exist for destination "svm-prod:vol_data"` | Verify the destination volume exists and an active SnapMirror relationship is already established before modifying it. |
 Verify the updated schedule is applied:
 
 ```bash
@@ -366,8 +388,10 @@ svm2:vol_temp     svm3:vol_temp_bak  4h
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Ensure you are logged into the NetApp cluster CLI or ONTAP system; snapmirror commands are not available on non-NetApp systems.
-    **`Error: This operation is not permitted: insufficient privileges`** — Verify your user account has the "snapmirror" capability; contact your cluster administrator to grant the required RBAC role.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Ensure you are logged into the NetApp cluster CLI or ONTAP system; snapmirror commands are not available on non-NetApp systems. |
+    | `Error: This operation is not permitted: insufficient privileges` | Verify your user account has the "snapmirror" capability; contact your cluster administrator to grant the required RBAC role. |
 Confirm the new schedule aligns with the required RPO — more frequent schedules reduce RPO but increase network utilisation.
 
 ---
@@ -433,9 +457,11 @@ svm_prod:vol_source svm_prod_dr:vol_backup transferring 00:15:32
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Cluster peer relationship already exists`** — Verify the peer relationship exists with `cluster peer show` before attempting creation.
-    **`Error: SnapMirror relationship create failed: destination volume is not of type DP`** — Ensure the destination volume is created with `-type DP` before creating the SnapMirror relationship.
-    **`Error: Vserver peer relationship does not exist for vservers "svm_prod" and "svm_prod_dr"`** — Create the SVM peer relationship with `vserver peer create` before initializing SnapMirror.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Cluster peer relationship already exists` | Verify the peer relationship exists with `cluster peer show` before attempting creation. |
+    | `Error: SnapMirror relationship create failed: destination volume is not of type DP` | Ensure the destination volume is created with `-type DP` before creating the SnapMirror relationship. |
+    | `Error: Vserver peer relationship does not exist for vservers "svm_prod" and "svm_prod_dr"` | Create the SVM peer relationship with `vserver peer create` before initializing SnapMirror. |
 Wait until state shows **Idle** before considering the relationship established.
 
 ---
@@ -470,8 +496,10 @@ cluster1::svm-prod:vol_data svm-dr:vol_backup hourly-sm
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Job schedule "hourly-sm" does not exist.`** — Create the schedule first using the `job schedule cron create` command before assigning it to a SnapMirror relationship.
-    **`Error: command failed: SnapMirror relationship for destination "svm-dr:vol_backup" does not exist.`** — Verify the destination path is correct and the SnapMirror relationship has been initialized with `snapmirror create` before modifying its schedule.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Job schedule "hourly-sm" does not exist.` | Create the schedule first using the `job schedule cron create` command before assigning it to a SnapMirror relationship. |
+    | `Error: command failed: SnapMirror relationship for destination "svm-dr:vol_backup" does not exist.` | Verify the destination path is correct and the SnapMirror relationship has been initialized with `snapmirror create` before modifying its schedule. |
 Confirm the schedule aligns with the required RPO — more frequent transfers reduce RPO but increase network utilisation.
 
 ---
@@ -500,11 +528,11 @@ prod_svm:vol_data
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: destination does not exist.`** — Verify the destination volume exists on the destination SVM using `volume show` and confirm the path format is `svm_name:volume_name`.
-    
-    **`Error: SnapMirror relationship is not initialized.`** — Initialize the relationship first with `snapmirror initialize -destination-path <dest_svm:dest_vol>` before attempting incremental updates.
-    
-    **`Error: Transfer is already in progress for this destination.`** — Wait for the current transfer to complete or abort it with `snapmirror abort -destination-path <dest_svm:dest_vol>` before issuing a new update.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: destination does not exist.` | Verify the destination volume exists on the destination SVM using `volume show` and confirm the path format is `svm_name:volume_name`. |
+    | `Error: SnapMirror relationship is not initialized.` | Initialize the relationship first with `snapmirror initialize -destination-path <dest_svm:dest_vol>` before attempting incremental updates. |
+    | `Error: Transfer is already in progress for this destination.` | Wait for the current transfer to complete or abort it with `snapmirror abort -destination-path <dest_svm:dest_vol>` before issuing a new update. |
 Verify lag-time drops to near-zero after the update, confirming the destination is current.
 
 ---
@@ -561,8 +589,10 @@ cluster1::> snapmirror update -destination-path svm_dr:vol_prod
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Relationship is not in a quiesced state`** — Run `snapmirror quiesce` first and verify with `snapmirror show` before attempting resume.
-    **`Error: command failed: Destination volume is offline`** — Bring the destination volume online with `volume online -vserver <svm> -volume <vol>` before resuming transfers.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Relationship is not in a quiesced state` | Run `snapmirror quiesce` first and verify with `snapmirror show` before attempting resume. |
+    | `Error: command failed: Destination volume is offline` | Bring the destination volume online with `volume online -vserver <svm> -volume <vol>` before resuming transfers. |
 Quiesce does not break the relationship — no resync is needed after resuming.
 
 ---
@@ -602,9 +632,11 @@ Time Node Severity Event
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Ensure you are logged into the NetApp cluster CLI (ssh to the cluster management IP) rather than a local shell.
-    **`Error: No matching relationships found`** — This is expected output for the broken-off check; if relationships exist but show no results, verify the relationship names with `snapmirror show` first.
-    **`Error: access denied: insufficient privileges`** — Confirm your user account has the "snapmirror" capability by running `security login show -user-or-group-name <username>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Ensure you are logged into the NetApp cluster CLI (ssh to the cluster management IP) rather than a local shell. |
+    | `Error: No matching relationships found` | This is expected output for the broken-off check; if relationships exist but show no results, verify the relationship names with `snapmirror show` first. |
+    | `Error: access denied: insufficient privileges` | Confirm your user account has the "snapmirror" capability by running `security login show -user-or-group-name <username>`. |
 Alert if `healthy` is `false` on any critical relationship, or if `lag-time` exceeds the agreed RPO threshold.
 
 ---
@@ -638,9 +670,11 @@ Volume "dest_vol" has been deleted.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: There is no SnapMirror relationship for destination "dest_svm:dest_vol"`** — Verify the destination path is correct and the relationship exists using `snapmirror show -destination-path <dest_svm:dest_vol>`.
-    **`Error: command failed: SnapMirror relationship is in transfer. Cannot break relationship`** — Wait for the current transfer to complete or use `snapmirror abort -destination-path <dest_svm:dest_vol>` before breaking.
-    **`Error: command failed: Volume "dest_vol" is online. Cannot delete online volume`** — Take the volume offline first using `volume offline -vserver <dest_svm> -volume <dest_vol>` before deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: There is no SnapMirror relationship for destination "dest_svm:dest_vol"` | Verify the destination path is correct and the relationship exists using `snapmirror show -destination-path <dest_svm:dest_vol>`. |
+    | `Error: command failed: SnapMirror relationship is in transfer. Cannot break relationship` | Wait for the current transfer to complete or use `snapmirror abort -destination-path <dest_svm:dest_vol>` before breaking. |
+    | `Error: command failed: Volume "dest_vol" is online. Cannot delete online volume` | Take the volume offline first using `volume offline -vserver <dest_svm> -volume <dest_vol>` before deletion. |
 Verify with `snapmirror show` that the relationship no longer appears after deletion.
 
 ---
@@ -692,9 +726,11 @@ svm1:vol_prod svm2:vol_prod_dr Snapmirrored InSync 0 seconds Idle true
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Policy "AutomatedFailOver" does not exist.`** — Verify the policy was created successfully in Step 1 by running `snapmirror policy show -policy AutomatedFailOver`.
-    **`Error: command failed: Source volume "svm1:vol_prod" does not exist.`** — Confirm the source volume name and SVM are correct, and that the volume exists with `volume show -vserver <svm>`.
-    **`Error: command failed: Destination volume "svm2:vol_prod_dr" does not exist.`** — Create the destination volume first with `volume create -vserver svm2 -volume vol_prod_dr -aggregate <aggr> -size <size>` before creating the SnapMirror relationship.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Policy "AutomatedFailOver" does not exist.` | Verify the policy was created successfully in Step 1 by running `snapmirror policy show -policy AutomatedFailOver`. |
+    | `Error: command failed: Source volume "svm1:vol_prod" does not exist.` | Confirm the source volume name and SVM are correct, and that the volume exists with `volume show -vserver <svm>`. |
+    | `Error: command failed: Destination volume "svm2:vol_prod_dr" does not exist.` | Create the destination volume first with `volume create -vserver svm2 -volume vol_prod_dr -aggregate <aggr> -size <size>` before creating the SnapMirror relationship. |
 **Note:** SM-BC supports iSCSI and FCP SAN volumes only — NAS (NFS/SMB) volumes are not supported. Confirm ONTAP Mediator is registered and both clusters can reach the mediator before initializing.
 
 ---

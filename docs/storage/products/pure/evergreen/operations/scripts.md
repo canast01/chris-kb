@@ -108,9 +108,11 @@ replication-lag	false
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present in script, but verify SSL_CERT_FILE environment variable isn't overriding it).
-    **`jq: parse error: Invalid JSON`** — Ensure the API token is valid and not expired; regenerate token in FlashArray management console if needed.
-    **`curl: (7) Failed to connect to 192.168.1.50 port 443: Connection refused`** — Verify the array IP address is correct and the management interface is reachable with `ping` or `nc -zv`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification (already present in script, but verify SSL_CERT_FILE environment variable isn't overriding it). |
+    | `jq: parse error: Invalid JSON` | Ensure the API token is valid and not expired; regenerate token in FlashArray management console if needed. |
+    | `curl: (7) Failed to connect to 192.168.1.50 port 443: Connection refused` | Verify the array IP address is correct and the management interface is reachable with `ping` or `nc -zv`. |
 ## Evergreen//One SLA Consumption Tracker
 
 Tracks consumed TiB vs SLA committed TiB over time, alerting when within 90% of commitment.
@@ -142,9 +144,11 @@ WARNING: SLA consumption above 90% threshold
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate in certificate chain`** — Remove the `-k` flag if connecting to a trusted Pure1 endpoint, or ensure your CA bundle is current with `update-ca-certificates`.
-    **`jq: error (at <stdin>:1): Cannot index array with string "items"`** — Verify the Pure1 API response format matches your API version; check the token validity and subscription endpoint with `curl -H "Authorization: Bearer $TOKEN" https://api.pure1.purestorage.com/api/1.0/subscriptions | jq .` to inspect the actual structure.
-    **`bc: command not found`** — Install bc with `apt-get install bc` (Debian/Ubuntu) or `yum install bc` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate in certificate chain` | Remove the `-k` flag if connecting to a trusted Pure1 endpoint, or ensure your CA bundle is current with `update-ca-certificates`. |
+    | `jq: error (at <stdin>:1): Cannot index array with string "items"` | Verify the Pure1 API response format matches your API version; check the token validity and subscription endpoint with `curl -H "Authorization: Bearer $TOKEN" https://api.pure1.purestorage.com/api/1.0/subscriptions | jq .` to inspect the actual structure. |
+    | `bc: command not found` | Install bc with `apt-get install bc` (Debian/Ubuntu) or `yum install bc` (RHEL/CentOS). |
 ## Protection Group Replication Status
 
 ```bash
@@ -170,9 +174,11 @@ pg-disaster-recovery	 replication_enabled=true
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 10.20.15.42 port 443: Connection refused`** — Verify the array IP is correct and the management interface is accessible on port 443.
-    **`jq: parse error: Invalid JSON text at line 1`** — Confirm the API token is valid and hasn't expired; an invalid token returns HTML error pages instead of JSON.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip SSL verification (already present in the script, so ensure it's not being overridden by shell aliases).
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 10.20.15.42 port 443: Connection refused` | Verify the array IP is correct and the management interface is accessible on port 443. |
+    | `jq: parse error: Invalid JSON text at line 1` | Confirm the API token is valid and hasn't expired; an invalid token returns HTML error pages instead of JSON. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to the curl command to skip SSL verification (already present in the script, so ensure it's not being overridden by shell aliases). |
 ---
 
 ## Verify

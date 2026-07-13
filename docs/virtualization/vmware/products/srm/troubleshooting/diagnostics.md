@@ -188,8 +188,10 @@ admin@vr-appliance-01:~$ cat /var/log/vmware/hbrsrv.log | grep "ReplicationConfi
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password)`** — Verify SSH credentials and that the admin user exists on the VR appliance; check `/etc/ssh/sshd_config` allows password authentication.
-    **`No such file or directory: /var/log/vmware/hbrsrv.log`** — Confirm the vSphere Replication server is installed and has started at least once; check `/var/log/vmware/`
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password)` | Verify SSH credentials and that the admin user exists on the VR appliance; check `/etc/ssh/sshd_config` allows password authentication. |
+    | `No such file or directory: /var/log/vmware/hbrsrv.log` | Confirm the vSphere Replication server is installed and has started at least once; check `/var/log/vmware/` |
 **If hbrsrv.log shows replication is behind:**
 1. Check network bandwidth between production and recovery site (VR uses HTTPS/TCP 443 and TCP 31031)
 2. Check ESXi host disk I/O on the production side — heavy I/O increases data to replicate
@@ -227,9 +229,11 @@ C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\netapp-2024-01-15.log:156:2024
 ```
 
 !!! warning "Common errors"
-    **`Select-String : Cannot find path 'C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-*.log' because it does not exist.`** — Verify SRM is installed on this Windows Server and check the actual log directory path with `dir "C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\"`.
-    **`ERROR [SRA-Worker] Connection refused to array management port`** — Confirm the SRA array management IP/hostname is reachable and the SRA credentials configured in SRM are correct by testing connectivity from the SRM server.
-    **`ERROR [SRA-Worker] discoverArrays command timeout after 30s`** — Increase SRA command timeout in the SRM configuration or check array responsiveness; if the array is slow, restart the SRA service on the array management appliance.
+    | Error | Fix |
+    |---|---|
+    | `Select-String : Cannot find path 'C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\srdf-*.log' because it does not exist.` | Verify SRM is installed on this Windows Server and check the actual log directory path with `dir "C:\ProgramData\VMware\VMware vCenter SRM\Logs\SRA\"`. |
+    | `ERROR [SRA-Worker] Connection refused to array management port` | Confirm the SRA array management IP/hostname is reachable and the SRA credentials configured in SRM are correct by testing connectivity from the SRM server. |
+    | `ERROR [SRA-Worker] discoverArrays command timeout after 30s` | Increase SRA command timeout in the SRM configuration or check array responsiveness; if the array is slow, restart the SRA service on the array management appliance. |
 **SRA error patterns:**
 - `"discoverArrays failed"` → SRA cannot authenticate to the array; verify SRA credentials in SRM UI
 - `"testFailoverStart timeout"` → array is not responding to the SRA failover command; check array replication state

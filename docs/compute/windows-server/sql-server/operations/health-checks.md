@@ -139,9 +139,11 @@ Connection to 192.168.1.50 1433 port [tcp/mssql-s] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "<host>" to address: Name or service not known`** — Replace `<host>` with the actual PostgreSQL server hostname or IP address.
-    **`mysql: [Warning] Using a password on the command line interface can be insecure.`** — Use a MySQL configuration file (~/.my.cnf) with restricted permissions instead of passing the password as a command-line argument.
-    **`nc: getaddrinfo: Name or service not known`** — Verify the database hostname is correct and resolvable; check DNS or use the IP address directly.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "<host>" to address: Name or service not known` | Replace `<host>` with the actual PostgreSQL server hostname or IP address. |
+    | `mysql: [Warning] Using a password on the command line interface can be insecure.` | Use a MySQL configuration file (~/.my.cnf) with restricted permissions instead of passing the password as a command-line argument. |
+    | `nc: getaddrinfo: Name or service not known` | Verify the database hostname is correct and resolvable; check DNS or use the IP address directly. |
 ## Database — Capacity Monitoring
 
 ![Database — Capacity Monitoring](../../../../assets/compute-windows-server-sql-server-hc-database-capacity-monitoring.svg)
@@ -214,9 +216,11 @@ Filesystem     Inodes IUsed IFree IUse% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`du: cannot access '/var/lib/postgresql/data/*': No such file or directory`** — Verify PostgreSQL is installed and the data directory path is correct, or adjust the path to match your actual PostgreSQL PGDATA location.
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost'`** — Use the correct MySQL credentials (e.g., `mysql -u root -p` and enter the password, or use a .my.cnf file with stored credentials).
-    **`df: '/var/opt/mssql': No such file or directory`** — Remove `/var/opt/mssql` from the command if SQL Server is not installed, or verify the correct installation path with `find / -name mssql -type d 2>/dev/null`.
+    | Error | Fix |
+    |---|---|
+    | `du: cannot access '/var/lib/postgresql/data/*': No such file or directory` | Verify PostgreSQL is installed and the data directory path is correct, or adjust the path to match your actual PostgreSQL PGDATA location. |
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost'` | Use the correct MySQL credentials (e.g., `mysql -u root -p` and enter the password, or use a .my.cnf file with stored credentials). |
+    | `df: '/var/opt/mssql': No such file or directory` | Remove `/var/opt/mssql` from the command if SQL Server is not installed, or verify the correct installation path with `find / -name mssql -type d 2>/dev/null`. |
 ```bash
 # Weekly snapshots — capture to track growth
 psql -U postgres -Atc "SELECT pg_database_size('mydb');" >> /var/log/db-size-mydb.log
@@ -334,9 +338,11 @@ pg_basebackup: base backup completed
 ```
 
 !!! warning "Common errors"
-    **`pg_basebackup: could not connect to server: FATAL: no pg_hba.conf entry for replication connection from "10.45.12.8" user "replication"`** — Add a replication entry to pg_hba.conf on the primary (e.g., `host replication replication 10.45.12.8/32 md5`) and reload PostgreSQL.
-    **`pg_basebackup: directory "/var/lib/postgresql/data-new" exists but is not empty`** — Remove or rename the target directory before running pg_basebackup, or use an empty path.
-    **`pg_basebackup: could not identify system: got 0 rows`** — Verify the replication user exists and has REPLICATION privilege on the primary with `ALTER USER replication WITH REPLICATION;`.
+    | Error | Fix |
+    |---|---|
+    | `pg_basebackup: could not connect to server: FATAL: no pg_hba.conf entry for replication connection from "10.45.12.8" user "replication"` | Add a replication entry to pg_hba.conf on the primary (e.g., `host replication replication 10.45.12.8/32 md5`) and reload PostgreSQL. |
+    | `pg_basebackup: directory "/var/lib/postgresql/data-new" exists but is not empty` | Remove or rename the target directory before running pg_basebackup, or use an empty path. |
+    | `pg_basebackup: could not identify system: got 0 rows` | Verify the replication user exists and has REPLICATION privilege on the primary with `ALTER USER replication WITH REPLICATION;`. |
 ---
 
 ## Verify

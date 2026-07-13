@@ -102,9 +102,11 @@ License
 ```
 
 !!! warning "Common errors"
-    **`Error: model not found`** — Verify the model name and tag exist on ollama.com, then retry the pull command.
-    **`Error: insufficient disk space`** — Check available disk space with `df -h` and ensure at least 50GB free for large models like 70b variants.
-    **`Error: connection refused`** — Start the Ollama daemon with `ollama serve` in another terminal or ensure the service is running.
+    | Error | Fix |
+    |---|---|
+    | `Error: model not found` | Verify the model name and tag exist on ollama.com, then retry the pull command. |
+    | `Error: insufficient disk space` | Check available disk space with `df -h` and ensure at least 50GB free for large models like 70b variants. |
+    | `Error: connection refused` | Start the Ollama daemon with `ollama serve` in another terminal or ensure the service is running. |
 ## Popular Models and Tags
 
 | Model | Tags | Notes |
@@ -190,8 +192,10 @@ The function appears to be a utility for data validation. Consider adding type h
 ```
 
 !!! warning "Common errors"
-    **`Error: could not find Modelfile`** — Ensure the Modelfile exists in the current directory and the path `./Modelfile` is correct.
-    **`Error: model not found`** — Run `ollama create code-reviewer -f ./Modelfile` successfully before attempting to run the model.
+    | Error | Fix |
+    |---|---|
+    | `Error: could not find Modelfile` | Ensure the Modelfile exists in the current directory and the path `./Modelfile` is correct. |
+    | `Error: model not found` | Run `ollama create code-reviewer -f ./Modelfile` successfully before attempting to run the model. |
 ## GGUF Models from HuggingFace
 
 ```bash
@@ -229,8 +233,10 @@ I don't have access to real-time weather data, but I'd be happy to help you find
 ```
 
 !!! warning "Common errors"
-    **`Error: model not found`** — Verify the path to model.gguf is absolute and the file exists with `ls -lh /path/to/model.gguf`.
-    **`Error: failed to create model: invalid modelfile`** — Check that the Modelfile syntax is correct and the FROM path points to a valid GGUF file, not a directory.
+    | Error | Fix |
+    |---|---|
+    | `Error: model not found` | Verify the path to model.gguf is absolute and the file exists with `ls -lh /path/to/model.gguf`. |
+    | `Error: failed to create model: invalid modelfile` | Check that the Modelfile syntax is correct and the FROM path points to a valid GGUF file, not a directory. |
 ## Managing the Model Library
 
 ```bash
@@ -260,6 +266,8 @@ pushing config... 100% ▕██████████████████
 ```
 
 !!! warning "Common errors"
-    **`Error: model 'llama3.1:8b' not found`** — Verify the model exists locally with `ollama list` before copying.
-    **`Error: push failed: unauthorized: authentication required`** — Log in with `ollama login` or ensure your ollama.com credentials are valid.
-    **`Error: model 'llama2:7b' is in use`** — Stop any running Ollama processes using the model with `ollama stop` before removing it.
+    | Error | Fix |
+    |---|---|
+    | `Error: model 'llama3.1:8b' not found` | Verify the model exists locally with `ollama list` before copying. |
+    | `Error: push failed: unauthorized: authentication required` | Log in with `ollama login` or ensure your ollama.com credentials are valid. |
+    | `Error: model 'llama2:7b' is in use` | Stop any running Ollama processes using the model with `ollama stop` before removing it. |

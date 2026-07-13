@@ -167,8 +167,10 @@ vol01.snap-2024-06-05         2024-06-05T08:19:33Z 94.6GB    2024-09-04T08:19:33
 ```
 
 !!! warning "Common errors"
-    **`Error: Snapshot 'vol01.*' not found`** — Verify the snapshot name pattern exists using `puresnapshot list | grep vol01` before attempting destroy.
-    **`Error: Cannot eradicate snapshot in use by replication target`** — Check active replication jobs with `purerepsnap list` and wait for replication to complete before eradicating.
+    | Error | Fix |
+    |---|---|
+    | `Error: Snapshot 'vol01.*' not found` | Verify the snapshot name pattern exists using `puresnapshot list | grep vol01` before attempting destroy. |
+    | `Error: Cannot eradicate snapshot in use by replication target` | Check active replication jobs with `purerepsnap list` and wait for replication to complete before eradicating. |
 ## Common Capacity Issues
 
 | Symptom | Cause | Action |

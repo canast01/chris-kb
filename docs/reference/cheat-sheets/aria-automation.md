@@ -47,9 +47,11 @@ Project: Finance-Systems | Members: 3 | Owner: financeadmin | Status: ACTIVE
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to vra.lab.local:443 - connection refused`** — Verify the vRA server hostname/IP is correct and the service is running with `systemctl status vra-server`.
-    **`Error: Authentication failed - Invalid credentials`** — Confirm the username and password are correct; check if the account is locked or expired in vRA's identity provider.
-    **`Error: No deployments found - insufficient permissions`** — Ensure the configadmin user has the appropriate project membership or global admin role assigned in vRA.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to vra.lab.local:443 - connection refused` | Verify the vRA server hostname/IP is correct and the service is running with `systemctl status vra-server`. |
+    | `Error: Authentication failed - Invalid credentials` | Confirm the username and password are correct; check if the account is locked or expired in vRA's identity provider. |
+    | `Error: No deployments found - insufficient permissions` | Ensure the configadmin user has the appropriate project membership or global admin role assigned in vRA. |
 ## REST API
 
 ```bash
@@ -167,7 +169,9 @@ curl -sk $HDR $BASE/iaas/api/zones | python3 -m json.tool                  # clo
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command |
 ## See also
 
 - [Aria Automation Procedures](../../../virtualization/vmware/products/aria-automation/operations/procedures/)

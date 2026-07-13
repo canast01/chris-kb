@@ -73,9 +73,11 @@ Nov 15 14:32:20 gpu-server ollama[2847]: time=2024-11-15T14:32:20.891Z level=INF
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to localhost port 11434: Connection refused`** — Ensure Ollama service is running with `systemctl start ollama` and listening on port 11434.
-    **`jq: parse error: Cannot index object with string "details"`** — The API response structure differs; use `curl http://localhost:11434/api/show -d '{"name":"llama3.1:8b"}' | jq '.'` to inspect the full response first.
-    **`Unit ollama.service could not be found`** — Install and enable the Ollama systemd service, or check logs directly with `ollama serve` in foreground mode instead of journalctl.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to localhost port 11434: Connection refused` | Ensure Ollama service is running with `systemctl start ollama` and listening on port 11434. |
+    | `jq: parse error: Cannot index object with string "details"` | The API response structure differs; use `curl http://localhost:11434/api/show -d '{"name":"llama3.1:8b"}' | jq '.'` to inspect the full response first. |
+    | `Unit ollama.service could not be found` | Install and enable the Ollama systemd service, or check logs directly with `ollama serve` in foreground mode instead of journalctl. |
 Ollama outputs the number of GPU layers loaded at model start. If `num_gpu: 0` appears, Ollama is running on CPU only.
 
 ## CUDA Setup
@@ -114,8 +116,10 @@ time=2025-01-10T14:32:47.124Z level=INFO msg="GPU detected" device_id=1 device_n
 ```
 
 !!! warning "Common errors"
-    **`NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.`** — Reinstall the NVIDIA driver with `sudo apt install nvidia-driver-535` (or appropriate version) and reboot.
-    **`time=2025-01-10T14:32:47.123Z level=ERROR msg="no CUDA-capable device is detected"`** — Verify GPU visibility with `nvidia-smi` and ensure `CUDA_VISIBLE_DEVICES` is not restricting access to all devices.
+    | Error | Fix |
+    |---|---|
+    | `NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.` | Reinstall the NVIDIA driver with `sudo apt install nvidia-driver-535` (or appropriate version) and reboot. |
+    | `time=2025-01-10T14:32:47.123Z level=ERROR msg="no CUDA-capable device is detected"` | Verify GPU visibility with `nvidia-smi` and ensure `CUDA_VISIBLE_DEVICES` is not restricting access to all devices. |
 ## ROCm (AMD GPU) Setup
 
 ```bash
@@ -163,9 +167,11 @@ Ollama running on 127.0.0.1:11434
 ```
 
 !!! warning "Common errors"
-    **`dpkg: error processing archive (--unpack): cannot open file '/root/amdgpu-install_6.1.60102-1_all.deb': No such file or directory`** — Run `wget` first to download the .deb file, or verify the file exists with `ls -la amdgpu-install*.deb`.
-    **`usermod: user 'root' is already a member of 'render' group`** — This is informational when running as root; the command succeeds and the user is already in the required groups.
-    **`rocm-smi: command not found`** — Ensure ROCm installation completed successfully by running `apt-get install rocm-smi` explicitly, or verify `/opt/rocm/bin` is in your PATH with `echo $PATH`.
+    | Error | Fix |
+    |---|---|
+    | `dpkg: error processing archive (--unpack): cannot open file '/root/amdgpu-install_6.1.60102-1_all.deb': No such file or directory` | Run `wget` first to download the .deb file, or verify the file exists with `ls -la amdgpu-install*.deb`. |
+    | `usermod: user 'root' is already a member of 'render' group` | This is informational when running as root; the command succeeds and the user is already in the required groups. |
+    | `rocm-smi: command not found` | Ensure ROCm installation completed successfully by running `apt-get install rocm-smi` explicitly, or verify `/opt/rocm/bin` is in your PATH with `echo $PATH`. |
 ## VRAM Requirements by Model Size
 
 | Model | Quantisation | VRAM Required | Minimum GPU |
@@ -210,8 +216,10 @@ Machine learning is a subset of artificial intelligence that enables systems to 
 ```
 
 !!! warning "Common errors"
-    **`Error: model not found`** — Run `ollama pull llama3.1:8b` first to download the model.
-    **`Error: CUDA out of memory`** — Reduce `OLLAMA_NUM_GPU` value (e.g., set to 16 or 24) to offload fewer layers to GPU.
+    | Error | Fix |
+    |---|---|
+    | `Error: model not found` | Run `ollama pull llama3.1:8b` first to download the model. |
+    | `Error: CUDA out of memory` | Reduce `OLLAMA_NUM_GPU` value (e.g., set to 16 or 24) to offload fewer layers to GPU. |
 ## Multi-GPU Configuration
 
 ```bash
@@ -243,9 +251,11 @@ Listening on 127.0.0.1:11434
 ```
 
 !!! warning "Common errors"
-    **`CUDA_VISIBLE_DEVICES: command not found`** — Set the environment variable before the command: `CUDA_VISIBLE_DEVICES=0,1,2,3 ollama serve` (not as a separate line).
-    **`nvidia-smi: command not found`** — Install NVIDIA GPU drivers and CUDA toolkit; verify with `nvidia-smi` alone first.
-    **`Error: could not connect to ollama server`** — Ensure `ollama serve` is running in another terminal before executing inference commands.
+    | Error | Fix |
+    |---|---|
+    | `CUDA_VISIBLE_DEVICES: command not found` | Set the environment variable before the command: `CUDA_VISIBLE_DEVICES=0,1,2,3 ollama serve` (not as a separate line). |
+    | `nvidia-smi: command not found` | Install NVIDIA GPU drivers and CUDA toolkit; verify with `nvidia-smi` alone first. |
+    | `Error: could not connect to ollama server` | Ensure `ollama serve` is running in another terminal before executing inference commands. |
 ## Flash Attention
 
 Enable flash attention for lower VRAM usage and faster inference on supported models:
@@ -266,7 +276,9 @@ time=2024-01-15T09:42:34.401Z level=INFO msg="Ollama server ready"
 ```
 
 !!! warning "Common errors"
-    **`error loading CUDA library: libnvml.so.1: cannot open shared object file`** — Install NVIDIA GPU drivers with `sudo apt install nvidia-driver-550` or equivalent for your distribution.
-    **`OLLAMA_FLASH_ATTENTION=1: command not found`** — Use `export OLLAMA_FLASH_ATTENTION=1` before running ollama serve, or run as `OLLAMA_FLASH_ATTENTION=1 ollama serve` with proper shell quoting.
-    **`listen tcp 127.0.0.1:11434: bind: address already in use`** — Kill the existing ollama process with `pkill ollama` or change the port with `OLLAMA_HOST=127.0.0.1:11435 ollama serve`.
+    | Error | Fix |
+    |---|---|
+    | `error loading CUDA library: libnvml.so.1: cannot open shared object file` | Install NVIDIA GPU drivers with `sudo apt install nvidia-driver-550` or equivalent for your distribution. |
+    | `OLLAMA_FLASH_ATTENTION=1: command not found` | Use `export OLLAMA_FLASH_ATTENTION=1` before running ollama serve, or run as `OLLAMA_FLASH_ATTENTION=1 ollama serve` with proper shell quoting. |
+    | `listen tcp 127.0.0.1:11434: bind: address already in use` | Kill the existing ollama process with `pkill ollama` or change the port with `OLLAMA_HOST=127.0.0.1:11435 ollama serve`. |
 Flash attention reduces the KV cache memory footprint significantly, allowing longer context windows with less VRAM.

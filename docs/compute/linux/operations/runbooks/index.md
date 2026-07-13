@@ -110,9 +110,11 @@ LimitNPROC=32768
 ```
 
 !!! warning "Common errors"
-    **`systemctl status <service>: Unit <service> could not be found.`** — Replace `<service>` with the actual service name (e.g., `nginx`, `postgresql`, `sshd`) and verify it exists with `systemctl list-units --type=service`.
-    **`nginx: [error] open() "/var/run/nginx.pid" failed (2: No such file or directory)`** — Run `systemctl restart nginx` to regenerate the PID file, or check that the service user has write permissions to `/var/run/`.
-    **`ss: No such file or directory`** — Install `iproute2` package with `apt install iproute2` (Debian/Ubuntu) or `yum install iproute2` (RHEL/CentOS), or use `netstat -tlnp` as an alternative.
+    | Error | Fix |
+    |---|---|
+    | `systemctl status <service>: Unit <service> could not be found.` | Replace `<service>` with the actual service name (e.g., `nginx`, `postgresql`, `sshd`) and verify it exists with `systemctl list-units --type=service`. |
+    | `nginx: [error] open() "/var/run/nginx.pid" failed (2: No such file or directory)` | Run `systemctl restart nginx` to regenerate the PID file, or check that the service user has write permissions to `/var/run/`. |
+    | `ss: No such file or directory` | Install `iproute2` package with `apt install iproute2` (Debian/Ubuntu) or `yum install iproute2` (RHEL/CentOS), or use `netstat -tlnp` as an alternative. |
 **Expected output (step 2):** `Active: active (running)` after restart. If `Active: failed` or `Active: activating` for > 30 seconds, proceed to step 3.
 
 ## Disk Space Emergency
@@ -157,8 +159,10 @@ Vacuumed journals from /var/log/journal/... to 2024-01-15 10:32:14 UTC, freed 2.
 ```
 
 !!! warning "Common errors"
-    **`find: '/tmp': Permission denied`** — Run the command with `sudo` or ensure the user has read permissions on /tmp.
-    **`journalctl: error: Failed to vacuum journal: Permission denied`** — Execute `journalctl --vacuum-time=7d` with `sudo` to modify system journal files.
+    | Error | Fix |
+    |---|---|
+    | `find: '/tmp': Permission denied` | Run the command with `sudo` or ensure the user has read permissions on /tmp. |
+    | `journalctl: error: Failed to vacuum journal: Permission denied` | Execute `journalctl --vacuum-time=7d` with `sudo` to modify system journal files. |
 ## Backup Validation
 
 ```bash
@@ -185,9 +189,11 @@ Query OK, 0 rows affected (0.01 sec)
 ```
 
 !!! warning "Common errors"
-    **`tar: /backup/app-2024-01-15.tar.gz: Cannot open: No such file or directory`** — Verify the backup file exists and the date format matches the actual backup filename.
-    **`mysql: [ERROR] File '/backup/mysql-2024-01-15.sql' not found`** — Confirm the MySQL backup file exists in /backup and check file permissions.
-    **`ERROR 1064 (42000) at line 1: You have an error in your SQL syntax`** — Validate the SQL dump file is not corrupted and was created with a compatible MySQL version.
+    | Error | Fix |
+    |---|---|
+    | `tar: /backup/app-2024-01-15.tar.gz: Cannot open: No such file or directory` | Verify the backup file exists and the date format matches the actual backup filename. |
+    | `mysql: [ERROR] File '/backup/mysql-2024-01-15.sql' not found` | Confirm the MySQL backup file exists in /backup and check file permissions. |
+    | `ERROR 1064 (42000) at line 1: You have an error in your SQL syntax` | Validate the SQL dump file is not corrupted and was created with a compatible MySQL version. |
 **Expected output:** `Archive OK` for the tar check. MD5 must match the stored hash from the backup job log. DB restore must complete without error output.
 
 ## Kernel and Package Update Runbook
@@ -231,9 +237,11 @@ Reboot is required to ensure that your system benefits from these updates.
 ```
 
 !!! warning "Common errors"
-    **`Error: Another app is currently holding the dnf lock; waiting for it to finish...`** — Wait for the running package manager to complete or kill the blocking process with `ps aux | grep dnf` and `kill -9 <PID>`.
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the command with `sudo` or as the root user.
-    **`command not found: needs-restarting`** — Install the `yum-utils` package with `dnf install yum-utils -y` on RHEL/Rocky systems.
+    | Error | Fix |
+    |---|---|
+    | `Error: Another app is currently holding the dnf lock; waiting for it to finish...` | Wait for the running package manager to complete or kill the blocking process with `ps aux | grep dnf` and `kill -9 <PID>`. |
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the command with `sudo` or as the root user. |
+    | `command not found: needs-restarting` | Install the `yum-utils` package with `dnf install yum-utils -y` on RHEL/Rocky systems. |
 **Expected output:** `needs-restarting -r` exits 0 (no reboot needed) or exits 1 (reboot required — schedule via server-reboot runbook). `/var/run/reboot-required` absent = no reboot needed.
 
 ## Verify

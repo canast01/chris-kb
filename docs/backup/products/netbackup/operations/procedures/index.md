@@ -102,9 +102,11 @@ estimated completion time: 2 hours 15 minutes
 ```
 
 !!! warning "Common errors"
-    **`bpbackup: policy '<policy>' not found`** — Verify the policy name exists in NetBackup Admin Console or use `bppllist` to list available policies.
-    **`bpbackup: client '<client>' is not associated with policy '<policy>'`** — Add the client to the policy's client list in NetBackup Admin Console or verify the client hostname matches exactly (case-sensitive).
-    **`bpbackup: cannot connect to master server`** — Ensure the NetBackup master server is running and reachable; check network connectivity and verify the master hostname in `/etc/netbackup/bp.conf`.
+    | Error | Fix |
+    |---|---|
+    | `bpbackup: policy '<policy>' not found` | Verify the policy name exists in NetBackup Admin Console or use `bppllist` to list available policies. |
+    | `bpbackup: client '<client>' is not associated with policy '<policy>'` | Add the client to the policy's client list in NetBackup Admin Console or verify the client hostname matches exactly (case-sensitive). |
+    | `bpbackup: cannot connect to master server` | Ensure the NetBackup master server is running and reachable; check network connectivity and verify the master hostname in `/etc/netbackup/bp.conf`. |
 ## Restore Files (bprestore)
 
 `bprestore -C <client> -p <policy> -s <schedule> -t <start-time> -T <end-time> <file-list>` — restores to original path.
@@ -129,9 +131,11 @@ bprestore: 247 files restored, 0 failed, 0 skipped
 ```
 
 !!! warning "Common errors"
-    **`bprestore: client '<client>' not found in policy '<policy>'`** — Verify the client name matches exactly in the NetBackup policy configuration and use the correct FQDN if required.
-    **`bprestore: invalid time format '<start-time>'`** — Use the correct time format (typically `mm/dd/yyyy HH:MM:SS`) as specified in your NetBackup documentation.
-    **`bprestore: no backup images found for the specified time range`** — Confirm that backups actually ran during the specified time window by checking the NetBackup Activity Monitor or job logs.
+    | Error | Fix |
+    |---|---|
+    | `bprestore: client '<client>' not found in policy '<policy>'` | Verify the client name matches exactly in the NetBackup policy configuration and use the correct FQDN if required. |
+    | `bprestore: invalid time format '<start-time>'` | Use the correct time format (typically `mm/dd/yyyy HH:MM:SS`) as specified in your NetBackup documentation. |
+    | `bprestore: no backup images found for the specified time range` | Confirm that backups actually ran during the specified time window by checking the NetBackup Activity Monitor or job logs. |
 ## Check Job Status
 
 `bpdbjobs -summary` for counts; `bpdbjobs -jobid <id> -L` for detail; `bperror -backstat -hoursago 24` for errors.
@@ -177,9 +181,11 @@ Warnings: 3
 ```
 
 !!! warning "Common errors"
-    **`bpdbjobs: command not found`** — Ensure the NetBackup client or master server is installed and /usr/openv/netbackup/bin is in your PATH.
-    **`Error Code: 12 - Cannot open file for reading`** — Verify file permissions on the backup source and ensure the NetBackup client process has read access to all backup paths.
-    **`bperror: invalid option -- 'b'`** — Use correct bperror syntax; try `bperror -backstat -hoursago 24` or check NetBackup version documentation for supported flags.
+    | Error | Fix |
+    |---|---|
+    | `bpdbjobs: command not found` | Ensure the NetBackup client or master server is installed and /usr/openv/netbackup/bin is in your PATH. |
+    | `Error Code: 12 - Cannot open file for reading` | Verify file permissions on the backup source and ensure the NetBackup client process has read access to all backup paths. |
+    | `bperror: invalid option -- 'b'` | Use correct bperror syntax; try `bperror -backstat -hoursago 24` or check NetBackup version documentation for supported flags. |
 ## Expire a Backup Image
 
 `bpexpdate -backupid <id> -d 0` — marks image expired; storage reclaimed at next image cleanup.
@@ -195,8 +201,10 @@ Backup will be eligible for deletion on the next retention cleanup cycle.
 ```
 
 !!! warning "Common errors"
-    **`bpexpdate: invalid backup ID format`** — Verify the backup ID exists and is in the correct format by running `bplist -backupid <id>` first.
-    **`bpexpdate: insufficient permissions`** — Run the command as root or a user with NetBackup administrative privileges.
+    | Error | Fix |
+    |---|---|
+    | `bpexpdate: invalid backup ID format` | Verify the backup ID exists and is in the correct format by running `bplist -backupid <id>` first. |
+    | `bpexpdate: insufficient permissions` | Run the command as root or a user with NetBackup administrative privileges. |
 ## Import a Backup from Tape (Catalog Recovery)
 
 `bpimport -create_db_info -Bidfile <bidfile>` — imports catalog info from tape without restoring data.
@@ -226,9 +234,11 @@ Database initialization complete.
 ```
 
 !!! warning "Common errors"
-    **`bpimport: ERR - Cannot open bidfile: No such file or directory`** — Verify the bidfile path is correct and the file exists with `ls -l <bidfile>`.
-    **`bpimport: ERR - Invalid bidfile format at line 23`** — Check the bidfile syntax against the NetBackup documentation and ensure all required fields are present and properly formatted.
-    **`bpimport: ERR - Database connection failed: Permission denied`** — Ensure the user running bpimport has root or nbadmin privileges and the NetBackup database service is running.
+    | Error | Fix |
+    |---|---|
+    | `bpimport: ERR - Cannot open bidfile: No such file or directory` | Verify the bidfile path is correct and the file exists with `ls -l <bidfile>`. |
+    | `bpimport: ERR - Invalid bidfile format at line 23` | Check the bidfile syntax against the NetBackup documentation and ensure all required fields are present and properly formatted. |
+    | `bpimport: ERR - Database connection failed: Permission denied` | Ensure the user running bpimport has root or nbadmin privileges and the NetBackup database service is running. |
 ## Manage Tape Media
 
 `vmupdate -rt TLD -rn <drive>` — update tape inventory; `vmchange -res <media-id>` — move media between pools.
@@ -259,8 +269,10 @@ Move operation completed. Media now in PRODUCTION pool.
 ```
 
 !!! warning "Common errors"
-    **`vmupdate: error: Drive <drive> not found or offline`** — Verify the drive name with `vmquery -dr` and ensure the drive is online and accessible.
-    **`vmchange: error: Media <media-id> is in use or locked`** — Wait for any active backup jobs to complete or check media status with `vmquery -m <media-id>` before attempting the move.
+    | Error | Fix |
+    |---|---|
+    | `vmupdate: error: Drive <drive> not found or offline` | Verify the drive name with `vmquery -dr` and ensure the drive is online and accessible. |
+    | `vmchange: error: Media <media-id> is in use or locked` | Wait for any active backup jobs to complete or check media status with `vmquery -m <media-id>` before attempting the move. |
 ## Configure a New Policy
 
 `bppolicynew <policy-name>` → `bpplclients -add <client> <hardware> <OS> <policy>` → `bpplsched -add <policy> <sched-type>`.
@@ -279,9 +291,11 @@ Schedule added to policy <policy-name>
 ```
 
 !!! warning "Common errors"
-    **`bppolicynew: policy <policy-name> already exists`** — Use a unique policy name or delete the existing policy with `bppolicynew -delete <policy-name>` first.
-    **`bpplclients: client <client> not found in NetBackup client list`** — Verify the client hostname is registered in NetBackup and reachable via DNS or add it to the master server's hosts file.
-    **`bpplsched: invalid schedule type <sched-type>`** — Use a valid schedule type such as `Full`, `Incremental`, or `Differential`.
+    | Error | Fix |
+    |---|---|
+    | `bppolicynew: policy <policy-name> already exists` | Use a unique policy name or delete the existing policy with `bppolicynew -delete <policy-name>` first. |
+    | `bpplclients: client <client> not found in NetBackup client list` | Verify the client hostname is registered in NetBackup and reachable via DNS or add it to the master server's hosts file. |
+    | `bpplsched: invalid schedule type <sched-type>` | Use a valid schedule type such as `Full`, `Incremental`, or `Differential`. |
 ## Check MSDP Dedup Pool Health
 
 `nbdevquery -listdp -U` — check used/free capacity and dedup ratio; `crcontrol --dsstat` — dedup store detail.
@@ -313,8 +327,10 @@ Failover Ready: YES
 ```
 
 !!! warning "Common errors"
-    **`nbdevquery: command not found`** — Ensure NetBackup client is installed and /usr/openv/netbackup/bin is in your PATH, or run with full path `/usr/openv/netbackup/bin/nbdevquery`.
-    **`crcontrol: error: unable to connect to cluster daemon on localhost:13224`** — Verify the NetBackup cluster resource daemon is running with `crctl status` and restart it with `crctl start` if needed.
+    | Error | Fix |
+    |---|---|
+    | `nbdevquery: command not found` | Ensure NetBackup client is installed and /usr/openv/netbackup/bin is in your PATH, or run with full path `/usr/openv/netbackup/bin/nbdevquery`. |
+    | `crcontrol: error: unable to connect to cluster daemon on localhost:13224` | Verify the NetBackup cluster resource daemon is running with `crctl status` and restart it with `crctl start` if needed. |
 ## Collect Debug Logs for Support
 
 `vxlogcfg -a -p 51216 -o 6 && nbpemreq -due` — enable verbose logging; `tar czf /tmp/nbu-logs.tgz /usr/openv/netbackup/logs/` — collect.
@@ -343,9 +359,11 @@ tar: removing leading '/' from member names
 ```
 
 !!! warning "Common errors"
-    **`vxlogcfg: command not found`** — Ensure NetBackup is installed and /usr/openv/netbackup/bin is in your PATH, or use the full path `/usr/openv/netbackup/bin/vxlogcfg`.
-    **`tar: /usr/openv/netbackup/logs/: Cannot open: Permission denied`** — Run the command with `sudo` or as the root user, since NetBackup log directories typically require elevated privileges.
-    **`nbpemreq: command not found`** — Verify NetBackup EMM service is running with `nbpemreq -list` or check that `/usr/openv/netbackup/bin` is in PATH.
+    | Error | Fix |
+    |---|---|
+    | `vxlogcfg: command not found` | Ensure NetBackup is installed and /usr/openv/netbackup/bin is in your PATH, or use the full path `/usr/openv/netbackup/bin/vxlogcfg`. |
+    | `tar: /usr/openv/netbackup/logs/: Cannot open: Permission denied` | Run the command with `sudo` or as the root user, since NetBackup log directories typically require elevated privileges. |
+    | `nbpemreq: command not found` | Verify NetBackup EMM service is running with `nbpemreq -list` or check that `/usr/openv/netbackup/bin` is in PATH. |
 ---
 
 ## Verify

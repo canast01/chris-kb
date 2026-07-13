@@ -82,8 +82,10 @@ Inherit a tag from the resource group                         InheritTagFromReso
 ```
 
 !!! warning "Common errors"
-    **`Policy definition not found. The policy definition with name '96670d01-0a4d-4649-9c89-2d3abc0a5025' does not exist.`** — Verify the policy definition ID is correct and exists in your subscription using `az policy definition list`.
-    **`The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Authorization/policyDefinitions/read'.`** — Ensure your user account has the Policy Insights Reader or higher role assigned at the subscription level.
+    | Error | Fix |
+    |---|---|
+    | `Policy definition not found. The policy definition with name '96670d01-0a4d-4649-9c89-2d3abc0a5025' does not exist.` | Verify the policy definition ID is correct and exists in your subscription using `az policy definition list`. |
+    | `The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Authorization/policyDefinitions/read'.` | Ensure your user account has the Policy Insights Reader or higher role assigned at the subscription level. |
 ### Commonly Used Built-in Policies
 
 | Display Name | Definition ID | Effect |
@@ -163,9 +165,11 @@ Require diagnostic settings for storage...    require-diagnostics-storage     In
 ```
 
 !!! warning "Common errors"
-    **`File not found: policy-rules.json`** — Verify the JSON file exists in the current working directory or provide the absolute file path with the `--rules` parameter.
-    **`InvalidPolicyDefinitionName: Policy definition 'deny-non-approved-vm-images' already exists`** — Use a unique policy name or delete the existing definition before recreating it.
-    **`AuthorizationFailed: The client does not have permission to perform action 'Microsoft.Authorization/policyDefinitions/write'`** — Ensure your Azure account has the Policy Contributor or Owner role at the subscription or management group scope.
+    | Error | Fix |
+    |---|---|
+    | `File not found: policy-rules.json` | Verify the JSON file exists in the current working directory or provide the absolute file path with the `--rules` parameter. |
+    | `InvalidPolicyDefinitionName: Policy definition 'deny-non-approved-vm-images' already exists` | Use a unique policy name or delete the existing definition before recreating it. |
+    | `AuthorizationFailed: The client does not have permission to perform action 'Microsoft.Authorization/policyDefinitions/write'` | Ensure your Azure account has the Policy Contributor or Owner role at the subscription or management group scope. |
 ## Policy Effects
 
 The effect defines what happens when a resource is evaluated and does not comply.
@@ -242,8 +246,10 @@ Policy                                                    NonCompliant
 ```
 
 !!! warning "Common errors"
-    **`The subscription '<subscription-id>' could not be found.`** — Replace `<subscription-id>` with a valid subscription ID from `az account list`.
-    **`No policy assignments found for the given filter criteria.`** — Verify the policy definition name matches exactly using `az policy definition list --query "[].displayName"` and check that the policy is assigned to the subscription.
+    | Error | Fix |
+    |---|---|
+    | `The subscription '<subscription-id>' could not be found.` | Replace `<subscription-id>` with a valid subscription ID from `az account list`. |
+    | `No policy assignments found for the given filter criteria.` | Verify the policy definition name matches exactly using `az policy definition list --query "[].displayName"` and check that the policy is assigned to the subscription. |
 ## Azure Policy Evaluation Flow
 
 ```d2

@@ -40,8 +40,10 @@ vm-archive-01         5.0TB        4.2TB      800GB      5.8TB
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Install the Pure Storage CLI package or add its installation directory to your PATH environment variable.
-    **`Error: Invalid credentials or unable to connect to array`** — Verify the array IP/hostname is reachable and run `purecli login` with valid credentials before executing commands.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Install the Pure Storage CLI package or add its installation directory to your PATH environment variable. |
+    | `Error: Invalid credentials or unable to connect to array` | Verify the array IP/hostname is reachable and run `purecli login` with valid credentials before executing commands. |
 **Dell PowerMax / Unity:**
 ```bash
 # PowerMax — Solutions Enabler
@@ -113,9 +115,11 @@ GigabitEthernet0/2 is down, line protocol is down
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the device is running Cisco IOS/NX-OS and use the exact command syntax without extra characters.
-    **`% Incomplete command.`** — Complete the command with a valid keyword such as `show ip ospf neighbor detail` or check device configuration mode.
-    **`Connection refused` or `Connection timed out`** — Ensure SSH/Telnet connectivity to the device and verify network reachability before running diagnostic commands.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the device is running Cisco IOS/NX-OS and use the exact command syntax without extra characters. |
+    | `% Incomplete command.` | Complete the command with a valid keyword such as `show ip ospf neighbor detail` or check device configuration mode. |
+    | `Connection refused` or `Connection timed out` | Ensure SSH/Telnet connectivity to the device and verify network reachability before running diagnostic commands. |
 ## Monitoring Agent Validation
 
 ```bash
@@ -148,9 +152,11 @@ grep "sending data" /var/log/zabbix/zabbix_agent2.log | tail -5
 ```
 
 !!! warning "Common errors"
-    **`Unit zabbix-agent2.service could not be found.`** — Install the Zabbix agent2 package with `apt-get install zabbix-agent2` or `yum install zabbix-agent2` depending on your distribution.
-    **`grep: /var/log/zabbix/zabbix_agent2.log: No such file or directory`** — Ensure the Zabbix agent2 service has started at least once and check that `/var/log/zabbix/` directory exists with proper permissions.
-    **`Active: inactive (dead) since Mon 2024-01-15 10:15:33 UTC`** — Start the service with `systemctl start zabbix-agent2` and verify connectivity to the monitoring server in `/etc/zabbix/zabbix_agent2.conf`.
+    | Error | Fix |
+    |---|---|
+    | `Unit zabbix-agent2.service could not be found.` | Install the Zabbix agent2 package with `apt-get install zabbix-agent2` or `yum install zabbix-agent2` depending on your distribution. |
+    | `grep: /var/log/zabbix/zabbix_agent2.log: No such file or directory` | Ensure the Zabbix agent2 service has started at least once and check that `/var/log/zabbix/` directory exists with proper permissions. |
+    | `Active: inactive (dead) since Mon 2024-01-15 10:15:33 UTC` | Start the service with `systemctl start zabbix-agent2` and verify connectivity to the monitoring server in `/etc/zabbix/zabbix_agent2.conf`. |
 ## Escalation Thresholds (reference)
 
 | Metric | Warning | Critical |

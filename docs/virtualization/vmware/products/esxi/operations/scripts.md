@@ -105,9 +105,11 @@ RESULT: CRITICAL — dead or missing paths detected
 ```
 
 !!! warning "Common errors"
-    **`bash: esxcli: command not found`** — Run the script directly on the ESXi host via SSH or ensure esxcli is in the PATH (typically `/sbin/esxcli`).
-    **`Device: line 1: syntax error: unexpected operator '(('`** — Verify the script uses bash, not sh; run with `bash esxi_path_health.sh` or ensure the shebang executes bash.
-    **`while: command not found`** — Confirm the script is being executed as bash and not sourced in a restricted shell; use `bash -s < esxi_path_health.sh` when piping over SSH.
+    | Error | Fix |
+    |---|---|
+    | `bash: esxcli: command not found` | Run the script directly on the ESXi host via SSH or ensure esxcli is in the PATH (typically `/sbin/esxcli`). |
+    | `Device: line 1: syntax error: unexpected operator '(('` | Verify the script uses bash, not sh; run with `bash esxi_path_health.sh` or ensure the shebang executes bash. |
+    | `while: command not found` | Confirm the script is being executed as bash and not sourced in a restricted shell; use `bash -s < esxi_path_health.sh` when piping over SSH. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -140,9 +142,11 @@ All paths healthy. No issues detected.
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and that root login is enabled on the ESXi host via `ssh root@192.168.1.100 'echo test'`.
-    **`bash: ~/Desktop/esxi_path_health.sh: No such file or directory`** — Confirm the script exists at the correct path with `ls -la ~/Desktop/esxi_path_health.sh` before running the command.
-    **`Connection refused`** — Ensure the ESXi host is reachable and SSH is enabled by pinging the host and checking SSH service status with `esxcli system ssh status`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and that root login is enabled on the ESXi host via `ssh root@192.168.1.100 'echo test'`. |
+    | `bash: ~/Desktop/esxi_path_health.sh: No such file or directory` | Confirm the script exists at the correct path with `ls -la ~/Desktop/esxi_path_health.sh` before running the command. |
+    | `Connection refused` | Ensure the ESXi host is reachable and SSH is enabled by pinging the host and checking SSH service status with `esxcli system ssh status`. |
 ---
 
 ## ESXi Syslog and Event Collector (Python)
@@ -300,9 +304,11 @@ Overall: CRITICAL
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Ensure passwordless SSH key is installed on each ESXi host with `ssh-copy-id root@esxi-host` or configure SSH key authentication in your automation framework.
-    **`ssh: connect to host esxi01 port 22 SSH_MSG_DISCONNECT: Connection closed`** — Verify SSH is enabled on the ESXi host via vSphere Client (Host > Manage > Services > SSH) and that the host is reachable on the network.
-    **`bash: esxcli: command not found`** — Confirm you are running the script against ESXi 5.0+ and that the SSH session is logged in as root with proper shell environment.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Ensure passwordless SSH key is installed on each ESXi host with `ssh-copy-id root@esxi-host` or configure SSH key authentication in your automation framework. |
+    | `ssh: connect to host esxi01 port 22 SSH_MSG_DISCONNECT: Connection closed` | Verify SSH is enabled on the ESXi host via vSphere Client (Host > Manage > Services > SSH) and that the host is reachable on the network. |
+    | `bash: esxcli: command not found` | Confirm you are running the script against ESXi 5.0+ and that the SSH session is logged in as root with proper shell environment. |
 **Usage:** `ESXI_HOSTS="192.168.1.101 192.168.1.102" ./esxi_ntp_audit.sh`
 
 ---

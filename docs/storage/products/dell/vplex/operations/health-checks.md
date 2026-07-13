@@ -132,9 +132,11 @@ drwxr-xr-x 3 root root 4096 Jan 15 10:17 cluster-2/
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/clusters/*/health-indications/': No such file or directory`** — Verify the VPLEX management console is running and the cluster paths are correctly mounted with `mount | grep clusters`.
-    **`health-check: command not found`** — Ensure you are logged into the VPLEX management CLI with proper credentials and the health-check utility is in your PATH.
-    **`Permission denied`** — Run the commands with appropriate VPLEX administrative privileges
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/clusters/*/health-indications/': No such file or directory` | Verify the VPLEX management console is running and the cluster paths are correctly mounted with `mount | grep clusters`. |
+    | `health-check: command not found` | Ensure you are logged into the VPLEX management CLI with proper credentials and the health-check utility is in your PATH. |
+    | `Permission denied` | Run the commands with appropriate VPLEX administrative privileges |
 ## Cluster Status
 
 ![Cluster Status](../../../../../assets/storage-dell-vplex-hc-cluster-status.svg)
@@ -165,8 +167,10 @@ VPlexcli:/> ll /clusters/cluster-2/
 ```
 
 !!! warning "Common errors"
-    **`Error: path does not exist`** — Verify the cluster name is correct and the cluster is online using `ll /clusters/` first.
-    **`Error: insufficient privileges`** — Ensure your VPlexcli user account has read permissions; contact your VPLEX administrator to grant access.
+    | Error | Fix |
+    |---|---|
+    | `Error: path does not exist` | Verify the cluster name is correct and the cluster is online using `ll /clusters/` first. |
+    | `Error: insufficient privileges` | Ensure your VPlexcli user account has read permissions; contact your VPLEX administrator to grant access. |
 All clusters should show `operational-status: ok`.
 
 ## Director Health
@@ -206,8 +210,10 @@ VPlexcli:/> ll /engines/engine-1-1/directors/
 ```
 
 !!! warning "Common errors"
-    **`Invalid path /engines/*/directors/`** — Use the full engine name (e.g., `/engines/engine-1-1/directors/`) as wildcard expansion is not supported in VPlexcli.
-    **`No such object: /engines/engine-1-1/directors/`** — Verify the engine is online and the director objects exist by running `ll /engines/engine-1-1/` first to confirm the engine name.
+    | Error | Fix |
+    |---|---|
+    | `Invalid path /engines/*/directors/` | Use the full engine name (e.g., `/engines/engine-1-1/directors/`) as wildcard expansion is not supported in VPlexcli. |
+    | `No such object: /engines/engine-1-1/directors/` | Verify the engine is online and the director objects exist by running `ll /engines/engine-1-1/` first to confirm the engine name. |
 All directors should be `operational-status: ok` and `health-state: ok`.
 
 ## Pre-Change Checklist

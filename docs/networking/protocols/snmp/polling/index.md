@@ -95,9 +95,11 @@ sysDescr OBJECT-TYPE
 ```
 
 !!! warning "Common errors"
-    **`snmpget: Unknown host (192.0.2.1)`** — Verify the device IP address is reachable and correct; check network connectivity with `ping <device-ip>`.
-    **`Timeout: No Response from 192.0.2.1`** — Confirm the SNMP community string is correct and SNMP is enabled on the device; check firewall rules allowing UDP 161.
-    **`snmptranslate: Unknown Object Identifier ".1.3.6.1.2.1.1.1.0"`** — Load the appropriate MIB file using `snmptranslate -m +<MIB-NAME>` or ensure MIB files are installed in `/usr/share/snmp/mibs/`.
+    | Error | Fix |
+    |---|---|
+    | `snmpget: Unknown host (192.0.2.1)` | Verify the device IP address is reachable and correct; check network connectivity with `ping <device-ip>`. |
+    | `Timeout: No Response from 192.0.2.1` | Confirm the SNMP community string is correct and SNMP is enabled on the device; check firewall rules allowing UDP 161. |
+    | `snmptranslate: Unknown Object Identifier ".1.3.6.1.2.1.1.1.0"` | Load the appropriate MIB file using `snmptranslate -m +<MIB-NAME>` or ensure MIB files are installed in `/usr/share/snmp/mibs/`. |
 ## Common OIDs for Polling
 
 | OID | Name | Metric |

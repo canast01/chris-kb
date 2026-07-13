@@ -139,8 +139,10 @@ Connection to target-vrs.example.local 31031 port [tcp/*] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`nc: getaddrinfo for host "target-vrs.example.local" port 31031: Name or service not known`** — Verify the target VRS hostname is correct and resolvable in DNS, or use the IP address directly.
-    **`Connection refused`** — Confirm the VRS replication service is running on the target appliance by checking service status via VAMI or SSH into the target VRS.
+    | Error | Fix |
+    |---|---|
+    | `nc: getaddrinfo for host "target-vrs.example.local" port 31031: Name or service not known` | Verify the target VRS hostname is correct and resolvable in DNS, or use the IP address directly. |
+    | `Connection refused` | Confirm the VRS replication service is running on the target appliance by checking service status via VAMI or SSH into the target VRS. |
 ---
 
 ## Move a Replication to a Different Target Datastore
@@ -271,9 +273,11 @@ SRM → Summary → Replication
 ```
 
 !!! warning "Common errors"
-    **`Connection refused on srm-source.example.local:443`** — Verify SRM service is running with `systemctl status srm` on the SRM server and confirm firewall rules allow port 443 from VRA.
-    **`Authentication failed for administrator@vsphere.local`** — Confirm the vCenter SSO password is current and the account has SRM Administrator role assigned in the SRM UI.
-    **`Certificate validation failed: self-signed certificate`** — Accept the self-signed certificate warning in your browser or import the SRM server's CA certificate into the VRA VAMI trusted store.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused on srm-source.example.local:443` | Verify SRM service is running with `systemctl status srm` on the SRM server and confirm firewall rules allow port 443 from VRA. |
+    | `Authentication failed for administrator@vsphere.local` | Confirm the vCenter SSO password is current and the account has SRM Administrator role assigned in the SRM UI. |
+    | `Certificate validation failed: self-signed certificate` | Accept the self-signed certificate warning in your browser or import the SRM server's CA certificate into the VRA VAMI trusted store. |
 ---
 
 ## Verify VR Appliance Registration
@@ -343,9 +347,11 @@ storage-vm-05                           Protected
 ```
 
 !!! warning "Common errors"
-    **`The term 'Get-SRMProtectionGroup' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Install the SRM PowerCLI module via `Install-Module -Name VMware.VimAutomation.Srm` and import it with `Import-Module VMware.VimAutomation.Srm`.
-    **`Connect-VIServer : Cannot find a vCenter Server system at 'vcenter-source.example.local'. The server may not be reachable or credentials may be invalid.`** — Verify the vCenter hostname/IP is correct and reachable, then retry with explicit credentials: `Connect-VIServer -Server vcenter-source.example.local -Credential (Get-Credential)`.
-    **`Get-SRMProtectionGroup : The SRM server is not registered or not responding.`** — Confirm SRM is installed and running on the recovery site, and that the SRM PowerCLI module is connected to the correct SRM instance via `Connect-SrmServer`.
+    | Error | Fix |
+    |---|---|
+    | `The term 'Get-SRMProtectionGroup' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Install the SRM PowerCLI module via `Install-Module -Name VMware.VimAutomation.Srm` and import it with `Import-Module VMware.VimAutomation.Srm`. |
+    | `Connect-VIServer : Cannot find a vCenter Server system at 'vcenter-source.example.local'. The server may not be reachable or credentials may be invalid.` | Verify the vCenter hostname/IP is correct and reachable, then retry with explicit credentials: `Connect-VIServer -Server vcenter-source.example.local -Credential (Get-Credential)`. |
+    | `Get-SRMProtectionGroup : The SRM server is not registered or not responding.` | Confirm SRM is installed and running on the recovery site, and that the SRM PowerCLI module is connected to the correct SRM instance via `Connect-SrmServer`. |
 ---
 
 ## Check Individual VM Replication Status
@@ -404,8 +410,10 @@ echo "scale=2; (50 * 8 * 1024) / (3600)" | bc
 ```
 
 !!! warning "Common errors"
-    **`command not found: bc`** — Install bc with `apt-get install bc` (Debian/Ubuntu) or `yum install bc` (RHEL/CentOS).
-    **`(standard_in) 1: syntax error`** — Ensure the echo string is properly quoted and the division syntax is correct; use `bc -l` for floating-point math if needed.
+    | Error | Fix |
+    |---|---|
+    | `command not found: bc` | Install bc with `apt-get install bc` (Debian/Ubuntu) or `yum install bc` (RHEL/CentOS). |
+    | `(standard_in) 1: syntax error` | Ensure the echo string is properly quoted and the division syntax is correct; use `bc -l` for floating-point math if needed. |
 ---
 
 ## Failback a Replicated VM (after SRM recovery)

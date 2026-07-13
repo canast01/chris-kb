@@ -99,9 +99,11 @@ Strong Ciphers        offered
 ```
 
 !!! warning "Common errors"
-    **`nmap: command not found`** — Install nmap with `apt-get install nmap` (Debian/Ubuntu) or `brew install nmap` (macOS).
-    **`./testssl.sh: Permission denied`** — Make the script executable with `chmod +x testssl.sh`.
-    **`SSL_ERROR_RX_RECORD_TOO_LONG`** — Verify the hostname and port are correct; this error often indicates a non-HTTPS service on port 443.
+    | Error | Fix |
+    |---|---|
+    | `nmap: command not found` | Install nmap with `apt-get install nmap` (Debian/Ubuntu) or `brew install nmap` (macOS). |
+    | `./testssl.sh: Permission denied` | Make the script executable with `chmod +x testssl.sh`. |
+    | `SSL_ERROR_RX_RECORD_TOO_LONG` | Verify the hostname and port are correct; this error often indicates a non-HTTPS service on port 443. |
 ## Configuring Ciphers
 
 ### nginx
@@ -151,9 +153,11 @@ LEGACY
 ```
 
 !!! warning "Common errors"
-    **`update-crypto-policies: command not found`** — Install the crypto-policies package with `sudo apt-get install crypto-policies` (Debian/Ubuntu) or `sudo dnf install crypto-policies` (RHEL/Fedora).
-    **`Error: invalid policy name 'DEFAULT'`** — Use uppercase policy names only; valid options are DEFAULT, FUTURE, LEGACY, FIPS, or FIPS-NG.
-    **`Error: cannot write to /etc/crypto-policies/state/current`** — Run the command with `sudo` to obtain root privileges required for system-wide policy changes.
+    | Error | Fix |
+    |---|---|
+    | `update-crypto-policies: command not found` | Install the crypto-policies package with `sudo apt-get install crypto-policies` (Debian/Ubuntu) or `sudo dnf install crypto-policies` (RHEL/Fedora). |
+    | `Error: invalid policy name 'DEFAULT'` | Use uppercase policy names only; valid options are DEFAULT, FUTURE, LEGACY, FIPS, or FIPS-NG. |
+    | `Error: cannot write to /etc/crypto-policies/state/current` | Run the command with `sudo` to obtain root privileges required for system-wide policy changes. |
 ## TLS Version Standards
 
 | Version | Status | Action |

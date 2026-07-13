@@ -85,9 +85,11 @@ notAfter=May 12 09:51:07 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to connect to vcenter.domain.local:443`** — Verify the hostname is correct and the vCenter server is reachable with `ping vcenter.domain.local` or `nc -zv vcenter.domain.local 443`.
-    **`routines:tls_process_server_certificate:certificate verify failed`** — Add `-showcerts` flag or use `openssl s_client -connect <host>:443 -servername <host>` to properly retrieve the certificate chain.
-    **`error in x509_print_fp:num=20:unable to get local issuer certificate`** — This is a warning about certificate chain validation; the dates will still display—ignore it if you only need expiry information.
+    | Error | Fix |
+    |---|---|
+    | `unable to connect to vcenter.domain.local:443` | Verify the hostname is correct and the vCenter server is reachable with `ping vcenter.domain.local` or `nc -zv vcenter.domain.local 443`. |
+    | `routines:tls_process_server_certificate:certificate verify failed` | Add `-showcerts` flag or use `openssl s_client -connect <host>:443 -servername <host>` to properly retrieve the certificate chain. |
+    | `error in x509_print_fp:num=20:unable to get local issuer certificate` | This is a warning about certificate chain validation; the dates will still display—ignore it if you only need expiry information. |
 ```bash
 # Batch audit across all known VMware hosts — outputs hostname and notAfter date
 for host in vcenter.domain.local nsxmanager.domain.local ariaops.domain.local arialogs.domain.local; do
@@ -106,9 +108,11 @@ arialogs.domain.local:                   notAfter=Feb 14 23:59:59 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the host is reachable on port 443 and the certificate chain is complete; try `openssl s_client -connect $host:443 -showcerts` to diagnose.
-    **`grep: (standard input) is empty`** — The host may not be presenting a valid SSL certificate or the connection timed out; add a timeout flag with `timeout 5 echo | openssl s_client -connect $host:443`.
-    **`Name or service not known`** — Ensure all hostnames resolve correctly by running `nslookup $host` or update the host list to use IP addresses instead.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the host is reachable on port 443 and the certificate chain is complete; try `openssl s_client -connect $host:443 -showcerts` to diagnose. |
+    | `grep: (standard input) is empty` | The host may not be presenting a valid SSL certificate or the connection timed out; add a timeout flag with `timeout 5 echo | openssl s_client -connect $host:443`. |
+    | `Name or service not known` | Ensure all hostnames resolve correctly by running `nslookup $host` or update the host list to use IP addresses instead. |
 Expected: each line prints the hostname and a `notAfter` date; any date within 60 days requires rotation.
 
 ---
@@ -140,9 +144,11 @@ Please select an option [1 to 7]:
 ```
 
 !!! warning "Common errors"
-    **`certificate-manager: command not found`** — Verify you are logged into the VCSA appliance via SSH and not a Windows vCenter instance; the tool only exists on Linux-based VCSA deployments.
-    **`Permission denied`** — Run the command with `sudo` or as root: `sudo /usr/lib/vmware-vmca/bin/certificate-manager`.
-    **`/usr/lib/vmware-vmca/bin/certificate-manager: No such file or directory`** — Confirm the vCenter version is 6.0 or later and the vmware-vmca package is installed by running `rpm -qa | grep vmware-vmca`.
+    | Error | Fix |
+    |---|---|
+    | `certificate-manager: command not found` | Verify you are logged into the VCSA appliance via SSH and not a Windows vCenter instance; the tool only exists on Linux-based VCSA deployments. |
+    | `Permission denied` | Run the command with `sudo` or as root: `sudo /usr/lib/vmware-vmca/bin/certificate-manager`. |
+    | `/usr/lib/vmware-vmca/bin/certificate-manager: No such file or directory` | Confirm the vCenter version is 6.0 or later and the vmware-vmca package is installed by running `rpm -qa | grep vmware-vmca`. |
 In the certificate manager menu:
 
 1. Select **Option 1**: Replace Machine SSL Certificate with Custom Certificate
@@ -188,9 +194,11 @@ vCenter services will be restarted to apply changes...
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate generation failed - insufficient disk space`** — Ensure at least 2GB free space in /etc/vmware-vpx/ssl and run the command again.
-    **`Error: Failed to restart vCenter services - timeout waiting for service startup`** — Wait 5-10 minutes for services to fully initialize, then verify with `service-control --status --all`.
-    **`Error: Permission denied - cannot write to /etc/vmware-vpx/ssl`** — Run the certificate-manager command with root privileges using `sudo` or as the root user.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate generation failed - insufficient disk space` | Ensure at least 2GB free space in /etc/vmware-vpx/ssl and run the command again. |
+    | `Error: Failed to restart vCenter services - timeout waiting for service startup` | Wait 5-10 minutes for services to fully initialize, then verify with `service-control --status --all`. |
+    | `Error: Permission denied - cannot write to /etc/vmware-vpx/ssl` | Run the certificate-manager command with root privileges using `sudo` or as the root user. |
 Expected: VCSA services restart; `openssl s_client` against vCenter returns a `notAfter` date beyond 1 year from today.
 
 ---
@@ -289,9 +297,11 @@ arialogs.domain.local:                  notAfter=Dec 15 23:59:59 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to connect to host:443`** — Verify the hostname resolves and the management interface is reachable on port 443 with `ping` and `nc -zv`.
-    **`depth=0 self signed certificate`** — This is a warning, not an error; the script will still extract the expiry date, but if you need to verify the certificate chain, use `openssl s_client -connect $host:443 -showcerts`.
-    **`grep: (standard input) is empty`** — The certificate was not returned; check that the host is running and SSL/TLS is enabled, or add `-servername $host` to the openssl command for SNI support.
+    | Error | Fix |
+    |---|---|
+    | `unable to connect to host:443` | Verify the hostname resolves and the management interface is reachable on port 443 with `ping` and `nc -zv`. |
+    | `depth=0 self signed certificate` | This is a warning, not an error; the script will still extract the expiry date, but if you need to verify the certificate chain, use `openssl s_client -connect $host:443 -showcerts`. |
+    | `grep: (standard input) is empty` | The certificate was not returned; check that the host is running and SSL/TLS is enabled, or add `-servername $host` to the openssl command for SNI support. |
 | Check | Location | Expected Result |
 |---|---|---|
 | vCenter cert expiry | `openssl s_client` against vCenter | notAfter > 1 year from today |

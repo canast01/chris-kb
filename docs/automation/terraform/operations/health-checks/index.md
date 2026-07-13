@@ -110,8 +110,10 @@ Usage: terraform force-unlock [options] LOCK_ID
 ```
 
 !!! warning "Common errors"
-    **`Error: Backend initialization required: please run "terraform init"`** — Run `terraform init` in the working directory to initialize the backend and download provider plugins.
-    **`Error: Error acquiring the state lock`** — Verify backend connectivity and check for stale locks with `terraform force-unlock <lock-id>` if the lock is orphaned.
+    | Error | Fix |
+    |---|---|
+    | `Error: Backend initialization required: please run "terraform init"` | Run `terraform init` in the working directory to initialize the backend and download provider plugins. |
+    | `Error: Error acquiring the state lock` | Verify backend connectivity and check for stale locks with `terraform force-unlock <lock-id>` if the lock is orphaned. |
 Compare the output against the expected resource count tracked in your runbook. A sudden drop or spike indicates a state manipulation issue.
 
 **Inspect a specific resource**
@@ -146,8 +148,10 @@ resource "aws_instance" "web_server" {
 ```
 
 !!! warning "Common errors"
-    **`Error: resource address "resource_address" not found in the current state`** — Replace `<resource_address>` with the actual resource type and name (e.g., `aws_instance.web_server`).
-    **`Error: No state file found`** — Initialize the Terraform working directory with `terraform init` and ensure a state file exists in the current directory or remote backend.
+    | Error | Fix |
+    |---|---|
+    | `Error: resource address "resource_address" not found in the current state` | Replace `<resource_address>` with the actual resource type and name (e.g., `aws_instance.web_server`). |
+    | `Error: No state file found` | Initialize the Terraform working directory with `terraform init` and ensure a state file exists in the current directory or remote backend. |
 **Remove a stale resource from state (non-destructive)**
 
 ```bash
@@ -160,8 +164,10 @@ Removed aws_instance.web_server from state
 ```
 
 !!! warning "Common errors"
-    **`Error: resource address "aws_instance.web_server" does not exist in the current state`** — Verify the exact resource address with `terraform state list` before attempting removal.
-    **`Error: Failed to read state`** — Ensure you have read/write permissions on the state file and backend is accessible (check `terraform init` completed successfully).
+    | Error | Fix |
+    |---|---|
+    | `Error: resource address "aws_instance.web_server" does not exist in the current state` | Verify the exact resource address with `terraform state list` before attempting removal. |
+    | `Error: Failed to read state` | Ensure you have read/write permissions on the state file and backend is accessible (check `terraform init` completed successfully). |
 Use only when a resource has been manually deleted outside Terraform and the state entry is orphaned.
 
 **Pull remote state to inspect locally**
@@ -176,8 +182,10 @@ terraform state pull > state-snapshot.json
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to read state` — Ensure you are in the correct Terraform working directory and have initialized the workspace with `terraform init`.**
-    **`Error: Insufficient permissions to read state` — Verify your AWS/cloud credentials are configured and have `s3:GetObject` permissions if using remote state.**
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to read state` | Ensure you are in the correct Terraform working directory and have initialized the workspace with `terraform init`. |
+    | `Error: Insufficient permissions to read state` | Verify your AWS/cloud credentials are configured and have `s3:GetObject` permissions if using remote state. |
 Review `state-snapshot.json` for unexpected `null` values, duplicate serial numbers, or missing resource blocks.
 
 **Key health indicators**
@@ -222,8 +230,10 @@ Providers required by state:
 ```
 
 !!! warning "Common errors"
-    **`Error: No configuration files`** — Run `terraform init` first to initialize the working directory and download provider plugins.
-    **`Error: Incompatible provider version`** — Update the provider constraint in your `.tf` files or run `terraform init -upgrade` to fetch compatible versions.
+    | Error | Fix |
+    |---|---|
+    | `Error: No configuration files` | Run `terraform init` first to initialize the working directory and download provider plugins. |
+    | `Error: Incompatible provider version` | Update the provider constraint in your `.tf` files or run `terraform init -upgrade` to fetch compatible versions. |
 **Review lock file constraints**
 
 ```bash
@@ -254,8 +264,10 @@ provider "registry.terraform.io/hashicorp/null" {
 ```
 
 !!! warning "Common errors"
-    **`cat: .terraform.lock.hcl: No such file or directory`** — Run `terraform init` in the working directory to generate the lock file.
-    **`Permission denied`** — Check file permissions with `ls -la .terraform.lock.hcl` and ensure the user has read access.
+    | Error | Fix |
+    |---|---|
+    | `cat: .terraform.lock.hcl: No such file or directory` | Run `terraform init` in the working directory to generate the lock file. |
+    | `Permission denied` | Check file permissions with `ls -la .terraform.lock.hcl` and ensure the user has read access. |
 Confirm that the `version` and `constraints` fields in the lock file match the versions declared in `versions.tf` or the root module.
 
 **Re-initialise and upgrade providers (controlled)**
@@ -283,8 +295,10 @@ You may now begin working with Terraform. Try running "terraform plan" next.
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to download module source`** — Verify the module source URL is correct and accessible, and check your network connectivity and VCS credentials.
-    **`Error: Incompatible provider version`** — Review the required_providers block in your configuration and adjust version constraints to match available releases.
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to download module source` | Verify the module source URL is correct and accessible, and check your network connectivity and VCS credentials. |
+    | `Error: Incompatible provider version` | Review the required_providers block in your configuration and adjust version constraints to match available releases. |
 Run this only during a planned maintenance window. After upgrading, run `terraform plan` to verify no unintended resource changes are introduced by the new provider version.
 
 **Key health indicators**
@@ -316,8 +330,10 @@ default
 ```
 
 !!! warning "Common errors"
-    **`Error: Not a valid terraform directory`** — Run the command from the directory containing your `.terraform` directory or re-initialize with `terraform init`.
-    **`Error: Failed to read state file`** — Ensure the backend is accessible (check AWS credentials, network connectivity, or remote state lock) and run `terraform init` to reinitialize the backend.
+    | Error | Fix |
+    |---|---|
+    | `Error: Not a valid terraform directory` | Run the command from the directory containing your `.terraform` directory or re-initialize with `terraform init`. |
+    | `Error: Failed to read state file` | Ensure the backend is accessible (check AWS credentials, network connectivity, or remote state lock) and run `terraform init` to reinitialize the backend. |
 The active workspace is marked with `*`.
 
 **Show current workspace**
@@ -332,8 +348,10 @@ default
 ```
 
 !!! warning "Common errors"
-    **`Error: Not a valid terraform directory`** — Run the command from the directory containing your `.terraform` directory or re-initialize with `terraform init`.
-    **`Error: Failed to read state file`** — Ensure the state backend is accessible and credentials are valid; check `terraform login` or backend configuration in `terraform.tf`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Not a valid terraform directory` | Run the command from the directory containing your `.terraform` directory or re-initialize with `terraform init`. |
+    | `Error: Failed to read state file` | Ensure the state backend is accessible and credentials are valid; check `terraform login` or backend configuration in `terraform.tf`. |
 **Switch workspace**
 
 ```bash
@@ -346,8 +364,10 @@ terraform workspace select <workspace_name>
 ```
 
 !!! warning "Common errors"
-    **`Error: workspace "<workspace_name>" does not exist`** — Run `terraform workspace list` to see available workspaces, then use the correct name.
-    **`Error: Failed to select workspace: invalid character in workspace name`** — Workspace names must contain only alphanumeric characters, hyphens, and underscores; rename or use a valid existing workspace.
+    | Error | Fix |
+    |---|---|
+    | `Error: workspace "<workspace_name>" does not exist` | Run `terraform workspace list` to see available workspaces, then use the correct name. |
+    | `Error: Failed to select workspace: invalid character in workspace name` | Workspace names must contain only alphanumeric characters, hyphens, and underscores; rename or use a valid existing workspace. |
 **Confirm state is scoped to the correct workspace**
 
 ```bash
@@ -367,8 +387,10 @@ aws_cloudwatch_log_group.application_logs
 ```
 
 !!! warning "Common errors"
-    **`Error: No state file was found!`** — Initialize the Terraform working directory with `terraform init` to create or load the state file.
-    **`Error: Error reading state file: stat .terraform/terraform.tfstate: permission denied`** — Ensure your user has read permissions on the `.terraform` directory and state file with `chmod 600 .terraform/terraform.tfstate`.
+    | Error | Fix |
+    |---|---|
+    | `Error: No state file was found!` | Initialize the Terraform working directory with `terraform init` to create or load the state file. |
+    | `Error: Error reading state file: stat .terraform/terraform.tfstate: permission denied` | Ensure your user has read permissions on the `.terraform` directory and state file with `chmod 600 .terraform/terraform.tfstate`. |
 Run this immediately after switching workspaces to verify the resource list matches the expected environment.
 
 **Key health indicators**
@@ -411,8 +433,10 @@ any changes that would be required to apply your current configuration.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unsupported or incorrectly formatted backend configuration`** — Verify the backend block in your terraform configuration files has valid syntax and the backend type is supported.
-    **`Error: Failed to download provider plugin`** — Check your internet connection and ensure your Terraform registry credentials are configured if using a private registry.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unsupported or incorrectly formatted backend configuration` | Verify the backend block in your terraform configuration files has valid syntax and the backend type is supported. |
+    | `Error: Failed to download provider plugin` | Check your internet connection and ensure your Terraform registry credentials are configured if using a private registry. |
 A clean init with no errors confirms backend credentials and network access are valid.
 
 **Check backend configuration**
@@ -443,8 +467,10 @@ terraform {
 ```
 
 !!! warning "Common errors"
-    **`cat: backend.tf: No such file or directory`** — Ensure you are in the correct Terraform working directory (typically the root of your infrastructure-as-code repository).
-    **`Permission denied`** — Run `chmod +r backend.tf` or check that your user has read permissions on the file.
+    | Error | Fix |
+    |---|---|
+    | `cat: backend.tf: No such file or directory` | Ensure you are in the correct Terraform working directory (typically the root of your infrastructure-as-code repository). |
+    | `Permission denied` | Run `chmod +r backend.tf` or check that your user has read permissions on the file. |
 Verify that the bucket/container name, region, and key path are correct for the current environment.
 
 **Validate credentials (AWS example)**
@@ -463,8 +489,10 @@ aws sts get-caller-identity
 ```
 
 !!! warning "Common errors"
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
-    **`An error occurred (UnauthorizedOperation) when calling the GetCallerIdentity operation: User: arn:aws:iam::987654321098:user/terraform-admin is not authorized to perform: sts:GetCallerIdentity`** — Add the `sts:GetCallerIdentity` permission to the IAM user or role's policy.
+    | Error | Fix |
+    |---|---|
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
+    | `An error occurred (UnauthorizedOperation) when calling the GetCallerIdentity operation: User: arn:aws:iam::987654321098:user/terraform-admin is not authorized to perform: sts:GetCallerIdentity` | Add the `sts:GetCallerIdentity` permission to the IAM user or role's policy. |
 Replace with the equivalent CLI check for your cloud provider (e.g., `az account show` for Azure, `gcloud auth list` for GCP).
 
 **Force-unlock a stale lock (use with caution)**
@@ -479,8 +507,10 @@ Terraform state lock with ID "8f4c2a91-7e3b-4d19-b8f2-1a6c5e9d2b3f" forcefully u
 ```
 
 !!! warning "Common errors"
-    **`Error: Error acquiring the state lock`** — Verify the lock ID is correct and the state backend is accessible by checking `terraform state list`.
-    **`Error: resource not found`** — Ensure you are in the correct Terraform working directory and the backend configuration matches the locked state.
+    | Error | Fix |
+    |---|---|
+    | `Error: Error acquiring the state lock` | Verify the lock ID is correct and the state backend is accessible by checking `terraform state list`. |
+    | `Error: resource not found` | Ensure you are in the correct Terraform working directory and the backend configuration matches the locked state. |
 Obtain the lock ID from the backend error message or by inspecting the lock object directly in the backend store. Only unlock if you have confirmed no active `apply` is running.
 
 **Key health indicators**
@@ -527,9 +557,11 @@ azurerm_resource_group.rg: Import complete!
 ```
 
 !!! warning "Common errors"
-    **`Error: resource address "aws_instance.web01" does not exist in the configuration`** — Add the resource block `resource "aws_instance" "web01" {}` to your Terraform configuration before running import.
-    **`Error: error reading resource: ResourceNotFound`** — Verify the resource ID is correct and exists in the target cloud account/subscription.
-    **`Error: error reading resource: Unauthorized`** — Ensure your cloud credentials (AWS_PROFILE, ARM_CLIENT_ID, etc.) have permissions to read the target resource.
+    | Error | Fix |
+    |---|---|
+    | `Error: resource address "aws_instance.web01" does not exist in the configuration` | Add the resource block `resource "aws_instance" "web01" {}` to your Terraform configuration before running import. |
+    | `Error: error reading resource: ResourceNotFound` | Verify the resource ID is correct and exists in the target cloud account/subscription. |
+    | `Error: error reading resource: Unauthorized` | Ensure your cloud credentials (AWS_PROFILE, ARM_CLIENT_ID, etc.) have permissions to read the target resource. |
 After import, add the matching resource block to your `.tf` files, then run `terraform plan` to verify state matches configuration.
 
 ### moved Blocks
@@ -573,8 +605,10 @@ Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 ```
 
 !!! warning "Common errors"
-    **`Error: Resource instance managed by a different state`** — Ensure all `moved` blocks reference the correct source and destination resource addresses, and run `terraform state list` to verify the current state structure.
-    **`Error: Invalid moved block: source and destination cannot be the same`** — Remove or correct the `moved` block so source and destination addresses differ (e.g., `from = aws_instance.old` to `to = aws_instance.new`).
+    | Error | Fix |
+    |---|---|
+    | `Error: Resource instance managed by a different state` | Ensure all `moved` blocks reference the correct source and destination resource addresses, and run `terraform state list` to verify the current state structure. |
+    | `Error: Invalid moved block: source and destination cannot be the same` | Remove or correct the `moved` block so source and destination addresses differ (e.g., `from = aws_instance.old` to `to = aws_instance.new`). |
 ### Scheduled Drift Detection
 
 Run drift checks on a schedule in CI/CD to get early warnings.

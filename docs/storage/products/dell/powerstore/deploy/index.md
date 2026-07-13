@@ -175,9 +175,11 @@ Status: OK
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to <cluster_vip>:443`** — Verify the cluster VIP is correct and reachable from the management host using `ping <cluster_vip>` or `nc -zv <cluster_vip> 443`.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the password is correct and the admin account is not locked; reset credentials in the PowerStore GUI if needed.
-    **`Error: Volume 'vol_sql01_data' not found`** — Check the exact volume name with `pstcli --address <cluster_vip> --user admin --password <password> volume query` to list all volumes.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to <cluster_vip>:443` | Verify the cluster VIP is correct and reachable from the management host using `ping <cluster_vip>` or `nc -zv <cluster_vip> 443`. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the password is correct and the admin account is not locked; reset credentials in the PowerStore GUI if needed. |
+    | `Error: Volume 'vol_sql01_data' not found` | Check the exact volume name with `pstcli --address <cluster_vip> --user admin --password <password> volume query` to list all volumes. |
 ---
 
 ## Configure Host Connectivity
@@ -236,8 +238,10 @@ size=500G features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`rescan-scsi-bus.sh: command not found`** — Install sg3_utils package with `apt-get install sg3-utils` or `yum install sg3_utils`.
-    **`multipathd is not running`** — Start the multipath daemon with `systemctl start multipathd` and enable it with `systemctl enable multipathd`.
+    | Error | Fix |
+    |---|---|
+    | `rescan-scsi-bus.sh: command not found` | Install sg3_utils package with `apt-get install sg3-utils` or `yum install sg3_utils`. |
+    | `multipathd is not running` | Start the multipath daemon with `systemctl start multipathd` and enable it with `systemctl enable multipathd`. |
 ---
 
 ## Set Up Data Protection
@@ -289,9 +293,11 @@ size=4.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`multipath: command not found`** — Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt-get install multipath-tools`.
-    **`the following paths have not been initialized: sda sdb sdc sdd`** — Run `multipath -v3` to initialize paths, then verify FC fabric connectivity and zoning rules allow host-to-array communication.
-    **`mpatha: all paths are down`** — Check FC switch port status, verify array LUNs are exported to the host's WWN, and confirm ALUA is enabled on the PowerStore array.
+    | Error | Fix |
+    |---|---|
+    | `multipath: command not found` | Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt-get install multipath-tools`. |
+    | `the following paths have not been initialized: sda sdb sdc sdd` | Run `multipath -v3` to initialize paths, then verify FC fabric connectivity and zoning rules allow host-to-array communication. |
+    | `mpatha: all paths are down` | Check FC switch port status, verify array LUNs are exported to the host's WWN, and confirm ALUA is enabled on the PowerStore array. |
 3. Run a quick I/O test to confirm no errors:
 
 ```bash
@@ -306,9 +312,11 @@ dd if=/dev/zero of=/dev/mapper/<mpath_dev> bs=1M count=512 oflag=direct
 ```
 
 !!! warning "Common errors"
-    **`dd: opening '/dev/mapper/<mpath_dev>': No such file or block device`** — Verify the multipath device exists with `multipath -ll` and substitute the actual device name (e.g., `mpatha`).
-    **`dd: writing to '/dev/mapper/<mpath_dev>': Read-only file system`** — Ensure the device is not write-protected; check with `blockdev --getro /dev/mapper/<mpath_dev>` and disable read-only mode if needed.
-    **`dd: opening '/dev/mapper/<mpath_dev>': Permission denied`** — Run the command with `sudo` or as root user.
+    | Error | Fix |
+    |---|---|
+    | `dd: opening '/dev/mapper/<mpath_dev>': No such file or block device` | Verify the multipath device exists with `multipath -ll` and substitute the actual device name (e.g., `mpatha`). |
+    | `dd: writing to '/dev/mapper/<mpath_dev>': Read-only file system` | Ensure the device is not write-protected; check with `blockdev --getro /dev/mapper/<mpath_dev>` and disable read-only mode if needed. |
+    | `dd: opening '/dev/mapper/<mpath_dev>': Permission denied` | Run the command with `sudo` or as root user. |
 4. Check PowerStore Manager **Monitoring > Performance** — latency should be sub-millisecond for NVMe-based appliances at low queue depth.
 5. Confirm no active alerts under **Monitoring > Alerts**.
 

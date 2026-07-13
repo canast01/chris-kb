@@ -250,9 +250,11 @@ Verifying site pairing is Connected...
 ```
 
 !!! warning "Common errors"
-    **`vCenter service unavailable: connection refused on port 443`** — Verify vCenter is running with `systemctl status vmware-vpxd` and check firewall rules allow port 443 between SRM and vCenter.
-    **`SRM service not running: failed to connect to localhost:13116`** — Restart the SRM service with `systemctl restart vmware-srm` and check `/var/log/vmware/srm/srm.log` for startup errors.
-    **`Site pairing status: DISCONNECTED - certificate validation failed`** — Regenerate and re-import the SSL certificates on both sites, then re-pair the sites through the SRM UI.
+    | Error | Fix |
+    |---|---|
+    | `vCenter service unavailable: connection refused on port 443` | Verify vCenter is running with `systemctl status vmware-vpxd` and check firewall rules allow port 443 between SRM and vCenter. |
+    | `SRM service not running: failed to connect to localhost:13116` | Restart the SRM service with `systemctl restart vmware-srm` and check `/var/log/vmware/srm/srm.log` for startup errors. |
+    | `Site pairing status: DISCONNECTED - certificate validation failed` | Regenerate and re-import the SSL certificates on both sites, then re-pair the sites through the SRM UI. |
 1. SRM → Configure → Array Managers → check status
 2. Verify SRA service is running:
    ```powershell

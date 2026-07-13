@@ -162,9 +162,11 @@ WARNING: Usage exceeds 85% of licensed capacity!
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Install EMC Solutions Enabler or add the Symmetrix CLI bin directory to your PATH environment variable.
-    **`Symmetrix ID: <sid> — Could not be found`** — Verify the SID is correct and the array is discoverable; run `symcfg discover` first to refresh the device list.
-    **`Permission denied`** — Run the command with appropriate privileges (sudo or as a user in the symcfg group) or configure passwordless sudo for Symmetrix CLI commands.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Install EMC Solutions Enabler or add the Symmetrix CLI bin directory to your PATH environment variable. |
+    | `Symmetrix ID: <sid> — Could not be found` | Verify the SID is correct and the array is discoverable; run `symcfg discover` first to refresh the device list. |
+    | `Permission denied` | Run the command with appropriate privileges (sudo or as a user in the symcfg group) or configure passwordless sudo for Symmetrix CLI commands. |
 ---
 
 ## Unisphere REST API
@@ -263,9 +265,11 @@ Licensed: 450.50 TB  Used: 312.80 TB  (69.4%)
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present in example; verify Unisphere host is reachable and certificate is valid).
-    **`jq: command not found` or `python3: command not found`** — Install the missing tool (`apt-get install python3` or `yum install python3`) or use the built-in `python3 -m json.tool` as shown in the example.
-    **`401 Unauthorized`** — Verify SMC user credentials are correct and the account has REST API permissions in Unisphere; check password expiration and reset if needed.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification (already present in example; verify Unisphere host is reachable and certificate is valid). |
+    | `jq: command not found` or `python3: command not found` | Install the missing tool (`apt-get install python3` or `yum install python3`) or use the built-in `python3 -m json.tool` as shown in the example. |
+    | `401 Unauthorized` | Verify SMC user credentials are correct and the account has REST API permissions in Unisphere; check password expiration and reset if needed. |
 ---
 
 ## Monitoring Burst Threshold
@@ -317,9 +321,11 @@ OK: FOD capacity usage nominal (67.3 TB / 120 TB ceiling)
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Ensure the EMC/Dell Unisphere CLI package is installed and `/usr/symcli/bin` is in your PATH, or use the full path `/usr/symcli/bin/symcfg`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the Unisphere server's CA certificate into your system trust store to avoid the `-k` workaround.
-    **`jq: command not found` or `python3: No module named json`** — Install Python 3 and verify the json module is available, or replace the JSON parser with `jq` if preferred.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Ensure the EMC/Dell Unisphere CLI package is installed and `/usr/symcli/bin` is in your PATH, or use the full path `/usr/symcli/bin/symcfg`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the Unisphere server's CA certificate into your system trust store to avoid the `-k` workaround. |
+    | `jq: command not found` or `python3: No module named json` | Install Python 3 and verify the json module is available, or replace the JSON parser with `jq` if preferred. |
 ---
 
 ## License Key Management
@@ -387,9 +393,11 @@ Solutions Enabler Version: 9.2.3.0 (Build 2024.01.15)
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Ensure Solutions Enabler is installed and the `$SYMCLI_PATH` environment variable is set, or add the bin directory to `$PATH`.
-    **`License import failed: File not found or invalid format`** — Verify the license file path is correct and the file was downloaded from the Dell License Management portal in the proper `.dat` format.
-    **`Error: Symmetrix ID <sid> not found or not responding`** — Confirm the Symmetrix array is online, the correct SID is specified, and the management station has network connectivity to the array's management port.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Ensure Solutions Enabler is installed and the `$SYMCLI_PATH` environment variable is set, or add the bin directory to `$PATH`. |
+    | `License import failed: File not found or invalid format` | Verify the license file path is correct and the file was downloaded from the Dell License Management portal in the proper `.dat` format. |
+    | `Error: Symmetrix ID <sid> not found or not responding` | Confirm the Symmetrix array is online, the correct SID is specified, and the management station has network connectivity to the array's management port. |
 ---
 
 ## Monthly Usage Tracking and Reporting
@@ -474,9 +482,11 @@ Monthly FOD report written to /var/log/fod-reports/monthly_2024-01.csv
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command (already present in the code; if still failing, verify UNISPHERE variable points to correct Unisphere hostname).
-    **`jq: command not found`** — Install `python3-json` or use `python3 -m json.tool` as shown; if json.tool fails, verify Python 3.6+ is installed with `python3 --version`.
-    **`No such file or directory: /var/log/fod-reports/capacity_2024-01-*.txt`** — Ensure capacity snapshot files exist in `/var/log/fod-reports/` and match the naming pattern `capacity_YYYY-MM-DD.txt` before running the report generation loop.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command (already present in the code; if still failing, verify UNISPHERE variable points to correct Unisphere hostname). |
+    | `jq: command not found` | Install `python3-json` or use `python3 -m json.tool` as shown; if json.tool fails, verify Python 3.6+ is installed with `python3 --version`. |
+    | `No such file or directory: /var/log/fod-reports/capacity_2024-01-*.txt` | Ensure capacity snapshot files exist in `/var/log/fod-reports/` and match the naming pattern `capacity_YYYY-MM-DD.txt` before running the report generation loop. |
 ---
 
 ## Verify

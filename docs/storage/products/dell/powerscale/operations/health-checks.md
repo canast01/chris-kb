@@ -204,9 +204,11 @@ License Expiration: 2025-06-30
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the Isilon OneFS CLI tools are installed and the PATH includes the OneFS bin directory (typically `/usr/local/bin` or part of the OneFS SDK).
-    **`Connection refused on 127.0.0.1:8080`** — Verify the OneFS management API service is running and accessible; check network connectivity to the cluster management IP and confirm firewall rules allow access.
-    **`Authentication failed: Invalid credentials`** — Verify your OneFS admin credentials are correct and that your user account has sufficient privileges; re-authenticate using `isi auth login` if needed.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the Isilon OneFS CLI tools are installed and the PATH includes the OneFS bin directory (typically `/usr/local/bin` or part of the OneFS SDK). |
+    | `Connection refused on 127.0.0.1:8080` | Verify the OneFS management API service is running and accessible; check network connectivity to the cluster management IP and confirm firewall rules allow access. |
+    | `Authentication failed: Invalid credentials` | Verify your OneFS admin credentials are correct and that your user account has sufficient privileges; re-authenticate using `isi auth login` if needed. |
 ## Cluster Health Commands
 
 ![Cluster Health Commands](../../../../../assets/storage-dell-powerscale-hc-cluster-health-commands.svg)
@@ -252,8 +254,10 @@ Node  Status  CPU   Memory  Disk
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the PATH includes `/usr/bin` or `/opt/isilon/bin`.
-    **`Error: Unable to connect to cluster`** — Verify network connectivity to the cluster management IP and that SSH/HTTPS access is permitted on port 22 or 8080.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the PATH includes `/usr/bin` or `/opt/isilon/bin`. |
+    | `Error: Unable to connect to cluster` | Verify network connectivity to the cluster management IP and that SSH/HTTPS access is permitted on port 22 or 8080. |
 ### Node Health
 
 ![Node Health](../../../../../assets/storage-dell-powerscale-hc-node-health.svg)
@@ -319,9 +323,11 @@ isi node drives list 1 | grep -iE "failed|degraded|missing"
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the isilon package is in your PATH, or run commands from the cluster management interface.
-    **`Error: Invalid node ID '<node_id>'`** — Replace `<node_id>` with an actual numeric node ID from the output of `isi node list`.
-    **`Error: Node <node_id> is unreachable or offline`** — Verify network connectivity to the node and check cluster status with `isi status` before querying individual nodes.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the isilon package is in your PATH, or run commands from the cluster management interface. |
+    | `Error: Invalid node ID '<node_id>'` | Replace `<node_id>` with an actual numeric node ID from the output of `isi node list`. |
+    | `Error: Node <node_id> is unreachable or offline` | Verify network connectivity to the node and check cluster status with `isi status` before querying individual nodes. |
 ### Active Events and Alerts
 
 ![Active Events and Alerts](../../../../../assets/storage-dell-powerscale-hc-active-events-and-alerts.svg)
@@ -408,8 +414,10 @@ Path                                    Hard Quota  Used        % Used
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the PATH includes the OneFS bin directory, or run commands directly on the cluster management interface.
-    **`Error: Invalid credentials or insufficient permissions`** — Verify your OneFS admin account has appropriate role permissions (typically "Cluster Admin") and re-authenticate if your session has expired.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the PATH includes the OneFS bin directory, or run commands directly on the cluster management interface. |
+    | `Error: Invalid credentials or insufficient permissions` | Verify your OneFS admin account has appropriate role permissions (typically "Cluster Admin") and re-authenticate if your session has expired. |
 ### Protocol Services
 
 ![Protocol Services](../../../../../assets/storage-dell-powerscale-hc-protocol-services.svg)
@@ -441,8 +449,10 @@ isi_eventd                             running
 ```
 
 !!! warning "Common errors"
-    **`command not found: isi`** — Ensure you are logged into the PowerScale cluster via SSH or the platform API, as the `isi` command is only available on cluster nodes.
-    **`Permission denied`** — Run the command with appropriate cluster admin credentials; standard user accounts may lack permission to query service status.
+    | Error | Fix |
+    |---|---|
+    | `command not found: isi` | Ensure you are logged into the PowerScale cluster via SSH or the platform API, as the `isi` command is only available on cluster nodes. |
+    | `Permission denied` | Run the command with appropriate cluster admin credentials; standard user accounts may lack permission to query service status. |
 ### SyncIQ Replication
 
 ![SyncIQ Replication](../../../../../assets/storage-dell-powerscale-hc-synciq-replication.svg)
@@ -493,8 +503,10 @@ ID       Policy Name               State      Start Time              Duration  
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy '<policy_name>' not found`** — Verify the policy name with `isi sync policies list` and use the exact name from the Name column.
-    **`Error: Invalid state value. Valid states are: running, finished, failed, paused, skipped`** — Use only the documented state keywords; check `isi sync jobs list --help` for valid options.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy '<policy_name>' not found` | Verify the policy name with `isi sync policies list` and use the exact name from the Name column. |
+    | `Error: Invalid state value. Valid states are: running, finished, failed, paused, skipped` | Use only the documented state keywords; check `isi sync jobs list --help` for valid options. |
 ### Jobs (Background Tasks)
 
 ![Jobs (Background Tasks)](../../../../../assets/storage-dell-powerscale-hc-jobs-background-tasks.svg)
@@ -527,9 +539,11 @@ Job ID                                    Job Type                Status      Pr
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run commands from the cluster management node.
-    **`Error: Invalid credentials`** — Verify you have authenticated to the cluster with `isi auth login` or check that your SSH key is properly configured for the admin user.
-    **`Error: Connection refused on 127.0.0.1:8080`** — Confirm the cluster is reachable and the OneFS API service is running; try pinging the cluster management IP address.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run commands from the cluster management node. |
+    | `Error: Invalid credentials` | Verify you have authenticated to the cluster with `isi auth login` or check that your SSH key is properly configured for the admin user. |
+    | `Error: Connection refused on 127.0.0.1:8080` | Confirm the cluster is reachable and the OneFS API service is running; try pinging the cluster management IP address. |
 ## Health Check Summary
 
 ![Health Check Summary](../../../../../assets/storage-dell-powerscale-hc-health-check-summary.svg)

@@ -73,9 +73,11 @@ Cluster health: green
 ```
 
 !!! warning "Common errors"
-    **`vsan cluster get: Unknown command or namespace`** — Ensure vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` only on hosts that are part of an active vSAN cluster.
-    **`Error: The object or item could not be found`** — Verify the disk NAA identifier is correct by running `esxcli storage core device list` and use the exact NAA string in the `-s` and `-d` parameters.
-    **`Permission denied`** — Run these commands as root or with appropriate vSAN administrator privileges; use `sudo` or ensure your account has vSAN management permissions.
+    | Error | Fix |
+    |---|---|
+    | `vsan cluster get: Unknown command or namespace` | Ensure vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` only on hosts that are part of an active vSAN cluster. |
+    | `Error: The object or item could not be found` | Verify the disk NAA identifier is correct by running `esxcli storage core device list` and use the exact NAA string in the `-s` and `-d` parameters. |
+    | `Permission denied` | Run these commands as root or with appropriate vSAN administrator privileges; use `sudo` or ensure your account has vSAN management permissions. |
 ## PowerCLI (run against vCenter)
 
 ```powershell

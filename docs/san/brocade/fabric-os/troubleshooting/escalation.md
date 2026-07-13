@@ -116,8 +116,10 @@ Chassis Serial Number: SN-BR-G630-0847291
 ```
 
 !!! warning "Common errors"
-    **`switchshow: command not found`** — Ensure you are logged into the Brocade switch via SSH/Telnet, not your local workstation; these commands run on the switch itself.
-    **`Permission denied`** — Verify your user account has admin privileges on the switch; use `userconfig --show` to check your role.
+    | Error | Fix |
+    |---|---|
+    | `switchshow: command not found` | Ensure you are logged into the Brocade switch via SSH/Telnet, not your local workstation; these commands run on the switch itself. |
+    | `Permission denied` | Verify your user account has admin privileges on the switch; use `userconfig --show` to check your role. |
 ### 2. Capture fabric state (before anything changes)
 
 ```bash
@@ -166,9 +168,11 @@ Port Error Summary:
 ```
 
 !!! warning "Common errors"
-    **`fabricshow: command not found`** — Verify you are logged into the Brocade switch CLI (not the host OS) by checking the prompt shows `switch>` or `switch#`.
-    **`Access denied: insufficient privileges`** — Ensure your user account has admin or read-only permissions; use `userconfig --show` to verify role assignments.
-    **`ISL port offline or isolated`** — Check physical cable connections and run `portshow <port>` to diagnose link state; verify switch firmware versions match across the fabric.
+    | Error | Fix |
+    |---|---|
+    | `fabricshow: command not found` | Verify you are logged into the Brocade switch CLI (not the host OS) by checking the prompt shows `switch>` or `switch#`. |
+    | `Access denied: insufficient privileges` | Ensure your user account has admin or read-only permissions; use `userconfig --show` to verify role assignments. |
+    | `ISL port offline or isolated` | Check physical cable connections and run `portshow <port>` to diagnose link state; verify switch firmware versions match across the fabric. |
 Copy the full output of each command into a text file. Paste this into the TAC case description — it gives TAC an immediate view of the fabric state at the time of the issue.
 
 ### 3. Run supportsave on each affected switch (takes 2–5 minutes per switch)
@@ -201,9 +205,11 @@ Archive stored at: /backups/fabric-logs/support_sw-fcswitch01_20240115_143022.ta
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and that the SCP server's SSH key is configured with `ssave --scp <username>@<scp-server-ip>:<path>` using a valid user account.
-    **`No space left on device`** — Check available disk space on the SCP destination with `df -h` and ensure at least 500 MB is free, or configure an alternate SCP path.
-    **`Connection refused`** — Confirm the SCP server is reachable and SSH is running on port 22 by testing with `ping <scp-server-ip>` and `telnet <scp-server-ip> 22` from the switch.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and that the SCP server's SSH key is configured with `ssave --scp <username>@<scp-server-ip>:<path>` using a valid user account. |
+    | `No space left on device` | Check available disk space on the SCP destination with `df -h` and ensure at least 500 MB is free, or configure an alternate SCP path. |
+    | `Connection refused` | Confirm the SCP server is reachable and SSH is running on port 22 by testing with `ping <scp-server-ip>` and `telnet <scp-server-ip> 22` from the switch. |
 Run supportsave on **every** switch in the affected fabric, not just the one that appears to be the source. Fabric issues often show on the downstream switch, not the root cause switch.
 
 ### 4. Capture the error log (timeline of events)
@@ -249,8 +255,10 @@ Error Log ID: 0x0000019d | Severity: INFORMATIONAL | Time: 2024-01-15 13:30:15 U
 ```
 
 !!! warning "Common errors"
-    **`errshow: command not found`** — Verify you are logged into a Brocade Fabric OS switch (not a Linux host); this command only exists on switch CLI.
-    **`Permission denied`** — Ensure your user account has administrative privileges; request `admin` role assignment from the fabric administrator.
+    | Error | Fix |
+    |---|---|
+    | `errshow: command not found` | Verify you are logged into a Brocade Fabric OS switch (not a Linux host); this command only exists on switch CLI. |
+    | `Permission denied` | Ensure your user account has administrative privileges; request `admin` role assignment from the fabric administrator. |
 ### 5. Write the timeline
 
 ```text

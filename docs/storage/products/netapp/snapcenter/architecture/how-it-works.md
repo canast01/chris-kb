@@ -131,8 +131,10 @@ Restart-Service -Name "SnapCenter Plug-in for Windows"
 ```
 
 !!! warning "Common errors"
-    **`Service 'SnapCenter Plug-in for Windows' cannot be found on the computer.`** — Verify the exact service name with `Get-Service | grep SnapCenter` and use the correct display name.
-    **`/opt/NetApp/snapcenter/scc/bin/scc: No such file or directory`** — Confirm SnapCenter plugin is installed at `/opt/NetApp/snapcenter/` and check the correct binary path with `find /opt/NetApp -name scc -type f`.
+    | Error | Fix |
+    |---|---|
+    | `Service 'SnapCenter Plug-in for Windows' cannot be found on the computer.` | Verify the exact service name with `Get-Service | grep SnapCenter` and use the correct display name. |
+    | `/opt/NetApp/snapcenter/scc/bin/scc: No such file or directory` | Confirm SnapCenter plugin is installed at `/opt/NetApp/snapcenter/` and check the correct binary path with `find /opt/NetApp -name scc -type f`. |
 ---
 
 ## See also

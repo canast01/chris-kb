@@ -69,8 +69,10 @@ az network vnet subnet show \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound : Resource group 'myRG' could not be found.`** — Verify the resource group name with `az group list` and use the correct name.
-    **`ResourceNotFound : The Resource 'Microsoft.Network/virtualNetworks/myVNet/subnets/mySubnet' under resource group 'myRG' was not found.`** — Confirm the VNet and subnet names exist using `az network vnet subnet list --resource-group myRG --vnet-name myVNet`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound : Resource group 'myRG' could not be found.` | Verify the resource group name with `az group list` and use the correct name. |
+    | `ResourceNotFound : The Resource 'Microsoft.Network/virtualNetworks/myVNet/subnets/mySubnet' under resource group 'myRG' was not found.` | Confirm the VNet and subnet names exist using `az network vnet subnet list --resource-group myRG --vnet-name myVNet`. |
 ## Subnet Delegation
 
 Delegation allows certain Azure services (e.g., Azure Container Instances, Azure NetApp Files, Azure Databricks) to inject resources directly into a subnet.
@@ -138,8 +140,10 @@ az network vnet subnet update \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Network/virtualNetworks/myVNet/subnets/aci-subnet' under resource group 'myRG' was not found.`** — Verify the subnet name, VNet name, and resource group name are correct using `az network vnet subnet list --resource-group myRG --vnet-name myVNet`.
-    **`(InvalidDelegationServiceName) The delegation service name 'Microsoft.ContainerInstance/containerGroups' is not valid for this subscription.`** — Ensure the service provider is registered in your subscription with `az provider register --namespace Microsoft.ContainerInstance`.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Network/virtualNetworks/myVNet/subnets/aci-subnet' under resource group 'myRG' was not found.` | Verify the subnet name, VNet name, and resource group name are correct using `az network vnet subnet list --resource-group myRG --vnet-name myVNet`. |
+    | `(InvalidDelegationServiceName) The delegation service name 'Microsoft.ContainerInstance/containerGroups' is not valid for this subscription.` | Ensure the service provider is registered in your subscription with `az provider register --namespace Microsoft.ContainerInstance`. |
 ## NSG and Route Table Association
 
 ```bash
@@ -197,8 +201,10 @@ az network vnet subnet update \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Network/networkSecurityGroups/myNSG' under resource group 'myRG' was not found.`** — Verify the NSG name and resource group are correct with `az network nsg list --resource-group myRG`.
-    **`(InvalidResourceReference) The resource '/subscriptions/.../routeTables/myRouteTable' referenced by resource '/subscriptions/.../subnets/mySubnet' does not exist.`** — Ensure the route table exists in the same resource group using `az network route-table list --resource-group myRG`.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Network/networkSecurityGroups/myNSG' under resource group 'myRG' was not found.` | Verify the NSG name and resource group are correct with `az network nsg list --resource-group myRG`. |
+    | `(InvalidResourceReference) The resource '/subscriptions/.../routeTables/myRouteTable' referenced by resource '/subscriptions/.../subnets/mySubnet' does not exist.` | Ensure the route table exists in the same resource group using `az network route-table list --resource-group myRG`. |
 ## Private Endpoint Network Policies
 
 ```bash
@@ -240,6 +246,8 @@ az network vnet subnet show \
 ```
 
 !!! warning "Common errors"
-    **`The resource group 'myRG' could not be found.`** — Verify the resource group name with `az group list` and ensure you are in the correct subscription.
-    **`The virtual network 'myVNet' could not be found in resource group 'myRG'.`** — Confirm the VNet name exists in the specified resource group using `az network vnet list --resource-group myRG`.
-    **`The subnet 'mySubnet' could not be found in virtual network 'myVNet'.`** — List subnets with `az network vnet subnet list --resource-group myRG --vnet-name myVNet` to verify the subnet name.
+    | Error | Fix |
+    |---|---|
+    | `The resource group 'myRG' could not be found.` | Verify the resource group name with `az group list` and ensure you are in the correct subscription. |
+    | `The virtual network 'myVNet' could not be found in resource group 'myRG'.` | Confirm the VNet name exists in the specified resource group using `az network vnet list --resource-group myRG`. |
+    | `The subnet 'mySubnet' could not be found in virtual network 'myVNet'.` | List subnets with `az network vnet subnet list --resource-group myRG --vnet-name myVNet` to verify the subnet name. |

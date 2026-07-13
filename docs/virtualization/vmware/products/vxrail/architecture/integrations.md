@@ -83,9 +83,11 @@ curl -k -H "X-AUTH-TOKEN: <token>" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to bypass SSL verification, or import the VxRail manager's certificate into your system's trusted store.
-    **`{"error":"Invalid credentials","error_code":401}`** — Verify the username and password are correct and the admin account is not locked; check VxRail manager logs for authentication failures.
-    **`{"error":"Token expired","error_code":401}`** — Re-authenticate to obtain a fresh token, as the previous token has exceeded its 3600-second expiration window.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to bypass SSL verification, or import the VxRail manager's certificate into your system's trusted store. |
+    | `{"error":"Invalid credentials","error_code":401}` | Verify the username and password are correct and the admin account is not locked; check VxRail manager logs for authentication failures. |
+    | `{"error":"Token expired","error_code":401}` | Re-authenticate to obtain a fresh token, as the previous token has exceeded its 3600-second expiration window. |
 ## CMDB Integration
 
 VxRail nodes and the vSAN datastore should be registered in the CMDB:

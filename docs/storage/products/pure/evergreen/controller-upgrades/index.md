@@ -54,8 +54,10 @@ info        PUR-002 Snapshot scheduled maintenance      2024-01-15T08:00:00Z
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Install the Pure CLI tools or add the installation directory to your PATH environment variable.
-    **`Error: Unable to connect to array at <ip>: Connection refused`** — Verify array management IP is reachable and purecli is configured with correct credentials in ~/.purerc or environment variables.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Install the Pure CLI tools or add the installation directory to your PATH environment variable. |
+    | `Error: Unable to connect to array at <ip>: Connection refused` | Verify array management IP is reachable and purecli is configured with correct credentials in ~/.purerc or environment variables. |
 Or via Pure1 / Purity GUI:
 - **Storage → Array** — confirm all drives healthy
 - **Analysis → Alerts** — no active critical alerts
@@ -108,9 +110,11 @@ Device: naa.6001405abcdef1234567890123456789
 ```
 
 !!! warning "Common errors"
-    **`multipath: command not found`** — Install device-mapper-multipath package with `apt-get install device-mapper-multipath` or `yum install device-mapper-multipath`.
-    **`MPIO is not installed on this computer`** — Enable MPIO through Windows Features or install via `Enable-WindowsOptionalFeature -FeatureName MultipathIO -Online`.
-    **`Unknown command or namespace`** — Verify ESXi version supports the command and run with `esxcli storage nmp device list` from the ESXi console or SSH session.
+    | Error | Fix |
+    |---|---|
+    | `multipath: command not found` | Install device-mapper-multipath package with `apt-get install device-mapper-multipath` or `yum install device-mapper-multipath`. |
+    | `MPIO is not installed on this computer` | Enable MPIO through Windows Features or install via `Enable-WindowsOptionalFeature -FeatureName MultipathIO -Online`. |
+    | `Unknown command or namespace` | Verify ESXi version supports the command and run with `esxcli storage nmp device list` from the ESXi console or SSH session. |
 Confirm all expected paths are active after the upgrade completes.
 
 ## Post-Upgrade Verification
@@ -139,9 +143,11 @@ Severity    Code    Message                           Timestamp
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Ensure the Pure Storage CLI is installed and the PATH environment variable includes its bin directory.
-    **`Error: Unable to connect to array at <ip>. Connection refused`** — Verify the array management IP is reachable and the purecli credentials are configured in ~/.purerc or via environment variables.
-    **`Error: Authentication failed. Invalid API token`** — Regenerate and update your Pure Storage API token using `purecli login` or refresh credentials in the configuration file.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Ensure the Pure Storage CLI is installed and the PATH environment variable includes its bin directory. |
+    | `Error: Unable to connect to array at <ip>. Connection refused` | Verify the array management IP is reachable and the purecli credentials are configured in ~/.purerc or via environment variables. |
+    | `Error: Authentication failed. Invalid API token` | Regenerate and update your Pure Storage API token using `purecli login` or refresh credentials in the configuration file. |
 ## Common Considerations
 
 | Item | Detail |

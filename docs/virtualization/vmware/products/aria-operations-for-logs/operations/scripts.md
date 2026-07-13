@@ -53,9 +53,11 @@ Replication Lag Detected                2024-01-15T07:19:42Z
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in script, but ensure your VRLI instance certificate is trusted or use `-k`).
-    **`jq: parse error: Cannot index number with string "hostname"`** — Verify the API endpoint returns the expected JSON structure by running `curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/cluster/nodes" | jq '.'` to inspect raw output.
-    **`curl: (7) Failed to connect to <vrli-fqdn> port 443: Connection refused`** — Confirm VRLI service is running and accessible at the provided FQDN with `curl -sk https://$VRLI/api/health` before running the full script.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in script, but ensure your VRLI instance certificate is trusted or use `-k`). |
+    | `jq: parse error: Cannot index number with string "hostname"` | Verify the API endpoint returns the expected JSON structure by running `curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/cluster/nodes" | jq '.'` to inspect raw output. |
+    | `curl: (7) Failed to connect to <vrli-fqdn> port 443: Connection refused` | Confirm VRLI service is running and accessible at the provided FQDN with `curl -sk https://$VRLI/api/health` before running the full script. |
 ```bash
 #!/usr/bin/env bash
 VRLI=$1; USER=$2; PASS=$3
@@ -70,9 +72,11 @@ Exported 247 alert definitions to vrli-alerts-20240115.json
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host`** — Verify the VRLI hostname is correct and resolvable (e.g., `nslookup $VRLI`).
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the API credentials are correct; a 401/403 response returns HTML instead of JSON.
-    **`command not found: jq`** — Install jq on the system with `apt-get install jq` or `yum install jq`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host` | Verify the VRLI hostname is correct and resolvable (e.g., `nslookup $VRLI`). |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the API credentials are correct; a 401/403 response returns HTML instead of JSON. |
+    | `command not found: jq` | Install jq on the system with `apt-get install jq` or `yum install jq`. |
 ```bash
 #!/usr/bin/env bash
 VRLI=$1; USER=$2; PASS=$3; WARN_PCT=${4:-75}
@@ -95,9 +99,11 @@ OK: Disk usage within threshold
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the script, so verify the VRLI hostname/IP is correct and reachable).
-    **`jq: command not found`** — Install jq on the system with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS).
-    **`bc: command not found`** — Install bc with `apt-get install bc` or `yum install bc` to enable floating-point arithmetic comparison.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the script, so verify the VRLI hostname/IP is correct and reachable). |
+    | `jq: command not found` | Install jq on the system with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS). |
+    | `bc: command not found` | Install bc with `apt-get install bc` or `yum install bc` to enable floating-point arithmetic comparison. |
 ```bash
 #!/usr/bin/env bash
 VRLI=$1; USER=$2; PASS=$3

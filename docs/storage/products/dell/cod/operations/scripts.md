@@ -166,9 +166,11 @@ Query completed successfully at 2024-01-15 14:32:47 UTC
 ```
 
 !!! warning "Common errors"
-    **`cannot find path 'C:\Users\YourName\Desktop\cod_license_query.ps1' because it does not exist`** — Replace `YourName` with your actual Windows username or verify the script exists in that directory.
-    **`File C:\Users\...\cod_license_query.ps1 cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to allow local script execution.
-    **`Unable to connect to isilon-prod-01.corp.local: Name or service not known`** — Verify the Isilon cluster hostname is correct and reachable from your network, or check your DNS configuration.
+    | Error | Fix |
+    |---|---|
+    | `cannot find path 'C:\Users\YourName\Desktop\cod_license_query.ps1' because it does not exist` | Replace `YourName` with your actual Windows username or verify the script exists in that directory. |
+    | `File C:\Users\...\cod_license_query.ps1 cannot be loaded because running scripts is disabled on this system` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to allow local script execution. |
+    | `Unable to connect to isilon-prod-01.corp.local: Name or service not known` | Verify the Isilon cluster hostname is correct and reachable from your network, or check your DNS configuration. |
 ```bash
 #!/bin/bash
 # cod_daily_check.sh — Daily capacity check via Unisphere REST API
@@ -259,9 +261,11 @@ License Information for Symmetrix 000123456789:
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Could not reach Unisphere at 192.168.1.100`** — Verify UNISPHERE_HOST is correct, Unisphere service is running on port 8443, and network connectivity exists with `ping` or `curl -sk https://${UNISPHERE_HOST}:8443/univmax/restapi/100/system/symmetrix`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the Unisphere certificate into your system's CA bundle with `curl -k` or configure `~/.curlrc` with `insecure`.
-    **`jq: command not found` or `python3: command not found`** — Install the missing dependency (`apt-get install python3` or `yum install python3`) or verify the interpreter path matches your system's installation.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Could not reach Unisphere at 192.168.1.100` | Verify UNISPHERE_HOST is correct, Unisphere service is running on port 8443, and network connectivity exists with `ping` or `curl -sk https://${UNISPHERE_HOST}:8443/univmax/restapi/100/system/symmetrix`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the Unisphere certificate into your system's CA bundle with `curl -k` or configure `~/.curlrc` with `insecure`. |
+    | `jq: command not found` or `python3: command not found` | Install the missing dependency (`apt-get install python3` or `yum install python3`) or verify the interpreter path matches your system's installation. |
 ```bash
 #!/bin/bash
 # cod_triage.sh — Capture COD capacity and license state to timestamped file
@@ -369,9 +373,11 @@ Output saved to: /tmp/cod_triage_000297123456_20240115_143247.txt
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the Unisphere certificate into your system CA bundle.
-    **`Authorization: Basic: command not found`** — Ensure `UNISPHERE_USER` and `UNISPHERE_PASS` environment variables are set before running the script.
-    **`SYMCLI not available`** — Install Unisphere CLI tools or set `SYMCLI_PATH` to the correct installation directory (e.g., `export SYMCLI_PATH=/opt/emc/SYMCLI/bin`).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the Unisphere certificate into your system CA bundle. |
+    | `Authorization: Basic: command not found` | Ensure `UNISPHERE_USER` and `UNISPHERE_PASS` environment variables are set before running the script. |
+    | `SYMCLI not available` | Install Unisphere CLI tools or set `SYMCLI_PATH` to the correct installation directory (e.g., `export SYMCLI_PATH=/opt/emc/SYMCLI/bin`). |
 ```bash
 #!/bin/bash
 # cod_precheck.sh — Pre-check before COD activation request
@@ -461,9 +467,11 @@ fi
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to unisphere.prod.local port 8443: Connection refused`** — Verify UNISPHERE_HOST is correct and Unisphere service is running on the target system.
-    **`  [FAIL] Unisphere not reachable (HTTP 000)`** — Check network connectivity to the Unisphere host and confirm UNISPHERE_USER and UNISPHERE_PASS credentials are valid.
-    **`  [FAIL] Capacity utilisation is only 45.2% (below 80% — COD activation may not be needed yet)`** — Confirm the array actually requires COD activation or adjust ACTIVATION_THRESHOLD if business requirements warrant lower utilization.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to unisphere.prod.local port 8443: Connection refused` | Verify UNISPHERE_HOST is correct and Unisphere service is running on the target system. |
+    | `  [FAIL] Unisphere not reachable (HTTP 000)` | Check network connectivity to the Unisphere host and confirm UNISPHERE_USER and UNISPHERE_PASS credentials are valid. |
+    | `  [FAIL] Capacity utilisation is only 45.2% (below 80% — COD activation may not be needed yet)` | Confirm the array actually requires COD activation or adjust ACTIVATION_THRESHOLD if business requirements warrant lower utilization. |
 ```bash
 #!/bin/bash
 # cod_postcheck.sh — Post-change validation after COD activation
@@ -558,9 +566,11 @@ Total Capacity (GBs)      : 589824
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the Unisphere certificate into your system CA bundle.
-    **`No storage groups returned — verify array connectivity and COD activation status`** — Verify UNISPHERE_HOST is reachable on port 8443, credentials are correct, and the SID matches an active array in Unisphere.
-    **`command not found: python3`** — Install Python 3 or replace `python3` with `python` if only Python 2 is available on the system.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the Unisphere certificate into your system CA bundle. |
+    | `No storage groups returned — verify array connectivity and COD activation status` | Verify UNISPHERE_HOST is reachable on port 8443, credentials are correct, and the SID matches an active array in Unisphere. |
+    | `command not found: python3` | Install Python 3 or replace `python3` with `python` if only Python 2 is available on the system. |
 ```bash
 #!/bin/bash
 # cod_health.sh — Cron-safe COD health check
@@ -613,9 +623,11 @@ COD_HEALTH SID=000296900111 total_tb=450.5 used_tb=382.1 avail_tb=68.4 pct_used=
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl (already present in script) or import the Unisphere CA certificate into your system trust store.
-    **`jq: command not found`** — The script uses `python3` for JSON parsing; ensure Python 3 is installed with `apt install python3` or `yum install python3`.
-    **`jq: error (at <stdin>:1): Cannot index number with string "system_capacity"`** — Verify the SID is correct and the Unisphere API endpoint is reachable; test with `curl -sk https://${UNISPHERE_HOST}:8443/univmax/restapi/100/system/symmetrix/${SID}/system_capacity`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl (already present in script) or import the Unisphere CA certificate into your system trust store. |
+    | `jq: command not found` | The script uses `python3` for JSON parsing; ensure Python 3 is installed with `apt install python3` or `yum install python3`. |
+    | `jq: error (at <stdin>:1): Cannot index number with string "system_capacity"` | Verify the SID is correct and the Unisphere API endpoint is reachable; test with `curl -sk https://${UNISPHERE_HOST}:8443/univmax/restapi/100/system/symmetrix/${SID}/system_capacity`. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

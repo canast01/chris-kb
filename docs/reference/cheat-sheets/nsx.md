@@ -57,9 +57,11 @@ Cluster Certificate Thumbprint: A1:B2:C3:D4:E5:F6:7G:8H:9I:0J:K1:L2:M3:N4:O5:P6:
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (Connection refused)`** — Verify NSX Manager is running and accessible on the configured IP/hostname and port (default 443).
-    **`Error: Invalid credentials (Unauthorized)`** — Ensure your NSX API user account has appropriate role permissions and credentials are correctly configured in your CLI session.
-    **`Error: Certificate verification failed`** — Add the NSX Manager certificate to your trusted store or disable certificate verification if in a lab environment (use `--insecure` flag if available).
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (Connection refused)` | Verify NSX Manager is running and accessible on the configured IP/hostname and port (default 443). |
+    | `Error: Invalid credentials (Unauthorized)` | Ensure your NSX API user account has appropriate role permissions and credentials are correctly configured in your CLI session. |
+    | `Error: Certificate verification failed` | Add the NSX Manager certificate to your trusted store or disable certificate verification if in a lab environment (use `--insecure` flag if available). |
 ## REST API (curl examples)
 
 ```bash
@@ -165,9 +167,11 @@ curl: (7) Failed to connect to nsx-mgr port 443: Name or service not known
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to nsx-mgr port 443: Name or service not known`** — Replace `nsx-mgr` with the actual NSX Manager FQDN or IP address (e.g., `https://10.0.0.10`).
-    **`HTTP/1.1 401 Unauthorized`** — Verify the admin credentials in the AUTH variable match your NSX Manager user account (reset password in NSX UI if needed).
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag already ignores SSL warnings; if curl still fails, ensure NSX Manager is reachable and not blocked by firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to nsx-mgr port 443: Name or service not known` | Replace `nsx-mgr` with the actual NSX Manager FQDN or IP address (e.g., `https://10.0.0.10`). |
+    | `HTTP/1.1 401 Unauthorized` | Verify the admin credentials in the AUTH variable match your NSX Manager user account (reset password in NSX UI if needed). |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag already ignores SSL warnings; if curl still fails, ensure NSX Manager is reachable and not blocked by firewall rules. |
 ## See also
 
 - [NSX Operations](../../../virtualization/vmware/products/nsx/operations/procedures/)

@@ -49,9 +49,11 @@ All secrets rotated.
 ```
 
 !!! warning "Common errors"
-    **`Error making API request.`** — Verify `VAULT_ROLE_ID` and `VAULT_SECRET_ID` environment variables are set and the AppRole auth method is enabled on the Vault instance.
-    **`Error: authentication required`** — Ensure you are authenticated to GitHub CLI with `gh auth login` and have `admin:org_hook` permissions on the target repository.
-    **`jq: error (at <stdin>:1): Cannot index null with string "auth"`** — Check that the Vault login response is valid JSON; confirm the Vault server is reachable at `VAULT_ADDR` and AppRole credentials are correct.
+    | Error | Fix |
+    |---|---|
+    | `Error making API request.` | Verify `VAULT_ROLE_ID` and `VAULT_SECRET_ID` environment variables are set and the AppRole auth method is enabled on the Vault instance. |
+    | `Error: authentication required` | Ensure you are authenticated to GitHub CLI with `gh auth login` and have `admin:org_hook` permissions on the target repository. |
+    | `jq: error (at <stdin>:1): Cannot index null with string "auth"` | Check that the Vault login response is valid JSON; confirm the Vault server is reachable at `VAULT_ADDR` and AppRole credentials are correct. |
 ```bash
 #!/bin/bash
 # audit-secrets.sh — List all secrets across repos and environments
@@ -92,9 +94,11 @@ Audit written to secret-audit-2025-01-15.csv
 ```
 
 !!! warning "Common errors"
-    **`gh: command not found`** — Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`.
-    **`HTTP 403: Resource not accessible by integration`** — Ensure your GitHub token has `admin:org_hook` and `repo` scopes by running `gh auth refresh -s admin:org_hook,repo`.
-    **`jq: parse error: Cannot index number with string "name"`** — The API response is malformed; add error handling with `| jq -r '.secrets[]? // empty | ...'` to skip empty or non-object responses.
+    | Error | Fix |
+    |---|---|
+    | `gh: command not found` | Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`. |
+    | `HTTP 403: Resource not accessible by integration` | Ensure your GitHub token has `admin:org_hook` and `repo` scopes by running `gh auth refresh -s admin:org_hook,repo`. |
+    | `jq: parse error: Cannot index number with string "name"` | The API response is malformed; add error handling with `| jq -r '.secrets[]? // empty | ...'` to skip empty or non-object responses. |
 ```bash
 #!/bin/bash
 # notify-failures.sh — Check for recent failures and post to Slack
@@ -148,9 +152,11 @@ fi
 ```
 
 !!! warning "Common errors"
-    **`gh: command not found`** — Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`.
-    **`"error": "invalid_auth", "ok": false`** — Verify the `SLACK_BOT_TOKEN` environment variable is set to a valid token and has `chat:write` scope in Slack workspace settings.
-    **`jq: parse error: Invalid numeric literal at line 1 column 7`** — Ensure the GitHub API response is valid JSON by checking that `gh auth status` shows you are authenticated and the repo name is correct.
+    | Error | Fix |
+    |---|---|
+    | `gh: command not found` | Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`. |
+    | `"error": "invalid_auth", "ok": false` | Verify the `SLACK_BOT_TOKEN` environment variable is set to a valid token and has `chat:write` scope in Slack workspace settings. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 7` | Ensure the GitHub API response is valid JSON by checking that `gh auth status` shows you are authenticated and the repo name is correct. |
 ```bash
 #!/bin/bash
 # register-runner.sh — Register a new self-hosted runner

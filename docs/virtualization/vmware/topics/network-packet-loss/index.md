@@ -88,8 +88,10 @@ vmnic3  0000:04:00.1 ixgbe        Up      10000Mbps Full   00:0a:95:9d:68:f5
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or set of options.`** — Verify the NIC name is correct (e.g., vmnic0, not vm-nic0) and that you have ESXi 5.0 or later.
-    **`Error: Could not connect to the host.`** — Ensure you are connected to the ESXi host via SSH or vSphere CLI with appropriate credentials.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or set of options.` | Verify the NIC name is correct (e.g., vmnic0, not vm-nic0) and that you have ESXi 5.0 or later. |
+    | `Error: Could not connect to the host.` | Ensure you are connected to the ESXi host via SSH or vSphere CLI with appropriate credentials. |
 ## vmkping — Reachability and MTU Testing
 
 ```bash
@@ -130,9 +132,11 @@ round-trip min/avg/max/stddev = 0.891/1.247/3.156/0.412 ms
 ```
 
 !!! warning "Common errors"
-    **`Unknown interface vmk0`** — Verify the VMkernel adapter name with `esxcli network ip interface list` and use the correct interface identifier.
-    **`Destination Host Unreachable`** — Confirm the destination IP is reachable and the vSAN/vMotion network routing is configured correctly on both ESXi hosts.
-    **`Message too long`** — Reduce the packet size below the MTU (e.g., `-s 8972` for 9000 MTU) or verify the physical switch and vNIC MTU settings match.
+    | Error | Fix |
+    |---|---|
+    | `Unknown interface vmk0` | Verify the VMkernel adapter name with `esxcli network ip interface list` and use the correct interface identifier. |
+    | `Destination Host Unreachable` | Confirm the destination IP is reachable and the vSAN/vMotion network routing is configured correctly on both ESXi hosts. |
+    | `Message too long` | Reduce the packet size below the MTU (e.g., `-s 8972` for 9000 MTU) or verify the physical switch and vNIC MTU settings match. |
 Packet loss should always be **zero**. Any loss requires investigation before proceeding with maintenance.
 
 ## PowerCLI Network Checks

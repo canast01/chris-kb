@@ -85,8 +85,10 @@ c3d4e5f6-g7h8-49i0-j1k2-l3m4n5o6p7q8  Staging-Testing            f9e8d7c6-b5a4-9
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The subscription of '<sub-id>' does not exist.`** — Verify the subscription ID is correct by running `az account list` and copy the exact SubscriptionId value.
-    **`ERROR: AADSTS50058: Silent sign-in request failed. The user needs to be authenticated.`** — Run `az login` to re-authenticate before attempting to switch subscriptions.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The subscription of '<sub-id>' does not exist.` | Verify the subscription ID is correct by running `az account list` and copy the exact SubscriptionId value. |
+    | `ERROR: AADSTS50058: Silent sign-in request failed. The user needs to be authenticated.` | Run `az login` to re-authenticate before attempting to switch subscriptions. |
 ---
 
 ## Multi-Factor Authentication (MFA)
@@ -134,8 +136,10 @@ az rest \
 ```
 
 !!! warning "Common errors"
-    **`Authorization_RequestDenied`** — Ensure your service principal or user account has Directory.Read.All permission in Microsoft Graph API.
-    **`Invalid OData query option '$select'`** — Remove the `$select` parameter or use only properties supported by the /users endpoint (strongAuthenticationRequirements may not be available in all API versions).
+    | Error | Fix |
+    |---|---|
+    | `Authorization_RequestDenied` | Ensure your service principal or user account has Directory.Read.All permission in Microsoft Graph API. |
+    | `Invalid OData query option '$select'` | Remove the `$select` parameter or use only properties supported by the /users endpoint (strongAuthenticationRequirements may not be available in all API versions). |
 **MFA methods (in order of security preference):**
 
 | Method | Security Level | Notes |
@@ -176,8 +180,10 @@ for p in data['value']:
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The user or app needs permission to call the API. Check the permissions and try again.`** — Ensure the authenticated account has `Policy.Read.All` permission in Microsoft Graph API.
-    **`ERROR: Invalid JSON input`** — Verify the Python script has correct indentation and `data['value']` key exists in the response.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The user or app needs permission to call the API. Check the permissions and try again.` | Ensure the authenticated account has `Policy.Read.All` permission in Microsoft Graph API. |
+    | `ERROR: Invalid JSON input` | Verify the Python script has correct indentation and `data['value']` key exists in the response. |
 ### Baseline Policies (Minimum Recommended)
 
 | Policy Name | Condition | Grant |
@@ -244,9 +250,11 @@ az rest \
 ```
 
 !!! warning "Common errors"
-    **`Authorization_RequestDenied: Insufficient privileges to complete the operation.`** — Ensure your Azure account has the "Conditional Access Administrator" role assigned in Azure AD.
-    **`Invalid JSON in request body`** — Validate the JSON syntax using `jq` locally before submission: `cat body.json | jq .`
-    **`Resource not found: https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies`** — Verify you are authenticated with `az account show` and that your tenant supports Conditional Access (Premium P1 license required).
+    | Error | Fix |
+    |---|---|
+    | `Authorization_RequestDenied: Insufficient privileges to complete the operation.` | Ensure your Azure account has the "Conditional Access Administrator" role assigned in Azure AD. |
+    | `Invalid JSON in request body` | Validate the JSON syntax using `jq` locally before submission: `cat body.json | jq .` |
+    | `Resource not found: https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies` | Verify you are authenticated with `az account show` and that your tenant supports Conditional Access (Premium P1 license required). |
 ---
 
 ## Entra ID Authentication Logs
@@ -415,9 +423,11 @@ for app in data:
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --password/-p or --certificate/-c`** — Provide either `--password` with the client secret or `--certificate` with the path to the PEM certificate file.
-    **`ERROR: AADSTS700016: Application with identifier 'invalid-app-id' was not found in the directory`** — Verify the app ID is correct and exists in the specified tenant by running `az ad app list --filter "appId eq '<app-id>'"`.
-    **`ERROR: Certificate file not found: /path/to/cert.pem`** — Ensure the certificate path is absolute and the file exists; use `ls -la /path/to/cert.pem` to verify.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --password/-p or --certificate/-c` | Provide either `--password` with the client secret or `--certificate` with the path to the PEM certificate file. |
+    | `ERROR: AADSTS700016: Application with identifier 'invalid-app-id' was not found in the directory` | Verify the app ID is correct and exists in the specified tenant by running `az ad app list --filter "appId eq '<app-id>'"`. |
+    | `ERROR: Certificate file not found: /path/to/cert.pem` | Ensure the certificate path is absolute and the file exists; use `ls -la /path/to/cert.pem` to verify. |
 ---
 
 ## Workload Identity (OIDC Federation)
@@ -471,9 +481,11 @@ az ad app federated-credential create \
 ```
 
 !!! warning "Common errors"
-    **`Invalid object id '<app-object-id>'. Object id must be a valid UUID.`** — Replace `<app-object-id>` with the actual application object ID from `az ad app list --query "[].id"`.
-    **`Malformed JSON in --parameters: Expecting value: line 1 column 1 (char 0)`** — Ensure the JSON string is properly escaped or use `@filename.json` syntax to load from a file instead of inline.
-    **`The issuer URL 'https://oidc.prod-aks.azure.com/<cluster-oidc-issuer>/' is not a valid issuer.`** — Replace `<cluster-oidc-issuer>` with the actual OIDC issuer ID from `az aks show --resource-group <rg> --name <cluster> --query "oidcIssuerProfile.issuerUrl"`.
+    | Error | Fix |
+    |---|---|
+    | `Invalid object id '<app-object-id>'. Object id must be a valid UUID.` | Replace `<app-object-id>` with the actual application object ID from `az ad app list --query "[].id"`. |
+    | `Malformed JSON in --parameters: Expecting value: line 1 column 1 (char 0)` | Ensure the JSON string is properly escaped or use `@filename.json` syntax to load from a file instead of inline. |
+    | `The issuer URL 'https://oidc.prod-aks.azure.com/<cluster-oidc-issuer>/' is not a valid issuer.` | Replace `<cluster-oidc-issuer>` with the actual OIDC issuer ID from `az aks show --resource-group <rg> --name <cluster> --query "oidcIssuerProfile.issuerUrl"`. |
 ---
 
 ## Break-Glass Accounts
@@ -537,9 +549,11 @@ az monitor scheduled-query create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/.../workspaces/<log-analytics-workspace-id>' could not be found.`** — Replace `<log-analytics-workspace-id>` with the full resource ID of your Log Analytics workspace (run `az monitor log-analytics workspace list -g <rg-monitoring> --query "[].id"` to find it).
-    **`InvalidTemplate: The template is invalid. Details: 'condition-query' is not a recognized property.`** — Use `--condition` with KQL syntax directly; the parameter should be `--condition "count > 0"` paired with the query in `--scopes` or use `--rule-type` to specify the query rule type.
-    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Insights/scheduledQueryRules/write' over scope '/subscriptions/.../resourceGroups/rg-monitoring'.`** — Assign the user or service principal the "Monitoring Contributor" role on the resource group with `az role assignment create --assignee <user-id> --role "Monitoring Contributor" -g <rg-monitoring>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/.../workspaces/<log-analytics-workspace-id>' could not be found.` | Replace `<log-analytics-workspace-id>` with the full resource ID of your Log Analytics workspace (run `az monitor log-analytics workspace list -g <rg-monitoring> --query "[].id"` to find it). |
+    | `InvalidTemplate: The template is invalid. Details: 'condition-query' is not a recognized property.` | Use `--condition` with KQL syntax directly; the parameter should be `--condition "count > 0"` paired with the query in `--scopes` or use `--rule-type` to specify the query rule type. |
+    | `AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Insights/scheduledQueryRules/write' over scope '/subscriptions/.../resourceGroups/rg-monitoring'.` | Assign the user or service principal the "Monitoring Contributor" role on the resource group with `az role assignment create --assignee <user-id> --role "Monitoring Contributor" -g <rg-monitoring>`. |
 ---
 
 ## Entra ID Connect (Hybrid Identity)
@@ -588,9 +602,11 @@ ExportWarnings                       : 0
 ```
 
 !!! warning "Common errors"
-    **`The term 'Get-ADSyncConnectorRunStatus' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Ensure ADSync module is installed on the Entra Connect server and run the command with elevated (Administrator) privileges.
-    **`A sync cycle is already in progress. Please wait for the current cycle to complete before starting a new one.`** — Wait for the current sync to finish (check LastSyncCycleEndTime) or use `Stop-ADSyncSyncCycle` to cancel it first.
-    **`The specified connector 'corp.local' was not found.`** — Verify the exact connector name using `Get-ADSyncConnector | Select-Object Name` and use the correct name in the ConnectorName parameter.
+    | Error | Fix |
+    |---|---|
+    | `The term 'Get-ADSyncConnectorRunStatus' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Ensure ADSync module is installed on the Entra Connect server and run the command with elevated (Administrator) privileges. |
+    | `A sync cycle is already in progress. Please wait for the current cycle to complete before starting a new one.` | Wait for the current sync to finish (check LastSyncCycleEndTime) or use `Stop-ADSyncSyncCycle` to cancel it first. |
+    | `The specified connector 'corp.local' was not found.` | Verify the exact connector name using `Get-ADSyncConnector | Select-Object Name` and use the correct name in the ConnectorName parameter. |
 **Authentication modes:**
 
 | Mode | Description | MFA location |

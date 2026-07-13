@@ -114,8 +114,10 @@ Capacity (GB)                 Used (GB)   Available (GB)
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in examples; ensure it's not removed).
-    **`jq: parse error: Invalid JSON at line 1`** — Verify the API token is valid and the array IP is reachable; an authentication failure returns HTML error pages instead of JSON.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in examples; ensure it's not removed). |
+    | `jq: parse error: Invalid JSON at line 1` | Verify the API token is valid and the array IP is reachable; an authentication failure returns HTML error pages instead of JSON. |
 ## Pre-Upgrade Configuration Snapshot
 
 Run before a scheduled controller or model swap to capture current state.
@@ -148,9 +150,11 @@ Config snapshot complete: ./pure-config-20240115
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present in script) or import the array's CA certificate into your system trust store.
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API token is valid and the array IP is reachable; an authentication failure returns HTML instead of JSON.
-    **`mkdir: cannot create directory './pure-config-20240115': Permission denied`** — Run the script from a directory where you have write permissions or specify an absolute path for `OUT_DIR`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present in script) or import the array's CA certificate into your system trust store. |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the API token is valid and the array IP is reachable; an authentication failure returns HTML instead of JSON. |
+    | `mkdir: cannot create directory './pure-config-20240115': Permission denied` | Run the script from a directory where you have write permissions or specify an absolute path for `OUT_DIR`. |
 ## Restore After Model Swap
 
 After a new controller ships under Evergreen//Forever:

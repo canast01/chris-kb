@@ -77,9 +77,11 @@ aria-operations-analytics            RUNNING     8080    HEALTHY
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname aria-ops.domain.local: Name or service not known`** — Verify the hostname is correct and resolvable in DNS, or use the IP address directly.
-    **`Permission denied (publickey,password)`** — Ensure the admin user has SSH access configured and your SSH key or password authentication is properly set up on the Aria Operations appliance.
-    **`vracli: command not found`** — Confirm you are connected to an Aria Operations node (not a standard Linux host) and that the vracli CLI tool is installed and in the PATH.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname aria-ops.domain.local: Name or service not known` | Verify the hostname is correct and resolvable in DNS, or use the IP address directly. |
+    | `Permission denied (publickey,password)` | Ensure the admin user has SSH access configured and your SSH key or password authentication is properly set up on the Aria Operations appliance. |
+    | `vracli: command not found` | Confirm you are connected to an Aria Operations node (not a standard Linux host) and that the vracli CLI tool is installed and in the PATH. |
 ```bash
 #!/usr/bin/env bash
 HOST="aria-ops.domain.local"
@@ -109,9 +111,11 @@ Alerts saved to /tmp/aria-ops-alerts-20240315.json
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification, or import the aria-ops certificate into your system's CA bundle.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify the HOST, USER, and PASS variables are correct and the aria-ops API is responding; check curl output by removing the pipe to python3 temporarily.
-    **`curl: (7) Failed to connect to aria-ops.domain.local port 443: Name or service not known`** — Ensure aria-ops.domain.local resolves in DNS or update the HOST variable to the correct FQDN or IP address.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip SSL verification, or import the aria-ops certificate into your system's CA bundle. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify the HOST, USER, and PASS variables are correct and the aria-ops API is responding; check curl output by removing the pipe to python3 temporarily. |
+    | `curl: (7) Failed to connect to aria-ops.domain.local port 443: Name or service not known` | Ensure aria-ops.domain.local resolves in DNS or update the HOST variable to the correct FQDN or IP address. |
 ---
 
 ## See also

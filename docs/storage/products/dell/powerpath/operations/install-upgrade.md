@@ -86,9 +86,11 @@ Pseudo name=emcpowerq, Symmetrix ID=000297900124, Server=symm-prod-02
 ```
 
 !!! warning "Common errors"
-    **`error: Failed dependencies: kernel-devel is needed by PowerPath-6.1.0.0-247.x86_64`** — Install the matching kernel-devel package with `yum install kernel-devel` before attempting the RPM upgrade.
-    **`Registration Status: INVALID - License Expired`** — Contact Dell support to renew the PowerPath license or restore a valid license file to `/etc/powerpath/license.txt`.
-    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep PowerPath` and ensure `/opt/emc/powerpath/bin` is in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `error: Failed dependencies: kernel-devel is needed by PowerPath-6.1.0.0-247.x86_64` | Install the matching kernel-devel package with `yum install kernel-devel` before attempting the RPM upgrade. |
+    | `Registration Status: INVALID - License Expired` | Contact Dell support to renew the PowerPath license or restore a valid license file to `/etc/powerpath/license.txt`. |
+    | `powermt: command not found` | Verify PowerPath is installed with `rpm -qa | grep PowerPath` and ensure `/opt/emc/powerpath/bin` is in your PATH. |
 **Post-upgrade validation:** Compare path count and policy output against pre-upgrade baseline; run `powermt restore` if any paths show `dead`.
 
 ## EOL and Renewal Tracking

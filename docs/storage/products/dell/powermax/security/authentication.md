@@ -91,9 +91,11 @@ User Database:
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the Unisphere certificate into your system's CA bundle.
-    **`symuserdb: Command not found`** — Install Solutions Enabler CLI package or verify the PATH includes the SymCLI bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`HTTP/1.1 401 Unauthorized`** — Verify the admin credentials are correct and the user account has REST API access permissions in Unisphere.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the Unisphere certificate into your system's CA bundle. |
+    | `symuserdb: Command not found` | Install Solutions Enabler CLI package or verify the PATH includes the SymCLI bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `HTTP/1.1 401 Unauthorized` | Verify the admin credentials are correct and the user account has REST API access permissions in Unisphere. |
 **Break-glass account policy:**
 - Always retain at least one named local admin account in a privileged access vault (CyberArk, Thycotic, etc.) even when LDAP is the primary authentication method.
 - The `smc` account should be disabled in production after LDAP is configured and tested. Re-enable only under emergency conditions.
@@ -195,9 +197,11 @@ numEntries: 1
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked in Active Directory.
-    **`Can't contact LDAP server (-1)`** — Confirm the LDAP server hostname resolves and port 389/636 is reachable from the Unisphere host (test with `nc -zv ldap.corp.example.com 389`).
-    **`TLS: peer certificate cannot be authenticated with known CA certificates`** — Add the LDAP server's CA certificate to the system trust store or disable certificate validation by adding `-o LDAPTLS_REQCERT=never` to the ldapsearch command.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account is not locked in Active Directory. |
+    | `Can't contact LDAP server (-1)` | Confirm the LDAP server hostname resolves and port 389/636 is reachable from the Unisphere host (test with `nc -zv ldap.corp.example.com 389`). |
+    | `TLS: peer certificate cannot be authenticated with known CA certificates` | Add the LDAP server's CA certificate to the system trust store or disable certificate validation by adding `-o LDAPTLS_REQCERT=never` to the ldapsearch command. |
 A successful bind returning the test user's attributes confirms LDAP connectivity. If the test fails, resolve the connectivity issue before configuring Unisphere — an incorrect LDAP configuration can lock administrators out.
 
 ## Role Mapping
@@ -245,8 +249,10 @@ monitor  Monitor        192.168.10.50
 ```
 
 !!! warning "Common errors"
-    **`Permission denied`** — Ensure the daemon_users file is readable by the SYMAPI daemon process (typically owned by root with 644 permissions).
-    **`Invalid host specification in daemon_users`** — Use valid CIDR notation (e.g., 192.168.10.0/24) or specific IPs; wildcards (*) are only valid for the host field when granting access to all hosts.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied` | Ensure the daemon_users file is readable by the SYMAPI daemon process (typically owned by root with 644 permissions). |
+    | `Invalid host specification in daemon_users` | Use valid CIDR notation (e.g., 192.168.10.0/24) or specific IPs; wildcards (*) are only valid for the host field when granting access to all hosts. |
 Restrict SYMAPI daemon access:
 - Only named service accounts and operations users should appear in `daemon_users`.
 - Restrict by source IP where possible.
@@ -283,9 +289,11 @@ systemctl status storsrvd    # systemd-based Linux
 ```
 
 !!! warning "Common errors"
-    **`Unit storsrvd.service could not be found.`** — Verify Solutions Enabler is installed with `rpm -qa | grep -i emc` and reinstall if missing.
-    **`Active: inactive (dead) since Wed 2024-01-17 09:15:42 UTC`** — Start the daemon with `systemctl start storsrvd` and check `/var/log/messages` for startup errors.
-    **`Permission denied` when reading `/var/symapi/config/netcnfg`** — Ensure your user is in the `symapi` group or run the command with `sudo`.
+    | Error | Fix |
+    |---|---|
+    | `Unit storsrvd.service could not be found.` | Verify Solutions Enabler is installed with `rpm -qa | grep -i emc` and reinstall if missing. |
+    | `Active: inactive (dead) since Wed 2024-01-17 09:15:42 UTC` | Start the daemon with `systemctl start storsrvd` and check `/var/log/messages` for startup errors. |
+    | `Permission denied` when reading `/var/symapi/config/netcnfg` | Ensure your user is in the `symapi` group or run the command with `sudo`. |
 ### SE Authentication for Scripts
 
 For automation scripts that run SYMCLI commands, use a dedicated service account:
@@ -319,8 +327,10 @@ Symmetrix ID: 000555444333
 ```
 
 !!! warning "Common errors"
-    **`sudo: user storadm is not in the sudoers file.  This incident will be reported.`** — Add the storadm user to sudoers with `visudo` and grant SYMCLI command permissions.
-    **`SYMCLI_SID environment variable not set or invalid`** — Verify the SID format is 12 digits and matches an actual array with `symcfg list` before setting SYMCLI_SID.
+    | Error | Fix |
+    |---|---|
+    | `sudo: user storadm is not in the sudoers file.  This incident will be reported.` | Add the storadm user to sudoers with `visudo` and grant SYMCLI command permissions. |
+    | `SYMCLI_SID environment variable not set or invalid` | Verify the SID format is 12 digits and matches an actual array with `symcfg list` before setting SYMCLI_SID. |
 ## Audit Logging
 
 All configuration changes on PowerMax are recorded as audit events accessible via SYMCLI and Unisphere. Audit logs capture the user, timestamp, action, affected object, and result.
@@ -370,9 +380,11 @@ Total System Events in window: 342
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid SID format or SID not found`** — Verify the SID value is correct and the array is reachable by running `symcfg list -sid <SID>` first.
-    **`Error: symaudit: command not found`** — Ensure SYMCLI is installed and the `$PATH` includes the SYMCLI bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`Error: Permission denied accessing audit database`** — Confirm your user account has appropriate RBAC permissions for audit log access on the PowerMax array.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid SID format or SID not found` | Verify the SID value is correct and the array is reachable by running `symcfg list -sid <SID>` first. |
+    | `Error: symaudit: command not found` | Ensure SYMCLI is installed and the `$PATH` includes the SYMCLI bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `Error: Permission denied accessing audit database` | Confirm your user account has appropriate RBAC permissions for audit log access on the PowerMax array. |
 ### Audit Log Forwarding to SIEM
 
 Export audit logs to a SIEM (Splunk, IBM QRadar, Microsoft Sentinel) via syslog from the Unisphere host:
@@ -466,9 +478,11 @@ Successfully installed PyU4V-9.2.1.0
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify it's not being overridden by environment variables).
-    **`curl: (7) Failed to connect to <unisphere-host>:8443: Name or service not known`** — Verify the Unisphere hostname is resolvable and reachable; check DNS or use the IP address directly instead of hostname.
-    **`ModuleNotFoundError: No module named 'PyU4V'`** — Install PyU4V in the correct Python environment using `pip3 install PyU4V` or ensure the virtual environment is activated before running the script.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but verify it's not being overridden by environment variables). |
+    | `curl: (7) Failed to connect to <unisphere-host>:8443: Name or service not known` | Verify the Unisphere hostname is resolvable and reachable; check DNS or use the IP address directly instead of hostname. |
+    | `ModuleNotFoundError: No module named 'PyU4V'` | Install PyU4V in the correct Python environment using `pip3 install PyU4V` or ensure the virtual environment is activated before running the script. |
 ## Certificate Management
 
 Unisphere uses TLS certificates for HTTPS. Replacing the default self-signed certificate with a CA-signed certificate is required for production environments.
@@ -505,9 +519,11 @@ Private key successfully created at /tmp/unisphere.key
 ```
 
 !!! warning "Common errors"
-    **`unable to load Private Key`** — Verify the private key file exists at `/tmp/unisphere.key` and has read permissions (chmod 600 /tmp/unisphere.key).
-    **`error on line 1 of /tmp/unisphere.csr`** — Ensure the CSR file was generated successfully and is not corrupted; regenerate if necessary using the same openssl command.
-    **`[Unisphere UI] Certificate import failed: Key and certificate do not match`** — Confirm that the unisphere.crt and unisphere.key files were generated as a matched pair from the same CSR.
+    | Error | Fix |
+    |---|---|
+    | `unable to load Private Key` | Verify the private key file exists at `/tmp/unisphere.key` and has read permissions (chmod 600 /tmp/unisphere.key). |
+    | `error on line 1 of /tmp/unisphere.csr` | Ensure the CSR file was generated successfully and is not corrupted; regenerate if necessary using the same openssl command. |
+    | `[Unisphere UI] Certificate import failed: Key and certificate do not match` | Confirm that the unisphere.crt and unisphere.key files were generated as a matched pair from the same CSR. |
 | Certificate | Renewal Trigger | Notes |
 |---|---|---|
 | Unisphere HTTPS certificate | 30 days before expiry | Monitor expiry with `openssl s_client` or a cert monitoring tool |
@@ -535,9 +551,11 @@ Certificate expires in 187 days
 ```
 
 !!! warning "Common errors"
-    **`unable to connect to <unisphere-host>:8443`** — Verify the Unisphere hostname/IP is correct and port 8443 is reachable (use `telnet <unisphere-host> 8443` to test connectivity).
-    **`date: invalid date '<expiry>'`** — Ensure the openssl command successfully extracted the certificate; check that Unisphere is responding on port 8443 and the certificate is valid.
-    **`command not found: openssl`** — Install openssl on the management host using `apt-get install openssl` (Debian/Ubuntu) or `yum install openssl` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `unable to connect to <unisphere-host>:8443` | Verify the Unisphere hostname/IP is correct and port 8443 is reachable (use `telnet <unisphere-host> 8443` to test connectivity). |
+    | `date: invalid date '<expiry>'` | Ensure the openssl command successfully extracted the certificate; check that Unisphere is responding on port 8443 and the certificate is valid. |
+    | `command not found: openssl` | Install openssl on the management host using `apt-get install openssl` (Debian/Ubuntu) or `yum install openssl` (RHEL/CentOS). |
 ---
 
 ## Related Reference

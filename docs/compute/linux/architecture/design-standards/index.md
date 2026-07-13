@@ -44,8 +44,10 @@ Sudo access granted via AD group membership:
 ```
 
 !!! warning "Common errors"
-    **`sudoers:1 syntax error near line 1`** — Verify the file was edited with `visudo` instead of a standard editor, as direct edits bypass syntax validation.
-    **`sudo: parse error in /etc/sudoers.d/infra-admins near line 1`** — Ensure the file has correct permissions (0440) by running `chmod 0440 /etc/sudoers.d/infra-admins`.
+    | Error | Fix |
+    |---|---|
+    | `sudoers:1 syntax error near line 1` | Verify the file was edited with `visudo` instead of a standard editor, as direct edits bypass syntax validation. |
+    | `sudo: parse error in /etc/sudoers.d/infra-admins near line 1` | Ensure the file has correct permissions (0440) by running `chmod 0440 /etc/sudoers.d/infra-admins`. |
 ## NTP Configuration
 
 ```bash
@@ -62,8 +64,10 @@ rtcsync
 ```
 
 !!! warning "Common errors"
-    **`command not found: chronyd`** — Install chrony with `sudo yum install chrony` and enable it with `sudo systemctl enable --now chronyd`.
-    **`Permission denied: /etc/chrony.conf`** — Edit the file with `sudo vi /etc/chrony.conf` or ensure your user has sudo privileges.
+    | Error | Fix |
+    |---|---|
+    | `command not found: chronyd` | Install chrony with `sudo yum install chrony` and enable it with `sudo systemctl enable --now chronyd`. |
+    | `Permission denied: /etc/chrony.conf` | Edit the file with `sudo vi /etc/chrony.conf` or ensure your user has sudo privileges. |
 Verify: `chronyc tracking` — `System time` offset should be < 1ms.
 
 ## Syslog Forwarding
@@ -81,8 +85,10 @@ Verify: `chronyc tracking` — `System time` offset should be < 1ms.
 ```
 
 !!! warning "Common errors"
-    **`rsyslogd: action 'action 1' suspended, next retry [timestamp]`** — Verify SIEM server hostname resolves with `nslookup siem.example.local` and confirm port 514/6514 is open with `nc -zv siem.example.local 514`.
-    **`error: certificate validation failed`** — For TLS forwarding (@@), ensure the SIEM server certificate is trusted by adding the CA certificate to `/etc/rsyslog.d/ca-certificates.crt` and referencing it in rsyslog.conf with `$DefaultNetstreamDriverCAFile`.
+    | Error | Fix |
+    |---|---|
+    | `rsyslogd: action 'action 1' suspended, next retry [timestamp]` | Verify SIEM server hostname resolves with `nslookup siem.example.local` and confirm port 514/6514 is open with `nc -zv siem.example.local 514`. |
+    | `error: certificate validation failed` | For TLS forwarding (@@), ensure the SIEM server certificate is trusted by adding the CA certificate to `/etc/rsyslog.d/ca-certificates.crt` and referencing it in rsyslog.conf with `$DefaultNetstreamDriverCAFile`. |
 ## Package Repository Policy
 
 Production servers point only to approved internal mirrors:
@@ -102,8 +108,10 @@ Repository 'rhel-9-for-x86_64-appstream-rpms' is enabled for this system.
 ```
 
 !!! warning "Common errors"
-    **`This system is not registered or the user does not have permission to access Red Hat Network.`** — Register the system first with `subscription-manager register --username=<user> --password=<pass> --auto-attach`.
-    **`Error updating certificate used for TLS:`** — Ensure the system's subscription certificate is valid by running `subscription-manager refresh`.
+    | Error | Fix |
+    |---|---|
+    | `This system is not registered or the user does not have permission to access Red Hat Network.` | Register the system first with `subscription-manager register --username=<user> --password=<pass> --auto-attach`. |
+    | `Error updating certificate used for TLS:` | Ensure the system's subscription certificate is valid by running `subscription-manager refresh`. |
 No direct internet access from production servers — all package traffic via mirror.
 
 ## OS Component Stack
@@ -154,9 +162,11 @@ dc1-wapp-prd-01.corp.example.com.
 ```
 
 !!! warning "Common errors"
-    **`getent hosts: No such file or directory`** — Ensure `/etc/hosts` contains the hostname entry or DNS is properly configured; add the entry manually if needed.
-    **`; <<>> DiG 9.16.1-Ubuntu <<>> +short dc1-wapp-prd-01.corp.example.com`** — Verify DNS resolver is configured in `/etc/resolv.conf` and the nameserver is reachable.
-    **`NXDOMAIN`** — Confirm the DNS A record for `dc1-wapp-prd-01.corp.example.com` exists and the reverse DNS PTR record for `10.10.4.21` is properly configured.
+    | Error | Fix |
+    |---|---|
+    | `getent hosts: No such file or directory` | Ensure `/etc/hosts` contains the hostname entry or DNS is properly configured; add the entry manually if needed. |
+    | `; <<>> DiG 9.16.1-Ubuntu <<>> +short dc1-wapp-prd-01.corp.example.com` | Verify DNS resolver is configured in `/etc/resolv.conf` and the nameserver is reachable. |
+    | `NXDOMAIN` | Confirm the DNS A record for `dc1-wapp-prd-01.corp.example.com` exists and the reverse DNS PTR record for `10.10.4.21` is properly configured. |
 DNS resolver configuration is managed by Ansible. `/etc/resolv.conf` must not be edited manually on RHEL/Ubuntu; use `nmcli` or the Ansible `dns_baseline` role.
 
 ```ini
@@ -213,8 +223,10 @@ MS Name/IP address         Stratum Poll Reach LastRx Last sample
 ```
 
 !!! warning "Common errors"
-    **`chronyc: Could not get tracking data`** — Verify chronyd daemon is running with `systemctl status chronyd` and listening on localhost.
-    **`506 Cannot talk to daemon`** — Ensure chronyd is started with `systemctl start chronyd` and check socket permissions in `/var/run/chrony/`.
+    | Error | Fix |
+    |---|---|
+    | `chronyc: Could not get tracking data` | Verify chronyd daemon is running with `systemctl status chronyd` and listening on localhost. |
+    | `506 Cannot talk to daemon` | Ensure chronyd is started with `systemctl start chronyd` and check socket permissions in `/var/run/chrony/`. |
 Expected: reference time offset under 100 ms, stratum 3 or better. An alert fires if offset exceeds 500 ms for more than 5 minutes.
 
 ## SSH and sudo Configuration
@@ -249,8 +261,10 @@ svc-backup ALL=(root) NOPASSWD: /usr/bin/rsync, /usr/bin/tar
 ```
 
 !!! warning "Common errors"
-    **`sudoers:1 syntax error near line 1`** — Run `visudo -c /etc/sudoers.d/ops-admins` to validate syntax before applying, as malformed sudoers files can lock out all sudo access.
-    **`>>> /etc/sudoers.d/ops-admins: bad permissions on sudoers file, should be mode 0440`** — Change file permissions with `chmod 0440 /etc/sudoers.d/ops-admins` since sudoers files must be readable only by root.
+    | Error | Fix |
+    |---|---|
+    | `sudoers:1 syntax error near line 1` | Run `visudo -c /etc/sudoers.d/ops-admins` to validate syntax before applying, as malformed sudoers files can lock out all sudo access. |
+    | `>>> /etc/sudoers.d/ops-admins: bad permissions on sudoers file, should be mode 0440` | Change file permissions with `chmod 0440 /etc/sudoers.d/ops-admins` since sudoers files must be readable only by root. |
 Run `visudo -c` after any sudoers change to confirm no syntax errors.
 
 ## Required Packages and Kernel Parameters
@@ -294,8 +308,10 @@ Remote syslog forwarding to the central SIEM is mandatory. The `rsyslog_baseline
 ```
 
 !!! warning "Common errors"
-    **`error: unexpected character '@' [/etc/rsyslog.d/50-remote.conf:1]`** — Verify the rsyslog configuration syntax; the double `@@` is correct for TCP forwarding, but check for typos or encoding issues in the file.
-    **`rsyslogd: action 'omfwd' suspended, next retry [timestamp] [/etc/rsyslog.d/50-remote.conf:1]`** — Confirm that siem.corp.example.com is resolvable and that port 514/TCP is open and the remote syslog server is listening.
+    | Error | Fix |
+    |---|---|
+    | `error: unexpected character '@' [/etc/rsyslog.d/50-remote.conf:1]` | Verify the rsyslog configuration syntax; the double `@@` is correct for TCP forwarding, but check for typos or encoding issues in the file. |
+    | `rsyslogd: action 'omfwd' suspended, next retry [timestamp] [/etc/rsyslog.d/50-remote.conf:1]` | Confirm that siem.corp.example.com is resolvable and that port 514/TCP is open and the remote syslog server is listening. |
 The audit daemon must be running and enabled at boot. Baseline audit rules capture:
 
 - All auth events (watches on `/etc/passwd`, `/etc/shadow`, `/etc/group`)

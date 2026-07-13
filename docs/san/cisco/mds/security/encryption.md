@@ -82,9 +82,11 @@ Copying tftp://192.168.100.50/mds-sw01.pem to bootflash:mds-sw01.pem
 ```
 
 !!! warning "Common errors"
-    **`% Error: Trustpoint LOCAL-CA does not exist`** — Create the trustpoint with `crypto ca trustpoint LOCAL-CA` before attempting enrollment.
-    **`% Error: Certificate file not found: bootflash:mds-sw01.pem`** — Verify the file was copied successfully with `dir bootflash:` and check TFTP server connectivity.
-    **`% Error: Invalid certificate format - PEM header not found`** — Ensure the certificate file is in valid PEM format (begins with `-----BEGIN CERTIFICATE-----`) and was not corrupted during transfer.
+    | Error | Fix |
+    |---|---|
+    | `% Error: Trustpoint LOCAL-CA does not exist` | Create the trustpoint with `crypto ca trustpoint LOCAL-CA` before attempting enrollment. |
+    | `% Error: Certificate file not found: bootflash:mds-sw01.pem` | Verify the file was copied successfully with `dir bootflash:` and check TFTP server connectivity. |
+    | `% Error: Invalid certificate format - PEM header not found` | Ensure the certificate file is in valid PEM format (begins with `-----BEGIN CERTIFICATE-----`) and was not corrupted during transfer. |
 ```bash
 # Remove default community strings
 no snmp-server community public
@@ -101,8 +103,10 @@ no snmp-server community private
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (config-if or config) and that SNMP is licensed on your MDS switch.
-    **`% Community string already removed`** — If the command fails on the second run, the community strings were already deleted; this is expected and not an error.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (config-if or config) and that SNMP is licensed on your MDS switch. |
+    | `% Community string already removed` | If the command fails on the second run, the community strings were already deleted; this is expected and not an error. |
 ```bash
 # Create an SNMPv3 user with authPriv (SHA auth, AES-128 privacy)
 snmp-server user nms_monitor network-operator v3 auth sha <auth-password> priv aes-128 <priv-password>
@@ -141,8 +145,10 @@ sysDescr.0 = STRING: Cisco MDS 9148 Multilayer Fabric Switch
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid password length for SHA authentication`** — Ensure the auth password is at least 8 characters long.
-    **`Error: SNMP trap delivery failed to 10.10.2.50`** — Verify network connectivity to the trap receiver and confirm the SNMP community/user credentials match on both devices.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid password length for SHA authentication` | Ensure the auth password is at least 8 characters long. |
+    | `Error: SNMP trap delivery failed to 10.10.2.50` | Verify network connectivity to the trap receiver and confirm the SNMP community/user credentials match on both devices. |
 ```bash
 # Enable specific trap categories
 snmp-server enable traps link
@@ -176,8 +182,10 @@ Trap Information:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (use `configure terminal` first if running from user EXEC mode).
-    **`% SNMP is not configured`** — Configure SNMP community strings and trap destinations with `snmp-server community` and `snmp-server host` before enabling trap categories.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (use `configure terminal` first if running from user EXEC mode). |
+    | `% SNMP is not configured` | Configure SNMP community strings and trap destinations with `snmp-server community` and `snmp-server host` before enabling trap categories. |
 ```bash
 # Enter key as plaintext (NX-OS encrypts automatically in running-config)
 tacacs-server host 10.10.1.10 key 0 <plaintext-key>
@@ -198,8 +206,10 @@ tacacs-server host 10.10.1.10 key 7 $1$abcd1234efgh5678ijkl90mn$pqrstuvwxyz12345
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in global configuration mode with `configure terminal` before entering tacacs-server commands.
-    **`% Incomplete command`** — Ensure the plaintext key is provided after `key 0`; the syntax requires both the encryption type (0 for plaintext) and the actual key string.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in global configuration mode with `configure terminal` before entering tacacs-server commands. |
+    | `% Incomplete command` | Ensure the plaintext key is provided after `key 0`; the syntax requires both the encryption type (0 for plaintext) and the actual key string. |
 ```bash
 # Enable FC-SP
 feature fcsp
@@ -242,9 +252,11 @@ VSAN 10:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch supports FC-SP (MDS 9000 series required); check NX-OS version with `show version`.
-    **`% DHCHAP password must be at least 16 characters`** — Use a password with minimum 16 characters; special characters and mixed case are recommended.
-    **`% Device PWWN not found in database`** — Ensure the PWWN is correctly formatted (48 hex digits with colons) and the device has logged into the fabric at least once.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch supports FC-SP (MDS 9000 series required); check NX-OS version with `show version`. |
+    | `% DHCHAP password must be at least 16 characters` | Use a password with minimum 16 characters; special characters and mixed case are recommended. |
+    | `% Device PWWN not found in database` | Ensure the PWWN is correctly formatted (48 hex digits with colons) and the device has logged into the fabric at least once. |
 ```bash
 # Enable FCIP feature
 feature fcip
@@ -282,9 +294,11 @@ mds-switch(config)#
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch supports FCIP licensing and run `show feature | grep fcip` to confirm the feature is available.
-    **`% VSAN 20 does not exist`** — Create the VSAN first with `vsan 20` in config mode before associating it to the FCIP interface.
-    **`% Profile 1 is already in use`** — Check existing profiles with `show fcip profile` and use an unused profile number.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch supports FCIP licensing and run `show feature | grep fcip` to confirm the feature is available. |
+    | `% VSAN 20 does not exist` | Create the VSAN first with `vsan 20` in config mode before associating it to the FCIP interface. |
+    | `% Profile 1 is already in use` | Check existing profiles with `show fcip profile` and use an unused profile number. |
 ```bash
 # Define IKE proposal
 crypto ike proposal FCIP-IKE-PROP
@@ -345,9 +359,11 @@ fcip1 is up, line protocol is up
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the MDS switch supports FCIP licensing and that crypto commands are available in your software version.
-    **`% Incomplete command`** — Replace `<pre-shared-key>` with an actual pre-shared key string (e.g., `pre-shared-key 0 MySecureKey123`).
-    **`IKE SA not established`** — Confirm peer IP 10.20.0.2 is reachable, firewall allows UDP 500/4500, and both sides use identical IKE proposals and pre-shared keys.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the MDS switch supports FCIP licensing and that crypto commands are available in your software version. |
+    | `% Incomplete command` | Replace `<pre-shared-key>` with an actual pre-shared key string (e.g., `pre-shared-key 0 MySecureKey123`). |
+    | `IKE SA not established` | Confirm peer IP 10.20.0.2 is reachable, firewall allows UDP 500/4500, and both sides use identical IKE proposals and pre-shared keys. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

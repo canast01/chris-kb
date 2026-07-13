@@ -104,9 +104,11 @@ The MySQL Shell version 8.0.34
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the MySQL service is running on the target host with `systemctl status mysql` and confirm the port is not blocked by firewall rules.
-    **`Access denied for user 'root'@'<ip>'`** — Check the password is correct and the root user has permissions from that source IP in the `mysql.user` table.
-    **`ERROR: Shell.Errors.RuntimeError: Error connecting to target server`** — Ensure MySQL Shell is installed, the cluster host is reachable, and the admin user credentials are valid.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the MySQL service is running on the target host with `systemctl status mysql` and confirm the port is not blocked by firewall rules. |
+    | `Access denied for user 'root'@'<ip>'` | Check the password is correct and the root user has permissions from that source IP in the `mysql.user` table. |
+    | `ERROR: Shell.Errors.RuntimeError: Error connecting to target server` | Ensure MySQL Shell is installed, the cluster host is reachable, and the admin user credentials are valid. |
 ## See also
 
 - [MySQL — Architecture](../how-it-works/)

@@ -131,9 +131,11 @@ ID                                   Hostname                Address            
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the cluster's CA certificate into your trust store.
-    **`showmount: clnt_create: RPC: Port mapper failure - Unable to receive: errno 113 (No route to host)`** — Verify network connectivity to the SmartConnect zone IP and confirm NFS ports (111, 2049) are not blocked by firewall rules.
-    **`isi: command not found`** — Run these commands from the PowerScale cluster CLI (SSH to the cluster management IP), not from an external admin workstation.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the cluster's CA certificate into your trust store. |
+    | `showmount: clnt_create: RPC: Port mapper failure - Unable to receive: errno 113 (No route to host)` | Verify network connectivity to the SmartConnect zone IP and confirm NFS ports (111, 2049) are not blocked by firewall rules. |
+    | `isi: command not found` | Run these commands from the PowerScale cluster CLI (SSH to the cluster management IP), not from an external admin workstation. |
 ## See also
 
 - [Dell PowerScale — Architecture](../how-it-works/)

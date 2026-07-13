@@ -110,8 +110,10 @@ media-storage-03              12.1TB            8.4TB             20.5TB
 ```
 
 !!! warning "Common errors"
-    **`Error: Array 'flashblade-prod-01' is unreachable`** — Verify network connectivity and that the management IP is reachable with `ping` or `ssh`.
-    **`Error: Invalid filter syntax in alert query`** — Use proper filter format with quotes: `--filter "state='open' and severity='warning'"`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Array 'flashblade-prod-01' is unreachable` | Verify network connectivity and that the management IP is reachable with `ping` or `ssh`. |
+    | `Error: Invalid filter syntax in alert query` | Use proper filter format with quotes: `--filter "state='open' and severity='warning'"`. |
 ### Blades & Hardware
 
 ```bash
@@ -146,8 +148,10 @@ chassis-1  healthy FB20-HA2-2U   PFC2142300001  32       OK
 ```
 
 !!! warning "Common errors"
-    **`Error: blade <blade_id> not found`** — Verify the blade ID exists by running `purefb blade show` without filters first.
-    **`Error: Connection refused on management IP`** — Ensure the FlashBlade management interface is reachable and the purefb CLI is authenticated with valid credentials.
+    | Error | Fix |
+    |---|---|
+    | `Error: blade <blade_id> not found` | Verify the blade ID exists by running `purefb blade show` without filters first. |
+    | `Error: Connection refused on management IP` | Ensure the FlashBlade management interface is reachable and the purefb CLI is authenticated with valid credentials. |
 ---
 
 ## File Systems (NFS / SMB)
@@ -183,8 +187,10 @@ archive-2024-q1               2.0T      2.0T      0          on   off  off   des
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid filesystem name '<name>'`** — Verify the filesystem name exists with `purefb filesystem show` and use the exact name without angle brackets.
-    **`Error: Connection refused to management IP`** — Ensure the FlashBlade management IP is reachable and your `purefb` credentials are configured with `purefb login`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid filesystem name '<name>'` | Verify the filesystem name exists with `purefb filesystem show` and use the exact name without angle brackets. |
+    | `Error: Connection refused to management IP` | Ensure the FlashBlade management IP is reachable and your `purefb` credentials are configured with `purefb login`. |
 ### Create a File System
 
 ```bash
@@ -236,9 +242,11 @@ Created: 2024-01-15T09:44:05Z
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid NFS rules syntax`** — Verify NFS export rules follow standard format (e.g., `"*(rw,no_root_squash)"` or `"192.168.1.0/24(rw)"`).
-    **`Error: Filesystem name already exists`** — Choose a unique filesystem name or delete the existing filesystem with `purefb filesystem delete --name <existing-name>`.
-    **`Error: Insufficient capacity on array`** — Reduce the requested size or check available capacity with `purefb hardware list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid NFS rules syntax` | Verify NFS export rules follow standard format (e.g., `"*(rw,no_root_squash)"` or `"192.168.1.0/24(rw)"`). |
+    | `Error: Filesystem name already exists` | Choose a unique filesystem name or delete the existing filesystem with `purefb filesystem delete --name <existing-name>`. |
+    | `Error: Insufficient capacity on array` | Reduce the requested size or check available capacity with `purefb hardware list`. |
 ### Resize a File System
 
 ```bash
@@ -251,9 +259,11 @@ Filesystem updated. Name: <name>, Size: 20T, Used: 8.3T, Available: 11.7T, Snaps
 ```
 
 !!! warning "Common errors"
-    **`Error: Filesystem '<name>' not found`** — Verify the filesystem name exists by running `purefb filesystem list` and use the correct name.
-    **`Error: Size must be larger than current usage (8.3T)`** — Increase the size to a value greater than the current used capacity shown in `purefb filesystem info --name <name>`.
-    **`Error: Authentication failed`** — Ensure you are authenticated to the FlashBlade array with valid credentials using `purefb login`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Filesystem '<name>' not found` | Verify the filesystem name exists by running `purefb filesystem list` and use the correct name. |
+    | `Error: Size must be larger than current usage (8.3T)` | Increase the size to a value greater than the current used capacity shown in `purefb filesystem info --name <name>`. |
+    | `Error: Authentication failed` | Ensure you are authenticated to the FlashBlade array with valid credentials using `purefb login`. |
 ### Update NFS Export Rules
 
 ```bash
@@ -278,9 +288,11 @@ State: available
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid CIDR notation in NFS rules`** — Verify the IP range uses proper CIDR format (e.g., 10.0.1.0/24) and separate multiple rules with colons without spaces.
-    **`Error: Filesystem '<name>' not found`** — Confirm the filesystem name matches exactly using `purefb filesystem list` and check for typos or special characters.
-    **`Error: NFS rules syntax invalid: missing parentheses`** — Ensure each rule follows the format `<ip_cidr>(<options>)` with options in parentheses immediately after the CIDR block.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid CIDR notation in NFS rules` | Verify the IP range uses proper CIDR format (e.g., 10.0.1.0/24) and separate multiple rules with colons without spaces. |
+    | `Error: Filesystem '<name>' not found` | Confirm the filesystem name matches exactly using `purefb filesystem list` and check for typos or special characters. |
+    | `Error: NFS rules syntax invalid: missing parentheses` | Ensure each rule follows the format `<ip_cidr>(<options>)` with options in parentheses immediately after the CIDR block. |
 ### SMB Shares
 
 ```bash
@@ -311,8 +323,10 @@ SMB share 'project-share' destroyed successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Filesystem <fs_name> not found`** — Verify the filesystem exists with `purefb filesystem show` before creating the share.
-    **`Error: SMB share <share_name> is in use by 1 client(s)`** — Disconnect all clients or use `--force` flag to destroy an active share.
+    | Error | Fix |
+    |---|---|
+    | `Error: Filesystem <fs_name> not found` | Verify the filesystem exists with `purefb filesystem show` before creating the share. |
+    | `Error: SMB share <share_name> is in use by 1 client(s)` | Disconnect all clients or use `--force` flag to destroy an active share. |
 ### Destroy and Eradicate
 
 ```bash
@@ -337,9 +351,11 @@ Filesystem 'archive-fs' recovered successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Filesystem 'data-backup' not found`** — Verify the filesystem name with `purefb filesystem list` and ensure you have the correct spelling.
-    **`Error: Filesystem 'data-backup' is not in destroyed state`** — Run `purefb filesystem destroy --name <name>` first before attempting eradication.
-    **`Error: Recovery window expired for filesystem 'old-fs'`** — Destroyed filesystems can only be recovered within 24 hours; if the window has passed, the data cannot be recovered.
+    | Error | Fix |
+    |---|---|
+    | `Error: Filesystem 'data-backup' not found` | Verify the filesystem name with `purefb filesystem list` and ensure you have the correct spelling. |
+    | `Error: Filesystem 'data-backup' is not in destroyed state` | Run `purefb filesystem destroy --name <name>` first before attempting eradication. |
+    | `Error: Recovery window expired for filesystem 'old-fs'` | Destroyed filesystems can only be recovered within 24 hours; if the window has passed, the data cannot be recovered. |
 ### Common Issues
 
 | Issue | Check | Action |
@@ -385,8 +401,10 @@ repl0                         10Gbps     down       10.1.0.20
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid interface name '<if_name>'`** — Replace `<if_name>` with an actual interface name like `eth0` or `mgmt0`.
-    **`Error: Connection refused — unable to reach management IP`** — Verify the FlashBlade management IP is reachable and the purefb CLI is authenticated with `purefb login`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid interface name '<if_name>'` | Replace `<if_name>` with an actual interface name like `eth0` or `mgmt0`. |
+    | `Error: Connection refused — unable to reach management IP` | Verify the FlashBlade management IP is reachable and the purefb CLI is authenticated with `purefb login`. |
 ### Subnets
 
 ```bash
@@ -412,9 +430,11 @@ Created subnet 'subnet-prod' with prefix 10.0.4.0/24 and gateway 10.0.4.1
 ```
 
 !!! warning "Common errors"
-    **`Error: Subnet 'subnet-prod' already exists`** — Verify the subnet name is unique or delete the existing subnet before recreating it.
-    **`Error: Invalid CIDR prefix '<cidr>' — must be /24 to /30`** — Ensure the subnet prefix is within the supported range (typically /24 to /30 for FlashBlade).
-    **`Error: Gateway IP '<gateway_ip>' is not in subnet prefix range`** — Confirm the gateway IP falls within the specified CIDR block (e.g., 10.0.4.1 for 10.0.4.0/24).
+    | Error | Fix |
+    |---|---|
+    | `Error: Subnet 'subnet-prod' already exists` | Verify the subnet name is unique or delete the existing subnet before recreating it. |
+    | `Error: Invalid CIDR prefix '<cidr>' — must be /24 to /30` | Ensure the subnet prefix is within the supported range (typically /24 to /30 for FlashBlade). |
+    | `Error: Gateway IP '<gateway_ip>' is not in subnet prefix range` | Confirm the gateway IP falls within the specified CIDR block (e.g., 10.0.4.1 for 10.0.4.0/24). |
 ### DNS and NTP
 
 ```bash
@@ -450,9 +470,11 @@ Enabled: true
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid IP address format`** — Verify the IP addresses are correctly formatted and separated by commas with no spaces (e.g., `10.0.0.1,10.0.0.2`).
-    **`Error: Connection refused to management interface`** — Ensure the FlashBlade management IP is reachable and the `purefb` CLI is authenticated with valid credentials.
-    **`Error: DNS/NTP server unreachable`** — Confirm the specified nameserver or NTP server IPs are accessible from the FlashBlade's management network before applying the update.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid IP address format` | Verify the IP addresses are correctly formatted and separated by commas with no spaces (e.g., `10.0.0.1,10.0.0.2`). |
+    | `Error: Connection refused to management interface` | Ensure the FlashBlade management IP is reachable and the `purefb` CLI is authenticated with valid credentials. |
+    | `Error: DNS/NTP server unreachable` | Confirm the specified nameserver or NTP server IPs are accessible from the FlashBlade's management network before applying the update. |
 ### VIPs (Virtual IPs) for NFS/SMB
 
 VIPs are what NFS/SMB clients mount — they float between blades for availability:
@@ -481,9 +503,11 @@ data-vip-01   192.168.1.20    data-subnet     nfs,smb         active
 ```
 
 !!! warning "Common errors"
-    **`Error: VIP address 192.168.1.20 already in use`** — Verify the IP address is not assigned to another VIP or host on the network using `purefb vip show`.
-    **`Error: Subnet 'subnet_name' not found`** — Confirm the subnet exists by running `purefb subnet show` and use the correct subnet name.
-    **`Error: Invalid service specification: smb`** — Ensure service names are lowercase and comma-separated without spaces (e.g., `--services nfs,smb`).
+    | Error | Fix |
+    |---|---|
+    | `Error: VIP address 192.168.1.20 already in use` | Verify the IP address is not assigned to another VIP or host on the network using `purefb vip show`. |
+    | `Error: Subnet 'subnet_name' not found` | Confirm the subnet exists by running `purefb subnet show` and use the correct subnet name. |
+    | `Error: Invalid service specification: smb` | Ensure service names are lowercase and comma-separated without spaces (e.g., `--services nfs,smb`). |
 ### Static Routes
 
 ```bash
@@ -509,9 +533,11 @@ Metric: 0
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid CIDR notation for address`** — Verify the destination_cidr parameter uses valid CIDR format (e.g., 10.0.0.0/8) and is not malformed.
-    **`Error: Gateway IP 10.20.1.254 is not reachable on any configured interface`** — Ensure the gateway_ip is on a subnet directly connected to one of the FlashBlade's network interfaces.
-    **`Error: Static route to 192.168.0.0/16 already exists`** — Delete the existing route first using `purefb static-route delete --address 192.168.0.0/16` or modify it with the `--metric` flag.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid CIDR notation for address` | Verify the destination_cidr parameter uses valid CIDR format (e.g., 10.0.0.0/8) and is not malformed. |
+    | `Error: Gateway IP 10.20.1.254 is not reachable on any configured interface` | Ensure the gateway_ip is on a subnet directly connected to one of the FlashBlade's network interfaces. |
+    | `Error: Static route to 192.168.0.0/16 already exists` | Delete the existing route first using `purefb static-route delete --address 192.168.0.0/16` or modify it with the `--metric` flag. |
 ### Network Troubleshooting
 
 ```bash
@@ -548,9 +574,11 @@ storage.example.com resolves to 10.20.30.50
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid destination IP address`** — Verify the destination IP is valid and reachable from the FlashBlade management network.
-    **`Error: DNS lookup failed for <hostname>`** — Confirm the hostname is correct and DNS servers are configured and accessible on the FlashBlade.
-    **`Error: Connection timeout - no response from <destination_ip>`** — Check network connectivity, firewall rules, and that the destination host is online and responding to ICMP.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid destination IP address` | Verify the destination IP is valid and reachable from the FlashBlade management network. |
+    | `Error: DNS lookup failed for <hostname>` | Confirm the hostname is correct and DNS servers are configured and accessible on the FlashBlade. |
+    | `Error: Connection timeout - no response from <destination_ip>` | Check network connectivity, firewall rules, and that the destination host is online and responding to ICMP. |
 | Issue | Check | Command |
 |---|---|---|
 | NFS mount fails | VIP exists and reachable? | `purefb vip show` |
@@ -609,8 +637,10 @@ Eradicated bucket 'backup-prod-02'
 ```
 
 !!! warning "Common errors"
-    **`Error: Bucket 'backup-prod-02' is not empty`** — Use `purefb bucket list-objects --name <bucket>` to verify contents, then delete objects before destroying the bucket.
-    **`Error: Bucket 'backup-prod-02' not found`** — Verify the bucket name spelling and that it has not already been eradicated; use `purefb bucket list --all` to confirm its status.
+    | Error | Fix |
+    |---|---|
+    | `Error: Bucket 'backup-prod-02' is not empty` | Use `purefb bucket list-objects --name <bucket>` to verify contents, then delete objects before destroying the bucket. |
+    | `Error: Bucket 'backup-prod-02' not found` | Verify the bucket name spelling and that it has not already been eradicated; use `purefb bucket list --all` to confirm its status. |
 ### Accounts and Users
 
 ```bash
@@ -657,8 +687,10 @@ Destroyed object store user 'etl-service' from account 'finance-ops'
 ```
 
 !!! warning "Common errors"
-    **`Error: Account '<account>' not found`** — Verify the account name exists with `purefb object-store-account list` and use the correct spelling.
-    **`Error: User '<user>' not found in account '<account>'`** — Confirm the user exists in the specified account using `purefb object-store-user list` before attempting to destroy.
+    | Error | Fix |
+    |---|---|
+    | `Error: Account '<account>' not found` | Verify the account name exists with `purefb object-store-account list` and use the correct spelling. |
+    | `Error: User '<user>' not found in account '<account>'` | Confirm the user exists in the specified account using `purefb object-store-user list` before attempting to destroy. |
 ### Access Keys
 
 ```bash
@@ -690,8 +722,10 @@ Destroyed access key: 9a7f2c1e-4b9d-11ec-81d4-0242ac130002
 ```
 
 !!! warning "Common errors"
-    **`Error: user '<user>/<account>' not found`** — Verify the user and account exist on the FlashBlade system using `purefb admin list`.
-    **`Error: access key '<key_id>' not found`** — Confirm the key ID is correct by running `purefb object-store-access-key list` to see all available keys.
+    | Error | Fix |
+    |---|---|
+    | `Error: user '<user>/<account>' not found` | Verify the user and account exist on the FlashBlade system using `purefb admin list`. |
+    | `Error: access key '<key_id>' not found` | Confirm the key ID is correct by running `purefb object-store-access-key list` to see all available keys. |
 > The secret access key is only shown at creation time — store it securely immediately.
 
 ### S3 Endpoint
@@ -714,9 +748,11 @@ An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: T
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The Access Key Id you provided does not exist in our records.`** — Verify AWS credentials are configured correctly with `aws configure` and match a valid FlashBlade S3 user account.
-    **`Unable to locate credentials`** — Set AWS credentials via environment variables (`export AWS_ACCESS_KEY_ID=...`) or create `~/.aws/credentials` with valid FlashBlade S3 access keys.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — Add `--no-verify-ssl` flag to the aws command or configure a trusted CA certificate for the FlashBlade S3 endpoint.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The Access Key Id you provided does not exist in our records.` | Verify AWS credentials are configured correctly with `aws configure` and match a valid FlashBlade S3 user account. |
+    | `Unable to locate credentials` | Set AWS credentials via environment variables (`export AWS_ACCESS_KEY_ID=...`) or create `~/.aws/credentials` with valid FlashBlade S3 access keys. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | Add `--no-verify-ssl` flag to the aws command or configure a trusted CA certificate for the FlashBlade S3 endpoint. |
 ### Bucket Replication
 
 ```bash
@@ -746,9 +782,11 @@ Status: Connecting
 ```
 
 !!! warning "Common errors"
-    **`Error: bucket 'prod-data' not found on local array`** — Verify the local bucket name exists with `purefb bucket list` and matches the `--local-bucket` parameter exactly.
-    **`Error: unable to connect to remote array 'fb-west-01': connection timeout`** — Confirm the remote array name is registered and reachable by running `purefb array list --remote` and checking network connectivity.
-    **`Error: bucket 'backup-replica' already has an active replica link`** — Remove the existing replica link with `purefb bucket-replica-link delete <link_name>` before creating a new one to the same bucket.
+    | Error | Fix |
+    |---|---|
+    | `Error: bucket 'prod-data' not found on local array` | Verify the local bucket name exists with `purefb bucket list` and matches the `--local-bucket` parameter exactly. |
+    | `Error: unable to connect to remote array 'fb-west-01': connection timeout` | Confirm the remote array name is registered and reachable by running `purefb array list --remote` and checking network connectivity. |
+    | `Error: bucket 'backup-replica' already has an active replica link` | Remove the existing replica link with `purefb bucket-replica-link delete <link_name>` before creating a new one to the same bucket. |
 ---
 
 ## Replication (ActiveDR)
@@ -781,8 +819,10 @@ Connection Status: Pending
 ```
 
 !!! warning "Common errors"
-    **`Error: Management address 10.20.30.40 is unreachable`** — Verify network connectivity to the target array's management IP and ensure firewall rules permit FlashBlade replication traffic.
-    **`Error: Remote array name 'target-array-01' already exists`** — Use a unique name for the new remote array or remove the existing configuration first with `purefb remote-array delete`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Management address 10.20.30.40 is unreachable` | Verify network connectivity to the target array's management IP and ensure firewall rules permit FlashBlade replication traffic. |
+    | `Error: Remote array name 'target-array-01' already exists` | Use a unique name for the new remote array or remove the existing configuration first with `purefb remote-array delete`. |
 ### File System Replica Links
 
 ```bash
@@ -817,9 +857,11 @@ Created replica link 'fs-prod-replica' from fs-prod to fs-prod-backup on flashbl
 ```
 
 !!! warning "Common errors"
-    **`Error: filesystem 'fs-prod' not found on local array`** — Verify the local filesystem name matches exactly with `purefb fs show` output.
-    **`Error: unable to connect to remote array 'flashblade-dr': connection timeout`** — Ensure the remote array hostname is reachable and configured in the replication network settings.
-    **`Error: replica link 'fs-prod-replica' already exists`** — Use a unique replica link name or delete the existing link before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `Error: filesystem 'fs-prod' not found on local array` | Verify the local filesystem name matches exactly with `purefb fs show` output. |
+    | `Error: unable to connect to remote array 'flashblade-dr': connection timeout` | Ensure the remote array hostname is reachable and configured in the replication network settings. |
+    | `Error: replica link 'fs-prod-replica' already exists` | Use a unique replica link name or delete the existing link before recreating it. |
 ### Replication Status
 
 | Status | Meaning |
@@ -881,9 +923,11 @@ Replication Lag: 0 bytes
 ```
 
 !!! warning "Common errors"
-    **`Error: Filesystem 'prod-data' not found on local array`** — Verify the local filesystem name matches exactly with `purefb fs list` output.
-    **`Error: Connection to remote array 'flashblade-dr.example.com' failed`** — Confirm the remote array hostname is reachable and the replication link credentials are configured with `purefb connect`.
-    **`Error: Replica link does not exist between 'prod-data' and 'prod-data-dr'`** — Check that the replica link is already established using `purefb fs-replica-link list` before attempting to pause or delete.
+    | Error | Fix |
+    |---|---|
+    | `Error: Filesystem 'prod-data' not found on local array` | Verify the local filesystem name matches exactly with `purefb fs list` output. |
+    | `Error: Connection to remote array 'flashblade-dr.example.com' failed` | Confirm the remote array hostname is reachable and the replication link credentials are configured with `purefb connect`. |
+    | `Error: Replica link does not exist between 'prod-data' and 'prod-data-dr'` | Check that the replica link is already established using `purefb fs-replica-link list` before attempting to pause or delete. |
 ### Object Store Replication (Buckets)
 
 ```bash
@@ -911,9 +955,11 @@ Status: Connecting
 ```
 
 !!! warning "Common errors"
-    **`Error: bucket '<bucket_name>' not found`** — Verify the local bucket exists with `purefb bucket list` and use the correct bucket name.
-    **`Error: remote array '<target_name>' is not connected`** — Ensure the remote array is reachable and has an established connection using `purefb array-connection show`.
-    **`Error: replica link already exists between these buckets`** — Check existing replica links with `purefb os-replica-link show` and use a different bucket pair or remove the existing link first.
+    | Error | Fix |
+    |---|---|
+    | `Error: bucket '<bucket_name>' not found` | Verify the local bucket exists with `purefb bucket list` and use the correct bucket name. |
+    | `Error: remote array '<target_name>' is not connected` | Ensure the remote array is reachable and has an established connection using `purefb array-connection show`. |
+    | `Error: replica link already exists between these buckets` | Check existing replica links with `purefb os-replica-link show` and use a different bucket pair or remove the existing link first. |
 ---
 
 ## Snapshots
@@ -947,8 +993,10 @@ snapshot-prod-2024-01-15      data-tier-01                  2024-01-15T09:23:47Z
 ```
 
 !!! warning "Common errors"
-    **`Error: filesystem <filesystem_name> not found`** — Verify the filesystem name exists using `purefb filesystem show` and check for typos.
-    **`Error: snapshot <snapshot_name> does not exist`** — Confirm the snapshot name is correct and has not been deleted with `purefb snapshot show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: filesystem <filesystem_name> not found` | Verify the filesystem name exists using `purefb filesystem show` and check for typos. |
+    | `Error: snapshot <snapshot_name> does not exist` | Confirm the snapshot name is correct and has not been deleted with `purefb snapshot show`. |
 ### Create a Snapshot
 
 ```bash
@@ -971,9 +1019,11 @@ Created: 2026-05-06T14:32:18Z
 ```
 
 !!! warning "Common errors"
-    **`Error: filesystem 'prod-nfs' not found`** — Verify the filesystem name exists with `purefb fs list` and correct any typos in the `--source` parameter.
-    **`Error: snapshot 'pre-maint-20260506' already exists`** — Use a unique snapshot name or delete the existing snapshot with `purefb snapshot delete --name pre-maint-20260506` before retrying.
-    **`Error: insufficient space for snapshot`** — Check available capacity on the array with `purefb capacity` and ensure at least 10% free space remains.
+    | Error | Fix |
+    |---|---|
+    | `Error: filesystem 'prod-nfs' not found` | Verify the filesystem name exists with `purefb fs list` and correct any typos in the `--source` parameter. |
+    | `Error: snapshot 'pre-maint-20260506' already exists` | Use a unique snapshot name or delete the existing snapshot with `purefb snapshot delete --name pre-maint-20260506` before retrying. |
+    | `Error: insufficient space for snapshot` | Check available capacity on the array with `purefb capacity` and ensure at least 10% free space remains. |
 ### Restore from Snapshot
 
 ```bash
@@ -995,9 +1045,11 @@ Estimated time remaining: 18 minutes
 ```
 
 !!! warning "Common errors"
-    **`Error: Snapshot 'daily-backup-2024-01-15' not found`** — Verify the snapshot name with `purefb snapshot list` and ensure it exists on the array.
-    **`Error: Filesystem 'prod-fs-restored' already exists`** — Use a unique target filesystem name or delete the existing filesystem before retrying the copy operation.
-    **`Error: Insufficient space available on array`** — Check available capacity with `purefb array info` and ensure the target filesystem size fits within remaining array capacity.
+    | Error | Fix |
+    |---|---|
+    | `Error: Snapshot 'daily-backup-2024-01-15' not found` | Verify the snapshot name with `purefb snapshot list` and ensure it exists on the array. |
+    | `Error: Filesystem 'prod-fs-restored' already exists` | Use a unique target filesystem name or delete the existing filesystem before retrying the copy operation. |
+    | `Error: Insufficient space available on array` | Check available capacity with `purefb array info` and ensure the target filesystem size fits within remaining array capacity. |
 ### Destroy and Eradicate
 
 ```bash
@@ -1023,8 +1075,10 @@ hourly-backup-2024-01-15-14   2024-01-15T14:00:00Z     2024-01-15T14:30:45Z     
 ```
 
 !!! warning "Common errors"
-    **`Error: Snapshot '<snapshot_name>' not found`** — Verify the snapshot name with `purefb snapshot show` and use the exact name including any timestamp or suffix.
-    **`Error: Snapshot '<snapshot_name>' is in use by replication or clone`** — Check active replications or clones with `purefb snapshot show --detail` and remove dependencies before destruction.
+    | Error | Fix |
+    |---|---|
+    | `Error: Snapshot '<snapshot_name>' not found` | Verify the snapshot name with `purefb snapshot show` and use the exact name including any timestamp or suffix. |
+    | `Error: Snapshot '<snapshot_name>' is in use by replication or clone` | Check active replications or clones with `purefb snapshot show --detail` and remove dependencies before destruction. |
 ### Scheduled Snapshot Policies
 
 ```bash
@@ -1054,8 +1108,10 @@ Snapshot rule 'hourly-snapshots' (keep-for: 7d) attached to filesystem 'data-vol
 ```
 
 !!! warning "Common errors"
-    **`Error: Filesystem 'data-vol-01' not found`** — Verify the filesystem name exists with `purefb fs list` and use the correct name.
-    **`Error: Snapshot rule 'hourly-snapshots' already attached to filesystem 'data-vol-01'`** — Remove the existing attachment with `purefb fs-snapshot-rule delete --filesystem <fs_name> --rule <rule_name>` before reattaching.
+    | Error | Fix |
+    |---|---|
+    | `Error: Filesystem 'data-vol-01' not found` | Verify the filesystem name exists with `purefb fs list` and use the correct name. |
+    | `Error: Snapshot rule 'hourly-snapshots' already attached to filesystem 'data-vol-01'` | Remove the existing attachment with `purefb fs-snapshot-rule delete --filesystem <fs_name> --rule <rule_name>` before reattaching. |
 ### Accessing Snapshots via NFS
 
 ```bash
@@ -1078,9 +1134,11 @@ weekly-2024-01-14-0000
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/mnt/nfs_export/.snapshot/': No such file or directory`** — Verify the NFS mount is active with `mount | grep nfs_export` and ensure snapshot visibility is enabled on the FlashBlade export policy.
-    **`cp: cannot stat '/mnt/nfs_export/.snapshot/<snapshot_name>/path/to/file': No such file or directory`** — Replace `<snapshot_name>` with an actual snapshot name from the listing and verify the source file path exists in that snapshot.
-    **`Permission denied`** — Ensure your user has read permissions on the snapshot directory; check with `ls -ld /mnt/nfs_export/.snapshot/` and adjust NFS export permissions if needed.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/mnt/nfs_export/.snapshot/': No such file or directory` | Verify the NFS mount is active with `mount | grep nfs_export` and ensure snapshot visibility is enabled on the FlashBlade export policy. |
+    | `cp: cannot stat '/mnt/nfs_export/.snapshot/<snapshot_name>/path/to/file': No such file or directory` | Replace `<snapshot_name>` with an actual snapshot name from the listing and verify the source file path exists in that snapshot. |
+    | `Permission denied` | Ensure your user has read permissions on the snapshot directory; check with `ls -ld /mnt/nfs_export/.snapshot/` and adjust NFS export permissions if needed. |
 ---
 
 ## Users & Authentication
@@ -1114,9 +1172,11 @@ Admin user 'jsmith' deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Admin user 'admin' cannot be deleted`** — Ensure you are not attempting to delete the default admin account; create an alternative admin user first.
-    **`Error: User 'jsmith' already exists`** — Choose a unique username or delete the existing user before recreating it with the same name.
-    **`Error: Invalid role 'invalid_role'. Valid roles are: array_admin, operator, readonly`** — Specify one of the three valid roles (array_admin, operator, or readonly) in the create command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Admin user 'admin' cannot be deleted` | Ensure you are not attempting to delete the default admin account; create an alternative admin user first. |
+    | `Error: User 'jsmith' already exists` | Choose a unique username or delete the existing user before recreating it with the same name. |
+    | `Error: Invalid role 'invalid_role'. Valid roles are: array_admin, operator, readonly` | Specify one of the three valid roles (array_admin, operator, or readonly) in the create command. |
 ### Roles
 
 | Role | Permissions |
@@ -1170,9 +1230,11 @@ Expires: 2025-01-15T09:43:15Z
 ```
 
 !!! warning "Common errors"
-    **`Error: API client 'api-client-prod-02' not found`** — Verify the client name exists with `purefb api-client show` before attempting deletion.
-    **`Error: Role 'invalid_role' is not valid`** — Use only valid roles: `array_admin`, `storage_admin`, or `read_only` when creating API clients.
-    **`Error: User '<username>' does not exist`** — Ensure the user account exists on the FlashBlade system before generating an API token.
+    | Error | Fix |
+    |---|---|
+    | `Error: API client 'api-client-prod-02' not found` | Verify the client name exists with `purefb api-client show` before attempting deletion. |
+    | `Error: Role 'invalid_role' is not valid` | Use only valid roles: `array_admin`, `storage_admin`, or `read_only` when creating API clients. |
+    | `Error: User '<username>' does not exist` | Ensure the user account exists on the FlashBlade system before generating an API token. |
 ### Directory Services (LDAP / Active Directory)
 
 ```bash
@@ -1216,9 +1278,11 @@ Base DN Search: OK
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid URI format`** — Verify the LDAP URI follows the format `ldap://hostname:port` or `ldaps://hostname:port` and that the hostname is resolvable.
-    **`Error: Bind failed - Invalid credentials`** — Confirm the bind-user DN and bind-password are correct and the service account has permission to query the directory.
-    **`Error: Base DN not found`** — Ensure the Base DN path exists in your LDAP directory and matches your domain structure exactly.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid URI format` | Verify the LDAP URI follows the format `ldap://hostname:port` or `ldaps://hostname:port` and that the hostname is resolvable. |
+    | `Error: Bind failed - Invalid credentials` | Confirm the bind-user DN and bind-password are correct and the service account has permission to query the directory. |
+    | `Error: Base DN not found` | Ensure the Base DN path exists in your LDAP directory and matches your domain structure exactly. |
 ### Multi-Factor Authentication
 
 ```bash
@@ -1241,8 +1305,10 @@ MFA Status:
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or insufficient permissions`** — Ensure your user account has administrative privileges and valid API token authentication is configured.
-    **`Error: MFA configuration is not supported on this system`** — Verify the FlashBlade system firmware version supports MFA (requires Purity 3.0+) by running `purefb version`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or insufficient permissions` | Ensure your user account has administrative privileges and valid API token authentication is configured. |
+    | `Error: MFA configuration is not supported on this system` | Verify the FlashBlade system firmware version supports MFA (requires Purity 3.0+) by running `purefb version`. |
 ### Session Management
 
 ```bash
@@ -1265,8 +1331,10 @@ Sessions invalidated for user: svc-backup
 ```
 
 !!! warning "Common errors"
-    **`Error: User '<username>' not found`** — Replace `<username>` with an actual user name from the `purefb admin show --sessions` output.
-    **`Error: Permission denied`** — Ensure your current admin account has sufficient privileges to invalidate sessions; contact your FlashBlade administrator if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: User '<username>' not found` | Replace `<username>` with an actual user name from the `purefb admin show --sessions` output. |
+    | `Error: Permission denied` | Ensure your current admin account has sufficient privileges to invalidate sessions; contact your FlashBlade administrator if needed. |
 ### Audit Log
 
 ```bash
@@ -1294,8 +1362,10 @@ Export completed successfully. Records exported: 1247
 ```
 
 !!! warning "Common errors"
-    **`Error: Authentication failed. Invalid credentials.`** — Verify the purefb CLI is authenticated with `purefb login` using valid admin credentials.
-    **`Error: Audit log export failed: Insufficient disk space on management interface.`** — Free up space on the management partition or export to an external location using `purefb audit export --target <remote_path>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Authentication failed. Invalid credentials.` | Verify the purefb CLI is authenticated with `purefb login` using valid admin credentials. |
+    | `Error: Audit log export failed: Insufficient disk space on management interface.` | Free up space on the management partition or export to an external location using `purefb audit export --target <remote_path>`. |
 ---
 
 ## Support & Diagnostics
@@ -1368,9 +1438,11 @@ Current Version    Available Version    Release Date       Status
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused — ensure the FlashBlade management network is reachable and SSH credentials are configured correctly.`** — Verify network connectivity to the FlashBlade management IP and confirm SSH access with `ssh admin@<fb-mgmt-ip>`.
-    **`Error: Permission denied (publickey,password) — user does not have sufficient privileges to execute phonehome commands.`** — Confirm the user account has admin or operator role by running `purefb admin list`.
-    **`Error: Phone home bundle send failed: Service unavailable — the phone home service is temporarily offline.`** — Wait 5-10 minutes and retry, or check Pure's status page for known service incidents.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused — ensure the FlashBlade management network is reachable and SSH credentials are configured correctly.` | Verify network connectivity to the FlashBlade management IP and confirm SSH access with `ssh admin@<fb-mgmt-ip>`. |
+    | `Error: Permission denied (publickey,password) — user does not have sufficient privileges to execute phonehome commands.` | Confirm the user account has admin or operator role by running `purefb admin list`. |
+    | `Error: Phone home bundle send failed: Service unavailable — the phone home service is temporarily offline.` | Wait 5-10 minutes and retry, or check Pure's status page for known service incidents. |
 ### Alerts
 
 ```bash
@@ -1400,8 +1472,10 @@ Updated: 2024-01-15T10:15:08Z
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid alert ID 'alert-999-unknown'`** — Verify the alert ID exists by running `purefb alert show --all` and use the exact Name value from the output.
-    **`Error: Authentication failed. Check credentials.`** — Ensure your Pure Storage credentials are configured correctly with `purefb login` or verify environment variables are set.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid alert ID 'alert-999-unknown'` | Verify the alert ID exists by running `purefb alert show --all` and use the exact Name value from the output. |
+    | `Error: Authentication failed. Check credentials.` | Ensure your Pure Storage credentials are configured correctly with `purefb login` or verify environment variables are set. |
 ### Common Support Scenarios
 
 | Issue | First Step | Command |

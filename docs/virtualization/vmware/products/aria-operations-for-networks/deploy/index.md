@@ -86,8 +86,10 @@ Address:	10.10.10.1#53
 ```
 
 !!! warning "Common errors"
-    **`** server can't find aon-platform.example.local: NXDOMAIN`** — Verify the DNS A record exists in your DNS server and the FQDN matches your deployment configuration exactly.
-    **`** connection timed out; try again later`** — Confirm the DNS server (10.10.10.1) is reachable and responsive from the management network; check firewall rules for UDP port 53.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find aon-platform.example.local: NXDOMAIN` | Verify the DNS A record exists in your DNS server and the FQDN matches your deployment configuration exactly. |
+    | `** connection timed out; try again later` | Confirm the DNS server (10.10.10.1) is reachable and responsive from the management network; check firewall rules for UDP port 53. |
 ### Service Accounts
 
 | System | Required Permission |
@@ -168,9 +170,11 @@ Connected to aon-platform.example.local (192.168.1.45)
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-    **`Connection refused`** — Verify the platform VM is running and HTTPS port 443 is accessible; check firewall rules with `sudo ufw status` or equivalent.
-    **`Unit postgres.service not found`** — Confirm the correct service name with `sudo systemctl list-units --type=service | grep -i postgres` as it may be named `postgresql` instead.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed). |
+    | `Connection refused` | Verify the platform VM is running and HTTPS port 443 is accessible; check firewall rules with `sudo ufw status` or equivalent. |
+    | `Unit postgres.service not found` | Confirm the correct service name with `sudo systemctl list-units --type=service | grep -i postgres` as it may be named `postgresql` instead. |
 ### Initial Setup Wizard
 
 1. Browse to `https://aon-platform.example.local`.
@@ -239,9 +243,11 @@ aon-collector-dc2 ACTIVE
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the platform's CA certificate into your system trust store.
-    **`jq: command not found`** — Install `jq` package (`apt-get install jq` on Ubuntu) or use the provided `python3 -c` JSON parsing instead of piping to jq.
-    **`{"error":"Invalid credentials","code":401}`** — Verify the admin@local username and PASSWORD are correct, and that the platform API is accessible at https://aon-platform.example.local.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the platform's CA certificate into your system trust store. |
+    | `jq: command not found` | Install `jq` package (`apt-get install jq` on Ubuntu) or use the provided `python3 -c` JSON parsing instead of piping to jq. |
+    | `{"error":"Invalid credentials","code":401}` | Verify the admin@local username and PASSWORD are correct, and that the platform API is accessible at https://aon-platform.example.local. |
 ---
 
 ## Phase 4 — Data Source Configuration
@@ -315,9 +321,11 @@ Arista-Switch-Core ENABLED
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the platform's CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to aon-platform.example.local port 443: Connection refused`** — Verify the AON platform hostname/IP is correct, the service is running (`systemctl status aria-operations-networks`), and network connectivity exists to port 443.
-    **`KeyError: 'results'`** — Confirm the API token in `${TOKEN}` is valid and has data-source read permissions by testing with `curl -sk "https://aon-platform.example.local/api/ni/data-sources" -H "Authorization: NetworkInsight ${TOKEN}"` directly.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the platform's CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to aon-platform.example.local port 443: Connection refused` | Verify the AON platform hostname/IP is correct, the service is running (`systemctl status aria-operations-networks`), and network connectivity exists to port 443. |
+    | `KeyError: 'results'` | Confirm the API token in `${TOKEN}` is valid and has data-source read permissions by testing with `curl -sk "https://aon-platform.example.local/api/ni/data-sources" -H "Authorization: NetworkInsight ${TOKEN}"` directly. |
 ---
 
 ## Phase 5 — IPFIX Flow Collection
@@ -372,8 +380,10 @@ interface GigabitEthernet1/0/1
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the interface name matches your device model (e.g., `GigabitEthernet0/0/1` on some platforms) and check syntax with `show ip flow export`.
-    **`% Incomplete command.`** — Ensure you are in the correct configuration mode (`config t`) before entering interface commands, and that the interface exists on the device.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the interface name matches your device model (e.g., `GigabitEthernet0/0/1` on some platforms) and check syntax with `show ip flow export`. |
+    | `% Incomplete command.` | Ensure you are in the correct configuration mode (`config t`) before entering interface commands, and that the interface exists on the device. |
 On Arista EOS (example):
 
 ```bash
@@ -392,8 +402,10 @@ flow tracking hardware
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (use `configure terminal` first on network devices).
-    **`% Incomplete command`** — Ensure all required parameters are present; check that the exporter destination IP is reachable and that Management1 interface exists on the device.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (use `configure terminal` first on network devices). |
+    | `% Incomplete command` | Ensure all required parameters are present; check that the exporter destination IP is reachable and that Management1 interface exists on the device. |
 ### Verify Flows Arriving
 
 In the AON UI: Network Map → select a VM entity → Flows tab — recent flow records should appear within 5 minutes of enabling export.
@@ -431,8 +443,10 @@ listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
 ```
 
 !!! warning "Common errors"
-    **`tcpdump: command not found`** — Install tcpdump with `sudo apt-get install tcpdump` on the collector VM.
-    **`tcpdump: eth0: No such device`** — Verify the correct interface name with `ip link show` and replace eth0 with the actual interface (e.g., ens0, ens
+    | Error | Fix |
+    |---|---|
+    | `tcpdump: command not found` | Install tcpdump with `sudo apt-get install tcpdump` on the collector VM. |
+    | `tcpdump: eth0: No such device` | Verify the correct interface name with `ip link show` and replace eth0 with the actual interface (e.g., ens0, ens |
 ---
 
 ## Phase 6 — Post-Deployment Validation
@@ -476,9 +490,11 @@ ubuntu@aon-platform.example.local's password:
 ```
 
 !!! warning "Common errors"
-    **`sudo: no password was provided`** — Use `ssh -i /path/to/key ubuntu@aon-platform.example.local` for key-based auth or ensure passwordless sudo is configured.
-    **`Connection refused`** — Verify the hostname resolves correctly with `nslookup aon-platform.example.local` and confirm SSH port 22 is accessible.
-    **`tail: cannot open '/var/log/vrni-platform/platform.log' for reading: No such file or directory`** — Check the actual log location with `sudo find /var/log -name "*.log" -path "*vrni*"` or verify the service is logging to a different directory.
+    | Error | Fix |
+    |---|---|
+    | `sudo: no password was provided` | Use `ssh -i /path/to/key ubuntu@aon-platform.example.local` for key-based auth or ensure passwordless sudo is configured. |
+    | `Connection refused` | Verify the hostname resolves correctly with `nslookup aon-platform.example.local` and confirm SSH port 22 is accessible. |
+    | `tail: cannot open '/var/log/vrni-platform/platform.log' for reading: No such file or directory` | Check the actual log location with `sudo find /var/log -name "*.log" -path "*vrni*"` or verify the service is logging to a different directory. |
 ### Topology and Flow Map
 
 - Network Map → browse to any VM → confirm VMs, segments, and physical switches are visible.

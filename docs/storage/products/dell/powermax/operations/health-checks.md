@@ -151,9 +151,11 @@ Replication Session: SRDF_003 (Synchronized, 12 devices)
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI Error: The specified Symmetrix ID is not available`** — Verify the SID is correct and the array is reachable via `symcfg discover`.
-    **`SYMCLI Error: You do not have the required privileges to execute this command`** — Ensure your user account is in the `symuser` group or has appropriate SYMCLI permissions configured.
-    **`SYMCLI Error: Cannot connect to the Symmetrix`** — Check that the Symmetrix Management Console (SMC) daemon is running with `service symcli status` and restart if necessary.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI Error: The specified Symmetrix ID is not available` | Verify the SID is correct and the array is reachable via `symcfg discover`. |
+    | `SYMCLI Error: You do not have the required privileges to execute this command` | Ensure your user account is in the `symuser` group or has appropriate SYMCLI permissions configured. |
+    | `SYMCLI Error: Cannot connect to the Symmetrix` | Check that the Symmetrix Management Console (SMC) daemon is running with `service symcli status` and restart if necessary. |
 ## Array Connectivity and Status
 
 ![Array Connectivity and Status](../../../../../assets/storage-dell-powermax-hc-array-connectivity-and-status.svg)
@@ -181,9 +183,11 @@ microcode: 5978.1221.1221
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Install EMC Solutions Enabler package or add its bin directory to your PATH environment variable.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Use the `-k` flag (already present) or import the Unisphere certificate into your system's CA bundle if SSL verification is required.
-    **`401 Unauthorized`** — Verify the bearer token is valid and not expired; regenerate it from Unisphere's REST API authentication endpoint.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Install EMC Solutions Enabler package or add its bin directory to your PATH environment variable. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Use the `-k` flag (already present) or import the Unisphere certificate into your system's CA bundle if SSL verification is required. |
+    | `401 Unauthorized` | Verify the bearer token is valid and not expired; regenerate it from Unisphere's REST API authentication endpoint. |
 ## Director and Port Status
 
 ![Director and Port Status](../../../../../assets/storage-dell-powermax-hc-director-and-port-status.svg)
@@ -221,8 +225,10 @@ Port 3d                Logins: 15
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Cannot open array <sid>`** — Verify the SID is correct and the Symmetrix is online by running `symcfg -sid <sid> list -v`.
-    **`grep: (standard input) is empty`** — Confirm the array has FA ports configured and the symcfg command executed successfully without permission errors.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Cannot open array <sid>` | Verify the SID is correct and the Symmetrix is online by running `symcfg -sid <sid> list -v`. |
+    | `grep: (standard input) is empty` | Confirm the array has FA ports configured and the symcfg command executed successfully without permission errors. |
 ## Events and Alerts
 
 ![Events and Alerts](../../../../../assets/storage-dell-powermax-hc-events-and-alerts.svg)
@@ -253,9 +259,11 @@ Event ID: 12847375 | Timestamp: 2024-01-14 13:08:12 | Severity: Error | Message:
 ```
 
 !!! warning "Common errors"
-    **`symevent: command not found`** — Ensure the Unisphere CLI tools are installed and the `$PATH` includes the Unisphere bin directory (typically `/opt/emc/unisphere/bin`).
-    **`Invalid SID: <sid>`** — Replace `<sid>` with a valid array serial number (e.g., `000297900000`) and verify connectivity to that array with `symcfg list -sid <sid>`.
-    **`date: invalid date 'yesterday'`** — Use `date -d '1 day ago'` or `date -v-1d` (macOS) instead of the GNU-specific `yesterday` keyword.
+    | Error | Fix |
+    |---|---|
+    | `symevent: command not found` | Ensure the Unisphere CLI tools are installed and the `$PATH` includes the Unisphere bin directory (typically `/opt/emc/unisphere/bin`). |
+    | `Invalid SID: <sid>` | Replace `<sid>` with a valid array serial number (e.g., `000297900000`) and verify connectivity to that array with `symcfg list -sid <sid>`. |
+    | `date: invalid date 'yesterday'` | Use `date -d '1 day ago'` or `date -v-1d` (macOS) instead of the GNU-specific `yesterday` keyword. |
 ## Storage Pool (SRP) Capacity
 
 ![Storage Pool (SRP) Capacity](../../../../../assets/storage-dell-powermax-hc-storage-pool-srp-capacity.svg)
@@ -293,9 +301,11 @@ WARNING: SRP_3     45.6 TB          6.9 TB    38.7 TB    88.3%
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Verify the Symmetrix CLI tools are installed and the PATH includes the installation directory (typically `/opt/emc/SYMCLI/bin`).
-    **`Symmetrix ID: <sid> — Could not be resolved`** — Replace `<sid>` with the actual 12-digit Symmetrix ID (e.g., `000123456789012`) or verify the array is reachable via `symcfg discover`.
-    **`awk: syntax error at source line 1`** — Ensure the awk command is on a single line without line breaks; the pipe may have been corrupted during copy-paste.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Verify the Symmetrix CLI tools are installed and the PATH includes the installation directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `Symmetrix ID: <sid> — Could not be resolved` | Replace `<sid>` with the actual 12-digit Symmetrix ID (e.g., `000123456789012`) or verify the array is reachable via `symcfg discover`. |
+    | `awk: syntax error at source line 1` | Ensure the awk command is on a single line without line breaks; the pipe may have been corrupted during copy-paste. |
 ## SRDF Replication State
 
 ![SRDF Replication State](../../../../../assets/storage-dell-powermax-hc-srdf-replication-state.svg)
@@ -324,9 +334,11 @@ Group Pair  Local Dev  Remote Dev  State           RDF Mode  Link State
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Command not found`** — Ensure the PowerMax/VMAX CLI tools are installed and the PATH includes the Symmetrix tools directory (typically `/opt/emc/SYMCLI/bin`).
-    **`Error: Invalid SID <sid>`** — Replace `<sid>` with the actual array serial number (e.g., `000123456789`) or verify connectivity to the array with `symcfg list`.
-    **`Error: Insufficient privileges to query RDF groups`** — Run the command with appropriate user permissions or use `sudo` if your account lacks SYMCLI access rights.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Command not found` | Ensure the PowerMax/VMAX CLI tools are installed and the PATH includes the Symmetrix tools directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `Error: Invalid SID <sid>` | Replace `<sid>` with the actual array serial number (e.g., `000123456789`) or verify connectivity to the array with `symcfg list`. |
+    | `Error: Insufficient privileges to query RDF groups` | Run the command with appropriate user permissions or use `sudo` if your account lacks SYMCLI access rights. |
 ## Device Status
 
 ![Device Status](../../../../../assets/storage-dell-powermax-hc-device-status.svg)
@@ -372,9 +384,11 @@ Number        ID        (MB)   (Type)  (%)
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_ERROR: The Symmetrix ID <sid> is not valid or not available`** — Verify the Symmetrix ID with `symcfg list` and ensure the array is reachable via the management network.
-    **`SYMCLI_ERROR: User does not have the required privileges to execute the command`** — Run the command with appropriate SYMCLI credentials or as a user with storage administrator role.
-    **`SYMCLI_ERROR: Cannot connect to the Symmetrix`** — Confirm the Solutions Enabler daemon is running with `sudo /opt/emc/SYMCLI/bin/stordaemon start` and the array gateway is accessible.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_ERROR: The Symmetrix ID <sid> is not valid or not available` | Verify the Symmetrix ID with `symcfg list` and ensure the array is reachable via the management network. |
+    | `SYMCLI_ERROR: User does not have the required privileges to execute the command` | Run the command with appropriate SYMCLI credentials or as a user with storage administrator role. |
+    | `SYMCLI_ERROR: Cannot connect to the Symmetrix` | Confirm the Solutions Enabler daemon is running with `sudo /opt/emc/SYMCLI/bin/stordaemon start` and the array gateway is accessible. |
 ## Cache Health
 
 ![Cache Health](../../../../../assets/storage-dell-powermax-hc-cache-health.svg)
@@ -396,9 +410,11 @@ Symmetrix ID: 000123456789012
 ```
 
 !!! warning "Common errors"
-    **`symstat: command not found`** — Ensure the EMC Solutions Enabler package is installed and the `symcli` binaries are in your PATH, or run the command with the full path `/opt/emc/SYMCLI_7.6.0.0/bin/symstat`.
-    **`Symmetrix ID <sid> not found or not responding`** — Verify the SID is correct, the Symmetrix array is online and reachable, and your user has proper credentials configured in `/var/symapi/config/netcnf.txt`.
-    **`grep: (standard input) is empty`** — The cache statistics output format may differ in your array's firmware version; try `symstat -sid <sid> list -type cache` without grep to see the actual column headers.
+    | Error | Fix |
+    |---|---|
+    | `symstat: command not found` | Ensure the EMC Solutions Enabler package is installed and the `symcli` binaries are in your PATH, or run the command with the full path `/opt/emc/SYMCLI_7.6.0.0/bin/symstat`. |
+    | `Symmetrix ID <sid> not found or not responding` | Verify the SID is correct, the Symmetrix array is online and reachable, and your user has proper credentials configured in `/var/symapi/config/netcnf.txt`. |
+    | `grep: (standard input) is empty` | The cache statistics output format may differ in your array's firmware version; try `symstat -sid <sid> list -type cache` without grep to see the actual column headers. |
 ## Health Check Decision Flow
 
 ![Health Check Decision Flow](../../../../../assets/storage-dell-powermax-hc-health-check-decision-flow.svg)

@@ -164,8 +164,10 @@ count | state
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: too many connections`** — Increase `max_connections` in postgresql.conf and restart PostgreSQL, or terminate idle connections with `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle' AND query_start < now() - interval '10 minutes';`
-    **`ERROR 1040 (HY000): Too many connections`** — Increase `max_connections` in my.cnf under `[mysqld]` section and restart MySQL, or kill idle connections with `KILL CONNECTION_ID;`
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: too many connections` | Increase `max_connections` in postgresql.conf and restart PostgreSQL, or terminate idle connections with `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle' AND query_start < now() - interval '10 minutes';` |
+    | `ERROR 1040 (HY000): Too many connections` | Increase `max_connections` in my.cnf under `[mysqld]` section and restart MySQL, or kill idle connections with `KILL CONNECTION_ID;` |
 ![PostgreSQL — Common Issues — Diagram](../../../../assets/compute-linux-postgresql-troubleshooting-common-issues-diagram.svg)
 
 ---

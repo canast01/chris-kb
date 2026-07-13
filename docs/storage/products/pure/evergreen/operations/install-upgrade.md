@@ -60,8 +60,10 @@ flasharray-dr-01              6.3.8.5678       FA-370                PURE12345GH
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Install the Pure CLI tools or ensure the PATH includes the Pure management tools directory.
-    **`Error: Unable to connect to array`** — Verify network connectivity to the array management IP and confirm your Pure credentials are configured in `~/.purerc`.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Install the Pure CLI tools or ensure the PATH includes the Pure management tools directory. |
+    | `Error: Unable to connect to array` | Verify network connectivity to the array management IP and confirm your Pure credentials are configured in `~/.purerc`. |
 ## Drive Replacement
 
 Drives are monitored by Pure1 and replaced proactively before failure:
@@ -94,9 +96,11 @@ drive.18            SN-G3V5C7D9         1.92TB    failed         52°C
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Ensure the Pure Storage CLI is installed and the PATH environment variable includes its bin directory.
-    **`Error: Authentication failed (401)`** — Verify your Pure Storage array credentials are configured via `purecli login` or check the PURE_API_TOKEN environment variable.
-    **`Error: Connection timeout to array`** — Confirm the array hostname/IP is reachable and the management interface is responding on port 443.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Ensure the Pure Storage CLI is installed and the PATH environment variable includes its bin directory. |
+    | `Error: Authentication failed (401)` | Verify your Pure Storage array credentials are configured via `purecli login` or check the PURE_API_TOKEN environment variable. |
+    | `Error: Connection timeout to array` | Confirm the array hostname/IP is reachable and the management interface is responding on port 443. |
 ## Controller Refresh (Evergreen//Forever)
 
 Under Evergreen//Forever, controllers are refreshed when new generations are available:
@@ -145,9 +149,11 @@ info        PFA0018   Replication sync lag: 2.3 seconds          2024-01-15T09:2
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Ensure Pure Storage CLI is installed and the PATH environment variable includes the installation directory.
-    **`Error: Unable to connect to array at <ip>. Connection refused`** — Verify network connectivity to the array management IP and confirm the array is online and responding to management requests.
-    **`Error: Authentication failed. Invalid credentials`** — Confirm your Pure Storage API token or username/password is valid and has not expired.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Ensure Pure Storage CLI is installed and the PATH environment variable includes the installation directory. |
+    | `Error: Unable to connect to array at <ip>. Connection refused` | Verify network connectivity to the array management IP and confirm the array is online and responding to management requests. |
+    | `Error: Authentication failed. Invalid credentials` | Confirm your Pure Storage API token or username/password is valid and has not expired. |
 ### Verifying Paths During/After Upgrade
 
 **On the host:**
@@ -203,9 +209,11 @@ Path Selection Plugin: VMW_PSP_RR
 ```
 
 !!! warning "Common errors"
-    **`device-mapper: multipath: command not found`** — Install device-mapper-multipath package with `apt-get install device-mapper-multipath` or `yum install device-mapper-multipath`.
-    **`mpclaim : The MPIO service is not running`** — Start the MPIO service with `net start msiscsi` and `net start mpiosvc` in an elevated PowerShell.
-    **`Unknown command or namespace`** — Ensure you are running the esxcli command on an ESXi host with proper SSH access and correct syntax for your vSphere version.
+    | Error | Fix |
+    |---|---|
+    | `device-mapper: multipath: command not found` | Install device-mapper-multipath package with `apt-get install device-mapper-multipath` or `yum install device-mapper-multipath`. |
+    | `mpclaim : The MPIO service is not running` | Start the MPIO service with `net start msiscsi` and `net start mpiosvc` in an elevated PowerShell. |
+    | `Unknown command or namespace` | Ensure you are running the esxcli command on an ESXi host with proper SSH access and correct syntax for your vSphere version. |
 Confirm all expected paths are active after the upgrade completes.
 
 ### Post-Upgrade Verification
@@ -235,9 +243,11 @@ Severity    Code      Message                              Timestamp
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Install the Pure Storage CLI package or add it to your PATH environment variable.
-    **`Error: Unable to connect to array at <hostname>`** — Verify network connectivity and that the management IP is reachable with `ping` or `nc`.
-    **`Error: Authentication failed`** — Confirm your Pure Storage credentials are configured in `~/.purerc` or via environment variables.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Install the Pure Storage CLI package or add it to your PATH environment variable. |
+    | `Error: Unable to connect to array at <hostname>` | Verify network connectivity and that the management IP is reachable with `ping` or `nc`. |
+    | `Error: Authentication failed` | Confirm your Pure Storage credentials are configured in `~/.purerc` or via environment variables. |
 ### Common Considerations
 
 | Item | Detail |

@@ -55,8 +55,10 @@ fc1/1         CRC=2 FrameTooLong=0 Delimiter=0 Address=0 LinkFailure=0
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the interface exists with `show interface brief` and use correct syntax `show interface fc<slot>/<port>`.
-    **`% Interface fc1/1 is administratively down`** — Enable the interface with `no shutdown` under the interface configuration mode.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the interface exists with `show interface brief` and use correct syntax `show interface fc<slot>/<port>`. |
+    | `% Interface fc1/1 is administratively down` | Enable the interface with `no shutdown` under the interface configuration mode. |
 ```bash
 # All line cards and supervisor modules — confirm all status is 'ok'
 show module
@@ -102,9 +104,11 @@ All tests passed. Module 1 is healthy.
 ```
 
 !!! warning "Common errors"
-    **`Module 1 is not present`** — Verify the module is physically installed and the switch has completed its boot cycle; check `show module` to confirm the slot is populated.
-    **`Diagnostics cannot run while module is in use`** — Schedule the diagnostic during a maintenance window or use `diagnostic start module 1 test all online` to run non-disruptive tests without impacting traffic.
-    **`Test failed: Port Loopback Test FAIL`** — Check for faulty transceivers, cable issues, or port configuration errors; replace the SFP/QSFP module and rerun diagnostics.
+    | Error | Fix |
+    |---|---|
+    | `Module 1 is not present` | Verify the module is physically installed and the switch has completed its boot cycle; check `show module` to confirm the slot is populated. |
+    | `Diagnostics cannot run while module is in use` | Schedule the diagnostic during a maintenance window or use `diagnostic start module 1 test all online` to run non-disruptive tests without impacting traffic. |
+    | `Test failed: Port Loopback Test FAIL` | Check for faulty transceivers, cable issues, or port configuration errors; replace the SFP/QSFP module and rerun diagnostics. |
 ```bash
 # View on-board flash log (persistent across reloads)
 show logging onboard
@@ -149,9 +153,11 @@ Temperature History (Last 24 hours):
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch model supports onboard logging (MDS9000 series with recent firmware); older models use `show logging` instead.
-    **`% Onboard logging is disabled`** — Enable onboard logging with `logging onboard enable` in configuration mode.
-    **`% Onboard log buffer full`** — Clear the onboard log with `clear logging onboard` to free space and resume logging.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch model supports onboard logging (MDS9000 series with recent firmware); older models use `show logging` instead. |
+    | `% Onboard logging is disabled` | Enable onboard logging with `logging onboard enable` in configuration mode. |
+    | `% Onboard log buffer full` | Clear the onboard log with `clear logging onboard` to free space and resume logging. |
 ```bash
 # Full environment summary (fans, power, temperature)
 show environment
@@ -200,8 +206,10 @@ Remaining Budget: 1153W
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch model supports these commands; older MDS models may require `show system resources` instead.
-    **`% Incomplete command`** — Add a valid subcommand like `fan`, `power`, or `temperature` after `show environment`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch model supports these commands; older MDS models may require `show system resources` instead. |
+    | `% Incomplete command` | Add a valid subcommand like `fan`, `power`, or `temperature` after `show environment`. |
 ```bash
 # All registered devices per VSAN
 show fcns database vsan 10
@@ -246,9 +254,11 @@ Last Sync Time:             2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`VSAN <vsan-id> does not exist`** — Verify the VSAN ID is configured and active using `show vsan` command.
-    **`% Invalid command`** — Ensure you are in the correct mode (exec or config); use `show version` to confirm device type is MDS.
-    **`grep: (standard input): No such file or directory`** — Pipe the full `show fcns database vsan 10` output to grep instead of using `show fcns database` without VSAN specification.
+    | Error | Fix |
+    |---|---|
+    | `VSAN <vsan-id> does not exist` | Verify the VSAN ID is configured and active using `show vsan` command. |
+    | `% Invalid command` | Ensure you are in the correct mode (exec or config); use `show version` to confirm device type is MDS. |
+    | `grep: (standard input): No such file or directory` | Pipe the full `show fcns database vsan 10` output to grep instead of using `show fcns database` without VSAN specification. |
 ```bash
 # FSPF link state database
 show fspf database vsan 10
@@ -285,8 +295,10 @@ FSPF Neighbors for VSAN 10:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct mode (enable mode required) and the VSAN exists with `show vsan`.
-    **`% FSPF is not enabled on this switch`** — Enable FSPF globally with `fspf enable` and ensure the VSAN is active with `vsan database` configuration.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct mode (enable mode required) and the VSAN exists with `show vsan`. |
+    | `% FSPF is not enabled on this switch` | Enable FSPF globally with `fspf enable` and ensure the VSAN is active with `vsan database` configuration. |
 ```bash
 # Domain information for all VSANs
 show fcdomain
@@ -332,8 +344,10 @@ Domain reconfiguration in progress...
 ```
 
 !!! warning "Common errors"
-    **`Domain conflict detected on VSAN 10`** — Run `show fcdomain vsan 10` to identify conflicting domain IDs, then resolve duplicate IDs before executing the disruptive restart.
-    **`fcdomain restart: command rejected, fabric reconfiguration in progress`** — Wait for the current fabric reconfiguration to complete (check with `show fcdomain vsan 10`) before attempting another restart.
+    | Error | Fix |
+    |---|---|
+    | `Domain conflict detected on VSAN 10` | Run `show fcdomain vsan 10` to identify conflicting domain IDs, then resolve duplicate IDs before executing the disruptive restart. |
+    | `fcdomain restart: command rejected, fabric reconfiguration in progress` | Wait for the current fabric reconfiguration to complete (check with `show fcdomain vsan 10`) before attempting another restart. |
 ```bash
 # Full zone database for a VSAN (pending + committed)
 show zone vsan 10
@@ -394,9 +408,11 @@ MDS9148S# show zone pending-diff vsan 10
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch supports enhanced mode with `show zone mode vsan 10`; `show zone pending-diff` requires enhanced mode enabled.
-    **`% Invalid VSAN ID`** — Confirm VSAN 10 exists and is active with `show vsan id 10`; create it if needed with `vsan database` configuration mode.
-    **`% Invalid PWWN format`** — Use 16 hexadecimal characters in format `50:00:xx:xx:xx:xx:xx:xx` and verify the device is logged in with `show flogi database vsan 10`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch supports enhanced mode with `show zone mode vsan 10`; `show zone pending-diff` requires enhanced mode enabled. |
+    | `% Invalid VSAN ID` | Confirm VSAN 10 exists and is active with `show vsan id 10`; create it if needed with `vsan database` configuration mode. |
+    | `% Invalid PWWN format` | Use 16 hexadecimal characters in format `50:00:xx:xx:xx:xx:xx:xx` and verify the device is logged in with `show flogi database vsan 10`. |
 ```bash
 # IVR overall status
 show ivr
@@ -442,8 +458,10 @@ Service Group Status:
 ```
 
 !!! warning "Common errors"
-    **`IVR database inconsistency detected`** — Run `clear ivr database` followed by `config terminal` and `ivr enable` to resynchronize the database across the fabric.
-    **`Zone activation failed: conflicting zone definitions`** — Resolve naming conflicts in `show ivr zone` output and reactivate the zoneset with `zoneset activate name <zoneset-name> vsan <vsan-id>`.
+    | Error | Fix |
+    |---|---|
+    | `IVR database inconsistency detected` | Run `clear ivr database` followed by `config terminal` and `ivr enable` to resynchronize the database across the fabric. |
+    | `Zone activation failed: conflicting zone definitions` | Resolve naming conflicts in `show ivr zone` output and reactivate the zoneset with `zoneset activate name <zoneset-name> vsan <vsan-id>`. |
 ```bash
 # Create SPAN session
 monitor session 1 source interface fc1/1 rx
@@ -484,9 +502,11 @@ Oper Mode              : Enabled
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch model supports SPAN (MDS 9000 series required) and use `show feature-set` to confirm Fabric Services are licensed.
-    **`% Interface fc1/1 does not exist`** — Confirm the source interface is valid and online with `show interface fc1/1` before configuring SPAN.
-    **`% Cannot configure monitor session: destination interface is in use`** — Ensure the destination port (fc2/48) is not already assigned to another session or in-use; use `show monitor session all` to verify availability.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch model supports SPAN (MDS 9000 series required) and use `show feature-set` to confirm Fabric Services are licensed. |
+    | `% Interface fc1/1 does not exist` | Confirm the source interface is valid and online with `show interface fc1/1` before configuring SPAN. |
+    | `% Cannot configure monitor session: destination interface is in use` | Ensure the destination port (fc2/48) is not already assigned to another session or in-use; use `show monitor session all` to verify availability. |
 ```bash
 interface fc2/48
   switchport mode SD
@@ -498,8 +518,10 @@ interface fc2/48
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the interface exists with `show interface fc2/48` and confirm you are in config mode with `config t`.
-    **`% Incomplete command`** — Use `switchport mode sd-target` or `switchport mode sd-initiator` instead of `switchport mode SD` (SD alone is incomplete).
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the interface exists with `show interface fc2/48` and confirm you are in config mode with `config t`. |
+    | `% Incomplete command` | Use `switchport mode sd-target` or `switchport mode sd-initiator` instead of `switchport mode SD` (SD alone is incomplete). |
 ```bash
 no monitor session 1
 
@@ -515,8 +537,10 @@ Session Not Found
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (should be `config t` for `no monitor session`) before running the command.
-    **`% Incomplete command`** — Ensure the full syntax `no monitor session 1` is entered; the session number is required.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (should be `config t` for `no monitor session`) before running the command. |
+    | `% Incomplete command` | Ensure the full syntax `no monitor session 1` is entered; the session number is required. |
 ```bash
 # Capture 200 packets matching a specific host
 ethanalyzer local interface mgmt capture-filter "host 192.168.1.50" limit-captured-frames 200
@@ -548,9 +572,11 @@ File transfer complete.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid capture filter syntax`** — Verify the filter expression is valid tcpdump syntax and properly quoted.
-    **`Error: Insufficient space on bootflash`** — Check available bootflash space with `dir bootflash:` and reduce capture size or delete old files.
-    **`Permission denied (publickey,password)`** — Ensure SSH credentials are correct and the remote server's SSH key is accepted, or use `copy bootflash:mgmt-capture.pcap ftp://<user>:<pass>@<server>/<path>/` as an alternative.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid capture filter syntax` | Verify the filter expression is valid tcpdump syntax and properly quoted. |
+    | `Error: Insufficient space on bootflash` | Check available bootflash space with `dir bootflash:` and reduce capture size or delete old files. |
+    | `Permission denied (publickey,password)` | Ensure SSH credentials are correct and the remote server's SSH key is accepted, or use `copy bootflash:mgmt-capture.pcap ftp://<user>:<pass>@<server>/<path>/` as an alternative. |
 ```bash
 # Most recent entries
 show logging last 50
@@ -583,8 +609,10 @@ show logging | grep -i flogi
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch is in the correct mode (use `config terminal` or ensure you're in exec mode); some log filters may require piping to `grep` rather than `include`.
-    **`% No matching output`** — The filter pattern is case-sensitive; use `grep -i` for case-insensitive matching or verify the event type exists in the buffer.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch is in the correct mode (use `config terminal` or ensure you're in exec mode); some log filters may require piping to `grep` rather than `include`. |
+    | `% No matching output` | The filter pattern is case-sensitive; use `grep -i` for case-insensitive matching or verify the event type exists in the buffer. |
 ```bash
 # Enable zone debug
 debug zone all vsan 10
@@ -617,9 +645,11 @@ MDS9148S#
 ```
 
 !!! warning "Common errors"
-    **`Invalid VSAN ID 10`** — Verify the VSAN exists with `show vsan` and use a valid VSAN ID (1-4094).
-    **`% Invalid command`** — Ensure you are in the correct mode (config mode for some debug commands); use `configure terminal` if needed.
-    **`Zone debugging is already enabled for VSAN 10`** — This is informational; proceed with your troubleshooting or use `undebug all` to clear and restart.
+    | Error | Fix |
+    |---|---|
+    | `Invalid VSAN ID 10` | Verify the VSAN exists with `show vsan` and use a valid VSAN ID (1-4094). |
+    | `% Invalid command` | Ensure you are in the correct mode (config mode for some debug commands); use `configure terminal` if needed. |
+    | `Zone debugging is already enabled for VSAN 10` | This is informational; proceed with your troubleshooting or use `undebug all` to clear and restart. |
 ```bash
 terminal monitor     # send log to this terminal
 debug zone all vsan 10
@@ -639,8 +669,10 @@ terminal no monitor
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Ensure you are in the correct mode (config-zone or exec); use `configure terminal` first if needed.
-    **`% VSAN 10 does not exist`** — Create the VSAN first with `vsan 10` command before attempting to debug it.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Ensure you are in the correct mode (config-zone or exec); use `configure terminal` first if needed. |
+    | `% VSAN 10 does not exist` | Create the VSAN first with `vsan 10` command before attempting to debug it. |
 ```bash
 # Redirect to bootflash (takes 5-10 minutes)
 show tech-support > bootflash:tech-support-<hostname>-<date>.txt

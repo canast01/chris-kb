@@ -142,9 +142,11 @@ download: s3://prod-app-backups/exports/data.csv to ./data.csv
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchBucket) when calling the ListObjects operation: The specified bucket does not exist`** — Verify the bucket name is correct and exists in your AWS account with `aws s3 ls`.
-    **`An error occurred (AccessDenied) when calling the PutObject operation: Access Denied`** — Ensure your IAM user/role has `s3:PutObject` permission for that bucket in the bucket policy or IAM policy.
-    **`fatal error: An error occurred (InvalidArgument) when calling the PutBucketLifecycleConfiguration operation: Invalid lifecycle configuration`** — Validate the JSON syntax in your lifecycle.json file and ensure it contains required fields like `Rules` and `Status`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchBucket) when calling the ListObjects operation: The specified bucket does not exist` | Verify the bucket name is correct and exists in your AWS account with `aws s3 ls`. |
+    | `An error occurred (AccessDenied) when calling the PutObject operation: Access Denied` | Ensure your IAM user/role has `s3:PutObject` permission for that bucket in the bucket policy or IAM policy. |
+    | `fatal error: An error occurred (InvalidArgument) when calling the PutBucketLifecycleConfiguration operation: Invalid lifecycle configuration` | Validate the JSON syntax in your lifecycle.json file and ensure it contains required fields like `Rules` and `Status`. |
 ---
 
 ## VPC & Networking
@@ -462,8 +464,10 @@ aws cloudformation validate-template --template-body file://template.yaml
 ```
 
 !!! warning "Common errors"
-    **`Template format error: Every Mappings object member must contain a String key and an object value.`** — Validate your YAML syntax, especially in the Mappings section, using `aws cloudformation validate-template` before deployment.
-    **`User: arn:aws:iam::123456789012:user/admin is not authorized to perform: cloudformation:CreateStack`** — Ensure your IAM user or role has the `cloudformation:*
+    | Error | Fix |
+    |---|---|
+    | `Template format error: Every Mappings object member must contain a String key and an object value.` | Validate your YAML syntax, especially in the Mappings section, using `aws cloudformation validate-template` before deployment. |
+    | `User: arn:aws:iam::123456789012:user/admin is not authorized to perform: cloudformation:CreateStack` | Ensure your IAM user or role has the `cloudformation:* |
 ---
 
 ## RDS
@@ -538,9 +542,11 @@ aws rds restore-db-instance-from-db-snapshot \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (DBInstanceNotFound) when calling the DescribeDBInstances operation: DBInstance not found`** — Verify the instance identifier is correct with `aws rds describe-db-instances` and check you're querying the correct AWS region.
-    **`An error occurred (InvalidDBInstanceState) when calling the StartDBInstance operation: DB instance is not in stopped state`** — Confirm the instance is stopped before attempting to start it using `aws rds describe-db-instances --db-instance-identifier <id>`.
-    **`An error occurred (DBSnapshotAlreadyExists) when calling the CreateDBSnapshot operation: DB Snapshot already exists`** — Use a unique snapshot identifier or delete the existing snapshot with `aws rds delete-db-snapshot --db-snapshot-identifier <snap_name>`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (DBInstanceNotFound) when calling the DescribeDBInstances operation: DBInstance not found` | Verify the instance identifier is correct with `aws rds describe-db-instances` and check you're querying the correct AWS region. |
+    | `An error occurred (InvalidDBInstanceState) when calling the StartDBInstance operation: DB instance is not in stopped state` | Confirm the instance is stopped before attempting to start it using `aws rds describe-db-instances --db-instance-identifier <id>`. |
+    | `An error occurred (DBSnapshotAlreadyExists) when calling the CreateDBSnapshot operation: DB Snapshot already exists` | Use a unique snapshot identifier or delete the existing snapshot with `aws rds delete-db-snapshot --db-snapshot-identifier <snap_name>`. |
 ---
 
 ## EKS
@@ -603,8 +609,10 @@ Added new context arn:aws:eks:us-east-1:123456789012:cluster/production-cluster 
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the ListClusters operation: No cluster found`** — Verify the cluster exists in your current AWS region with `aws eks list-clusters --region <region>`.
-    **`An error occurred (InvalidParameterException) when calling the UpdateKubeconfig operation: Cluster not found`** — Ensure the cluster name is correct and you have permissions; verify with `aws eks describe-cluster --name <cluster> --region <region>`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the ListClusters operation: No cluster found` | Verify the cluster exists in your current AWS region with `aws eks list-clusters --region <region>`. |
+    | `An error occurred (InvalidParameterException) when calling the UpdateKubeconfig operation: Cluster not found` | Ensure the cluster name is correct and you have permissions; verify with `aws eks describe-cluster --name <cluster> --region <region>`. |
 ---
 
 ## Systems Manager (SSM)
@@ -667,9 +675,11 @@ Parameters:
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (TargetNotConnected) when calling the SendCommand operation: The following instances are not connected: i-0a7f2c9d4e1b5f3a2`** — Verify the instance has the SSM agent running (`systemctl status amazon-ssm-agent`) and an IAM role with `AmazonSSMManagedInstanceCore` policy attached.
-    **`An error occurred (ParameterNotFound) when calling the GetParameter operation: Parameter /my/param not found.`** — Confirm the parameter name and path are correct with `aws ssm describe-parameters --filters "Key=Name,Values=/my/param"`.
-    **`An error occurred (AccessDenied) when calling the StartSession operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: ssm:StartSession`** — Add the `AmazonSSMFullAccess` policy or a custom policy with `ssm:StartSession` and `ssm:GetConnectionStatus` permissions to the IAM user/role.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (TargetNotConnected) when calling the SendCommand operation: The following instances are not connected: i-0a7f2c9d4e1b5f3a2` | Verify the instance has the SSM agent running (`systemctl status amazon-ssm-agent`) and an IAM role with `AmazonSSMManagedInstanceCore` policy attached. |
+    | `An error occurred (ParameterNotFound) when calling the GetParameter operation: Parameter /my/param not found.` | Confirm the parameter name and path are correct with `aws ssm describe-parameters --filters "Key=Name,Values=/my/param"`. |
+    | `An error occurred (AccessDenied) when calling the StartSession operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: ssm:StartSession` | Add the `AmazonSSMFullAccess` policy or a custom policy with `ssm:StartSession` and `ssm:GetConnectionStatus` permissions to the IAM user/role. |
 ---
 
 ## Lambda

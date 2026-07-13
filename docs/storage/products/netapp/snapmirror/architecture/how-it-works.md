@@ -157,9 +157,11 @@ svm_dst:vol_dst svm_dst:vol_dst sm_daily.2 2024-01-13 14:08:09 +00:00 Success
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: destination path is not a SnapMirror destination`** — Verify the destination SVM and volume exist and are properly configured as a SnapMirror destination with `snapmirror show`.
-    **`Error: SnapMirror relationship is not in a state that allows this operation`** — Ensure the relationship is healthy and not already in a transitional state (quiesced, transferring, or broken-off) before attempting the operation.
-    **`Error: transfer is already in progress for this destination`** — Wait for the current transfer to complete or abort it with `snapmirror abort -destination-path <path>` before issuing a new update command.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: destination path is not a SnapMirror destination` | Verify the destination SVM and volume exist and are properly configured as a SnapMirror destination with `snapmirror show`. |
+    | `Error: SnapMirror relationship is not in a state that allows this operation` | Ensure the relationship is healthy and not already in a transitional state (quiesced, transferring, or broken-off) before attempting the operation. |
+    | `Error: transfer is already in progress for this destination` | Wait for the current transfer to complete or abort it with `snapmirror abort -destination-path <path>` before issuing a new update command. |
 ## DR Failover Sequence
 
 1. **Detect RPO breach or site failure** — identify that the source is unavailable or lag has exceeded the RPO threshold
@@ -205,9 +207,11 @@ Vserver "svm_dst" started successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Relationship does not exist.`** — Verify the source and destination SVM names are correct and the relationship was created successfully with `snapmirror show`.
-    **`Error: command failed: SnapMirror relationship is not idle.`** — Wait for the previous transfer to complete or abort it with `snapmirror abort -destination-path svm_dst:` before breaking the relationship.
-    **`Error: command failed: Vserver is already running.`** — Check the current state with `vserver show -vserver svm_dst` and skip the start command if the vserver is already online.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Relationship does not exist.` | Verify the source and destination SVM names are correct and the relationship was created successfully with `snapmirror show`. |
+    | `Error: command failed: SnapMirror relationship is not idle.` | Wait for the previous transfer to complete or abort it with `snapmirror abort -destination-path svm_dst:` before breaking the relationship. |
+    | `Error: command failed: Vserver is already running.` | Check the current state with `vserver show -vserver svm_dst` and skip the start command if the vserver is already online. |
 ---
 
 ## See also

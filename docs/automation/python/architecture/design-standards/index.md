@@ -266,9 +266,11 @@ tests/test_api.py::test_fetch_comments PASSED                             [100%]
 ```
 
 !!! warning "Common errors"
-    **`ERROR: file not found: tests/test_api.py`** — Verify the test file path matches your project structure and run from the repository root directory.
-    **`ModuleNotFoundError: No module named 'pytest'`** — Install pytest with `pip install pytest pytest-cov` before running tests.
-    **`FAILED tests/test_api.py::test_fetch - AssertionError: assert None == 'expected_value'`** — Review the failing test assertion and ensure the code under test returns the expected value.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: file not found: tests/test_api.py` | Verify the test file path matches your project structure and run from the repository root directory. |
+    | `ModuleNotFoundError: No module named 'pytest'` | Install pytest with `pip install pytest pytest-cov` before running tests. |
+    | `FAILED tests/test_api.py::test_fetch - AssertionError: assert None == 'expected_value'` | Review the failing test assertion and ensure the code under test returns the expected value. |
 ---
 
 ```d2

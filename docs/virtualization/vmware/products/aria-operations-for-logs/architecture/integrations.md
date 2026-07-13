@@ -46,9 +46,11 @@ esxcli system syslog config get
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to resolve hostname vrli-prod-01.example.local`** — Verify the FQDN is correct and that DNS resolution is working on the ESXi host with `nslookup vrli-prod-01.example.local`.
-    **`Error: Connection refused to 192.168.1.50:514`** — Ensure the vRealize Log Insight server is running and listening on UDP port 514 with `netstat -tuln | grep 514` on the VRLI host.
-    **`Error: This command requires root privileges`** — Run the esxcli commands as root or with appropriate sudo permissions on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to resolve hostname vrli-prod-01.example.local` | Verify the FQDN is correct and that DNS resolution is working on the ESXi host with `nslookup vrli-prod-01.example.local`. |
+    | `Error: Connection refused to 192.168.1.50:514` | Ensure the vRealize Log Insight server is running and listening on UDP port 514 with `netstat -tuln | grep 514` on the VRLI host. |
+    | `Error: This command requires root privileges` | Run the esxcli commands as root or with appropriate sudo permissions on the ESXi host. |
 ---
 
 ## NSX-T Syslog Integration
@@ -91,9 +93,11 @@ curl -sk -u 'admin:<password>' -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but verify NSX Manager certificate is trusted if removing `-k`).
-    **`{"httpStatus":401,"error_code":"UNAUTHENTICATED","module_name":"common-services","error_message":"The credentials were invalid"}`** — Verify the NSX Manager admin password is correct and URL-encode special characters in the password.
-    **`{"httpStatus":400,"error_code":"INVALID_REQUEST","error_message":"Invalid facility value"}`** — Use valid syslog facility values (USER, LOCAL0–LOCAL7, DAEMON, etc.) and verify JSON syntax is valid.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example, but verify NSX Manager certificate is trusted if removing `-k`). |
+    | `{"httpStatus":401,"error_code":"UNAUTHENTICATED","module_name":"common-services","error_message":"The credentials were invalid"}` | Verify the NSX Manager admin password is correct and URL-encode special characters in the password. |
+    | `{"httpStatus":400,"error_code":"INVALID_REQUEST","error_message":"Invalid facility value"}` | Use valid syslog facility values (USER, LOCAL0–LOCAL7, DAEMON, etc.) and verify JSON syntax is valid. |
 For NSX Edge nodes, apply the syslog configuration via a transport node profile or per-edge configuration in NSX-T Manager UI:
 ```text
 NSX-T UI → Fabric → Nodes → Edge Transport Nodes → select node → Syslog → Add
@@ -149,9 +153,11 @@ Verification completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`./VMware-Log-Insight-Agent-*.bin: Permission denied`** — Run `chmod +x VMware-Log-Insight-Agent-*.bin` before executing the installer.
-    **`[server] hostname=vrli-prod-01.example.local: Name or service not known`** — Verify the VRLI hostname is resolvable by running `nslookup vrli-prod-01.example.local` and update `/var/lib/loginsight-agent/liagent.ini` with the correct IP or FQDN.
-    **`liagentd.service: Unit not found.`** — Ensure the agent installation completed without errors and check `/var/log/loginsight-agent/liagent.log` for installation failures.
+    | Error | Fix |
+    |---|---|
+    | `./VMware-Log-Insight-Agent-*.bin: Permission denied` | Run `chmod +x VMware-Log-Insight-Agent-*.bin` before executing the installer. |
+    | `[server] hostname=vrli-prod-01.example.local: Name or service not known` | Verify the VRLI hostname is resolvable by running `nslookup vrli-prod-01.example.local` and update `/var/lib/loginsight-agent/liagent.ini` with the correct IP or FQDN. |
+    | `liagentd.service: Unit not found.` | Ensure the agent installation completed without errors and check `/var/log/loginsight-agent/liagent.log` for installation failures. |
 ---
 
 ## Windows Log Forwarding Agent
@@ -253,9 +259,11 @@ curl -sk -u 'admin:<password>' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the CA certificate into your system's trust store with `update-ca-certificates`.
-    **`jq: parse error: Cannot index string with string "name"`** — Verify the API response structure matches your jq filter by running `curl -sk -u 'admin:<password>' "https://vrli-prod-01.example.local/api/v2/alerts?severity=critical&limit=1" | jq '.'` to inspect the raw JSON.
-    **`curl: (401) Unauthorized`** — Confirm the admin credentials are correct and the user has API access permissions in Aria Operations for Logs.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the CA certificate into your system's trust store with `update-ca-certificates`. |
+    | `jq: parse error: Cannot index string with string "name"` | Verify the API response structure matches your jq filter by running `curl -sk -u 'admin:<password>' "https://vrli-prod-01.example.local/api/v2/alerts?severity=critical&limit=1" | jq '.'` to inspect the raw JSON. |
+    | `curl: (401) Unauthorized` | Confirm the admin credentials are correct and the user has API access permissions in Aria Operations for Logs. |
 ## See also
 
 - [Aria Operations for Logs — How It Works](../how-it-works/)

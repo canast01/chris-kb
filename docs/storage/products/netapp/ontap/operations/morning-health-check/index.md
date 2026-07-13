@@ -57,8 +57,10 @@ cluster-test-03             true    false
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: cluster`** — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not your local shell.
-    **`Error: Access denied for command "cluster show"`** — Verify your ONTAP user account has the appropriate RBAC role assigned (e.g., admin or read-only).
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: cluster` | Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not your local shell. |
+    | `Error: Access denied for command "cluster show"` | Verify your ONTAP user account has the appropriate RBAC role assigned (e.g., admin or read-only). |
 Expected output: every node shows `true` in the Health column and `false` in the Epsilon column (one node may hold Epsilon — that is normal). Any node showing `false` for Health blocks the rest of the routine.
 
 ---
@@ -91,8 +93,10 @@ Component Details:
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found`** — Ensure you are logged into the ONTAP cluster CLI (via SSH or console) and not a Linux shell.
-    **`Error: Access denied for command: system health status show`** — Verify your user role has sufficient privileges; request admin or operator role access from your cluster administrator.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found` | Ensure you are logged into the ONTAP cluster CLI (via SSH or console) and not a Linux shell. |
+    | `Error: Access denied for command: system health status show` | Verify your user role has sufficient privileges; request admin or operator role access from your cluster administrator. |
 Expected output: `Status: ok`. Any other status (`degraded`, `warning`) means a subsystem has an active alert — proceed to step 3 immediately.
 
 ---
@@ -128,8 +132,10 @@ Alert ID: 3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r
 ```
 
 !!! warning "Common errors"
-    **`Error: This command is not available in the current cluster setup`** — Verify the cluster is running ONTAP 9.1 or later and that the health monitoring subsystem is enabled with `system health status show`.
-    **`Error: Access denied for user 'admin' on this command`** — Ensure your user account has the 'admin' or 'readonly' role assigned via `security login show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: This command is not available in the current cluster setup` | Verify the cluster is running ONTAP 9.1 or later and that the health monitoring subsystem is enabled with `system health status show`. |
+    | `Error: Access denied for user 'admin' on this command` | Ensure your user account has the 'admin' or 'readonly' role assigned via `security login show`. |
 Expected output: no rows. Any alert row must be acknowledged or resolved. Note the `Probable Cause` and `Corrective Action` columns — these are actionable.
 
 ---
@@ -152,8 +158,10 @@ backup_aggregate          online   51
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: storage`** — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a local shell.
-    **`Error: Invalid field "used-percent"`** — Use the correct field name `used-percent` or check available fields with `storage aggregate show -fields ?`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: storage` | Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a local shell. |
+    | `Error: Invalid field "used-percent"` | Use the correct field name `used-percent` or check available fields with `storage aggregate show -fields ?`. |
 Expected output: all aggregates in `online` state. Flag any aggregate with `used-percent` exceeding 80%. At 85% or above treat as critical — see threshold table below.
 
 ---
@@ -174,8 +182,10 @@ cluster2  vol_archive  offline    12%
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found`** — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a standard Linux shell.
-    **`Error: No such field "percent-used"`** — Verify your ONTAP version supports the percent-used field; use `volume show -fields ?` to list available fields for your release.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found` | Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a standard Linux shell. |
+    | `Error: No such field "percent-used"` | Verify your ONTAP version supports the percent-used field; use `volume show -fields ?` to list available fields for your release. |
 Expected output: no rows (or only the header line). Any volume not in `online` state requires investigation before starting operational work.
 
 ---
@@ -198,8 +208,10 @@ svm_prod  vol_temp     95
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: volume`** — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a standard Linux shell.
-    **`Error: invalid field name "percent-used"`** — Verify the field name matches your ONTAP version; use `volume show -fields ?` to list available fields.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: volume` | Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a standard Linux shell. |
+    | `Error: invalid field name "percent-used"` | Verify the field name matches your ONTAP version; use `volume show -fields ?` to list available fields. |
 Expected output: header line only. Any volume above 80% must be noted. Above 90% is critical — expand the volume or move data before proceeding with other work.
 
 ---
@@ -222,9 +234,11 @@ svm1:vol_backup svm2:vol_backup_mirror SnapMirror Idle 23:45:00 Healthy
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Ensure you are logged into the ONTAP cluster CLI (ssh admin@cluster-mgmt-ip) rather than the local shell.
-    **`Error: No SnapMirror relationships found`** — Verify that SnapMirror relationships exist on this cluster using `snapmirror show` without filters first.
-    **`Error: Invalid field name "lag-time"`** — Use the correct field name `lag_time` (underscore instead of hyphen) in the -fields parameter.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Ensure you are logged into the ONTAP cluster CLI (ssh admin@cluster-mgmt-ip) rather than the local shell. |
+    | `Error: No SnapMirror relationships found` | Verify that SnapMirror relationships exist on this cluster using `snapmirror show` without filters first. |
+    | `Error: Invalid field name "lag-time"` | Use the correct field name `lag_time` (underscore instead of hyphen) in the -fields parameter. |
 Expected output: all relationships show `true` for Health. For `lag-time`, compare against each relationship's schedule — lag exceeding 2× the schedule interval indicates a transfer problem. Any `false` Health value requires immediate investigation.
 
 ---
@@ -249,8 +263,10 @@ node2           data1           172.16.0.101    255.255.255.0   down   up    dow
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: network`** — Ensure you are connected to the ONTAP cluster CLI (SSH to the cluster management IP), not the local shell.
-    **`Error: invalid field name "status-oper"`** — Use the correct field name `status-admin` or `status-oper` separately, or omit `-fields` to see all interface details.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: network` | Ensure you are connected to the ONTAP cluster CLI (SSH to the cluster management IP), not the local shell. |
+    | `Error: invalid field name "status-oper"` | Use the correct field name `status-admin` or `status-oper` separately, or omit `-fields` to see all interface details. |
 Expected output: all LIFs show `up` for `status-oper`. Any `down` LIF blocks storage access for the associated protocol — resolve before starting other work.
 
 ---
@@ -275,8 +291,10 @@ Disk                 Container                     Type    RPM  Usable Size Stat
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: storage`** — Ensure you are running this command in the ONTAP CLI (SSH to the cluster management IP), not in the Linux shell.
-    **`Error: access denied for command "storage disk show"`** — Verify your user role has the "storage" privilege by running `security login show -user-or-group-name <username>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: storage` | Ensure you are running this command in the ONTAP CLI (SSH to the cluster management IP), not in the Linux shell. |
+    | `Error: access denied for command "storage disk show"` | Verify your user role has the "storage" privilege by running `security login show -user-or-group-name <username>`. |
 Expected output: no rows. Any broken disk must be replaced immediately. Open a case with NetApp if the disk is under support contract. Do not start any workload migrations until broken disks are replaced.
 
 ---
@@ -299,8 +317,10 @@ Time                 Severity Event
 ```
 
 !!! warning "Common errors"
-    **`Error: invalid time-range format`** — Use ISO 8601 format or relative time like "-1h", "-24h", or specify absolute timestamps with "-start-time" and "-end-time" parameters.
-    **`Error: This command requires cluster admin privileges`** — Run the command with an account that has cluster-admin role, or use `security login show` to verify your permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: invalid time-range format` | Use ISO 8601 format or relative time like "-1h", "-24h", or specify absolute timestamps with "-start-time" and "-end-time" parameters. |
+    | `Error: This command requires cluster admin privileges` | Run the command with an account that has cluster-admin role, or use `security login show` to verify your permissions. |
 Expected output: no rows, or only informational entries. Review any `error`-severity events. Cross-reference with steps 3–9 to determine if they are already captured by an alert. Events not tied to an existing alert need investigation.
 
 ---
@@ -339,8 +359,10 @@ Size: 8.1 MB
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found`** — Verify you are connected to the ONTAP cluster CLI and have appropriate admin privileges.
-    **`Error: This command is not supported on this release`** — Check your ONTAP version with `version` command; autosupport history show requires ONTAP 9.6 or later.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found` | Verify you are connected to the ONTAP cluster CLI and have appropriate admin privileges. |
+    | `Error: This command is not supported on this release` | Check your ONTAP version with `version` command; autosupport history show requires ONTAP 9.6 or later. |
 Expected output: the most recent entry shows `sent-successful` or `ignore`. A `failed` status means AutoSupport is not reaching NetApp — check proxy configuration and network connectivity. This does not block operations but must be resolved today.
 
 ---

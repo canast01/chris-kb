@@ -141,9 +141,11 @@ Progress: 34%
 ```
 
 !!! warning "Common errors"
-    **`qlist: command not found`** — Ensure you are running the command from the CommVault bin directory (typically `C:\Program Files\Commvault\ContentStore\Base\`) or add it to your PATH environment variable.
-    **`Error Code: 19:107 - Archive Index failed`** — Check CommServe disk space and database connectivity; restart the CommVault services if the index is corrupted.
-    **`Job ID <job-id> not found`** — Verify the job ID is correct and the job has not been purged from the job history (default retention is 90 days).
+    | Error | Fix |
+    |---|---|
+    | `qlist: command not found` | Ensure you are running the command from the CommVault bin directory (typically `C:\Program Files\Commvault\ContentStore\Base\`) or add it to your PATH environment variable. |
+    | `Error Code: 19:107 - Archive Index failed` | Check CommServe disk space and database connectivity; restart the CommVault services if the index is corrupted. |
+    | `Job ID <job-id> not found` | Verify the job ID is correct and the job has not been purged from the job history (default retention is 90 days). |
 ---
 
 ## Step 2 — Test connectivity to affected clients
@@ -202,9 +204,11 @@ CommCell ID: 2
 ```
 
 !!! warning "Common errors"
-    **`Ping failed`** — Verify network connectivity between CommServe and client, check firewall rules allow port 8400, and confirm CV services are running on both hosts with `service cvd status`.
-    **`Client not found in CommCell`** — Ensure the client hostname is registered in CommCell by running `qlist client` to verify it exists, or re-register the client if missing.
-    **`Connection timeout after 30 seconds`** — Check if the client's CV daemon is running with `service cvd status` and restart it with `service cvd restart` if stopped.
+    | Error | Fix |
+    |---|---|
+    | `Ping failed` | Verify network connectivity between CommServe and client, check firewall rules allow port 8400, and confirm CV services are running on both hosts with `service cvd status`. |
+    | `Client not found in CommCell` | Ensure the client hostname is registered in CommCell by running `qlist client` to verify it exists, or re-register the client if missing. |
+    | `Connection timeout after 30 seconds` | Check if the client's CV daemon is running with `service cvd status` and restart it with `service cvd restart` if stopped. |
 **If cvping fails:**
 1. Confirm TCP 8400 is open between CommServe and client (use telnet or Test-NetConnection)
 2. On the client: verify `GxFWD` (CvFwd) service is running
@@ -270,9 +274,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`qlist: command not found`** — Ensure the Commvault installation directory is in your PATH or run the command from the Commvault bin directory (e.g., `/opt/commvault/Base/bin/qlist`).
-    **`DDB status = Resync Required`** — Run a DDB rebuild from the CommCell console or contact Commvault support if the resync does not complete within the expected timeframe.
-    **`Filesystem /mnt/cv-disk-library: No such file or directory`** — Verify the mount path exists and the disk library is properly mounted on the MediaAgent host.
+    | Error | Fix |
+    |---|---|
+    | `qlist: command not found` | Ensure the Commvault installation directory is in your PATH or run the command from the Commvault bin directory (e.g., `/opt/commvault/Base/bin/qlist`). |
+    | `DDB status = Resync Required` | Run a DDB rebuild from the CommCell console or contact Commvault support if the resync does not complete within the expected timeframe. |
+    | `Filesystem /mnt/cv-disk-library: No such file or directory` | Verify the mount path exists and the disk library is properly mounted on the MediaAgent host. |
 **If DDB status is "Resync Required" or "Offline":**
 1. Do not delete or move DDB files — this can cause data loss for all dedup-enabled backups on that MA
 2. Run the DDB verification script: `qoperation execscript -sn QS_DDBVerify`

@@ -74,9 +74,11 @@ VMAX3 Flex on Demand Base             0.00 TB     Expired
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Cannot open Symmetrix <sid>`** — Verify the SID is correct and the array is reachable via `symcfg -sid <sid> list -director`.
-    **`symlmf: License file format invalid or corrupted`** — Ensure the license file is not truncated and was obtained directly from Dell EMC licensing portal.
-    **`symlmf: Permission denied on /tmp/new_fod_license.dat`** — Run the import command with appropriate privileges (sudo) or move the file to a readable location.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Cannot open Symmetrix <sid>` | Verify the SID is correct and the array is reachable via `symcfg -sid <sid> list -director`. |
+    | `symlmf: License file format invalid or corrupted` | Ensure the license file is not truncated and was obtained directly from Dell EMC licensing portal. |
+    | `symlmf: Permission denied on /tmp/new_fod_license.dat` | Run the import command with appropriate privileges (sudo) or move the file to a readable location. |
 ---
 
 ## Verify

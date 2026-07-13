@@ -108,9 +108,11 @@ Swap:           16Gi       8.2Gi       7.8Gi
 ```
 
 !!! warning "Common errors"
-    **`cat: /etc/os-release: No such file or directory`** — Use `cat /etc/system-release` on older RHEL/CentOS systems, or check `/etc/redhat-release`.
-    **`dmidecode: command not found`** — Install the dmidecode package with `sudo yum install dmidecode` or `sudo apt install dmidecode`.
-    **`lscpu: command not found`** — Install util-linux package with `sudo yum install util-linux` or `sudo apt install util-linux`.
+    | Error | Fix |
+    |---|---|
+    | `cat: /etc/os-release: No such file or directory` | Use `cat /etc/system-release` on older RHEL/CentOS systems, or check `/etc/redhat-release`. |
+    | `dmidecode: command not found` | Install the dmidecode package with `sudo yum install dmidecode` or `sudo apt install dmidecode`. |
+    | `lscpu: command not found` | Install util-linux package with `sudo yum install util-linux` or `sudo apt install util-linux`. |
 ### 2. Collect recent journal and dmesg output
 
 ```bash
@@ -141,9 +143,11 @@ tail: cannot open '/var/log/messages' for reading: No such file or directory
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/messages' for reading: No such file or directory`** — Use `/var/log/syslog` on Debian/Ubuntu systems or check the actual log path with `ls /var/log/*.log`.
-    **`journalctl: command not found`** — Install systemd with `apt-get install systemd` or `yum install systemd` depending on your distribution.
-    **`Permission denied`** — Run the commands with `sudo` or as root to access full journal and kernel buffer contents.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/messages' for reading: No such file or directory` | Use `/var/log/syslog` on Debian/Ubuntu systems or check the actual log path with `ls /var/log/*.log`. |
+    | `journalctl: command not found` | Install systemd with `apt-get install systemd` or `yum install systemd` depending on your distribution. |
+    | `Permission denied` | Run the commands with `sudo` or as root to access full journal and kernel buffer contents. |
 ### 3. Run sosreport (RHEL) or apport-collect (Ubuntu)
 
 **RHEL:**
@@ -211,8 +215,10 @@ Your sosreport has been successfully generated and saved in:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to find a match: sos`** — Ensure your system repositories are enabled with `dnf repolist` and run `dnf update` before retrying the install.
-    **`ERROR: sosreport requires root privileges to run`** — Execute the sosreport command with `sudo` or as the root user.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to find a match: sos` | Ensure your system repositories are enabled with `dnf repolist` and run `dnf update` before retrying the install. |
+    | `ERROR: sosreport requires root privileges to run` | Execute the sosreport command with `sudo` or as the root user. |
 **Ubuntu:**
 
 ```bash
@@ -246,9 +252,11 @@ The checksum is: 7f2e8c9d5a1b3c4e6f9a2b8d5e1c3a4f
 ```
 
 !!! warning "Common errors"
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the command with `sudo` or as the root user.
-    **`sosreport: command not found`** — Install sosreport with `apt-get install -y sosreport` before running the diagnostic collection.
-    **`apport-collect: command not found`** — Install apport with `apt-get install -y apport` or use sosreport as the primary diagnostic tool.
+    | Error | Fix |
+    |---|---|
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the command with `sudo` or as the root user. |
+    | `sosreport: command not found` | Install sosreport with `apt-get install -y sosreport` before running the diagnostic collection. |
+    | `apport-collect: command not found` | Install apport with `apt-get install -y apport` or use sosreport as the primary diagnostic tool. |
 Upload the archive to the support case. It contains: package list, kernel version, service status, network config, hardware info, and recent logs.
 
 ### 4. Collect the crash dump (if host has kernel-panicked)
@@ -282,9 +290,11 @@ BOOT_IMAGE=/boot/vmlinuz-5.14.0-427.el9.x86_64 root=UUID=a1b2c3d4-e5f6-7890-abcd
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/var/crash/': No such file or directory`** — Create the directory with `mkdir -p /var/crash/` and ensure kdump is properly initialized with `kdumpctl rebuild`.
-    **`● kdump.service - Crash recovery kernel dump service Loaded: loaded ... Active: inactive (dead)`** — Enable and start kdump with `systemctl enable kdump && systemctl start kdump`.
-    **`grep: (standard input) is empty`** — Add `crashkernel=auto` to the kernel boot parameters in `/etc/default/grub`, run `grub2-mkconfig -o /boot/grub2/grub.cfg`, and reboot.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/var/crash/': No such file or directory` | Create the directory with `mkdir -p /var/crash/` and ensure kdump is properly initialized with `kdumpctl rebuild`. |
+    | `● kdump.service - Crash recovery kernel dump service Loaded: loaded ... Active: inactive (dead)` | Enable and start kdump with `systemctl enable kdump && systemctl start kdump`. |
+    | `grep: (standard input) is empty` | Add `crashkernel=auto` to the kernel boot parameters in `/etc/default/grub`, run `grub2-mkconfig -o /boot/grub2/grub.cfg`, and reboot. |
 If a crash dump exists, include the path in the case description. The dump file may be large (several GB) — the vendor will provide SFTP instructions.
 
 ### 5. Write the timeline

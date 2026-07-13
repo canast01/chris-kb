@@ -153,8 +153,10 @@ drwxr-xr-x 4 root root 4096 May 25 02:00 2026-05-25_02-00-00
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/vcenter-backups/': No such file or directory`** — Verify the SFTP target mount point exists and is mounted with `mount | grep vcenter-backups`.
-    **`ls: cannot open directory '/vcenter-backups/': Permission denied`** — Check directory permissions with `stat /vcenter-backups/` and ensure your user has read access.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/vcenter-backups/': No such file or directory` | Verify the SFTP target mount point exists and is mounted with `mount | grep vcenter-backups`. |
+    | `ls: cannot open directory '/vcenter-backups/': Permission denied` | Check directory permissions with `stat /vcenter-backups/` and ensure your user has read access. |
 ---
 
 ## Restore Considerations
@@ -194,9 +196,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Verify VxRail Manager is fully booted and accessible; check network connectivity with `ping <vxm-ip>` and confirm HTTPS service is running.
-    **`{"error": "Invalid credentials", "code": 401}`** — Verify the base64-encoded username and password are correct by decoding with `echo 'bXlzdGljOnBhc3N3b3Jk' | base64 -d` and confirm the account has API access permissions.
-    **`command not found: python3`** — Install Python 3 with your package manager (`apt install python3` on Debian/Ubuntu or `yum install python3` on RHEL) or pipe to `jq` instead if available.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused` | Verify VxRail Manager is fully booted and accessible; check network connectivity with `ping <vxm-ip>` and confirm HTTPS service is running. |
+    | `{"error": "Invalid credentials", "code": 401}` | Verify the base64-encoded username and password are correct by decoding with `echo 'bXlzdGljOnBhc3N3b3Jk' | base64 -d` and confirm the account has API access permissions. |
+    | `command not found: python3` | Install Python 3 with your package manager (`apt install python3` on Debian/Ubuntu or `yum install python3` on RHEL) or pipe to `jq` instead if available. |
 ### If vCenter is Lost
 
 1. **VMs continue to run** on ESXi hosts — vSphere HA and DRS stop functioning but workloads are unaffected

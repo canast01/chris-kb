@@ -128,8 +128,10 @@ admin>
 ```
 
 !!! warning "Common errors"
-    **`Password too short (minimum 8 characters required)`** — Ensure the new password is at least 8 characters long and includes uppercase, lowercase, numbers, and special characters.
-    **`Passwords do not match`** — Re-enter both passwords carefully, ensuring they are identical on the second prompt.
+    | Error | Fix |
+    |---|---|
+    | `Password too short (minimum 8 characters required)` | Ensure the new password is at least 8 characters long and includes uppercase, lowercase, numbers, and special characters. |
+    | `Passwords do not match` | Re-enter both passwords carefully, ensuring they are identical on the second prompt. |
 **Set the switch name:**
 
 ```bash
@@ -142,8 +144,10 @@ switchName "sw-fabric-a-01"
 ```
 
 !!! warning "Common errors"
-    **`switchName: command not found`** — Ensure you are in the Brocade FOS CLI environment (telnet/SSH to the switch) rather than a standard bash shell.
-    **`Invalid switch name format`** — Use only alphanumeric characters and hyphens; switch names cannot exceed 63 characters or contain spaces.
+    | Error | Fix |
+    |---|---|
+    | `switchName: command not found` | Ensure you are in the Brocade FOS CLI environment (telnet/SSH to the switch) rather than a standard bash shell. |
+    | `Invalid switch name format` | Use only alphanumeric characters and hyphens; switch names cannot exceed 63 characters or contain spaces. |
 **Set management IP (if not using DHCP):**
 
 ```bash
@@ -177,8 +181,10 @@ Please restart the switch for changes to take effect.
 ```
 
 !!! warning "Common errors"
-    **`Invalid IP address format`** — Ensure all IP addresses are entered in dotted-decimal notation (e.g., 10.0.0.10) with no spaces or special characters.
-    **`Gateway IP Address must be on the same subnet as Ethernet IP Address`** — Verify the gateway IP falls within the 10.0.0.0/24 subnet (10.0.0.1–10.0.0.254).
+    | Error | Fix |
+    |---|---|
+    | `Invalid IP address format` | Ensure all IP addresses are entered in dotted-decimal notation (e.g., 10.0.0.10) with no spaces or special characters. |
+    | `Gateway IP Address must be on the same subnet as Ethernet IP Address` | Verify the gateway IP falls within the 10.0.0.0/24 subnet (10.0.0.1–10.0.0.254). |
 **Configure NTP:**
 
 ```bash
@@ -197,8 +203,10 @@ Wed Oct 18 14:32:47 UTC 2024
 ```
 
 !!! warning "Common errors"
-    **`tsclockserver: command not found`** — Ensure you are logged into the Brocade switch via SSH or serial console, not a Linux host; this command only exists on FabricOS.
-    **`Error: Invalid IP address "10.0.0.5"`** — Verify the NTP server IP is reachable from the switch and is a valid, active NTP server on your network.
+    | Error | Fix |
+    |---|---|
+    | `tsclockserver: command not found` | Ensure you are logged into the Brocade switch via SSH or serial console, not a Linux host; this command only exists on FabricOS. |
+    | `Error: Invalid IP address "10.0.0.5"` | Verify the NTP server IP is reachable from the switch and is a valid, active NTP server on your network. |
 **Configure DNS:**
 
 ```bash
@@ -215,8 +223,10 @@ Current DNS configuration:
 ```
 
 !!! warning "Common errors"
-    **`dnsconfig: Invalid IP address format`** — Verify the IP address is in valid dotted-decimal notation (e.g., 10.0.0.53).
-    **`dnsconfig: DNS server already exists`** — Remove the duplicate entry with `dnsconfig --remove 10.0.0.53` before re-adding it.
+    | Error | Fix |
+    |---|---|
+    | `dnsconfig: Invalid IP address format` | Verify the IP address is in valid dotted-decimal notation (e.g., 10.0.0.53). |
+    | `dnsconfig: DNS server already exists` | Remove the duplicate entry with `dnsconfig --remove 10.0.0.53` before re-adding it. |
 **Enable SSH (if not already enabled):**
 
 ```bash
@@ -231,8 +241,10 @@ SSH key generation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`sshutil: command not found`** — Ensure you are logged into the Brocade switch console or SSH session with administrative privileges, as sshutil is a switch-native command.
-    **`Permission denied`** — Run the command with admin credentials or switch to the admin user account before executing sshutil commands.
+    | Error | Fix |
+    |---|---|
+    | `sshutil: command not found` | Ensure you are logged into the Brocade switch console or SSH session with administrative privileges, as sshutil is a switch-native command. |
+    | `Permission denied` | Run the command with admin credentials or switch to the admin user account before executing sshutil commands. |
 ---
 
 ## Set Domain ID and Fabric Parameters
@@ -258,8 +270,10 @@ Switch is now in disabled state.
 ```
 
 !!! warning "Common errors"
-    **`switchDisable: command not found`** — Ensure you are logged into the Fabric OS CLI (via SSH or console) and have appropriate admin privileges; this command only works within the FOS shell, not the Linux host shell.
-    **`Permission denied`** — Verify your user account has admin-level credentials; use `userconfig --show` to check your current role and request elevation if needed.
+    | Error | Fix |
+    |---|---|
+    | `switchDisable: command not found` | Ensure you are logged into the Fabric OS CLI (via SSH or console) and have appropriate admin privileges; this command only works within the FOS shell, not the Linux host shell. |
+    | `Permission denied` | Verify your user account has admin-level credentials; use `userconfig --show` to check your current role and request elevation if needed. |
 **Set the domain ID:**
 
 ```bash
@@ -301,9 +315,11 @@ Configuration applied successfully. Switch will reboot in 30 seconds.
 ```
 
 !!! warning "Common errors"
-    **`Error: Domain ID 1 already in use on fabric`** — Choose an unused domain ID between 2–239 that is not already assigned to another switch in the fabric.
-    **`Error: R_A_TOV (10000) does not match peer switch (5000)`** — Set R_A_TOV to the same value across all switches in the fabric before committing the configuration.
-    **`Error: Invalid BB Credits value 16 for ISL speed 4Gbps`** — Reduce BB Credits to 8 or lower, or increase ISL speed to 8Gbps or higher to support 16 credits.
+    | Error | Fix |
+    |---|---|
+    | `Error: Domain ID 1 already in use on fabric` | Choose an unused domain ID between 2–239 that is not already assigned to another switch in the fabric. |
+    | `Error: R_A_TOV (10000) does not match peer switch (5000)` | Set R_A_TOV to the same value across all switches in the fabric before committing the configuration. |
+    | `Error: Invalid BB Credits value 16 for ISL speed 4Gbps` | Reduce BB Credits to 8 or lower, or increase ISL speed to 8Gbps or higher to support 16 credits. |
 **Re-enable the switch:**
 
 ```bash
@@ -328,8 +344,10 @@ Fabric Participation: Active
 ```
 
 !!! warning "Common errors"
-    **`switchEnable: command not found`** — Ensure you are logged into the Brocade switch via SSH or serial console, not a local shell.
-    **`Permission denied`** — Verify your user account has administrative privileges; use `userConfig --show` to check role assignments.
+    | Error | Fix |
+    |---|---|
+    | `switchEnable: command not found` | Ensure you are logged into the Brocade switch via SSH or serial console, not a local shell. |
+    | `Permission denied` | Verify your user account has administrative privileges; use `userConfig --show` to check role assignments. |
 **Verify domain ID and fabric formation:**
 
 ```bash
@@ -369,9 +387,11 @@ Fabric Port Status: Online
 ```
 
 !!! warning "Common errors"
-    **`switchShow: command not found`** — Ensure you are logged into the Brocade switch CLI (via SSH or console) and not a Linux shell; use `ssh admin@<switch-ip>` to connect.
-    **`Fabric ID mismatch detected`** — Verify all switches have the same Fabric ID configured; use `fabricShow` to confirm and reconfigure mismatched switches with `configDefault` if needed.
-    **`Switch State: Offline`** — Check physical ISL (Inter-Switch Link) connections between fabric members and verify switch power and network connectivity.
+    | Error | Fix |
+    |---|---|
+    | `switchShow: command not found` | Ensure you are logged into the Brocade switch CLI (via SSH or console) and not a Linux shell; use `ssh admin@<switch-ip>` to connect. |
+    | `Fabric ID mismatch detected` | Verify all switches have the same Fabric ID configured; use `fabricShow` to confirm and reconfigure mismatched switches with `configDefault` if needed. |
+    | `Switch State: Offline` | Check physical ISL (Inter-Switch Link) connections between fabric members and verify switch power and network connectivity. |
 ---
 
 ## Zone Configuration
@@ -408,9 +428,11 @@ Zoning configuration saved to flash memory.
 ```
 
 !!! warning "Common errors"
-    **`Zone name already exists`** — Delete the existing zone with `zoneDelete "zone_esx01_hba0_pmax_fa1e_p0"` before recreating it.
-    **`Invalid WWN format in zone member list`** — Verify WWN syntax is exactly 16 hexadecimal characters (e.g., `50:00:09:73:00:1a:2b:3c`) with colons separating each pair.
-    **`Configuration is already enabled`** — Run `cfgDisable "cfg_fabric_a"` first if you need to modify the active configuration.
+    | Error | Fix |
+    |---|---|
+    | `Zone name already exists` | Delete the existing zone with `zoneDelete "zone_esx01_hba0_pmax_fa1e_p0"` before recreating it. |
+    | `Invalid WWN format in zone member list` | Verify WWN syntax is exactly 16 hexadecimal characters (e.g., `50:00:09:73:00:1a:2b:3c`) with colons separating each pair. |
+    | `Configuration is already enabled` | Run `cfgDisable "cfg_fabric_a"` first if you need to modify the active configuration. |
 **Verify zones are active:**
 
 ```bash
@@ -445,8 +467,10 @@ Zone Information:
 ```
 
 !!! warning "Common errors"
-    **`zoneShow: command not found`** — Verify you are logged into the Brocade switch CLI (not the Linux shell) by checking the prompt shows `switch>` or `switch#`.
-    **`Access denied`** — Ensure your user account has sufficient privileges; request admin or operator role from the fabric administrator.
+    | Error | Fix |
+    |---|---|
+    | `zoneShow: command not found` | Verify you are logged into the Brocade switch CLI (not the Linux shell) by checking the prompt shows `switch>` or `switch#`. |
+    | `Access denied` | Ensure your user account has sufficient privileges; request admin or operator role from the fabric administrator. |
 **Confirm name server entries (hosts and storage logged in):**
 
 ```bash
@@ -472,8 +496,10 @@ Fabric OS (v9.1.0)
 ```
 
 !!! warning "Common errors"
-    **`nsAllShow: command not found`** — Verify you are logged into the Brocade switch CLI (not the Linux shell) and have admin credentials.
-    **`Name Server not initialized`** — Enable the name server on the switch using `nsEnable` and wait 30 seconds for fabric discovery to complete.
+    | Error | Fix |
+    |---|---|
+    | `nsAllShow: command not found` | Verify you are logged into the Brocade switch CLI (not the Linux shell) and have admin credentials. |
+    | `Name Server not initialized` | Enable the name server on the switch using `nsEnable` and wait 30 seconds for fabric discovery to complete. |
 ---
 
 ## ISL Configuration
@@ -516,8 +542,10 @@ Port Status (sample):
 ```
 
 !!! warning "Common errors"
-    **`switchShow: command not found`** — Ensure you are logged into the Brocade switch via SSH or serial console, not a Linux host.
-    **`Permission denied`** — Verify your user account has sufficient privileges; use `userConfig --show` to check role assignments.
+    | Error | Fix |
+    |---|---|
+    | `switchShow: command not found` | Ensure you are logged into the Brocade switch via SSH or serial console, not a Linux host. |
+    | `Permission denied` | Verify your user account has sufficient privileges; use `userConfig --show` to check role assignments. |
 **Enable ISL trunking on ISL port groups:**
 
 ```bash
@@ -531,9 +559,11 @@ portCfgTrunkPort <port_number> 1
 ```
 
 !!! warning "Common errors"
-    **`portCfgTrunkPort: command not found`** — Ensure you are logged into the Brocade switch via SSH or serial console, not your local workstation.
-    **`Invalid port number <port_number>`** — Replace `<port_number>` with an actual port number (0-127 depending on switch model) and verify the port exists on your switch.
-    **`Port <port_number> is not adjacent to trunk group`** — Trunk ports must be consecutive within a group (e.g., 0-7 or 8-15); do not skip ports or mix non-adjacent ranges.
+    | Error | Fix |
+    |---|---|
+    | `portCfgTrunkPort: command not found` | Ensure you are logged into the Brocade switch via SSH or serial console, not your local workstation. |
+    | `Invalid port number <port_number>` | Replace `<port_number>` with an actual port number (0-127 depending on switch model) and verify the port exists on your switch. |
+    | `Port <port_number> is not adjacent to trunk group` | Trunk ports must be consecutive within a group (e.g., 0-7 or 8-15); do not skip ports or mix non-adjacent ranges. |
 **Verify trunk master and member ports:**
 
 ```bash
@@ -569,8 +599,10 @@ TrunkGroup: TG3
 ```
 
 !!! warning "Common errors"
-    **`trunkShow: command not found`** — Ensure you are logged into the Brocade switch via SSH/Telnet and have administrative privileges; the command is native to Fabric OS and not available on non-Brocade systems.
-    **`Access denied: insufficient privileges`** — Log in with an account that has admin or operator-level permissions on the switch.
+    | Error | Fix |
+    |---|---|
+    | `trunkShow: command not found` | Ensure you are logged into the Brocade switch via SSH/Telnet and have administrative privileges; the command is native to Fabric OS and not available on non-Brocade systems. |
+    | `Access denied: insufficient privileges` | Log in with an account that has admin or operator-level permissions on the switch. |
 **Check ISL topology:**
 
 ```bash
@@ -595,8 +627,10 @@ Connected Devices: 24
 ```
 
 !!! warning "Common errors"
-    **`topologyShow: command not found`** — Ensure you are logged into the Brocade switch via SSH or serial console, not a Linux host.
-    **`Permission denied`** — Verify your user account has admin or fabric-admin role privileges using `userConfig --show`.
+    | Error | Fix |
+    |---|---|
+    | `topologyShow: command not found` | Ensure you are logged into the Brocade switch via SSH or serial console, not a Linux host. |
+    | `Permission denied` | Verify your user account has admin or fabric-admin role privileges using `userConfig --show`. |
 ---
 
 ## SANnav Integration
@@ -629,8 +663,10 @@ Configuration saved to persistent storage
 ```
 
 !!! warning "Common errors"
-    **`snmpMibCapSet: command not found`** — Verify you are running this on a Brocade switch with FabricOS installed and have administrative privileges.
-    **`Error: Invalid IP address format for trap destination`** — Ensure the SANnav server IP is in valid dotted-decimal notation (e.g., 192.168.1.50) before running snmpConfig.
+    | Error | Fix |
+    |---|---|
+    | `snmpMibCapSet: command not found` | Verify you are running this on a Brocade switch with FabricOS installed and have administrative privileges. |
+    | `Error: Invalid IP address format for trap destination` | Ensure the SANnav server IP is in valid dotted-decimal notation (e.g., 192.168.1.50) before running snmpConfig. |
 7. In SANnav, configure alert policies under **Monitoring > Alerts** for link-down events, port errors, and fabric changes.
 
 ---
@@ -693,9 +729,11 @@ Port 3: 50:00:14:40:1a:2b:3c:50 (HOST_SERVER_02)
 ```
 
 !!! warning "Common errors"
-    **`portErrShow: command not found`** — Verify you are logged into the Brocade switch CLI (not the Linux shell) and use the correct Fabric OS command syntax.
-    **`lsanZoneShow: No zones configured`** — Create at least one zone using `zoneCreate` before querying zone status, or skip this check if FCR is not in use.
-    **`nsAllShow: Name Server not responding`** — Restart the name server with `nsRestart` or check fabric connectivity with `fabricShow` to ensure the switch is fully operational.
+    | Error | Fix |
+    |---|---|
+    | `portErrShow: command not found` | Verify you are logged into the Brocade switch CLI (not the Linux shell) and use the correct Fabric OS command syntax. |
+    | `lsanZoneShow: No zones configured` | Create at least one zone using `zoneCreate` before querying zone status, or skip this check if FCR is not in use. |
+    | `nsAllShow: Name Server not responding` | Restart the name server with `nsRestart` or check fabric connectivity with `fabricShow` to ensure the switch is fully operational. |
 **Verify host-to-storage path visibility:**
 
 From the host, scan for new FC targets and verify the storage volumes are visible. For a Linux host:
@@ -730,9 +768,11 @@ size=2.0T features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp
 ```
 
 !!! warning "Common errors"
-    **`rescan-scsi-bus.sh: command not found`** — Install sg3_utils package with `apt-get install sg3-utils` or `yum install sg3_utils`.
-    **`multipath: command not found`** — Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`.
-    **`No multipath output or "create: no paths"`** — Verify Brocade fabric connectivity and zoning by checking `zonestat` on the switch, then rescan with `rescan-scsi-bus.sh` again.
+    | Error | Fix |
+    |---|---|
+    | `rescan-scsi-bus.sh: command not found` | Install sg3_utils package with `apt-get install sg3-utils` or `yum install sg3_utils`. |
+    | `multipath: command not found` | Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`. |
+    | `No multipath output or "create: no paths"` | Verify Brocade fabric connectivity and zoning by checking `zonestat` on the switch, then rescan with `rescan-scsi-bus.sh` again. |
 **Fabric-level consistency check:**
 
 ```bash
@@ -772,9 +812,11 @@ Port Error Statistics (post-clear):
 ```
 
 !!! warning "Common errors"
-    **`Segmented Fabric Detected: Switch prod-switch-03 is isolated`** — Check ISL (Inter-Switch Link) connectivity between the isolated switch and the fabric core using `portShow` and verify cable connections.
-    **`portStatsClear: Command failed — Permission denied`** — Ensure you are logged in with admin credentials or use `userConfig --change <username>` to elevate permissions.
-    **`portErrShow: Port 0/5 shows CRC errors: 1247`** — Run `portDisable 0/5` followed by `portEnable 0/5` to reset the port, or replace the SFP transceiver if errors persist after restart.
+    | Error | Fix |
+    |---|---|
+    | `Segmented Fabric Detected: Switch prod-switch-03 is isolated` | Check ISL (Inter-Switch Link) connectivity between the isolated switch and the fabric core using `portShow` and verify cable connections. |
+    | `portStatsClear: Command failed — Permission denied` | Ensure you are logged in with admin credentials or use `userConfig --change <username>` to elevate permissions. |
+    | `portErrShow: Port 0/5 shows CRC errors: 1247` | Run `portDisable 0/5` followed by `portEnable 0/5` to reset the port, or replace the SFP transceiver if errors persist after restart. |
 ---
 
 ## Verify

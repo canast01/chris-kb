@@ -128,9 +128,11 @@ sudo grep -E "FATAL|ERROR|PANIC" /var/log/postgresql/postgresql-16-main.log | ta
 ```
 
 !!! warning "Common errors"
-    **`FATAL:  max_connections (100) exceeded`** — Increase `max_connections` in postgresql.conf and reload the server with `sudo systemctl reload postgresql-16`.
-    **`ERROR:  relation "users_table" does not exist`** — Verify the table name is correct and exists in the current schema with `\dt` in psql, or check if you need to specify the schema name explicitly.
-    **`FATAL:  password authentication failed for user "postgres"`** — Verify credentials in pg_hba.conf are correct and the user exists; check with `sudo -u postgres psql -c "\du"` to list users.
+    | Error | Fix |
+    |---|---|
+    | `FATAL:  max_connections (100) exceeded` | Increase `max_connections` in postgresql.conf and reload the server with `sudo systemctl reload postgresql-16`. |
+    | `ERROR:  relation "users_table" does not exist` | Verify the table name is correct and exists in the current schema with `\dt` in psql, or check if you need to specify the schema name explicitly. |
+    | `FATAL:  password authentication failed for user "postgres"` | Verify credentials in pg_hba.conf are correct and the user exists; check with `sudo -u postgres psql -c "\du"` to list users. |
 ---
 
 ## Step 2 — Check active sessions and blocking

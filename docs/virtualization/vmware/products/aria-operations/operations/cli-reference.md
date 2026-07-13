@@ -63,8 +63,10 @@ Adapter restart initiated successfully. Restart will complete in 30-60 seconds.
 ```
 
 !!! warning "Common errors"
-    **`Error: adapter not found: adapter-invalid-id`** — Verify the adapter ID from `vracli adapter list` output and ensure it is spelled correctly.
-    **`Error: permission denied - insufficient privileges`** — Run the command with appropriate sudo privileges or as a user with vRealize Operations administrator role.
+    | Error | Fix |
+    |---|---|
+    | `Error: adapter not found: adapter-invalid-id` | Verify the adapter ID from `vracli adapter list` output and ensure it is spelled correctly. |
+    | `Error: permission denied - insufficient privileges` | Run the command with appropriate sudo privileges or as a user with vRealize Operations administrator role. |
 ### Status and Services
 
 ```bash
@@ -109,9 +111,11 @@ vmware-vcops-gateway.service - VMware vRealize Operations Gateway
 ```
 
 !!! warning "Common errors"
-    **`Unit vmware-vcops-<service-name>.service could not be found.`** — Replace `<service-name>` with an actual service name like `controller`, `ui`, `analytics`, or `collector`.
-    **`Failed to get unit file state for vmware-vcops-controller.service: Connection refused`** — Ensure the systemd daemon is running with `systemctl daemon-reexec` and verify the service file exists in `/etc/systemd/system/`.
-    **`No units matching 'vmware-*' were found.`** — Confirm VMware vRealize Operations is installed and systemd service files are present in `/etc/systemd/system/` or `/usr/lib/systemd/system/`.
+    | Error | Fix |
+    |---|---|
+    | `Unit vmware-vcops-<service-name>.service could not be found.` | Replace `<service-name>` with an actual service name like `controller`, `ui`, `analytics`, or `collector`. |
+    | `Failed to get unit file state for vmware-vcops-controller.service: Connection refused` | Ensure the systemd daemon is running with `systemctl daemon-reexec` and verify the service file exists in `/etc/systemd/system/`. |
+    | `No units matching 'vmware-*' were found.` | Confirm VMware vRealize Operations is installed and systemd service files are present in `/etc/systemd/system/` or `/usr/lib/systemd/system/`. |
 ### Certificate Management
 
 ```bash
@@ -142,9 +146,11 @@ Certificate installation successful. Services will restart in 30 seconds.
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate file not found: /tmp/aria-ops.crt`** — Verify the certificate file path exists and is readable with `ls -la /tmp/aria-ops.crt`.
-    **`Error: Private key and certificate do not match`** — Ensure the key and certificate were generated as a pair; regenerate both from the same CSR if mismatch persists.
-    **`Error: CA chain validation failed - untrusted root`** — Verify the CA chain file contains the complete certificate hierarchy in correct order (leaf to root) using `openssl crl2pkcs7 -nocrl -certfile /tmp/ca-chain.crt | openssl pkcs7 -print_certs -text -noout`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate file not found: /tmp/aria-ops.crt` | Verify the certificate file path exists and is readable with `ls -la /tmp/aria-ops.crt`. |
+    | `Error: Private key and certificate do not match` | Ensure the key and certificate were generated as a pair; regenerate both from the same CSR if mismatch persists. |
+    | `Error: CA chain validation failed - untrusted root` | Verify the CA chain file contains the complete certificate hierarchy in correct order (leaf to root) using `openssl crl2pkcs7 -nocrl -certfile /tmp/ca-chain.crt | openssl pkcs7 -print_certs -text -noout`. |
 ### Support
 
 ```bash
@@ -181,9 +187,11 @@ total 2.3G
 ```
 
 !!! warning "Common errors"
-    **`vracli: command not found`** — Ensure vRealize Operations is installed and the vracli binary is in your PATH, or run with full path `/opt/vmware/vrealize-operations/bin/vracli`.
-    **`Permission denied`** — Run the command with sudo or as the root user, as support bundle generation requires elevated privileges.
-    **`/storage/log/support-bundle/: No such file or directory`** — Verify the storage mount is accessible and the support-bundle directory exists; check with `df -h /storage` and create the directory if needed.
+    | Error | Fix |
+    |---|---|
+    | `vracli: command not found` | Ensure vRealize Operations is installed and the vracli binary is in your PATH, or run with full path `/opt/vmware/vrealize-operations/bin/vracli`. |
+    | `Permission denied` | Run the command with sudo or as the root user, as support bundle generation requires elevated privileges. |
+    | `/storage/log/support-bundle/: No such file or directory` | Verify the storage mount is accessible and the support-bundle directory exists; check with `df -h /storage` and create the directory if needed. |
 ### Authentication and Users
 
 ```bash
@@ -215,9 +223,11 @@ Search Test: SUCCESS (5 users found)
 ```
 
 !!! warning "Common errors"
-    **`Error: Authentication source 'corp-ldap' not found`** — Verify the exact source name with `vracli auth list` and use the correct spelling.
-    **`Error: LDAP connection timeout after 30 seconds`** — Check network connectivity to the LDAP server and confirm the hostname/port are correct with `telnet ldap.corp.local 389`.
-    **`Error: LDAP bind failed: Invalid credentials`** — Verify the bind DN and password configured for the LDAP source are correct in the auth source settings.
+    | Error | Fix |
+    |---|---|
+    | `Error: Authentication source 'corp-ldap' not found` | Verify the exact source name with `vracli auth list` and use the correct spelling. |
+    | `Error: LDAP connection timeout after 30 seconds` | Check network connectivity to the LDAP server and confirm the hostname/port are correct with `telnet ldap.corp.local 389`. |
+    | `Error: LDAP bind failed: Invalid credentials` | Verify the bind DN and password configured for the LDAP source are correct in the auth source settings. |
 ---
 
 ## Before you begin
@@ -249,8 +259,10 @@ vmware-nginx       	0:off	1:off	2:on	3:on	4:on	5:on	6:off
 ```
 
 !!! warning "Common errors"
-    **`chkconfig: command not found`** — Use `systemctl list-unit-files | grep vmware` on systemd-based systems (RHEL 7+, CentOS 7+).
-    **`error reading information on service vmware-vcops: No such file or directory`** — Verify the exact service name with `systemctl list-unit-files | grep vmware` and use the correct name in the chkconfig command.
+    | Error | Fix |
+    |---|---|
+    | `chkconfig: command not found` | Use `systemctl list-unit-files | grep vmware` on systemd-based systems (RHEL 7+, CentOS 7+). |
+    | `error reading information on service vmware-vcops: No such file or directory` | Verify the exact service name with `systemctl list-unit-files | grep vmware` and use the correct name in the chkconfig command. |
 ---
 
 ## Useful Paths
@@ -349,9 +361,11 @@ curl -sk -H "Authorization: vRealizeOpsToken <token>" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the Aria Operations certificate into your system trust store.
-    **`jq: parse error: Invalid JSON at line 1`** — Verify the API endpoint URL is correct and the Aria Operations service is running; check response with `curl -sk ... | head -20` to see actual content.
-    **`{"error":"Invalid token or token expired"}`** — Re-authenticate to get a fresh token using the first curl command and update the Authorization header with the new token value.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the Aria Operations certificate into your system trust store. |
+    | `jq: parse error: Invalid JSON at line 1` | Verify the API endpoint URL is correct and the Aria Operations service is running; check response with `curl -sk ... | head -20` to see actual content. |
+    | `{"error":"Invalid token or token expired"}` | Re-authenticate to get a fresh token using the first curl command and update the Authorization header with the new token value. |
 ---
 
 ## Related Sections

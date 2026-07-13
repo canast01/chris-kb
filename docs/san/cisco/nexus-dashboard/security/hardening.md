@@ -114,9 +114,11 @@ Privileged: monitoring/alertmanager-0/alertmanager
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to the server: dial tcp: lookup nd-dc1-1.corp.example.com on 127.0.0.1:53: no such host`** — Verify the hostname is correct and DNS is resolving; check `/etc/hosts` or corporate DNS configuration.
-    **`command not found: python3`** — Install Python 3 on the Nexus Dashboard node with `apt-get install python3` or equivalent for your OS.
-    **`error: You must be logged in to the server (Unauthorized)`** — Ensure your kubeconfig is valid and your ndadmin user has cluster-admin permissions; run `kubectl auth can-i get pods --all-namespaces` to verify.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to the server: dial tcp: lookup nd-dc1-1.corp.example.com on 127.0.0.1:53: no such host` | Verify the hostname is correct and DNS is resolving; check `/etc/hosts` or corporate DNS configuration. |
+    | `command not found: python3` | Install Python 3 on the Nexus Dashboard node with `apt-get install python3` or equivalent for your OS. |
+    | `error: You must be logged in to the server (Unauthorized)` | Ensure your kubeconfig is valid and your ndadmin user has cluster-admin permissions; run `kubectl auth can-i get pods --all-namespaces` to verify. |
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -164,9 +166,11 @@ Synchronization Status: SYNCHRONIZED
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the Nexus Dashboard IP address is correct and SSH is enabled on port 22.
-    **`NTP Server 10.10.0.10 already exists`** — Remove the existing NTP server with `acs system ntp remove --server 10.10.0.10` before re-adding it.
-    **`Synchronization Status: UNSYNCHRONIZED`** — Confirm the NTP servers are reachable from the Nexus Dashboard network and allow UDP port 123 in firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the Nexus Dashboard IP address is correct and SSH is enabled on port 22. |
+    | `NTP Server 10.10.0.10 already exists` | Remove the existing NTP server with `acs system ntp remove --server 10.10.0.10` before re-adding it. |
+    | `Synchronization Status: UNSYNCHRONIZED` | Confirm the NTP servers are reachable from the Nexus Dashboard network and allow UDP port 123 in firewall rules. |
 ---
 
 ## See also

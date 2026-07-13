@@ -78,9 +78,11 @@ Device Display Name: Local SSD (naa.60000000000000000000000000000002)
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown device naa.xxxx`** — Replace `naa.xxxx` with an actual NAA ID from the `esxcli storage core device list` output.
-    **`Error: Unknown SATP VMW_SATP_LOCAL`** — Use the correct SATP name (typically `VMW_SATP_LOCAL` for local disks, or verify with `esxcli storage nmp satp list`).
-    **`IsSSD: false`** — The rule may not have applied; run `esxcli storage core adapter rescan --all` again and verify the device NAA ID matches exactly.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown device naa.xxxx` | Replace `naa.xxxx` with an actual NAA ID from the `esxcli storage core device list` output. |
+    | `Error: Unknown SATP VMW_SATP_LOCAL` | Use the correct SATP name (typically `VMW_SATP_LOCAL` for local disks, or verify with `esxcli storage nmp satp list`). |
+    | `IsSSD: false` | The rule may not have applied; run `esxcli storage core adapter rescan --all` again and verify the device NAA ID matches exactly. |
 Repeat on ESXi-02 for its cache disk.
 
 ---

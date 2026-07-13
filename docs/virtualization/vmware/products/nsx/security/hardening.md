@@ -29,9 +29,11 @@ Rule 65535: action=DROP
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-    **`jq: command not found`** — Use `python3 -c` with json module as shown, or install `jq` package; the example already uses Python which is more portable.
-    **`No JSON object could be decoded`** — Verify NSX Manager is responding with valid JSON by testing the curl command alone without piping to Python, and confirm authentication credentials are correct.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed). |
+    | `jq: command not found` | Use `python3 -c` with json module as shown, or install `jq` package; the example already uses Python which is more portable. |
+    | `No JSON object could be decoded` | Verify NSX Manager is responding with valid JSON by testing the curl command alone without piping to Python, and confirm authentication credentials are correct. |
 ```bash
 # SSH to Edge node — list services
 get services
@@ -61,8 +63,10 @@ load-balancer           stopped         true
 ```
 
 !!! warning "Common errors"
-    **`error: service load-balancer does not exist`** — Verify the exact service name using `get services` and check for typos or version-specific naming differences.
-    **`error: cannot stop service manager — required service`** — Do not attempt to stop critical services; only stop optional services like load-balancer, dhcp, or dns if unused.
+    | Error | Fix |
+    |---|---|
+    | `error: service load-balancer does not exist` | Verify the exact service name using `get services` and check for typos or version-specific naming differences. |
+    | `error: cannot stop service manager — required service` | Do not attempt to stop critical services; only stop optional services like load-balancer, dhcp, or dns if unused. |
 ```bash
 # SSH to Active Edge
 set edge-cluster failover
@@ -100,8 +104,10 @@ Flags: [*=best, +=multipath, ?=incomplete]
 ```
 
 !!! warning "Common errors"
-    **`BGP neighbor 10.50.1.1 state: Connect`** — Wait 30–45 seconds for graceful restart to complete; if persists, verify BGP timers match upstream router configuration.
-    **`vrf <tier0-vrf>: VRF not found`** — Replace `<tier0-vrf>` with the actual VRF ID (typically `0` for default or check `get vrf list`).
+    | Error | Fix |
+    |---|---|
+    | `BGP neighbor 10.50.1.1 state: Connect` | Wait 30–45 seconds for graceful restart to complete; if persists, verify BGP timers match upstream router configuration. |
+    | `vrf <tier0-vrf>: VRF not found` | Replace `<tier0-vrf>` with the actual VRF ID (typically `0` for default or check `get vrf list`). |
 ```bash
 # Confirm BGP neighbor has password set
 curl -sk -u 'admin:password' \
@@ -122,9 +128,11 @@ bgp-peer-backup  203.0.113.8  password=NO
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed).
-    **`jq: command not found` or `python3: command not found`** — Install Python 3 (`apt-get install python3` on Ubuntu/Debian or `yum install python3` on RHEL) and verify the NSX Manager hostname/IP is resolvable.
-    **`"error":"Unauthorized"`** — Verify the admin credentials are correct and the user has API access permissions in NSX Manager's role-based access control settings.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed). |
+    | `jq: command not found` or `python3: command not found` | Install Python 3 (`apt-get install python3` on Ubuntu/Debian or `yum install python3` on RHEL) and verify the NSX Manager hostname/IP is resolvable. |
+    | `"error":"Unauthorized"` | Verify the admin credentials are correct and the user has API access permissions in NSX Manager's role-based access control settings. |
 ```bash
 # On ESXi host
 esxcli software vib list | grep -i nsx | awk '{print $1, $4}'
@@ -139,8 +147,10 @@ NSX-DVFilter-2.5.0.0-12345681       VMwareCertified
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input) No such file or directory`** — Verify the ESXi host is accessible and esxcli is properly configured by running `esxcli system version get` first.
-    **`awk: syntax error in pattern near line 1`** — Correct the awk field separator if output format differs; use `esxcli software vib list --format=csv` and adjust the column numbers accordingly.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input) No such file or directory` | Verify the ESXi host is accessible and esxcli is properly configured by running `esxcli system version get` first. |
+    | `awk: syntax error in pattern near line 1` | Correct the awk field separator if output format differs; use `esxcli software vib list --format=csv` and adjust the column numbers accordingly. |
 ```bash
 # On each ESXi host — confirm DFW filters exist
 summarize-dvfilter | grep -c "vmware-sfw"
@@ -154,8 +164,10 @@ summarize-dvfilter | grep -c "vmware-sfw"
 ```
 
 !!! warning "Common errors"
-    **`summarize-dvfilter: command not found`** — Ensure you are running this command directly on an ESXi host (SSH access), not from vCenter; the tool is ESXi-local only.
-    **`grep: (standard input) is empty`** — Verify DFW is enabled in NSX Manager under Security > Distributed Firewall and that at least one rule is published to this cluster.
+    | Error | Fix |
+    |---|---|
+    | `summarize-dvfilter: command not found` | Ensure you are running this command directly on an ESXi host (SSH access), not from vCenter; the tool is ESXi-local only. |
+    | `grep: (standard input) is empty` | Verify DFW is enabled in NSX Manager under Security > Distributed Firewall and that at least one rule is published to this cluster. |
 ## Before you begin
 
 - **Access:** vCenter Administrator role

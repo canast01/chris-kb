@@ -110,9 +110,11 @@ Command group 'backup policy' is in preview and under development. Reference and
 ```
 
 !!! warning "Common errors"
-    **`Invalid template member reference 'vm-backup-policy.json'. Specify the correct path to the file.`** — Verify the JSON file exists in the current directory and use the correct relative or absolute path.
-    **`The policy definition in the JSON file is invalid. Error: Missing required property 'schedulePolicy'.`** — Ensure the JSON file contains all required properties including `schedulePolicy`, `retentionPolicy`, and `backupManagementType`.
-    **`The specified resource group '<rg>' could not be found.`** — Replace `<rg>` with an actual resource group name that exists in your subscription.
+    | Error | Fix |
+    |---|---|
+    | `Invalid template member reference 'vm-backup-policy.json'. Specify the correct path to the file.` | Verify the JSON file exists in the current directory and use the correct relative or absolute path. |
+    | `The policy definition in the JSON file is invalid. Error: Missing required property 'schedulePolicy'.` | Ensure the JSON file contains all required properties including `schedulePolicy`, `retentionPolicy`, and `backupManagementType`. |
+    | `The specified resource group '<rg>' could not be found.` | Replace `<rg>` with an actual resource group name that exists in your subscription. |
 ---
 
 ## Retention Rules Reference
@@ -177,9 +179,11 @@ az backup policy set \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The specified backup policy 'DailyBackupPolicy' was not found in vault 'prod-vault-01'.`** — Verify the policy name matches exactly with `az backup policy list --resource-group <rg> --vault-name <vault-name>`.
-    **`InvalidJsonInput: The JSON file 'current-policy.json' is malformed or missing required fields.`** — Ensure the exported JSON is valid by running `jq empty current-policy.json` before applying, and do not remove required fields like `schedulePolicy` or `retentionPolicy`.
-    **`AuthorizationFailed: The user does not have permission to modify backup policies in this vault.`** — Confirm your account has the "Backup Operator" or "Contributor" role on the Recovery Services vault using `az role assignment list --scope /subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The specified backup policy 'DailyBackupPolicy' was not found in vault 'prod-vault-01'.` | Verify the policy name matches exactly with `az backup policy list --resource-group <rg> --vault-name <vault-name>`. |
+    | `InvalidJsonInput: The JSON file 'current-policy.json' is malformed or missing required fields.` | Ensure the exported JSON is valid by running `jq empty current-policy.json` before applying, and do not remove required fields like `schedulePolicy` or `retentionPolicy`. |
+    | `AuthorizationFailed: The user does not have permission to modify backup policies in this vault.` | Confirm your account has the "Backup Operator" or "Contributor" role on the Recovery Services vault using `az role assignment list --scope /subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>`. |
 ---
 
 ## Assigning a Policy to Protected Items
@@ -215,9 +219,11 @@ dev-test-vm-02                   ProtectionStopped
 ```
 
 !!! warning "Common errors"
-    **`The item with name '<vm-name>' not found in the container '<container-name>'`** — Verify the VM name and container name match exactly using `az backup container list` and `az backup item list`.
-    **`The policy with name '<new-policy-name>' does not exist in the vault`** — Confirm the policy exists in the vault with `az backup policy list --resource-group <rg> --vault-name <vault-name>`.
-    **`ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<rg>' was not found`** — Ensure the vault name and resource group are correct and the vault exists in your subscription.
+    | Error | Fix |
+    |---|---|
+    | `The item with name '<vm-name>' not found in the container '<container-name>'` | Verify the VM name and container name match exactly using `az backup container list` and `az backup item list`. |
+    | `The policy with name '<new-policy-name>' does not exist in the vault` | Confirm the policy exists in the vault with `az backup policy list --resource-group <rg> --vault-name <vault-name>`. |
+    | `ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<rg>' was not found` | Ensure the vault name and resource group are correct and the vault exists in your subscription. |
 ---
 
 ## Deleting a Policy
@@ -236,5 +242,7 @@ az backup policy delete \
 ```
 
 !!! warning "Common errors"
-    **`The policy 'DailyBackupPolicy' cannot be deleted because it is still associated with 1 protected item(s).`** — Disassociate or delete all backup items using this policy before attempting deletion.
-    **`ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/<vault-name>/backupPolicies/<policy-name>' does not exist.`** — Verify the policy name is correct and exists in the specified vault using `az backup policy list`.
+    | Error | Fix |
+    |---|---|
+    | `The policy 'DailyBackupPolicy' cannot be deleted because it is still associated with 1 protected item(s).` | Disassociate or delete all backup items using this policy before attempting deletion. |
+    | `ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/<vault-name>/backupPolicies/<policy-name>' does not exist.` | Verify the policy name is correct and exists in the specified vault using `az backup policy list`. |

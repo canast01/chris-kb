@@ -119,9 +119,11 @@ Dropped: 0
 ```
 
 !!! warning "Common errors"
-    **`command: line 1: esxcli: command not found`** — Run this script directly on an ESXi host via SSH or vSphere CLI, not from a remote management station.
-    **`VSAN health cluster get: Unknown command or namespace`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` first to confirm vSAN is active.
-    **`vmkping: Unknown host <host2-vsan-ip>`** — Replace `<host2-vsan-ip>` and `<host3-vsan-ip>` with actual vSAN VMkernel IP addresses (e.g., 192.168.10.52).
+    | Error | Fix |
+    |---|---|
+    | `command: line 1: esxcli: command not found` | Run this script directly on an ESXi host via SSH or vSphere CLI, not from a remote management station. |
+    | `VSAN health cluster get: Unknown command or namespace` | Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` first to confirm vSAN is active. |
+    | `vmkping: Unknown host <host2-vsan-ip>` | Replace `<host2-vsan-ip>` and `<host3-vsan-ip>` with actual vSAN VMkernel IP addresses (e.g., 192.168.10.52). |
 **What to look for:**
 
 | Section | Green | Investigate |
@@ -186,8 +188,10 @@ Disk Group: 564d5c6b-a1f2-4e8c-9d3a-7b2c1e9f5a4d
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan storage list`** — Verify vSAN is licensed and enabled on the cluster, then run `esxcli vsan cluster get` to confirm vSAN status.
-    **`SMART Information for Device naa.xxxxxxxxxxxxxxxx: Device not found`** — Replace the placeholder naa ID with an actual device from the first command's output (e.g., `naa.5001405a1b2c3d4e`).
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan storage list` | Verify vSAN is licensed and enabled on the cluster, then run `esxcli vsan cluster get` to confirm vSAN status. |
+    | `SMART Information for Device naa.xxxxxxxxxxxxxxxx: Device not found` | Replace the placeholder naa ID with an actual device from the first command's output (e.g., `naa.5001405a1b2c3d4e`). |
 **Disk states to know:**
 
 | State | Meaning | Action |
@@ -251,9 +255,11 @@ Estimated Time: 45m 18s
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace vsan debug object`** — Ensure VSAN is enabled on the cluster and you are running this command on a VSAN-enabled ESXi host with proper permissions.
-    **`Object UUID not found: <object-uuid>`** — Verify the UUID is correct and copied completely without whitespace; use the grep output directly or wrap the UUID in quotes.
-    **`Permission denied`** — Run the command with root privileges or ensure your account has the Administrator role in vCenter for the VSAN cluster.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace vsan debug object` | Ensure VSAN is enabled on the cluster and you are running this command on a VSAN-enabled ESXi host with proper permissions. |
+    | `Object UUID not found: <object-uuid>` | Verify the UUID is correct and copied completely without whitespace; use the grep output directly or wrap the UUID in quotes. |
+    | `Permission denied` | Run the command with root privileges or ensure your account has the Administrator role in vCenter for the VSAN cluster. |
 **Object states:**
 
 | State | Meaning | Action |
@@ -341,9 +347,11 @@ Host: esx-03.lab.local
 ```
 
 !!! warning "Common errors"
-    **`Error: vSAN performance service not ready`** — Wait 2-3 minutes after cluster formation or reboot for the vSAN performance service to initialize, then retry the query.
-    **`Error: Invalid entity type 'host-domclient'`** — Verify the entity type with `esxcli vsan perf query --help` and use a valid option such as `host-domclient`, `host-storage-adapter`, or `vsan-cluster`.
-    **`Error: No data available for the specified time range`** — Ensure the timestamp is within the last 24 hours of collected metrics and that vSAN performance monitoring is enabled on the cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error: vSAN performance service not ready` | Wait 2-3 minutes after cluster formation or reboot for the vSAN performance service to initialize, then retry the query. |
+    | `Error: Invalid entity type 'host-domclient'` | Verify the entity type with `esxcli vsan perf query --help` and use a valid option such as `host-domclient`, `host-storage-adapter`, or `vsan-cluster`. |
+    | `Error: No data available for the specified time range` | Ensure the timestamp is within the last 24 hours of collected metrics and that vSAN performance monitoring is enabled on the cluster. |
 ---
 
 ## Network Health
@@ -385,9 +393,11 @@ round-trip min/avg/max = 2.367/2.403/2.445 ms
 ```
 
 !!! warning "Common errors"
-    **`PING <host2-vsan-ip> (<host2-vsan-ip>): sendto: No route to host`** — Verify vmk2 is configured on the vSAN network and the target IP is reachable; check routing table with `esxcli network ip route ipv4 list`.
-    **`PING <host2-vsan-ip> (<host2-vsan-ip>): 0 packets transmitted, 0 packets received, 100% packet loss`** — Confirm vmk2 interface is up with `esxcli network ip interface list` and verify vSAN network VLAN is correctly tagged on the switch port.
-    **`vmkping: Unknown interface vmk2`** — Create or enable vmk2 on the vSAN network using vSphere Client or `esxcli network ip interface add -i vmk2 -p <vsan-portgroup>`.
+    | Error | Fix |
+    |---|---|
+    | `PING <host2-vsan-ip> (<host2-vsan-ip>): sendto: No route to host` | Verify vmk2 is configured on the vSAN network and the target IP is reachable; check routing table with `esxcli network ip route ipv4 list`. |
+    | `PING <host2-vsan-ip> (<host2-vsan-ip>): 0 packets transmitted, 0 packets received, 100% packet loss` | Confirm vmk2 interface is up with `esxcli network ip interface list` and verify vSAN network VLAN is correctly tagged on the switch port. |
+    | `vmkping: Unknown interface vmk2` | Create or enable vmk2 on the vSAN network using vSphere Client or `esxcli network ip interface add -i vmk2 -p <vsan-portgroup>`. |
 ---
 
 ## Stretched Cluster Checks

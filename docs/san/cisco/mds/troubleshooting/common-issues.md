@@ -113,8 +113,10 @@ fc1/4 is trunking
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct mode (should be `enable` mode); use `show ?` to list available commands.
-    **`Port fc1/4 not found`** — Confirm the port number exists on this switch model with `show interface brief | grep fc1`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct mode (should be `enable` mode); use `show ?` to list available commands. |
+    | `Port fc1/4 not found` | Confirm the port number exists on this switch model with `show interface brief | grep fc1`. |
 ```bash
 interface fc1/4
   shutdown
@@ -140,8 +142,10 @@ fc1/4 is up
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (interface mode) before entering shutdown/no shutdown commands.
-    **`fc1/4 is down (Administratively down)`** — Ensure the no shutdown command executed successfully; check for port hardware issues or SFP module problems if the port remains down after no shutdown.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (interface mode) before entering shutdown/no shutdown commands. |
+    | `fc1/4 is down (Administratively down)` | Ensure the no shutdown command executed successfully; check for port hardware issues or SFP module problems if the port remains down after no shutdown. |
 ```bash
 # 1. Is the host HBA logged into the fabric?
 show flogi database vsan 10 | grep <host-pwwn>
@@ -217,9 +221,11 @@ Zoneset activated successfully.
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the zoneset name exists with `show zoneset` and confirm the VSAN number is correct.
-    **`% Zoneset activation failed: Configuration locked by another user`** — Wait for the active session to complete or use `no zone lock` to release the lock if safe.
-    **`% Commit failed: Pending zone changes conflict with active zoneset`** — Review pending changes with `show zone pending-changes vsan 10` and resolve conflicts before committing.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the zoneset name exists with `show zoneset` and confirm the VSAN number is correct. |
+    | `% Zoneset activation failed: Configuration locked by another user` | Wait for the active session to complete or use `no zone lock` to release the lock if safe. |
+    | `% Commit failed: Pending zone changes conflict with active zoneset` | Review pending changes with `show zone pending-changes vsan 10` and resolve conflicts before committing. |
 ```bash
 # Check ISL port state
 show interface fc2/1
@@ -281,9 +287,11 @@ VSAN 20 Information
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact command syntax for your MDS firmware version; use `show interface ?` to see available options.
-    **`Port fc2/1 is suspended`** — Check for port faults with `show interface fc2/1 | include fault` and resolve hardware/SFP issues before the port will become operational.
-    **`VSAN <id> does not exist`** — Confirm the VSAN ID is created and active with `show vsan` before attempting to display its detailed configuration.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact command syntax for your MDS firmware version; use `show interface ?` to see available options. |
+    | `Port fc2/1 is suspended` | Check for port faults with `show interface fc2/1 | include fault` and resolve hardware/SFP issues before the port will become operational. |
+    | `VSAN <id> does not exist` | Confirm the VSAN ID is created and active with `show vsan` before attempting to display its detailed configuration. |
 ```bash
 show fcdomain vsan 10
 show fcdomain domain-list vsan 10
@@ -307,8 +315,10 @@ Domain ID  | Principal | WWN              | FC Address | State
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact syntax matches your MDS OS version (some versions use `show fcdomain status vsan` instead).
-    **`VSAN 10 does not exist`** — Confirm VSAN 10 is created and active with `show vsan` before querying domain information.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact syntax matches your MDS OS version (some versions use `show fcdomain status vsan` instead). |
+    | `VSAN 10 does not exist` | Confirm VSAN 10 is created and active with `show vsan` before querying domain information. |
 ```bash
 # Identify flapping port
 show logging last 200 | grep "link down\|link up\|flogi" | head -40
@@ -351,9 +361,11 @@ fc1/6 transceiver information:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact command syntax for your MDS firmware version; use `show logging last 200` without piping to grep if the device doesn't support grep in show commands.
-    **`Port fc1/6 does not exist`** — Confirm the port number is valid for your MDS model (e.g., MDS 9710 has fc1/1 through fc1/48) using `show interface brief`.
-    **`Receive power: -12.8 dBm (below threshold)`** — Replace the transceiver or check fiber connection for dirt/damage; optical power below -10 dBm typically indicates a failing SFP or bad cable.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact command syntax for your MDS firmware version; use `show logging last 200` without piping to grep if the device doesn't support grep in show commands. |
+    | `Port fc1/6 does not exist` | Confirm the port number is valid for your MDS model (e.g., MDS 9710 has fc1/1 through fc1/48) using `show interface brief`. |
+    | `Receive power: -12.8 dBm (below threshold)` | Replace the transceiver or check fiber connection for dirt/damage; optical power below -10 dBm typically indicates a failing SFP or bad cable. |
 ```bash
 # Check overall CPU and memory
 show system resources
@@ -383,8 +395,10 @@ PID    Process Name              CPU%    Memory
 ```
 
 !!! warning "Common errors"
-    **`Invalid command name 'show processes cpu sort'`** — Use the correct syntax `show processes cpu | sort` with a pipe instead of the sort keyword.
-    **`grep: (standard input) is empty`** — Increase the log buffer with `show logging last 500` or check if logging is enabled with `show logging info`.
+    | Error | Fix |
+    |---|---|
+    | `Invalid command name 'show processes cpu sort'` | Use the correct syntax `show processes cpu | sort` with a pipe instead of the sort keyword. |
+    | `grep: (standard input) is empty` | Increase the log buffer with `show logging last 500` or check if logging is enabled with `show logging info`. |
 ```bash
 # Always run this after every configuration change
 copy running-config startup-config
@@ -405,9 +419,11 @@ zone member pwwn 50:00:09:73:a1:2b:3c:5e vsan 20
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the device is in config mode and supports the `copy` command (some MDS versions require `copy running-config startup-config` without interactive prompts).
-    **`% Startup config not found`** — Ensure the startup configuration file exists by running `dir bootflash:` and confirm the device has write permissions to the startup location.
-    **`(no matching lines)`** — Confirm the exact spelling and context of `<changed-item>` matches what was configured, as `grep` is case-sensitive and searches the entire startup config output.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the device is in config mode and supports the `copy` command (some MDS versions require `copy running-config startup-config` without interactive prompts). |
+    | `% Startup config not found` | Ensure the startup configuration file exists by running `dir bootflash:` and confirm the device has write permissions to the startup location. |
+    | `(no matching lines)` | Confirm the exact spelling and context of `<changed-item>` matches what was configured, as `grep` is case-sensitive and searches the entire startup config output. |
 ```bash
 checkpoint post-change
 show checkpoint summary

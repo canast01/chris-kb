@@ -145,9 +145,11 @@ Installation log: /var/log/netbackup/install.log
 ```
 
 !!! warning "Common errors"
-    **`tar: NetBackup_10.x_LinuxR_x86_64.tar.gz: No such file or directory`** — Verify the tarball exists in the current directory with `ls -la` and check the exact filename matches.
-    **`./install: Permission denied`** — Run `chmod +x install` to make the installer executable before running it.
-    **`Error: Insufficient disk space. Required: 20 GB, Available: 8 GB`** — Free up disk space on the target partition or mount the installation directory on a volume with adequate free space.
+    | Error | Fix |
+    |---|---|
+    | `tar: NetBackup_10.x_LinuxR_x86_64.tar.gz: No such file or directory` | Verify the tarball exists in the current directory with `ls -la` and check the exact filename matches. |
+    | `./install: Permission denied` | Run `chmod +x install` to make the installer executable before running it. |
+    | `Error: Insufficient disk space. Required: 20 GB, Available: 8 GB` | Free up disk space on the target partition or mount the installation directory on a volume with adequate free space. |
 At the interactive prompts:
 
 - Select **1** → NetBackup Primary Server
@@ -191,8 +193,10 @@ root      1301     1 0 08:16 ?   Ss   0:00     /usr/openv/netbackup/bin/bpjobd -
 ```
 
 !!! warning "Common errors"
-    **`bpps: command not found`** — Add `/usr/openv/netbackup/bin` to PATH or use the full path `/usr/openv/netbackup/bin/bpps -a`.
-    **`No matching processes found`** — Verify NetBackup is installed in `/usr/openv/netbackup` and start daemons with `/usr/openv/netbackup/bin/bpup -start`.
+    | Error | Fix |
+    |---|---|
+    | `bpps: command not found` | Add `/usr/openv/netbackup/bin` to PATH or use the full path `/usr/openv/netbackup/bin/bpps -a`. |
+    | `No matching processes found` | Verify NetBackup is installed in `/usr/openv/netbackup` and start daemons with `/usr/openv/netbackup/bin/bpup -start`. |
 ### Step 5 — Access the Web UI
 
 Browse to `https://<primary-server-fqdn>/webui` and log in as the local admin
@@ -245,9 +249,11 @@ Media Server hostname: nbmedia01.corp.example.com
 ```
 
 !!! warning "Common errors"
-    **`Enter your selection (1-4): invalid input`** — Ensure you enter a single digit (1–4) without extra characters or spaces.
-    **`Validating connection to nbmaster.corp.example.com... FAILED`** — Verify the Primary Server FQDN is correct, reachable on the network, and that port 13782 is open between the two hosts.
-    **`Disk space required: 15 GB / Disk space available: 2 GB`** — Free up at least 15 GB on the target installation disk before running the installer.
+    | Error | Fix |
+    |---|---|
+    | `Enter your selection (1-4): invalid input` | Ensure you enter a single digit (1–4) without extra characters or spaces. |
+    | `Validating connection to nbmaster.corp.example.com... FAILED` | Verify the Primary Server FQDN is correct, reachable on the network, and that port 13782 is open between the two hosts. |
+    | `Disk space required: 15 GB / Disk space available: 2 GB` | Free up at least 15 GB on the target installation disk before running the installer. |
 On Windows, choose **NetBackup Media Server** in the setup wizard and enter
 the Primary Server hostname.
 
@@ -279,9 +285,11 @@ Configuration synchronized to catalog.
 ```
 
 !!! warning "Common errors"
-    **`nbemmcmd: host already exists`** — Remove the existing host entry with `nbemmcmd -removehost -machinename <media-server-fqdn>` before re-adding it.
-    **`nbemmcmd: cannot connect to master server`** — Verify the Primary Server is running NetBackup services with `bpps -a` and confirm network connectivity to the master server hostname.
-    **`nbemmcmd: invalid machine type 'media'`** — Use a valid machine type such as `media`, `client`, or `gateway`; confirm the exact spelling matches your NetBackup version documentation.
+    | Error | Fix |
+    |---|---|
+    | `nbemmcmd: host already exists` | Remove the existing host entry with `nbemmcmd -removehost -machinename <media-server-fqdn>` before re-adding it. |
+    | `nbemmcmd: cannot connect to master server` | Verify the Primary Server is running NetBackup services with `bpps -a` and confirm network connectivity to the master server hostname. |
+    | `nbemmcmd: invalid machine type 'media'` | Use a valid machine type such as `media`, `client`, or `gateway`; confirm the exact spelling matches your NetBackup version documentation. |
 ### Step 3 — Verify Connectivity
 
 ```bash
@@ -301,9 +309,11 @@ EXIT STATUS 0
 ```
 
 !!! warning "Common errors"
-    **`bptestbpcd: Cannot connect to host <media-server-fqdn>`** — Verify the Media Server hostname/FQDN is correct and the host is reachable via `ping` or `nslookup`.
-    **`bptestbpcd: bpcd is not running on host <media-server-fqdn>`** — Start the NetBackup daemon on the Media Server with `/usr/openv/netbackup/bin/bprd` or verify it is running via `ps -ef | grep bpcd`.
-    **`EXIT STATUS 1`** — Check firewall rules allow port 13782 (bpcd) between Primary and Media Server, and verify NetBackup is properly installed on the Media Server.
+    | Error | Fix |
+    |---|---|
+    | `bptestbpcd: Cannot connect to host <media-server-fqdn>` | Verify the Media Server hostname/FQDN is correct and the host is reachable via `ping` or `nslookup`. |
+    | `bptestbpcd: bpcd is not running on host <media-server-fqdn>` | Start the NetBackup daemon on the Media Server with `/usr/openv/netbackup/bin/bprd` or verify it is running via `ps -ef | grep bpcd`. |
+    | `EXIT STATUS 1` | Check firewall rules allow port 13782 (bpcd) between Primary and Media Server, and verify NetBackup is properly installed on the Media Server. |
 ---
 
 ## Configure Storage Units
@@ -363,9 +373,11 @@ Sync completed in 12 seconds.
 ```
 
 !!! warning "Common errors"
-    **`nbdevconfig: command not found`** — Ensure the NetBackup bin directory is in your PATH or use the full path `/usr/openv/netbackup/bin/admincmd/nbdevconfig`.
-    **`Error: Storage server already exists`** — Verify the media server FQDN is correct and not already registered; use `nbdevconfig -liststs` to check existing storage servers.
-    **`Error: Cannot connect to media server <media-server-fqdn>`** — Confirm the media server hostname resolves correctly and NetBackup services are running on it with `nslookup <media-server-fqdn>` and `bpps -l` on the media server.
+    | Error | Fix |
+    |---|---|
+    | `nbdevconfig: command not found` | Ensure the NetBackup bin directory is in your PATH or use the full path `/usr/openv/netbackup/bin/admincmd/nbdevconfig`. |
+    | `Error: Storage server already exists` | Verify the media server FQDN is correct and not already registered; use `nbdevconfig -liststs` to check existing storage servers. |
+    | `Error: Cannot connect to media server <media-server-fqdn>` | Confirm the media server hostname resolves correctly and NetBackup services are running on it with `nslookup <media-server-fqdn>` and `bpps -l` on the media server. |
 Or via web UI: **Storage** → **Storage Servers** → **+ Add** →
 select **Media Server Deduplication Pool**.
 
@@ -393,9 +405,11 @@ Capacity: 2.5 TB
 ```
 
 !!! warning "Common errors"
-    **`Error: Storage server media-server-prod-01.corp.local is not reachable`** — Verify the media server hostname is correct and the NetBackup daemons are running with `bpps -a` on the media server.
-    **`Error: Disk pool path /mnt/msdp does not exist or is not writable`** — Create the directory with `mkdir -p /mnt/msdp` and ensure the NetBackup user has read/write permissions with `chown -R nbuser:nbgroup /mnt/msdp`.
-    **`Error: Disk pool MSDP-Pool-01 already exists`** — Use a unique pool name or remove the existing pool with `nbdevconfig -deletedp -dp_name MSDP-Pool-01` before recreating.
+    | Error | Fix |
+    |---|---|
+    | `Error: Storage server media-server-prod-01.corp.local is not reachable` | Verify the media server hostname is correct and the NetBackup daemons are running with `bpps -a` on the media server. |
+    | `Error: Disk pool path /mnt/msdp does not exist or is not writable` | Create the directory with `mkdir -p /mnt/msdp` and ensure the NetBackup user has read/write permissions with `chown -R nbuser:nbgroup /mnt/msdp`. |
+    | `Error: Disk pool MSDP-Pool-01 already exists` | Use a unique pool name or remove the existing pool with `nbdevconfig -deletedp -dp_name MSDP-Pool-01` before recreating. |
 The `/mnt/msdp` path should be a dedicated high-throughput volume. Do not share
 this volume with other data.
 
@@ -475,9 +489,11 @@ NetBackup services started.
 ```
 
 !!! warning "Common errors"
-    **`Validating server connectivity... FAILED`** — Verify the Primary Server FQDN is correct and reachable from the client (test with `ping` or `nslookup`).
-    **`Permission denied`** — Run the installer with `sudo ./install` or as the root user.
-    **`./install: No such file or directory`** — Ensure you are in the correct directory where the NetBackup package was extracted and the install script exists.
+    | Error | Fix |
+    |---|---|
+    | `Validating server connectivity... FAILED` | Verify the Primary Server FQDN is correct and reachable from the client (test with `ping` or `nslookup`). |
+    | `Permission denied` | Run the installer with `sudo ./install` or as the root user. |
+    | `./install: No such file or directory` | Ensure you are in the correct directory where the NetBackup package was extracted and the install script exists. |
 After install, verify the client is visible under **Hosts** in the web UI.
 
 ---
@@ -591,9 +607,11 @@ For detailed documentation, visit: https://www.veritas.com/support
 ```
 
 !!! warning "Common errors"
-    **`bpbackupdb: command not found`** — Verify NetBackup is installed and /usr/openv/netbackup/bin/admincmd is in your PATH, or use the full path with correct permissions.
-    **`Permission denied`** — Run the command as root or a user with sudo privileges, as database backup operations require elevated permissions.
-    **`Cannot access backup directory: No such file or directory`** — Create the target backup directory first with `mkdir -p /path/to/backup` before running bpbackupdb.
+    | Error | Fix |
+    |---|---|
+    | `bpbackupdb: command not found` | Verify NetBackup is installed and /usr/openv/netbackup/bin/admincmd is in your PATH, or use the full path with correct permissions. |
+    | `Permission denied` | Run the command as root or a user with sudo privileges, as database backup operations require elevated permissions. |
+    | `Cannot access backup directory: No such file or directory` | Create the target backup directory first with `mkdir -p /path/to/backup` before running bpbackupdb. |
 A failed catalog backup is a critical risk; the catalog is required for all restores.
 
 ### Step 5 — Document the Deployment

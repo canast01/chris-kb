@@ -141,8 +141,10 @@ MFA on Root Account                     ok
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the DescribeEvents operation: Invalid filter value`** — Verify the filter syntax matches AWS Health API documentation; use `--filter eventStatusCodes=OPEN` (uppercase) instead.
-    **`An error occurred (InvalidParameterValue) when calling the DescribeTargetHealth operation: Target group arn '<arn>' does not exist`** — Replace `<arn>` with an actual target group ARN from your account (e.g., `arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/my-targets/abc123def456`).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the DescribeEvents operation: Invalid filter value` | Verify the filter syntax matches AWS Health API documentation; use `--filter eventStatusCodes=OPEN` (uppercase) instead. |
+    | `An error occurred (InvalidParameterValue) when calling the DescribeTargetHealth operation: Target group arn '<arn>' does not exist` | Replace `<arn>` with an actual target group ARN from your account (e.g., `arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/my-targets/abc123def456`). |
     **`An error occurred (AccessDenied) when calling the DescribeTrustedAdvisorCheckSummaries operation: User is not authorized to perform: support:DescribeTrustedAdvisorCheckSummaries`
 | Status | Meaning | Action |
 |---|---|---|
@@ -351,8 +353,10 @@ dev-temp: Enabled
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the DescribeVolumes operation: The filter 'status' does not exist`** — Use `--filters Name=status,Values=error` without the `status` prefix in the filter name, or verify the correct filter name for your AWS CLI version.
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the DescribeVolumes operation: The filter 'status' does not exist` | Use `--filters Name=status,Values=error` without the `status` prefix in the filter name, or verify the correct filter name for your AWS CLI version. |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
     **`(InvalidParameterValue) when calling the ListBackupJobs operation: 1 validation error detected: Value at '
 ---
 
@@ -432,9 +436,11 @@ finding-id-001a2b3c4d5e6f7g8h9i0j1k2l3m4n5o finding-id-002b3c4d5e6f7g8h9i0j1k2l3
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDenied) when calling the GenerateCredentialReport operation: User: arn:aws:iam::123456789:user/ops-user is not authorized to perform: iam:GenerateCredentialReport`** — Add `iam:GenerateCredentialReport` and `iam:GetCredentialReport` permissions to the IAM user or role running this script.
-    **`date: invalid date '2024-07-15T09:22:00Z'`** — Use `date -d "2024-07-15T09:22:00Z" +%s` (with quotes around the date string) or install GNU coreutils if on macOS.
-    **`An error occurred (InvalidParameterException) when calling the GetFindings operation: 1 validation error detected`** — Ensure the `--filters` JSON is valid; use `--filters file://filters.json` if the filter structure is complex, or verify SeverityLabel values match AWS documentation exactly.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDenied) when calling the GenerateCredentialReport operation: User: arn:aws:iam::123456789:user/ops-user is not authorized to perform: iam:GenerateCredentialReport` | Add `iam:GenerateCredentialReport` and `iam:GetCredentialReport` permissions to the IAM user or role running this script. |
+    | `date: invalid date '2024-07-15T09:22:00Z'` | Use `date -d "2024-07-15T09:22:00Z" +%s` (with quotes around the date string) or install GNU coreutils if on macOS. |
+    | `An error occurred (InvalidParameterException) when calling the GetFindings operation: 1 validation error detected` | Ensure the `--filters` JSON is valid; use `--filters file://filters.json` if the filter structure is complex, or verify SeverityLabel values match AWS documentation exactly. |
 ---
 
 ## Cost and Billing Alerts
@@ -504,9 +510,11 @@ aws ce get-anomaly-monitors \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDenied) when calling the GetCostAndUsage operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: ce:GetCostAndUsage`** — Attach the `CE_ReadOnly` or `Billing` IAM policy to the user or role executing the command.
-    **`An error occurred (ValidationException) when calling the DescribeBudgets operation: Invalid account id`** — Verify the AWS account ID is correct and the IAM principal has `budgets:DescribeBudgets` permission.
-    **`date: invalid date 'TZ=UTC0 7 days ago'`** — Use `date -d '7 days ago' +%Y-%m-%d` (without `-u` flag) or ensure GNU coreutils is installed on macOS by using `brew install coreutils` and calling `gdate` instead.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDenied) when calling the GetCostAndUsage operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: ce:GetCostAndUsage` | Attach the `CE_ReadOnly` or `Billing` IAM policy to the user or role executing the command. |
+    | `An error occurred (ValidationException) when calling the DescribeBudgets operation: Invalid account id` | Verify the AWS account ID is correct and the IAM principal has `budgets:DescribeBudgets` permission. |
+    | `date: invalid date 'TZ=UTC0 7 days ago'` | Use `date -d '7 days ago' +%Y-%m-%d` (without `-u` flag) or ensure GNU coreutils is installed on macOS by using `brew install coreutils` and calling `gdate` instead. |
 > Billing alarms require the CloudWatch region set to `us-east-1` (global billing metrics are only published there). Use Cost Explorer anomaly detection for multi-service monitoring.
 
 ```bash
@@ -533,9 +541,11 @@ aws cloudwatch describe-alarms \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (UnauthorizedOperation) when calling the DescribeAlarms operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: cloudwatch:DescribeAlarms`** — Add `cloudwatch:DescribeAlarms` permission to the IAM user/role policy.
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
-    **`The Billing namespace does not have any alarms configured`** — Create billing alarms first using `aws cloudwatch put-metric-alarm` with `--namespace AWS/Billing`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (UnauthorizedOperation) when calling the DescribeAlarms operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: cloudwatch:DescribeAlarms` | Add `cloudwatch:DescribeAlarms` permission to the IAM user/role policy. |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
+    | `The Billing namespace does not have any alarms configured` | Create billing alarms first using `aws cloudwatch put-metric-alarm` with `--namespace AWS/Billing`. |
 ---
 
 ```bash
@@ -565,8 +575,10 @@ aws sts get-caller-identity
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDenied) when calling the DescribeEvents operation: User: arn:aws:iam::123456789012:user/ops-admin is not authorized to perform: health:DescribeEvents`** — Add `health:DescribeEvents` permission to the IAM user/role policy.
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDenied) when calling the DescribeEvents operation: User: arn:aws:iam::123456789012:user/ops-admin is not authorized to perform: health:DescribeEvents` | Add `health:DescribeEvents` permission to the IAM user/role policy. |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
 ```bash
 # Cluster status
 aws eks describe-cluster --name my-cluster \
@@ -607,9 +619,11 @@ default       app-deployment-6f7g8h9i0-9j2k3l4m5     0/3     Pending            
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the DescribeCluster operation: No cluster found for name: my-cluster.`** — Verify the cluster name matches exactly and you are querying the correct AWS region with `--region`.
-    **`error: You must be logged in to the server (Unauthorized)`** — Run `aws eks update-kubeconfig --name my-cluster --region eu-west-1` to refresh your kubeconfig credentials.
-    **`error: exec plugin: invalid apiVersion "client.authentication.k8s.io/v1alpha1"`** — Update your AWS CLI to the latest version with `pip install --upgrade awscli` to fix kubeconfig authentication plugin version mismatch.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the DescribeCluster operation: No cluster found for name: my-cluster.` | Verify the cluster name matches exactly and you are querying the correct AWS region with `--region`. |
+    | `error: You must be logged in to the server (Unauthorized)` | Run `aws eks update-kubeconfig --name my-cluster --region eu-west-1` to refresh your kubeconfig credentials. |
+    | `error: exec plugin: invalid apiVersion "client.authentication.k8s.io/v1alpha1"` | Update your AWS CLI to the latest version with `pip install --upgrade awscli` to fix kubeconfig authentication plugin version mismatch. |
 ```bash
 # ALB / NLB target group health
 aws elbv2 describe-target-health \
@@ -645,8 +659,10 @@ aws elbv2 describe-load-balancers \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (LoadBalancerNotFound) when calling the DescribeTargetHealth operation: There is no target group found for arn`** — Verify the target group ARN is correct and exists in the current AWS region and account.
-    **`An error occurred (AccessDenied) when calling the DescribeLoadBalancers operation: User: arn:aws:iam::<account>:user/<user> is not authorized`** — Add `elasticloadbalancing:Describe*` permissions to the IAM user or role policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (LoadBalancerNotFound) when calling the DescribeTargetHealth operation: There is no target group found for arn` | Verify the target group ARN is correct and exists in the current AWS region and account. |
+    | `An error occurred (AccessDenied) when calling the DescribeLoadBalancers operation: User: arn:aws:iam::<account>:user/<user> is not authorized` | Add `elasticloadbalancing:Describe*` permissions to the IAM user or role policy. |
 ```bash
 aws cloudwatch describe-alarms \
   --state-value ALARM \
@@ -669,9 +685,11 @@ aws cloudwatch describe-alarms \
 ```
 
 !!! warning "Common errors"
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
-    **`An error occurred (UnauthorizedOperation) when calling the DescribeAlarms operation: User is not authorized to perform: cloudwatch:DescribeAlarms`** — Add the `cloudwatch:DescribeAlarms` permission to your IAM user or role policy.
-    **`An error occurred (InvalidParameterValue) when calling the DescribeAlarms operation: Invalid value for parameter StateValue: ALARM`** — Use valid state values: `ALARM`, `INSUFFICIENT_DATA`, or `OK` (case-sensitive).
+    | Error | Fix |
+    |---|---|
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
+    | `An error occurred (UnauthorizedOperation) when calling the DescribeAlarms operation: User is not authorized to perform: cloudwatch:DescribeAlarms` | Add the `cloudwatch:DescribeAlarms` permission to your IAM user or role policy. |
+    | `An error occurred (InvalidParameterValue) when calling the DescribeAlarms operation: Invalid value for parameter StateValue: ALARM` | Use valid state values: `ALARM`, `INSUFFICIENT_DATA`, or `OK` (case-sensitive). |
 ```bash
 # Verify bucket versioning and replication status
 aws s3api get-bucket-versioning --bucket my-prod-bucket
@@ -717,9 +735,11 @@ aws s3api get-bucket-lifecycle-configuration --bucket my-prod-bucket \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchBucket) when calling the GetBucketVersioning operation: The specified bucket does not exist`** — Verify the bucket name is correct and exists in your current AWS region using `aws s3 ls`.
-    **`An error occurred (ReplicationConfigurationNotFoundError) when calling the GetBucketReplication operation: The replication configuration was not found`** — Replication has not been configured for this bucket; use `aws s3api put-bucket-replication` to set it up if needed.
-    **`An error occurred (NoSuchLifecycleConfiguration) when calling the GetBucketLifecycleConfiguration operation: The lifecycle configuration does not exist`** — No lifecycle rules are configured; this is expected if lifecycle management is not in use for this bucket.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchBucket) when calling the GetBucketVersioning operation: The specified bucket does not exist` | Verify the bucket name is correct and exists in your current AWS region using `aws s3 ls`. |
+    | `An error occurred (ReplicationConfigurationNotFoundError) when calling the GetBucketReplication operation: The replication configuration was not found` | Replication has not been configured for this bucket; use `aws s3api put-bucket-replication` to set it up if needed. |
+    | `An error occurred (NoSuchLifecycleConfiguration) when calling the GetBucketLifecycleConfiguration operation: The lifecycle configuration does not exist` | No lifecycle rules are configured; this is expected if lifecycle management is not in use for this bucket. |
 ```bash
 # List certificates and expiry
 aws acm list-certificates \
@@ -753,8 +773,10 @@ aws acm describe-certificate \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ValidationException) when calling the ListCertificates operation: 1 validation error detected: value at 'certificateArn' failed to match pattern`** — Verify the certificate ARN format matches `arn:aws:acm:region:account-id:certificate/id` exactly.
-    **`An error occurred (ResourceNotFoundException) when calling the DescribeCertificate operation: Certificate not found`** — Confirm the certificate exists in the specified region by running `aws acm list-certificates --region <region>`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ValidationException) when calling the ListCertificates operation: 1 validation error detected: value at 'certificateArn' failed to match pattern` | Verify the certificate ARN format matches `arn:aws:acm:region:account-id:certificate/id` exactly. |
+    | `An error occurred (ResourceNotFoundException) when calling the DescribeCertificate operation: Certificate not found` | Confirm the certificate exists in the specified region by running `aws acm list-certificates --region <region>`. |
 ```bash
 # Generate credential report (takes ~10s)
 aws iam generate-credential-report
@@ -780,8 +802,10 @@ svc-deploy              arn:aws:iam::123456789012:user/svc-deploy        false  
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDenied) when calling the GenerateCredentialReport operation: User: arn:aws:iam::123456789012:user/alice is not authorized to perform: iam:GenerateCredentialReport`** — Attach the `IAMReadOnlyAccess` policy or `iam:GenerateCredentialReport` permission to the calling user's IAM role.
-    **`base64: invalid input`** — Wait the full 10 seconds before calling `get-credential-report`; the report may not be ready immediately after generation.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDenied) when calling the GenerateCredentialReport operation: User: arn:aws:iam::123456789012:user/alice is not authorized to perform: iam:GenerateCredentialReport` | Attach the `IAMReadOnlyAccess` policy or `iam:GenerateCredentialReport` permission to the calling user's IAM role. |
+    | `base64: invalid input` | Wait the full 10 seconds before calling `get-credential-report`; the report may not be ready immediately after generation. |
 ```bash
 # Active findings count by severity
 aws securityhub get-findings \
@@ -815,8 +839,10 @@ CloudTrail logging disabled on trail              HIGH             AWS Security 
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidInputException) when calling the GetFindings operation: 1 validation error detected: Value at 'filters' failed a custom validation constraint`** — Verify JSON syntax in the filters parameter; use single quotes around the entire filter object and ensure proper nesting of arrays.
-    **`An error occurred (AccessDenied) when calling the GetFindings operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: securityhub:GetFindings`** — Add the `securityhub:GetFindings` permission to the IAM user or role's policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidInputException) when calling the GetFindings operation: 1 validation error detected: Value at 'filters' failed a custom validation constraint` | Verify JSON syntax in the filters parameter; use single quotes around the entire filter object and ensure proper nesting of arrays. |
+    | `An error occurred (AccessDenied) when calling the GetFindings operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: securityhub:GetFindings` | Add the `securityhub:GetFindings` permission to the IAM user or role's policy. |
 ```bash
 #!/bin/bash
 # Quick daily AWS health summary
@@ -871,9 +897,11 @@ aws health describe-events \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (UnauthorizedOperation) when calling the DescribeInstanceStatus operation: You are not authorized to perform: ec2:DescribeInstanceStatus on resource`** — Ensure the IAM role or user has the `ec2:DescribeInstanceStatus`, `cloudwatch:DescribeAlarms`, `rds:DescribeDBInstances`, and `health:DescribeEvents` permissions attached.
-    **`Unable to locate credentials. You can configure credentials by running "aws configure".`** — Set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_DEFAULT_REGION` environment variables or run `aws configure` to store credentials in `~/.aws/credentials`.
-    **`An error occurred (InvalidParameterValue) when calling the DescribeAlarms operation: Invalid value for parameter StateValue`** — Verify the `--state-value` parameter accepts `ALARM` (not `alarm` or `ALARMED`); check AWS CLI version compatibility with the health API.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (UnauthorizedOperation) when calling the DescribeInstanceStatus operation: You are not authorized to perform: ec2:DescribeInstanceStatus on resource` | Ensure the IAM role or user has the `ec2:DescribeInstanceStatus`, `cloudwatch:DescribeAlarms`, `rds:DescribeDBInstances`, and `health:DescribeEvents` permissions attached. |
+    | `Unable to locate credentials. You can configure credentials by running "aws configure".` | Set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_DEFAULT_REGION` environment variables or run `aws configure` to store credentials in `~/.aws/credentials`. |
+    | `An error occurred (InvalidParameterValue) when calling the DescribeAlarms operation: Invalid value for parameter StateValue` | Verify the `--state-value` parameter accepts `ALARM` (not `alarm` or `ALARMED`); check AWS CLI version compatibility with the health API. |
 ---
 
 ## Verify

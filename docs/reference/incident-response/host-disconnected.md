@@ -73,9 +73,11 @@ rtt min/avg/max/stddev = 2.156/2.316/2.489/0.131 ms
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <vm-ip>`** — Replace `<vm-ip>` with the actual IP address (e.g., `ping 192.168.45.87`).
-    **`From 192.168.1.1 icmp_seq=1 Destination Host Unreachable`** — Verify the VM is powered on and check network connectivity; confirm the IP address is correct and on the same subnet.
-    **`ping: sendto: Operation not permitted`** — Run the command with appropriate permissions or check if ICMP is blocked by a firewall rule on the host or network.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <vm-ip>` | Replace `<vm-ip>` with the actual IP address (e.g., `ping 192.168.45.87`). |
+    | `From 192.168.1.1 icmp_seq=1 Destination Host Unreachable` | Verify the VM is powered on and check network connectivity; confirm the IP address is correct and on the same subnet. |
+    | `ping: sendto: Operation not permitted` | Run the command with appropriate permissions or check if ICMP is blocked by a firewall rule on the host or network. |
 If VMs respond to ping, the host is up but vCenter lost the management agent — lower urgency.
 
 **Check HA events** — did HA already handle it?
@@ -103,8 +105,10 @@ rtt min/avg/max/stddev = 1.89/2.09/2.34/0.16 ms
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <esxi-management-ip>`** — Replace `<esxi-management-ip>` with the actual ESXi management IP address (e.g., `192.168.1.42`).
-    **`From 192.168.1.1 icmp_seq=1 Destination Host Unreachable`** — Verify the ESXi host is powered on and the management network is reachable; check physical connectivity and firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <esxi-management-ip>` | Replace `<esxi-management-ip>` with the actual ESXi management IP address (e.g., `192.168.1.42`). |
+    | `From 192.168.1.1 icmp_seq=1 Destination Host Unreachable` | Verify the ESXi host is powered on and the management network is reachable; check physical connectivity and firewall rules. |
 | Result | Meaning |
 |---|---|
 | Responds | ESXi is alive; issue is `hostd` or `vpxa` agent crash |
@@ -143,9 +147,11 @@ root@esxi-prod-01.dc1 [ ~ ]# grep -i "error\|fault\|fail" /var/log/vmkernel.log 
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host <esxi-management-ip> port 22: Connection timed out`** — Verify the ESXi host is powered on and reachable by pinging the management IP; check firewall rules allow SSH on port 22.
-    **`hostd is stopped.`** — Restart the management agent with `/etc/init.d/hostd start` and check `/var/log/hostd.log` for startup errors.
-    **`grep: /var/log/vmkernel.log: No such file or directory`** — Verify the ESXi host filesystem is accessible; if corrupted, boot into maintenance mode and check `/var/log/vmkernel.log` path exists.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host <esxi-management-ip> port 22: Connection timed out` | Verify the ESXi host is powered on and reachable by pinging the management IP; check firewall rules allow SSH on port 22. |
+    | `hostd is stopped.` | Restart the management agent with `/etc/init.d/hostd start` and check `/var/log/hostd.log` for startup errors. |
+    | `grep: /var/log/vmkernel.log: No such file or directory` | Verify the ESXi host filesystem is accessible; if corrupted, boot into maintenance mode and check `/var/log/vmkernel.log` path exists. |
 ### Step 3 — Try vSphere Host Client directly
 
 Browse to `https://<esxi-ip>/ui` — if this loads, the host is healthy but the vCenter agent has crashed.
@@ -187,8 +193,10 @@ Starting hostd... done
 ```
 
 !!! warning "Common errors"
-    **`hostd: unrecognized service`** — Verify you are running this command on an ESXi host (not vCenter); these services only exist on ESXi.
-    **`/etc/init.d/hostd: Permission denied`** — Execute the commands with root privileges using `sudo` or by logging in as root.
+    | Error | Fix |
+    |---|---|
+    | `hostd: unrecognized service` | Verify you are running this command on an ESXi host (not vCenter); these services only exist on ESXi. |
+    | `/etc/init.d/hostd: Permission denied` | Execute the commands with root privileges using `sudo` or by logging in as root. |
 Wait 60–90 seconds — the host should reconnect to vCenter automatically.
 
 ## Fix — Option C: Reconnect via PowerCLI
@@ -216,8 +224,10 @@ esxcli system maintenanceMode set --enable true
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or flag '--enable'`** — Use `esxcli system maintenanceMode set --enable=true` with an equals sign instead of a space.
-    **`Error: Permission denied`** — Ensure you are logged in as root or a user with administrative privileges on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or flag '--enable'` | Use `esxcli system maintenanceMode set --enable=true` with an equals sign instead of a space. |
+    | `Error: Permission denied` | Ensure you are logged in as root or a user with administrative privileges on the ESXi host. |
 ## If VMs Are Inaccessible and Host Is Down
 
 1. **Wait for HA timeout** (default 5 minutes) — HA will restart VMs on surviving hosts

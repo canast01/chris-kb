@@ -117,9 +117,11 @@ OpenSSL 3.0.11 19 Sep 2023
 ```
 
 !!! warning "Common errors"
-    **`which: python3: not found`** — Ensure Python 3 is installed and in PATH, or use the full path to the interpreter (e.g., `/usr/bin/python3`).
-    **`$VIRTUAL_ENV: command not found`** — The virtual environment is not activated; run `source /path/to/venv/bin/activate` before executing the script.
-    **`ModuleNotFoundError: No module named 'ssl'`** — Reinstall Python with OpenSSL support using your package manager (e.g., `apt-get install python3-dev libssl-dev && python3 -m pip install --upgrade pip`).
+    | Error | Fix |
+    |---|---|
+    | `which: python3: not found` | Ensure Python 3 is installed and in PATH, or use the full path to the interpreter (e.g., `/usr/bin/python3`). |
+    | `$VIRTUAL_ENV: command not found` | The virtual environment is not activated; run `source /path/to/venv/bin/activate` before executing the script. |
+    | `ModuleNotFoundError: No module named 'ssl'` | Reinstall Python with OpenSSL support using your package manager (e.g., `apt-get install python3-dev libssl-dev && python3 -m pip install --upgrade pip`). |
 ### 2. Capture the full traceback
 
 ```python
@@ -161,9 +163,11 @@ Output saved to /tmp/script-output-2024-01-15-143218.log
 ```
 
 !!! warning "Common errors"
-    **`python3: command not found`** — Install Python 3 or verify it's in your PATH with `which python3`.
-    **`/path/to/script.py: No such file or directory`** — Replace `/path/to/script.py` with the actual script path and verify it exists with `ls -la`.
-    **`Permission denied`** — Make the script executable with `chmod +x /path/to/script.py` or run with `python3` directly.
+    | Error | Fix |
+    |---|---|
+    | `python3: command not found` | Install Python 3 or verify it's in your PATH with `which python3`. |
+    | `/path/to/script.py: No such file or directory` | Replace `/path/to/script.py` with the actual script path and verify it exists with `ls -la`. |
+    | `Permission denied` | Make the script executable with `chmod +x /path/to/script.py` or run with `python3` directly. |
 ### 3. Identify the failing dependency
 
 ```bash
@@ -208,8 +212,10 @@ Vulnerability found in certifi (2022.12.7):
 ```
 
 !!! warning "Common errors"
-    **`ERROR: No matching distribution found for <package-name>`** — Verify the package name spelling and ensure PyPI is accessible; try `pip search <package-name>` or check https://pypi.org directly.
-    **`ModuleNotFoundError: No module named '<package>'`** — Install the package with `pip install <package>` or check that the import name matches the distribution name (they sometimes differ, e.g., `pip install pillow` but `import PIL`).
+    | Error | Fix |
+    |---|---|
+    | `ERROR: No matching distribution found for <package-name>` | Verify the package name spelling and ensure PyPI is accessible; try `pip search <package-name>` or check https://pypi.org directly. |
+    | `ModuleNotFoundError: No module named '<package>'` | Install the package with `pip install <package>` or check that the import name matches the distribution name (they sometimes differ, e.g., `pip install pillow` but `import PIL`). |
 ### 4. For API errors — capture request/response detail
 
 ```python
@@ -344,9 +350,11 @@ Found 2 vulnerabilities:
 ```
 
 !!! warning "Common errors"
-    **`ModuleNotFoundError: No module named 'requests'`** — Run `pip install requests` in the active Python environment before executing the script.
-    **`requests.exceptions.SSLError: HTTPSConnectionPool(host='api.example.com', port=443): Max retries exceeded`** — Verify SSL certificates are valid with `python3 -c "import certifi; print(certifi.where())"` and check firewall/proxy rules blocking HTTPS.
-    **`venv: error: command not found`** — Install the venv module with `apt install python3-venv` (Debian/Ubuntu) or `yum install python3-venv` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `ModuleNotFoundError: No module named 'requests'` | Run `pip install requests` in the active Python environment before executing the script. |
+    | `requests.exceptions.SSLError: HTTPSConnectionPool(host='api.example.com', port=443): Max retries exceeded` | Verify SSL certificates are valid with `python3 -c "import certifi; print(certifi.where())"` and check firewall/proxy rules blocking HTTPS. |
+    | `venv: error: command not found` | Install the venv module with `apt install python3-venv` (Debian/Ubuntu) or `yum install python3-venv` (RHEL/CentOS). |
 ---
 
 ## See also

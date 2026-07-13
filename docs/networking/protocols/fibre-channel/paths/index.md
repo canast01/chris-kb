@@ -86,9 +86,11 @@ blacklist {
 ```
 
 !!! warning "Common errors"
-    **`multipath: command not found`** — Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt install multipath-tools`.
-    **`device-mapper: reload ioctl failed: Device or resource busy`** — Ensure no processes are accessing the multipath devices and try `multipath -F` to flush before reload.
-    **`parse error in /etc/multipath.conf line 42`** — Check multipath.conf syntax with `multipath -t` to identify and fix configuration errors.
+    | Error | Fix |
+    |---|---|
+    | `multipath: command not found` | Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt install multipath-tools`. |
+    | `device-mapper: reload ioctl failed: Device or resource busy` | Ensure no processes are accessing the multipath devices and try `multipath -F` to flush before reload. |
+    | `parse error in /etc/multipath.conf line 42` | Check multipath.conf syntax with `multipath -t` to identify and fix configuration errors. |
 ### ESXi
 
 ```bash
@@ -129,8 +131,10 @@ ClaimRule  PluginName  DeviceType  VendorFilter  ModelFilter  Options
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or set of options: -d`** — Use the correct device identifier format without the `-d` flag; try `esxcli storage core path list | grep naa.<id>` instead.
-    **`Error: Unable to find a matching vm kernel nic for the management network`** — Ensure the ESXi host has network connectivity and the management interface is properly configured before running storage commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or set of options: -d` | Use the correct device identifier format without the `-d` flag; try `esxcli storage core path list | grep naa.<id>` instead. |
+    | `Error: Unable to find a matching vm kernel nic for the management network` | Ensure the ESXi host has network connectivity and the management interface is properly configured before running storage commands. |
 ### Windows — MPIO
 
 ```powershell
@@ -196,6 +200,8 @@ vmhba2      bnx2fc   Link Up      10 Gbps
 ```
 
 !!! warning "Common errors"
-    **`bash: /sys/class/scsi_host/host0/scan: Permission denied`** — Run the command with `sudo` or as root user.
-    **`esxcli: command not found`** — Verify you are connected to an ESXi host via SSH; this command only runs on ESXi, not vCenter.
-    **`Update-StorageProviderCache : The term 'Update-StorageProviderCache' is not recognized`** — Run PowerShell as Administrator and ensure the Storage module is loaded with `Import-Module Storage`.
+    | Error | Fix |
+    |---|---|
+    | `bash: /sys/class/scsi_host/host0/scan: Permission denied` | Run the command with `sudo` or as root user. |
+    | `esxcli: command not found` | Verify you are connected to an ESXi host via SSH; this command only runs on ESXi, not vCenter. |
+    | `Update-StorageProviderCache : The term 'Update-StorageProviderCache' is not recognized` | Run PowerShell as Administrator and ensure the Storage module is loaded with `Import-Module Storage`. |

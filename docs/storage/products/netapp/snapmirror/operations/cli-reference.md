@@ -102,9 +102,11 @@ Lag Time      Healthy
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Verify you are connected to a NetApp cluster with SnapMirror licensed and enabled, or use the full path `snapmirror` from the ONTAP CLI.
-    **`Error: No matching relationships found`** — Confirm the destination path exists and is formatted as `svm_name:volume_name` with correct SVM and volume names.
-    **`Error: Access denied for command "snapmirror show"`** — Ensure your ONTAP user role has the "snapmirror" capability; contact your cluster administrator to grant appropriate permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Verify you are connected to a NetApp cluster with SnapMirror licensed and enabled, or use the full path `snapmirror` from the ONTAP CLI. |
+    | `Error: No matching relationships found` | Confirm the destination path exists and is formatted as `svm_name:volume_name` with correct SVM and volume names. |
+    | `Error: Access denied for command "snapmirror show"` | Ensure your ONTAP user role has the "snapmirror" capability; contact your cluster administrator to grant appropriate permissions. |
 ### Create and Initialize
 
 ```bash
@@ -145,9 +147,11 @@ svm_dr:vol_data              87%                847GB
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Relationship does not exist.`** — Verify the source and destination paths are correct and the relationship was successfully created with the first command.
-    **`Error: command failed: Cannot initialize relationship with policy "MirrorAllSnapshots" and schedule "hourly".`** — Remove the `-schedule` parameter when creating XDP relationships; scheduling is configured separately after creation.
-    **`Error: command failed: Insufficient space on destination volume.`** — Ensure the destination volume has at least 110% of the source volume's used capacity available.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Relationship does not exist.` | Verify the source and destination paths are correct and the relationship was successfully created with the first command. |
+    | `Error: command failed: Cannot initialize relationship with policy "MirrorAllSnapshots" and schedule "hourly".` | Remove the `-schedule` parameter when creating XDP relationships; scheduling is configured separately after creation. |
+    | `Error: command failed: Insufficient space on destination volume.` | Ensure the destination volume has at least 110% of the source volume's used capacity available. |
 ### Updates and Quiesce
 
 ```bash
@@ -179,9 +183,11 @@ Transfer aborted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: There is no SnapMirror relationship for destination "svm_dr:vol_data"`** — Verify the relationship exists with `snapmirror show -destination-path svm_dr:vol_data` and ensure the destination path is correctly formatted.
-    **`Error: command failed: SnapMirror transfer is not in progress for destination "svm_dr:vol_data"`** — Check the current transfer status with `snapmirror show -destination-path svm_dr:vol_data` before attempting to abort.
-    **`Error: command failed: Insufficient privileges to perform SnapMirror operations`** — Ensure your user account has the required RBAC role; contact your cluster administrator to grant `snapmirror` command permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: There is no SnapMirror relationship for destination "svm_dr:vol_data"` | Verify the relationship exists with `snapmirror show -destination-path svm_dr:vol_data` and ensure the destination path is correctly formatted. |
+    | `Error: command failed: SnapMirror transfer is not in progress for destination "svm_dr:vol_data"` | Check the current transfer status with `snapmirror show -destination-path svm_dr:vol_data` before attempting to abort. |
+    | `Error: command failed: Insufficient privileges to perform SnapMirror operations` | Ensure your user account has the required RBAC role; contact your cluster administrator to grant `snapmirror` command permissions. |
 ### DR Failover Procedure
 
 ```bash
@@ -216,9 +222,11 @@ DNS host entry created successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: SnapMirror relationship is in "transferring" state and cannot be quiesced`** — Wait for the active transfer to complete or use `snapmirror abort` to force-stop the transfer before quiescing.
-    **`Error: volume mount failed: Junction path "/vol_data" already exists`** — Remove the existing junction path with `volume unmount -vserver svm_dr -volume vol_data` or use a different junction path.
-    **`Error: SnapMirror relationship is not in "snapmirrored" state`** — Verify the relationship status with `snapmirror show -destination-path svm_dr:vol_data` and ensure it is not already broken or in an error state.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: SnapMirror relationship is in "transferring" state and cannot be quiesced` | Wait for the active transfer to complete or use `snapmirror abort` to force-stop the transfer before quiescing. |
+    | `Error: volume mount failed: Junction path "/vol_data" already exists` | Remove the existing junction path with `volume unmount -vserver svm_dr -volume vol_data` or use a different junction path. |
+    | `Error: SnapMirror relationship is not in "snapmirrored" state` | Verify the relationship status with `snapmirror show -destination-path svm_dr:vol_data` and ensure it is not already broken or in an error state. |
 ### Failback Sequence
 
 ```bash
@@ -255,9 +263,11 @@ svm_prod:vol_data svm_dr:vol_data snapmirrored 00:00:15
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Snapmirror relationship does not exist.`** — Verify the relationship exists with `snapmirror show` and confirm SVM and volume names match exactly.
-    **`Error: This destination is not quiesced. Quiesce the destination before breaking the relationship.`** — Run `snapmirror quiesce -destination-path svm_prod:vol_data` and wait for the operation to complete before breaking.
-    **`Error: Snapmirror relationship is in transfer. Cannot resync while a transfer is in progress.`** — Wait for the current transfer to finish using `snapmirror show -destination-path svm_prod:vol_data` or abort it with `snapmirror abort`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Snapmirror relationship does not exist.` | Verify the relationship exists with `snapmirror show` and confirm SVM and volume names match exactly. |
+    | `Error: This destination is not quiesced. Quiesce the destination before breaking the relationship.` | Run `snapmirror quiesce -destination-path svm_prod:vol_data` and wait for the operation to complete before breaking. |
+    | `Error: Snapmirror relationship is in transfer. Cannot resync while a transfer is in progress.` | Wait for the current transfer to finish using `snapmirror show -destination-path svm_prod:vol_data` or abort it with `snapmirror abort`. |
 ### Delete a Relationship
 
 ```bash
@@ -285,9 +295,11 @@ Snapshots deleted: 12
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: There is no SnapMirror relationship for destination "svm_dr:vol_data"`** — Verify the relationship exists with `snapmirror show -destination-path svm_dr:vol_data` before attempting to quiesce.
-    **`Error: command failed: Cannot delete snapshot(s): snapshot(s) are locked by SnapMirror`** — Ensure the SnapMirror relationship is fully broken (not just quiesced) before deleting snapshots.
-    **`Error: command failed: Volume vol_data does not exist on Vserver svm_dr`** — Confirm the destination volume name and SVM name are correct using `volume show -vserver svm_dr`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: There is no SnapMirror relationship for destination "svm_dr:vol_data"` | Verify the relationship exists with `snapmirror show -destination-path svm_dr:vol_data` before attempting to quiesce. |
+    | `Error: command failed: Cannot delete snapshot(s): snapshot(s) are locked by SnapMirror` | Ensure the SnapMirror relationship is fully broken (not just quiesced) before deleting snapshots. |
+    | `Error: command failed: Volume vol_data does not exist on Vserver svm_dr` | Confirm the destination volume name and SVM name are correct using `volume show -vserver svm_dr`. |
 ---
 
 ## Lag Monitoring and Alerts
@@ -328,8 +340,10 @@ Event notification "SnapMirrorLag" created successfully.
 ```
 
 !!! warning "Common errors"
-    **`awk: syntax error near line 1`** — Use numeric comparison `$3 > "02:00:00"` or convert lag-time to seconds for proper awk filtering.
-    **`Error: entry doesn't exist: snap-lag-email`** — Create the notification destination before referencing it in the event notification command.
+    | Error | Fix |
+    |---|---|
+    | `awk: syntax error near line 1` | Use numeric comparison `$3 > "02:00:00"` or convert lag-time to seconds for proper awk filtering. |
+    | `Error: entry doesn't exist: snap-lag-email` | Create the notification destination before referencing it in the event notification command. |
 ---
 
 ## REST API
@@ -413,9 +427,11 @@ curl -sk $AUTH "$BASEURL/snapmirror/relationships/<uuid>/transfers" | python3 -m
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or install the cluster's CA certificate in your system trust store.
-    **`{"error":{"message":"Invalid UUID format","code":4}}`** — Replace `<uuid>` placeholder with an actual relationship UUID from the list output (e.g., `a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6`).
-    **`curl: (7) Failed to connect to ontap-cluster.example.com port 443: Connection refused`** — Verify the ONTAP cluster hostname/IP is correct and the REST API service is running; check firewall rules allowing port 443 from your client.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or install the cluster's CA certificate in your system trust store. |
+    | `{"error":{"message":"Invalid UUID format","code":4}}` | Replace `<uuid>` placeholder with an actual relationship UUID from the list output (e.g., `a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6`). |
+    | `curl: (7) Failed to connect to ontap-cluster.example.com port 443: Connection refused` | Verify the ONTAP cluster hostname/IP is correct and the REST API service is running; check firewall rules allowing port 443 from your client. |
 ---
 
 ## Verify

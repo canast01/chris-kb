@@ -100,9 +100,11 @@ Protocol  : TLSv1.2
 ```
 
 !!! warning "Common errors"
-    **`unable to load client cert (no certs available)`** — Ensure the system's CA certificates are installed via `update-ca-certificates` or equivalent, or add `-CAfile /path/to/ca-bundle.crt` to the openssl command.
-    **`connect: Connection refused`** — Verify the vrli-prod-01.example.local hostname resolves and port 443 is accessible; check DNS resolution with `nslookup vrli-prod-01.example.local` and firewall rules.
-    **`Protocol  : TLSv1.0` (when TLS 1.0 should be rejected)`** — Disable TLS 1.0 on the Aria Operations for Logs appliance via the security settings in the web UI or by editing `/etc/ssl/openssl.cnf` to remove TLSv1 from the MinProtocol directive.
+    | Error | Fix |
+    |---|---|
+    | `unable to load client cert (no certs available)` | Ensure the system's CA certificates are installed via `update-ca-certificates` or equivalent, or add `-CAfile /path/to/ca-bundle.crt` to the openssl command. |
+    | `connect: Connection refused` | Verify the vrli-prod-01.example.local hostname resolves and port 443 is accessible; check DNS resolution with `nslookup vrli-prod-01.example.local` and firewall rules. |
+    | `Protocol  : TLSv1.0` (when TLS 1.0 should be rejected)` | Disable TLS 1.0 on the Aria Operations for Logs appliance via the security settings in the web UI or by editing `/etc/ssl/openssl.cnf` to remove TLSv1 from the MinProtocol directive. |
 Use `testssl.sh` for a comprehensive scan before exposing the UI to any external network:
 
 ```bash
@@ -149,9 +151,11 @@ Certificate information:
 ```
 
 !!! warning "Common errors"
-    **`testssl.sh: command not found`** — Install testssl.sh from https://github.com/drwetter/testssl.sh or add it to your PATH.
-    **`Unable to open a socket to vrli-prod-01.example.local:443`** — Verify the hostname resolves, the host is reachable, and port 443 is open (use `nc -zv vrli-prod-01.example.local 443`).
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — This is expected for self-signed certificates in lab environments; testssl.sh will continue testing despite the verification failure.
+    | Error | Fix |
+    |---|---|
+    | `testssl.sh: command not found` | Install testssl.sh from https://github.com/drwetter/testssl.sh or add it to your PATH. |
+    | `Unable to open a socket to vrli-prod-01.example.local:443` | Verify the hostname resolves, the host is reachable, and port 443 is open (use `nc -zv vrli-prod-01.example.local 443`). |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | This is expected for self-signed certificates in lab environments; testssl.sh will continue testing despite the verification failure. |
 ## See also
 
 - [Aria Ops for Logs — Hardening](../hardening/)

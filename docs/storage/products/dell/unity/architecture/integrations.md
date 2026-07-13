@@ -164,9 +164,11 @@ curl -c cookie.txt -b cookie.txt -k \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification, or import the Unity's certificate into your system trust store.
-    **`{"error":401,"message":"Unauthorized"}`** — Verify the admin credentials and ensure the password does not contain special characters that need escaping; use single quotes around the password string.
-    **`curl: (7) Failed to connect to <sp-ip> port 443: Connection refused`** — Confirm the SP IP address is correct and reachable on the network, and verify the Unity management interface is running with `telnet <sp-ip> 443`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip SSL verification, or import the Unity's certificate into your system trust store. |
+    | `{"error":401,"message":"Unauthorized"}` | Verify the admin credentials and ensure the password does not contain special characters that need escaping; use single quotes around the password string. |
+    | `curl: (7) Failed to connect to <sp-ip> port 443: Connection refused` | Confirm the SP IP address is correct and reachable on the network, and verify the Unity management interface is running with `telnet <sp-ip> 443`. |
 The API supports basic auth and session (cookie) auth. Use session auth for scripts that make multiple API calls to avoid authenticating on each request. The full API reference is available in Unisphere under **Help > REST API Reference**.
 
 ---

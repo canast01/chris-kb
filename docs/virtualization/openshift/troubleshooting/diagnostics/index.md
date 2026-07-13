@@ -147,9 +147,11 @@ status:
 ```
 
 !!! warning "Common errors"
-    **`error: unable to find image "registry.redhat.io/ocs4/ocs-must-gather-rhel8" locally`** — Ensure the cluster has pull credentials for registry.redhat.io and the image name matches your OCS/ODF version (e.g., ocs-must-gather-rhel9 for OCS 4.13+).
-    **`error: open /tmp/must-gather: permission denied`** — Run the command with appropriate permissions or specify a writable destination directory (e.g., `--dest-dir=$HOME/must-gather`).
-    **`error: unable to connect to the server: dial tcp: lookup api.cluster.example.com on 8.8.8.8:53: no such host`** — Verify kubeconfig is set correctly with `oc config current-context` and the cluster API endpoint is reachable.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to find image "registry.redhat.io/ocs4/ocs-must-gather-rhel8" locally` | Ensure the cluster has pull credentials for registry.redhat.io and the image name matches your OCS/ODF version (e.g., ocs-must-gather-rhel9 for OCS 4.13+). |
+    | `error: open /tmp/must-gather: permission denied` | Run the command with appropriate permissions or specify a writable destination directory (e.g., `--dest-dir=$HOME/must-gather`). |
+    | `error: unable to connect to the server: dial tcp: lookup api.cluster.example.com on 8.8.8.8:53: no such host` | Verify kubeconfig is set correctly with `oc config current-context` and the cluster API endpoint is reachable. |
 ## oc adm inspect (Targeted)
 
 ```bash
@@ -215,8 +217,10 @@ openshift-ingress            pod/router-default-9k4lm                          F
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "clusteroperator"`** — Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc version` and check cluster API availability.
-    **`error: unable to write to /tmp/etcd-inspect: permission denied`** — Run the command with appropriate permissions or specify a writable destination directory like `$HOME/inspect-output`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "clusteroperator"` | Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc version` and check cluster API availability. |
+    | `error: unable to write to /tmp/etcd-inspect: permission denied` | Run the command with appropriate permissions or specify a writable destination directory like `$HOME/inspect-output`. |
     **`error: no resources found in openshift
 ## Metrics-Based Diagnostics
 
@@ -287,9 +291,11 @@ kube_pod_container_status_last_terminated_reason{reason="OOMKilled",pod="worker-
 ```
 
 !!! warning "Common errors"
-    **`error: metrics not available yet`** — Wait 2-3 minutes after cluster startup for Prometheus to collect initial metrics, then retry the query.
-    **`Error executing remote command: command terminated with exit code 1`** — Verify the prometheus-k8s-0 pod is running with `oc get pod -n openshift-monitoring prometheus-k8s-0` and check pod logs with `oc logs -n openshift-monitoring prometheus-k8s-0`.
-    **`error: unable to connect to the server: dial tcp: lookup prometheus-k8s-0 on [IP]: no such host`** — Ensure you are connected to the correct cluster context with `oc config current-context` and the openshift-monitoring namespace exists.
+    | Error | Fix |
+    |---|---|
+    | `error: metrics not available yet` | Wait 2-3 minutes after cluster startup for Prometheus to collect initial metrics, then retry the query. |
+    | `Error executing remote command: command terminated with exit code 1` | Verify the prometheus-k8s-0 pod is running with `oc get pod -n openshift-monitoring prometheus-k8s-0` and check pod logs with `oc logs -n openshift-monitoring prometheus-k8s-0`. |
+    | `error: unable to connect to the server: dial tcp: lookup prometheus-k8s-0 on [IP]: no such host` | Ensure you are connected to the correct cluster context with `oc config current-context` and the openshift-monitoring namespace exists. |
 ## etcd Diagnostics
 
 ```bash
@@ -349,9 +355,11 @@ Finished defragmenting etcd member [6d1a0b8c3e7f2d4] in 8.456s
 ```
 
 !!! warning "Common errors"
-    **`error: unable to match a volume mount in pod openshift-etcd/etcd-ip-10-0-1-45.ec2.internal for /etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/`** — Verify the certificate path exists in the pod with `oc rsh -n openshift-etcd <pod> ls -la /etc/kubernetes/static-pod-certs/secrets/` and adjust the path if using a different OpenShift version.
-    **`Error: context deadline exceeded`** — The etcd cluster is overloaded or unhealthy; check member health with `etcdctl_cmd member list` and verify all three masters are running before retrying.
-    **`Error: failed to dial default: context deadline exceeded`** — Ensure network connectivity between the control plane nodes and that the etcd service is listening on port 2379 with `oc rsh -n openshift-et
+    | Error | Fix |
+    |---|---|
+    | `error: unable to match a volume mount in pod openshift-etcd/etcd-ip-10-0-1-45.ec2.internal for /etc/kubernetes/static-pod-certs/secrets/etcd-all-certs/` | Verify the certificate path exists in the pod with `oc rsh -n openshift-etcd <pod> ls -la /etc/kubernetes/static-pod-certs/secrets/` and adjust the path if using a different OpenShift version. |
+    | `Error: context deadline exceeded` | The etcd cluster is overloaded or unhealthy; check member health with `etcdctl_cmd member list` and verify all three masters are running before retrying. |
+    | `Error: failed to dial default: context deadline exceeded` | Ensure network connectivity between the control plane nodes and that the etcd service is listening on port 2379 with `oc rsh -n openshift-et |
 ## Network Diagnostics
 
 ```bash
@@ -548,8 +556,10 @@ sh-4.4# systemctl --failed
 ```
 
 !!! warning "Common errors"
-    **`chroot: can't execute '/bin/bash': No such file or directory`** — Use `sh` instead of `bash` or verify the host filesystem is properly mounted by checking `ls /host/bin`.
-    **`error: unable to get pod logs: rpc error: code = Unavailable desc = connection error: desc = "error reading from server: EOF"`** — Restart the CRI-O service with `systemctl restart crio` or check if the container runtime socket is accessible
+    | Error | Fix |
+    |---|---|
+    | `chroot: can't execute '/bin/bash': No such file or directory` | Use `sh` instead of `bash` or verify the host filesystem is properly mounted by checking `ls /host/bin`. |
+    | `error: unable to get pod logs: rpc error: code = Unavailable desc = connection error: desc = "error reading from server: EOF"` | Restart the CRI-O service with `systemctl restart crio` or check if the container runtime socket is accessible |
 ---
 
 ## See also

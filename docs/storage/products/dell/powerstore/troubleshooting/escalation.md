@@ -112,9 +112,11 @@ curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/appliance" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, so ensure it's not removed).
-    **`curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused`** — Verify the PowerStore management IP is correct and the REST API service is running with `ssh admin@<ip>` and check service status.
-    **`{"error":"Unauthorized","code":"401"}`** — Ensure the base64-encoded credentials are correct by re-encoding with `echo -n "user:password" | base64` and updating the Authorization header.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present in the example, so ensure it's not removed). |
+    | `curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused` | Verify the PowerStore management IP is correct and the REST API service is running with `ssh admin@<ip>` and check service status. |
+    | `{"error":"Unauthorized","code":"401"}` | Ensure the base64-encoded credentials are correct by re-encoding with `echo -n "user:password" | base64` and updating the Authorization header. |
 ### 2. Capture all active alerts
 
 ```bash
@@ -161,9 +163,11 @@ curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/alert?state=active" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example; if still failing, verify the management IP is correct).
-    **`curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused`** — Confirm the PowerStore management IP is reachable and the REST API service is running with `ping <powerstore-mgmt-ip>` and check network connectivity.
-    **`{"error": "Unauthorized"}`** — Verify the base64-encoded credentials are correct by re-encoding the username:password and ensure the user has API access permissions in PowerStore.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example; if still failing, verify the management IP is correct). |
+    | `curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused` | Confirm the PowerStore management IP is reachable and the REST API service is running with `ping <powerstore-mgmt-ip>` and check network connectivity. |
+    | `{"error": "Unauthorized"}` | Verify the base64-encoded credentials are correct by re-encoding the username:password and ensure the user has API access permissions in PowerStore. |
 ### 3. Check hardware health (controller and drive state)
 
 In PSM: click **Hardware → Appliance** and screenshot the hardware topology view showing controller and drive status.
@@ -233,9 +237,11 @@ curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/hardware?type=Drive" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-    **`401 Unauthorized`** — Verify the base64-encoded credentials are correct by running `echo -n "user:password" | base64` and comparing the output to your Authorization header.
-    **`curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused`** — Confirm the PowerStore management IP is reachable and the REST API service is running with `ping <powerstore-mgmt-ip>` and check firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed). |
+    | `401 Unauthorized` | Verify the base64-encoded credentials are correct by running `echo -n "user:password" | base64` and comparing the output to your Authorization header. |
+    | `curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused` | Confirm the PowerStore management IP is reachable and the REST API service is running with `ping <powerstore-mgmt-ip>` and check firewall rules. |
 ### 4. Collect the support bundle
 
 The support bundle packages all PSM logs, configuration data, and event history.
@@ -271,9 +277,11 @@ curl -k -X POST "https://<powerstore-mgmt-ip>/api/rest/support_material" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, so ensure it's not being removed).
-    **`{"error": "401 Unauthorized", "message": "Invalid or expired credentials"}`** — Verify the base64-encoded credentials are correct by re-encoding `username:password` and ensure the user has REST API permissions.
-    **`{"error": "404 Not Found", "message": "Appliance ID not found"}`** — Confirm the appliance ID exists by running `curl -k -H "Authorization: Basic <base64>" https://<powerstore-mgmt-ip>/api/rest/appliances` to list valid IDs.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present in the example, so ensure it's not being removed). |
+    | `{"error": "401 Unauthorized", "message": "Invalid or expired credentials"}` | Verify the base64-encoded credentials are correct by re-encoding `username:password` and ensure the user has REST API permissions. |
+    | `{"error": "404 Not Found", "message": "Appliance ID not found"}` | Confirm the appliance ID exists by running `curl -k -H "Authorization: Basic <base64>" https://<powerstore-mgmt-ip>/api/rest/appliances` to list valid IDs. |
 ### 5. Write the timeline
 
 ```text
@@ -470,8 +478,10 @@ curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/replication_session" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in examples, but ensure it's not removed).
-    **`{"error": "Unauthorized"}`** — Verify base64 credentials are
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in examples, but ensure it's not removed). |
+    | `{"error": "Unauthorized"}` | Verify base64 credentials are |
 ---
 
 ## Support SLA Reference

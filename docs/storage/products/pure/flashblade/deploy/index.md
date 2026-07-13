@@ -109,9 +109,11 @@ pureuser@flashblade-01>
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname <dhcp_assigned_ip>: Name or service not known`** — Replace `<dhcp_assigned_ip>` with the actual IP address assigned to the FlashBlade management interface.
-    **`Permission denied (publickey,password).`** — Verify the pureuser credentials are correct and the account is active on the FlashBlade system.
-    **`ssh: connect to host 192.168.1.45 port 22: Connection refused`** — Ensure the FlashBlade management interface is online and SSH is enabled; check network connectivity to the management IP.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname <dhcp_assigned_ip>: Name or service not known` | Replace `<dhcp_assigned_ip>` with the actual IP address assigned to the FlashBlade management interface. |
+    | `Permission denied (publickey,password).` | Verify the pureuser credentials are correct and the account is active on the FlashBlade system. |
+    | `ssh: connect to host 192.168.1.45 port 22: Connection refused` | Ensure the FlashBlade management interface is online and SSH is enabled; check network connectivity to the management IP. |
 **Run the setup wizard:**
 
 ```bash
@@ -145,8 +147,10 @@ System initialization complete. Please reboot to apply changes.
 ```
 
 !!! warning "Common errors"
-    **`purity: command not found`** — Ensure you are logged into the FlashBlade management console or that the purity CLI package is installed and in your PATH.
-    **`Error: Management IP already in use`** — Choose a different IP address that is not already assigned to another device on the network.
+    | Error | Fix |
+    |---|---|
+    | `purity: command not found` | Ensure you are logged into the FlashBlade management console or that the purity CLI package is installed and in your PATH. |
+    | `Error: Management IP already in use` | Choose a different IP address that is not already assigned to another device on the network. |
 The wizard prompts for:
 
 1. **System name:** Enter the array name (e.g., `fb-prod-01`). This appears in Pure1 and alert notifications.
@@ -183,8 +187,10 @@ MGMT       1Gb      healthy   1Gb/s
 ```
 
 !!! warning "Common errors"
-    **`purehw: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory.
-    **`Error: Unable to connect to array management interface`** — Verify network connectivity to the FlashBlade management IP and that SSH credentials are configured correctly.
+    | Error | Fix |
+    |---|---|
+    | `purehw: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory. |
+    | `Error: Unable to connect to array management interface` | Verify network connectivity to the FlashBlade management IP and that SSH credentials are configured correctly. |
 ---
 
 ## Configure Network Interfaces
@@ -220,9 +226,11 @@ VIF data_vif01 created successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Subnet data_subnet already exists`** — Use `purenetwork subnet list` to verify existing subnets, then choose a unique name or delete the conflicting subnet first.
-    **`Error: Invalid CIDR prefix 192.168.20.0/24: overlaps with existing subnet`** — Ensure the subnet prefix does not overlap with existing network segments; use `purenetwork subnet list` to check current allocations.
-    **`Error: VIF creation failed: subnet data_subnet not found`** — Verify the subnet was created successfully before creating the VIF, or check the subnet name spelling matches exactly.
+    | Error | Fix |
+    |---|---|
+    | `Error: Subnet data_subnet already exists` | Use `purenetwork subnet list` to verify existing subnets, then choose a unique name or delete the conflicting subnet first. |
+    | `Error: Invalid CIDR prefix 192.168.20.0/24: overlaps with existing subnet` | Ensure the subnet prefix does not overlap with existing network segments; use `purenetwork subnet list` to check current allocations. |
+    | `Error: VIF creation failed: subnet data_subnet not found` | Verify the subnet was created successfully before creating the VIF, or check the subnet name spelling matches exactly. |
 **Verify the VIF is online:**
 
 ```bash
@@ -249,8 +257,10 @@ Subnet Mask           : 255.255.255.0
 ```
 
 !!! warning "Common errors"
-    **`Error: VIF 'data_vif01' not found`** — Verify the VIF name matches exactly using `purenetwork vif list` and check for typos or case sensitivity.
-    **`Error: Command 'purenetwork' not found`** — Ensure the Pure FlashBlade CLI tools are installed and the PATH includes the Pure bin directory, or run with the full path `/opt/pureflashblade/bin/purenetwork`.
+    | Error | Fix |
+    |---|---|
+    | `Error: VIF 'data_vif01' not found` | Verify the VIF name matches exactly using `purenetwork vif list` and check for typos or case sensitivity. |
+    | `Error: Command 'purenetwork' not found` | Ensure the Pure FlashBlade CLI tools are installed and the PATH includes the Pure bin directory, or run with the full path `/opt/pureflashblade/bin/purenetwork`. |
 **Create a replication VIF (if replication is planned):**
 
 ```bash
@@ -276,9 +286,11 @@ Virtual Interface repl_vif01 created successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Subnet repl_subnet already exists`** — Use `purenetwork subnet list` to verify existing subnets and choose a unique name or delete the conflicting subnet first.
-    **`Error: Address 10.0.20.60 is outside subnet prefix 10.0.20.0/24`** — Ensure the VIF address falls within the subnet range (10.0.20.1–10.0.20.254 in this case).
-    **`Error: Subnet repl_subnet not found`** — Create the subnet before creating the VIF, or verify the subnet name matches exactly (case-sensitive).
+    | Error | Fix |
+    |---|---|
+    | `Error: Subnet repl_subnet already exists` | Use `purenetwork subnet list` to verify existing subnets and choose a unique name or delete the conflicting subnet first. |
+    | `Error: Address 10.0.20.60 is outside subnet prefix 10.0.20.0/24` | Ensure the VIF address falls within the subnet range (10.0.20.1–10.0.20.254 in this case). |
+    | `Error: Subnet repl_subnet not found` | Create the subnet before creating the VIF, or verify the subnet name matches exactly (case-sensitive). |
 **Test connectivity:**
 
 ```bash
@@ -301,9 +313,11 @@ round-trip min/avg/max/stddev = 2.156/2.279/2.412/0.098 ms
 ```
 
 !!! warning "Common errors"
-    **`Error: VIF 'data_vif01' not found`** — Verify the VIF name matches exactly using `purenetwork vif list` and correct any typos.
-    **`Error: Gateway IP <gateway_ip> is unreachable`** — Confirm the gateway IP is correct, the network is configured, and the gateway device is online and responding.
-    **`Error: Permission denied`** — Run the command with appropriate credentials or use `pureadmin` to verify your user has network management privileges.
+    | Error | Fix |
+    |---|---|
+    | `Error: VIF 'data_vif01' not found` | Verify the VIF name matches exactly using `purenetwork vif list` and correct any typos. |
+    | `Error: Gateway IP <gateway_ip> is unreachable` | Confirm the gateway IP is correct, the network is configured, and the gateway device is online and responding. |
+    | `Error: Permission denied` | Run the command with appropriate credentials or use `pureadmin` to verify your user has network management privileges. |
 ---
 
 ## Create First File System (NFS) or Bucket (S3)
@@ -336,8 +350,10 @@ NFS Versions: nfsv3, nfsv4.1
 ```
 
 !!! warning "Common errors"
-    **`Error: File system nfs_share01 already exists`** — Use a unique file system name or delete the existing file system with `purefs delete nfs_share01` first.
-    **`Error: NFS service is not enabled on this array`** — Enable NFS on the FlashBlade array using the management console or `purearray set --nfs-enabled true`.
+    | Error | Fix |
+    |---|---|
+    | `Error: File system nfs_share01 already exists` | Use a unique file system name or delete the existing file system with `purefs delete nfs_share01` first. |
+    | `Error: NFS service is not enabled on this array` | Enable NFS on the FlashBlade array using the management console or `purearray set --nfs-enabled true`. |
 Verify the export:
 
 ```bash
@@ -354,8 +370,10 @@ nfs_share03     NFS         No         No          0 B            50 TB
 ```
 
 !!! warning "Common errors"
-    **`purenfs: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory, or use the full path to the purenfs binary.
-    **`Error: Unable to connect to array at <ip>`** — Verify network connectivity to the FlashBlade management IP and confirm credentials are configured via `purenfs login` or environment variables.
+    | Error | Fix |
+    |---|---|
+    | `purenfs: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory, or use the full path to the purenfs binary. |
+    | `Error: Unable to connect to array at <ip>` | Verify network connectivity to the FlashBlade management IP and confirm credentials are configured via `purenfs login` or environment variables. |
 Mount from a Linux client:
 
 ```bash
@@ -379,9 +397,11 @@ drwxr-xr-x  4 root   root   4096 Nov 13 16:05 snapshots
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: mount point /mnt/flashblade_nfs does not exist`** — Create the mount point directory with `mkdir -p /mnt/flashblade_nfs` before mounting.
-    **`mount.nfs: access denied by server while mounting 192.168.20.100:/nfs_share01`** — Verify the NFS export is configured on the FlashBlade and the client IP is in the allowed export list.
-    **`Read-only file system`** — Check that the NFS mount wasn't mounted read-only; remount with `mount -o remount,rw /mnt/flashblade_nfs` if needed.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: mount point /mnt/flashblade_nfs does not exist` | Create the mount point directory with `mkdir -p /mnt/flashblade_nfs` before mounting. |
+    | `mount.nfs: access denied by server while mounting 192.168.20.100:/nfs_share01` | Verify the NFS export is configured on the FlashBlade and the client IP is in the allowed export list. |
+    | `Read-only file system` | Check that the NFS mount wasn't mounted read-only; remount with `mount -o remount,rw /mnt/flashblade_nfs` if needed. |
 **Create an S3 bucket:**
 
 1. First, create an object store account and access credentials:
@@ -418,9 +438,11 @@ Access Key Created Successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Account 'prod_s3_account' already exists`** — Use `purearray objectstore account list` to verify the account name is unique before creation.
-    **`Error: User 's3_admin' not found in account 'prod_s3_account'`** — Ensure the user creation command completed successfully and the account name matches exactly (case-sensitive).
-    **`Error: Authentication failed - invalid credentials`** — Verify your Pure Storage array credentials are configured in `~/.purearray/config` or set via environment variables.
+    | Error | Fix |
+    |---|---|
+    | `Error: Account 'prod_s3_account' already exists` | Use `purearray objectstore account list` to verify the account name is unique before creation. |
+    | `Error: User 's3_admin' not found in account 'prod_s3_account'` | Ensure the user creation command completed successfully and the account name matches exactly (case-sensitive). |
+    | `Error: Authentication failed - invalid credentials` | Verify your Pure Storage array credentials are configured in `~/.purearray/config` or set via environment variables. |
 2. Create a bucket:
 
 ```bash
@@ -444,8 +466,10 @@ Object Count: 0
 ```
 
 !!! warning "Common errors"
-    **`Error: Account 'prod_s3_account' does not exist`** — Create the S3 account first using `pures3 account create --account prod_s3_account` before creating the bucket.
-    **`Error: Filesystem 's3_bucket01' already exists`** — Use a different filesystem name or delete the existing filesystem with `purefs delete --name s3_bucket01` before retrying.
+    | Error | Fix |
+    |---|---|
+    | `Error: Account 'prod_s3_account' does not exist` | Create the S3 account first using `pures3 account create --account prod_s3_account` before creating the bucket. |
+    | `Error: Filesystem 's3_bucket01' already exists` | Use a different filesystem name or delete the existing filesystem with `purefs delete --name s3_bucket01` before retrying. |
 3. Test S3 access:
 
 ```bash
@@ -472,9 +496,11 @@ upload: ../etc/hosts to s3://s3_bucket01/test_upload
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The Access Key Id you provided does not exist in our records.`** — Verify the Access Key ID and Secret Access Key are correct and have been created in the FlashBlade management console.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is already present; if the error persists, ensure the FlashBlade endpoint certificate is valid or use a self-signed certificate bundle with `--ca-bundle` parameter.
-    **`NoSuchBucket`** — Confirm the bucket name `s3_bucket01` exists on the FlashBlade system using `aws s3 ls --endpoint-url https://192.168.20.100 --no-verify-ssl --profile flashblade`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The Access Key Id you provided does not exist in our records.` | Verify the Access Key ID and Secret Access Key are correct and have been created in the FlashBlade management console. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | The `--no-verify-ssl` flag is already present; if the error persists, ensure the FlashBlade endpoint certificate is valid or use a self-signed certificate bundle with `--ca-bundle` parameter. |
+    | `NoSuchBucket` | Confirm the bucket name `s3_bucket01` exists on the FlashBlade system using `aws s3 ls --endpoint-url https://192.168.20.100 --no-verify-ssl --profile flashblade`. |
 ---
 
 ## Configure Replication
@@ -504,9 +530,11 @@ Sync status: In-Sync
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid management address <dr_flashblade_mgmt_ip>`** — Replace the placeholder with the actual DR FlashBlade management IP address (e.g., 10.42.18.55).
-    **`Error: Pre-shared key mismatch or invalid format`** — Ensure the pre-shared key copied from the propose command output is pasted exactly without whitespace or truncation on the accept command.
-    **`Error: Peer relationship already exists with name fb-prod`** — Remove the existing peer relationship using `purearray peer delete --name fb-prod` before accepting a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid management address <dr_flashblade_mgmt_ip>` | Replace the placeholder with the actual DR FlashBlade management IP address (e.g., 10.42.18.55). |
+    | `Error: Pre-shared key mismatch or invalid format` | Ensure the pre-shared key copied from the propose command output is pasted exactly without whitespace or truncation on the accept command. |
+    | `Error: Peer relationship already exists with name fb-prod` | Remove the existing peer relationship using `purearray peer delete --name fb-prod` before accepting a new one. |
 **Create a replication policy on the source:**
 
 ```bash
@@ -543,9 +571,11 @@ Policy replicate_hourly applied to file system nfs_share01.
 ```
 
 !!! warning "Common errors"
-    **`Error: replication target fb-dr already exists`** — Verify the target name is unique or use `purearray replicationtarget list` to check existing targets.
-    **`Error: file system nfs_share01 not found`** — Confirm the file system name with `purepolicy filesystem list` and correct the spelling (note: the command has a typo: `--filsystem` should be `--filesystem`).
-    **`Error: replication target fb-dr is unreachable`** — Verify network connectivity to 10.0.20.70 and ensure the remote FlashBlade's replication VIF is configured and listening.
+    | Error | Fix |
+    |---|---|
+    | `Error: replication target fb-dr already exists` | Verify the target name is unique or use `purearray replicationtarget list` to check existing targets. |
+    | `Error: file system nfs_share01 not found` | Confirm the file system name with `purepolicy filesystem list` and correct the spelling (note: the command has a typo: `--filsystem` should be `--filesystem`). |
+    | `Error: replication target fb-dr is unreachable` | Verify network connectivity to 10.0.20.70 and ensure the remote FlashBlade's replication VIF is configured and listening. |
 **Monitor replication:**
 
 ```bash
@@ -564,8 +594,10 @@ repl-compliance-mirror        SYNCED    15        4.091 TB
 ```
 
 !!! warning "Common errors"
-    **`purepolicy: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory.
-    **`Error: Not authenticated to array`** — Run `purepolicy login` with valid credentials before executing replication commands.
+    | Error | Fix |
+    |---|---|
+    | `purepolicy: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory. |
+    | `Error: Not authenticated to array` | Run `purepolicy login` with valid credentials before executing replication commands. |
 ---
 
 ## Register with Pure1
@@ -585,8 +617,10 @@ Test phonehome succeeded
 ```
 
 !!! warning "Common errors"
-    **`Error: Phone home is not configured`** — Run `puresupport phonehome enable` first to initialize the phone home service.
-    **`Error: Unable to reach Pure1 cloud service`** — Verify network connectivity and firewall rules allow HTTPS outbound to Pure1 endpoints (pure1.purestorage.com).
+    | Error | Fix |
+    |---|---|
+    | `Error: Phone home is not configured` | Run `puresupport phonehome enable` first to initialize the phone home service. |
+    | `Error: Unable to reach Pure1 cloud service` | Verify network connectivity and firewall rules allow HTTPS outbound to Pure1 endpoints (pure1.purestorage.com). |
 2. Log in to `https://pure1.purestorage.com`.
 3. The FlashBlade appears in the **Arrays** list within 30 minutes of enabling Phone Home.
 4. Navigate to **Alerts** and add an email notification recipient.
@@ -622,9 +656,11 @@ psu-4                         healthy     PSU-3000W             PSU20230415004
 ```
 
 !!! warning "Common errors"
-    **`purehw: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/pureapp/bin`).
-    **`Error: Unable to connect to array management interface`** — Verify network connectivity to the FlashBlade management IP and confirm SSH credentials are configured correctly.
-    **`Status: degraded`** — Replace the failed hardware component immediately and run `purehw list` again to confirm the replacement is detected as healthy.
+    | Error | Fix |
+    |---|---|
+    | `purehw: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/pureapp/bin`). |
+    | `Error: Unable to connect to array management interface` | Verify network connectivity to the FlashBlade management IP and confirm SSH credentials are configured correctly. |
+    | `Status: degraded` | Replace the failed hardware component immediately and run `purehw list` again to confirm the replacement is detected as healthy. |
 2. Confirm NFS mount is accessible and performing:
 
 ```bash
@@ -643,9 +679,11 @@ dd if=/dev/zero of=/mnt/flashblade_nfs/throughput_test bs=1M count=10240 oflag=d
 ```
 
 !!! warning "Common errors"
-    **`mount: /mnt/flashblade_nfs: mount point does not exist`** — Create the mount point with `mkdir -p /mnt/flashblade_nfs` before mounting the FlashBlade NFS export.
-    **`dd: opening '/mnt/flashblade_nfs/throughput_test': Permission denied`** — Verify the NFS mount has write permissions and the user running dd has access; check with `ls -ld /mnt/flashblade_nfs`.
-    **`dd: opening '/mnt/flashblade_nfs/throughput_test': No space left on device`** — Reduce the test file size (e.g., `count=1024` for 1 GB) or verify FlashBlade capacity with `df -h /mnt/flashblade_nfs`.
+    | Error | Fix |
+    |---|---|
+    | `mount: /mnt/flashblade_nfs: mount point does not exist` | Create the mount point with `mkdir -p /mnt/flashblade_nfs` before mounting the FlashBlade NFS export. |
+    | `dd: opening '/mnt/flashblade_nfs/throughput_test': Permission denied` | Verify the NFS mount has write permissions and the user running dd has access; check with `ls -ld /mnt/flashblade_nfs`. |
+    | `dd: opening '/mnt/flashblade_nfs/throughput_test': No space left on device` | Reduce the test file size (e.g., `count=1024` for 1 GB) or verify FlashBlade capacity with `df -h /mnt/flashblade_nfs`. |
 3. Confirm S3 bucket operations are working:
 
 ```bash
@@ -662,9 +700,11 @@ aws s3 ls s3://s3_bucket01 --endpoint-url https://192.168.20.100 --no-verify-ssl
 ```
 
 !!! warning "Common errors"
-    **`Unable to locate credentials for profile: flashblade`** — Ensure the AWS profile is configured in `~/.aws/credentials` or set `AWS_PROFILE=flashblade` environment variable.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is already present; if still failing, verify the endpoint URL matches the FlashBlade management IP and is reachable via `ping 192.168.20.100`.
-    **`An error occurred (NoSuchBucket) when calling the ListBucket operation: The specified bucket does not exist`** — Confirm the bucket name `s3_bucket01` exists on the FlashBlade array using the management console or correct the bucket name.
+    | Error | Fix |
+    |---|---|
+    | `Unable to locate credentials for profile: flashblade` | Ensure the AWS profile is configured in `~/.aws/credentials` or set `AWS_PROFILE=flashblade` environment variable. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | The `--no-verify-ssl` flag is already present; if still failing, verify the endpoint URL matches the FlashBlade management IP and is reachable via `ping 192.168.20.100`. |
+    | `An error occurred (NoSuchBucket) when calling the ListBucket operation: The specified bucket does not exist` | Confirm the bucket name `s3_bucket01` exists on the FlashBlade array using the management console or correct the bucket name. |
 4. Verify replication is running:
 
 ```bash
@@ -681,8 +721,10 @@ test-replication-policy       active    86400                 flashblade-test.ex
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (111)`** — Verify the Pure FlashBlade management IP is reachable and the purepolicy CLI tool is properly configured with `purepolicy login`.
-    **`Error: Authentication failed`** — Ensure your Pure FlashBlade API token or credentials are valid and have not expired; re-authenticate with `purepolicy login`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (111)` | Verify the Pure FlashBlade management IP is reachable and the purepolicy CLI tool is properly configured with `purepolicy login`. |
+    | `Error: Authentication failed` | Ensure your Pure FlashBlade API token or credentials are valid and have not expired; re-authenticate with `purepolicy login`. |
 5. In Pure1, confirm the FlashBlade shows no active critical alerts and Phone Home status is **Connected**.
 
 ---

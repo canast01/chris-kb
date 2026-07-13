@@ -230,9 +230,11 @@ Total        8947283     1456789120
 ```
 
 !!! warning "Common errors"
-    **`pgrep: command not found`** — Install procps-ng package or use `ps aux | grep atlassian-jira` to locate the PID manually.
-    **`Could not attach to <PID>: Permission denied`** — Run the command as the same user running JIRA (typically `jira` user) or use `sudo`.
-    **`jcmd: command not found`** — Ensure JAVA_HOME is set correctly and jcmd is in PATH; verify JDK (not JRE) is installed.
+    | Error | Fix |
+    |---|---|
+    | `pgrep: command not found` | Install procps-ng package or use `ps aux | grep atlassian-jira` to locate the PID manually. |
+    | `Could not attach to <PID>: Permission denied` | Run the command as the same user running JIRA (typically `jira` user) or use `sudo`. |
+    | `jcmd: command not found` | Ensure JAVA_HOME is set correctly and jcmd is in PATH; verify JDK (not JRE) is installed. |
 ### Capture heap dump
 
 ```bash
@@ -252,9 +254,11 @@ Heap dump: /tmp/jira-heap-20240115-143022.hprof (2.3G)
 ```
 
 !!! warning "Common errors"
-    **`Could not attach to process`** — Ensure the JIRA process is running with `pgrep -f 'atlassian-jira'` and verify the PID is correct before running jmap.
-    **`Permission denied`** — Run the command with appropriate sudo privileges or ensure the jira user has permissions to write to /tmp.
-    **`jmap: command not found`** — Install the JDK (not just JRE) on the system, as jmap is part of the JDK tools.
+    | Error | Fix |
+    |---|---|
+    | `Could not attach to process` | Ensure the JIRA process is running with `pgrep -f 'atlassian-jira'` and verify the PID is correct before running jmap. |
+    | `Permission denied` | Run the command with appropriate sudo privileges or ensure the jira user has permissions to write to /tmp. |
+    | `jmap: command not found` | Install the JDK (not just JRE) on the system, as jmap is part of the JDK tools. |
 ### Analyse with Eclipse MAT
 
 1. Download [Eclipse Memory Analyser Tool (MAT)](https://eclipse.dev/mat/)
@@ -305,9 +309,11 @@ GC events: 1847, Total pause: 892.3s, Avg: 483ms
 ```
 
 !!! warning "Common errors"
-    **`grep: /opt/atlassian/jira/logs/gc.log: No such file or directory`** — Verify the GC log path matches your JIRA installation; check `$JIRA_HOME/logs/` and update `GC_LOG` variable accordingly.
-    **`awk: syntax error in function printf near line 1`** — Ensure the awk script is properly quoted and newlines are preserved; use single quotes around the entire awk block or escape internal quotes.
-    **`command not found: awk`** — Install gawk or mawk package using your system package manager (e.g., `apt-get install gawk` on Debian/Ubuntu).
+    | Error | Fix |
+    |---|---|
+    | `grep: /opt/atlassian/jira/logs/gc.log: No such file or directory` | Verify the GC log path matches your JIRA installation; check `$JIRA_HOME/logs/` and update `GC_LOG` variable accordingly. |
+    | `awk: syntax error in function printf near line 1` | Ensure the awk script is properly quoted and newlines are preserved; use single quotes around the entire awk block or escape internal quotes. |
+    | `command not found: awk` | Install gawk or mawk package using your system package manager (e.g., `apt-get install gawk` on Debian/Ubuntu). |
 ---
 
 ## Step 3 — Thread dump capture and analysis
@@ -341,9 +347,11 @@ Thread dumps in: /tmp/jira-thread-dumps-20240315
 ```
 
 !!! warning "Common errors"
-    **`jcmd: command not found`** — Ensure the JDK (not just JRE) is installed and `JAVA_HOME` is set correctly in your environment.
-    **`Error: Could not attach to process`** — Verify the JIRA process is running with `ps aux | grep atlassian-jira` and that you have sufficient permissions (may require `sudo`).
-    **`No such file or directory`** — Check that `/tmp` is writable and has sufficient free space with `df -h /tmp`.
+    | Error | Fix |
+    |---|---|
+    | `jcmd: command not found` | Ensure the JDK (not just JRE) is installed and `JAVA_HOME` is set correctly in your environment. |
+    | `Error: Could not attach to process` | Verify the JIRA process is running with `ps aux | grep atlassian-jira` and that you have sufficient permissions (may require `sudo`). |
+    | `No such file or directory` | Check that `/tmp` is writable and has sufficient free space with `df -h /tmp`. |
 ### Parse thread dumps
 
 ```bash
@@ -399,9 +407,11 @@ Found one Java-level deadlock:
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/dumps/dump-1-*.txt: No such file or directory`** — Verify the dump file exists in `${DUMP_DIR}` and matches the naming pattern, or use `ls ${DUMP_DIR}/dump-1-*.txt` to confirm the path.
-    **`grep: (standard input) is empty`** — The dump file is empty or the grep pattern doesn't match any content; regenerate the thread dump using `jstack <pid> > ${DUMP_DIR}/dump-1-$(date +%s).txt`.
-    **`DUMP_DIR: unbound variable`** — Set the `DUMP_DIR` variable before running the script with `export DUMP_DIR=/path/to/dumps` or define it inline.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/dumps/dump-1-*.txt: No such file or directory` | Verify the dump file exists in `${DUMP_DIR}` and matches the naming pattern, or use `ls ${DUMP_DIR}/dump-1-*.txt` to confirm the path. |
+    | `grep: (standard input) is empty` | The dump file is empty or the grep pattern doesn't match any content; regenerate the thread dump using `jstack <pid> > ${DUMP_DIR}/dump-1-$(date +%s).txt`. |
+    | `DUMP_DIR: unbound variable` | Set the `DUMP_DIR` variable before running the script with `export DUMP_DIR=/path/to/dumps` or define it inline. |
 ### Thread states interpretation
 
 | State | Meaning | Concern |
@@ -552,9 +562,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify `${JIRA_URL}` is correct and the Jira instance is running and accessible from your network.
-    **`{"errorMessages":["User does not have permission to administer Jira"],"errors":{}}`** — Ensure `${JIRA_USER}` has Jira administrator privileges or use an API token from an admin account.
-    **`curl: (6) Could not resolve host: jira.example.com`** — Check that `${JIRA_URL}` hostname is resolvable and verify DNS or network connectivity.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify `${JIRA_URL}` is correct and the Jira instance is running and accessible from your network. |
+    | `{"errorMessages":["User does not have permission to administer Jira"],"errors":{}}` | Ensure `${JIRA_USER}` has Jira administrator privileges or use an API token from an admin account. |
+    | `curl: (6) Could not resolve host: jira.example.com` | Check that `${JIRA_URL}` hostname is resolvable and verify DNS or network connectivity. |
 The zip file is created in `<jira-home>/export/support/`. Retrieve and attach to your Atlassian support ticket.
 
 ### What the Support ZIP contains
@@ -609,9 +621,11 @@ Enable JMX in `setenv.sh` for external monitoring:
 ```
 
 !!! warning "Common errors"
-    **`Exception in thread "main" java.net.BindException: Address already in use`** — Change the JMX port (e.g., 9999 to 10000) if another process is already listening on that port.
-    **`java.rmi.ConnectException: Connection refused to host: <node-ip>`** — Verify the `java.rmi.server.hostname` is set to the actual resolvable IP or FQDN of the Jira node, not localhost or an internal IP if connecting remotely.
-    **`java.lang.SecurityException: Authentication disabled but password file not found`** — Set `jmxremote.authenticate=false` only in non-production environments; for production, create a jmxremote.password file and set authenticate=true instead.
+    | Error | Fix |
+    |---|---|
+    | `Exception in thread "main" java.net.BindException: Address already in use` | Change the JMX port (e.g., 9999 to 10000) if another process is already listening on that port. |
+    | `java.rmi.ConnectException: Connection refused to host: <node-ip>` | Verify the `java.rmi.server.hostname` is set to the actual resolvable IP or FQDN of the Jira node, not localhost or an internal IP if connecting remotely. |
+    | `java.lang.SecurityException: Authentication disabled but password file not found` | Set `jmxremote.authenticate=false` only in non-production environments; for production, create a jmxremote.password file and set authenticate=true instead. |
 Key MBeans to monitor:
 
 | MBean | Attribute | Meaning |

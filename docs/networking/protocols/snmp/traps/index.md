@@ -64,9 +64,11 @@ systemctl restart snmpd
 ```
 
 !!! warning "Common errors"
-    **`error on line 3: unknown token: trapsink`** — Use `trap2sink` for SNMPv2c traps, or verify snmpd version supports legacy `trapsink` syntax.
-    **`error on line 9: Unknown user name "trapuser"`** — Create the SNMPv3 user first with `net-snmp-create-v3-user -A <authpass> -X <privpass> -a SHA -x AES trapuser` before restarting snmpd.
-    **`Job for snmpd.service failed because the control process exited with error code`** — Check `/var/log/snmpd.log` or run `snmpd -f -L s 6` to validate configuration syntax before restart.
+    | Error | Fix |
+    |---|---|
+    | `error on line 3: unknown token: trapsink` | Use `trap2sink` for SNMPv2c traps, or verify snmpd version supports legacy `trapsink` syntax. |
+    | `error on line 9: Unknown user name "trapuser"` | Create the SNMPv3 user first with `net-snmp-create-v3-user -A <authpass> -X <privpass> -a SHA -x AES trapuser` before restarting snmpd. |
+    | `Job for snmpd.service failed because the control process exited with error code` | Check `/var/log/snmpd.log` or run `snmpd -f -L s 6` to validate configuration syntax before restart. |
 ### Cisco IOS
 
 ```bash
@@ -105,9 +107,11 @@ bgp
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the NMS IP address format is valid (e.g., 192.168.x.x) and that the community string contains no spaces or special characters.
-    **`% Incomplete command.`** — Ensure you specify both the NMS IP address and community string; `snmp-server host` requires at least these two parameters.
-    **`% Unknown SNMP trap type 'envmon'`** — Check device platform support; some devices use `snmp-server enable traps enviromental` or `snmp-server enable traps entity` instead of `envmon`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the NMS IP address format is valid (e.g., 192.168.x.x) and that the community string contains no spaces or special characters. |
+    | `% Incomplete command.` | Ensure you specify both the NMS IP address and community string; `snmp-server host` requires at least these two parameters. |
+    | `% Unknown SNMP trap type 'envmon'` | Check device platform support; some devices use `snmp-server enable traps enviromental` or `snmp-server enable traps entity` instead of `envmon`. |
 ### Arista EOS
 
 ```text
@@ -147,9 +151,11 @@ MIB Capability Settings:
 ```
 
 !!! warning "Common errors"
-    **`snmpconfig: command not found`** — Verify SNMP tools are installed with `apt-get install snmp snmp-mibs-downloader` or equivalent for your distribution.
-    **`Error: Unable to write configuration — Permission denied`** — Run the command with `sudo` or ensure your user has write access to `/etc/snmp/` configuration directories.
-    **`Invalid IP address format`** — Enter the trap recipient IP in valid dotted-decimal notation (e.g., 192.168.1.50) without CIDR notation or hostnames.
+    | Error | Fix |
+    |---|---|
+    | `snmpconfig: command not found` | Verify SNMP tools are installed with `apt-get install snmp snmp-mibs-downloader` or equivalent for your distribution. |
+    | `Error: Unable to write configuration — Permission denied` | Run the command with `sudo` or ensure your user has write access to `/etc/snmp/` configuration directories. |
+    | `Invalid IP address format` | Enter the trap recipient IP in valid dotted-decimal notation (e.g., 192.168.1.50) without CIDR notation or hostnames. |
 ## Testing Trap Delivery
 
 ```bash
@@ -177,9 +183,11 @@ Listening at UDP: [0.0.0.0]:162
 ```
 
 !!! warning "Common errors"
-    **`snmptrap: Unknown host "<nms-ip>"`** — Replace `<nms-ip>` with a valid IP address or resolvable hostname (e.g., `192.168.1.100`).
-    **`snmptrapd: Error opening specified endpoint "UDP: [0.0.0.0]:162"`** — Ensure snmptrapd is not already running on port 162 and that you have root/sudo privileges to bind to port 162.
-    **`snmptrap: No response from <nms-ip>:162`** — Verify the NMS host is reachable, the SNMP community string matches the NMS configuration, and firewall rules allow UDP 162 inbound.
+    | Error | Fix |
+    |---|---|
+    | `snmptrap: Unknown host "<nms-ip>"` | Replace `<nms-ip>` with a valid IP address or resolvable hostname (e.g., `192.168.1.100`). |
+    | `snmptrapd: Error opening specified endpoint "UDP: [0.0.0.0]:162"` | Ensure snmptrapd is not already running on port 162 and that you have root/sudo privileges to bind to port 162. |
+    | `snmptrap: No response from <nms-ip>:162` | Verify the NMS host is reachable, the SNMP community string matches the NMS configuration, and firewall rules allow UDP 162 inbound. |
 ## Common Trap OIDs
 
 | Trap | OID |
@@ -212,8 +220,10 @@ Created symlink /etc/systemd/system/multi-user.target.wants/snmptrapd.service �
 ```
 
 !!! warning "Common errors"
-    **`error: [NET FAILURE] Unknown host name`** — Verify the SNMP trap source hostname/IP is resolvable; add it to `/etc/hosts` or ensure DNS is configured correctly.
-    **`error opening specified logfile /var/log/snmptrapd.log: Permission denied`** — Create the log file with proper permissions: `touch /var/log/snmptrapd.log && chmod 644 /var/log/snmptrapd.log && chown snmp:snmp /var/log/snmptrapd.log`.
+    | Error | Fix |
+    |---|---|
+    | `error: [NET FAILURE] Unknown host name` | Verify the SNMP trap source hostname/IP is resolvable; add it to `/etc/hosts` or ensure DNS is configured correctly. |
+    | `error opening specified logfile /var/log/snmptrapd.log: Permission denied` | Create the log file with proper permissions: `touch /var/log/snmptrapd.log && chmod 644 /var/log/snmptrapd.log && chown snmp:snmp /var/log/snmptrapd.log`. |
 ## Common Issues
 
 | Symptom | Cause | Check |

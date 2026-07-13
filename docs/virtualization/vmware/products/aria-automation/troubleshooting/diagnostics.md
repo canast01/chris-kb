@@ -127,9 +127,11 @@ eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkB2c3BoZXJlLmxvY2FsIiwiaWF
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example; if error persists, verify vRA appliance certificate is valid).
-    **`jq: error (at <stdin>:0): Cannot index object with string "cspAuthToken"`** — Verify credentials are correct and domain is set to `vsphere.local`; check vIDM is reachable and user account is not locked.
-    **`curl: (7) Failed to connect to <vra-fqdn> port 443: Connection refused`** — Confirm vRA FQDN is correct and vRA appliance is running; check network connectivity and firewall rules allow port 443.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example; if error persists, verify vRA appliance certificate is valid). |
+    | `jq: error (at <stdin>:0): Cannot index object with string "cspAuthToken"` | Verify credentials are correct and domain is set to `vsphere.local`; check vIDM is reachable and user account is not locked. |
+    | `curl: (7) Failed to connect to <vra-fqdn> port 443: Connection refused` | Confirm vRA FQDN is correct and vRA appliance is running; check network connectivity and firewall rules allow port 443. |
 ---
 
 ## Step 2 — Check failed deployments
@@ -209,9 +211,11 @@ legacy-app-test | FAILED | Blueprint validation failed: missing required input '
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the VRA certificate into your system CA bundle.
-    **`jq: command not found`** — Install python3-json or use `python3 -m json.tool` instead of piping to jq for JSON formatting.
-    **`Authorization: Bearer $TOKEN: command not found`** — Ensure `$TOKEN` variable is set by running `TOKEN=$(curl -sk -u admin:password "https://<vra-fqdn>/iaas/api/login" | grep -o '"token":"[^"]*' | cut -d'"' -f4)` first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the VRA certificate into your system CA bundle. |
+    | `jq: command not found` | Install python3-json or use `python3 -m json.tool` instead of piping to jq for JSON formatting. |
+    | `Authorization: Bearer $TOKEN: command not found` | Ensure `$TOKEN` variable is set by running `TOKEN=$(curl -sk -u admin:password "https://<vra-fqdn>/iaas/api/login" | grep -o '"token":"[^"]*' | cut -d'"' -f4)` first. |
 ---
 
 ## Step 3 — Check catalog request status
@@ -273,9 +277,11 @@ e2b7f5d3 | admin@corp.local | vCenter connection timeout
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the VRA certificate into your system's trusted CA store.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the `$TOKEN` variable is set correctly with a valid bearer token and the VRA API endpoint is reachable.
-    **`"reason": ""`** — Check the request events endpoint for detailed error messages, as some failures only populate the event log rather than the reason field.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the VRA certificate into your system's trusted CA store. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify the `$TOKEN` variable is set correctly with a valid bearer token and the VRA API endpoint is reachable. |
+    | `"reason": ""` | Check the request events endpoint for detailed error messages, as some failures only populate the event log rather than the reason field. |
 ---
 
 ## Step 4 — Inspect Kubernetes pod logs
@@ -345,9 +351,11 @@ approval-service-4c7d6b2e-uvwxy         67       256
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "pods"`** — Verify kubectl is configured correctly and you have access to the cluster with `kubectl cluster-info`.
-    **`Unable to connect to the server: dial tcp: lookup <vra-appliance-ip>: no such host`** — Ensure the vRA appliance IP is correct and reachable, or use the FQDN instead of IP address.
-    **`Error from server (NotFound): pods "<pod-name>" not found`** — Confirm the pod name is spelled correctly and exists in the prelude namespace with `kubectl get pods -n prelude`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "pods"` | Verify kubectl is configured correctly and you have access to the cluster with `kubectl cluster-info`. |
+    | `Unable to connect to the server: dial tcp: lookup <vra-appliance-ip>: no such host` | Ensure the vRA appliance IP is correct and reachable, or use the FQDN instead of IP address. |
+    | `Error from server (NotFound): pods "<pod-name>" not found` | Confirm the pod name is spelled correctly and exists in the prelude namespace with `kubectl get pods -n prelude`. |
 ---
 
 ## Step 5 — Check PostgreSQL database health
@@ -408,8 +416,10 @@ vcac=# \q
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "postgres"`** — Run the psql command directly on the vRA appliance or configure pg_hba.conf to allow password authentication.
-    **`ERROR: permission denied for schema public`** — Connect as the vcac database owner instead: `psql -U vcac -d vcac` or grant appropriate privileges to the postgres user.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "postgres"` | Run the psql command directly on the vRA appliance or configure pg_hba.conf to allow password authentication. |
+    | `ERROR: permission denied for schema public` | Connect as the vcac database owner instead: `psql -U vcac -d vcac` or grant appropriate privileges to the postgres user. |
 ---
 
 ## Step 6 — Check ABX action failures
@@ -463,9 +473,11 @@ post-deployment-webhook | FAILED | Connection refused to https://webhook.example
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vRA root CA into your system trust store.
-    **`jq: command not found`** — Install `jq` with `apt-get install jq` or `yum install jq`, or use the Python JSON parser shown in the example instead.
-    **`Authorization: Bearer $TOKEN: command not found`** — Ensure `$TOKEN` is set by running `TOKEN=$(curl -sk ... /api/login)` first, or use explicit token value in quotes.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the vRA root CA into your system trust store. |
+    | `jq: command not found` | Install `jq` with `apt-get install jq` or `yum install jq`, or use the Python JSON parser shown in the example instead. |
+    | `Authorization: Bearer $TOKEN: command not found` | Ensure `$TOKEN` is set by running `TOKEN=$(curl -sk ... /api/login)` first, or use explicit token value in quotes. |
 ---
 
 ## Step 7 — Collect support bundle
@@ -512,9 +524,11 @@ root@vra-appliance-01:~#
 ```
 
 !!! warning "Common errors"
-    **`/var/log/vmware/vra/support-bundle.sh: Permission denied`** — Run the command with `sudo` or ensure you are logged in as root user.
-    **`/tmp: No space left on device`** — Free up disk space on the appliance (check with `df -h`) or specify an alternate output directory before running the script.
-    **`support-bundle.sh: command not found`** — Verify the vRA appliance is fully deployed and the support tools are installed; check `/var/log/vmware/vra/` exists with `ls -la /var/log/vmware/vra/`.
+    | Error | Fix |
+    |---|---|
+    | `/var/log/vmware/vra/support-bundle.sh: Permission denied` | Run the command with `sudo` or ensure you are logged in as root user. |
+    | `/tmp: No space left on device` | Free up disk space on the appliance (check with `df -h`) or specify an alternate output directory before running the script. |
+    | `support-bundle.sh: command not found` | Verify the vRA appliance is fully deployed and the support tools are installed; check `/var/log/vmware/vra/` exists with `ls -la /var/log/vmware/vra/`. |
 ---
 
 ## Log locations

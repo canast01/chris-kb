@@ -129,9 +129,11 @@ curl -sk -X POST "https://harbor.example.local/api/v2.0/projects/team-alpha/memb
 ```
 
 !!! warning "Common errors"
-    **`{"errors":[{"code":"UNAUTHORIZED","message":"user does not have permission to the project"}]}`** — Verify the admin account has project admin privileges or use an account with explicit project membership.
-    **`{"errors":[{"code":"NOT_FOUND","message":"project team-alpha not found"}]}`** — Confirm the project name is correct and exists in Harbor; check for typos or use `curl -sk https://harbor.example.local/api/v2.0/projects -u admin:<password>` to list available projects.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present) or import the Harbor CA certificate into your system's trust store.
+    | Error | Fix |
+    |---|---|
+    | `{"errors":[{"code":"UNAUTHORIZED","message":"user does not have permission to the project"}]}` | Verify the admin account has project admin privileges or use an account with explicit project membership. |
+    | `{"errors":[{"code":"NOT_FOUND","message":"project team-alpha not found"}]}` | Confirm the project name is correct and exists in Harbor; check for typos or use `curl -sk https://harbor.example.local/api/v2.0/projects -u admin:<password>` to list available projects. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present) or import the Harbor CA certificate into your system's trust store. |
 ---
 
 ## Network Policy (Namespace Isolation)
@@ -193,8 +195,10 @@ namespace/logging labeled
 ```
 
 !!! warning "Common errors"
-    **`error: namespaces "production" does not exist`** — Verify the namespace exists with `kubectl get namespaces` and create it if needed using `kubectl create namespace production`.
-    **`Error from server (Forbidden): namespaces "production" is forbidden: User "system:serviceaccount:default:deployer" cannot patch resource "namespaces" in API group "" in the namespace "production"`** — Ensure your current user or service account has RBAC permissions to patch namespaces by binding the `edit` or `admin` ClusterRole.
+    | Error | Fix |
+    |---|---|
+    | `error: namespaces "production" does not exist` | Verify the namespace exists with `kubectl get namespaces` and create it if needed using `kubectl create namespace production`. |
+    | `Error from server (Forbidden): namespaces "production" is forbidden: User "system:serviceaccount:default:deployer" cannot patch resource "namespaces" in API group "" in the namespace "production"` | Ensure your current user or service account has RBAC permissions to patch namespaces by binding the `edit` or `admin` ClusterRole. |
 ---
 
 ## OPA Gatekeeper Policies

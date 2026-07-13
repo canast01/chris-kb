@@ -93,8 +93,10 @@ Address:	10.0.1.53#53
 ```
 
 !!! warning "Common errors"
-    **`** server can't find esxi-new-host.domain.local: NXDOMAIN`** — Verify the hostname is correctly registered in DNS and check that the jump host can reach the DNS server (ping 10.0.1.53).
-    **`** server can't find 45.100.168.192.in-addr.arpa: NXDOMAIN`** — Confirm the reverse DNS zone is configured on the DNS server and the PTR record exists for the ESXi management IP address.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find esxi-new-host.domain.local: NXDOMAIN` | Verify the hostname is correctly registered in DNS and check that the jump host can reach the DNS server (ping 10.0.1.53). |
+    | `** server can't find 45.100.168.192.in-addr.arpa: NXDOMAIN` | Confirm the reverse DNS zone is configured on the DNS server and the PTR record exists for the ESXi management IP address. |
 Expected: both lookups return the correct name/IP. Fix DNS if either fails — do not use `/etc/hosts` workarounds.
 
 ---
@@ -121,9 +123,11 @@ ntpq -p
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option --server`** — Use `esxcli system ntp set --servers=ntp1.domain.local,ntp2.domain.local` (comma-separated in a single argument) on some ESXi versions instead of repeated `--server` flags.
-    **`Error: Unable to resolve ntp1.domain.local`** — Verify DNS resolution is working on the ESXi host and the NTP server hostnames are resolvable via `nslookup ntp1.domain.local`.
-    **`reach   delay   offset  jitter` (no peer entries)** — Wait 2-3 minutes for NTP to synchronize and re-run `ntpq -p`, or check firewall rules allow UDP port 123 outbound to the NTP servers.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option --server` | Use `esxcli system ntp set --servers=ntp1.domain.local,ntp2.domain.local` (comma-separated in a single argument) on some ESXi versions instead of repeated `--server` flags. |
+    | `Error: Unable to resolve ntp1.domain.local` | Verify DNS resolution is working on the ESXi host and the NTP server hostnames are resolvable via `nslookup ntp1.domain.local`. |
+    | `reach   delay   offset  jitter` (no peer entries)` | Wait 2-3 minutes for NTP to synchronize and re-run `ntpq -p`, or check firewall rules allow UDP port 123 outbound to the NTP servers. |
 Look for: `*` or `+` next to a server in the `ntpq -p` output, indicating an active sync source.
 
 ---
@@ -167,9 +171,11 @@ PING 10.20.1.42 (10.20.1.42): 8972 data bytes
 ```
 
 !!! warning "Common errors"
-    **`Error: The object already exists.`** — Verify the VMkernel interface does not already exist with `esxcli network ip interface list` before adding.
-    **`Error: The portgroup does not exist.`** — Ensure the port group "vMotion" or "vSAN" is created on the vSwitch before running the interface add command.
-    **`100% packet loss`** — Confirm the target vSAN host's vmk2 IP is reachable and that jumbo frames (MTU 9000) are enabled on both the physical switch and vSAN port group.
+    | Error | Fix |
+    |---|---|
+    | `Error: The object already exists.` | Verify the VMkernel interface does not already exist with `esxcli network ip interface list` before adding. |
+    | `Error: The portgroup does not exist.` | Ensure the port group "vMotion" or "vSAN" is created on the vSwitch before running the interface add command. |
+    | `100% packet loss` | Confirm the target vSAN host's vmk2 IP is reachable and that jumbo frames (MTU 9000) are enabled on both the physical switch and vSAN port group. |
 Expected: vmkping returns 0% packet loss. If it fails, check MTU on the switch port and VDS portgroup — vSAN requires end-to-end MTU 9000.
 
 ---
@@ -208,8 +214,10 @@ vsanDatastore-prod                      8bg66f74-db15-7h45-e4f6-0i2h5d4g8f1e  Al
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Run this command directly on an ESXi host via SSH or vSphere CLI, not from a local workstation.
-    **`Error: Could not connect to the vSAN cluster`** — Verify the host is part of a vSAN cluster and vSAN is enabled on the cluster.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Run this command directly on an ESXi host via SSH or vSphere CLI, not from a local workstation. |
+    | `Error: Could not connect to the vSAN cluster` | Verify the host is part of a vSAN cluster and vSAN is enabled on the cluster. |
 Expected: all disks shown as claimed and healthy in the disk group. If EZ-Claim is not enabled, manually select disks, click **Claim Disks**, and assign cache and capacity roles.
 
 ---
@@ -252,8 +260,10 @@ SSH has been disabled.
 ```
 
 !!! warning "Common errors"
-    **`Unknown command: disable_ssh`** — Verify the correct vSphere API command syntax; use `vim-cmd hostsvc/enable_ssh` or `vim-cmd hostsvc/query_config` to check SSH status instead.
-    **`vim-cmd: command not found`** — Ensure you are running this command directly on the ESXi host (not a vCenter server) where vim-cmd is available in the PATH.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command: disable_ssh` | Verify the correct vSphere API command syntax; use `vim-cmd hostsvc/enable_ssh` or `vim-cmd hostsvc/query_config` to check SSH status instead. |
+    | `vim-cmd: command not found` | Ensure you are running this command directly on the ESXi host (not a vCenter server) where vim-cmd is available in the PATH. |
 Expected: SSH service stops. Set startup policy to **Start and stop manually** (vCenter → Host → **Configure** → **Services** → **SSH**) to prevent it restarting on reboot.
 
 ---

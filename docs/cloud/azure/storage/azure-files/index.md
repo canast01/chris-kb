@@ -80,9 +80,11 @@ premium-share01   1024     2024-01-15T09:42:41+00:00
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The specified storage account does not exist.`** — Verify the storage account name is correct and exists in the subscription with `az storage account show --name $SA`.
-    **`InvalidResourceName: The name 'premium-share01' is invalid. Share names must be lowercase, 3-63 characters, and contain only numbers, lowercase letters, and hyphens.`** — Use only lowercase letters, numbers, and hyphens in the share name.
-    **`AuthorizationPermissionMismatch: This request is not authorized to perform this operation.`** — Ensure your Azure CLI account has the Storage Account Contributor role on the storage account with `az role assignment list --scope /subscriptions/{sub-id}/resourceGroups/$RG/providers/Microsoft.Storage/storageAccounts/$SA`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The specified storage account does not exist.` | Verify the storage account name is correct and exists in the subscription with `az storage account show --name $SA`. |
+    | `InvalidResourceName: The name 'premium-share01' is invalid. Share names must be lowercase, 3-63 characters, and contain only numbers, lowercase letters, and hyphens.` | Use only lowercase letters, numbers, and hyphens in the share name. |
+    | `AuthorizationPermissionMismatch: This request is not authorized to perform this operation.` | Ensure your Azure CLI account has the Storage Account Contributor role on the storage account with `az role assignment list --scope /subscriptions/{sub-id}/resourceGroups/$RG/providers/Microsoft.Storage/storageAccounts/$SA`. |
 ## Mounting on Linux
 
 ```bash
@@ -122,9 +124,11 @@ storagekey123abc456def789ghi==
 ```
 
 !!! warning "Common errors"
-    **`mount error(13): Permission denied`** — Verify the storage account key is correct and the share exists by running `az storage share exists --account-name $SA --name $SHARE`.
-    **`mount error(111): Connection refused`** — Ensure the storage account name and share name variables are set correctly with `echo $SA $SHARE`, and that the storage account firewall rules allow your client IP.
-    **`bash: az: command not found`** — Install the Azure CLI with `curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash` on Debian/Ubuntu or `sudo dnf install azure-cli` on RHEL/Rocky.
+    | Error | Fix |
+    |---|---|
+    | `mount error(13): Permission denied` | Verify the storage account key is correct and the share exists by running `az storage share exists --account-name $SA --name $SHARE`. |
+    | `mount error(111): Connection refused` | Ensure the storage account name and share name variables are set correctly with `echo $SA $SHARE`, and that the storage account firewall rules allow your client IP. |
+    | `bash: az: command not found` | Install the Azure CLI with `curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash` on Debian/Ubuntu or `sudo dnf install azure-cli` on RHEL/Rocky. |
 ## Mounting on Windows
 
 ```powershell
@@ -169,9 +173,11 @@ Registration completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource 'sss-prod' does not exist in resource group 'prod-rg'.`** — Verify the storage sync service name and resource group name match exactly using `az storagesync list --resource-group $RG`.
-    **`BadRequest: The server is already registered with a different agent version.`** — Update the Azure File Sync agent on the Windows Server to the latest version from the Microsoft Download Center before re-registering.
-    **`InvalidPath: The local path 'D:\SyncedData' is not accessible or does not exist.`** — Ensure the path exists on the Windows Server and the service account has full read/write permissions to the directory.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource 'sss-prod' does not exist in resource group 'prod-rg'.` | Verify the storage sync service name and resource group name match exactly using `az storagesync list --resource-group $RG`. |
+    | `BadRequest: The server is already registered with a different agent version.` | Update the Azure File Sync agent on the Windows Server to the latest version from the Microsoft Download Center before re-registering. |
+    | `InvalidPath: The local path 'D:\SyncedData' is not accessible or does not exist.` | Ensure the path exists on the Windows Server and the service account has full read/write permissions to the directory. |
 ## Share Types and Tiers
 
 | Tier | Protocol | Min Size | Max IOPS | Use Case |
@@ -239,6 +245,8 @@ documents           2024-01-13T09:30:18Z
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The specified resource does not exist.`** — Verify that `$SA` and `$SHARE` variables are set correctly and the storage account exists in the specified resource group.
-    **`InvalidResourceName: The resource name contains invalid characters or exceeds length limits.`** — Ensure the file share name contains only lowercase letters, numbers, and hyphens, and is between 3–63 characters.
-    **`AuthorizationFailed: The client does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems/write'.`** — Grant the user or service principal the "Backup Operator" or "Contributor" role on the Recovery Services vault.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The specified resource does not exist.` | Verify that `$SA` and `$SHARE` variables are set correctly and the storage account exists in the specified resource group. |
+    | `InvalidResourceName: The resource name contains invalid characters or exceeds length limits.` | Ensure the file share name contains only lowercase letters, numbers, and hyphens, and is between 3–63 characters. |
+    | `AuthorizationFailed: The client does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems/write'.` | Grant the user or service principal the "Backup Operator" or "Contributor" role on the Recovery Services vault. |

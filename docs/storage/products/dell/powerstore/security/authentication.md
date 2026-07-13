@@ -70,9 +70,11 @@ curl -k -X PATCH "https://<mgmt-ip>/api/rest/user/local/<user-id>" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the PowerStore certificate into your system's trusted CA store.
-    **`{"error":"Invalid or expired token","error_code":"401"}`** — Regenerate the DELL-EMC-TOKEN by authenticating first with valid credentials and extract the token from the login response.
-    **`{"error":"Cannot modify built-in user account","error_code":"403"}`** — Ensure the `<user-id>` is not 'admin' or another built-in account; only custom local users can be disabled via this endpoint.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the PowerStore certificate into your system's trusted CA store. |
+    | `{"error":"Invalid or expired token","error_code":"401"}` | Regenerate the DELL-EMC-TOKEN by authenticating first with valid credentials and extract the token from the login response. |
+    | `{"error":"Cannot modify built-in user account","error_code":"403"}` | Ensure the `<user-id>` is not 'admin' or another built-in account; only custom local users can be disabled via this endpoint. |
 Local account password policy defaults:
 
 | Parameter | Default | Recommended |
@@ -132,9 +134,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/ldap" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip SSL verification (already present in the example, but ensure it's not removed in production without proper CA certificate validation).
-    **`{"error": "Invalid token", "code": 401}`** — Regenerate the DELL-EMC-TOKEN via the PowerStore management interface and ensure it has not expired or been revoked.
-    **`{"error": "LDAP bind failed", "code": 400}`** — Verify the bind_user DN and bind_password are correct, and confirm the service account has permission to query the Active Directory domain.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to the curl command to skip SSL verification (already present in the example, but ensure it's not removed in production without proper CA certificate validation). |
+    | `{"error": "Invalid token", "code": 401}` | Regenerate the DELL-EMC-TOKEN via the PowerStore management interface and ensure it has not expired or been revoked. |
+    | `{"error": "LDAP bind failed", "code": 400}` | Verify the bind_user DN and bind_password are correct, and confirm the service account has permission to query the Active Directory domain. |
 | LDAP Parameter | Recommended Setting | Notes |
 |---|---|---|
 | Protocol | LDAPS | Use LDAP over SSL; do not use plain LDAP in production |
@@ -205,9 +209,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/ldap_domain_role_mapping" \
 ```
 
 !!! warning "Common errors"
-    **`{"error_code": 401, "message": "Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it has not exceeded its expiration window.
-    **`{"error_code": 404, "message": "LDAP domain not found"}`** — Verify the ldap_domain_id exists by listing configured LDAP domains with `GET /api/rest/ldap_domain` and use the correct domain ID.
-    **`{"error_code": 400, "message": "Invalid role_name"}`** — Confirm the role_name is one of the valid PowerStore roles (Administrator, StorageOperator, Viewer, OperatorMonitor) and check for typos.
+    | Error | Fix |
+    |---|---|
+    | `{"error_code": 401, "message": "Invalid or expired token"}` | Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it has not exceeded its expiration window. |
+    | `{"error_code": 404, "message": "LDAP domain not found"}` | Verify the ldap_domain_id exists by listing configured LDAP domains with `GET /api/rest/ldap_domain` and use the correct domain ID. |
+    | `{"error_code": 400, "message": "Invalid role_name"}` | Confirm the role_name is one of the valid PowerStore roles (Administrator, StorageOperator, Viewer, OperatorMonitor) and check for typos. |
 ### Testing LDAP Configuration
 
 Before relying on LDAP for all authentication, test with a named user:
@@ -254,9 +260,11 @@ result: 0 Success
 ```
 
 !!! warning "Common errors"
-    **`ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)`** — Verify the LDAP server IP (192.168.1.10) is reachable and port 636 is open using `telnet 192.168.1.10 636` or `nc -zv 192.168.1.10 636`.
-    **`ldap_bind: Invalid credentials (49)`** — Confirm the bind DN path and password are correct; test with a known working service account credential.
-    **`ldap_search_ext: No such object (32)`** — Verify the base DN path `OU=Users,OU=Corp,DC=corp,DC=example,DC=com` exists in Active Directory and matches your domain structure exactly.
+    | Error | Fix |
+    |---|---|
+    | `ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)` | Verify the LDAP server IP (192.168.1.10) is reachable and port 636 is open using `telnet 192.168.1.10 636` or `nc -zv 192.168.1.10 636`. |
+    | `ldap_bind: Invalid credentials (49)` | Confirm the bind DN path and password are correct; test with a known working service account credential. |
+    | `ldap_search_ext: No such object (32)` | Verify the base DN path `OU=Users,OU=Corp,DC=corp,DC=example,DC=com` exists in Active Directory and matches your domain structure exactly. |
 ## REST API Token Authentication
 
 The PowerStore REST API uses session-based token authentication via the `login_session` endpoint. Tokens are valid for the duration of the session or until explicitly logged out.
@@ -304,9 +312,11 @@ curl -k -X DELETE "https://<mgmt-ip>/api/rest/login_session" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands to skip certificate verification, or import the PowerStore management certificate into your CA bundle.
-    **`jq: parse error: Cannot index string with string "token"`** — Verify the login credentials are correct and the API endpoint is responding with valid JSON; check the response with `curl -ks ... | cat` to inspect raw output.
-    **`{"error":"Invalid or expired token"}`** — Ensure the token variable is properly set by testing `echo $TOKEN` before the GET request, and verify the token hasn't expired (default 3600 seconds).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands to skip certificate verification, or import the PowerStore management certificate into your CA bundle. |
+    | `jq: parse error: Cannot index string with string "token"` | Verify the login credentials are correct and the API endpoint is responding with valid JSON; check the response with `curl -ks ... | cat` to inspect raw output. |
+    | `{"error":"Invalid or expired token"}` | Ensure the token variable is properly set by testing `echo $TOKEN` before the GET request, and verify the token hasn't expired (default 3600 seconds). |
 For automation, use a dedicated service account with the minimum required role:
 
 | Integration | Recommended Role | Rationale |
@@ -387,9 +397,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/smb_server" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the PowerStore management certificate into your system's trusted CA store.
-    **`{"error_code": "INVALID_FIELD", "message": "Invalid domain credentials"}`** — Verify the domain admin account exists, password is correct, and the account has permissions to join computers to the specified organizational unit.
-    **`{"error_code": "INVALID_FIELD", "message": "NAS server not found"}`** — Confirm the `nas_server_id` value matches an existing NAS server by querying `/api/rest/nas_server` first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the PowerStore management certificate into your system's trusted CA store. |
+    | `{"error_code": "INVALID_FIELD", "message": "Invalid domain credentials"}` | Verify the domain admin account exists, password is correct, and the account has permissions to join computers to the specified organizational unit. |
+    | `{"error_code": "INVALID_FIELD", "message": "NAS server not found"}` | Confirm the `nas_server_id` value matches an existing NAS server by querying `/api/rest/nas_server` first. |
 ---
 
 ## Related Reference

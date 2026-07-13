@@ -264,8 +264,10 @@ aws cloudwatch put-metric-alarm \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the PutMetricAlarm operation: Invalid namespace: AWS/EVS`** — Use a custom namespace like `EVS/Cluster` or verify the metric namespace exists in your CloudWatch metrics.
-    **`An error occurred (ValidationError) when calling the PutMetricAlarm operation: 1 validation error detected: Value at 'alarmActions' failed to satisfy constraint: Member must satisfy regular expression pattern: arn:aws[a-z\-]*:[a-z0-9\-]+:.*`** — Verify the SNS topic ARN is correctly formatted and the topic exists in the specified region.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the PutMetricAlarm operation: Invalid namespace: AWS/EVS` | Use a custom namespace like `EVS/Cluster` or verify the metric namespace exists in your CloudWatch metrics. |
+    | `An error occurred (ValidationError) when calling the PutMetricAlarm operation: 1 validation error detected: Value at 'alarmActions' failed to satisfy constraint: Member must satisfy regular expression pattern: arn:aws[a-z\-]*:[a-z0-9\-]+:.*` | Verify the SNS topic ARN is correctly formatted and the topic exists in the specified region. |
 ## AWS Native Service Integration
 
 ```bash
@@ -349,9 +351,11 @@ aws cloudwatch get-metric-statistics \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidVpcId.NotFound) when calling the CreateVpcEndpoint operation: The VPC ID 'vpc-evs-xxx' does not exist`** — Replace `vpc-evs-xxx` with your actual EVS VPC ID from the AWS console.
-    **`An error occurred (InvalidInput) when calling the CreateHostedZone operation: Invalid VPC association`** — Ensure the VPC ID exists in the specified region and the VPC has DNS support enabled.
-    **`An error occurred (InvalidParameterValue) when calling the GetMetricStatistics operation: The parameter StartTime must be before EndTime`** — Verify the system clock is correct and that the `-v-1H` date offset syntax is supported on your OS (use `date -u -d '1 hour ago'` on Linux instead).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidVpcId.NotFound) when calling the CreateVpcEndpoint operation: The VPC ID 'vpc-evs-xxx' does not exist` | Replace `vpc-evs-xxx` with your actual EVS VPC ID from the AWS console. |
+    | `An error occurred (InvalidInput) when calling the CreateHostedZone operation: Invalid VPC association` | Ensure the VPC ID exists in the specified region and the VPC has DNS support enabled. |
+    | `An error occurred (InvalidParameterValue) when calling the GetMetricStatistics operation: The parameter StartTime must be before EndTime` | Verify the system clock is correct and that the `-v-1H` date offset syntax is supported on your OS (use `date -u -d '1 hour ago'` on Linux instead). |
 ## See also
 
 - [Amazon EVS — How It Works](../how-it-works/)

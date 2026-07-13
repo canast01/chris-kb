@@ -113,9 +113,11 @@ curl -sk -H "x-xenon-auth-token: $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the LCM root CA into your system trust store.
-    **`jq: error (at <stdin>:0): Cannot index null with string "token"`** — Verify the LCM credentials are correct and the login endpoint is reachable; check that the password is URL-encoded if it contains special characters.
-    **`curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Name or service not known`** — Confirm the LCM hostname resolves in DNS and is reachable from your current network location, or use the IP address directly.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the LCM root CA into your system trust store. |
+    | `jq: error (at <stdin>:0): Cannot index null with string "token"` | Verify the LCM credentials are correct and the login endpoint is reachable; check that the password is URL-encoded if it contains special characters. |
+    | `curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Name or service not known` | Confirm the LCM hostname resolves in DNS and is reachable from your current network location, or use the IP address directly. |
 UI path: **LCM → Locker → Certificates** — columns show Alias, Subject, Expiry, and Status. Sort by Expiry to identify near-term renewals.
 
 | Certificate Status | Meaning | Action |
@@ -194,9 +196,11 @@ curl -sk -H "x-xenon-auth-token: $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example; if error persists, verify the LCM hostname resolves correctly).
-    **`jq: error (at <stdin>:1): Cannot index null with string "productId"`** — Verify the `$TOKEN` variable is set and valid by running `echo $TOKEN` and checking the API response contains actual product data.
-    **`curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Name or service not known`** — Replace `lcm-prod-01.example.local` with the correct LCM appliance hostname and verify network connectivity with `ping` or `nslookup`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example; if error persists, verify the LCM hostname resolves correctly). |
+    | `jq: error (at <stdin>:1): Cannot index null with string "productId"` | Verify the `$TOKEN` variable is set and valid by running `echo $TOKEN` and checking the API response contains actual product data. |
+    | `curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Name or service not known` | Replace `lcm-prod-01.example.local` with the correct LCM appliance hostname and verify network connectivity with `ping` or `nslookup`. |
 Expected output: `health` field should be `GREEN` for all products in a healthy environment. `YELLOW` indicates a configuration warning; `RED` indicates a failure requiring investigation.
 
 ---
@@ -251,7 +255,9 @@ total 2847
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/vmware/vrlcm/lcm-app.log' for reading: No such file or directory`** — Verify the vrlcm service is installed and running with `systemctl status vrlcm`, or check the correct log path with `find /var/log -name "*lcm*" -type f`.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/vmware/vrlcm/lcm-app.log' for reading: No such file or directory` | Verify the vrlcm service is installed and running with `systemctl status vrlcm`, or check the correct log path with `find /var/log -name "*lcm*" -type f`. |
     **`tail: cannot open '/var/log/vmware/vrlc
 ---
 
@@ -287,9 +293,11 @@ tail -200 /var/log/vmware/vrlcm/lcm-app.log | grep -i "ERROR\|WARN\|exception"
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/vmware/vrlcm/lcm-app.log' for reading: No such file or directory`** — Verify the LCM service is running with `systemctl status vrlcm` and confirm the log directory exists at `/var/log/vmware/vrlcm/`.
-    **`grep: (standard input) is empty`** — The log file exists but contains no data; check if the LCM service has written logs by running `ls -lh /var/log/vmware/vrlcm/lcm-app.log` to verify file size and timestamp.
-    **`<request-id>: No such file or directory`** — Replace `<request-id>` with an actual request ID value (e.g., `req-a7f2c9e1-4d8b-11ee-b56f-0242ac120002`) or use a pattern like `grep "req-"` to search for any request IDs.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/vmware/vrlcm/lcm-app.log' for reading: No such file or directory` | Verify the LCM service is running with `systemctl status vrlcm` and confirm the log directory exists at `/var/log/vmware/vrlcm/`. |
+    | `grep: (standard input) is empty` | The log file exists but contains no data; check if the LCM service has written logs by running `ls -lh /var/log/vmware/vrlcm/lcm-app.log` to verify file size and timestamp. |
+    | `<request-id>: No such file or directory` | Replace `<request-id>` with an actual request ID value (e.g., `req-a7f2c9e1-4d8b-11ee-b56f-0242ac120002`) or use a pattern like `grep "req-"` to search for any request IDs. |
 Common causes of stuck tasks: expired certificates mid-workflow, vCenter connectivity loss, NFS mount dropped, or a product VM that lost its management IP.
 
 **LCM service log** — primary location: `/var/log/vmware/lcm/lcm.log` on the LCM appliance. Tail this file for real-time ERROR entries during any active operation.
@@ -326,9 +334,11 @@ OK: >60 days
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the Aria Suite Lifecycle service is running with `systemctl status aria-suite-lifecycle` and listening on port 443.
-    **`unable to load certificate`** — Ensure the certificate chain is properly installed in the keystore; check `/opt/vmware/aria/lifecycle/conf/keystore.jks` exists and contains valid certificates.
-    **`Hostname mismatch`** — Confirm the certificate's CN or SAN matches the FQDN returned by `hostname -f`; regenerate or import the correct certificate if they don't align.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the Aria Suite Lifecycle service is running with `systemctl status aria-suite-lifecycle` and listening on port 443. |
+    | `unable to load certificate` | Ensure the certificate chain is properly installed in the keystore; check `/opt/vmware/aria/lifecycle/conf/keystore.jks` exists and contains valid certificates. |
+    | `Hostname mismatch` | Confirm the certificate's CN or SAN matches the FQDN returned by `hostname -f`; regenerate or import the correct certificate if they don't align. |
 **CLI check — each managed product (run from any host with network access):**
 
 ```bash
@@ -355,9 +365,11 @@ vidm-prod-01.example.local: Jul 08 16:44:19 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to connect to <product-fqdn>:443`** — Verify the FQDN is correct, the host is reachable on port 443, and no firewall rules are blocking the connection.
-    **`error in x509 certificate routines:x509_check_cert_time:certificate has expired`** — The SSL certificate has expired; regenerate and install a new certificate on the affected product instance.
-    **`cut: the delimiter does not appear in this line`** — The openssl command failed silently (likely due to network timeout or invalid hostname); add explicit error handling or verify DNS resolution with `nslookup <fqdn>`.
+    | Error | Fix |
+    |---|---|
+    | `unable to connect to <product-fqdn>:443` | Verify the FQDN is correct, the host is reachable on port 443, and no firewall rules are blocking the connection. |
+    | `error in x509 certificate routines:x509_check_cert_time:certificate has expired` | The SSL certificate has expired; regenerate and install a new certificate on the affected product instance. |
+    | `cut: the delimiter does not appear in this line` | The openssl command failed silently (likely due to network timeout or invalid hostname); add explicit error handling or verify DNS resolution with `nslookup <fqdn>`. |
 Renew any certificate expiring within 60 days using the procedure in the Procedures page (Request and Install Product Certificates via LCM).
 
 ---
@@ -392,8 +404,10 @@ du -sh /backup/lcm-backup-$(date +%Y%m%d)*
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/backup/lcm-backup-*': No such file or directory`** — Verify the backup directory path is correct and backups are being written to `/backup/` by checking the LCM backup job configuration.
-    **`du: cannot access '/backup/lcm-backup-20241115*': No such file or directory`** — Run the backup job manually or check the system date/cron scheduler to ensure today's backup has completed; use `ls -lh /backup/lcm-backup-*` to see available backups.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/backup/lcm-backup-*': No such file or directory` | Verify the backup directory path is correct and backups are being written to `/backup/` by checking the LCM backup job configuration. |
+    | `du: cannot access '/backup/lcm-backup-20241115*': No such file or directory` | Run the backup job manually or check the system date/cron scheduler to ensure today's backup has completed; use `ls -lh /backup/lcm-backup-*` to see available backups. |
 If no backup file exists for today: check LCM → Settings → Backup and Restore → review error messages; common causes are SFTP credential expiry, NFS connectivity loss, or insufficient disk space on the target.
 
 ---
@@ -438,8 +452,10 @@ tmpfs           1.6G     0  1.6G   0% /run/user/0
 ```
 
 !!! warning "Common errors"
-    **`du: cannot access '/data/*': Permission denied`** — Run the command with `sudo` or ensure the user has read permissions on the /data directory.
-    **`Filesystem /dev/mapper/data not found`** — Verify the LVM volume is mounted with `sudo lvdisplay` and mount it if necessary using `sudo mount /dev/mapper/data /data`.
+    | Error | Fix |
+    |---|---|
+    | `du: cannot access '/data/*': Permission denied` | Run the command with `sudo` or ensure the user has read permissions on the /data directory. |
+    | `Filesystem /dev/mapper/data not found` | Verify the LVM volume is mounted with `sudo lvdisplay` and mount it if necessary using `sudo mount /dev/mapper/data /data`. |
 **Clean unused binaries (UI):**
 Navigate to **Locker → Binary Mappings** — identify product versions that are no longer needed (older than two versions back from current). Select the binary mapping and click **Delete** — this removes the binary from `/data/` and frees disk space.
 
@@ -460,8 +476,10 @@ drwxr-xr-x  9 root root 4.0K Jul 31 11:34 /data/lcm/upgrade/aria-8.8.0-upgrade-2
 ```
 
 !!! warning "Common errors"
-    **`find: '/data/lcm/upgrade/': Permission denied`** — Run the command with `sudo` or ensure the user has read and execute permissions on the directory.
-    **`find: paths must begin with "." or "/"`** — Verify the path `/data/lcm/upgrade/` exists and is correctly spelled; check with `ls -ld /data/lcm/upgrade/` first.
+    | Error | Fix |
+    |---|---|
+    | `find: '/data/lcm/upgrade/': Permission denied` | Run the command with `sudo` or ensure the user has read and execute permissions on the directory. |
+    | `find: paths must begin with "." or "/"` | Verify the path `/data/lcm/upgrade/` exists and is correctly spelled; check with `ls -ld /data/lcm/upgrade/` first. |
 ---
 
 ## Integration Health
@@ -488,9 +506,11 @@ curl -sk https://<vcenter-fqdn>/rest/com/vmware/cis/session \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to vcenter.example.com port 443: Connection timed out`** — Verify network connectivity from the LCM appliance to vCenter using `ping` or `traceroute`, and confirm firewall rules allow port 443.
-    **`{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"default_message":"Invalid user name or password","id":"com.vmware.vapi.std.errors.invalid_request"}]}}`** — Verify the service account credentials are correct and the account has not been locked; reset the password in vCenter if needed.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should suppress this, but if it persists, ensure you're using the correct vCenter FQDN that matches the SSL certificate.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to vcenter.example.com port 443: Connection timed out` | Verify network connectivity from the LCM appliance to vCenter using `ping` or `traceroute`, and confirm firewall rules allow port 443. |
+    | `{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"default_message":"Invalid user name or password","id":"com.vmware.vapi.std.errors.invalid_request"}]}}` | Verify the service account credentials are correct and the account has not been locked; reset the password in vCenter if needed. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag should suppress this, but if it persists, ensure you're using the correct vCenter FQDN that matches the SSL certificate. |
 **VIDM (Workspace ONE Access) connectivity:**
 Navigate to **LCM → Settings → VIDM** — click **Test Connection**. A successful test returns a green indicator; failure means either the VIDM service is down or the LCM-to-VIDM network path is blocked (TCP 443).
 
@@ -516,9 +536,11 @@ curl -sk https://<vidm-fqdn>/SAAS/API/1.0/REST/system/health | jq .
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the VIDM CA certificate into the LCM appliance's trust store.
-    **`curl: (7) Failed to connect to <vidm-fqdn> port 443: Connection refused`** — Verify VIDM is running and accessible on the network; check firewall rules and DNS resolution with `nslookup <vidm-fqdn>`.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the endpoint is returning valid JSON; test with `curl -sk https://<vidm-fqdn>/SAAS/API/1.0/REST/system/health` without piping to `jq` to see the raw response.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the VIDM CA certificate into the LCM appliance's trust store. |
+    | `curl: (7) Failed to connect to <vidm-fqdn> port 443: Connection refused` | Verify VIDM is running and accessible on the network; check firewall rules and DNS resolution with `nslookup <vidm-fqdn>`. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the endpoint is returning valid JSON; test with `curl -sk https://<vidm-fqdn>/SAAS/API/1.0/REST/system/health` without piping to `jq` to see the raw response. |
 **Depot connectivity (online depot):**
 Navigate to **LCM → Settings → My VMware / Broadcom Support Portal** — verify the depot status shows as Connected. If offline: check proxy settings under **Settings → Proxy** and verify outbound HTTPS to `depot.vmware.com` is permitted by the firewall.
 

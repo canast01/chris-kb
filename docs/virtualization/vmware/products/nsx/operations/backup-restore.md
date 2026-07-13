@@ -72,9 +72,11 @@ curl -sk -u 'admin:password' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed in production use with proper CA certificates).
-    **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify the NSX Manager admin credentials are correct and the user has backup configuration privileges.
-    **`{"error_code":400,"error_message":"Connection to backup server failed"}`** — Confirm the backup server hostname/IP is reachable from NSX Manager and SFTP port 22 is open in firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed in production use with proper CA certificates). |
+    | `{"error_code":401,"error_message":"Invalid credentials"}` | Verify the NSX Manager admin credentials are correct and the user has backup configuration privileges. |
+    | `{"error_code":400,"error_message":"Connection to backup server failed"}` | Confirm the backup server hostname/IP is reachable from NSX Manager and SFTP port 22 is open in firewall rules. |
 ```bash
 nsxcli
 get cluster status
@@ -107,9 +109,11 @@ Services:
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to nsx-manager`** — Verify NSX Manager hostname/IP is reachable and nsxcli is configured with correct credentials in ~/.nsxclirc.
-    **`error: cluster status unavailable - quorum lost`** — Restart the NSX Manager cluster services or check network connectivity between manager nodes; if persistent, restore from backup.
-    **`error: authentication failed`** — Ensure your NSX Manager admin credentials are correct and the user account has not been locked after failed login attempts.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to nsx-manager` | Verify NSX Manager hostname/IP is reachable and nsxcli is configured with correct credentials in ~/.nsxclirc. |
+    | `error: cluster status unavailable - quorum lost` | Restart the NSX Manager cluster services or check network connectivity between manager nodes; if persistent, restore from backup. |
+    | `error: authentication failed` | Ensure your NSX Manager admin credentials are correct and the user account has not been locked after failed login attempts. |
 ```bash
 # Cluster health
 get cluster status
@@ -194,9 +198,11 @@ logical-routers:
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example; if error persists, verify NSX Manager hostname matches certificate CN).
-    **`401 Unauthorized`** — Verify admin credentials are correct and user has API access permissions; check NSX Manager audit logs for failed authentication attempts.
-    **`transport-node-status: tn-edge-01 DISCONNECTED`** — Check Edge node VM power state, network connectivity to NSX Manager, and certificate expiration on the Edge node via `get certificate-info`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example; if error persists, verify NSX Manager hostname matches certificate CN). |
+    | `401 Unauthorized` | Verify admin credentials are correct and user has API access permissions; check NSX Manager audit logs for failed authentication attempts. |
+    | `transport-node-status: tn-edge-01 DISCONNECTED` | Check Edge node VM power state, network connectivity to NSX Manager, and certificate expiration on the Edge node via `get certificate-info`. |
 ```bash
 # Export full policy config as JSON (use before changes for comparison)
 curl -sk -u 'admin:password' \
@@ -218,9 +224,11 @@ curl -sk -u 'admin:password' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or use `--cacert /path/to/ca.pem` with a valid certificate bundle.
-    **`curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused`** — Verify the NSX Manager hostname/IP is correct and the API service is running with `curl -sk https://<nsx-manager>/api/v1/node/status`.
-    **`{"error_code":401,"error_message":"Unauthorized"}`** — Confirm the admin credentials are correct and the user has API access permissions in NSX Manager.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or use `--cacert /path/to/ca.pem` with a valid certificate bundle. |
+    | `curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused` | Verify the NSX Manager hostname/IP is correct and the API service is running with `curl -sk https://<nsx-manager>/api/v1/node/status`. |
+    | `{"error_code":401,"error_message":"Unauthorized"}` | Confirm the admin credentials are correct and the user has API access permissions in NSX Manager. |
 ```bash
 # Query the last successful backup timestamp
 curl -sk -u 'admin:password' \
@@ -245,9 +253,11 @@ Last backup: 2024-01-15 03:45:22.341000  Status: SUCCEEDED
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed).
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify the NSX Manager hostname is correct and reachable, and confirm credentials are valid by testing with `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/cluster/backups/history"` directly.
-    **`KeyError: 'end_time'`** — Check that backups exist and have completed; if the API returns an empty results array or malformed backup objects, verify NSX backup jobs have run successfully via the NSX UI.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed). |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify the NSX Manager hostname is correct and reachable, and confirm credentials are valid by testing with `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/cluster/backups/history"` directly. |
+    | `KeyError: 'end_time'` | Check that backups exist and have completed; if the API returns an empty results array or malformed backup objects, verify NSX backup jobs have run successfully via the NSX UI. |
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

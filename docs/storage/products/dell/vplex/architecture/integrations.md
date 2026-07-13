@@ -83,9 +83,11 @@ Storage volume sv_001 claimed successfully for VPLEX provisioning.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to VPLEX management server at localhost:443`** — Verify the VPLEX cluster is reachable and vplexcli credentials are configured via `vplexcli --setup`.
-    **`Error: Storage volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001 not found`** — Run `vplexcli -q -e "ls /storage-elements/storage-arrays/array-A/storage-volumes"` to confirm the volume exists before attempting rediscovery.
-    **`Error: Storage volume sv_001 is already claimed`** — Check if the volume is already in use with `vplexcli -q -e "ll /storage-elements/storage-arrays/array-A/storage-volumes/sv_001"` before claiming.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to VPLEX management server at localhost:443` | Verify the VPLEX cluster is reachable and vplexcli credentials are configured via `vplexcli --setup`. |
+    | `Error: Storage volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001 not found` | Run `vplexcli -q -e "ls /storage-elements/storage-arrays/array-A/storage-volumes"` to confirm the volume exists before attempting rediscovery. |
+    | `Error: Storage volume sv_001 is already claimed` | Check if the volume is already in use with `vplexcli -q -e "ll /storage-elements/storage-arrays/array-A/storage-volumes/sv_001"` before claiming. |
 ### PowerMax Integration Notes
 
 - PowerMax SRDF and VPLEX back-end masking can coexist on the same array; ensure SRDF R1/R2 pairs are not also claimed as VPLEX back-end volumes unless that is the intended Geo configuration.
@@ -121,9 +123,11 @@ New virtual volume size: 1000 GB
 ```
 
 !!! warning "Common errors"
-    **`Error: Storage volume sv_001 not found or not accessible`** — Verify the storage array is online and the LUN path is correct using `vplexcli -e "storage-volume list"`.
-    **`Error: Extent ext_app_001 is in use and cannot be expanded at this time`** — Ensure all I/O to the virtual volume is quiesced and no snapshots are being created before retrying the expand operation.
-    **`Error: New capacity (1000 GB) is smaller than current capacity (1000 GB)`** — Confirm the back-end LUN was actually expanded on the PowerMax array before attempting the VPLEX rediscovery and expansion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Storage volume sv_001 not found or not accessible` | Verify the storage array is online and the LUN path is correct using `vplexcli -e "storage-volume list"`. |
+    | `Error: Extent ext_app_001 is in use and cannot be expanded at this time` | Ensure all I/O to the virtual volume is quiesced and no snapshots are being created before retrying the expand operation. |
+    | `Error: New capacity (1000 GB) is smaller than current capacity (1000 GB)` | Confirm the back-end LUN was actually expanded on the PowerMax array before attempting the VPLEX rediscovery and expansion. |
 ## VMware vSphere
 
 VPLEX is deeply integrated with VMware vSphere environments, particularly for Metro stretched-cluster configurations.
@@ -160,8 +164,10 @@ Rescan complete.
 ```
 
 !!! warning "Common errors"
-    **`Could not find device naa.60060e80057d2700028d2700000012a4`** — Verify the NAA ID is correct by running `esxcli storage core device list` and copy the exact device identifier.
-    **`Unknown option --adapter vmhba<n>`** — Replace the literal `<n>` placeholder with the actual HBA number (e.g., `vmhba4`), not the angle brackets.
+    | Error | Fix |
+    |---|---|
+    | `Could not find device naa.60060e80057d2700028d2700000012a4` | Verify the NAA ID is correct by running `esxcli storage core device list` and copy the exact device identifier. |
+    | `Unknown option --adapter vmhba<n>` | Replace the literal `<n>` placeholder with the actual HBA number (e.g., `vmhba4`), not the angle brackets. |
 ### VPLEX Metro + vSphere HA / vMotion
 
 VPLEX Metro is the prerequisite for vSphere Metro Storage Cluster (vMSC) configurations:
@@ -291,8 +297,10 @@ systemctl restart rsyslog
 ```
 
 !!! warning "Common errors"
-    **`Job for rsyslog.service failed because the control process exited with error code.`** — Check the rsyslog configuration syntax with `rsyslog -N1` and verify the SIEM_IP is reachable via `telnet <SIEM_IP> 514`.
-    **`Failed to restart rsyslog.service: Unit rsyslog.service not found.`** — Confirm rsyslog is installed with `systemctl list-unit-files | grep rsyslog` or install it with `apt-get install rsyslog` (Debian/Ubuntu) or `yum install rsyslog` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `Job for rsyslog.service failed because the control process exited with error code.` | Check the rsyslog configuration syntax with `rsyslog -N1` and verify the SIEM_IP is reachable via `telnet <SIEM_IP> 514`. |
+    | `Failed to restart rsyslog.service: Unit rsyslog.service not found.` | Confirm rsyslog is installed with `systemctl list-unit-files | grep rsyslog` or install it with `apt-get install rsyslog` (Debian/Ubuntu) or `yum install rsyslog` (RHEL/CentOS). |
 Key log sources to forward:
 
 | Log | Path on VMS | Content |

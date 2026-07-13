@@ -217,9 +217,11 @@ curl -sk https://<snapcenter-server>:8146/api/3.0/version
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification or import the SnapCenter server's CA certificate into the plug-in host's trust store.
-    **`curl: (7) Failed to connect to <snapcenter-server>:8146: Connection refused`** — Verify the SnapCenter server is running (`systemctl status snapcenter` on the server) and that port 8146 is not blocked by firewall rules between the plug-in host and server.
-    **`ERROR: Failed to load custom plugin module`** — Check that custom plugin JAR files exist in `/opt/snapcenter/spl/plugins/custom/` and have correct permissions (644), then restart SPL with `systemctl restart spl`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification or import the SnapCenter server's CA certificate into the plug-in host's trust store. |
+    | `curl: (7) Failed to connect to <snapcenter-server>:8146: Connection refused` | Verify the SnapCenter server is running (`systemctl status snapcenter` on the server) and that port 8146 is not blocked by firewall rules between the plug-in host and server. |
+    | `ERROR: Failed to load custom plugin module` | Check that custom plugin JAR files exist in `/opt/snapcenter/spl/plugins/custom/` and have correct permissions (644), then restart SPL with `systemctl restart spl`. |
 ---
 
 ## Step 5 — Inspect component logs on the SnapCenter server

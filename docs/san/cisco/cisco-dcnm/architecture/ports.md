@@ -76,9 +76,11 @@ sysDescr.0 = STRING: "Cisco NX-OS Software, version 9.4(1), MDS 9148S"
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the DCNM CA certificate into your system trust store.
-    **`ssh: connect to host 10.50.12.45 port 22: Connection refused`** — Verify the MDS switch IP is correct and SSH is enabled with `feature ssh` on the switch.
-    **`Timeout: No Response from 10.50.12.50`** — Confirm SNMP is enabled on the switch (`snmp-server community <community>`), the community string matches, and the switch IP is reachable via ping.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the DCNM CA certificate into your system trust store. |
+    | `ssh: connect to host 10.50.12.45 port 22: Connection refused` | Verify the MDS switch IP is correct and SSH is enabled with `feature ssh` on the switch. |
+    | `Timeout: No Response from 10.50.12.50` | Confirm SNMP is enabled on the switch (`snmp-server community <community>`), the community string matches, and the switch IP is reachable via ping. |
 ## See also
 
 - [Cisco DCNM — Architecture](../how-it-works/)

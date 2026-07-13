@@ -145,9 +145,11 @@ tkg-dev-cluster-02      dev-ns          running  1/1            2/2       v1.27.
 ```
 
 !!! warning "Common errors"
-    **`Unable to connect to the server: dial tcp 10.20.50.100:6443: i/o timeout`** — Verify the Supervisor VIP is reachable and the API server is running with `kubectl get nodes -A` from the Supervisor cluster.
-    **`Connection refused`** — Confirm the overlay network is operational on the peer node by checking `ip link show` for the VXLAN interface and verifying vSphere Distributed Switch settings.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the Harbor/TMC CA certificate into your system trust store.
+    | Error | Fix |
+    |---|---|
+    | `Unable to connect to the server: dial tcp 10.20.50.100:6443: i/o timeout` | Verify the Supervisor VIP is reachable and the API server is running with `kubectl get nodes -A` from the Supervisor cluster. |
+    | `Connection refused` | Confirm the overlay network is operational on the peer node by checking `ip link show` for the VXLAN interface and verifying vSphere Distributed Switch settings. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the Harbor/TMC CA certificate into your system trust store. |
 ---
 
 ## See also

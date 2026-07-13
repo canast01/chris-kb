@@ -74,9 +74,11 @@ Identity assigned to App Service 'api-backend-prod'.
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure it exists in the correct subscription.
-    **`InvalidResourceId`** — Confirm the subscription ID, resource group name, and identity name in the full resource ID path match exactly with `az identity list --resource-group <rg>`.
-    **`AuthorizationFailed: The client does not have permission`** — Ensure your Azure account has the Managed Identity Operator or Owner role on the target VM/App Service resource.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure it exists in the correct subscription. |
+    | `InvalidResourceId` | Confirm the subscription ID, resource group name, and identity name in the full resource ID path match exactly with `az identity list --resource-group <rg>`. |
+    | `AuthorizationFailed: The client does not have permission` | Ensure your Azure account has the Managed Identity Operator or Owner role on the target VM/App Service resource. |
 ## Grant Access via RBAC
 
 ```bash
@@ -218,9 +220,11 @@ Federated credential 'aks-workload-credential' created successfully.
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.ContainerService/managedClusters/<cluster>' under resource group '<rg>' was not found.`** — Verify the cluster name and resource group name are correct and the cluster exists in your subscription.
-    **`(InvalidInput) The identity '<identity-name>' does not exist in resource group '<rg>'.`** — Create the user-assigned managed identity first using `az identity create --name <identity-name> --resource-group <rg>`.
-    **`(InvalidInput) The subject 'system:serviceaccount:<namespace>:<service-account-name>' is invalid.`** — Ensure the namespace and service account name match exactly what exists in your AKS cluster; verify with `kubectl get serviceaccount -n <namespace>`.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.ContainerService/managedClusters/<cluster>' under resource group '<rg>' was not found.` | Verify the cluster name and resource group name are correct and the cluster exists in your subscription. |
+    | `(InvalidInput) The identity '<identity-name>' does not exist in resource group '<rg>'.` | Create the user-assigned managed identity first using `az identity create --name <identity-name> --resource-group <rg>`. |
+    | `(InvalidInput) The subject 'system:serviceaccount:<namespace>:<service-account-name>' is invalid.` | Ensure the namespace and service account name match exactly what exists in your AKS cluster; verify with `kubectl get serviceaccount -n <namespace>`. |
 ## Common Issues
 
 | Symptom | Cause | Resolution |

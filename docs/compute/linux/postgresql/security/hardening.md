@@ -80,8 +80,10 @@ drwx------  2 postgres postgres  4096 Nov 14 10:20 pg_wal
 ```
 
 !!! warning "Common errors"
-    **`chmod: changing permissions of '/var/lib/pgsql/16/data/postgresql.conf': Operation not permitted`** — Run the chmod commands with `sudo` or as the postgres user, and verify the file is not immutable with `lsattr`.
-    **`ls: cannot open directory '/var/lib/pgsql/16/data': Permission denied`** — Ensure your user is in the postgres group (`usermod -a -G postgres $USER`) or run the ls command with `sudo`.
+    | Error | Fix |
+    |---|---|
+    | `chmod: changing permissions of '/var/lib/pgsql/16/data/postgresql.conf': Operation not permitted` | Run the chmod commands with `sudo` or as the postgres user, and verify the file is not immutable with `lsattr`. |
+    | `ls: cannot open directory '/var/lib/pgsql/16/data': Permission denied` | Ensure your user is in the postgres group (`usermod -a -G postgres $USER`) or run the ls command with `sudo`. |
 ## Disable Unnecessary Features
 
 ```sql

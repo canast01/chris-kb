@@ -150,9 +150,11 @@ SNMPv2-MIB::sysDescr.0 = STRING: "Brocade G620 Fabric OS v9.1.0"
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host 192.168.1.50 port 22: Connection refused`** — Verify the switch management IP is correct and SSH service is enabled with `sshconfig --show` on the switch.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if your environment requires certificate validation, or ensure the switch certificate is trusted by your CA.
-    **`SNMP packet from 192.168.1.50:161 authentication failure`** — Verify the SNMP community string matches the switch configuration with `snmpconfig --show snmpv1` and check firewall rules allow UDP 161.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host 192.168.1.50 port 22: Connection refused` | Verify the switch management IP is correct and SSH service is enabled with `sshconfig --show` on the switch. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag if your environment requires certificate validation, or ensure the switch certificate is trusted by your CA. |
+    | `SNMP packet from 192.168.1.50:161 authentication failure` | Verify the SNMP community string matches the switch configuration with `snmpconfig --show snmpv1` and check firewall rules allow UDP 161. |
 ---
 
 ## See also

@@ -87,9 +87,11 @@ Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unsupported argument on line 12, in resource "aws_instance" "web": on instance_type = var.instance_type`** — Verify the variable name matches your Terraform configuration and check for typos in the resource block.
-    **`Error: variables not allowed`** — Remove the `export` statement; use `-var-file` or inline `-var` flags instead, or ensure `TF_VAR_` environment variables are set before running `terraform apply`.
-    **`Error: Failed to read variables file "envs/production.tfvars": no such file or directory`** — Verify the file path is correct relative to your working directory and that the file exists with `ls -la envs/production.tfvars`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unsupported argument on line 12, in resource "aws_instance" "web": on instance_type = var.instance_type` | Verify the variable name matches your Terraform configuration and check for typos in the resource block. |
+    | `Error: variables not allowed` | Remove the `export` statement; use `-var-file` or inline `-var` flags instead, or ensure `TF_VAR_` environment variables are set before running `terraform apply`. |
+    | `Error: Failed to read variables file "envs/production.tfvars": no such file or directory` | Verify the file path is correct relative to your working directory and that the file exists with `ls -la envs/production.tfvars`. |
 ### Apply in CI/CD Pipelines
 
 ```yaml
@@ -182,8 +184,10 @@ Changes to Outputs:
 ```
 
 !!! warning "Common errors"
-    **`Error: Variables not allowed`** — Remove `-var` flags from `terraform plan` if using a `.tfvars` file, or ensure the variable is declared in your Terraform configuration.
-    **`Error: Failed to read variables file "envs/prod.tfvars": no such file or directory`** — Verify the path to your `.tfvars` file is correct relative to your working directory and the file exists.
+    | Error | Fix |
+    |---|---|
+    | `Error: Variables not allowed` | Remove `-var` flags from `terraform plan` if using a `.tfvars` file, or ensure the variable is declared in your Terraform configuration. |
+    | `Error: Failed to read variables file "envs/prod.tfvars": no such file or directory` | Verify the path to your `.tfvars` file is correct relative to your working directory and the file exists. |
 ### Saving Plan Files
 
 Saving a plan guarantees the apply step executes exactly what was reviewed.
@@ -248,9 +252,11 @@ Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 ```
 
 !!! warning "Common errors"
-    **`Error: No saved plan file found`** — Verify the tfplan file exists in the current directory with `ls -la tfplan`.
-    **`Error: jq: command not found`** — Install jq using `apt-get install jq` (Ubuntu/Debian) or `brew install jq` (macOS).
-    **`Error: Error reading plan file: invalid plan format`** — Regenerate the plan file by running `terraform plan -out=tfplan` again, as the binary format may be corrupted or from an incompatible Terraform version.
+    | Error | Fix |
+    |---|---|
+    | `Error: No saved plan file found` | Verify the tfplan file exists in the current directory with `ls -la tfplan`. |
+    | `Error: jq: command not found` | Install jq using `apt-get install jq` (Ubuntu/Debian) or `brew install jq` (macOS). |
+    | `Error: Error reading plan file: invalid plan format` | Regenerate the plan file by running `terraform plan -out=tfplan` again, as the binary format may be corrupted or from an incompatible Terraform version. |
 ### Reading Plan Output
 
 Understanding the plan output symbols:
@@ -288,8 +294,10 @@ Plan: 0 to add, 1 to change, 0 to destroy.
 ```
 
 !!! warning "Common errors"
-    **`Error: resource does not support in-place update for "instance_type"`** — Stop the instance, apply the change, or use `create_before_destroy` lifecycle rule to avoid downtime.
-    **`Error: Invalid or unknown key: instance_type`** — Verify the resource type supports the `instance_type` argument and check for typos in the Terraform configuration.
+    | Error | Fix |
+    |---|---|
+    | `Error: resource does not support in-place update for "instance_type"` | Stop the instance, apply the change, or use `create_before_destroy` lifecycle rule to avoid downtime. |
+    | `Error: Invalid or unknown key: instance_type` | Verify the resource type supports the `instance_type` argument and check for typos in the Terraform configuration. |
 ### Plan Review Checklist
 
 Before approving and applying a plan, verify:
@@ -317,9 +325,11 @@ terraform show -json tfplan | \
 ```
 
 !!! warning "Common errors"
-    **`jq: parse error: Invalid numeric literal at line 1 column 10`** — Ensure the tfplan file exists and is a valid Terraform plan file; regenerate it with `terraform plan -out=tfplan` if corrupted.
-    **`No such file or directory`** — Verify the tfplan file path is correct and the file exists in the current working directory with `ls -la tfplan`.
-    **`error: 2 positional arguments expected, got 1`** — Update to `terraform show -json tfplan` (add the explicit filename argument after the `-json` flag).
+    | Error | Fix |
+    |---|---|
+    | `jq: parse error: Invalid numeric literal at line 1 column 10` | Ensure the tfplan file exists and is a valid Terraform plan file; regenerate it with `terraform plan -out=tfplan` if corrupted. |
+    | `No such file or directory` | Verify the tfplan file path is correct and the file exists in the current working directory with `ls -la tfplan`. |
+    | `error: 2 positional arguments expected, got 1` | Update to `terraform show -json tfplan` (add the explicit filename argument after the `-json` flag). |
 ### Plan in CI/CD
 
 ```yaml
@@ -391,8 +401,10 @@ digraph {
 ```
 
 !!! warning "Common errors"
-    **`Error: resource targeting is not supported for outputs`** — Remove `-target` flags that reference output values; use `-target` only for resources and modules.
-    **`Error: Failed to load plugin`** — Install Graphviz (`apt-get install graphviz` on Ubuntu or `brew install graphviz` on macOS) before piping to the `dot` command.
+    | Error | Fix |
+    |---|---|
+    | `Error: resource targeting is not supported for outputs` | Remove `-target` flags that reference output values; use `-target` only for resources and modules. |
+    | `Error: Failed to load plugin` | Install Graphviz (`apt-get install graphviz` on Ubuntu or `brew install graphviz` on macOS) before piping to the `dot` command. |
 ---
 
 ## Change Readiness
@@ -502,8 +514,10 @@ No changes. Your infrastructure matches the configuration.
 ```
 
 !!! warning "Common errors"
-    **`Error: resource aws_instance.example does not exist in configuration`** — Add the empty resource block to your .tf file before running terraform import.
-    **`Error: InvalidInstanceID.NotFound`** — Verify the instance ID is correct and exists in the target AWS region and account.
+    | Error | Fix |
+    |---|---|
+    | `Error: resource aws_instance.example does not exist in configuration` | Add the empty resource block to your .tf file before running terraform import. |
+    | `Error: InvalidInstanceID.NotFound` | Verify the instance ID is correct and exists in the target AWS region and account. |
 ```bash
 # Common import address formats
 terraform import aws_s3_bucket.logs my-bucket-name
@@ -526,9 +540,11 @@ Import successful. Resources have been added to the Terraform state.
 ```
 
 !!! warning "Common errors"
-    **`Error: resource address "aws_s3_bucket.logs" does not exist in the configuration`** — Add the resource block `resource "aws_s3_bucket" "logs" {}` to your Terraform configuration before importing.
-    **`Error: error reading S3 Bucket (my-bucket-name): AccessDenied: Access Denied`** — Verify your AWS credentials have `s3:GetBucketVersioning` and `s3:ListBucket` permissions for the target bucket.
-    **`Error: retrieving subscription ID: subscription ID can not be empty`** — Replace `<sub>` with your actual Azure subscription ID in the resource ID path.
+    | Error | Fix |
+    |---|---|
+    | `Error: resource address "aws_s3_bucket.logs" does not exist in the configuration` | Add the resource block `resource "aws_s3_bucket" "logs" {}` to your Terraform configuration before importing. |
+    | `Error: error reading S3 Bucket (my-bucket-name): AccessDenied: Access Denied` | Verify your AWS credentials have `s3:GetBucketVersioning` and `s3:ListBucket` permissions for the target bucket. |
+    | `Error: retrieving subscription ID: subscription ID can not be empty` | Replace `<sub>` with your actual Azure subscription ID in the resource ID path. |
 | Step | Action |
 |---|---|
 | 1 | Write the resource block in `.tf` (placeholder — attributes not needed yet) |
@@ -603,9 +619,11 @@ No changes. Your infrastructure matches the configuration.
 ```
 
 !!! warning "Common errors"
-    **`Error: resource address "aws_instance.old_name" does not exist in the current state`** — Verify the exact resource address with `terraform state list` before attempting the move.
-    **`Error: failed to read state from remote backend: AccessDenied`** — Ensure your AWS credentials are valid and you have `s3:GetObject` and `s3:PutObject` permissions on the state bucket.
-    **`Error: state push rejected: serial number mismatch`** — Do not manually edit the `serial` field in the state file; use `terraform state pull` and `terraform state push` without modifications to avoid conflicts.
+    | Error | Fix |
+    |---|---|
+    | `Error: resource address "aws_instance.old_name" does not exist in the current state` | Verify the exact resource address with `terraform state list` before attempting the move. |
+    | `Error: failed to read state from remote backend: AccessDenied` | Ensure your AWS credentials are valid and you have `s3:GetObject` and `s3:PutObject` permissions on the state bucket. |
+    | `Error: state push rejected: serial number mismatch` | Do not manually edit the `serial` field in the state file; use `terraform state pull` and `terraform state push` without modifications to avoid conflicts. |
 | Command | Purpose |
 |---|---|
 | `terraform workspace new <name>` | Create an isolated state environment |
@@ -678,9 +696,11 @@ sup3rS3cur3P@ssw0rd!2024
 ```
 
 !!! warning "Common errors"
-    **`Error: output not found`** — Verify the output name exists in your Terraform configuration with `terraform output` (no arguments) to list all available outputs.
-    **`psql: error: FATAL: password authentication failed for user "admin"`** — Ensure the password variable is correctly populated and the database user credentials match; test with `echo "$DB_PASS" | wc -c` to confirm the value was captured.
-    **`Error: output "db_password" is sensitive`** — Use the `-raw` flag to access sensitive outputs directly: `terraform output -raw db_password`.
+    | Error | Fix |
+    |---|---|
+    | `Error: output not found` | Verify the output name exists in your Terraform configuration with `terraform output` (no arguments) to list all available outputs. |
+    | `psql: error: FATAL: password authentication failed for user "admin"` | Ensure the password variable is correctly populated and the database user credentials match; test with `echo "$DB_PASS" | wc -c` to confirm the value was captured. |
+    | `Error: output "db_password" is sensitive` | Use the `-raw` flag to access sensitive outputs directly: `terraform output -raw db_password`. |
 | Practice | Reason |
 |---|---|
 | `sensitive = true` on output | Redacts value in `plan` and `apply` console output |

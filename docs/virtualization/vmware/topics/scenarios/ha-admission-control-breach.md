@@ -168,8 +168,10 @@ Server power operation successful.
 ```
 
 !!! warning "Common errors"
-    **`DRAC/BMC Connection failed: Unable to establish IPMI v1.5 / IPMI v2.0 session`** — Verify iDRAC IP address is reachable with `ping <idrac-ip>` and confirm iDRAC credentials are correct.
-    **`racadm: ERROR: DRAC_E_INVALID_PARAM`** — Ensure racadm is installed on the local system with `which racadm` and that you have network connectivity to the iDRAC interface.
+    | Error | Fix |
+    |---|---|
+    | `DRAC/BMC Connection failed: Unable to establish IPMI v1.5 / IPMI v2.0 session` | Verify iDRAC IP address is reachable with `ping <idrac-ip>` and confirm iDRAC credentials are correct. |
+    | `racadm: ERROR: DRAC_E_INVALID_PARAM` | Ensure racadm is installed on the local system with `which racadm` and that you have network connectivity to the iDRAC interface. |
 Once a host is recovered and reconnects to vCenter, HA automatically re-evaluates VM placement and restarts any VMs still in "Insufficient resources" state — you do not need to manually trigger restarts.
 
 Monitor reconnection:
@@ -189,8 +191,10 @@ vmware-fdm is stopped
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Ensure you are running this command on an ESXi host (not vCenter); service-control is ESXi-specific.
-    **`Unit vmware-fdm.service could not be found`** — The vmware-fdm service may not exist on this ESXi version; use `service-control --list` to verify available services instead.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Ensure you are running this command on an ESXi host (not vCenter); service-control is ESXi-specific. |
+    | `Unit vmware-fdm.service could not be found` | The vmware-fdm service may not exist on this ESXi version; use `service-control --list` to verify available services instead. |
 ---
 
 ## 5. Option B — Temporarily Lower Admission Control Reservation

@@ -189,9 +189,11 @@ curl -sk -X GET \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if error persists, verify `ariaops.domain.local` hostname resolves correctly).
-    **`jq: parse error: Cannot index string with string "alerts"`** — Verify the API response is valid JSON and the bearer token is not expired; test with `curl -sk ... | jq '.'` to inspect raw response.
-    **`curl: (401) Unauthorized`** — Regenerate the bearer token in Aria Ops UI (Administration > API Tokens) and ensure it has alert read permissions.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if error persists, verify `ariaops.domain.local` hostname resolves correctly). |
+    | `jq: parse error: Cannot index string with string "alerts"` | Verify the API response is valid JSON and the bearer token is not expired; test with `curl -sk ... | jq '.'` to inspect raw response. |
+    | `curl: (401) Unauthorized` | Regenerate the bearer token in Aria Ops UI (Administration > API Tokens) and ensure it has alert read permissions. |
 ```bash
 # Get alerts for a specific resource (cluster or host)
 curl -sk -X GET \
@@ -225,9 +227,11 @@ curl -sk -X GET \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present; if still failing, verify the hostname matches the certificate CN).
-    **`jq: parse error: Invalid numeric literal at line 1 column 7`** — Ensure the API response is valid JSON by checking the token is not expired and the resourceId UUID format is correct.
-    **`curl: (401) Unauthorized`** — Verify the Bearer token is valid and not expired by requesting a fresh token from the authentication endpoint.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present; if still failing, verify the hostname matches the certificate CN). |
+    | `jq: parse error: Invalid numeric literal at line 1 column 7` | Ensure the API response is valid JSON by checking the token is not expired and the resourceId UUID format is correct. |
+    | `curl: (401) Unauthorized` | Verify the Bearer token is valid and not expired by requesting a fresh token from the authentication endpoint. |
 ---
 
 ## 4. Identify Common Root Causes
@@ -302,9 +306,11 @@ curl -sk -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example; if still failing, verify the Aria Logs server certificate is trusted or use `--cacert` with the proper CA bundle).
-    **`jq: parse error: Cannot index string with string "timestamp"`** — Ensure the API response contains a valid `.events` array; check the token is valid and the query constraints match the Aria Logs schema by testing with `| jq '.'` first.
-    **`curl: (401) Unauthorized`** — Verify the Bearer token is current and has permissions to query the Aria Logs API; regenerate the token in the Aria Logs UI if expired.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example; if still failing, verify the Aria Logs server certificate is trusted or use `--cacert` with the proper CA bundle). |
+    | `jq: parse error: Cannot index string with string "timestamp"` | Ensure the API response contains a valid `.events` array; check the token is valid and the query constraints match the Aria Logs schema by testing with `| jq '.'` first. |
+    | `curl: (401) Unauthorized` | Verify the Bearer token is current and has permissions to query the Aria Logs API; regenerate the token in the Aria Logs UI if expired. |
 ---
 
 ## 7. Tune Noisy Alert Definitions After the Storm

@@ -82,9 +82,11 @@ curl -sk -X PUT \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command (already present) or import the SDDC Manager CA certificate into your system trust store.
-    **`jq: command not found` or `json.load(sys.stdin).get: error`** — Ensure python3 is installed and the JSON parsing syntax matches your Python version; test with `python3 -c "import json; print(json.dumps({'test':'ok'}))"`.
-    **`{"error":"Invalid token","code":401}`** — Verify the SDDC Manager credentials (username/password) are correct and the `/v1/tokens` endpoint is accessible; check network connectivity to `sddc-manager.vcf.internal`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command (already present) or import the SDDC Manager CA certificate into your system trust store. |
+    | `jq: command not found` or `json.load(sys.stdin).get: error` | Ensure python3 is installed and the JSON parsing syntax matches your Python version; test with `python3 -c "import json; print(json.dumps({'test':'ok'}))"`. |
+    | `{"error":"Invalid token","code":401}` | Verify the SDDC Manager credentials (username/password) are correct and the `/v1/tokens` endpoint is accessible; check network connectivity to `sddc-manager.vcf.internal`. |
 **Trigger an immediate on-demand backup:**
 
 ```bash
@@ -112,9 +114,11 @@ COMPLETED 2024-01-15T14:32:18.000Z
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or ensure your CA certificate is in the system trust store.
-    **`jq: command not found` or `python3: command not found`** — Install the required JSON parser (python3 is already used here) or verify it's in your PATH with `which python3`.
-    **`Authorization: Bearer: command not found`** — Ensure the `TOKEN` environment variable is set before running the script with `export TOKEN="your_bearer_token"`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or ensure your CA certificate is in the system trust store. |
+    | `jq: command not found` or `python3: command not found` | Install the required JSON parser (python3 is already used here) or verify it's in your PATH with `which python3`. |
+    | `Authorization: Bearer: command not found` | Ensure the `TOKEN` environment variable is set before running the script with `export TOKEN="your_bearer_token"`. |
 **List available backups:**
 
 ```bash
@@ -138,9 +142,11 @@ for b in d.get('elements', []):
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify `${SDDC_URL}` is correct and reachable).
-    **`curl: (401) Unauthorized`** — Ensure `${TOKEN}` is set and valid by running `echo $TOKEN` and regenerating the API token if expired.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the API endpoint returns valid JSON by testing `curl -sk -H "Authorization: Bearer ${TOKEN}" "${SDDC_URL}/v1/backups"` directly without piping to Python.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify `${SDDC_URL}` is correct and reachable). |
+    | `curl: (401) Unauthorized` | Ensure `${TOKEN}` is set and valid by running `echo $TOKEN` and regenerating the API token if expired. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify the API endpoint returns valid JSON by testing `curl -sk -H "Authorization: Bearer ${TOKEN}" "${SDDC_URL}/v1/backups"` directly without piping to Python. |
 **SFTP target options for EVS:**
 
 - AWS Transfer Family SFTP with S3 backend: recommended for EVS environments; SFTP endpoint backed by S3; requires IAM user with SSH key pair
@@ -214,9 +220,11 @@ curl -sk -X POST "${VAMI_URL}/api/appliance/recovery/backup/schedules/daily-back
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example, but ensure it's not removed).
-    **`{"error":{"messages":["Authentication failed"],"error_code":"com.vmware.appliance.recovery.backup.error.authentication_failed"}}`** — Verify vCenter root password is correct and user has backup permissions via `curl -sk -X GET "${VAMI_URL}/api/appliance/system/version" --user "root:${VCENTER_PASS}"`.
-    **`{"error":{"messages":["Cannot connect to SFTP location"],"error_code":"com.vmware.appliance.recovery.backup.error.location_connection_failed"}}`** — Confirm SFTP endpoint is reachable and credentials are valid by testing connectivity: `sftp -o StrictHostKeyChecking=no vcenter-backup@<transfer-family-endpoint>`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example, but ensure it's not removed). |
+    | `{"error":{"messages":["Authentication failed"],"error_code":"com.vmware.appliance.recovery.backup.error.authentication_failed"}}` | Verify vCenter root password is correct and user has backup permissions via `curl -sk -X GET "${VAMI_URL}/api/appliance/system/version" --user "root:${VCENTER_PASS}"`. |
+    | `{"error":{"messages":["Cannot connect to SFTP location"],"error_code":"com.vmware.appliance.recovery.backup.error.location_connection_failed"}}` | Confirm SFTP endpoint is reachable and credentials are valid by testing connectivity: `sftp -o StrictHostKeyChecking=no vcenter-backup@<transfer-family-endpoint>`. |
 **Trigger an immediate vCenter backup:**
 
 ```bash
@@ -253,9 +261,11 @@ curl -sk -X POST "${VAMI_URL}/api/appliance/recovery/backup/job" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`{"error": "Invalid location_type or malformed SFTP URL"}`** — Verify the SFTP endpoint format matches `sftp://hostname/path` and that the transfer family endpoint is correctly specified without extra protocols.
-    **`{"error": "Authentication failed for location_user"}`** — Confirm the SFTP credentials (location_user and location_password) are correct and the vCenter backup user has write permissions on the remote SFTP path.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `{"error": "Invalid location_type or malformed SFTP URL"}` | Verify the SFTP endpoint format matches `sftp://hostname/path` and that the transfer family endpoint is correctly specified without extra protocols. |
+    | `{"error": "Authentication failed for location_user"}` | Confirm the SFTP credentials (location_user and location_password) are correct and the vCenter backup user has write permissions on the remote SFTP path. |
 **Restore vCenter from backup:**
 
 1. Run the vCenter Server Appliance Installer
@@ -315,9 +325,11 @@ curl -sk -X PUT -u "admin:${NSX_PASS}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the NSX Manager's CA certificate into your system trust store.
-    **`{"httpStatus":401,"error_code":401,"module_name":"common","error_message":"Invalid credentials"}`** — Verify the NSX admin password in `NSX_PASS` matches the current credentials and the user has backup configuration permissions.
-    **`{"httpStatus":400,"error_code":400,"module_name":"common","error_message":"Invalid SFTP server configuration"}`** — Test SFTP connectivity with `sftp -P 22 nsx-backup@<transfer-family-endpoint>.server.transfer.us-east-1.amazonaws.com` and confirm the directory path exists and is writable.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the NSX Manager's CA certificate into your system trust store. |
+    | `{"httpStatus":401,"error_code":401,"module_name":"common","error_message":"Invalid credentials"}` | Verify the NSX admin password in `NSX_PASS` matches the current credentials and the user has backup configuration permissions. |
+    | `{"httpStatus":400,"error_code":400,"module_name":"common","error_message":"Invalid SFTP server configuration"}` | Test SFTP connectivity with `sftp -P 22 nsx-backup@<transfer-family-endpoint>.server.transfer.us-east-1.amazonaws.com` and confirm the directory path exists and is writable. |
 **Trigger an immediate NSX-T on-demand backup:**
 
 ```bash
@@ -332,9 +344,11 @@ backup-20240315-143827-a7f9c2e1-9d4a-4b2c-8f3a-6e1d2c9b5a4f
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host`** — Verify the NSX_URL environment variable is set correctly and the NSX Manager hostname is resolvable.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should bypass this, but if it persists, ensure your curl version supports the flag or check NSX Manager certificate validity.
-    **`KeyError: 'backup_id'`** — Confirm the NSX Manager API response includes a `backup_id` field; check NSX version compatibility and that the backup request was accepted (HTTP 200/202).
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host` | Verify the NSX_URL environment variable is set correctly and the NSX Manager hostname is resolvable. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag should bypass this, but if it persists, ensure your curl version supports the flag or check NSX Manager certificate validity. |
+    | `KeyError: 'backup_id'` | Confirm the NSX Manager API response includes a `backup_id` field; check NSX version compatibility and that the backup request was accepted (HTTP 200/202). |
 **List NSX-T backups:**
 
 ```bash
@@ -359,9 +373,11 @@ for b in d.get('results', []):
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure NSX_URL uses https://).
-    **`curl: (7) Failed to connect to host:port: Connection refused`** — Verify NSX_URL environment variable is set correctly and the NSX manager is reachable on the network.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Confirm NSX_PASS credentials are correct; an authentication failure returns HTML error instead of JSON.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure NSX_URL uses https://). |
+    | `curl: (7) Failed to connect to host:port: Connection refused` | Verify NSX_URL environment variable is set correctly and the NSX manager is reachable on the network. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Confirm NSX_PASS credentials are correct; an authentication failure returns HTML error instead of JSON. |
 NSX-T backup includes all policies, segments, firewall rules, and gateway configuration. It does not include fabric-level state (transport nodes are re-associated after restore). After NSX-T restore, you must re-push host transport node configuration.
 
 ## VM Workload Backup

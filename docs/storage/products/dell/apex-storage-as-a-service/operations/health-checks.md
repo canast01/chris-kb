@@ -119,8 +119,10 @@ curl -s -H "Authorization: Bearer ${CLOUDIQ_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (401) Unauthorized`** — Verify the APEX_TOKEN and CLOUDIQ_TOKEN are valid and not expired by regenerating them in the Dell APEX console.
-    **`jq: error (at <stdin>:1): Cannot index null with string "results"`** — Confirm the API endpoint URLs are correct and the API gateway is reachable; check for typos in APEX_BASE and CloudIQ URLs.
+    | Error | Fix |
+    |---|---|
+    | `curl: (401) Unauthorized` | Verify the APEX_TOKEN and CLOUDIQ_TOKEN are valid and not expired by regenerating them in the Dell APEX console. |
+    | `jq: error (at <stdin>:1): Cannot index null with string "results"` | Confirm the API endpoint URLs are correct and the API gateway is reachable; check for typos in APEX_BASE and CloudIQ URLs. |
 ## Change Readiness
 
 - [ ] Contracted capacity headroom is sufficient for the planned workload increase (consumed < 80% of contracted)

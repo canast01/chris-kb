@@ -64,9 +64,11 @@ host0  host1  host2
 ```
 
 !!! warning "Common errors"
-    **`cat: /sys/class/fc_host/host0/port_name: No such file or directory`** — Verify the FC HBA is installed and recognized with `lspci | grep -i fibre` before querying sysfs paths.
-    **`systool: command not found`** — Install the sysfsutils package with `apt-get install sysfsutils` or `yum install sysfsutils`.
-    **`cat: /sys/class/fc_host/host1/port_name: Permission denied`** — Run the command with `sudo` or as root to access sysfs FC host attributes.
+    | Error | Fix |
+    |---|---|
+    | `cat: /sys/class/fc_host/host0/port_name: No such file or directory` | Verify the FC HBA is installed and recognized with `lspci | grep -i fibre` before querying sysfs paths. |
+    | `systool: command not found` | Install the sysfsutils package with `apt-get install sysfsutils` or `yum install sysfsutils`. |
+    | `cat: /sys/class/fc_host/host1/port_name: Permission denied` | Run the command with `sudo` or as root to access sysfs FC host attributes. |
 ### Windows (HBA)
 
 ```powershell
@@ -94,8 +96,10 @@ vmhba4    50:00:14:40:5a:2b:c4:b2  50:00:14:40:5a:2b:c4:b0  16Gb   Link Failure
 ```
 
 !!! warning "Common errors"
-    **`Could not get HBA information. Error: Unknown command or namespace`** — Verify esxcli is available and you are running this command on an ESXi host with Fibre Channel adapters installed.
-    **`Error: The object has already been deleted or has not been completely created`** — Wait 30 seconds for the HBA driver to fully initialize after a recent reboot or adapter insertion.
+    | Error | Fix |
+    |---|---|
+    | `Could not get HBA information. Error: Unknown command or namespace` | Verify esxcli is available and you are running this command on an ESXi host with Fibre Channel adapters installed. |
+    | `Error: The object has already been deleted or has not been completely created` | Wait 30 seconds for the HBA driver to fully initialize after a recent reboot or adapter insertion. |
 ### Brocade switch (nameserver)
 
 ```bash
@@ -123,8 +127,10 @@ Switch_C:3     50:00:09:73:00:1a:2b:6e  backup-appliance-01
 ```
 
 !!! warning "Common errors"
-    **`nsshow: command not found`** — Verify you are logged into a Fibre Channel switch (Brocade/Cisco) with admin credentials, not a Linux host.
-    **`Permission denied`** — Elevate to admin role using `roleshow` and `userconfig` or re-authenticate with appropriate fabric credentials.
+    | Error | Fix |
+    |---|---|
+    | `nsshow: command not found` | Verify you are logged into a Fibre Channel switch (Brocade/Cisco) with admin credentials, not a Linux host. |
+    | `Permission denied` | Elevate to admin role using `roleshow` and `userconfig` or re-authenticate with appropriate fabric credentials. |
 ### Cisco MDS
 
 ```bash
@@ -149,8 +155,10 @@ FCNS Database for VSAN 10:
 ```
 
 !!! warning "Common errors"
-    **`VSAN 10 not found`** — Verify the VSAN exists with `show vsan` and confirm it is active.
-    **`% Invalid command`** — Ensure you are in the correct switch CLI mode (some switches require `show fcns database` without the vsan parameter for older firmware versions).
+    | Error | Fix |
+    |---|---|
+    | `VSAN 10 not found` | Verify the VSAN exists with `show vsan` and confirm it is active. |
+    | `% Invalid command` | Ensure you are in the correct switch CLI mode (some switches require `show fcns database` without the vsan parameter for older firmware versions). |
 ## WWN Standards
 
 - Document all server and storage WWPNs in CMDB at provisioning time

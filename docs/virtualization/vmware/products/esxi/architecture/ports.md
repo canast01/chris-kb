@@ -194,9 +194,11 @@ PING 192.168.100.67 (192.168.100.67): 56 data bytes
 ```
 
 !!! warning "Common errors"
-    **`nc: getaddrinfo: Name or service not known`** — Verify the ESXi hostname resolves in DNS or use the IP address directly.
-    **`Connection refused`** — Confirm the ESXi management port (443/902) is open and the ESXi host is powered on and reachable.
-    **`vmkping: Unknown virtual network adapter`** — Verify vmk1 exists on the ESXi host with `esxcli network ip interface list` and use the correct VMkernel interface name.
+    | Error | Fix |
+    |---|---|
+    | `nc: getaddrinfo: Name or service not known` | Verify the ESXi hostname resolves in DNS or use the IP address directly. |
+    | `Connection refused` | Confirm the ESXi management port (443/902) is open and the ESXi host is powered on and reachable. |
+    | `vmkping: Unknown virtual network adapter` | Verify vmk1 exists on the ESXi host with `esxcli network ip interface list` and use the correct VMkernel interface name. |
 ---
 
 ## See also

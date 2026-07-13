@@ -168,8 +168,10 @@ Hostname updated successfully.
 ```
 
 !!! warning "Common errors"
-    **`command not found: set_hostname`** — Verify the RecoverPoint deployment script is sourced or use the full path to the set_hostname function.
-    **`Permission denied`** — Run the command with sudo or as root: `sudo set_hostname rpa1.site1.corp.local`.
+    | Error | Fix |
+    |---|---|
+    | `command not found: set_hostname` | Verify the RecoverPoint deployment script is sourced or use the full path to the set_hostname function. |
+    | `Permission denied` | Run the command with sudo or as root: `sudo set_hostname rpa1.site1.corp.local`. |
 Confirm forward and reverse DNS resolves correctly before proceeding.
 
 ### Step 4 — Configure NTP

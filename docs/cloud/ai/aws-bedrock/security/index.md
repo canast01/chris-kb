@@ -125,9 +125,11 @@ aws ec2 create-vpc-endpoint \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidVpcID.NotFound) when calling the CreateVpcEndpoint operation: The VPC ID 'vpc-0abc1234' does not exist`** — Verify the VPC ID exists in your region with `aws ec2 describe-vpcs --region us-east-1`.
-    **`An error occurred (InvalidSubnetID.NotFound) when calling the CreateVpcEndpoint operation: The subnet ID 'subnet-0abc1234' does not exist`** — Confirm the subnet IDs belong to the specified VPC and region using `aws ec2 describe-subnets --subnet-ids subnet-0abc1234 --region us-east-1`.
-    **`An error occurred (InvalidGroup.NotFound) when calling the CreateVpcEndpoint operation: The security group 'sg-0abc1234' does not exist`** — Ensure the security group exists in the same VPC with `aws ec2 describe-security-groups --group-ids sg-0abc1234 --region us-east-1`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidVpcID.NotFound) when calling the CreateVpcEndpoint operation: The VPC ID 'vpc-0abc1234' does not exist` | Verify the VPC ID exists in your region with `aws ec2 describe-vpcs --region us-east-1`. |
+    | `An error occurred (InvalidSubnetID.NotFound) when calling the CreateVpcEndpoint operation: The subnet ID 'subnet-0abc1234' does not exist` | Confirm the subnet IDs belong to the specified VPC and region using `aws ec2 describe-subnets --subnet-ids subnet-0abc1234 --region us-east-1`. |
+    | `An error occurred (InvalidGroup.NotFound) when calling the CreateVpcEndpoint operation: The security group 'sg-0abc1234' does not exist` | Ensure the security group exists in the same VPC with `aws ec2 describe-security-groups --group-ids sg-0abc1234 --region us-east-1`. |
 Attach an endpoint policy to restrict which principals and models can be accessed via the endpoint.
 
 ## Encryption
@@ -159,9 +161,11 @@ aws s3api put-bucket-encryption \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchBucket) when calling the PutBucketEncryption operation: The specified bucket does not exist`** — Verify the bucket name is correct and exists in the same AWS region by running `aws s3 ls | grep my-bedrock-logs`.
-    **`An error occurred (AccessDenied) when calling the PutBucketEncryption operation: User: arn:aws:iam::123456789012:user/USERNAME is not authorized to perform: s3:PutEncryptionConfiguration`** — Add the `s3:PutEncryptionConfiguration` permission to your IAM user or role's policy.
-    **`An error occurred (InvalidArgument) when calling the PutBucketEncryption operation: The KMS key ARN provided is invalid or the key does not exist`** — Confirm the KMS key ARN is correct and the key exists in the same region using `aws kms describe-key --key-id arn:aws:kms:us-east-1:123456789012:key/KEY_ID`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchBucket) when calling the PutBucketEncryption operation: The specified bucket does not exist` | Verify the bucket name is correct and exists in the same AWS region by running `aws s3 ls | grep my-bedrock-logs`. |
+    | `An error occurred (AccessDenied) when calling the PutBucketEncryption operation: User: arn:aws:iam::123456789012:user/USERNAME is not authorized to perform: s3:PutEncryptionConfiguration` | Add the `s3:PutEncryptionConfiguration` permission to your IAM user or role's policy. |
+    | `An error occurred (InvalidArgument) when calling the PutBucketEncryption operation: The KMS key ARN provided is invalid or the key does not exist` | Confirm the KMS key ARN is correct and the key exists in the same region using `aws kms describe-key --key-id arn:aws:kms:us-east-1:123456789012:key/KEY_ID`. |
 ## Guardrails
 
 Guardrails enforce content policies on both input prompts and model responses.
@@ -214,9 +218,11 @@ aws bedrock create-guardrail \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ValidationException) when calling the CreateGuardrail operation: Invalid filter type 'SEXUAL'. Valid types are: PROFANITY, HATE, VIOLENCE, SEXUAL_CONTENT, PROMPT_INJECTION`** — Replace `"SEXUAL"` with `"SEXUAL_CONTENT"` in the filtersConfig.
-    **`An error occurred (AccessDeniedException) when calling the CreateGuardrail operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: bedrock:CreateGuardrail`** — Add the `bedrock:CreateGuardrail` permission to the IAM user or role's policy.
-    **`An error occurred (ValidationException) when calling the CreateGuardrail operation: Invalid action 'ANONYMIZE' for PII type 'EMAIL'. Valid actions are: BLOCK, REDACT`** — Change the EMAIL action from `"ANONYMIZE"` to `"REDACT"`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ValidationException) when calling the CreateGuardrail operation: Invalid filter type 'SEXUAL'. Valid types are: PROFANITY, HATE, VIOLENCE, SEXUAL_CONTENT, PROMPT_INJECTION` | Replace `"SEXUAL"` with `"SEXUAL_CONTENT"` in the filtersConfig. |
+    | `An error occurred (AccessDeniedException) when calling the CreateGuardrail operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: bedrock:CreateGuardrail` | Add the `bedrock:CreateGuardrail` permission to the IAM user or role's policy. |
+    | `An error occurred (ValidationException) when calling the CreateGuardrail operation: Invalid action 'ANONYMIZE' for PII type 'EMAIL'. Valid actions are: BLOCK, REDACT` | Change the EMAIL action from `"ANONYMIZE"` to `"REDACT"`. |
 Apply the guardrail ARN when invoking a model:
 
 ```bash
@@ -249,9 +255,11 @@ aws bedrock-runtime invoke-model \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ValidationException) when calling the InvokeModel operation: Invalid guardrail ARN format`** — Verify the guardrail ARN matches the pattern `arn:aws:bedrock:region:account-id:guardrail/guardrail-id` and that the guardrail exists in the specified region.
-    **`An error occurred (ResourceNotFoundException) when calling the InvokeModel operation: Could not find guardrail with id GUARD_ID`** — Confirm the guardrail identifier exists in your AWS account by running `aws bedrock list-guardrails --region us-east-1`.
-    **`An error occurred (AccessDeniedException) when calling the InvokeModel operation: User is not authorized to perform bedrock:InvokeModel`** — Add the `bedrock:InvokeModel` and `bedrock:ApplyGuardrail` permissions to your IAM user or role policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ValidationException) when calling the InvokeModel operation: Invalid guardrail ARN format` | Verify the guardrail ARN matches the pattern `arn:aws:bedrock:region:account-id:guardrail/guardrail-id` and that the guardrail exists in the specified region. |
+    | `An error occurred (ResourceNotFoundException) when calling the InvokeModel operation: Could not find guardrail with id GUARD_ID` | Confirm the guardrail identifier exists in your AWS account by running `aws bedrock list-guardrails --region us-east-1`. |
+    | `An error occurred (AccessDeniedException) when calling the InvokeModel operation: User is not authorized to perform bedrock:InvokeModel` | Add the `bedrock:InvokeModel` and `bedrock:ApplyGuardrail` permissions to your IAM user or role policy. |
 ## Audit and Compliance
 
 ```bash
@@ -306,6 +314,8 @@ aws cloudtrail lookup-events \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (TrailAlreadyExists) when calling the CreateTrail operation: Trail already exists.`** — Use `aws cloudtrail describe-trails --trail-name bedrock-audit-trail` to verify the trail exists, or delete it first with `aws cloudtrail delete-trail --name bedrock-audit-trail`.
-    **`An error occurred (S3BucketDoesNotExist) when calling the CreateTrail operation: S3 bucket does not exist.`** — Create the S3 bucket with `aws s3 mb s3://my-cloudtrail-bucket` before running the create-trail command.
-    **`An error occurred (InvalidParameterException) when calling the LookupEvents operation: Start time is invalid.`** — Ensure the date command produces valid ISO 8601 format; test with `date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ` on your system first.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (TrailAlreadyExists) when calling the CreateTrail operation: Trail already exists.` | Use `aws cloudtrail describe-trails --trail-name bedrock-audit-trail` to verify the trail exists, or delete it first with `aws cloudtrail delete-trail --name bedrock-audit-trail`. |
+    | `An error occurred (S3BucketDoesNotExist) when calling the CreateTrail operation: S3 bucket does not exist.` | Create the S3 bucket with `aws s3 mb s3://my-cloudtrail-bucket` before running the create-trail command. |
+    | `An error occurred (InvalidParameterException) when calling the LookupEvents operation: Start time is invalid.` | Ensure the date command produces valid ISO 8601 format; test with `date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ` on your system first. |

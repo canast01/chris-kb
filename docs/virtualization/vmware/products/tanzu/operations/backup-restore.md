@@ -74,9 +74,11 @@ curl -sk -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify VCSA hostname matches certificate CN).
-    **`{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"args":[],"default_message":"Invalid credentials"}]}}`** — Verify the SSO password is URL-encoded and correct for `administrator@vsphere.local` account.
-    **`{"type":"com.vmware.vapi.std.errors.invalid_argument","value":{"messages":[{"args":["location"],"default_message":"Invalid SFTP location URI"}]}}`** — Ensure SFTP server is reachable, credentials are valid, and the backup directory path exists with write permissions for the backupuser account.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify VCSA hostname matches certificate CN). |
+    | `{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"args":[],"default_message":"Invalid credentials"}]}}` | Verify the SSO password is URL-encoded and correct for `administrator@vsphere.local` account. |
+    | `{"type":"com.vmware.vapi.std.errors.invalid_argument","value":{"messages":[{"args":["location"],"default_message":"Invalid SFTP location URI"}]}}` | Ensure SFTP server is reachable, credentials are valid, and the backup directory path exists with write permissions for the backupuser account. |
 ---
 
 ## Install and Configure Velero
@@ -127,9 +129,11 @@ Velero successfully installed!
 ```
 
 !!! warning "Common errors"
-    **`error: failed to get backup storage location: error validating backup storage location: error connecting to object storage: NoSuchBucket: The specified bucket does not exist`** — Create the MinIO bucket named `velero-backups` before running the install command.
-    **`error: secret "cloud-credentials" not found`** — Ensure the `--secret-file ./credentials-velero` path is correct and the file exists with proper AWS/MinIO credentials in INI format.
-    **`error: unable to pull image "velero/velero-plugin-for-aws:v1.8.0"`** — Verify the plugin version matches your Velero version and that the cluster has internet access or the image is available in a private registry.
+    | Error | Fix |
+    |---|---|
+    | `error: failed to get backup storage location: error validating backup storage location: error connecting to object storage: NoSuchBucket: The specified bucket does not exist` | Create the MinIO bucket named `velero-backups` before running the install command. |
+    | `error: secret "cloud-credentials" not found` | Ensure the `--secret-file ./credentials-velero` path is correct and the file exists with proper AWS/MinIO credentials in INI format. |
+    | `error: unable to pull image "velero/velero-plugin-for-aws:v1.8.0"` | Verify the plugin version matches your Velero version and that the cluster has internet access or the image is available in a private registry. |
 ---
 
 ## Schedule Cluster Backups with Velero
@@ -179,9 +183,11 @@ Velero Version: 1.12.1
 ```
 
 !!! warning "Common errors"
-    **`error: timed out waiting for backup to complete`** — Increase the `--wait` timeout or check cluster resources with `kubectl top nodes` to ensure sufficient capacity.
-    **`error: schedule "daily-backup" already exists`** — Delete the existing schedule with `velero schedule delete daily-backup` before recreating it.
-    **`error: backup "daily-backup-20240101020000" not found`** — Verify the exact backup name with `velero backup get` and ensure the backup has not expired based on the TTL setting.
+    | Error | Fix |
+    |---|---|
+    | `error: timed out waiting for backup to complete` | Increase the `--wait` timeout or check cluster resources with `kubectl top nodes` to ensure sufficient capacity. |
+    | `error: schedule "daily-backup" already exists` | Delete the existing schedule with `velero schedule delete daily-backup` before recreating it. |
+    | `error: backup "daily-backup-20240101020000" not found` | Verify the exact backup name with `velero backup get` and ensure the backup has not expired based on the TTL setting. |
 ---
 
 ## Restore from Velero Backup
@@ -236,9 +242,11 @@ Restore hooks: <none>
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "backups"`** — Ensure Velero CRDs are installed with `velero install` or verify the velero namespace exists with `kubectl get ns velero`.
-    **`error: backup "daily-backup-20240101020000" not found`** — Verify the backup name is correct with `velero backup get` and check that the backup has completed with status "Completed".
-    **`error: restore "daily-backup-20240101020000-20240101143022" not found`** — Wait a few seconds for the restore resource to be created in the cluster, or check the velero logs with `kubectl logs -n velero deployment/velero` for submission errors.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "backups"` | Ensure Velero CRDs are installed with `velero install` or verify the velero namespace exists with `kubectl get ns velero`. |
+    | `error: backup "daily-backup-20240101020000" not found` | Verify the backup name is correct with `velero backup get` and check that the backup has completed with status "Completed". |
+    | `error: restore "daily-backup-20240101020000-20240101143022" not found` | Wait a few seconds for the restore resource to be created in the cluster, or check the velero logs with `kubectl logs -n velero deployment/velero` for submission errors. |
 ---
 
 ## PVC Backup with CSI Snapshots
@@ -271,8 +279,10 @@ default                  velero-backup-user-data-1703085604               false 
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "volumesnapshots"`** — Install the snapshot controller and CRDs with `kubectl apply -k github.com/kubernetes-csi/external-snapshotter/client/config/crd`.
-    **`No resources found in all namespaces.`** — Verify Velero is running with `kubectl get pods -n velero` and check that your storage class has a corresponding VolumeSnapshotClass defined.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "volumesnapshots"` | Install the snapshot controller and CRDs with `kubectl apply -k github.com/kubernetes-csi/external-snapshotter/client/config/crd`. |
+    | `No resources found in all namespaces.` | Verify Velero is running with `kubectl get pods -n velero` and check that your storage class has a corresponding VolumeSnapshotClass defined. |
 ---
 
 ## Harbor Backup
@@ -322,9 +332,11 @@ Completed 245 objects (8.3 MB) in 12s
 ```
 
 !!! warning "Common errors"
-    **`error: unable to decode "pods" from server: the object has been deleted`** — Ensure the Harbor database pod is running with `kubectl get pods -n harbor -l component=database` before executing the backup command.
-    **`tar: /mnt/harbor-data/registry/: No such file or directory`** — Verify the NFS volume is mounted and the path exists with `mount | grep harbor-data` or adjust the path to match your Harbor storage configuration.
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables before running the S3 sync command.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to decode "pods" from server: the object has been deleted` | Ensure the Harbor database pod is running with `kubectl get pods -n harbor -l component=database` before executing the backup command. |
+    | `tar: /mnt/harbor-data/registry/: No such file or directory` | Verify the NFS volume is mounted and the path exists with `mount | grep harbor-data` or adjust the path to match your Harbor storage configuration. |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables before running the S3 sync command. |
 ---
 
 ## Restore Harbor
@@ -366,9 +378,11 @@ deployment.apps/harbor-portal restarted
 ```
 
 !!! warning "Common errors"
-    **`error: unable to upgrade connection: container not found ("postgres")`** — Verify the database pod is running with `kubectl get pods -n harbor -l component=database` and ensure the pod name substitution is working correctly.
-    **`tar: /mnt/harbor-data/: No such file or directory`** — Create the target directory first with `mkdir -p /mnt/harbor-data/` before extracting the archive.
-    **`error: no deployment selected`** — Specify the deployment name explicitly: `kubectl rollout restart deployment harbor-core -n harbor` (or use a selector like `-l app=harbor`).
+    | Error | Fix |
+    |---|---|
+    | `error: unable to upgrade connection: container not found ("postgres")` | Verify the database pod is running with `kubectl get pods -n harbor -l component=database` and ensure the pod name substitution is working correctly. |
+    | `tar: /mnt/harbor-data/: No such file or directory` | Create the target directory first with `mkdir -p /mnt/harbor-data/` before extracting the archive. |
+    | `error: no deployment selected` | Specify the deployment name explicitly: `kubectl rollout restart deployment harbor-core -n harbor` (or use a selector like `-l app=harbor`). |
 ---
 
 ## See also

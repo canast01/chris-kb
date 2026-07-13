@@ -118,9 +118,11 @@ HTTP 200
 ```
 
 !!! warning "Common errors"
-    **`HTTP 401`** — Verify the service account credentials are correct and the password hasn't expired in vCenter or NSX-T.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the data source's CA certificate into the collector VM's trust store.
-    **`curl: (7) Failed to connect to vcenter.corp.local port 443: Connection timed out`** — Confirm network connectivity and firewall rules allow the collector VM to reach the data source on port 443.
+    | Error | Fix |
+    |---|---|
+    | `HTTP 401` | Verify the service account credentials are correct and the password hasn't expired in vCenter or NSX-T. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the data source's CA certificate into the collector VM's trust store. |
+    | `curl: (7) Failed to connect to vcenter.corp.local port 443: Connection timed out` | Confirm network connectivity and firewall rules allow the collector VM to reach the data source on port 443. |
 **Common causes and fixes:**
 
 | Cause | Indicator | Fix |
@@ -154,9 +156,11 @@ curl -sk -X POST "${AON_URL}/api/ni/datasources/${DS_ID}/sync" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the AON certificate into your system trust store.
-    **`{"error": "Unauthorized", "code": 401}`** — Verify the `AON_TOKEN` is valid and not expired by checking Settings → Administration → API Tokens in the AON UI.
-    **`curl: (7) Failed to connect to aon-prod.example.com port 443: Connection refused`** — Confirm `AON_URL` is correct and the AON appliance is running and network-accessible from your client.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the AON certificate into your system trust store. |
+    | `{"error": "Unauthorized", "code": 401}` | Verify the `AON_TOKEN` is valid and not expired by checking Settings → Administration → API Tokens in the AON UI. |
+    | `curl: (7) Failed to connect to aon-prod.example.com port 443: Connection refused` | Confirm `AON_URL` is correct and the AON appliance is running and network-accessible from your client. |
 ---
 
 ## No Flows in Flow Map
@@ -198,8 +202,10 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 ```
 
 !!! warning "Common errors"
-    **`tcpdump: Permission denied`** — Run the command with `sudo` or add your user to the `tcpdump` group with `sudo usermod -aG tcpdump $USER`.
-    **`grep: /var/log/proxy.log: No such file or directory`** — Verify the collector service is running with `sudo systemctl status aria-collector` and check the actual log path in `/var/log/aria/` or `/opt/aria/logs/`.
+    | Error | Fix |
+    |---|---|
+    | `tcpdump: Permission denied` | Run the command with `sudo` or add your user to the `tcpdump` group with `sudo usermod -aG tcpdump $USER`. |
+    | `grep: /var/log/proxy.log: No such file or directory` | Verify the collector service is running with `sudo systemctl status aria-collector` and check the actual log path in `/var/log/aria/` or `/opt/aria/logs/`. |
 **IPFIX not configured on vDS:**
 ```text
 vSphere Client → Distributed Switch → Configure → NetFlow
@@ -259,9 +265,11 @@ Jan 18 14:35:01 aon-collector ni-collector[8762]: ERROR: Failed to load SSL cert
 ```
 
 !!! warning "Common errors"
-    **`sudo: command not found`** — Verify the user has sudo privileges or log in as root; check `/etc/sudoers` includes the ubuntu user.
-    **`Connection refused`** — Ensure the ni-collector service is actually running with `systemctl status ni-collector` and check firewall rules allow outbound 443 to the platform VM.
-    **`ERROR: Failed to load SSL certificate from /etc/ni/certs/collector.pem`** — Regenerate or restore the collector certificate bundle using the platform's certificate management tool or re-register the collector.
+    | Error | Fix |
+    |---|---|
+    | `sudo: command not found` | Verify the user has sudo privileges or log in as root; check `/etc/sudoers` includes the ubuntu user. |
+    | `Connection refused` | Ensure the ni-collector service is actually running with `systemctl status ni-collector` and check firewall rules allow outbound 443 to the platform VM. |
+    | `ERROR: Failed to load SSL certificate from /etc/ni/certs/collector.pem` | Regenerate or restore the collector certificate bundle using the platform's certificate management tool or re-register the collector. |
 **If service restart doesn't fix it — re-register in UI:**
 ```text
 AON UI → Settings → Infrastructure and Support → Collectors
@@ -296,9 +304,11 @@ Pairing complete. Collector is now active.
 ```
 
 !!! warning "Common errors"
-    **`sudo: /home/ubuntu/support/pairing.sh: command not found`** — Verify the script exists at that path and run `ls -la /home/ubuntu/support/pairing.sh` to confirm permissions and location.
-    **`Validating pairing key... FAILED - Invalid or expired key`** — Obtain a fresh pairing key from the Aria Operations platform UI under Administration > Collectors and re-run the script.
-    **`Connecting to platform at platform.example.com:443... Connection refused`** — Verify network connectivity to the platform FQDN with `ping platform.example.com` and confirm the platform is running and accessible on port 443.
+    | Error | Fix |
+    |---|---|
+    | `sudo: /home/ubuntu/support/pairing.sh: command not found` | Verify the script exists at that path and run `ls -la /home/ubuntu/support/pairing.sh` to confirm permissions and location. |
+    | `Validating pairing key... FAILED - Invalid or expired key` | Obtain a fresh pairing key from the Aria Operations platform UI under Administration > Collectors and re-run the script. |
+    | `Connecting to platform at platform.example.com:443... Connection refused` | Verify network connectivity to the platform FQDN with `ping platform.example.com` and confirm the platform is running and accessible on port 443. |
 **Collector disk full (stops forwarding flows at >85% disk usage):**
 ```bash
 df -h /   # check root partition
@@ -313,8 +323,10 @@ Vacuumed journals from /var/log/journal/abc123def456 to 1.0G.
 ```
 
 !!! warning "Common errors"
-    **`df: '/': Permission denied`** — Run the command without `sudo` as `df` doesn't require elevated privileges, or check that the mount point exists and is accessible.
-    **`sudo: journalctl: command not found`** — Install systemd-journal or verify the system uses systemd; on some minimal distributions, journalctl may not be available.
+    | Error | Fix |
+    |---|---|
+    | `df: '/': Permission denied` | Run the command without `sudo` as `df` doesn't require elevated privileges, or check that the mount point exists and is accessible. |
+    | `sudo: journalctl: command not found` | Install systemd-journal or verify the system uses systemd; on some minimal distributions, journalctl may not be available. |
 ---
 
 ## Path Analysis Showing No Path or Incomplete Path
@@ -347,9 +359,11 @@ Intersight                   intersight-connector             True
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the AON server's certificate into your system trust store.
-    **`jq: command not found`** — Install `python3-json` or use the provided Python one-liner instead of piping to `jq`.
-    **`Authorization header missing or invalid`** — Verify `${AON_TOKEN}` is set with a valid API token by running `echo $AON_TOKEN` and regenerate it in the AON UI if expired.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the AON server's certificate into your system trust store. |
+    | `jq: command not found` | Install `python3-json` or use the provided Python one-liner instead of piping to `jq`. |
+    | `Authorization header missing or invalid` | Verify `${AON_TOKEN}` is set with a valid API token by running `echo $AON_TOKEN` and regenerate it in the AON UI if expired. |
 **Fix:** In AON UI → Settings → Data Sources → Add Source:
 - Ensure all NSX-T Managers are added
 - Add physical switch SNMP credentials for switches in the path
@@ -413,9 +427,11 @@ text:
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked in Active Directory.
-    **`Can't contact LDAP server (-1)`** — Confirm the DC hostname resolves and port 389/636 is reachable from the platform VM (use `nc -zv dc.corp.local 389`).
-    **`ldap_bind: Inappropriate authentication (48)`** — Remove the `-x` flag if using SASL authentication, or ensure the bind DN format matches your AD schema (try `svc-aon@corp.local` or `corp\svc-aon`).
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account is not locked in Active Directory. |
+    | `Can't contact LDAP server (-1)` | Confirm the DC hostname resolves and port 389/636 is reachable from the platform VM (use `nc -zv dc.corp.local 389`). |
+    | `ldap_bind: Inappropriate authentication (48)` | Remove the `-x` flag if using SASL authentication, or ensure the bind DN format matches your AD schema (try `svc-aon@corp.local` or `corp\svc-aon`). |
 **Common causes:**
 
 | Cause | Fix |
@@ -459,9 +475,11 @@ Vacuumed journals space from 1.0G to 892M.
 ```
 
 !!! warning "Common errors"
-    **`df: /var/lib/cassandra: No such file or directory`** — Verify the Aria Operations for Networks collector node is running and the Cassandra service has initialized its data directory.
-    **`sudo: journalctl: command not found`** — Remove `sudo` prefix as journalctl requires root privileges via `sudo journalctl` without redundant elevation, or run the command directly as root.
-    **`Permission denied`** — Run the entire script with `sudo bash` or prefix each command with `sudo` to ensure proper permissions for system directories.
+    | Error | Fix |
+    |---|---|
+    | `df: /var/lib/cassandra: No such file or directory` | Verify the Aria Operations for Networks collector node is running and the Cassandra service has initialized its data directory. |
+    | `sudo: journalctl: command not found` | Remove `sudo` prefix as journalctl requires root privileges via `sudo journalctl` without redundant elevation, or run the command directly as root. |
+    | `Permission denied` | Run the entire script with `sudo bash` or prefix each command with `sudo` to ensure proper permissions for system directories. |
 **Adjust retention in UI:**
 ```text
 AON UI → Settings → Infrastructure and Support → Platform Settings

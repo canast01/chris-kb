@@ -38,9 +38,11 @@ To git@backup-gitlab.example.com:ansible/infrastructure.git
 ```
 
 !!! warning "Common errors"
-    **`fatal: remote backup already exists.`** — Remove the existing remote with `git remote remove backup` before adding it again.
-    **`fatal: Could not read from remote repository. Please make sure you have the correct access rights and the repository exists.`** — Verify SSH key permissions (`chmod 600 ~/.ssh/id_rsa`) and that the backup remote URL is correct and accessible.
-    **`error: failed to push some refs to 'origin'`** — Pull the latest changes with `git pull origin main` to resolve conflicts before pushing again.
+    | Error | Fix |
+    |---|---|
+    | `fatal: remote backup already exists.` | Remove the existing remote with `git remote remove backup` before adding it again. |
+    | `fatal: Could not read from remote repository. Please make sure you have the correct access rights and the repository exists.` | Verify SSH key permissions (`chmod 600 ~/.ssh/id_rsa`) and that the backup remote URL is correct and accessible. |
+    | `error: failed to push some refs to 'origin'` | Pull the latest changes with `git pull origin main` to resolve conflicts before pushing again. |
 ```bash
 # On the AWX/AAP server
 awx-manage dumpdata --natural-foreign --natural-primary \
@@ -56,9 +58,11 @@ backup-server:/backups/awx/awx-dump-2024-01-15.json                             
 ```
 
 !!! warning "Common errors"
-    **`awx-manage: command not found`** — Ensure you are running this command on the AWX/AAP server with the correct Python virtual environment activated (source /var/lib/awx/venv/bin/activate).
-    **`Permission denied (publickey)`** — Verify SSH key-based authentication is configured for the backup-server user and the public key is in ~/.ssh/authorized_keys on the target host.
-    **`mkdir: cannot create directory '/backups/awx': Permission denied`** — Create the backup directory on the target server beforehand with appropriate permissions (ssh backup-server mkdir -p /backups/awx && chmod 755 /backups/awx).
+    | Error | Fix |
+    |---|---|
+    | `awx-manage: command not found` | Ensure you are running this command on the AWX/AAP server with the correct Python virtual environment activated (source /var/lib/awx/venv/bin/activate). |
+    | `Permission denied (publickey)` | Verify SSH key-based authentication is configured for the backup-server user and the public key is in ~/.ssh/authorized_keys on the target host. |
+    | `mkdir: cannot create directory '/backups/awx': Permission denied` | Create the backup directory on the target server beforehand with appropriate permissions (ssh backup-server mkdir -p /backups/awx && chmod 755 /backups/awx). |
 ```bash
 pip install awxkit
 
@@ -105,9 +109,11 @@ Success! Data written to: secret/ansible/prod/smtp_token
 ```
 
 !!! warning "Common errors"
-    **`vault: command not found`** — Install the Vault CLI binary and ensure it is in your PATH, or use the full path to the vault executable.
-    **`Error reading vault.yml: Decryption failed`** — Verify the Ansible vault password is correct by running `ansible-vault view group_vars/prod/vault.yml` interactively first.
-    **`Error making API request: permission denied`** — Ensure your Vault token has write permissions to the `secret/ansible/prod/` path by checking your policy with `vault token lookup`.
+    | Error | Fix |
+    |---|---|
+    | `vault: command not found` | Install the Vault CLI binary and ensure it is in your PATH, or use the full path to the vault executable. |
+    | `Error reading vault.yml: Decryption failed` | Verify the Ansible vault password is correct by running `ansible-vault view group_vars/prod/vault.yml` interactively first. |
+    | `Error making API request: permission denied` | Ensure your Vault token has write permissions to the `secret/ansible/prod/` path by checking your policy with `vault token lookup`. |
 ```bash
 # Generate new password file
 openssl rand -base64 32 > ~/.ansible_vault_pass_new
@@ -129,9 +135,11 @@ Rekeying /home/ansible/playbooks/roles/security/defaults/vault.yml
 ```
 
 !!! warning "Common errors"
-    **`ansible-vault rekey: error: argument --new-vault-password-file: can't open '/home/ansible/.ansible_vault_pass_new': No such file or directory`** — Ensure the openssl command completes successfully and the file is created in the correct home directory before running ansible-vault rekey.
-    **`find: 'vault.yml' -exec ansible-vault rekey: No such file or directory`** — Run the find command from the correct directory containing your vault files, or use an absolute path like `find /path/to/playbooks -name "vault.yml"`.
-    **`Vault password does not match existing vault password for /home/ansible/playbooks/group_vars/webservers/vault.yml`** — Verify that ~/.ansible_vault_pass contains the original vault password before running the rekey operation.
+    | Error | Fix |
+    |---|---|
+    | `ansible-vault rekey: error: argument --new-vault-password-file: can't open '/home/ansible/.ansible_vault_pass_new': No such file or directory` | Ensure the openssl command completes successfully and the file is created in the correct home directory before running ansible-vault rekey. |
+    | `find: 'vault.yml' -exec ansible-vault rekey: No such file or directory` | Run the find command from the correct directory containing your vault files, or use an absolute path like `find /path/to/playbooks -name "vault.yml"`. |
+    | `Vault password does not match existing vault password for /home/ansible/playbooks/group_vars/webservers/vault.yml` | Verify that ~/.ansible_vault_pass contains the original vault password before running the rekey operation. |
 ```bash
 # 1. Install ansible-core
 dnf install -y epel-release ansible-core
@@ -187,9 +195,11 @@ Vault password:
 ```
 
 !!! warning "Common errors"
-    **`fatal: could not read Username for 'github.com': No such file or directory`** — Ensure SSH keys are restored before cloning and the ansible user has SSH access configured with `ssh-keyscan github.com >> /home/ansible/.ssh/known_hosts`.
-    **`ERROR! the role 'some_role' was not found in /opt/ansible-project/roles`** — Verify the requirements.yml file exists in the project root and contains valid role definitions with proper source URLs.
-    **`fatal: [prod-web-01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Confirm SSH keys have correct permissions (600 for keys, 700 for .ssh directory) and the backup-server path is accessible.
+    | Error | Fix |
+    |---|---|
+    | `fatal: could not read Username for 'github.com': No such file or directory` | Ensure SSH keys are restored before cloning and the ansible user has SSH access configured with `ssh-keyscan github.com >> /home/ansible/.ssh/known_hosts`. |
+    | `ERROR! the role 'some_role' was not found in /opt/ansible-project/roles` | Verify the requirements.yml file exists in the project root and contains valid role definitions with proper source URLs. |
+    | `fatal: [prod-web-01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Confirm SSH keys have correct permissions (600 for keys, 700 for .ssh directory) and the backup-server path is accessible. |
 ```bash
 # Kubernetes AWX operator
 kubectl scale deployment awx-prod -n awx --replicas=0
@@ -229,9 +239,11 @@ deployment.apps/awx-prod scaled up to 1 replicas
 ```
 
 !!! warning "Common errors"
-    **`error: unable to forward port because pod is not running`** — Wait for the awx-prod pod to reach Running state before executing the psql command, or increase the replica count before running the restore.
-    **`Error: Invalid token or host unreachable`** — Verify that `$AWX_TOKEN` is set correctly and that `https://awx.example.com` is accessible from your current network location.
-    **`psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections`** — Reduce concurrent connections or scale down other AWX services before restoring the database dump.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to forward port because pod is not running` | Wait for the awx-prod pod to reach Running state before executing the psql command, or increase the replica count before running the restore. |
+    | `Error: Invalid token or host unreachable` | Verify that `$AWX_TOKEN` is set correctly and that `https://awx.example.com` is accessible from your current network location. |
+    | `psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections` | Reduce concurrent connections or scale down other AWX services before restoring the database dump. |
 ```bash
 #!/bin/bash
 # Run monthly to verify backup integrity

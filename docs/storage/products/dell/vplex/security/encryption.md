@@ -118,9 +118,11 @@ systemctl restart sshd
 ```
 
 !!! warning "Common errors"
-    **`sshd: no hostkeys available -- exiting.`** — Ensure SSH host keys exist in /etc/ssh/ (ssh-keygen -A) before restarting sshd.
-    **`Invalid user service from 192.168.1.50 port 54321`** — Replace `<MGMT_SUBNET>` with actual CIDR notation (e.g., `AllowUsers service@192.168.0.0/24`) or use specific usernames without IP restrictions.
-    **`Job for sshd.service failed because the control process exited with error code.`** — Run `sshd -t` to validate syntax errors in sshd_config before restarting the service.
+    | Error | Fix |
+    |---|---|
+    | `sshd: no hostkeys available -- exiting.` | Ensure SSH host keys exist in /etc/ssh/ (ssh-keygen -A) before restarting sshd. |
+    | `Invalid user service from 192.168.1.50 port 54321` | Replace `<MGMT_SUBNET>` with actual CIDR notation (e.g., `AllowUsers service@192.168.0.0/24`) or use specific usernames without IP restrictions. |
+    | `Job for sshd.service failed because the control process exited with error code.` | Run `sshd -t` to validate syntax errors in sshd_config before restarting the service. |
 Verify the active SSH configuration:
 
 ```bash
@@ -136,8 +138,10 @@ kexalgorithms curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,
 ```
 
 !!! warning "Common errors"
-    **`sshd: command not found`** — Ensure OpenSSH server is installed with `apt-get install openssh-server` or equivalent for your distro.
-    **`error: Could not load host key`** — Run the command with sudo or as root, since sshd configuration requires elevated privileges to read.
+    | Error | Fix |
+    |---|---|
+    | `sshd: command not found` | Ensure OpenSSH server is installed with `apt-get install openssh-server` or equivalent for your distro. |
+    | `error: Could not load host key` | Run the command with sudo or as root, since sshd configuration requires elevated privileges to read. |
 ### HTTPS / TLS (Unisphere for VPLEX)
 
 Unisphere for VPLEX ships with a self-signed TLS certificate. Replace this with a certificate signed by the corporate CA before production use.
@@ -185,8 +189,10 @@ Certificate Request:
 ```
 
 !!! warning "Common errors"
-    **`openssl: /opt/vplex/certs: No such file or directory`** — Create the directory with `mkdir -p /opt/vplex/certs` before running the openssl command.
-    **`Permission denied`** — Ensure the admin user has write permissions to `/opt/vplex/certs` or run the command with appropriate sudo privileges.
+    | Error | Fix |
+    |---|---|
+    | `openssl: /opt/vplex/certs: No such file or directory` | Create the directory with `mkdir -p /opt/vplex/certs` before running the openssl command. |
+    | `Permission denied` | Ensure the admin user has write permissions to `/opt/vplex/certs` or run the command with appropriate sudo privileges. |
 **Step 2: Submit the CSR to the corporate CA**
 
 Submit `vplex_mgmt.csr` to the corporate certificate authority. Request a certificate with:
@@ -215,8 +221,10 @@ corporate_ca_chain.crt                            100% 5634     2.1MB/s   00:00
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the VMS_IP is correct and the admin user has SSH access enabled; check that your SSH key is loaded or use password authentication with the `-o PubkeyAuthentication=no` flag.
-    **`scp: /opt/vplex/certs/: No such file or directory`** — Create the target directory on the VMS first with `ssh admin@<VMS_IP> 'mkdir -p /opt/vplex/certs/'` before copying files.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the VMS_IP is correct and the admin user has SSH access enabled; check that your SSH key is loaded or use password authentication with the `-o PubkeyAuthentication=no` flag. |
+    | `scp: /opt/vplex/certs/: No such file or directory` | Create the target directory on the VMS first with `ssh admin@<VMS_IP> 'mkdir -p /opt/vplex/certs/'` before copying files. |
 Alternatively, import through Unisphere → Settings → Security → Certificates if a GUI-based import is supported on the installed GeoSynchrony version.
 
 **Step 4: Verify the certificate**
@@ -238,9 +246,11 @@ X509v3 Subject Alternative Name:
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the VMS_IP is correct and the VPLEX management interface is listening on port 443 with `telnet <VMS_IP> 443`.
-    **`unable to load certificate`** — The certificate chain was not properly returned; try removing the pipe to `openssl x509` and run `openssl s_client -connect <VMS_IP>:443 -showcerts </dev/null 2>&1 | head -50` to inspect the raw output.
-    **`grep: (standard input) is empty`** — The certificate output format differs; run the command without grep first to see the actual certificate structure, then adjust the grep patterns accordingly.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the VMS_IP is correct and the VPLEX management interface is listening on port 443 with `telnet <VMS_IP> 443`. |
+    | `unable to load certificate` | The certificate chain was not properly returned; try removing the pipe to `openssl x509` and run `openssl s_client -connect <VMS_IP>:443 -showcerts </dev/null 2>&1 | head -50` to inspect the raw output. |
+    | `grep: (standard input) is empty` | The certificate output format differs; run the command without grep first to see the actual certificate structure, then adjust the grep patterns accordingly. |
 #### Certificate Lifecycle Management
 
 | Activity | Timing | Owner |
@@ -264,8 +274,10 @@ notAfter=Dec 15 09:47:32 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the VPLEX management IP is correct and port 443 is accessible from your monitoring host (check firewall rules and network connectivity).
-    **`unable to load certificate`** — The server is not responding with a valid SSL certificate; confirm the VPLEX cluster is running and the management interface is online.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the VPLEX management IP is correct and port 443 is accessible from your monitoring host (check firewall rules and network connectivity). |
+    | `unable to load certificate` | The server is not responding with a valid SSL certificate; confirm the VPLEX cluster is running and the management interface is online. |
 Alert when fewer than 30 days remain before expiry.
 
 ## Fibre Channel Layer Encryption

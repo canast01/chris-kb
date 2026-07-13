@@ -211,9 +211,11 @@ aws s3api get-bucket-acl \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchBucket) when calling the PutBucketPolicy operation: The specified bucket does not exist`** — Verify the bucket name matches exactly and exists in the ECS namespace with `aws s3api list-buckets --endpoint-url https://<ecs-s3-endpoint>:9021 --profile ecs`.
-    **`An error occurred (InvalidArgument) when calling the PutBucketPolicy operation: Invalid policy JSON`** — Validate the JSON syntax in `bucket-policy.json` using `jq . bucket-policy.json` or an online JSON validator before applying.
-    **`Unable to locate credentials for the 'ecs' profile`** — Ensure the AWS credentials are configured in `~/.aws/credentials` with the `[ecs]` profile section containing valid access key and secret key.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchBucket) when calling the PutBucketPolicy operation: The specified bucket does not exist` | Verify the bucket name matches exactly and exists in the ECS namespace with `aws s3api list-buckets --endpoint-url https://<ecs-s3-endpoint>:9021 --profile ecs`. |
+    | `An error occurred (InvalidArgument) when calling the PutBucketPolicy operation: Invalid policy JSON` | Validate the JSON syntax in `bucket-policy.json` using `jq . bucket-policy.json` or an online JSON validator before applying. |
+    | `Unable to locate credentials for the 'ecs' profile` | Ensure the AWS credentials are configured in `~/.aws/credentials` with the `[ecs]` profile section containing valid access key and secret key. |
 ## Namespace Isolation
 
 Namespaces are the primary multi-tenancy isolation boundary in ECS. Each namespace has independent:
@@ -301,9 +303,11 @@ namespace-backup
 ```
 
 !!! warning "Common errors"
-    **`error: namespace not found`** — Verify the namespace exists with `ecscli namespace list` and check for typos in the `<namespace>` parameter.
-    **`An error occurred (NoSuchBucket) when calling the GetBucketPolicy operation: The specified bucket does not exist`** — Confirm the bucket name is correct and exists in the ECS system using `aws s3 ls --endpoint-url https://<ecs-endpoint>:9021 --profile ecs`.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is already present; if the error persists, verify the ECS endpoint hostname matches the certificate or update your CA bundle.
+    | Error | Fix |
+    |---|---|
+    | `error: namespace not found` | Verify the namespace exists with `ecscli namespace list` and check for typos in the `<namespace>` parameter. |
+    | `An error occurred (NoSuchBucket) when calling the GetBucketPolicy operation: The specified bucket does not exist` | Confirm the bucket name is correct and exists in the ECS system using `aws s3 ls --endpoint-url https://<ecs-endpoint>:9021 --profile ecs`. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | The `--no-verify-ssl` flag is already present; if the error persists, verify the ECS endpoint hostname matches the certificate or update your CA bundle. |
 For each access review:
 1. Confirm each object user maps to an active application or service in the CMDB
 2. Confirm bucket policies grant only the minimum required actions

@@ -102,9 +102,11 @@ Address: 192.168.100.50
 ```
 
 !!! warning "Common errors"
-    **`** server can't find vcenter.example.local: NXDOMAIN`** — Add the FQDN and IP to your DNS server or /etc/hosts on the ESXi host before deployment.
-    **`** server can't find 50.100.168.192.in-addr.arpa: NXDOMAIN`** — Create a PTR record in your DNS reverse zone matching the planned VCSA IP address.
-    **`ssh: connect to host esxi-01.example.local port 22 rejected`** — Verify ESXi host is powered on, SSH is enabled in the ESXi firewall, and the hostname resolves correctly.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find vcenter.example.local: NXDOMAIN` | Add the FQDN and IP to your DNS server or /etc/hosts on the ESXi host before deployment. |
+    | `** server can't find 50.100.168.192.in-addr.arpa: NXDOMAIN` | Create a PTR record in your DNS reverse zone matching the planned VCSA IP address. |
+    | `ssh: connect to host esxi-01.example.local port 22 rejected` | Verify ESXi host is powered on, SSH is enabled in the ESXi firewall, and the hostname resolves correctly. |
 ### NTP Validation
 
 ```bash
@@ -128,9 +130,11 @@ LOCAL(0)        .LOCL.          10 l  998 1024  377    0.000    0.000   0.001
 ```
 
 !!! warning "Common errors"
-    **`Connection refused connecting to Management Agent on 10.20.50.100:443`** — Verify the ESXi host is reachable and the vSphere Client has network connectivity to the target host.
-    **`NTP Enabled: false`** — Enable NTP on the ESXi host using `esxcli system ntp set --enabled=true` and start the service with `esxcli system service start ntpd`.
-    **`reach   delay   offset  jitter` (no data rows below header)** — Wait 2-3 minutes for NTP to synchronize, or restart ntpd with `esxcli system service restart ntpd`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused connecting to Management Agent on 10.20.50.100:443` | Verify the ESXi host is reachable and the vSphere Client has network connectivity to the target host. |
+    | `NTP Enabled: false` | Enable NTP on the ESXi host using `esxcli system ntp set --enabled=true` and start the service with `esxcli system service start ntpd`. |
+    | `reach   delay   offset  jitter` (no data rows below header)` | Wait 2-3 minutes for NTP to synchronize, or restart ntpd with `esxcli system service restart ntpd`. |
 ### Datastore Space Check
 
 | VCSA Size | Max Hosts | Max VMs | Required Disk |
@@ -230,9 +234,11 @@ curl -sk https://<VCSA-IP>:5480 | grep -i "getting started"
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.50 port 5480: Connection refused`** — Verify the VCSA VM is powered on and has completed its initial boot sequence (may take 5–10 minutes).
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag is already present in the command; if still failing, ensure you're using `https://` and not `http://`.
-    **`curl: (6) Could not resolve host name`** — Confirm the VCSA IP address is correct and the appliance has obtained network connectivity via DHCP or static configuration.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.50 port 5480: Connection refused` | Verify the VCSA VM is powered on and has completed its initial boot sequence (may take 5–10 minutes). |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag is already present in the command; if still failing, ensure you're using `https://` and not `http://`. |
+    | `curl: (6) Could not resolve host name` | Confirm the VCSA IP address is correct and the appliance has obtained network connectivity via DHCP or static configuration. |
 ---
 
 ## Phase 3 — VCSA Configuration: Stage 2
@@ -302,9 +308,11 @@ tmpfs           16G  512M  15G   4% /dev/shm
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host vcenter.example.local port 22: Connection refused`** — Verify VCSA is powered on and SSH is enabled via DCUI, or use the IP address directly if DNS is unresolved.
-    **`service-control: command not found`** — Ensure you are logged in as root and the VCSA shell environment is properly initialized; try `source /etc/profile` first.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if you have a valid certificate, or ensure the hostname matches the certificate CN; the `-k` flag bypasses verification for self-signed certs.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host vcenter.example.local port 22: Connection refused` | Verify VCSA is powered on and SSH is enabled via DCUI, or use the IP address directly if DNS is unresolved. |
+    | `service-control: command not found` | Ensure you are logged in as root and the VCSA shell environment is properly initialized; try `source /etc/profile` first. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag if you have a valid certificate, or ensure the hostname matches the certificate CN; the `-k` flag bypasses verification for self-signed certs. |
 ---
 
 ## Phase 4 — Active Directory Integration
@@ -476,8 +484,10 @@ root@vcenter [ ~ ]# /usr/lib/vmware-vmcad/certificate-manager
 ```
 
 !!! warning "Common errors"
-    **`vecs-cli: command not found`** — Ensure you are running the command as root and the vmafd service is running with `systemctl status vmware-vmafd`.
-    **`certificate-manager: command not found`** — Verify the vmcad package is installed with `rpm -qa | grep vmcad` and reinstall if missing.
+    | Error | Fix |
+    |---|---|
+    | `vecs-cli: command not found` | Ensure you are running the command as root and the vmafd service is running with `systemctl status vmware-vmafd`. |
+    | `certificate-manager: command not found` | Verify the vmcad package is installed with `rpm -qa | grep vmcad` and reinstall if missing. |
 ### Configure Alarm Definitions
 
 ```text
@@ -511,8 +521,10 @@ service-control --status --all | grep -v "Running"
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Use the full path `/usr/lib/vmware-vmafd/bin/service-control` or source the VCSA environment setup script.
-    **`"CN=localhost,CN=Services,CN=Configuration,DC=vsphere,DC=local" not found`** — Verify VCSA is fully initialized and the Lightweight Directory Access Service (LSASS) is running with `service-control --status --all | grep vmafdd`.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Use the full path `/usr/lib/vmware-vmafd/bin/service-control` or source the VCSA environment setup script. |
+    | `"CN=localhost,CN=Services,CN=Configuration,DC=vsphere,DC=local" not found` | Verify VCSA is fully initialized and the Lightweight Directory Access Service (LSASS) is running with `service-control --status --all | grep vmafdd`. |
 ### Configure Syslog Forwarding
 
 ```text

@@ -83,9 +83,11 @@ Done. Repositories in: /home/devops/repos
 ```
 
 !!! warning "Common errors"
-    **`curl: (22) The requested URL returned error: 401 Unauthorized`** — Verify that GITHUB_TOKEN or GITLAB_TOKEN environment variable is set and has valid API permissions.
-    **`jq: parse error: Invalid numeric literal at line 1 column 10`** — Ensure the API endpoint URL and authentication header names are correct for your platform version.
-    **`fatal: could not read Username for 'git@github.com': No such file or directory`** — Configure SSH keys for git authentication or use HTTPS clone URLs instead of SSH URLs.
+    | Error | Fix |
+    |---|---|
+    | `curl: (22) The requested URL returned error: 401 Unauthorized` | Verify that GITHUB_TOKEN or GITLAB_TOKEN environment variable is set and has valid API permissions. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 10` | Ensure the API endpoint URL and authentication header names are correct for your platform version. |
+    | `fatal: could not read Username for 'git@github.com': No such file or directory` | Configure SSH keys for git authentication or use HTTPS clone URLs instead of SSH URLs. |
 ```bash
 #!/usr/bin/env bash
 # scan-secrets.sh
@@ -176,9 +178,11 @@ Report written to: /tmp/secret-scan-20240115-143247.txt
 ```
 
 !!! warning "Common errors"
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Ensure all subdirectories in `$REPOS_DIR` are valid bare Git repositories with `.git` directories at the expected depth.
-    **`Set REPOS_DIR`** — Export the `REPOS_DIR` environment variable before running the script (e.g., `export REPOS_DIR=/backup/git`).
-    **`grep: Invalid regular expression`** — Escape special regex characters in the `PATTERNS` array or use `grep -F` for literal string matching instead of regex patterns.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not a git repository (or any of the parent directories): .git` | Ensure all subdirectories in `$REPOS_DIR` are valid bare Git repositories with `.git` directories at the expected depth. |
+    | `Set REPOS_DIR` | Export the `REPOS_DIR` environment variable before running the script (e.g., `export REPOS_DIR=/backup/git`). |
+    | `grep: Invalid regular expression` | Escape special regex characters in the `PATTERNS` array or use `grep -F` for literal string matching instead of regex patterns. |
 ```bash
 #!/usr/bin/env bash
 # webhook-health.sh
@@ -270,9 +274,11 @@ Webhook health check: 6 total, 1 failures
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.github.com`** — Verify network connectivity and DNS resolution; check if a corporate proxy or firewall is blocking GitHub API access.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the GITHUB_TOKEN or GITLAB_TOKEN is valid and has appropriate API scopes (repo:read_hook or api).
-    **`[FAIL 000] ... hook ... -> https://webhook.internal.io/...`** — Verify the webhook endpoint is reachable from the CI/CD runner's network, check firewall rules, and confirm the target service is running.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.github.com` | Verify network connectivity and DNS resolution; check if a corporate proxy or firewall is blocking GitHub API access. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the GITHUB_TOKEN or GITLAB_TOKEN is valid and has appropriate API scopes (repo:read_hook or api). |
+    | `[FAIL 000] ... hook ... -> https://webhook.internal.io/...` | Verify the webhook endpoint is reachable from the CI/CD runner's network, check firewall rules, and confirm the target service is running. |
 ```bash
 #!/usr/bin/env bash
 # lfs-audit.sh

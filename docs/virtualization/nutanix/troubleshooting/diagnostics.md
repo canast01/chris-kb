@@ -149,9 +149,11 @@ nutanix@cvm-10-20-30-45:~$ ncc health_checks hardware_checks run_all
 ```
 
 !!! warning "Common errors"
-    **`ncc: command not found`** — Ensure you are logged into a Nutanix CVM (Controller VM) and not a hypervisor host; NCC is only available on CVMs.
-    **`Error: Check '<check_name>' not found in registry`** — Verify the check name spelling and run `ncc health_checks list_checks` to see all available check names.
-    **`Connection refused: Unable to connect to Prism Central`** — Confirm Prism Central is reachable from the CVM by running `ping <prism-central-ip>` and verify network connectivity.
+    | Error | Fix |
+    |---|---|
+    | `ncc: command not found` | Ensure you are logged into a Nutanix CVM (Controller VM) and not a hypervisor host; NCC is only available on CVMs. |
+    | `Error: Check '<check_name>' not found in registry` | Verify the check name spelling and run `ncc health_checks list_checks` to see all available check names. |
+    | `Connection refused: Unable to connect to Prism Central` | Confirm Prism Central is reachable from the CVM by running `ping <prism-central-ip>` and verify network connectivity. |
 ---
 
 ## Step 2 — Check cluster and host health
@@ -220,9 +222,11 @@ ncli disk ls
 ```
 
 !!! warning "Common errors"
-    **`Service <service_name> is in NOT_RUNNING state`** — SSH to the CVM and run `service <service_name> start` to restart the service, then verify with `cluster status`.
-    **`Host <hostname> has HealthStatus=WARNING or NodeStatus=DOWN`** — Check the host's physical connectivity and hardware health via IPMI, then reboot the node if necessary.
-    **`Disk <disk_id> is in MARKED_FOR_REMOVAL or FAILED state`** — Run `ncli disk remove disk-id=<disk_id>` to decommission the failed disk and monitor rebuild progress with `ncli disk ls`.
+    | Error | Fix |
+    |---|---|
+    | `Service <service_name> is in NOT_RUNNING state` | SSH to the CVM and run `service <service_name> start` to restart the service, then verify with `cluster status`. |
+    | `Host <hostname> has HealthStatus=WARNING or NodeStatus=DOWN` | Check the host's physical connectivity and hardware health via IPMI, then reboot the node if necessary. |
+    | `Disk <disk_id> is in MARKED_FOR_REMOVAL or FAILED state` | Run `ncli disk remove disk-id=<disk_id>` to decommission the failed disk and monitor rebuild progress with `ncli disk ls`. |
 ---
 
 ## Step 3 — Check alerts and events
@@ -289,8 +293,10 @@ backup-container   | 5497558138880  | 4398046511 | 80%               | good
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid alert id format`** — Verify the alert ID exists by running `ncli alert ls` first and copy the exact UUID from the id column.
-    **`Error: Connection refused to cluster (10.20.30.x:9440)`** — Ensure the Nutanix cluster is reachable and the ncli tool is configured with correct cluster credentials via `ncli -h <cluster-ip> -u <username>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid alert id format` | Verify the alert ID exists by running `ncli alert ls` first and copy the exact UUID from the id column. |
+    | `Error: Connection refused to cluster (10.20.30.x:9440)` | Ensure the Nutanix cluster is reachable and the ncli tool is configured with correct cluster credentials via `ncli -h <cluster-ip> -u <username>`. |
     **
 ---
 
@@ -403,8 +409,10 @@ Replication Status for prod-vms-pd:
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (Connection refused)`** — Verify ncli is installed and Nutanix services are running with `systemctl status nutanix-cluster-init`.
-    **`Error: Unknown command 'allssh'` or `command not found`** — Ensure you are running this command on a Nutanix cluster node where allssh is available in the PATH, or use full path `/opt/nutanix/bin/allssh`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (Connection refused)` | Verify ncli is installed and Nutanix services are running with `systemctl status nutanix-cluster-init`. |
+    | `Error: Unknown command 'allssh'` or `command not found` | Ensure you are running this command on a Nutanix cluster node where allssh is available in the PATH, or use full path `/opt/nutanix/bin/allssh`. |
 ---
 
 ## Step 6 — Advanced service diagnostics
@@ -529,9 +537,11 @@ NCC Version: 4.5.1
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Ensure the nutanix user SSH key is configured or use `ssh-keyscan` to add the CVM host key to your known_hosts file.
-    **`ncc: command not found`** — Verify you are SSH'd into a CVM (not a hypervisor host); NCC is only available on Nutanix Controller VMs.
-    **`/home/nutanix/send: No such file or directory`** — Wait for the ncc log_collector command to complete fully before attempting SCP; the output directory is created during collection.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Ensure the nutanix user SSH key is configured or use `ssh-keyscan` to add the CVM host key to your known_hosts file. |
+    | `ncc: command not found` | Verify you are SSH'd into a CVM (not a hypervisor host); NCC is only available on Nutanix Controller VMs. |
+    | `/home/nutanix/send: No such file or directory` | Wait for the ncc log_collector command to complete fully before attempting SCP; the output directory is created during collection. |
 ---
 
 ## Log locations

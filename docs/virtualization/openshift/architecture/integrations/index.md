@@ -89,8 +89,10 @@ cloud-provider-config   1      3d12h
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "csidriver"`** — Verify the cluster is fully initialized by running `oc get nodes` and waiting for all nodes to reach Ready status.
-    **`Error from server (NotFound): configmaps "cloud-provider-config" not found`** — Confirm vSphere integration was enabled during IPI installation; re-run the installer with the correct vCenter credentials if the ConfigMap is missing.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "csidriver"` | Verify the cluster is fully initialized by running `oc get nodes` and waiting for all nodes to reach Ready status. |
+    | `Error from server (NotFound): configmaps "cloud-provider-config" not found` | Confirm vSphere integration was enabled during IPI installation; re-run the installer with the correct vCenter credentials if the ConfigMap is missing. |
 ### vSphere Cloud Controller Manager (CCM)
 
 The CCM (`openshift-cloud-controller-manager` namespace) manages the node lifecycle: it provisions node objects when VMs come up, updates node addresses, and removes node objects when VMs are deleted. It also adds topology labels used by the scheduler.
@@ -147,9 +149,11 @@ allowVolumeExpansion: true
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "node" or you've misspelled it`** — Replace `<node>` with an actual node name from `oc get nodes`.
-    **`jq: command not found`** — Install jq on the bastion host with `sudo yum install -y jq` or use `grep` to filter labels instead.
-    **`error: resource name may not be empty`** — Ensure the CCM namespace `openshift-cloud-controller-manager` exists; verify with `oc get ns | grep cloud-controller`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "node" or you've misspelled it` | Replace `<node>` with an actual node name from `oc get nodes`. |
+    | `jq: command not found` | Install jq on the bastion host with `sudo yum install -y jq` or use `grep` to filter labels instead. |
+    | `error: resource name may not be empty` | Ensure the CCM namespace `openshift-cloud-controller-manager` exists; verify with `oc get ns | grep cloud-controller`. |
 ## LDAP / Active Directory Identity Provider
 
 ```yaml
@@ -211,9 +215,11 @@ secret "kubeadmin" deleted
 ```
 
 !!! warning "Common errors"
-    **`error: unable to read /path/to/ad-ca.crt: no such file or directory`** — Verify the CA certificate path exists and is readable with `ls -la /path/to/ad-ca.crt` before running the configmap command.
-    **`error: groups sync failed: LDAP server unreachable or invalid credentials`** — Confirm LDAP connectivity and bindPassword secret are correct by testing with `ldapsearch -x -H ldap://ad-server:389 -D "cn=bind-user,dc=example,dc=com" -W`.
-    **`Error from server (NotFound): secrets "kubeadmin" not found`** — Only delete kubeadmin after LDAP authentication is fully tested; if it's already deleted, skip this step or restore from backup if needed.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to read /path/to/ad-ca.crt: no such file or directory` | Verify the CA certificate path exists and is readable with `ls -la /path/to/ad-ca.crt` before running the configmap command. |
+    | `error: groups sync failed: LDAP server unreachable or invalid credentials` | Confirm LDAP connectivity and bindPassword secret are correct by testing with `ldapsearch -x -H ldap://ad-server:389 -D "cn=bind-user,dc=example,dc=com" -W`. |
+    | `Error from server (NotFound): secrets "kubeadmin" not found` | Only delete kubeadmin after LDAP authentication is fully tested; if it's already deleted, skip this step or restore from backup if needed. |
 **Recommended:** Use the Red Hat `Group Sync Operator` from OperatorHub for scheduled automatic group synchronization. Install in `group-sync-operator` namespace; create a `GroupSync` CR pointing at your LDAP/AD server to run on a cron schedule (e.g. `*/30 * * * *`).
 
 ## Image Registry Integration
@@ -266,9 +272,11 @@ config.imageregistry.operator.openshift.io/cluster patched
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "configs" in group "imageregistry.operator.openshift.io"`** — Verify the Image Registry Operator is installed with `oc get operators | grep image-registry` and install it from OperatorHub if missing.
-    **`The registry is not available`** — Ensure the storage backend (PVC or S3) is accessible and has sufficient capacity by checking `oc describe pvc` or S3 bucket permissions.
-    **`invalid JSON in patch`** — Validate JSON syntax using a linter before patching; common issues are unescaped quotes or missing commas in the spec object.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "configs" in group "imageregistry.operator.openshift.io"` | Verify the Image Registry Operator is installed with `oc get operators | grep image-registry` and install it from OperatorHub if missing. |
+    | `The registry is not available` | Ensure the storage backend (PVC or S3) is accessible and has sufficient capacity by checking `oc describe pvc` or S3 bucket permissions. |
+    | `invalid JSON in patch` | Validate JSON syntax using a linter before patching; common issues are unescaped quotes or missing commas in the spec object. |
 ### Air-Gap Mirror with oc mirror
 
 ```bash
@@ -295,9 +303,11 @@ mirror-openshift-release-images         5s
 ```
 
 !!! warning "Common errors"
-    **`error: unable to read imageset-config.yaml: no such file or directory`** — Verify the imageset-config.yaml file exists in the current directory and contains valid YAML syntax.
-    **`error: failed to push image to quay.local.example.com: x509: certificate signed by unknown authority`** — Configure the registry as insecure in the imageset-config.yaml or add the registry's CA certificate to the system trust store.
-    **`error: imagecontentsourcepolicy.config.openshift.io "mirror-openshift-release-images" already exists`** — Delete the existing policy with `oc delete imagecontentsourcepolicy mirror-openshift-release-images` before reapplying.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to read imageset-config.yaml: no such file or directory` | Verify the imageset-config.yaml file exists in the current directory and contains valid YAML syntax. |
+    | `error: failed to push image to quay.local.example.com: x509: certificate signed by unknown authority` | Configure the registry as insecure in the imageset-config.yaml or add the registry's CA certificate to the system trust store. |
+    | `error: imagecontentsourcepolicy.config.openshift.io "mirror-openshift-release-images" already exists` | Delete the existing policy with `oc delete imagecontentsourcepolicy mirror-openshift-release-images` before reapplying. |
 ## cert-manager Integration
 
 cert-manager automates TLS certificate lifecycle. Install via OperatorHub (`cert-manager` operator in `cert-manager` namespace).
@@ -357,9 +367,11 @@ kube-system           kubelet-serving-cert           True    kubelet-certs      
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "ingresscontroller" in group "operator.openshift.io"`** — Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc api-resources | grep ingress`.
-    **`Error from server (NotFound): secrets "apps-wildcard-tls" not found`** — Create the TLS secret first using `oc create secret tls apps-wildcard-tls --cert=cert.crt --key=key.key -n openshift-ingress`.
-    **`certificate.cert-manager.io "apps-wildcard-tls" not found`** — Confirm the secret exists in the correct namespace with `oc get secret apps-wildcard-tls -n openshift-ingress` before patching.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "ingresscontroller" in group "operator.openshift.io"` | Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc api-resources | grep ingress`. |
+    | `Error from server (NotFound): secrets "apps-wildcard-tls" not found` | Create the TLS secret first using `oc create secret tls apps-wildcard-tls --cert=cert.crt --key=key.key -n openshift-ingress`. |
+    | `certificate.cert-manager.io "apps-wildcard-tls" not found` | Confirm the secret exists in the correct namespace with `oc get secret apps-wildcard-tls -n openshift-ingress` before patching. |
 ## ArgoCD / OpenShift GitOps
 
 OpenShift GitOps operator installs ArgoCD. Install from OperatorHub; the operator creates an `ArgoCD` CR in `openshift-gitops` namespace automatically.
@@ -442,9 +454,11 @@ admin@argocd.example.com:p@ssw0rd_2024
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "application"`** — Ensure ArgoCD is installed in the cluster with `oc get ns openshift-gitops` and verify the CRD exists via `oc get crd applications.argoproj.io`.
-    **`error: unable to connect to the server: dial tcp: lookup argocd-server on 127.0.0.1:53: no such host`** — Port-forward to the ArgoCD server first with `oc port-forward -n openshift-gitops svc/openshift-gitops-server 8080:443` or use the route hostname instead.
-    **`error: invalid token`** — Replace `<token>` with a valid ArgoCD API token obtained from `oc -n openshift-gitops exec deploy/openshift-gitops-server -- argocd account generate-token --account <username>`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "application"` | Ensure ArgoCD is installed in the cluster with `oc get ns openshift-gitops` and verify the CRD exists via `oc get crd applications.argoproj.io`. |
+    | `error: unable to connect to the server: dial tcp: lookup argocd-server on 127.0.0.1:53: no such host` | Port-forward to the ArgoCD server first with `oc port-forward -n openshift-gitops svc/openshift-gitops-server 8080:443` or use the route hostname instead. |
+    | `error: invalid token` | Replace `<token>` with a valid ArgoCD API token obtained from `oc -n openshift-gitops exec deploy/openshift-gitops-server -- argocd account generate-token --account <username>`. |
 ## Advanced Cluster Management (ACM)
 
 ```bash
@@ -477,8 +491,10 @@ policy-rbac-enforcement                 audit                NonCompliant       
 ```
 
 !!! warning "Common errors"
-    **`error: resource mapping not found for name: "multiclusterhub" namespace: "open-cluster-management"`** — Ensure the ACM operator is fully installed and the CRD is available with `oc get crd | grep multiclusterhub`.
-    **`The MultiClusterHub "multiclusterhub" is invalid: spec.imagePullSecret: Invalid value: "": imagePullSecret cannot be empty`** — Add a valid imagePullSecret to multiclusterhub.yaml or use `spec.imagePullSecret: null` if using default registry credentials.
+    | Error | Fix |
+    |---|---|
+    | `error: resource mapping not found for name: "multiclusterhub" namespace: "open-cluster-management"` | Ensure the ACM operator is fully installed and the CRD is available with `oc get crd | grep multiclusterhub`. |
+    | `The MultiClusterHub "multiclusterhub" is invalid: spec.imagePullSecret: Invalid value: "": imagePullSecret cannot be empty` | Add a valid imagePullSecret to multiclusterhub.yaml or use `spec.imagePullSecret: null` if using default registry credentials. |
 ## ODF (OpenShift Data Foundation) Storage
 
 ```bash
@@ -516,9 +532,11 @@ ceph-cluster   3          3          2m    Ready   Cluster created successfully
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "storagecluster"`** — Ensure the ODF operator is installed first via OperatorHub or `oc apply -f odf-operator.yaml`.
-    **`pod not found with selector: app=rook-ceph-tools`** — Wait for the rook-ceph-tools pod to be ready with `oc wait --for=condition=Ready pod -l app=rook-ceph-tools -n openshift-storage --timeout=300s`.
-    **`CephCluster is in a degraded state: insufficient OSDs`** — Verify that all OSD disks are properly attached and available by checking `oc describe storagecluster -n openshift-storage` for device discovery errors.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "storagecluster"` | Ensure the ODF operator is installed first via OperatorHub or `oc apply -f odf-operator.yaml`. |
+    | `pod not found with selector: app=rook-ceph-tools` | Wait for the rook-ceph-tools pod to be ready with `oc wait --for=condition=Ready pod -l app=rook-ceph-tools -n openshift-storage --timeout=300s`. |
+    | `CephCluster is in a degraded state: insufficient OSDs` | Verify that all OSD disks are properly attached and available by checking `oc describe storagecluster -n openshift-storage` for device discovery errors. |
 ## See also
 
 - [OpenShift — How It Works](../how-it-works/)

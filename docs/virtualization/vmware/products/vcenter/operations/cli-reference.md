@@ -270,9 +270,11 @@ machine-ssl-old                Jan 10 2022         Jan 10 2025         CN=CA,DC=
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Verify the vCenter Server is fully installed and /usr/lib/vmware-vmafd/bin is in PATH, or use full path `/usr/lib/vmware-vmafd/bin/service-control`.
-    **`tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory`** — Ensure vpxd service is running with `service-control --start vpxd` and the log directory exists.
-    **`Error: Cannot connect to server localhost`** — Verify vmdird and vmafdd services are running with `service-control --status` and check network connectivity to localhost.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Verify the vCenter Server is fully installed and /usr/lib/vmware-vmafd/bin is in PATH, or use full path `/usr/lib/vmware-vmafd/bin/service-control`. |
+    | `tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory` | Ensure vpxd service is running with `service-control --start vpxd` and the log directory exists. |
+    | `Error: Cannot connect to server localhost` | Verify vmdird and vmafdd services are running with `service-control --status` and check network connectivity to localhost. |
 ---
 
 ## See also

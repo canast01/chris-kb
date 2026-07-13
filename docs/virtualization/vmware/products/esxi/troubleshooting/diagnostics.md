@@ -147,9 +147,11 @@ hostd.log  vmkernel.log  vpxa.log  fdm.log  shell.log  syslog.log
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify SSH is enabled on the ESXi host and the root account credentials are correct.
-    **`tail: cannot open '/var/log/vmkernel.log' for reading: No such file or directory`** — Ensure you are connected to the ESXi host via SSH and the log files exist; check the correct path with `ls /var/log/`.
-    **`Connection refused`** — Confirm the ESXi host IP address
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify SSH is enabled on the ESXi host and the root account credentials are correct. |
+    | `tail: cannot open '/var/log/vmkernel.log' for reading: No such file or directory` | Ensure you are connected to the ESXi host via SSH and the log files exist; check the correct path with `ls /var/log/`. |
+    | `Connection refused` | Confirm the ESXi host IP address |
 ---
 
 ## Step 2 — Check live storage state
@@ -241,7 +243,9 @@ vmhba2 (lpfc821)
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Verify you are running this command directly on the ESXi host via SSH or DCUI console, not from vCenter.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Verify you are running this command directly on the ESXi host via SSH or DCUI console, not from vCenter. |
     **`State: dead` for all paths to a LUN** — Check SAN switch port status, FC cable connections, and storage array LUN masking for the ESXi host's WWN.
     **`LinkState: link
 ---
@@ -310,9 +314,11 @@ TxPkts: 38291847  TxBytes: 19283746592  TxErrors: 0  TxDropped: 0
 ```
 
 !!! warning "Common errors"
-    **`Could not resolve host <gateway-ip>`** — Replace `<gateway-ip>` with the actual IP address (e.g., `192.168.1.1`) before running vmkping.
-    **`Network is unreachable`** — Verify the VMkernel adapter is bound to the correct vSwitch and port group, and that the physical network path is connected.
-    **`RxDropped or TxDropped > 0`** — Check for MTU mismatches between ESXi and network switches, or reduce VM network load if drops are increasing.
+    | Error | Fix |
+    |---|---|
+    | `Could not resolve host <gateway-ip>` | Replace `<gateway-ip>` with the actual IP address (e.g., `192.168.1.1`) before running vmkping. |
+    | `Network is unreachable` | Verify the VMkernel adapter is bound to the correct vSwitch and port group, and that the physical network path is connected. |
+    | `RxDropped or TxDropped > 0` | Check for MTU mismatches between ESXi and network switches, or reduce VM network load if drops are increasing. |
 ---
 
 ## Step 4 — Performance diagnostics with esxtop
@@ -350,8 +356,10 @@ GID  NAME             NWORLDID WORLDID  CPUID %MLMTD %SWPWT %RDY  %CSTP %USED
 ```
 
 !!! warning "Common errors"
-    **`ESXTOP: Failed to open /proc/vmware/sched/cpu/stats`** — Ensure ESXi SSH service is running and you have root credentials; restart Management agents with `services.sh restart`.
-    **`scp: command not found`** — Install openssh-client on your local machine or use `esxcli hardware cpu list` to verify connectivity first before attempting SCP.
+    | Error | Fix |
+    |---|---|
+    | `ESXTOP: Failed to open /proc/vmware/sched/cpu/stats` | Ensure ESXi SSH service is running and you have root credentials; restart Management agents with `services.sh restart`. |
+    | `scp: command not found` | Install openssh-client on your local machine or use `esxcli hardware cpu list` to verify connectivity first before attempting SCP. |
 Key metrics thresholds:
 
 | Metric | Normal | Caution | Problem |
@@ -419,9 +427,11 @@ date: Mon Jan 15 14:32:18 UTC 2024
 ```
 
 !!! warning "Common errors"
-    **`Connection timeout to vCenter <vcenter-ip>:443 after 30s`** — Verify vCenter is running and reachable on port 443 using `nc -zv <vcenter-ip> 443`, and check firewall rules between ESXi management network and vCenter.
-    **`SSL certificate verification failed: hostname mismatch`** — Ensure the ESXi host's system time is synchronized within 5 minutes of vCenter using `esxcli system time get`, or re-register the host in vCenter if the certificate was regenerated.
-    **`vpxa is not running`** — Start the vpxa service with `/etc/init.d/vpxa start` and check `/var/log/vpxa.log` for startup errors.
+    | Error | Fix |
+    |---|---|
+    | `Connection timeout to vCenter <vcenter-ip>:443 after 30s` | Verify vCenter is running and reachable on port 443 using `nc -zv <vcenter-ip> 443`, and check firewall rules between ESXi management network and vCenter. |
+    | `SSL certificate verification failed: hostname mismatch` | Ensure the ESXi host's system time is synchronized within 5 minutes of vCenter using `esxcli system time get`, or re-register the host in vCenter if the certificate was regenerated. |
+    | `vpxa is not running` | Start the vpxa service with `/etc/init.d/vpxa start` and check `/var/log/vpxa.log` for startup errors. |
 ---
 
 ## Step 6 — Validate storage and network before maintenance
@@ -458,9 +468,11 @@ Enabled: true
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vmkernel.log: No such file or directory`** — SSH to the ESXi host directly; the log is only accessible on the host itself, not remotely.
-    **`Unknown command or namespace: vm process list`** — Verify esxcli is in the PATH and you are running ESXi 5.0 or later; try `esxcli --version` to confirm.
-    **`Name: vmk1 not found`** — Confirm the vMotion VMkernel adapter exists by running `esxcli network ip interface list` without grep to see all adapters, then create vmk1 if missing.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vmkernel.log: No such file or directory` | SSH to the ESXi host directly; the log is only accessible on the host itself, not remotely. |
+    | `Unknown command or namespace: vm process list` | Verify esxcli is in the PATH and you are running ESXi 5.0 or later; try `esxcli --version` to confirm. |
+    | `Name: vmk1 not found` | Confirm the vMotion VMkernel adapter exists by running `esxcli network ip interface list` without grep to see all adapters, then create vmk1 if missing. |
 ---
 
 ## Step 7 — Collect support bundle for VMware SR
@@ -500,9 +512,11 @@ esx-prod-01-2024-01-15-14-32-45.tgz                100%  287MB   8.2MB/s   00:35
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Ensure SSH is enabled on the ESXi host and the root account credentials are correct.
-    **`No such file or directory`** — Run `vm-support -n -w /tmp/` first to generate the bundle before attempting to transfer it.
-    **`Disk space exhausted`** — Free up space on /tmp (at least 500 MB) or specify an alternate output directory with `-w /vmfs/volumes/datastore1/`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Ensure SSH is enabled on the ESXi host and the root account credentials are correct. |
+    | `No such file or directory` | Run `vm-support -n -w /tmp/` first to generate the bundle before attempting to transfer it. |
+    | `Disk space exhausted` | Free up space on /tmp (at least 500 MB) or specify an alternate output directory with `-w /vmfs/volumes/datastore1/`. |
 ---
 
 ## Log locations

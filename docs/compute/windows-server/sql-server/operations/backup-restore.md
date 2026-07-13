@@ -69,8 +69,10 @@ stanza: prod-db-01
 ```
 
 !!! warning "Common errors"
-    **`ERROR: stanza 'prod-db-01' not found`** — Verify the stanza name matches your pgBackRest configuration file (usually /etc/pgbackrest/pgbackrest.conf).
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed`** — Ensure PostgreSQL is running and the postgres user has passwordless local connections configured in pg_hba.conf.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: stanza 'prod-db-01' not found` | Verify the stanza name matches your pgBackRest configuration file (usually /etc/pgbackrest/pgbackrest.conf). |
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed` | Ensure PostgreSQL is running and the postgres user has passwordless local connections configured in pg_hba.conf. |
 ```bash
 # PostgreSQL — verify backup with pgBackRest
 pgbackrest --stanza=<stanza-name> check
@@ -101,9 +103,11 @@ RESTORE VERIFYONLY passed.
 ```
 
 !!! warning "Common errors"
-    **`pgbackrest: ERROR: archive-push command failed: backup path does not exist`** — Create the backup directory with `mkdir -p /var/lib/pgbackrest/backup/<stanza-name>` and ensure the postgres user owns it.
-    **`xtrabackup: error: cannot open file /backup/mysql/latest/ibdata1`** — Verify the backup path exists and xtrabackup process has read permissions with `ls -la /backup/mysql/latest/`.
-    **`Msg 3013, Level 16, State 1 — RESTORE VERIFYONLY failed`** — Check that the backup file path is correct and the SQL Server service account has read permissions on the .bak file.
+    | Error | Fix |
+    |---|---|
+    | `pgbackrest: ERROR: archive-push command failed: backup path does not exist` | Create the backup directory with `mkdir -p /var/lib/pgbackrest/backup/<stanza-name>` and ensure the postgres user owns it. |
+    | `xtrabackup: error: cannot open file /backup/mysql/latest/ibdata1` | Verify the backup path exists and xtrabackup process has read permissions with `ls -la /backup/mysql/latest/`. |
+    | `Msg 3013, Level 16, State 1 — RESTORE VERIFYONLY failed` | Check that the backup file path is correct and the SQL Server service account has read permissions on the .bak file. |
 ```bash
 # Restore to test instance
 pgbackrest --stanza=<stanza-name> --pg1-path=/var/lib/pgsql/test-restore restore
@@ -128,9 +132,11 @@ server started
 ```
 
 !!! warning "Common errors"
-    **`ERROR: archive directory missing: /var/lib/pgbackrest/archive/prod-db`** — Verify pgbackrest archive path is configured correctly in pgbackrest.conf and the directory exists with proper permissions.
-    **`FATAL: could not open file "/var/lib/pgsql/test-restore/global/pg_control": No such file or directory`** — Ensure the restore completed successfully and the destination path /var/lib/pgsql/test-restore has sufficient disk space and proper ownership.
-    **`psql: error: could not translate host name "localhost" to address: Name or service not known`** — Verify PostgreSQL is listening on port 5433 by checking pg_isready -p 5433 or confirming the port in postgresql.conf.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: archive directory missing: /var/lib/pgbackrest/archive/prod-db` | Verify pgbackrest archive path is configured correctly in pgbackrest.conf and the directory exists with proper permissions. |
+    | `FATAL: could not open file "/var/lib/pgsql/test-restore/global/pg_control": No such file or directory` | Ensure the restore completed successfully and the destination path /var/lib/pgsql/test-restore has sufficient disk space and proper ownership. |
+    | `psql: error: could not translate host name "localhost" to address: Name or service not known` | Verify PostgreSQL is listening on port 5433 by checking pg_isready -p 5433 or confirming the port in postgresql.conf. |
 ```bash
 # Copy backup to test directory
 xtrabackup --prepare --target-dir=/restore/mysql-test/

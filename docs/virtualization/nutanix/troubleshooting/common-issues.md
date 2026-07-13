@@ -149,8 +149,10 @@ CVM login:
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host 10.20.30.45 port 22: Connection timed out`** — Verify network connectivity and firewall rules allow SSH (port 22) from your management network to the CVM.
-    **`virsh: error: failed to get domain 'CVM'`** — Ensure you are logged into the correct AHV hypervisor host and use the exact CVM domain name (check with `virsh list --all` first).
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host 10.20.30.45 port 22: Connection timed out` | Verify network connectivity and firewall rules allow SSH (port 22) from your management network to the CVM. |
+    | `virsh: error: failed to get domain 'CVM'` | Ensure you are logged into the correct AHV hypervisor host and use the exact CVM domain name (check with `virsh list --all` first). |
 **Common causes and fixes:**
 
 | Cause | Fix |
@@ -184,9 +186,11 @@ Genesis is now running (PID: 4521)
 ```
 
 !!! warning "Common errors"
-    **`genesis: command not found`** — Ensure you are logged into the CVM (Controller VM) directly; this command only exists on Nutanix nodes, not on the Prism host.
-    **`Permission denied`** — Run the command with `sudo genesis restart` or ensure your user account has sudo privileges on the CVM.
-    **`Genesis failed to start after 120 seconds`** — Proceed with a full CVM reboot using `sudo reboot` as the genesis service may be in an unrecoverable state.
+    | Error | Fix |
+    |---|---|
+    | `genesis: command not found` | Ensure you are logged into the CVM (Controller VM) directly; this command only exists on Nutanix nodes, not on the Prism host. |
+    | `Permission denied` | Run the command with `sudo genesis restart` or ensure your user account has sudo privileges on the CVM. |
+    | `Genesis failed to start after 120 seconds` | Proceed with a full CVM reboot using `sudo reboot` as the genesis service may be in an unrecoverable state. |
 ---
 
 ## NCC Health Check Failures
@@ -228,9 +232,11 @@ Recommendation: Verify network connectivity between sites, check firewall rules 
 ```
 
 !!! warning "Common errors"
-    **`ncc: command not found`** — Ensure NCC is installed on the Nutanix cluster node or run the command from a node with NCC available in PATH.
-    **`FAIL - Health check timed out after 600 seconds`** — Increase timeout or run individual checks with `ncc --health_checks <check_name>` instead of `run_all` if the cluster is under heavy load.
-    **`grep: /tmp/ncc-20240115.txt: No such file or directory`** — Verify the first ncc command completed successfully and check that /tmp has write permissions.
+    | Error | Fix |
+    |---|---|
+    | `ncc: command not found` | Ensure NCC is installed on the Nutanix cluster node or run the command from a node with NCC available in PATH. |
+    | `FAIL - Health check timed out after 600 seconds` | Increase timeout or run individual checks with `ncc --health_checks <check_name>` instead of `run_all` if the cluster is under heavy load. |
+    | `grep: /tmp/ncc-20240115.txt: No such file or directory` | Verify the first ncc command completed successfully and check that /tmp has write permissions. |
 **Common NCC failures:**
 
 | NCC Check | Common cause | Fix |
@@ -296,9 +302,11 @@ Task ID: 87654321-dcba-10fe-5432-1fedcba98765
 ```
 
 !!! warning "Common errors"
-    **`ncli: command not found`** — Ensure you are running this command on a Nutanix cluster node with the Nutanix CLI installed, or source the appropriate environment setup script.
-    **`Permission denied`** — Run the commands with appropriate privileges (use `sudo` or ensure your user has Nutanix admin role permissions).
-    **`Connection refused`** — Verify the Nutanix cluster is running and accessible; check network connectivity to the cluster management IP with `ping` or `nc`.
+    | Error | Fix |
+    |---|---|
+    | `ncli: command not found` | Ensure you are running this command on a Nutanix cluster node with the Nutanix CLI installed, or source the appropriate environment setup script. |
+    | `Permission denied` | Run the commands with appropriate privileges (use `sudo` or ensure your user has Nutanix admin role permissions). |
+    | `Connection refused` | Verify the Nutanix cluster is running and accessible; check network connectivity to the cluster management IP with `ping` or `nc`. |
 **Common causes:**
 
 | Cause | Indicator | Fix |
@@ -342,11 +350,11 @@ Domain web-prod-01 destroyed
 ```
 
 !!! warning "Common errors"
-    **`acli: command not found`** — Ensure you're running this command on a Nutanix cluster node where the Nutanix CLI is installed, or source the appropriate environment setup script.
-    
-    **`virsh: command not found`** — Install libvirt-client on the AHV host with `yum install libvirt-client` or verify you're SSH'd into an actual AHV hypervisor node, not a CVM.
-    
-    **`error: failed to get domain '<vm-name>'`** — Verify the exact VM name matches the output from `virsh list --all` (names are case-sensitive) and that the VM actually exists on that specific AHV host.
+    | Error | Fix |
+    |---|---|
+    | `acli: command not found` | Ensure you're running this command on a Nutanix cluster node where the Nutanix CLI is installed, or source the appropriate environment setup script. |
+    | `virsh: command not found` | Install libvirt-client on the AHV host with `yum install libvirt-client` or verify you're SSH'd into an actual AHV hypervisor node, not a CVM. |
+    | `error: failed to get domain '<vm-name>'` | Verify the exact VM name matches the output from `virsh list --all` (names are case-sensitive) and that the VM actually exists on that specific AHV host. |
 ---
 
 ## VM Cannot Connect to Network
@@ -388,9 +396,11 @@ NIC created successfully on network vlan-prod-100
 ```
 
 !!! warning "Common errors"
-    **`Error: VM <vm-name> not found`** — Verify the VM name is correct and the VM exists using `acli vm.list`.
-    **`Error: Network <network-name> does not exist`** — Confirm the network name with `acli net.list` and check for typos or VLAN configuration issues.
-    **`Error: NIC with MAC <mac> not found on VM`** — Ensure the MAC address is exact and currently attached to the VM by running `acli vm.nic_list <vm-name>` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: VM <vm-name> not found` | Verify the VM name is correct and the VM exists using `acli vm.list`. |
+    | `Error: Network <network-name> does not exist` | Confirm the network name with `acli net.list` and check for typos or VLAN configuration issues. |
+    | `Error: NIC with MAC <mac> not found on VM` | Ensure the MAC address is exact and currently attached to the VM by running `acli vm.nic_list <vm-name>` first. |
 Inside the VM:
 ```bash
 # Reset network interface
@@ -405,8 +415,10 @@ dhclient eth0   # re-request DHCP
 ```
 
 !!! warning "Common errors"
-    **`RTNETLINK answers: Operation not permitted`** — Run the commands with `sudo` or as root user.
-    **`No DHCPOFFERS received`** — Verify the DHCP server is reachable and the interface is connected to an active network; check `ip link show eth0` to confirm the interface is UP.
+    | Error | Fix |
+    |---|---|
+    | `RTNETLINK answers: Operation not permitted` | Run the commands with `sudo` or as root user. |
+    | `No DHCPOFFERS received` | Verify the DHCP server is reachable and the interface is connected to an active network; check `ip link show eth0` to confirm the interface is UP. |
 ---
 
 ## Cluster Full — Storage Exhausted
@@ -440,8 +452,10 @@ Snapshot deleted successfully. Snapshot UUID: 00051234-1234-1234-1234-123456789a
 ```
 
 !!! warning "Common errors"
-    **`acli: command not found`** — Ensure the Nutanix CLI is installed and the PATH includes the acli binary location, or source the Nutanix environment setup script.
-    **`Error: Invalid snapshot name '<snap-name>'`** — Replace `<snap-name>` with the actual snapshot name from the vm.snapshot_list output and verify the VM name with `acli vm.list`.
+    | Error | Fix |
+    |---|---|
+    | `acli: command not found` | Ensure the Nutanix CLI is installed and the PATH includes the acli binary location, or source the Nutanix environment setup script. |
+    | `Error: Invalid snapshot name '<snap-name>'` | Replace `<snap-name>` with the actual snapshot name from the vm.snapshot_list output and verify the VM name with `acli vm.list`. |
 2. Delete Protection Domain old snapshots:
 ```bash
 ncli pd ls-snapshots name=<pd-name>
@@ -463,8 +477,10 @@ e5f6g7h8-i9j0-41k1-l2m3-n4o5p6q7r8s9 | pd-daily-2024-01-11   | 2024-01-11 02:30:
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid PD name '<pd-name>'`** — Replace `<pd-name>` with the actual protection domain name (e.g., `ncli pd ls-snapshots name=prod-db-pd`).
-    **`Error: Connection refused to Nutanix cluster`** — Verify cluster connectivity and that you are authenticated with valid Nutanix credentials using `ncli user whoami`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid PD name '<pd-name>'` | Replace `<pd-name>` with the actual protection domain name (e.g., `ncli pd ls-snapshots name=prod-db-pd`). |
+    | `Error: Connection refused to Nutanix cluster` | Verify cluster connectivity and that you are authenticated with valid Nutanix credentials using `ncli user whoami`. |
 3. Power off non-critical VMs
 
 4. If still critical — Nutanix support for emergency capacity expansion
@@ -518,9 +534,11 @@ node-3: [  5] 5.00-10.00 sec  498 MBytes  796 Mbps
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection Domain '<pd-name>' not found`** — Verify the PD name with `ncli pd list` and use the exact name from the output.
-    **`Error: iperf3: command not found`** — Install iperf3 on all CVMs using `allssh "apt-get install -y iperf3"` before running the bandwidth test.
-    **`Error: Unable to reach remote site '<dr-site-name>'`** — Check network connectivity between sites and verify the remote site name matches the configured DR site with `ncli remote-site list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection Domain '<pd-name>' not found` | Verify the PD name with `ncli pd list` and use the exact name from the output. |
+    | `Error: iperf3: command not found` | Install iperf3 on all CVMs using `allssh "apt-get install -y iperf3"` before running the bandwidth test. |
+    | `Error: Unable to reach remote site '<dr-site-name>'` | Check network connectivity between sites and verify the remote site name matches the configured DR site with `ncli remote-site list`. |
 ---
 
 ## Prism UI Inaccessible
@@ -558,9 +576,11 @@ CVM-3: cluster: UP (PID: 4956, uptime: 18d 3h 42m)
 ```
 
 !!! warning "Common errors"
-    **`PING: sendto: No route to host`** — Verify the cluster VIP is on the same subnet as the CVM and check network connectivity with `ncli network list`.
-    **`cluster: DOWN`** — Run `genesis restart` on the affected CVM to bring the cluster service back online.
-    **`ncli: command not found`** — Execute the command from a Nutanix CVM (Controller VM) where ncli is installed, not from a hypervisor host.
+    | Error | Fix |
+    |---|---|
+    | `PING: sendto: No route to host` | Verify the cluster VIP is on the same subnet as the CVM and check network connectivity with `ncli network list`. |
+    | `cluster: DOWN` | Run `genesis restart` on the affected CVM to bring the cluster service back online. |
+    | `ncli: command not found` | Execute the command from a Nutanix CVM (Controller VM) where ncli is installed, not from a hypervisor host. |
 ---
 
 ---

@@ -83,8 +83,10 @@ SNMPv3 Configuration:
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the switch IP address is correct and admin credentials are valid; check if SSH is enabled on the switch with `snmpconfig --show ssh`.
-    **`snmpconfig: command not found`** — Log in directly to the switch console or use the correct management interface; SNMPv3 configuration may require access via the switch's web UI or telnet if SSH is not available.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the switch IP address is correct and admin credentials are valid; check if SSH is enabled on the switch with `snmpconfig --show ssh`. |
+    | `snmpconfig: command not found` | Log in directly to the switch console or use the correct management interface; SNMPv3 configuration may require access via the switch's web UI or telnet if SSH is not available. |
 ---
 
 ## Add a Fabric to SANnav

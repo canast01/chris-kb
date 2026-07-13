@@ -128,9 +128,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/alert?severity=CRITICAL&state=active"
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`{"error": "Unauthorized", "code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP address is correct and the PowerStore REST API service is running on port 443.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `{"error": "Unauthorized", "code": 401}` | Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint. |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Confirm the management IP address is correct and the PowerStore REST API service is running on port 443. |
 Review every active alert:
 
 | Alert Severity | Required Action |
@@ -236,9 +238,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/node" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, so ensure it's not removed).
-    **`{"error": "Unauthorized", "code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP address is correct and the REST API service is running on the PowerStore appliance.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, so ensure it's not removed). |
+    | `{"error": "Unauthorized", "code": 401}` | Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint. |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Confirm the management IP address is correct and the REST API service is running on the PowerStore appliance. |
 Look for drives with a `health_state` of `failed`, `degraded`, or `reconstructing`. A single drive failure places the pool in degraded mode — the array remains fully operational but has reduced fault tolerance until the failed drive is replaced and reconstruction completes.
 
 Reconstruction time estimate: approximately 1 hour per TB of data for NVMe SSDs under normal workload.
@@ -300,9 +304,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/pool?select=name,size_free,size_used,
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present in example, but ensure it's not removed).
-    **`error: 401 Unauthorized`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.
-    **`command not found: python3`** — Install Python 3 or pipe output to `jq` instead: `| jq '.'` for JSON formatting without the python dependency.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification (already present in example, but ensure it's not removed). |
+    | `error: 401 Unauthorized` | Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint. |
+    | `command not found: python3` | Install Python 3 or pipe output to `jq` instead: `| jq '.'` for JSON formatting without the python dependency. |
 Flag any pool with `percent_used` above 70 for capacity planning review.
 
 ### 5. Replication Session Health
@@ -345,9 +351,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/replication_session?select=name,state
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip certificate verification (already present in the example, so verify the flag is not being removed).
-    **`401 Unauthorized`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP address is correct and the PowerStore array is reachable on port 443 using `ping` or `nc`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to the curl command to skip certificate verification (already present in the example, so verify the flag is not being removed). |
+    | `401 Unauthorized` | Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint. |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Confirm the management IP address is correct and the PowerStore array is reachable on port 443 using `ping` or `nc`. |
 Expected states:
 
 | State | Meaning | Action |
@@ -385,9 +393,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/software_installed" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Verify the management IP is correct and the REST API service is running with `systemctl status dell-emc-rest-api`.
-    **`{"error":"Invalid or expired token"}`** — Regenerate the authentication token using the PowerStore management console or API login endpoint.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Verify the management IP is correct and the REST API service is running with `systemctl status dell-emc-rest-api`. |
+    | `{"error":"Invalid or expired token"}` | Regenerate the authentication token using the PowerStore management console or API login endpoint. |
 Compare the running version against the latest available PowerStoreOS release. Upgrade if the system is more than one minor release behind and a pending CVE applies.
 
 ## Change Readiness Checklist
@@ -479,8 +489,10 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/host?select=name,type,health_state" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`{"error": "Unauthorized", "code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `{"error": "Unauthorized", "code": 401}` | Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint. |
 ## Quick Reference — Key REST API Health Endpoints
 
 ![Quick Reference — Key REST API Health Endpoints](../../../../../assets/storage-dell-powerstore-hc-quick-reference-key-rest-api-health-endpoints.svg)

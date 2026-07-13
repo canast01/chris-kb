@@ -87,9 +87,11 @@ Zone esxi01_pure01_ctB2:
 ```
 
 !!! warning "Common errors"
-    **`Invalid WWN format`** — Ensure WWN is formatted as 16 hexadecimal characters separated by colons (e.g., `21:00:00:xx:xx:xx:xx:xx`).
-    **`Zone already exists`** — Use `zonedelete` to remove the existing zone before recreating it with `zonecreate`.
-    **`Configuration is already active`** — Deactivate the current config with `cfgdisable` before enabling a different one.
+    | Error | Fix |
+    |---|---|
+    | `Invalid WWN format` | Ensure WWN is formatted as 16 hexadecimal characters separated by colons (e.g., `21:00:00:xx:xx:xx:xx:xx`). |
+    | `Zone already exists` | Use `zonedelete` to remove the existing zone before recreating it with `zonecreate`. |
+    | `Configuration is already active` | Deactivate the current config with `cfgdisable` before enabling a different one. |
 ## Cisco MDS / NX-OS — Zone Commands
 
 ```bash
@@ -138,9 +140,11 @@ Zone Name: esxi01_pure01_ctA1
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (use `config t` for terminal configuration) and check VSAN number exists with `show vsan`.
-    **`% Zone member already exists`** — Remove the duplicate PWWN entry from the zone definition or use `no member pwwn <address>` before re-adding with correct syntax.
-    **`% Zoneset activation failed: conflicting zones detected`** — Run `show zone conflicts vsan 10` to identify overlapping zone members and resolve duplicate PWWN assignments across zones.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (use `config t` for terminal configuration) and check VSAN number exists with `show vsan`. |
+    | `% Zone member already exists` | Remove the duplicate PWWN entry from the zone definition or use `no member pwwn <address>` before re-adding with correct syntax. |
+    | `% Zoneset activation failed: conflicting zones detected` | Run `show zone conflicts vsan 10` to identify overlapping zone members and resolve duplicate PWWN assignments across zones. |
 ## Common Issues
 
 | Symptom | Likely cause | Check |

@@ -211,8 +211,10 @@ Bucket: prod-bucket-01
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the ECS certificate into your system CA bundle.
-    **`jq: command not found`** — Install `python3-json.tool` or `jq` package; the script uses `python3 -m json.tool` for JSON formatting.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the ECS certificate into your system CA bundle. |
+    | `jq: command not found` | Install `python3-json.tool` or `jq` package; the script uses `python3 -m json.tool` for JSON formatting. |
     **`The AWS Access Key Id you provided does not exist in our records.
 ## Node-Level Diagnostic Checks
 
@@ -374,9 +376,11 @@ archive-cold                       urn:storageos:NamespaceId:i9j0k1l2   2023-08-
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <ECS_IP>: Connection refused`** — Verify the $ECS variable is set correctly and the ECS management API endpoint is reachable on port 443.
-    **`error: Invalid authentication token`** — Regenerate the authentication token using `ecscli authenticate` and ensure $TOKEN is exported in the current shell session.
-    **`jq: error (at <stdin>:1): Cannot index number with string "totalProvisioned_gb"`** — Check that the API response is valid JSON and the ECS version supports the capacity endpoint; use `curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/vdc/capacity" | python3 -m json.tool` to inspect the actual response structure.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <ECS_IP>: Connection refused` | Verify the $ECS variable is set correctly and the ECS management API endpoint is reachable on port 443. |
+    | `error: Invalid authentication token` | Regenerate the authentication token using `ecscli authenticate` and ensure $TOKEN is exported in the current shell session. |
+    | `jq: error (at <stdin>:1): Cannot index number with string "totalProvisioned_gb"` | Check that the API response is valid JSON and the ECS version supports the capacity endpoint; use `curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/vdc/capacity" | python3 -m json.tool` to inspect the actual response structure. |
 ## Pre-Change Checklist
 
 Complete all items before any planned maintenance. Do not proceed if any item is unresolved.

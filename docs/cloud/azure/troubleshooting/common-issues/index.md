@@ -166,9 +166,11 @@ StorageLocation: {
 ```
 
 !!! warning "Common errors"
-    **`The resource with name '<nic-name>' does not exist in the resource group '<rg>'`** — Verify the NIC name and resource group name match exactly using `az network nic list -g <rg>`.
-    **`(ResourceNotFound) Resource not found`** — Ensure the Network Watcher extension is enabled in the region and the source VM exists with `az network watcher list -g <rg>`.
-    **`The storage account '<sa>' does not exist or you do not have access to it`** — Confirm the storage account name is correct and your account has Contributor role on it using `az storage account show -n <sa> -g <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `The resource with name '<nic-name>' does not exist in the resource group '<rg>'` | Verify the NIC name and resource group name match exactly using `az network nic list -g <rg>`. |
+    | `(ResourceNotFound) Resource not found` | Ensure the Network Watcher extension is enabled in the region and the source VM exists with `az network watcher list -g <rg>`. |
+    | `The storage account '<sa>' does not exist or you do not have access to it` | Confirm the storage account name is correct and your account has Contributor role on it using `az storage account show -n <sa> -g <rg>`. |
 Common causes:
 - NSG deny rule at NIC level (NIC NSG takes precedence over Subnet NSG)
 - User-defined route sending traffic to wrong next hop
@@ -218,8 +220,10 @@ TimeGenerated                 SrcIP_s      DestIP_s     DestPort_d  NSGName_s   
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Network/networkSecurityGroups/<nsg-id>' under resource group '<rg>' was not found.`** — Verify the NSG ID is correct and exists in the target resource group with `az network nsg list -g <resource-group>`.
-    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Network/networkWatchers/checkIPFlow/action'.`** — Ensure your Azure account has Network Contributor or higher role assigned to the subscription or resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Network/networkSecurityGroups/<nsg-id>' under resource group '<rg>' was not found.` | Verify the NSG ID is correct and exists in the target resource group with `az network nsg list -g <resource-group>`. |
+    | `AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Network/networkWatchers/checkIPFlow/action'.` | Ensure your Azure account has Network Contributor or higher role assigned to the subscription or resource group. |
 ## Azure AD Authentication Errors
 
 ```bash
@@ -285,9 +289,11 @@ az ad app federated-credential list --id <app-id>
 ```
 
 !!! warning "Common errors"
-    **`The provided object id '<sp-object-id>' does not refer to a valid service principal object.`** — Verify the service principal object ID with `az ad sp list --filter "displayName eq 'your-sp-name'"` and use the correct `id` field.
-    **`Federated credential not found for the given application.`** — Confirm the app ID is correct and that federated credentials have been configured; if none exist, create one with `az ad app federated-credential create`.
-    **`Authorization_RequestDenied: Insufficient privileges to complete the operation.`** — Ensure your Azure CLI session has the `Application.ReadWrite.All` or `Directory.ReadWrite.All` permission in Entra ID.
+    | Error | Fix |
+    |---|---|
+    | `The provided object id '<sp-object-id>' does not refer to a valid service principal object.` | Verify the service principal object ID with `az ad sp list --filter "displayName eq 'your-sp-name'"` and use the correct `id` field. |
+    | `Federated credential not found for the given application.` | Confirm the app ID is correct and that federated credentials have been configured; if none exist, create one with `az ad app federated-credential create`. |
+    | `Authorization_RequestDenied: Insufficient privileges to complete the operation.` | Ensure your Azure CLI session has the `Application.ReadWrite.All` or `Directory.ReadWrite.All` permission in Entra ID. |
 Common causes:
 - Conditional Access policy blocking (no MFA, non-compliant device, suspicious location)
 - Service principal client secret expired
@@ -343,9 +349,11 @@ true
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/<storage-account>' under resource group '<rg>' was not found.`** — Verify the storage account name and resource group are correct, and that you are querying the correct subscription.
-    **`AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/read' over scope '<scope>'.`** — Ensure your user or service principal has at least Reader role on the storage account or its resource group.
-    **`InvalidAuthenticationTokenTenant: The access token is from the wrong tenant.`** — Run `az account set --subscription <subscription-id>` to switch to the correct subscription context.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/<storage-account>' under resource group '<rg>' was not found.` | Verify the storage account name and resource group are correct, and that you are querying the correct subscription. |
+    | `AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/read' over scope '<scope>'.` | Ensure your user or service principal has at least Reader role on the storage account or its resource group. |
+    | `InvalidAuthenticationTokenTenant: The access token is from the wrong tenant.` | Run `az account set --subscription <subscription-id>` to switch to the correct subscription context. |
 ## AKS Pod Not Starting
 
 ```bash
@@ -421,8 +429,10 @@ az appservice plan update --name <plan-name> -g <rg> --sku P2V3
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Web/serverfarms/<plan-name>' under resource group '<rg>' was not found.`** — Verify the App Service Plan name and resource group name are correct with `az appservice plan list -g <rg>`.
-    **`AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Web/serverfarms/write' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Web/serverfarms/<plan-name>'.`** — Ensure your Azure account has Contributor or App Service Plan Contributor role on the resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Web/serverfarms/<plan-name>' under resource group '<rg>' was not found.` | Verify the App Service Plan name and resource group name are correct with `az appservice plan list -g <rg>`. |
+    | `AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Web/serverfarms/write' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Web/serverfarms/<plan-name>'.` | Ensure your Azure account has Contributor or App Service Plan Contributor role on the resource group. |
 ---
 
 ## Verify resolution

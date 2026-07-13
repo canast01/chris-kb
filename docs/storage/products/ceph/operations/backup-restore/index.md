@@ -123,9 +123,11 @@ Applying diff: 100% complete...done.
 ```
 
 !!! warning "Common errors"
-    **`rbd: error: image rbd/vm-disk@backup-2025-01-15 is not protected`** — Add `rbd snap protect <pool>/<image>@<snap>` before export-diff to prevent snapshot deletion during incremental operations.
-    **`rbd: error: failed to open /mnt/backup/image.img: No such file or directory`** — Verify the backup file path exists and the mount point is accessible with `ls -lh /mnt/backup/`.
-    **`rbd: error: image rbd/new-image already exists`** — Use a unique image name or delete the existing image with `rbd rm <pool>/<new-image>` before importing.
+    | Error | Fix |
+    |---|---|
+    | `rbd: error: image rbd/vm-disk@backup-2025-01-15 is not protected` | Add `rbd snap protect <pool>/<image>@<snap>` before export-diff to prevent snapshot deletion during incremental operations. |
+    | `rbd: error: failed to open /mnt/backup/image.img: No such file or directory` | Verify the backup file path exists and the mount point is accessible with `ls -lh /mnt/backup/`. |
+    | `rbd: error: image rbd/new-image already exists` | Use a unique image name or delete the existing image with `rbd rm <pool>/<new-image>` before importing. |
 ## CephFS Snapshots
 
 ```bash
@@ -163,9 +165,11 @@ SCHEDULE_PATH  SCHEDULE  RETENTION
 ```
 
 !!! warning "Common errors"
-    **`mkdir: cannot create directory '/mnt/cephfs/.snap/daily-2026-06-01': File exists`** — Use a unique snapshot name or delete the existing snapshot with `rmdir /mnt/cephfs/.snap/daily-2026-06-01` first.
-    **`Error EPERM: permission denied`** — Ensure the user running the command has write permissions on the CephFS mount and that snapshots are enabled with `ceph fs set <fs_name> allow_new_snaps true`.
-    **`Error: snap_schedule module is not available`** — Enable the snap_schedule manager module with `ceph mgr module enable snap_schedule` before scheduling snapshots.
+    | Error | Fix |
+    |---|---|
+    | `mkdir: cannot create directory '/mnt/cephfs/.snap/daily-2026-06-01': File exists` | Use a unique snapshot name or delete the existing snapshot with `rmdir /mnt/cephfs/.snap/daily-2026-06-01` first. |
+    | `Error EPERM: permission denied` | Ensure the user running the command has write permissions on the CephFS mount and that snapshots are enabled with `ceph fs set <fs_name> allow_new_snaps true`. |
+    | `Error: snap_schedule module is not available` | Enable the snap_schedule manager module with `ceph mgr module enable snap_schedule` before scheduling snapshots. |
 ## RGW Bucket Replication (Cross-Cluster DR)
 
 ```bash
@@ -238,9 +242,11 @@ bucket sync run for 'prod-data': OK
 ```
 
 !!! warning "Common errors"
-    **`error: bucket 'prod-data' not found`** — Verify the bucket exists on the source zone with `radosgw-admin bucket list` and use the correct bucket name.
-    **`error: invalid replication configuration: missing Role ARN`** — Ensure the replicate.json file contains a valid IAM role ARN in the Role field.
-    **`error: period update failed: another update in progress`** — Wait for the previous period update to complete or check `radosgw-admin period get` to see the current state.
+    | Error | Fix |
+    |---|---|
+    | `error: bucket 'prod-data' not found` | Verify the bucket exists on the source zone with `radosgw-admin bucket list` and use the correct bucket name. |
+    | `error: invalid replication configuration: missing Role ARN` | Ensure the replicate.json file contains a valid IAM role ARN in the Role field. |
+    | `error: period update failed: another update in progress` | Wait for the previous period update to complete or check `radosgw-admin period get` to see the current state. |
 ## RBD Mirroring (DR / Async Replication)
 
 ```bash
@@ -290,9 +296,11 @@ Image rbd/my-volume demoted to non-primary
 ```
 
 !!! warning "Common errors"
-    **`rbd: error: image rbd/my-volume does not have journaling feature enabled`** — Enable journaling on the image with `rbd feature enable rbd/my-volume journaling` before enabling mirroring.
-    **`rbd: error: peer rbd-cluster-dr does not exist`** — Bootstrap import the peer first using `rbd mirror pool peer bootstrap import rbd <bootstrap-token>` on the secondary cluster.
-    **`rbd: error: image rbd/my-volume is not mirrored`** — Enable mirroring on the image or pool with `rbd mirror pool enable rbd image` or `rbd mirror image enable rbd/my-volume journaling`.
+    | Error | Fix |
+    |---|---|
+    | `rbd: error: image rbd/my-volume does not have journaling feature enabled` | Enable journaling on the image with `rbd feature enable rbd/my-volume journaling` before enabling mirroring. |
+    | `rbd: error: peer rbd-cluster-dr does not exist` | Bootstrap import the peer first using `rbd mirror pool peer bootstrap import rbd <bootstrap-token>` on the secondary cluster. |
+    | `rbd: error: image rbd/my-volume is not mirrored` | Enable mirroring on the image or pool with `rbd mirror pool enable rbd image` or `rbd mirror image enable rbd/my-volume journaling`. |
 ## Cluster Configuration Backup
 
 ```bash
@@ -329,9 +337,11 @@ ceph.conf backed up to /backup/ceph.conf.2025-01-15
 ```
 
 !!! warning "Common errors"
-    **`Error EACCES: access denied`** — Ensure the user running these commands has sudo privileges or is part the ceph group (`sudo usermod -a -G ceph $USER`).
-    **`No such file or directory`** — Create the `/backup` directory with write permissions before running the export commands (`sudo mkdir -p /backup && sudo chmod 755 /backup`).
-    **`ceph: command not found`** — Install the ceph-common package on the admin node (`sudo apt install ceph-common` or `sudo yum install ceph-common`).
+    | Error | Fix |
+    |---|---|
+    | `Error EACCES: access denied` | Ensure the user running these commands has sudo privileges or is part the ceph group (`sudo usermod -a -G ceph $USER`). |
+    | `No such file or directory` | Create the `/backup` directory with write permissions before running the export commands (`sudo mkdir -p /backup && sudo chmod 755 /backup`). |
+    | `ceph: command not found` | Install the ceph-common package on the admin node (`sudo apt install ceph-common` or `sudo yum install ceph-common`). |
 ## Restore from Configuration Backup
 
 ```bash
@@ -382,9 +392,11 @@ osd repair: 47 PGs repaired
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: unable to open /backup/crush-2026-06-07.bin`** — Verify the backup file path exists and the ceph-mon container/service has read permissions to the backup directory.
-    **`Error EINVAL: imported 0 keys`** — Ensure the keyring file is valid and not corrupted; try `ceph auth list` to confirm current keys before import.
-    **`Error: image already exists`** — Use `rbd rm rbd/my-volume-restored` to remove the existing image first, or change the restored image name.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: unable to open /backup/crush-2026-06-07.bin` | Verify the backup file path exists and the ceph-mon container/service has read permissions to the backup directory. |
+    | `Error EINVAL: imported 0 keys` | Ensure the keyring file is valid and not corrupted; try `ceph auth list` to confirm current keys before import. |
+    | `Error: image already exists` | Use `rbd rm rbd/my-volume-restored` to remove the existing image first, or change the restored image name. |
 ## MON Data Recovery (Loss of Quorum)
 
 ```bash
@@ -433,9 +445,11 @@ Stopping ceph-mon@ceph-mon01...
 ```
 
 !!! warning "Common errors"
-    **`Error: unable to open monitor store at /var/lib/ceph/mon/ceph-<id>/store.db`** — Verify the monitor ID is correct and the store directory exists before running rebuild.
-    **`Error: failed to inject monmap: no such file or directory`** — Export the monmap first using `ceph mon getmap -o /tmp/monmap` before attempting injection.
-    **`Error: failed to stop ceph-mon@<id>: Unit not loaded`** — Ensure the monitor service name matches your cluster configuration; check with `systemctl list-units | grep ceph-mon`.
+    | Error | Fix |
+    |---|---|
+    | `Error: unable to open monitor store at /var/lib/ceph/mon/ceph-<id>/store.db` | Verify the monitor ID is correct and the store directory exists before running rebuild. |
+    | `Error: failed to inject monmap: no such file or directory` | Export the monmap first using `ceph mon getmap -o /tmp/monmap` before attempting injection. |
+    | `Error: failed to stop ceph-mon@<id>: Unit not loaded` | Ensure the monitor service name matches your cluster configuration; check with `systemctl list-units | grep ceph-mon`. |
 ## Backup Schedule Recommendations
 
 | Data type | Method | Frequency | Retention |
@@ -491,6 +505,8 @@ Keyring OK
 ```
 
 !!! warning "Common errors"
-    **`qemu-img: Could not open '/mnt/backup/image-2026-06-07.img': No such file or directory`** — Verify the backup path is mounted and the image filename matches exactly with `ls -lh /mnt/backup/`.
-    **`error: pool does not exist`** — Create the test pool first with `ceph osd pool create restore-test 128 128` or use an existing pool name.
-    **`Error reading crushmap from /backup/crushmap.bin`** — Ensure the crushmap binary file exists and is readable with `file /backup/crushmap.bin` to confirm it's a valid compiled CRUSH map.
+    | Error | Fix |
+    |---|---|
+    | `qemu-img: Could not open '/mnt/backup/image-2026-06-07.img': No such file or directory` | Verify the backup path is mounted and the image filename matches exactly with `ls -lh /mnt/backup/`. |
+    | `error: pool does not exist` | Create the test pool first with `ceph osd pool create restore-test 128 128` or use an existing pool name. |
+    | `Error reading crushmap from /backup/crushmap.bin` | Ensure the crushmap binary file exists and is readable with `file /backup/crushmap.bin` to confirm it's a valid compiled CRUSH map. |

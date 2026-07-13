@@ -109,9 +109,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/host_volume_mapping?host_id=<host-id>
 ```
 
 !!! warning "Common errors"
-    **`"error_code": 401, "message": "Invalid or expired token"`** — Regenerate the authentication token using the PowerStore management API login endpoint and update the DELL-EMC-TOKEN header.
-    **`"error_code": 400, "message": "Invalid volume_group_id"`** — Verify the volume group ID from Step 1 output and ensure it is correctly substituted in the Step 2 request body.
-    **`"error_code": 409, "message": "Volume already mapped to host"`** — Check existing mappings with a GET query and either use a different LUN number or unmap the volume before remapping.
+    | Error | Fix |
+    |---|---|
+    | `"error_code": 401, "message": "Invalid or expired token"` | Regenerate the authentication token using the PowerStore management API login endpoint and update the DELL-EMC-TOKEN header. |
+    | `"error_code": 400, "message": "Invalid volume_group_id"` | Verify the volume group ID from Step 1 output and ensure it is correctly substituted in the Step 2 request body. |
+    | `"error_code": 409, "message": "Volume already mapped to host"` | Check existing mappings with a GET query and either use a different LUN number or unmap the volume before remapping. |
 **Post-provisioning on the host (Linux):**
 
 ```bash
@@ -153,9 +155,11 @@ mount: /mnt/oradb: mount point does not exist
 ```
 
 !!! warning "Common errors"
-    **`mkfs.xfs: /dev/mapper/mpatha appears to be mounted`** — Unmount the device first with `umount /dev/mapper/mpatha` before formatting.
-    **`mount: /mnt/oradb: mount point does not exist`** — Create the mount point directory with `mkdir -p /mnt/oradb` before running the mount command.
-    **`iscsiadm: No active sessions.`** — Ensure iSCSI targets are discovered and logged in with `iscsiadm -m discovery -t st -p <target_ip>` and `iscsiadm -m node --login` before rescanning.
+    | Error | Fix |
+    |---|---|
+    | `mkfs.xfs: /dev/mapper/mpatha appears to be mounted` | Unmount the device first with `umount /dev/mapper/mpatha` before formatting. |
+    | `mount: /mnt/oradb: mount point does not exist` | Create the mount point directory with `mkdir -p /mnt/oradb` before running the mount command. |
+    | `iscsiadm: No active sessions.` | Ensure iSCSI targets are discovered and logged in with `iscsiadm -m discovery -t st -p <target_ip>` and `iscsiadm -m node --login` before rescanning. |
 ## Provisioning a NAS File System (NFS)
 
 ```bash
@@ -205,9 +209,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/nfs_export" \
 ```
 
 !!! warning "Common errors"
-    **`{"error_code":"400","message":"Invalid DELL-EMC-TOKEN or token expired"}`** — Regenerate the authentication token using the PowerStore management API login endpoint and update the DELL-EMC-TOKEN header value.
-    **`{"error_code":"409","message":"NAS server with name 'nas-prod-001' already exists"}`** — Query existing NAS servers with `curl -k -X GET "https://<mgmt-ip>/api/rest/nas_server" -H "DELL-EMC-TOKEN: <token>"` and use an existing server ID or choose a unique name.
-    **`{"error_code":"422","message":"Invalid filesystem size: size_total must be greater than 1GB"}`** — Increase the `size_total` parameter to at least 1073741824 bytes (1 GB) or verify the value is in bytes, not GB.
+    | Error | Fix |
+    |---|---|
+    | `{"error_code":"400","message":"Invalid DELL-EMC-TOKEN or token expired"}` | Regenerate the authentication token using the PowerStore management API login endpoint and update the DELL-EMC-TOKEN header value. |
+    | `{"error_code":"409","message":"NAS server with name 'nas-prod-001' already exists"}` | Query existing NAS servers with `curl -k -X GET "https://<mgmt-ip>/api/rest/nas_server" -H "DELL-EMC-TOKEN: <token>"` and use an existing server ID or choose a unique name. |
+    | `{"error_code":"422","message":"Invalid filesystem size: size_total must be greater than 1GB"}` | Increase the `size_total` parameter to at least 1073741824 bytes (1 GB) or verify the value is in bytes, not GB. |
 **Mount on Linux host:**
 
 ```bash
@@ -227,9 +233,11 @@ echo "192.168.20.10:/homedirs-prod-001 /mnt/homedirs nfs4 rw,hard,intr,timeo=600
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: access denied by server while mounting 192.168.20.10:/homedirs-prod-001`** — Verify the NFS export permissions on the PowerStore array and ensure the client IP is listed in the export ACL.
-    **`mount.nfs: No such file or directory`** — Create the mount point directory with `mkdir -p /mnt/homedirs` before attempting to mount.
-    **`mount.nfs: Protocol not supported`** — Confirm the NFS client supports NFSv4.1 by running `cat /proc/fs/nfsd/versions` and install `nfs-utils` if needed.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: access denied by server while mounting 192.168.20.10:/homedirs-prod-001` | Verify the NFS export permissions on the PowerStore array and ensure the client IP is listed in the export ACL. |
+    | `mount.nfs: No such file or directory` | Create the mount point directory with `mkdir -p /mnt/homedirs` before attempting to mount. |
+    | `mount.nfs: Protocol not supported` | Confirm the NFS client supports NFSv4.1 by running `cat /proc/fs/nfsd/versions` and install `nfs-utils` if needed. |
 ## Snapshot Operations
 
 ### Create a Manual Snapshot
@@ -281,9 +289,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/filesystem_snapshot" \
 ```
 
 !!! warning "Common errors"
-    **`"error_code": 401, "message": "Invalid or expired token"`** — Regenerate the authentication token using the PowerStore management API login endpoint and update the DELL-EMC-TOKEN header.
-    **`"error_code": 404, "message": "Resource not found"`** — Verify the volume_id and filesystem_id exist by querying `/api/rest/volumes` and `/api/rest/filesystems` endpoints respectively.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to bypass SSL verification or import the PowerStore management certificate into your system's certificate store.
+    | Error | Fix |
+    |---|---|
+    | `"error_code": 401, "message": "Invalid or expired token"` | Regenerate the authentication token using the PowerStore management API login endpoint and update the DELL-EMC-TOKEN header. |
+    | `"error_code": 404, "message": "Resource not found"` | Verify the volume_id and filesystem_id exist by querying `/api/rest/volumes` and `/api/rest/filesystems` endpoints respectively. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to bypass SSL verification or import the PowerStore management certificate into your system's certificate store. |
 ### Restore a Volume from Snapshot
 
 ![Restore a Volume from Snapshot](../../../../../assets/powerstore-proc-restore-a-volume-from-snapshot.svg)
@@ -337,9 +347,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/volume_snapshot/<snapshot-id>/restor
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or install the PowerStore management certificate in your system's certificate store.
-    **`{"error": "Unauthorized", "error_code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating with the PowerStore management API.
-    **`{"error": "Not Found", "error_code": 404}`** — Confirm the snapshot_id and volume_id exist by running the GET list command first and copying the exact IDs from the response.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or install the PowerStore management certificate in your system's certificate store. |
+    | `{"error": "Unauthorized", "error_code": 401}` | Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating with the PowerStore management API. |
+    | `{"error": "Not Found", "error_code": 404}` | Confirm the snapshot_id and volume_id exist by running the GET list command first and copying the exact IDs from the response. |
 ### Clone a Volume
 
 ![Clone a Volume](../../../../../assets/powerstore-proc-clone-a-volume.svg)
@@ -376,9 +388,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/volume/<source-volume-id>/clone" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the management array's certificate into your system trust store.
-    **`{"error":"Invalid token or token expired","error_code":"UNAUTHENTICATED"}`** — Regenerate the authentication token using the PowerStore login API and ensure it has not exceeded its 24-hour expiration window.
-    **`{"error":"Volume not found","error_code":"NOT_FOUND"}`** — Verify the source volume ID exists by running `curl -k -H "DELL-EMC-TOKEN: <token>" https://<mgmt-ip>/api/rest/volume/<source-volume-id>` to confirm the UUID is correct.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the management array's certificate into your system trust store. |
+    | `{"error":"Invalid token or token expired","error_code":"UNAUTHENTICATED"}` | Regenerate the authentication token using the PowerStore login API and ensure it has not exceeded its 24-hour expiration window. |
+    | `{"error":"Volume not found","error_code":"NOT_FOUND"}` | Verify the source volume ID exists by running `curl -k -H "DELL-EMC-TOKEN: <token>" https://<mgmt-ip>/api/rest/volume/<source-volume-id>` to confirm the UUID is correct. |
 ## Host Management
 
 ### Add a New Host
@@ -440,9 +454,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/host_group/<host-group-id>/add_hosts
 ```
 
 !!! warning "Common errors"
-    **`{"error_code":"INVALID_TOKEN","message":"The supplied token is invalid or expired"}`** — Regenerate the authentication token using the PowerStore login API and update the DELL-EMC-TOKEN header.
-    **`{"error_code":"DUPLICATE_NAME","message":"A host with name 'lon01-db-srv-001' already exists"}`** — Verify the host does not already exist on the array using a GET request, or use a unique hostname.
-    **`{"error_code":"INVALID_HOST_ID","message":"Host ID '<host-id>' does not exist"}`** — Confirm the host_id from the first POST response was correctly captured and used in subsequent API calls.
+    | Error | Fix |
+    |---|---|
+    | `{"error_code":"INVALID_TOKEN","message":"The supplied token is invalid or expired"}` | Regenerate the authentication token using the PowerStore login API and update the DELL-EMC-TOKEN header. |
+    | `{"error_code":"DUPLICATE_NAME","message":"A host with name 'lon01-db-srv-001' already exists"}` | Verify the host does not already exist on the array using a GET request, or use a unique hostname. |
+    | `{"error_code":"INVALID_HOST_ID","message":"Host ID '<host-id>' does not exist"}` | Confirm the host_id from the first POST response was correctly captured and used in subsequent API calls. |
 ### Decommission a Host
 
 ![Decommission a Host](../../../../../assets/powerstore-proc-decommission-a-host.svg)
@@ -506,9 +522,11 @@ curl -k -X DELETE "https://<mgmt-ip>/api/rest/host/<host-id>" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify it's not being stripped by proxies).
-    **`{"error": "Unauthorized", "error_code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating and obtaining a fresh token.
-    **`{"error": "Resource in use", "error_code": 409}`** — Ensure all volume mappings are deleted before attempting to remove the host from the host group or delete the host object.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but verify it's not being stripped by proxies). |
+    | `{"error": "Unauthorized", "error_code": 401}` | Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating and obtaining a fresh token. |
+    | `{"error": "Resource in use", "error_code": 409}` | Ensure all volume mappings are deleted before attempting to remove the host from the host group or delete the host object. |
 ## Replication Management
 
 ### Create an Async Replication Session
@@ -575,9 +593,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/replication_rule" \
 ```
 
 !!! warning "Common errors"
-    **`"error_code": 401, "message": "Invalid or expired token"`** — Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it has not exceeded its 24-hour expiration window.
-    **`"error_code": 400, "message": "Invalid rpo value. Allowed values: [Five_Minutes, Fifteen_Minutes, One_Hour, Four_Hours, Daily]"`** — Correct the rpo field to one of the supported values; "One_Hour" is valid but check for typos or unsupported custom values.
-    **`"error_code": 409, "message": "Remote system with name 'lon02-pstore-001' already exists"`** — Query the existing remote system by name and reuse its ID instead of attempting to create a duplicate.
+    | Error | Fix |
+    |---|---|
+    | `"error_code": 401, "message": "Invalid or expired token"` | Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it has not exceeded its 24-hour expiration window. |
+    | `"error_code": 400, "message": "Invalid rpo value. Allowed values: [Five_Minutes, Fifteen_Minutes, One_Hour, Four_Hours, Daily]"` | Correct the rpo field to one of the supported values; "One_Hour" is valid but check for typos or unsupported custom values. |
+    | `"error_code": 409, "message": "Remote system with name 'lon02-pstore-001' already exists"` | Query the existing remote system by name and reuse its ID instead of attempting to create a duplicate. |
 ### Failover to DR (Planned Failover)
 
 ![Failover to DR (Planned Failover)](../../../../../assets/powerstore-proc-failover-to-dr-planned-failover.svg)
@@ -613,9 +633,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/replication_session/<session-id>/fai
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it's not removed).
-    **`{"error":"401 Unauthorized","message":"Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN via the PowerStore management UI or API authentication endpoint and update the header.
-    **`{"error":"409 Conflict","message":"Replication session is not in synchronized state"}`** — Wait for the sync operation to complete and verify `state=synchronized` before attempting failover.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it's not removed). |
+    | `{"error":"401 Unauthorized","message":"Invalid or expired token"}` | Regenerate the DELL-EMC-TOKEN via the PowerStore management UI or API authentication endpoint and update the header. |
+    | `{"error":"409 Conflict","message":"Replication session is not in synchronized state"}` | Wait for the sync operation to complete and verify `state=synchronized` before attempting failover. |
 ## Metro Volume Operations
 
 ### Promote a Metro Volume (Site Failure)
@@ -670,9 +692,11 @@ curl -k -X POST "https://<dr-mgmt-ip>/api/rest/replication_session/<session-id>/
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the PowerStore management certificate into your CA bundle.
-    **`{"error_code":401,"message":"Invalid or expired token"}`** — Regenerate the API token via PowerStore management console and ensure it has not exceeded its 24-hour expiration window.
-    **`{"error_code":404,"message":"Replication session not found"}`** — Verify the session ID is correct by running the GET query first to list all active replication sessions and their IDs.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the PowerStore management certificate into your CA bundle. |
+    | `{"error_code":401,"message":"Invalid or expired token"}` | Regenerate the API token via PowerStore management console and ensure it has not exceeded its 24-hour expiration window. |
+    | `{"error_code":404,"message":"Replication session not found"}` | Verify the session ID is correct by running the GET query first to list all active replication sessions and their IDs. |
 ### Resync After Site Recovery
 
 ![Resync After Site Recovery](../../../../../assets/powerstore-proc-resync-after-site-recovery.svg)
@@ -705,9 +729,11 @@ Date: Thu, 15 Feb 2024 14:32:18 GMT
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed in production variants).
-    **`{"error": "401 Unauthorized", "message": "Invalid or expired DELL-EMC-TOKEN"}`** — Regenerate the authentication token via the PowerStore management interface and update the header value.
-    **`{"error": "404 Not Found", "message": "Replication session <session-id> not found"}`** — Verify the session ID matches an active Metro Volume replication session using `GET /api/rest/replication_session` to list all sessions.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed in production variants). |
+    | `{"error": "401 Unauthorized", "message": "Invalid or expired DELL-EMC-TOKEN"}` | Regenerate the authentication token via the PowerStore management interface and update the header value. |
+    | `{"error": "404 Not Found", "message": "Replication session <session-id> not found"}` | Verify the session ID matches an active Metro Volume replication session using `GET /api/rest/replication_session` to list all sessions. |
 ## NAS Server Failover
 
 NAS servers run on one node at a time. To manually fail over a NAS server to the peer node (e.g., before node maintenance):
@@ -755,9 +781,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/nas_server/<nas-id>?select=name,curre
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to bypass certificate validation, or import the management certificate into your CA bundle.
-    **`{"statusCode":401,"messages":["Authentication failed"]}`** — Verify the DELL-EMC-TOKEN is valid and not expired; regenerate it from the management UI if necessary.
-    **`{"statusCode":409,"messages":["NAS server is already in failover state"]}`** — Wait for the previous failover operation to complete before initiating another one; check current state with the GET query.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to bypass certificate validation, or import the management certificate into your CA bundle. |
+    | `{"statusCode":401,"messages":["Authentication failed"]}` | Verify the DELL-EMC-TOKEN is valid and not expired; regenerate it from the management UI if necessary. |
+    | `{"statusCode":409,"messages":["NAS server is already in failover state"]}` | Wait for the previous failover operation to complete before initiating another one; check current state with the GET query. |
 NFS clients experience a brief interruption (seconds) during NAS server failover. SMB clients may require re-mounting depending on the session timeout configuration.
 
 ---
@@ -817,9 +845,11 @@ Volume Protection Policy Assignment:
 ```
 
 !!! warning "Common errors"
-    **`pstcli: command not found`** — Install the PowerStore CLI package or add it to your PATH environment variable.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to bypass SSL verification or import the management server's certificate into your trust store.
-    **`{"error": "Invalid token or token expired"}`** — Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it hasn't exceeded its expiration time.
+    | Error | Fix |
+    |---|---|
+    | `pstcli: command not found` | Install the PowerStore CLI package or add it to your PATH environment variable. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to bypass SSL verification or import the management server's certificate into your trust store. |
+    | `{"error": "Invalid token or token expired"}` | Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it hasn't exceeded its expiration time. |
 GUI path: Protection → Protection Policies → Create. Assign snapshot rule (name, interval, retained copies) and optional replication rule. Assign policy to volumes via Volumes → select volume → Protection → Assign Policy. Snapshots begin on the defined schedule immediately after assignment.
 
 ### Volume Migration (Import / Mobility)
@@ -872,8 +902,10 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/import_session" \
 ```
 
 !!! warning "Common errors"
-    **`{"error": "Unauthorized", "code": 401, "message": "Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it hasn't exceeded its TTL.
-    **`{"error": "Not Found", "code": 404, "message": "Volume <volume-id> not found"}`** — Verify the volume ID exists on the target appliance using `curl -k -X GET "https://<mgmt-ip>/api/rest/volume" -H "DELL-EMC-TOKEN: <token>"`.
+    | Error | Fix |
+    |---|---|
+    | `{"error": "Unauthorized", "code": 401, "message": "Invalid or expired token"}` | Regenerate the DELL-EMC-TOKEN using the authentication endpoint and ensure it hasn't exceeded its TTL. |
+    | `{"error": "Not Found", "code": 404, "message": "Volume <volume-id> not found"}` | Verify the volume ID exists on the target appliance using `curl -k -X GET "https://<mgmt-ip>/api/rest/volume" -H "DELL-EMC-TOKEN: <token>"`. |
 GUI path for tier change: Storage → Volumes → select volume → Modify → Storage Tier. For import from external array (VPLEX, Unity, VNX): Storage → Import → Create Import Session; select source array and volume; initiate cutover when ready. Monitor progress under Storage → Import → Active Sessions.
 
 ### NAS File System Creation and Share
@@ -933,9 +965,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/smb_share" \
 ```
 
 !!! warning "Common errors"
-    **`"error_code":"INVALID_FIELD","message":"Invalid value for current_node_id"`** — Verify the node ID exists by running `curl -k -H "DELL-EMC-TOKEN: <token>" https://<mgmt-ip>/api/rest/node` and use a valid node ID from the response.
-    **`"error_code":"RESOURCE_NOT_FOUND","message":"nas_server_id does not exist"`** — Replace `<nas-server-id>` with the actual ID returned from Step 1 (the "id" field in the NAS server creation response).
-    **`"error_code":"INVALID_FIELD","message":"Token is invalid or expired"`** — Regenerate the DELL-EMC-TOKEN using your management console authentication endpoint and ensure it hasn't exceeded its TTL.
+    | Error | Fix |
+    |---|---|
+    | `"error_code":"INVALID_FIELD","message":"Invalid value for current_node_id"` | Verify the node ID exists by running `curl -k -H "DELL-EMC-TOKEN: <token>" https://<mgmt-ip>/api/rest/node` and use a valid node ID from the response. |
+    | `"error_code":"RESOURCE_NOT_FOUND","message":"nas_server_id does not exist"` | Replace `<nas-server-id>` with the actual ID returned from Step 1 (the "id" field in the NAS server creation response). |
+    | `"error_code":"INVALID_FIELD","message":"Token is invalid or expired"` | Regenerate the DELL-EMC-TOKEN using your management console authentication endpoint and ensure it hasn't exceeded its TTL. |
 Verify NFS from Linux: `mount <ip>:/dept-shares-001 /mnt/test`. Verify SMB from Windows: map `\\<ip>\dept-shares`. GUI path: Storage → NAS Servers → Create; then Storage → File Systems → Create.
 
 ### Performance Policy Management
@@ -994,9 +1028,11 @@ Volume dev-vol-01 modified successfully.
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the management node's certificate into your CA bundle.
-    **`{"error": "Unauthorized", "code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating with the management IP.
-    **`Error: Volume <vol> not found`** — Confirm the volume name matches exactly (case-sensitive) and exists on the array using `pstcli -server <ip> -user admin volume list`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the management node's certificate into your CA bundle. |
+    | `{"error": "Unauthorized", "code": 401}` | Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating with the management IP. |
+    | `Error: Volume <vol> not found` | Confirm the volume name matches exactly (case-sensitive) and exists on the array using `pstcli -server <ip> -user admin volume list`. |
 GUI path: Storage → Storage Policies → Performance Policies → Create (set IOPS limit and/or bandwidth limit in MB/s). Assign to a volume via Volumes → Modify → Storage Policy → select performance policy. View utilisation against limits under Dashboard → Performance. A value of `0` for `max_iops` or `max_bandwidth` means unlimited.
 
 ---

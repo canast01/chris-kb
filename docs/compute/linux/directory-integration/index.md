@@ -64,9 +64,11 @@ uid=1234567890(administrator@corp.example.com) gid=1234567890(corp.example.com\d
 ```
 
 !!! warning "Common errors"
-    **`realm: Couldn't resolve host: corp.example.com`** — Verify DNS resolution with `nslookup corp.example.com` and check network connectivity to the domain controller.
-    **`realm join: Couldn't authenticate with kerberos: PKINIT client certificate not found`** — Ensure the domain admin account credentials are correct and the domain controller is reachable on port 88 (Kerberos).
-    **`Error looking up administrator@corp.example.com - No such user`** — Run `systemctl restart sssd` to reload the SSSD cache after domain join completes.
+    | Error | Fix |
+    |---|---|
+    | `realm: Couldn't resolve host: corp.example.com` | Verify DNS resolution with `nslookup corp.example.com` and check network connectivity to the domain controller. |
+    | `realm join: Couldn't authenticate with kerberos: PKINIT client certificate not found` | Ensure the domain admin account credentials are correct and the domain controller is reachable on port 88 (Kerberos). |
+    | `Error looking up administrator@corp.example.com - No such user` | Run `systemctl restart sssd` to reload the SSSD cache after domain join completes. |
 ```bash
 # Allow only members of 'linux-admins' AD group to log in
 realm permit -g linux-admins@corp.example.com
@@ -80,8 +82,10 @@ realm permit -g linux-admins@corp.example.com
 ```
 
 !!! warning "Common errors"
-    **`Error: No such realm`** — Run `realm discover corp.example.com` first to initialize the realm integration.
-    **`Error: access_provider not found in [domain/corp.example.com]`** — Ensure the `[domain/corp.example.com]` section exists in `/etc/sssd/sssd.conf` before adding access_provider directives, then run `systemctl restart sssd`.
+    | Error | Fix |
+    |---|---|
+    | `Error: No such realm` | Run `realm discover corp.example.com` first to initialize the realm integration. |
+    | `Error: access_provider not found in [domain/corp.example.com]` | Ensure the `[domain/corp.example.com]` section exists in `/etc/sssd/sssd.conf` before adding access_provider directives, then run `systemctl restart sssd`. |
 ```bash
 # smb.conf excerpt for AD membership
 [global]
@@ -129,9 +133,11 @@ uid=1000000(CORP\jsmith) gid=1000001(CORP\Domain Users) groups=1000001(CORP\Doma
 ```
 
 !!! warning "Common errors"
-    **`failed to bind to server socket -- No such file or directory`** — Ensure `/var/lib/samba` directory exists and winbind has write permissions; run `mkdir -p /var/lib/samba/private && chown root:root /var/lib/samba`.
-    **`CIFS VFS: Couldn't find suitable server with type=0x20`** — Verify DNS resolves the domain controller with `nslookup corp.example.com` and check firewall allows port 389/636 to the DC.
-    **`wbinfo: error looking up domain users -- WBC_ERR_DOMAIN_NOT_FOUND`** — Confirm the domain join succeeded by checking `net ads testjoin` and restart winbind with `systemctl restart winbind`.
+    | Error | Fix |
+    |---|---|
+    | `failed to bind to server socket -- No such file or directory` | Ensure `/var/lib/samba` directory exists and winbind has write permissions; run `mkdir -p /var/lib/samba/private && chown root:root /var/lib/samba`. |
+    | `CIFS VFS: Couldn't find suitable server with type=0x20` | Verify DNS resolves the domain controller with `nslookup corp.example.com` and check firewall allows port 389/636 to the DC. |
+    | `wbinfo: error looking up domain users -- WBC_ERR_DOMAIN_NOT_FOUND` | Confirm the domain join succeeded by checking `net ads testjoin` and restart winbind with `systemctl restart winbind`. |
 ```bash
 # SSSD with LDAP provider
 # /etc/sssd/sssd.conf
@@ -151,9 +157,11 @@ ldap_tls_cacert = /etc/ssl/certs/internal-ca.crt
 ```
 
 !!! warning "Common errors"
-    **`Error: SSSD service failed to start - TLS: TLSV1_ALERT_UNKNOWN_CA`** — Verify the CA certificate path in `ldap_tls_cacert` exists and contains the LDAP server's signing CA, then restart SSSD with `systemctl restart sssd`.
-    **`LDAP connection refused on ldaps://ldap.example.com:636`** — Confirm the LDAP server hostname resolves correctly with `nslookup ldap.example.com` and that port 636 is open via `nc -zv ldap.example.com 636`.
-    **`Error: Authentication failure - Invalid credentials for cn=readonly,dc=example,dc=com`** — Verify the bind DN and password are correct by testing the connection manually with `ldapsearch -x -D "cn=readonly,dc=example,dc=com" -W -H ldaps://ldap.example.com:636 -b dc=example,dc=com`.
+    | Error | Fix |
+    |---|---|
+    | `Error: SSSD service failed to start - TLS: TLSV1_ALERT_UNKNOWN_CA` | Verify the CA certificate path in `ldap_tls_cacert` exists and contains the LDAP server's signing CA, then restart SSSD with `systemctl restart sssd`. |
+    | `LDAP connection refused on ldaps://ldap.example.com:636` | Confirm the LDAP server hostname resolves correctly with `nslookup ldap.example.com` and that port 636 is open via `nc -zv ldap.example.com 636`. |
+    | `Error: Authentication failure - Invalid credentials for cn=readonly,dc=example,dc=com` | Verify the bind DN and password are correct by testing the connection manually with `ldapsearch -x -D "cn=readonly,dc=example,dc=com" -W -H ldaps://ldap.example.com:636 -b dc=example,dc=com`. |
 ```bash
 # Test LDAP query
 ldapsearch -x -H ldaps://ldap.example.com \

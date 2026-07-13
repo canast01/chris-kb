@@ -256,8 +256,10 @@ iptables -A INPUT -p tcp --dport 5480 -j DROP
 ```
 
 !!! warning "Common errors"
-    **`iptables: No chain/target/match by that name`** — Ensure you are running these commands in the vCSA shell with root privileges, as iptables may not be available or properly initialized in non-root contexts.
-    **`iptables v1.8.7 (nf_tables): RULE_INSERT failed (1): Operation not permitted`** — Disable nf_tables mode or run the commands with full root access; some vCSA versions require `iptables-legacy` or direct firewall service restart after rule changes.
+    | Error | Fix |
+    |---|---|
+    | `iptables: No chain/target/match by that name` | Ensure you are running these commands in the vCSA shell with root privileges, as iptables may not be available or properly initialized in non-root contexts. |
+    | `iptables v1.8.7 (nf_tables): RULE_INSERT failed (1): Operation not permitted` | Disable nf_tables mode or run the commands with full root access; some vCSA versions require `iptables-legacy` or direct firewall service restart after rule changes. |
 Apply equivalent restrictions at the network perimeter firewall — do not rely solely on host-based firewall rules.
 
 ### vSAN Network Isolation

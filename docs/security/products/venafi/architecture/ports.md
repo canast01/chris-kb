@@ -167,9 +167,11 @@ TcpTestSucceeded : True
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the TPP CA certificate into your system trust store.
-    **`Connection refused` or `nc: connect to <dc-ip> port 636 (tcp) failed`** — Verify the DC IP is correct, the LDAPS port 636 is open in firewalls, and the domain controller is running; check `netstat -tlnp | grep 636` on the DC.
-    **`TcpTestSucceeded : False` with `RemotePort : 0`** — Confirm the target hostname resolves correctly with `nslookup <hostname>` and that the service is listening on the specified port.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the TPP CA certificate into your system trust store. |
+    | `Connection refused` or `nc: connect to <dc-ip> port 636 (tcp) failed` | Verify the DC IP is correct, the LDAPS port 636 is open in firewalls, and the domain controller is running; check `netstat -tlnp | grep 636` on the DC. |
+    | `TcpTestSucceeded : False` with `RemotePort : 0` | Confirm the target hostname resolves correctly with `nslookup <hostname>` and that the service is listening on the specified port. |
 ---
 
 ## See also

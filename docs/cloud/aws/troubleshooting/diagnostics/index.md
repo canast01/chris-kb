@@ -174,9 +174,11 @@ EventTime    Username          EventName        ErrorCode
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValueException) when calling the LookupEvents operation: Invalid start time`** — Use the correct date format `YYYY-MM-DDTHH:MM:SSZ` and ensure the start time is not older than 90 days.
-    **`An error occurred (CloudTrailNotEnabledException) when calling the LookupEvents operation: CloudTrail is not enabled`** — Enable CloudTrail for your AWS account via the CloudTrail console or use `aws cloudtrail create-trail`.
-    **`date: invalid date 'now'`** — Replace `date -d "1 hour ago"` with `date -v-1H` on macOS, or use `date --date="1 hour ago"` on Linux systems
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValueException) when calling the LookupEvents operation: Invalid start time` | Use the correct date format `YYYY-MM-DDTHH:MM:SSZ` and ensure the start time is not older than 90 days. |
+    | `An error occurred (CloudTrailNotEnabledException) when calling the LookupEvents operation: CloudTrail is not enabled` | Enable CloudTrail for your AWS account via the CloudTrail console or use `aws cloudtrail create-trail`. |
+    | `date: invalid date 'now'` | Replace `date -d "1 hour ago"` with `date -v-1H` on macOS, or use `date --date="1 hour ago"` on Linux systems |
 ---
 
 ## Step 2 — Diagnose VPC connectivity with Flow Logs and Reachability Analyzer
@@ -238,9 +240,11 @@ nia-0f1e2d3c4b5a6978
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the FilterLogEvents operation: The specified log group does not exist.`** — Verify the log group name with `aws logs describe-log-groups | grep flowlogs` and update `--log-group-name` to the correct path.
-    **`An error occurred (InvalidParameterException) when calling the CreateNetworkInsightsPath operation: Invalid destination. Destination must be an ENI, VPC, or Internet Gateway.`** — Replace the security group ID with a valid destination resource type (e.g., `eni-xxxxx` or `igw-xxxxx`).
-    **`An error occurred (InvalidParameterValue.NotFound) when calling the DescribeNetworkInsightsAnalyses operation: The network insights analysis ID 'nia-0f1e2d3c4b5a6978' does not exist.`** — Ensure the `ANALYSIS_ID` variable is set correctly from the previous command output and the analysis hasn't expired (analyses are retained for 35 days).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the FilterLogEvents operation: The specified log group does not exist.` | Verify the log group name with `aws logs describe-log-groups | grep flowlogs` and update `--log-group-name` to the correct path. |
+    | `An error occurred (InvalidParameterException) when calling the CreateNetworkInsightsPath operation: Invalid destination. Destination must be an ENI, VPC, or Internet Gateway.` | Replace the security group ID with a valid destination resource type (e.g., `eni-xxxxx` or `igw-xxxxx`). |
+    | `An error occurred (InvalidParameterValue.NotFound) when calling the DescribeNetworkInsightsAnalyses operation: The network insights analysis ID 'nia-0f1e2d3c4b5a6978' does not exist.` | Ensure the `ANALYSIS_ID` variable is set correctly from the previous command output and the analysis hasn't expired (analyses are retained for 35 days). |
 ---
 
 ## Step 3 — Diagnose IAM access denied errors
@@ -322,8 +326,10 @@ RolePolicies:
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchEntity) when calling the SimulatePrincipalPolicy operation: The role with name MyRole cannot be found.`** — Verify the role name is correct and exists in the current AWS account using `aws iam list-roles`.
-    **`An error occurred (InvalidInput) when calling the SimulatePrincipalPolicy operation: Invalid context key name: aws:RequestedRegion`** — Use valid context key names from AWS documentation (e.g., `aws:username`, `aws:SourceIp`) and ensure ContextKeyType matches the value format.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchEntity) when calling the SimulatePrincipalPolicy operation: The role with name MyRole cannot be found.` | Verify the role name is correct and exists in the current AWS account using `aws iam list-roles`. |
+    | `An error occurred (InvalidInput) when calling the SimulatePrincipalPolicy operation: Invalid context key name: aws:RequestedRegion` | Use valid context key names from AWS documentation (e.g., `aws:username`, `aws:SourceIp`) and ensure ContextKeyType matches the value format. |
     **`An error occurred (AccessDenied) when calling the SimulatePrincipalPolicy operation: User: arn:aws:iam::123456789012:user/admin
 ---
 
@@ -405,9 +411,11 @@ i-0abc123
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidInstanceID.NotFound) when calling the DescribeInstanceStatus operation: The instance ID 'i-0abc123' does not exist`** — Verify the instance ID is correct and exists in the current region using `aws ec2 describe-instances --query 'Reservations[*].Instances[*].InstanceId'`.
-    **`An error occurred (UnauthorizedOperation) when calling the StartSession operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: ssm:StartSession`** — Add the `AmazonSSMManagedInstanceCore` policy to the IAM role attached to the EC2 instance and ensure the SSM agent is running.
-    **`curl: (7) Failed to connect to 169.254.169.254 port 80: Connection timed out`** — Verify the instance has an attached IAM instance profile and that the metadata service is enabled; check with `aws ec2 describe-instances --instance-ids i-0abc123 --query 'Reservations[0].Instances[0].MetadataOptions'`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidInstanceID.NotFound) when calling the DescribeInstanceStatus operation: The instance ID 'i-0abc123' does not exist` | Verify the instance ID is correct and exists in the current region using `aws ec2 describe-instances --query 'Reservations[*].Instances[*].InstanceId'`. |
+    | `An error occurred (UnauthorizedOperation) when calling the StartSession operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: ssm:StartSession` | Add the `AmazonSSMManagedInstanceCore` policy to the IAM role attached to the EC2 instance and ensure the SSM agent is running. |
+    | `curl: (7) Failed to connect to 169.254.169.254 port 80: Connection timed out` | Verify the instance has an attached IAM instance profile and that the metadata service is enabled; check with `aws ec2 describe-instances --instance-ids i-0abc123 --query 'Reservations[0].Instances[0].MetadataOptions'`. |
 ---
 
 ## Step 5 — Diagnose RDS performance and connectivity
@@ -464,9 +472,11 @@ aws logs filter-log-events \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the DescribeEvents operation: Invalid source identifier`** — Verify the DB instance name matches exactly with `aws rds describe-db-instances --query 'DBInstances[*].DBInstanceIdentifier'`.
-    **`An error occurred (ResourceNotFoundException) when calling the FilterLogEvents operation: The specified log group does not exist`** — Enable slow query logging in the RDS parameter group and wait 5–10 minutes for the log group to be created, or check the actual log group name with `aws logs describe-log-groups --log-group-name-prefix /aws/rds`.
-    **`date: invalid date 'now'`** — Replace `date -d` with `date -v-1H` on macOS, or use `date -u -d '1 hour ago'` on Linux systems only.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the DescribeEvents operation: Invalid source identifier` | Verify the DB instance name matches exactly with `aws rds describe-db-instances --query 'DBInstances[*].DBInstanceIdentifier'`. |
+    | `An error occurred (ResourceNotFoundException) when calling the FilterLogEvents operation: The specified log group does not exist` | Enable slow query logging in the RDS parameter group and wait 5–10 minutes for the log group to be created, or check the actual log group name with `aws logs describe-log-groups --log-group-name-prefix /aws/rds`. |
+    | `date: invalid date 'now'` | Replace `date -d` with `date -v-1H` on macOS, or use `date -u -d '1 hour ago'` on Linux systems only. |
 ---
 
 ## Step 6 — Diagnose Lambda and EKS failures
@@ -610,9 +620,11 @@ DRIFTED
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ValidationError) when calling the DescribeStackEvents operation: Stack with id my-stack does not exist`** — Verify the stack name matches exactly and exists in the current AWS region using `aws cloudformation list-stacks --query 'StackSummaries[?StackName==\`my-stack\`]'`.
-    **`An error occurred (AccessDenied) when calling the CreateCase operation: User is not authorized to perform: support:CreateCase`** — Ensure your IAM user has the `support:CreateCase` permission and that your AWS account has an active Business or Enterprise Support plan.
-    **`An error occurred (ValidationError) when calling the DetectStackDrift operation: Stack [my-stack] does not have a status of CREATE_COMPLETE or UPDATE_COMPLETE`** — Wait for the stack to finish its current operation (CREATE/UPDATE/DELETE) before running drift detection.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ValidationError) when calling the DescribeStackEvents operation: Stack with id my-stack does not exist` | Verify the stack name matches exactly and exists in the current AWS region using `aws cloudformation list-stacks --query 'StackSummaries[?StackName==\`my-stack\`]'`. |
+    | `An error occurred (AccessDenied) when calling the CreateCase operation: User is not authorized to perform: support:CreateCase` | Ensure your IAM user has the `support:CreateCase` permission and that your AWS account has an active Business or Enterprise Support plan. |
+    | `An error occurred (ValidationError) when calling the DetectStackDrift operation: Stack [my-stack] does not have a status of CREATE_COMPLETE or UPDATE_COMPLETE` | Wait for the stack to finish its current operation (CREATE/UPDATE/DELETE) before running drift detection. |
 ---
 
 ## Log locations

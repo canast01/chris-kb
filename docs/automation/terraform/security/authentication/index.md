@@ -92,9 +92,11 @@ Credentials saved to: /home/terraform/.config/gcloud/application_default_credent
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (gcloud.auth.application-default.login) User cancelled the web authorization flow.`** — Re-run the command and complete the browser authentication flow, or use a service account key instead.
-    **`ERROR: Could not open browser. Please visit the URL above manually.`** — Copy the provided URL into your browser manually, then paste the verification code back into the terminal.
-    **`gcloud: command not found`** — Install the Google Cloud SDK by following https://cloud.google.com/sdk/docs/install or add it to your PATH.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (gcloud.auth.application-default.login) User cancelled the web authorization flow.` | Re-run the command and complete the browser authentication flow, or use a service account key instead. |
+    | `ERROR: Could not open browser. Please visit the URL above manually.` | Copy the provided URL into your browser manually, then paste the verification code back into the terminal. |
+    | `gcloud: command not found` | Install the Google Cloud SDK by following https://cloud.google.com/sdk/docs/install or add it to your PATH. |
 ## CI/CD Credential Injection
 
 Credentials should be stored as CI/CD secrets and injected at runtime — never committed to source control.

@@ -197,9 +197,11 @@ Report saved to: C:\Users\YourName\Desktop\vxrail-health-2024-01-15.html
 ```
 
 !!! warning "Common errors"
-    **`cannot be loaded because running scripts is disabled on this system`** — Execute `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before running the script.
-    **`Unable to connect to vCenter Server at 192.168.1.50:443`** — Verify the VxRail Manager IP address is correct and reachable with `ping 192.168.1.50`, and confirm the management network is operational.
-    **`Access Denied. The user 'admin' does not have sufficient privileges`** — Confirm the credentials are correct and the account has VxRail Administrator role assigned in the management interface.
+    | Error | Fix |
+    |---|---|
+    | `cannot be loaded because running scripts is disabled on this system` | Execute `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before running the script. |
+    | `Unable to connect to vCenter Server at 192.168.1.50:443` | Verify the VxRail Manager IP address is correct and reachable with `ping 192.168.1.50`, and confirm the management network is operational. |
+    | `Access Denied. The user 'admin' does not have sufficient privileges` | Confirm the credentials are correct and the account has VxRail Administrator role assigned in the management interface. |
 **What you should see**
 
 A table listing each VxRail node (by serial number) with colour-coded health status for CPU, Memory, Disk, and NIC. Any active faults are listed below the table. The final line says either `RESULT: HEALTHY` (green) or `RESULT: UNHEALTHY` (red) with a count of issues found.
@@ -331,9 +333,11 @@ PRE-CHECK RESULT : PASS — Ready to upgrade from 7.0.510 to 7.0.520.
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to vxrail-mgr-01.lab.local port 443: Connection refused`** — Verify the VXRAIL_MGR_HOST is correct and the VxRail Manager is reachable on port 443.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag is already set to skip SSL verification; if this persists, check network connectivity and certificate validity.
-    **`VXRAIL_MGR_HOST is required`** — Export the required environment variables before running the script: `export VXRAIL_MGR_HOST=<host> VXRAIL_USER=<user> VXRAIL_PASS=<pass>`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to vxrail-mgr-01.lab.local port 443: Connection refused` | Verify the VXRAIL_MGR_HOST is correct and the VxRail Manager is reachable on port 443. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag is already set to skip SSL verification; if this persists, check network connectivity and certificate validity. |
+    | `VXRAIL_MGR_HOST is required` | Export the required environment variables before running the script: `export VXRAIL_MGR_HOST=<host> VXRAIL_USER=<user> VXRAIL_PASS=<pass>`. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -393,9 +397,11 @@ Check completed successfully at 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed for user admin at 192.168.1.50`** — Verify the VXRAIL_USER and VXRAIL_PASS environment variables match the VxRail Manager credentials.
-    **`Connection timeout connecting to 192.168.1.50:443`** — Confirm the VxRail Manager IP address is correct and reachable from your network, and that port 443 is not blocked by a firewall.
-    **`Permission denied: ./vxrail-lcm-readiness.sh`** — Run `chmod +x vxrail-lcm-readiness.sh` before executing the script.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed for user admin at 192.168.1.50` | Verify the VXRAIL_USER and VXRAIL_PASS environment variables match the VxRail Manager credentials. |
+    | `Connection timeout connecting to 192.168.1.50:443` | Confirm the VxRail Manager IP address is correct and reachable from your network, and that port 443 is not blocked by a firewall. |
+    | `Permission denied: ./vxrail-lcm-readiness.sh` | Run `chmod +x vxrail-lcm-readiness.sh` before executing the script. |
 **What you should see**
 
 Current VxRail version, available upgrade version (or "none" if already up to date), and a table showing each node's health. Final line reads `PRE-CHECK RESULT : PASS`, `FAIL`, or `INFO`.
@@ -531,9 +537,11 @@ OVERALL: 1 node(s) with hardware faults.
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to vxrail-mgr.corp.local port 443: Connection refused`** — Verify the VXRAIL_MGR_HOST is correct and the VxRail Manager API service is running and accessible on port 443.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag in CURL_OPTS already ignores SSL verification; if this persists, ensure the hostname matches the certificate or check network proxy settings.
-    **`jq: error (at <stdin>:1): Cannot index array with string "serial_number"`** — Verify the VxRail API version matches the expected response schema; check `/v1/hosts` endpoint returns an array of host objects with `serial_number` fields.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to vxrail-mgr.corp.local port 443: Connection refused` | Verify the VXRAIL_MGR_HOST is correct and the VxRail Manager API service is running and accessible on port 443. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag in CURL_OPTS already ignores SSL verification; if this persists, ensure the hostname matches the certificate or check network proxy settings. |
+    | `jq: error (at <stdin>:1): Cannot index array with string "serial_number"` | Verify the VxRail API version matches the expected response schema; check `/v1/hosts` endpoint returns an array of host objects with `serial_number` fields. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -597,9 +605,11 @@ Execution time: 12.4 seconds
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed: Invalid credentials for user 'admin'`** — Verify the VXRAIL_USER and VXRAIL_PASS environment variables match the VxRail Manager credentials.
-    **`Connection timeout: Unable to reach 192.168.1.50:443`** — Confirm the VXRAIL_MGR_HOST IP address is correct and the VxRail Manager is reachable on port 443 from your network.
-    **`Permission denied: ./vxrail-node-hardware.sh`** — Ensure the chmod +x command completed successfully before executing the script.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed: Invalid credentials for user 'admin'` | Verify the VXRAIL_USER and VXRAIL_PASS environment variables match the VxRail Manager credentials. |
+    | `Connection timeout: Unable to reach 192.168.1.50:443` | Confirm the VXRAIL_MGR_HOST IP address is correct and the VxRail Manager is reachable on port 443 from your network. |
+    | `Permission denied: ./vxrail-node-hardware.sh` | Ensure the chmod +x command completed successfully before executing the script. |
 **What you should see**
 
 A section for each VxRail node showing PSU, Fan, Disk, and NIC health status. Any component not in a `Healthy` state is marked with `<-- FAULT`. The final line shows `OVERALL: All nodes hardware Healthy` or a count of nodes with faults.
@@ -782,9 +792,11 @@ PLAY RECAP *********************************************************************
 ```
 
 !!! warning "Common errors"
-    **`fatal: [192.168.1.50]: FAILED! => {"msg": "Unable to authenticate to VxRail manager"}`** — Verify the vxrail_user and vxrail_pass variables are correct and the account has API permissions.
-    **`fatal: [192.168.1.50]: FAILED! => {"msg": "No route to host"}`** — Confirm the vxrail_mgr IP address is reachable and correct, and check network connectivity from the Ansible control node.
-    **`ERROR! the playbook: vxrail-health.yml could not be found`** — Ensure you are in the correct directory (/path/to/your/file) and the playbook filename matches exactly.
+    | Error | Fix |
+    |---|---|
+    | `fatal: [192.168.1.50]: FAILED! => {"msg": "Unable to authenticate to VxRail manager"}` | Verify the vxrail_user and vxrail_pass variables are correct and the account has API permissions. |
+    | `fatal: [192.168.1.50]: FAILED! => {"msg": "No route to host"}` | Confirm the vxrail_mgr IP address is reachable and correct, and check network connectivity from the Ansible control node. |
+    | `ERROR! the playbook: vxrail-health.yml could not be found` | Ensure you are in the correct directory (/path/to/your/file) and the playbook filename matches exactly. |
 **What you should see**
 
 Ansible will print task-by-task output. The `debug` tasks will display cluster version, health state, node count, and per-node component health. If any CRITICAL faults exist the playbook will fail at the `assert` task and display the fault descriptions.
@@ -951,9 +963,11 @@ Report saved to: C:\Users\YourName\Desktop\vxrail-health-20240115.log
 ```
 
 !!! warning "Common errors"
-    **`Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.`** — Add `-SkipCertificateCheck` parameter or import the VxRail Manager's SSL certificate into the Windows trusted store.
-    **`Exception calling "GetVxRailClusterInfo" with "0" argument(s): Access Denied`** — Verify the VxUser account has appropriate VxRail Manager permissions and that the password is correct.
-    **`The term '.\vxrail-health-windows.ps1' is not recognized`** — Ensure the script file exists in the current directory and run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` if execution policy blocks the script.
+    | Error | Fix |
+    |---|---|
+    | `Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.` | Add `-SkipCertificateCheck` parameter or import the VxRail Manager's SSL certificate into the Windows trusted store. |
+    | `Exception calling "GetVxRailClusterInfo" with "0" argument(s): Access Denied` | Verify the VxUser account has appropriate VxRail Manager permissions and that the password is correct. |
+    | `The term '.\vxrail-health-windows.ps1' is not recognized` | Ensure the script file exists in the current directory and run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` if execution policy blocks the script. |
 **What you should see**
 
 Cluster version and health state, number of nodes, a table showing each node's health (green = healthy, red = fault), and a list of any active alerts. If all is well the final output shows "Active Alerts : None" in green.
@@ -1069,9 +1083,11 @@ Report saved to: C:\Users\YourName\Desktop\vxrail_status_20240115.log
 ```
 
 !!! warning "Common errors"
-    **`'vxrail-node-status.bat' is not recognized as an internal or external command`** — Verify the script exists in the current directory or add its full path (e.g., `C:\Program Files\VxRail\Scripts\vxrail-node-status.bat`).
-    **`Access Denied`** — Run the command prompt as Administrator or check file permissions on the .bat script.
-    **`Unable to connect to VxRail Manager at 192.168.1.45`** — Verify network connectivity to the VxRail Manager IP and confirm credentials are configured in the script or environment variables.
+    | Error | Fix |
+    |---|---|
+    | `'vxrail-node-status.bat' is not recognized as an internal or external command` | Verify the script exists in the current directory or add its full path (e.g., `C:\Program Files\VxRail\Scripts\vxrail-node-status.bat`). |
+    | `Access Denied` | Run the command prompt as Administrator or check file permissions on the .bat script. |
+    | `Unable to connect to VxRail Manager at 192.168.1.45` | Verify network connectivity to the VxRail Manager IP and confirm credentials are configured in the script or environment variables. |
 You can also double-click the `.bat` file in File Explorer.
 
 **What you should see**

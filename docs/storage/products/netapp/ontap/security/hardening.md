@@ -117,8 +117,10 @@ Public Key Hash: SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0AbCdEfG==
 ```
 
 !!! warning "Common errors"
-    **`Error: entry doesn't exist`** — Ensure the public key has been added to the admin account using `security login publickey create` before attempting deletion.
-    **`Error: Cannot delete the only authentication method`** — Verify the public key is working via SSH before deleting the password method, or add an additional authentication method first.
+    | Error | Fix |
+    |---|---|
+    | `Error: entry doesn't exist` | Ensure the public key has been added to the admin account using `security login publickey create` before attempting deletion. |
+    | `Error: Cannot delete the only authentication method` | Verify the public key is working via SSH before deleting the password method, or add an additional authentication method first. |
 ### Lock Diagnostic Accounts
 
 ```bash
@@ -140,8 +142,10 @@ prod-cluster diag     true
 ```
 
 !!! warning "Common errors"
-    **`Error: "diag" is not a valid username for Vserver "prod-cluster"`** — Verify the cluster name with `cluster show` and ensure the diag account exists on that specific Vserver.
-    **`Error: This operation is not permitted: User "admin" does not have permission to execute the command "security login lock"`** — Confirm your user account has the "admin" or equivalent security role by running `security login show -username <your-user>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: "diag" is not a valid username for Vserver "prod-cluster"` | Verify the cluster name with `cluster show` and ensure the diag account exists on that specific Vserver. |
+    | `Error: This operation is not permitted: User "admin" does not have permission to execute the command "security login lock"` | Confirm your user account has the "admin" or equivalent security role by running `security login show -username <your-user>`. |
 ### Session Timeout
 
 ```bash
@@ -162,8 +166,10 @@ Idle Timeout: 600 seconds
 ```
 
 !!! warning "Common errors"
-    **`Error: "security session timeout modify" is not a valid command.`** — Verify you are running ONTAP 9.1 or later, as this command was introduced in that version.
-    **`Error: Invalid value "600" for parameter "timeout".`** — Use a value between 0 and 86400 seconds; 600 seconds is valid, so check for typos or ensure the parameter name matches your ONTAP version exactly.
+    | Error | Fix |
+    |---|---|
+    | `Error: "security session timeout modify" is not a valid command.` | Verify you are running ONTAP 9.1 or later, as this command was introduced in that version. |
+    | `Error: Invalid value "600" for parameter "timeout".` | Use a value between 0 and 86400 seconds; 600 seconds is valid, so check for typos or ensure the parameter name matches your ONTAP version exactly. |
 ### Account Lockout Policy
 
 ONTAP does not have a configurable account lockout after N failed attempts in the same way as Active Directory. Enforce this compensating control:
@@ -209,9 +215,11 @@ CONNECTED(00000000)
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid value for "-min-protocol-version": "TLSv1.2"`** — Verify the exact protocol version string supported by your ONTAP version (may be `TLSv1.2` or `TLSV1_2` depending on release); check the admin guide for valid enum values.
-    **`Error: command not found: openssl`** — Install openssl on your management workstation or use a dedicated SSL testing tool; the ONTAP cluster itself does not require openssl for this configuration.
-    **`Error: Connection refused`** — Ensure the cluster management IP is correct and reachable from your test host, and verify the HTTPS management interface is enabled with `network interface show -vserver <cluster> -role mgmt`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid value for "-min-protocol-version": "TLSv1.2"` | Verify the exact protocol version string supported by your ONTAP version (may be `TLSv1.2` or `TLSV1_2` depending on release); check the admin guide for valid enum values. |
+    | `Error: command not found: openssl` | Install openssl on your management workstation or use a dedicated SSL testing tool; the ONTAP cluster itself does not require openssl for this configuration. |
+    | `Error: Connection refused` | Ensure the cluster management IP is correct and reachable from your test host, and verify the HTTPS management interface is enabled with `network interface show -vserver <cluster> -role mgmt`. |
 ### SSH Cipher Hardening
 
 ```bash
@@ -235,8 +243,10 @@ Hostkey Algorithms: ssh-rsa,rsa-sha2-256,rsa-sha2-512,ecdsa-sha2-nistp256,ecdsa-
 ```
 
 !!! warning "Common errors"
-    **`Error: Vserver "<cluster-name>" does not exist`** — Replace `<cluster-name>` with the actual cluster name from `cluster identity show`.
-    **`Error: Invalid cipher name "aes256-ctr"`** — Verify cipher names match your ONTAP version's supported list using `security ssh show -fields ciphers`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Vserver "<cluster-name>" does not exist` | Replace `<cluster-name>` with the actual cluster name from `cluster identity show`. |
+    | `Error: Invalid cipher name "aes256-ctr"` | Verify cipher names match your ONTAP version's supported list using `security ssh show -fields ciphers`. |
 ### Disable Legacy Protocols
 
 ```bash
@@ -273,8 +283,10 @@ cifs            true
 ```
 
 !!! warning "Common errors"
-    **`Error: "telnet" is not a valid application name`** — Use the exact application name from `security protocol show` output; verify spelling matches ONTAP's protocol list.
-    **`Error: This operation is not permitted: admin role lacks "security" API access`** — Ensure your user account has the "admin" or equivalent security management role assigned.
+    | Error | Fix |
+    |---|---|
+    | `Error: "telnet" is not a valid application name` | Use the exact application name from `security protocol show` output; verify spelling matches ONTAP's protocol list. |
+    | `Error: This operation is not permitted: admin role lacks "security" API access` | Ensure your user account has the "admin" or equivalent security management role assigned. |
 ### Disable SMB1
 
 ```bash
@@ -304,9 +316,11 @@ vserver cifs security modify -vserver prod-svm-01 -is-signing-required true
 ```
 
 !!! warning "Common errors"
-    **`Error: "prod-svm-01" is not a valid vserver name`** — Verify the SVM name with `vserver show` and replace `<svm>` with the correct vserver name.
-    **`Error: CIFS is not configured on vserver "prod-svm-01"`** — Enable CIFS on the SVM first with `vserver cifs create -vserver <svm> -cifs-server <netbios-name> -domain <domain>`.
-    **`Error: This operation is not permitted: SMB1 is required for legacy clients`** — If legacy clients require SMB1, document the exception and use `-smb1-enabled true` instead, or plan a client upgrade.
+    | Error | Fix |
+    |---|---|
+    | `Error: "prod-svm-01" is not a valid vserver name` | Verify the SVM name with `vserver show` and replace `<svm>` with the correct vserver name. |
+    | `Error: CIFS is not configured on vserver "prod-svm-01"` | Enable CIFS on the SVM first with `vserver cifs create -vserver <svm> -cifs-server <netbios-name> -domain <domain>`. |
+    | `Error: This operation is not permitted: SMB1 is required for legacy clients` | If legacy clients require SMB1, document the exception and use `-smb1-enabled true` instead, or plan a client upgrade. |
 ---
 
 ## SNMP Hardening
@@ -378,9 +392,11 @@ Port: 162
 ```
 
 !!! warning "Common errors"
-    **`Error: entry already exists.`** — Verify the community string or user does not already exist before creation; use `system snmp community show` or `system snmp user show` to check.
-    **`Error: Invalid IP address <monitoring-server-ip>`** — Replace the placeholder with a valid IPv4 or IPv6 address in dotted-decimal or colon-hexadecimal notation.
-    **`Error: Authentication failed: invalid password complexity`** — Ensure both `<strong-auth-passphrase>` and `<strong-priv-passphrase>` meet minimum length (8 characters) and complexity requirements.
+    | Error | Fix |
+    |---|---|
+    | `Error: entry already exists.` | Verify the community string or user does not already exist before creation; use `system snmp community show` or `system snmp user show` to check. |
+    | `Error: Invalid IP address <monitoring-server-ip>` | Replace the placeholder with a valid IPv4 or IPv6 address in dotted-decimal or colon-hexadecimal notation. |
+    | `Error: Authentication failed: invalid password complexity` | Ensure both `<strong-auth-passphrase>` and `<strong-priv-passphrase>` meet minimum length (8 characters) and complexity requirements. |
 ---
 
 ## AutoSupport Security
@@ -465,9 +481,11 @@ Node: node-2
 ```
 
 !!! warning "Common errors"
-    **`Error: Proxy URL is invalid or unreachable`** — Verify the proxy hostname resolves and is reachable from the cluster management LIF using `network ping -vserver Cluster -destination proxy.example.local`.
-    **`Error: AutoSupport check show reports FAILED for HTTPS Connectivity`** — Confirm port 443 is not blocked to NetApp AutoSupport endpoints by checking firewall rules and running `network traceroute -destination support.netapp.com`.
-    **`Error: autosupport history show displays status: sent-failed`** — Check the AutoSupport destination email address is correct and review logs with `autosupport history show -node <node> -fields subject,status,error-detail` to identify the delivery failure reason.
+    | Error | Fix |
+    |---|---|
+    | `Error: Proxy URL is invalid or unreachable` | Verify the proxy hostname resolves and is reachable from the cluster management LIF using `network ping -vserver Cluster -destination proxy.example.local`. |
+    | `Error: AutoSupport check show reports FAILED for HTTPS Connectivity` | Confirm port 443 is not blocked to NetApp AutoSupport endpoints by checking firewall rules and running `network traceroute -destination support.netapp.com`. |
+    | `Error: autosupport history show displays status: sent-failed` | Check the AutoSupport destination email address is correct and review logs with `autosupport history show -node <node> -fields subject,status,error-detail` to identify the delivery failure reason. |
 ---
 
 ## Audit and SIEM Forwarding
@@ -527,8 +545,10 @@ Time                     User   Vserver      Command                          Re
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid time range format "24h"`** — Use valid ONTAP time format such as "2024-01-14T00:00:00" or specify "-time-range -24h" with a leading dash for relative time.
-    **`Error: Access denied for user 'readonly' to command 'security audit log show'`** — Ensure the user account has the "admin" or "security" role assigned via `security login modify`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid time range format "24h"` | Use valid ONTAP time format such as "2024-01-14T00:00:00" or specify "-time-range -24h" with a leading dash for relative time. |
+    | `Error: Access denied for user 'readonly' to command 'security audit log show'` | Ensure the user account has the "admin" or "security" role assigned via `security login modify`. |
 ### EMS Syslog Forwarding to SIEM
 
 ```bash
@@ -585,9 +605,11 @@ critical-errors siem-dest
 ```
 
 !!! warning "Common errors"
-    **`Error: Syslog server address is not reachable`** — Verify network connectivity to the SIEM server IP and ensure the firewall permits syslog traffic (UDP 514 by default).
-    **`Error: "critical-errors" does not exist`** — Create the filter before linking it to a notification destination using the event filter create command.
-    **`Error: Destination "siem-dest" does not exist`** — Create the syslog destination first with event notification destination create before referencing it in the notification.
+    | Error | Fix |
+    |---|---|
+    | `Error: Syslog server address is not reachable` | Verify network connectivity to the SIEM server IP and ensure the firewall permits syslog traffic (UDP 514 by default). |
+    | `Error: "critical-errors" does not exist` | Create the filter before linking it to a notification destination using the event filter create command. |
+    | `Error: Destination "siem-dest" does not exist` | Create the syslog destination first with event notification destination create before referencing it in the notification. |
 ### File Access Audit (ONTAP Audit Framework)
 
 For NAS environments requiring file access audit logging (SOX, HIPAA, PCI-DSS):
@@ -643,9 +665,11 @@ Index  Filename                          Size      Timestamp
 ```
 
 !!! warning "Common errors"
-    **`Error: destination path "/audit_logs" does not exist`** — Create the volume and mount it at the junction path before configuring the audit destination.
-    **`Error: vserver audit create: command failed: Audit is already enabled on vserver "prod-svm-01"`** — Run `vserver audit delete -vserver <svm>` first to remove the existing audit configuration, then recreate it.
-    **`Error: Invalid event type "file-ops"`** — Use valid event types such as `file-ops`, `cifs-logon-logoff`, `cap-staging`, or `file-share-access` separated by commas without spaces.
+    | Error | Fix |
+    |---|---|
+    | `Error: destination path "/audit_logs" does not exist` | Create the volume and mount it at the junction path before configuring the audit destination. |
+    | `Error: vserver audit create: command failed: Audit is already enabled on vserver "prod-svm-01"` | Run `vserver audit delete -vserver <svm>` first to remove the existing audit configuration, then recreate it. |
+    | `Error: Invalid event type "file-ops"` | Use valid event types such as `file-ops`, `cifs-logon-logoff`, `cap-staging`, or `file-share-access` separated by commas without spaces. |
 ---
 
 ## RBAC Hardening for Service Accounts
@@ -737,9 +761,11 @@ cluster1::> security login publickey create \
 ```
 
 !!! warning "Common errors"
-    **`Error: "monitoring-ro" already exists.`** — Drop the existing role with `security login role delete -role monitoring-ro -cmddirname DEFAULT` before recreating it, or use a different role name.
-    **`Error: Invalid vserver name "<cluster-name>"`** — Replace `<cluster-name>` with the actual cluster name (e.g., `cluster1`) or omit the `-vserver` parameter to use the admin vserver.
-    **`Error: User "svc-monitoring" already exists.`** — Delete the existing user with `security login delete -username svc-monitoring -application ssh` before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `Error: "monitoring-ro" already exists.` | Drop the existing role with `security login role delete -role monitoring-ro -cmddirname DEFAULT` before recreating it, or use a different role name. |
+    | `Error: Invalid vserver name "<cluster-name>"` | Replace `<cluster-name>` with the actual cluster name (e.g., `cluster1`) or omit the `-vserver` parameter to use the admin vserver. |
+    | `Error: User "svc-monitoring" already exists.` | Delete the existing user with `security login delete -username svc-monitoring -application ssh` before recreating it. |
 ### SnapCenter / Backup Role
 
 ```bash
@@ -783,9 +809,11 @@ Please confirm the password:
 ```
 
 !!! warning "Common errors"
-    **`Role "backup-role" already exists.`** — Delete the existing role with `security login role delete -role backup-role` before recreating it.
-    **`"<cluster-name>" is not a valid vserver name.`** — Replace `<cluster-name>` with the actual cluster name (e.g., `cluster1`) or use `-vserver *` for cluster-scoped access.
-    **`User "svc-snapcenter" already exists.`** — Use `security login delete -username svc-snapcenter -application http` to remove the existing user first, or choose a different username.
+    | Error | Fix |
+    |---|---|
+    | `Role "backup-role" already exists.` | Delete the existing role with `security login role delete -role backup-role` before recreating it. |
+    | `"<cluster-name>" is not a valid vserver name.` | Replace `<cluster-name>` with the actual cluster name (e.g., `cluster1`) or use `-vserver *` for cluster-scoped access. |
+    | `User "svc-snapcenter" already exists.` | Use `security login delete -username svc-snapcenter -application http` to remove the existing user first, or choose a different username. |
 ---
 
 ## Compliance Mode and Audit Readiness

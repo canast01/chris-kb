@@ -82,9 +82,11 @@ Bundle size: 487.3 MB
 ```
 
 !!! warning "Common errors"
-    **`vm-support: command not found`** — Ensure you are running this command on an ESXi host or vCenter Server where vm-support is installed, or use the full path `/usr/lib/vmware/bin/vm-support`.
-    **`Permission denied`** — Run the command with root privileges using `sudo vm-support -n <bundle-name>` or log in as root.
-    **`Error: Bundle name contains invalid characters`** — Use only alphanumeric characters, hyphens, and underscores in the bundle name; avoid spaces and special characters.
+    | Error | Fix |
+    |---|---|
+    | `vm-support: command not found` | Ensure you are running this command on an ESXi host or vCenter Server where vm-support is installed, or use the full path `/usr/lib/vmware/bin/vm-support`. |
+    | `Permission denied` | Run the command with root privileges using `sudo vm-support -n <bundle-name>` or log in as root. |
+    | `Error: Bundle name contains invalid characters` | Use only alphanumeric characters, hyphens, and underscores in the bundle name; avoid spaces and special characters. |
 ## Using Aria Operations for Logs
 
 - Search by hostname, IP, or keyword

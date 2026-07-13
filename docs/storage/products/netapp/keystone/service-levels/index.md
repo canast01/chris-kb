@@ -81,8 +81,10 @@ cluster1            archive-tier                   true
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: qos`** — Ensure you are connected to the NetApp cluster management interface and have the appropriate ONTAP version installed that supports QoS commands.
-    **`Error: This operation is not permitted: insufficient privileges`** — Verify your user account has admin-level or equivalent QoS management permissions on the cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: qos` | Ensure you are connected to the NetApp cluster management interface and have the appropriate ONTAP version installed that supports QoS commands. |
+    | `Error: This operation is not permitted: insufficient privileges` | Verify your user account has admin-level or equivalent QoS management permissions on the cluster. |
 Each Keystone service level corresponds to a named adaptive QoS policy group applied to the volumes.
 
 ## Common Issues

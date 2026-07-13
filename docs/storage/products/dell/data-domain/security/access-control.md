@@ -33,9 +33,11 @@ audit-admin             audit-admin           active
 ```
 
 !!! warning "Common errors"
-    **`Error: User <username> already exists`** — Choose a different username or delete the existing user with `user remove <username>` first.
-    **`Error: Role backup-operator not found`** — Verify the role name is correct; use `authentication roles show` to list available roles.
-    **`Error: LDAP group <ldap-group-name> not found or not configured`** — Ensure LDAP authentication is configured and the group exists in your directory with `authentication show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: User <username> already exists` | Choose a different username or delete the existing user with `user remove <username>` first. |
+    | `Error: Role backup-operator not found` | Verify the role name is correct; use `authentication roles show` to list available roles. |
+    | `Error: LDAP group <ldap-group-name> not found or not configured` | Ensure LDAP authentication is configured and the group exists in your directory with `authentication show`. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -119,9 +119,11 @@ Private endpoint IP: 10.1.2.45
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/<vault-name>' under resource group '<rg>' was not found.`** — Verify the vault name and resource group name are correct and the vault exists in the specified subscription.
-    **`(InvalidResourceId) The provided resource ID is invalid or the resource does not exist.`** — Ensure the subscription ID, resource group name, and vault name in the private-connection-resource-id parameter match exactly with the actual resource.
-    **`(BadRequest) The subnet '<subnet-name>' does not have the 'Microsoft.Network/virtualNetworks/subnets/join/action' permission.`** — Verify the subnet exists in the specified vnet and that the service principal has network permissions to create private endpoints.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/<vault-name>' under resource group '<rg>' was not found.` | Verify the vault name and resource group name are correct and the vault exists in the specified subscription. |
+    | `(InvalidResourceId) The provided resource ID is invalid or the resource does not exist.` | Ensure the subscription ID, resource group name, and vault name in the private-connection-resource-id parameter match exactly with the actual resource. |
+    | `(BadRequest) The subnet '<subnet-name>' does not have the 'Microsoft.Network/virtualNetworks/subnets/join/action' permission.` | Verify the subnet exists in the specified vnet and that the service principal has network permissions to create private endpoints. |
 ## DNS Configuration
 
 ### Private DNS Zone setup
@@ -239,9 +241,11 @@ az network private-endpoint dns-zone-group create \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Network/privateEndpoints/vault-name-pe' under resource group 'myResourceGroup' was not found.`** — Verify the private endpoint name matches exactly and exists in the specified resource group with `az network private-endpoint list -g <rg>`.
-    **`(InvalidResourceId) The provided resource ID is invalid.`** — Ensure the private DNS zone resource ID path is correct and the zone exists by running `az network private-dns zone list -g <rg>`.
-    **`(BadRequest) The private endpoint 'vault-name-pe' does not have a network interface attached.`** — Wait a few moments for the private endpoint to fully provision before attaching the DNS zone group.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Network/privateEndpoints/vault-name-pe' under resource group 'myResourceGroup' was not found.` | Verify the private endpoint name matches exactly and exists in the specified resource group with `az network private-endpoint list -g <rg>`. |
+    | `(InvalidResourceId) The provided resource ID is invalid.` | Ensure the private DNS zone resource ID path is correct and the zone exists by running `az network private-dns zone list -g <rg>`. |
+    | `(BadRequest) The private endpoint 'vault-name-pe' does not have a network interface attached.` | Wait a few moments for the private endpoint to fully provision before attaching the DNS zone group. |
 ## Private DNS Zones by Service
 
 | Service | Private DNS Zone |
@@ -290,9 +294,11 @@ Address: 10.42.3.15
 ```
 
 !!! warning "Common errors"
-    **`nslookup: can't resolve '(null)': Name or service not known`** — Replace `<vault-name>` and `<dns-server-in-vnet>` with actual values; do not run the template literally.
-    **`Connection to contoso-vault.vault.azure.net 443 port [tcp/https] timed out.`** — Verify the private endpoint exists in the VNet, the Network Security Group allows outbound 443, and the VM has network connectivity to the subnet hosting the private endpoint.
-    **`Address: 52.231.x.x`** — DNS is resolving to the public IP instead of private; check that private DNS zone is linked to the VNet and the private endpoint is properly registered in Azure DNS.
+    | Error | Fix |
+    |---|---|
+    | `nslookup: can't resolve '(null)': Name or service not known` | Replace `<vault-name>` and `<dns-server-in-vnet>` with actual values; do not run the template literally. |
+    | `Connection to contoso-vault.vault.azure.net 443 port [tcp/https] timed out.` | Verify the private endpoint exists in the VNet, the Network Security Group allows outbound 443, and the VM has network connectivity to the subnet hosting the private endpoint. |
+    | `Address: 52.231.x.x` | DNS is resolving to the public IP instead of private; check that private DNS zone is linked to the VNet and the private endpoint is properly registered in Azure DNS. |
 ## On-Premises Access via ExpressRoute / VPN
 
 For on-premises hosts to reach private endpoints, they must:

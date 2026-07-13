@@ -174,9 +174,11 @@ rbd image 'app-data-vol':
 ```
 
 !!! warning "Common errors"
-    **`ceph: command not found`** — Run `dnf install -y ceph-common` (or `apt-get install -y ceph-common` on Ubuntu) to install the Ceph client tools.
-    **`Permission denied`** — Ensure the keyring file has 600 permissions (`chmod 600 /etc/ceph/ceph.client.myapp.keyring`) and is owned by the correct user.
-    **`error connecting to the cluster`** — Verify the ceph.conf file was copied correctly and contains valid monitor addresses by checking `cat /etc/ceph/ceph.conf | grep mon_host`.
+    | Error | Fix |
+    |---|---|
+    | `ceph: command not found` | Run `dnf install -y ceph-common` (or `apt-get install -y ceph-common` on Ubuntu) to install the Ceph client tools. |
+    | `Permission denied` | Ensure the keyring file has 600 permissions (`chmod 600 /etc/ceph/ceph.client.myapp.keyring`) and is owned by the correct user. |
+    | `error connecting to the cluster` | Verify the ceph.conf file was copied correctly and contains valid monitor addresses by checking `cat /etc/ceph/ceph.conf | grep mon_host`. |
 ## Key Rotation Procedure
 
 Ceph has no automatic key rotation; all rotation is manual. Execute in sequence — never delete the old key before the new key is confirmed working on all clients.
@@ -198,8 +200,10 @@ ceph auth get-or-create client.<name> \
 ```
 
 !!! warning "Common errors"
-    **`Error EACCES: permission denied`** — Ensure you are running the command with appropriate privileges (typically as root or with `sudo`) on a Ceph monitor node.
-    **`Error EINVAL: invalid value`** — Verify the pool name exists by running `ceph osd pool ls` and replace `<pool>` with an actual pool name.
+    | Error | Fix |
+    |---|---|
+    | `Error EACCES: permission denied` | Ensure you are running the command with appropriate privileges (typically as root or with `sudo`) on a Ceph monitor node. |
+    | `Error EINVAL: invalid value` | Verify the pool name exists by running `ceph osd pool ls` and replace `<pool>` with an actual pool name. |
 2. Export new keyring:
 
 ```bash
@@ -212,8 +216,10 @@ ceph auth export client.<name> > /etc/ceph/ceph.client.<name>.keyring
 ```
 
 !!! warning "Common errors"
-    **`Error EACCES: permission denied`** — Run the command with `sudo` or as the root user to write to `/etc/ceph/`.
-    **`Error: client.<name> does not exist`** — Verify the client name exists first with `ceph auth list` and use the correct client identifier.
+    | Error | Fix |
+    |---|---|
+    | `Error EACCES: permission denied` | Run the command with `sudo` or as the root user to write to `/etc/ceph/`. |
+    | `Error: client.<name> does not exist` | Verify the client name exists first with `ceph auth list` and use the correct client identifier. |
 3. Distribute keyring to all client hosts:
 
 ```bash
@@ -230,9 +236,11 @@ done
 ```
 
 !!! warning "Common errors"
-    **`/etc/ceph/ceph.client.<name>.keyring: No such file or directory`** — Replace `<name>` with the actual client name (e.g., `admin`, `nova`, `cinder`) or verify the keyring file exists on the source host.
-    **`Permission denied (publickey,password).`** — Ensure SSH key-based authentication is configured for the destination hosts or add `-o StrictHostKeyChecking=no` if using password authentication with expect/sshpass.
-    **`scp: /etc/ceph/: Permission denied`** — Verify the destination `/etc/ceph/` directory is writable by the SSH user, or use `sudo` on the remote host via a wrapper script.
+    | Error | Fix |
+    |---|---|
+    | `/etc/ceph/ceph.client.<name>.keyring: No such file or directory` | Replace `<name>` with the actual client name (e.g., `admin`, `nova`, `cinder`) or verify the keyring file exists on the source host. |
+    | `Permission denied (publickey,password).` | Ensure SSH key-based authentication is configured for the destination hosts or add `-o StrictHostKeyChecking=no` if using password authentication with expect/sshpass. |
+    | `scp: /etc/ceph/: Permission denied` | Verify the destination `/etc/ceph/` directory is writable by the SSH user, or use `sudo` on the remote host via a wrapper script. |
 4. Verify client connectivity with new key on each host:
 
 ```bash
@@ -263,9 +271,11 @@ cluster:
 ```
 
 !!! warning "Common errors"
-    **`Error connecting to cluster: [errno 2] error connecting to the cluster`** — Verify the keyring file path is correct and the client ID matches the keyring filename.
-    **`PermissionError: [errno 13] Permission denied: '/etc/ceph/ceph.client.<name>.keyring'`** — Ensure the keyring file is readable by the user running the command (typically `chmod 600` and owned by the appropriate user).
-    **`[errno 110] connection timed out`** — Confirm that the Ceph monitor daemons are running and reachable on the network, and check firewall rules for port 6789.
+    | Error | Fix |
+    |---|---|
+    | `Error connecting to cluster: [errno 2] error connecting to the cluster` | Verify the keyring file path is correct and the client ID matches the keyring filename. |
+    | `PermissionError: [errno 13] Permission denied: '/etc/ceph/ceph.client.<name>.keyring'` | Ensure the keyring file is readable by the user running the command (typically `chmod 600` and owned by the appropriate user). |
+    | `[errno 110] connection timed out` | Confirm that the Ceph monitor daemons are running and reachable on the network, and check firewall rules for port 6789. |
 5. Restart application services to load new keyring; confirm I/O is operating.
 
 6. Revoke old key after all clients confirmed on new key:
@@ -280,8 +290,10 @@ updated
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: auth entity client.<name>-old does not exist`** — Verify the client name exists with `ceph auth list` before deletion.
-    **`Error EACCES: insufficient capabilities`** — Ensure you have admin-level permissions by running the command with appropriate credentials or as a user with `caps mon = "allow *"`.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: auth entity client.<name>-old does not exist` | Verify the client name exists with `ceph auth list` before deletion. |
+    | `Error EACCES: insufficient capabilities` | Ensure you have admin-level permissions by running the command with appropriate credentials or as a user with `caps mon = "allow *"`. |
 7. Confirm no remaining references to old entity:
 
 ```bash
@@ -294,8 +306,10 @@ Error ENOENT: entity not found
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: entity not found`** — Verify the client name exists by running `ceph auth list` to see all configured clients, then use the correct name in the command.
-    **`Error EINVAL: invalid entity name`** — Ensure the entity name follows the format `client.<name>` without extra spaces or special characters.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: entity not found` | Verify the client name exists by running `ceph auth list` to see all configured clients, then use the correct name in the command. |
+    | `Error EINVAL: invalid entity name` | Ensure the entity name follows the format `client.<name>` without extra spaces or special characters. |
 ## Bootstrap Key Handling
 
 Bootstrap keys are used by cephadm during initial daemon provisioning. They hold elevated permissions for provisioning only and must be rotated after cluster setup is complete.
@@ -332,8 +346,10 @@ updated caps for client.bootstrap-osd
 ```
 
 !!! warning "Common errors"
-    **`Error EACCES: insufficient permissions to read client.bootstrap-osd`** — Run the command with `sudo` or as a user with Ceph admin privileges (ensure your keyring is in `/etc/ceph/ceph.client.admin.keyring`).
-    **`Error EINVAL: unknown capability profile 'bootstrap-osd'`** — Verify the Ceph version supports this profile; use `ceph auth help` to list valid profiles for your cluster version.
+    | Error | Fix |
+    |---|---|
+    | `Error EACCES: insufficient permissions to read client.bootstrap-osd` | Run the command with `sudo` or as a user with Ceph admin privileges (ensure your keyring is in `/etc/ceph/ceph.client.admin.keyring`). |
+    | `Error EINVAL: unknown capability profile 'bootstrap-osd'` | Verify the Ceph version supports this profile; use `ceph auth help` to list valid profiles for your cluster version. |
 ## MON and Admin Keyring Security
 
 ```bash
@@ -369,8 +385,10 @@ node-04.ceph.local: -rw------- 1 root root 151 Nov 14 10:23 /etc/ceph/ceph.clien
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/etc/ceph/ceph.mon.keyring': No such file or directory`** — Verify the Ceph cluster is initialized and the MON keyring exists at the expected path on the current host.
-    **`ssh: Could not resolve hostname node-XX.ceph.local: Name or service not known`** — Ensure all hostnames in the loop are resolvable via DNS or add entries to /etc/hosts on the orchestrator host.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/etc/ceph/ceph.mon.keyring': No such file or directory` | Verify the Ceph cluster is initialized and the MON keyring exists at the expected path on the current host. |
+    | `ssh: Could not resolve hostname node-XX.ceph.local: Name or service not known` | Ensure all hostnames in the loop are resolvable via DNS or add entries to /etc/hosts on the orchestrator host. |
 ## Cluster Bootstrap Auth (New Node)
 
 ```bash
@@ -406,9 +424,11 @@ ceph auth get osd.5   # should show capabilities
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/var/lib/ceph/osd/ceph-*/keyring': No such file or directory`** — Verify the OSD was successfully added with `ceph orch device ls` and check `/var/lib/ceph/` directory structure exists.
-    **`cat: /var/lib/ceph/mon/ceph-nodename/keyring: Permission denied`** — Run the command with `sudo` or as the `ceph` user to access keyring files.
-    **`Error EACCES: permission denied`** — Ensure the daemon's keyring has correct permissions (`chmod 600`) and the ceph user owns the file.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/var/lib/ceph/osd/ceph-*/keyring': No such file or directory` | Verify the OSD was successfully added with `ceph orch device ls` and check `/var/lib/ceph/` directory structure exists. |
+    | `cat: /var/lib/ceph/mon/ceph-nodename/keyring: Permission denied` | Run the command with `sudo` or as the `ceph` user to access keyring files. |
+    | `Error EACCES: permission denied` | Ensure the daemon's keyring has correct permissions (`chmod 600`) and the ceph user owns the file. |
 ## Session Timeouts
 
 ```bash
@@ -435,8 +455,10 @@ auth_service_ticket_ttl = 3600
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: invalid value '3600' for option 'auth_service_ticket_ttl'`** — Ensure the value is specified in seconds and is a valid integer; check current limits with `ceph config get global auth_service_ticket_ttl`.
-    **`Error: set failed: (1) Operation not permitted`** — Verify you have sufficient privileges by running the command with `sudo` or as a user in the `ceph` group.
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: invalid value '3600' for option 'auth_service_ticket_ttl'` | Ensure the value is specified in seconds and is a valid integer; check current limits with `ceph config get global auth_service_ticket_ttl`. |
+    | `Error: set failed: (1) Operation not permitted` | Verify you have sufficient privileges by running the command with `sudo` or as a user in the `ceph` group. |
 ## msgr2 In-Transit Encryption
 
 Ceph msgr2 protocol (default since Octopus) supports `secure` mode for AES-GCM encrypted transport. `crc` mode (default) provides integrity only — no confidentiality.
@@ -491,8 +513,10 @@ secure
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: ms_cluster_mode not found`** — Verify Ceph version supports this setting (Nautilus or later) and check cluster health with `ceph status`.
-    **`Error: failed to get config: (1) Operation not permitted`** — Run commands with appropriate privileges; use `sudo` or ensure the user has `mon 'allow *'` capabilities in the keyring.
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: ms_cluster_mode not found` | Verify Ceph version supports this setting (Nautilus or later) and check cluster health with `ceph status`. |
+    | `Error: failed to get config: (1) Operation not permitted` | Run commands with appropriate privileges; use `sudo` or ensure the user has `mon 'allow *'` capabilities in the keyring. |
 > **Performance note**: `secure` mode adds ~5–10% throughput overhead on the cluster network. On hardware with AES-NI, overhead is typically 3–5%. Enable on cluster network at minimum; the public (client) network is lower priority if clients are on a trusted VLAN.
 
 ## Authentication Troubleshooting
@@ -558,7 +582,9 @@ $ ceph --debug-auth 10 --id rbd-user -s 2>&1 | head -40
 ```
 
 !!! warning "Common errors"
-    **`Error EACCES: permission denied`** — Run `ceph auth caps client.<name> mon 'allow r' osd 'allow rw pool=<pool>'` to grant required capabilities.
+    | Error | Fix |
+    |---|---|
+    | `Error EACCES: permission denied` | Run `ceph auth caps client.<name> mon 'allow r' osd 'allow rw pool=<pool>'` to grant required capabilities. |
     **`Error ENOENT
 ## Authentication Reference Table
 
@@ -600,9 +626,11 @@ AQBvF7tgFxZaARAAp8K3vLm9xK8L2mN9oP3qR4sS5tU==
 ```
 
 !!! warning "Common errors"
-    **`Error EACCES: permission denied`** — Ensure the user running the command has read access to `/etc/ceph/ceph.client.admin.keyring` or appropriate keyring file.
-    **`Error ENOENT: error connecting to the cluster`** — Verify the Ceph cluster is running and `/etc/ceph/ceph.conf` exists with correct monitor addresses.
-    **`Error EACCES: client.myapp authentication cap mismatch`** — Confirm the `client.myapp` entity exists in the cluster by running `ceph auth list | grep client.myapp`.
+    | Error | Fix |
+    |---|---|
+    | `Error EACCES: permission denied` | Ensure the user running the command has read access to `/etc/ceph/ceph.client.admin.keyring` or appropriate keyring file. |
+    | `Error ENOENT: error connecting to the cluster` | Verify the Ceph cluster is running and `/etc/ceph/ceph.conf` exists with correct monitor addresses. |
+    | `Error EACCES: client.myapp authentication cap mismatch` | Confirm the `client.myapp` entity exists in the cluster by running `ceph auth list | grep client.myapp`. |
 ## See also
 
 - [Ceph — Access Control](../access-control/)

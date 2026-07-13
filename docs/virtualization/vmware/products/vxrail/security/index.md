@@ -96,9 +96,11 @@ RACADM: Performing set on property iDRAC.IPBlocking.RangeMask
 ```
 
 !!! warning "Common errors"
-    **`RACADM: Error: DRAC_E_INVALID_PARAMETER (DRAC error 0x00000002)`** — Verify the password meets iDRAC complexity requirements (minimum 8 characters, uppercase, lowercase, number, special character) and that user ID 2 exists.
-    **`RACADM: Error: DRAC_E_UNSUPPORTED_OPERATION (DRAC error 0x00000005)`** — Ensure you are connected to the iDRAC via SSH or serial console with root/DRAC credentials, not a remote RACADM session.
-    **`RACADM: Error: DRAC_E_INVALID_IPADDRESS (DRAC error 0x00000009)`** — Verify the management subnet IP address and mask are in valid CIDR notation (e.g., 10.0.0.0 and 255.255.255.0).
+    | Error | Fix |
+    |---|---|
+    | `RACADM: Error: DRAC_E_INVALID_PARAMETER (DRAC error 0x00000002)` | Verify the password meets iDRAC complexity requirements (minimum 8 characters, uppercase, lowercase, number, special character) and that user ID 2 exists. |
+    | `RACADM: Error: DRAC_E_UNSUPPORTED_OPERATION (DRAC error 0x00000005)` | Ensure you are connected to the iDRAC via SSH or serial console with root/DRAC credentials, not a remote RACADM session. |
+    | `RACADM: Error: DRAC_E_INVALID_IPADDRESS (DRAC error 0x00000009)` | Verify the management subnet IP address and mask are in valid CIDR notation (e.g., 10.0.0.0 and 255.255.255.0). |
 ---
 
 ## ESXi Lockdown Mode
@@ -169,8 +171,10 @@ EncryptionCompressionLevel : 6
 ```
 
 !!! warning "Common errors"
-    **`Connect-VIServer : The server certificate could not be validated`** — Add `-IgnoreCertificateErrors` to the PowerCLI command or configure trusted certificates on the vCenter server.
-    **`esxcli: Unknown command or namespace vsan debug object`** — Verify VSAN is licensed and enabled on the ESXi host by running `esxcli vsan cluster get`.
+    | Error | Fix |
+    |---|---|
+    | `Connect-VIServer : The server certificate could not be validated` | Add `-IgnoreCertificateErrors` to the PowerCLI command or configure trusted certificates on the vCenter server. |
+    | `esxcli: Unknown command or namespace vsan debug object` | Verify VSAN is licensed and enabled on the ESXi host by running `esxcli vsan cluster get`. |
 ---
 
 ## Certificate Management

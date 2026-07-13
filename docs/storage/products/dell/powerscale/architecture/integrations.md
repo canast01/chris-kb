@@ -89,8 +89,10 @@ ID    Name            Type      Server                    Zone
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to join domain EXAMPLE.COM: Authentication failed`** — Verify the Administrator credentials are correct and the account has sufficient permissions to join computers to the domain.
-    **`Error: LDAP server ldap://ldap.example.com is unreachable`** — Confirm network connectivity to the LDAP server and that the URI scheme and port are correct (typically ldap:// on port 389 or ldaps:// on port 636).
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to join domain EXAMPLE.COM: Authentication failed` | Verify the Administrator credentials are correct and the account has sufficient permissions to join computers to the domain. |
+    | `Error: LDAP server ldap://ldap.example.com is unreachable` | Confirm network connectivity to the LDAP server and that the URI scheme and port are correct (typically ldap:// on port 389 or ldaps:// on port 636). |
 - Use a dedicated service account for AD join; avoid domain admin credentials.
 - For multi-protocol (NFS + SMB) environments, configure both AD (for Windows SIDs) and LDAP/NIS (for Unix UIDs/GIDs) on the same zone, and enable identity mapping.
 
@@ -190,9 +192,11 @@ curl -k -u admin:password \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the cluster's CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to <cluster-node>:8080: Connection refused`** — Verify the cluster node hostname/IP is correct, the management interface is listening on port 8080, and network connectivity exists from your client.
-    **`{"errors":[{"code":"EACCES","message":"Access denied"}]}`** — Ensure the admin credentials are correct and the user has sufficient role-based permissions for the requested API endpoint.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the cluster's CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to <cluster-node>:8080: Connection refused` | Verify the cluster node hostname/IP is correct, the management interface is listening on port 8080, and network connectivity exists from your client. |
+    | `{"errors":[{"code":"EACCES","message":"Access denied"}]}` | Ensure the admin credentials are correct and the user has sufficient role-based permissions for the requested API endpoint. |
 Use the `isilon_sdk` Python package for scripted automation: `pip install isilon-sdk`.
 API documentation is available at `https://<cluster-node>:8080/platform/latest/`.
 

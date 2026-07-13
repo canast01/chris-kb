@@ -60,8 +60,10 @@ esxcli system ntp set --enabled true
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or flag '--server'`** — Use `esxcli system ntp set --servers=pool.ntp.org` with `--servers=` instead of `--server`.
-    **`Error: Unable to set NTP server: Connection refused`** — Ensure the NTP service is running with `esxcli system service start ntpd` before configuring servers.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or flag '--server'` | Use `esxcli system ntp set --servers=pool.ntp.org` with `--servers=` instead of `--server`. |
+    | `Error: Unable to set NTP server: Connection refused` | Ensure the NTP service is running with `esxcli system service start ntpd` before configuring servers. |
 ---
 
 ## Phase 2 — Fill In the VCF Configuration Workbook
@@ -189,8 +191,10 @@ tail -100f /var/log/vmware/vcf/bringup/vcf-bringup.log
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/vmware/vcf/bringup/vcf-bringup.log' for reading: No such file or directory`** — Verify you are logged into the Cloud Builder VM and the bringup process has started; check `/var/log/vmware/vcf/` exists first.
-    **`Permission denied`** — Run the command with `sudo` or ensure your user account has read permissions on the log file.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/vmware/vcf/bringup/vcf-bringup.log' for reading: No such file or directory` | Verify you are logged into the Cloud Builder VM and the bringup process has started; check `/var/log/vmware/vcf/` exists first. |
+    | `Permission denied` | Run the command with `sudo` or ensure your user account has read permissions on the log file. |
 ---
 
 ## Phase 6 — Post-Deployment

@@ -114,9 +114,11 @@ total 284K
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Authentication failed.`** — Verify ECS_HOST, ECS_USER, and ECS_PASS environment variables are set correctly and the ECS management interface is reachable on port 4443.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the ECS certificate into your system CA bundle; if persisting, check that curl was compiled with SSL support.
-    **`jq: command not found`** — Install python3-json or use the existing Python JSON parser in the script; the script already uses Python for namespace parsing instead of jq.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Authentication failed.` | Verify ECS_HOST, ECS_USER, and ECS_PASS environment variables are set correctly and the ECS management interface is reachable on port 4443. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the ECS certificate into your system CA bundle; if persisting, check that curl was compiled with SSL support. |
+    | `jq: command not found` | Install python3-json or use the existing Python JSON parser in the script; the script already uses Python for namespace parsing instead of jq. |
 ## Restoring Object Data
 
 Object data restore depends on the failure scenario.
@@ -212,9 +214,11 @@ curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the ECS node's certificate into your CA bundle.
-    **`error: 401 Unauthorized`** — Verify the `$TOKEN` variable is set correctly with a valid authentication token from `POST /login`.
-    **`jq: command not found`** — Install `python3-json.tool` or use `jq` instead; if using jq, replace `python3 -m json.tool` with `jq '.'`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the ECS node's certificate into your CA bundle. |
+    | `error: 401 Unauthorized` | Verify the `$TOKEN` variable is set correctly with a valid authentication token from `POST /login`. |
+    | `jq: command not found` | Install `python3-json.tool` or use `jq` instead; if using jq, replace `python3 -m json.tool` with `jq '.'`. |
 ### VDC Failure (Geo-Replication Configured)
 
 When a VDC becomes unavailable:
@@ -310,8 +314,10 @@ aws s3api copy-object \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidAccessKeyId) when calling the ListObjectVersions operation: The Access Key Id you provided does not exist in our records.`** — Verify the AWS profile `ecs` is configured correctly with valid credentials in `~/.aws/credentials`.
-    **`An error occurred (InvalidBucketName) when calling the ListObjectVersions operation: The specified bucket is not valid.`** — Confirm the bucket name is correct and that the ECS endpoint URL and profile have access to it.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidAccessKeyId) when calling the ListObjectVersions operation: The Access Key Id you provided does not exist in our records.` | Verify the AWS profile `ecs` is configured correctly with valid credentials in `~/.aws/credentials`. |
+    | `An error occurred (InvalidBucketName) when calling the ListObjectVersions operation: The specified bucket is not valid.` | Confirm the bucket name is correct and that the ECS endpoint URL and profile have access to it. |
 **Without versioning enabled:**
 - The object is unrecoverable unless it exists on a remote VDC with replication lag less than the time of deletion
 - Immediately check the remote VDC:
@@ -399,9 +405,11 @@ Total Objects: 247
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidEndpointAddress) when calling the ListBuckets operation: Could not connect to the endpoint URL: https://<ecs-endpoint>:9021`** — Replace `<ecs-endpoint>` with the actual ECS node hostname or IP address (e.g., `ecs-node-01.internal`).
-    **`An error occurred (AccessDenied) when calling the ListObjectsV2 operation: Access Denied`** — Verify the AWS profile `ecs` has valid credentials configured in `~/.aws/credentials` and the ECS access key has ListBucket permissions.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — Confirm `--no-verify-ssl` flag is present in both commands; if SSL errors persist, verify the ECS certificate is valid or use HTTP instead of HTTPS.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidEndpointAddress) when calling the ListBuckets operation: Could not connect to the endpoint URL: https://<ecs-endpoint>:9021` | Replace `<ecs-endpoint>` with the actual ECS node hostname or IP address (e.g., `ecs-node-01.internal`). |
+    | `An error occurred (AccessDenied) when calling the ListObjectsV2 operation: Access Denied` | Verify the AWS profile `ecs` has valid credentials configured in `~/.aws/credentials` and the ECS access key has ListBucket permissions. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | Confirm `--no-verify-ssl` flag is present in both commands; if SSL errors persist, verify the ECS certificate is valid or use HTTP instead of HTTPS. |
 ## Validation After Restore or Failover
 
 After any restore or VDC failover, validate the following before declaring recovery complete:

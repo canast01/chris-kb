@@ -151,9 +151,11 @@ ALERT: 2 critical event(s) found in activity log.
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The subscription 'invalid-id' could not be found.`** — Verify the SUBSCRIPTION_ID environment variable is set to a valid Azure subscription ID using `az account list -o table`.
-    **`ERROR: The resource group 'nonexistent-rg' could not be found in subscription.`** — Confirm the RESOURCE_GROUP environment variable matches an existing resource group with `az group list --subscription $SUBSCRIPTION_ID -o table`.
-    **`ERROR: The user does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read'.`** — Ensure the authenticated Azure account has Reader or higher role assigned to the subscription using `az role assignment list --subscription $SUBSCRIPTION_ID`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The subscription 'invalid-id' could not be found.` | Verify the SUBSCRIPTION_ID environment variable is set to a valid Azure subscription ID using `az account list -o table`. |
+    | `ERROR: The resource group 'nonexistent-rg' could not be found in subscription.` | Confirm the RESOURCE_GROUP environment variable matches an existing resource group with `az group list --subscription $SUBSCRIPTION_ID -o table`. |
+    | `ERROR: The user does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read'.` | Ensure the authenticated Azure account has Reader or higher role assigned to the subscription using `az role assignment list --subscription $SUBSCRIPTION_ID`. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -212,9 +214,11 @@ Last updated: 2024-01-15T14:32:18Z
 ```
 
 !!! warning "Common errors"
-    **`command not found: azure-health-check.sh`** — Verify the script exists in ~/Desktop with `ls -la azure-health-check.sh` and check the filename spelling.
-    **`az: command not found`** — Install the Azure CLI by running `curl -sL https://aka.ms/InstallAzureCLIDeb | bash` on Linux or `brew install azure-cli` on macOS.
-    **`ERROR: Please run 'az login' first`** — Authenticate to Azure by executing `az login` and selecting your subscription with `az account set --subscription <subscription-id>`.
+    | Error | Fix |
+    |---|---|
+    | `command not found: azure-health-check.sh` | Verify the script exists in ~/Desktop with `ls -la azure-health-check.sh` and check the filename spelling. |
+    | `az: command not found` | Install the Azure CLI by running `curl -sL https://aka.ms/InstallAzureCLIDeb | bash` on Linux or `brew install azure-cli` on macOS. |
+    | `ERROR: Please run 'az login' first` | Authenticate to Azure by executing `az login` and selecting your subscription with `az account set --subscription <subscription-id>`. |
 **What you should see**
 
 Tables showing your VMs with power state, load balancers, and SQL servers. Then a section showing any critical events from the Azure activity log. If critical events are found the script exits with an error and shows a red ALERT message.
@@ -388,9 +392,11 @@ Report saved to: compliance_report_2024-01-15.json
 ```
 
 !!! warning "Common errors"
-    **`ModuleNotFoundError: No module named 'azure.identity'`** — Ensure pip is using the correct Python interpreter by running `python -m pip install azure-identity` instead of `pip install`.
-    **`FileNotFoundError: [Errno 2] No such file or directory: 'azure_vm_compliance.py'`** — Verify the script exists in the current directory with `ls azure_vm_compliance.py` and check the file path is correct.
-    **`AuthenticationError: Failed to get token for scope`** — Authenticate to Azure first using `az login` or set environment variables for service principal credentials before running the script.
+    | Error | Fix |
+    |---|---|
+    | `ModuleNotFoundError: No module named 'azure.identity'` | Ensure pip is using the correct Python interpreter by running `python -m pip install azure-identity` instead of `pip install`. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: 'azure_vm_compliance.py'` | Verify the script exists in the current directory with `ls azure_vm_compliance.py` and check the file path is correct. |
+    | `AuthenticationError: Failed to get token for scope` | Authenticate to Azure first using `az login` or set environment variables for service principal credentials before running the script. |
 **What you should see**
 
 One line per VM as it scans: VM name, power state, and either OK or a list of flags like `MISSING_TAG_OWNER` or `NO_MONITORING_AGENT`. A CSV file is created that you can open in Excel for a full report.
@@ -583,9 +589,11 @@ Anomaly Detected: 45% spike on 2024-01-13
 ```
 
 !!! warning "Common errors"
-    **`cd: command not found`** — Use `cd /Users/YourName/Desktop` on macOS/Linux or remove the `cd` command if running from the correct directory on Windows PowerShell.
-    **`ModuleNotFoundError: No module named 'azure.identity'`** — Ensure pip is pointing to the correct Python interpreter with `python -m pip install azure-identity azure-mgmt-costmanagement`.
-    **`AuthenticationError: Failed to authenticate with Azure credentials`** — Configure Azure CLI credentials with `az login` or set the `AZURE_SUBSCRIPTION_ID` environment variable before running the script.
+    | Error | Fix |
+    |---|---|
+    | `cd: command not found` | Use `cd /Users/YourName/Desktop` on macOS/Linux or remove the `cd` command if running from the correct directory on Windows PowerShell. |
+    | `ModuleNotFoundError: No module named 'azure.identity'` | Ensure pip is pointing to the correct Python interpreter with `python -m pip install azure-identity azure-mgmt-costmanagement`. |
+    | `AuthenticationError: Failed to authenticate with Azure credentials` | Configure Azure CLI credentials with `az login` or set the `AZURE_SUBSCRIPTION_ID` environment variable before running the script. |
 **What you should see**
 
 A table showing each Azure service with its average daily spend for the previous 7 days and the current 7 days, plus a percentage change. Services that have spiked more than the threshold are marked with `*** SPIKE ***`. If spikes are found and SMTP is configured, an alert email is sent.
@@ -776,9 +784,11 @@ Audit complete. 2 NSGs scanned.
 ```
 
 !!! warning "Common errors"
-    **`cd: command not found`** — Use `cd /Users/YourName/Desktop` (forward slashes) on macOS/Linux, or run from PowerShell/Command Prompt on Windows.
-    **`ModuleNotFoundError: No module named 'azure.identity'`** — Ensure pip is using the same Python interpreter as your script by running `python -m pip install azure-identity azure-mgmt-network`.
-    **`AuthenticationError: DefaultAzureCredential failed to authenticate`** — Run `az login` to authenticate with Azure CLI before executing the script.
+    | Error | Fix |
+    |---|---|
+    | `cd: command not found` | Use `cd /Users/YourName/Desktop` (forward slashes) on macOS/Linux, or run from PowerShell/Command Prompt on Windows. |
+    | `ModuleNotFoundError: No module named 'azure.identity'` | Ensure pip is using the same Python interpreter as your script by running `python -m pip install azure-identity azure-mgmt-network`. |
+    | `AuthenticationError: DefaultAzureCredential failed to authenticate` | Run `az login` to authenticate with Azure CLI before executing the script. |
 **What you should see**
 
 A table with one row per problematic NSG rule. Each row shows the NSG name, resource group, rule name, port, protocol, and a finding code like `SSH_OPEN_TO_INTERNET` or `RDP_OPEN_TO_INTERNET`. NSGs with no issues show `(no public inbound issues)`. The script exits with an error if any issues are found.
@@ -955,9 +965,11 @@ localhost                  : ok=1    changed=1    unreachable=0    failed=0
 ```
 
 !!! warning "Common errors"
-    **`fatal: [prod-vm-eastus-01]: FAILED! => {"msg": "Unable to authenticate with Azure credentials"}`** — Verify Azure credentials are configured in `~/.azure/credentials` or set `AZURE_SUBSCRIPTION_ID`, `AZURE_CLIENT_ID`, and `AZURE_CLIENT_SECRET` environment variables.
-    **`ERROR! the playbook: azure_dr_failover.yml could not be found`** — Ensure the playbook file exists in the current directory or provide the full path with `ansible-playbook /path/to/azure_dr_failover.yml`.
-    **`fatal: [prod-vm-westus-02]: FAILED! => {"msg": "Secondary region is also unreachable"}`** — Verify network connectivity and NSG rules allow traffic to the secondary region, then manually check Azure portal for service health status.
+    | Error | Fix |
+    |---|---|
+    | `fatal: [prod-vm-eastus-01]: FAILED! => {"msg": "Unable to authenticate with Azure credentials"}` | Verify Azure credentials are configured in `~/.azure/credentials` or set `AZURE_SUBSCRIPTION_ID`, `AZURE_CLIENT_ID`, and `AZURE_CLIENT_SECRET` environment variables. |
+    | `ERROR! the playbook: azure_dr_failover.yml could not be found` | Ensure the playbook file exists in the current directory or provide the full path with `ansible-playbook /path/to/azure_dr_failover.yml`. |
+    | `fatal: [prod-vm-westus-02]: FAILED! => {"msg": "Secondary region is also unreachable"}` | Verify network connectivity and NSG rules allow traffic to the secondary region, then manually check Azure portal for service health status. |
 **What you should see**
 
 Ansible checks ASR replication health, triggers the failover for each VM in your list, then polls until the VMs come up running in the DR resource group. At the end it prints a summary confirming each VM's name and the result. The whole process can take 10–30 minutes depending on VM size.
@@ -1105,9 +1117,11 @@ Old snapshot size    : 448 GB (estimated wasted cost)
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The subscription of the graph client does not match the subscription of the specified resource group.`** — Ensure the subscription ID is correct and you have access to it by running `az account set --subscription <SUBSCRIPTION_ID>`.
-    **`ERROR: (ResourceNotFound) Resource 'Microsoft.Compute/snapshots/<name>' not found.`** — The snapshot may have already been deleted or the resource group name is incorrect; verify with `az snapshot list --subscription <SUBSCRIPTION_ID>`.
-    **`jq: error (at <stdin>:0): Cannot index string with string`** — The JSON parsing failed because `az snapshot list` returned invalid JSON; try running `az snapshot list --subscription <SUBSCRIPTION_ID> -o json` directly to verify the output format.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The subscription of the graph client does not match the subscription of the specified resource group.` | Ensure the subscription ID is correct and you have access to it by running `az account set --subscription <SUBSCRIPTION_ID>`. |
+    | `ERROR: (ResourceNotFound) Resource 'Microsoft.Compute/snapshots/<name>' not found.` | The snapshot may have already been deleted or the resource group name is incorrect; verify with `az snapshot list --subscription <SUBSCRIPTION_ID>`. |
+    | `jq: error (at <stdin>:0): Cannot index string with string` | The JSON parsing failed because `az snapshot list` returned invalid JSON; try running `az snapshot list --subscription <SUBSCRIPTION_ID> -o json` directly to verify the output format. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -1168,9 +1182,11 @@ Report saved to: ~/Desktop/snapshot-audit-report-20240122.json
 ```
 
 !!! warning "Common errors"
-    **`bash: azure-snapshot-audit.sh: No such file or directory`** — Verify the script exists in ~/Desktop or provide the full path to the script location.
-    **`ERROR: Not authenticated to Azure. Run 'az login' first.`** — Execute `az login` and authenticate with your Azure credentials before running the audit script.
-    **`ERROR: Insufficient permissions. Required role: Reader on subscription.`** — Ensure your Azure account has at least Reader role assigned to the target subscription.
+    | Error | Fix |
+    |---|---|
+    | `bash: azure-snapshot-audit.sh: No such file or directory` | Verify the script exists in ~/Desktop or provide the full path to the script location. |
+    | `ERROR: Not authenticated to Azure. Run 'az login' first.` | Execute `az login` and authenticate with your Azure credentials before running the audit script. |
+    | `ERROR: Insufficient permissions. Required role: Reader on subscription.` | Ensure your Azure account has at least Reader role assigned to the target subscription. |
 To also delete old snapshots (use with caution — this is permanent):
 
 ```text
@@ -1354,9 +1370,11 @@ Expiring within 30 days: 3
 ```
 
 !!! warning "Common errors"
-    **`'python' is not recognized as an internal or external command`** — Use `python3` instead of `python`, or ensure Python is in your system PATH environment variable.
-    **`ModuleNotFoundError: No module named 'azure'`** — Run `pip install` from the same Python environment/virtual environment where you plan to execute the script.
-    **`FileNotFoundError: [Errno 2] No such file or directory: 'azure_cert_expiry.py'`** — Verify the script exists in the current directory with `dir` (Windows) or `ls` (WSL), and ensure you're in the correct working directory.
+    | Error | Fix |
+    |---|---|
+    | `'python' is not recognized as an internal or external command` | Use `python3` instead of `python`, or ensure Python is in your system PATH environment variable. |
+    | `ModuleNotFoundError: No module named 'azure'` | Run `pip install` from the same Python environment/virtual environment where you plan to execute the script. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: 'azure_cert_expiry.py'` | Verify the script exists in the current directory with `dir` (Windows) or `ls` (WSL), and ensure you're in the correct working directory. |
 **What you should see**
 
 A table sorted with CRITICAL certificates first, then WARNING, then OK. Each row shows the vault name, certificate name, expiry date, days remaining, and status. The script exits with an error if any CRITICAL certificates are found.
@@ -1576,9 +1594,11 @@ localhost                  : ok=5    changed=0    unreachable=0    failed=0
 ```
 
 !!! warning "Common errors"
-    **`fatal: [localhost]: FAILED! => {"msg": "Unable to locate ansible.cfg or playbook file"}`** — Verify the playbook file `azure_infra_health.yml` exists in the current directory with `ls -la azure_infra_health.yml`.
-    **`fatal: [localhost]: FAILED! => {"msg": "Azure CLI not found. Please install azure-cli."}`** — Install the Azure CLI with `curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash` or your platform's package manager.
-    **`fatal: [localhost]: FAILED! => {"msg": "ERROR: Please run 'az login' to setup account."}`** — Authenticate to Azure with `az login` and set the correct subscription using `az account set --subscription <subscription-id>`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: [localhost]: FAILED! => {"msg": "Unable to locate ansible.cfg or playbook file"}` | Verify the playbook file `azure_infra_health.yml` exists in the current directory with `ls -la azure_infra_health.yml`. |
+    | `fatal: [localhost]: FAILED! => {"msg": "Azure CLI not found. Please install azure-cli."}` | Install the Azure CLI with `curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash` or your platform's package manager. |
+    | `fatal: [localhost]: FAILED! => {"msg": "ERROR: Please run 'az login' to setup account."}` | Authenticate to Azure with `az login` and set the correct subscription using `az account set --subscription <subscription-id>`. |
 **What you should see**
 
 Ansible works through each check in sequence. VM asserts show green `ok` if all VMs are running or red `failed` with the list of problem VMs. Load balancer, storage, Key Vault, and NSG info is printed as debug messages. At the end a summary block shows what was checked.
@@ -1679,9 +1699,11 @@ Health check completed successfully in 8.2 seconds.
 ```
 
 !!! warning "Common errors"
-    **`'azure-health-check.bat' is not recognized as an internal or external command`** — Verify the script exists in the current directory and the filename matches exactly (check for typos or missing file extension).
-    **`ERROR: Not authenticated. Please run 'az login' first.`** — Run `az login` in PowerShell or Command Prompt to authenticate before executing the health check script.
-    **`Access Denied: Insufficient permissions to read subscription details`** — Ensure your Azure account has at least Reader role permissions on the subscriptions being queried.
+    | Error | Fix |
+    |---|---|
+    | `'azure-health-check.bat' is not recognized as an internal or external command` | Verify the script exists in the current directory and the filename matches exactly (check for typos or missing file extension). |
+    | `ERROR: Not authenticated. Please run 'az login' first.` | Run `az login` in PowerShell or Command Prompt to authenticate before executing the health check script. |
+    | `Access Denied: Insufficient permissions to read subscription details` | Ensure your Azure account has at least Reader role permissions on the subscriptions being queried. |
 Or just double-click the file from your Desktop.
 
 **What you should see**
@@ -1836,9 +1858,11 @@ Last updated: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
-    **`Connect-AzAccount : The term 'Connect-AzAccount' is not recognized`** — Install the Azure PowerShell module with `Install-Module -Name Az -AllowClobber -Force`.
-    **`Subscription not found or access denied`** — Verify you are authenticated with `Connect-AzAccount` and have permissions on the target subscription.
+    | Error | Fix |
+    |---|---|
+    | `cannot be loaded because running scripts is disabled on this system` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script. |
+    | `Connect-AzAccount : The term 'Connect-AzAccount' is not recognized` | Install the Azure PowerShell module with `Install-Module -Name Az -AllowClobber -Force`. |
+    | `Subscription not found or access denied` | Verify you are authenticated with `Connect-AzAccount` and have permissions on the target subscription. |
 **What you should see**
 
 The first time it runs, it installs the Az PowerShell module automatically (can take 5–10 minutes). Then your browser opens for Azure login. After login, it prints a table of VMs with their power state and flags any that are not running. Then it shows any Azure Advisor recommendations for improving your environment.
@@ -1883,9 +1907,11 @@ Daily check: 1 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The subscription of type 'Microsoft.Subscription/subscriptions' could not be found.`** — Set the correct subscription with `az account set --subscription $SUBSCRIPTION_ID` before running the script.
-    **`ERROR: The resource group 'prod-eastus-rg' could not be found.`** — Verify the resource group name is correct and exists in the subscription with `az group list --query "[].name" -o tsv`.
-    **`ERROR: The user does not have authorization to perform action 'Microsoft.Advisor/recommendations/read' over scope '/subscriptions/...'`** — Ensure the service principal or user account has Reader or higher role assigned to the subscription via `az role assignment create`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The subscription of type 'Microsoft.Subscription/subscriptions' could not be found.` | Set the correct subscription with `az account set --subscription $SUBSCRIPTION_ID` before running the script. |
+    | `ERROR: The resource group 'prod-eastus-rg' could not be found.` | Verify the resource group name is correct and exists in the subscription with `az group list --query "[].name" -o tsv`. |
+    | `ERROR: The user does not have authorization to perform action 'Microsoft.Advisor/recommendations/read' over scope '/subscriptions/...'` | Ensure the service principal or user account has Reader or higher role assigned to the subscription via `az role assignment create`. |
 ---
 
 ## Incident Triage Script
@@ -1971,9 +1997,11 @@ Triage data saved to: /tmp/azure_triage_prod-eastus-rg_20250115_143218.txt
 ```
 
 !!! warning "Common errors"
-    **`SUBSCRIPTION_ID is required`** — Set the SUBSCRIPTION_ID environment variable before running the script: `export SUBSCRIPTION_ID=<your-subscription-id>`.
-    **`ERROR: The subscription of '<subscription-id>' doesn't have a namespace registered for service 'Microsoft.Advisor'`** — Register the Advisor provider with `az provider register --namespace Microsoft.Advisor` and wait 5–10 minutes for propagation.
-    **`ERROR: (InvalidDatetimeFormat) Datetime string does not match any expected format`** — Use GNU date syntax (`date -u -d '2 hours ago'`) on Linux or BSD syntax (`date -u -v-2H`) on macOS; the script attempts both but may fail on unsupported systems.
+    | Error | Fix |
+    |---|---|
+    | `SUBSCRIPTION_ID is required` | Set the SUBSCRIPTION_ID environment variable before running the script: `export SUBSCRIPTION_ID=<your-subscription-id>`. |
+    | `ERROR: The subscription of '<subscription-id>' doesn't have a namespace registered for service 'Microsoft.Advisor'` | Register the Advisor provider with `az provider register --namespace Microsoft.Advisor` and wait 5–10 minutes for propagation. |
+    | `ERROR: (InvalidDatetimeFormat) Datetime string does not match any expected format` | Use GNU date syntax (`date -u -d '2 hours ago'`) on Linux or BSD syntax (`date -u -v-2H`) on macOS; the script attempts both but may fail on unsupported systems. |
 ---
 
 ## Change Pre-Check Script
@@ -2035,9 +2063,11 @@ Pre-check: 1 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`SUBSCRIPTION_ID is required`** — Export the variable before running the script: `export SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789012"`.
-    **`ERROR: (AuthorizationFailed) The client '...' with object id '...' does not have authorization to perform action 'Microsoft.Advisor/recommendations/read'`** — Ensure the service principal or user account has at least Reader role on the subscription or resource group.
-    **`[FAIL] 3 VM(s) not in running state`** — Start the stopped VMs using `az vm start --resource-group "$RESOURCE_GROUP" --name <vm-name>` before proceeding with changes.
+    | Error | Fix |
+    |---|---|
+    | `SUBSCRIPTION_ID is required` | Export the variable before running the script: `export SUBSCRIPTION_ID="12345678-1234-1234-1234-123456789012"`. |
+    | `ERROR: (AuthorizationFailed) The client '...' with object id '...' does not have authorization to perform action 'Microsoft.Advisor/recommendations/read'` | Ensure the service principal or user account has at least Reader role on the subscription or resource group. |
+    | `[FAIL] 3 VM(s) not in running state` | Start the stopped VMs using `az vm start --resource-group "$RESOURCE_GROUP" --name <vm-name>` before proceeding with changes. |
 ---
 
 ## Post-Change Validation Script
@@ -2103,9 +2133,11 @@ Post-change validation: 0 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`SUBSCRIPTION_ID is required`** — Export the variable before running the script: `export SUBSCRIPTION_ID="<your-subscription-id>"`.
-    **`[FAIL] Resource <name> not found`** — Verify the resource name matches exactly in the resource group and check that the deployment completed successfully with `az resource list --resource-group <rg>`.
-    **`[FAIL] 1 VM(s) not running after change`** — Start the stopped VM using `az vm start --resource-group <rg> --name <vm-name>` and verify the change did not inadvertently deallocate it.
+    | Error | Fix |
+    |---|---|
+    | `SUBSCRIPTION_ID is required` | Export the variable before running the script: `export SUBSCRIPTION_ID="<your-subscription-id>"`. |
+    | `[FAIL] Resource <name> not found` | Verify the resource name matches exactly in the resource group and check that the deployment completed successfully with `az resource list --resource-group <rg>`. |
+    | `[FAIL] 1 VM(s) not running after change` | Start the stopped VM using `az vm start --resource-group <rg> --name <vm-name>` and verify the change did not inadvertently deallocate it. |
 ---
 
 ## Health Check Script
@@ -2151,9 +2183,11 @@ rg=prod-eastus-rg vms_running=8 vms_stopped=1 storage_accounts=3 advisor_high=0 
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The subscription 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' could not be found.`** — Verify SUBSCRIPTION_ID environment variable is set correctly and the service principal has access to that subscription.
-    **`ERROR: RESOURCE_GROUP is required`** — Ensure RESOURCE_GROUP environment variable is exported before running the script, or pass it in the cron job definition.
-    **`WARNING: The following scopes have no role assignments: /subscriptions/.../resourceGroups/prod-eastus-rg`** — Grant the service principal or managed identity the Reader role on the resource group using `az role assignment create --assignee <principal-id> --role Reader --scope <resource-group-id>`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The subscription 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' could not be found.` | Verify SUBSCRIPTION_ID environment variable is set correctly and the service principal has access to that subscription. |
+    | `ERROR: RESOURCE_GROUP is required` | Ensure RESOURCE_GROUP environment variable is exported before running the script, or pass it in the cron job definition. |
+    | `WARNING: The following scopes have no role assignments: /subscriptions/.../resourceGroups/prod-eastus-rg` | Grant the service principal or managed identity the Reader role on the resource group using `az role assignment create --assignee <principal-id> --role Reader --scope <resource-group-id>`. |
 ---
 
 ## Verify

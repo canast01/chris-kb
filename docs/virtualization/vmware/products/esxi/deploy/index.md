@@ -82,9 +82,11 @@ Address:	10.0.0.1#53
 ```
 
 !!! warning "Common errors"
-    **`** server can't find esxi-host-01.domain.local: NXDOMAIN`** — Verify the DNS A record exists in your DNS server and the domain suffix is correct; check `nslookup esxi-host-01.domain.local <dns-server-ip>` against the authoritative nameserver.
-    **`** server can't find 10.0.0.10.in-addr.arpa: NXDOMAIN`** — Create a reverse DNS PTR record for 10.0.0.10 pointing to esxi-host-01.domain.local in your DNS reverse zone.
-    **`nslookup: command not found`** — Install `bind-utils` (RHEL/CentOS) or `dnsutils` (Debian/Ubuntu), or use `dig` or `host` as alternatives.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find esxi-host-01.domain.local: NXDOMAIN` | Verify the DNS A record exists in your DNS server and the domain suffix is correct; check `nslookup esxi-host-01.domain.local <dns-server-ip>` against the authoritative nameserver. |
+    | `** server can't find 10.0.0.10.in-addr.arpa: NXDOMAIN` | Create a reverse DNS PTR record for 10.0.0.10 pointing to esxi-host-01.domain.local in your DNS reverse zone. |
+    | `nslookup: command not found` | Install `bind-utils` (RHEL/CentOS) or `dnsutils` (Debian/Ubuntu), or use `dig` or `host` as alternatives. |
 **NTP reachability**
 
 ```bash
@@ -99,9 +101,11 @@ ntpdate[12847]: adjust time server 10.45.12.8 offset 0.002341 sec
 ```
 
 !!! warning "Common errors"
-    **`ntpdate[12847]: no server suitable for synchronization found`** — Verify NTP server hostname resolves and is reachable from the management VLAN (ping ntp1.domain.local).
-    **`ntpdate: command not found`** — Install ntpdate package or use `chronyc -a makestep` / `timedatectl set-ntp true` on modern systems instead.
-    **`ntpdate[12847]: socket in use - exiting`** — Stop the ntpd/chronyd service first with `systemctl stop ntpd` or `systemctl stop chronyd` before running ntpdate.
+    | Error | Fix |
+    |---|---|
+    | `ntpdate[12847]: no server suitable for synchronization found` | Verify NTP server hostname resolves and is reachable from the management VLAN (ping ntp1.domain.local). |
+    | `ntpdate: command not found` | Install ntpdate package or use `chronyc -a makestep` / `timedatectl set-ntp true` on modern systems instead. |
+    | `ntpdate[12847]: socket in use - exiting` | Stop the ntpd/chronyd service first with `systemctl stop ntpd` or `systemctl stop chronyd` before running ntpdate. |
 **Cabling**
 
 - Dedicated NICs for management, vMotion, vSAN, and VM traffic (or LACP bond)
@@ -191,9 +195,11 @@ Tag added to vmk1.
 ```
 
 !!! warning "Common errors"
-    **`Error: The object already exists.`** — Verify the VMkernel interface name does not already exist with `esxcli network ip interface list`.
-    **`Error: The portgroup 'vMotion' does not exist.`** — Create the vMotion portgroup on the vSwitch before adding the interface using `esxcli vswitch standard portgroup add`.
-    **`Error: The tag 'VMotion' is not a valid tag.`** — Use the correct tag name `vMotion` (case-sensitive) instead of `VMotion` with `esxcli network ip interface tag add --interface-name vmk1 --tagname vMotion`.
+    | Error | Fix |
+    |---|---|
+    | `Error: The object already exists.` | Verify the VMkernel interface name does not already exist with `esxcli network ip interface list`. |
+    | `Error: The portgroup 'vMotion' does not exist.` | Create the vMotion portgroup on the vSwitch before adding the interface using `esxcli vswitch standard portgroup add`. |
+    | `Error: The tag 'VMotion' is not a valid tag.` | Use the correct tag name `vMotion` (case-sensitive) instead of `VMotion` with `esxcli network ip interface tag add --interface-name vmk1 --tagname vMotion`. |
 **Create vSAN VMkernel**
 
 ```bash
@@ -215,9 +221,11 @@ esxcli network vswitch standard set --vswitch-name vSwitch1 --mtu 9000
 ```
 
 !!! warning "Common errors"
-    **`Error: The object already exists.`** — Verify the vmk2 interface doesn't already exist with `esxcli network ip interface list` before adding it.
-    **`Error: The portgroup "vSAN" does not exist.`** — Create the vSAN portgroup on vSwitch1 first using vCenter or `esxcli network vswitch standard portgroup add --vswitch-name vSwitch1 --portgroup-name "vSAN"`.
-    **`Error: The vswitch vSwitch1 does not exist.`** — Confirm the vSwitch name with `esxcli network vswitch standard list` and use the correct vSwitch identifier.
+    | Error | Fix |
+    |---|---|
+    | `Error: The object already exists.` | Verify the vmk2 interface doesn't already exist with `esxcli network ip interface list` before adding it. |
+    | `Error: The portgroup "vSAN" does not exist.` | Create the vSAN portgroup on vSwitch1 first using vCenter or `esxcli network vswitch standard portgroup add --vswitch-name vSwitch1 --portgroup-name "vSAN"`. |
+    | `Error: The vswitch vSwitch1 does not exist.` | Confirm the vSwitch name with `esxcli network vswitch standard list` and use the correct vSwitch identifier. |
 **Verify connectivity from each VMkernel**
 
 ```bash
@@ -248,8 +256,10 @@ round-trip min/avg/max = 3.721/3.826/3.912 ms
 ```
 
 !!! warning "Common errors"
-    **`vmkping: Unknown interface vmk2`** — Verify the VMkernel interface exists with `esxcli network ip interface list` and use the correct interface name.
-    **`PING 10.20.1.1 (10.20.1.1): 8972 data bytes ... 100% packet loss`** — Confirm the gateway IP is reachable and that the MTU is set to 9000 on both the ESXi interface and upstream switch port with `esxcli network ip interface get -i vmk2`.
+    | Error | Fix |
+    |---|---|
+    | `vmkping: Unknown interface vmk2` | Verify the VMkernel interface exists with `esxcli network ip interface list` and use the correct interface name. |
+    | `PING 10.20.1.1 (10.20.1.1): 8972 data bytes ... 100% packet loss` | Confirm the gateway IP is reachable and that the MTU is set to 9000 on both the ESXi interface and upstream switch port with `esxcli network ip interface get -i vmk2`. |
 **List all VMkernel interfaces**
 
 ```bash
@@ -267,8 +277,10 @@ vmk3  0.0.0.0              255.255.255.0     ::                                 
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace esxcli`** — Ensure you are logged into an ESXi host directly via SSH or console; this command does not work on vCenter Server.
-    **`Error: Permission denied`** — Run the command as root or a user with administrative privileges on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace esxcli` | Ensure you are logged into an ESXi host directly via SSH or console; this command does not work on vCenter Server. |
+    | `Error: Permission denied` | Run the command as root or a user with administrative privileges on the ESXi host. |
 ---
 
 ## Phase 4: Storage Configuration
@@ -318,9 +330,11 @@ Target: iqn.1991-05.com.example:storage.lun3
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the host. The host is not reachable.`** — Verify network connectivity to the ESXi host and ensure you have valid credentials in your esxcli session.
-    **`Error: Discovery sendtarget failed: Connection refused (111)`** — Confirm the iSCSI target portal IP address and port are correct, and that the storage array is reachable from the ESXi management network.
-    **`Error: Adapter vmhba65 not found`** — Verify the software iSCSI initiator is enabled and the adapter name is correct by running `esxcli iscsi adapter list` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the host. The host is not reachable.` | Verify network connectivity to the ESXi host and ensure you have valid credentials in your esxcli session. |
+    | `Error: Discovery sendtarget failed: Connection refused (111)` | Confirm the iSCSI target portal IP address and port are correct, and that the storage array is reachable from the ESXi management network. |
+    | `Error: Adapter vmhba65 not found` | Verify the software iSCSI initiator is enabled and the adapter name is correct by running `esxcli iscsi adapter list` first. |
 **Fibre Channel**
 
 ```bash
@@ -354,8 +368,10 @@ Device naa.60060e8007e2d0000007e2d000010003 Size: 512000 MB Display Name: PURE S
 ```
 
 !!! warning "Common errors"
-    **`Could not get device list. Error: Permission denied`** — Run the commands as root or with sudo, or ensure your account has ESXi administrator privileges.
-    **`No matching HBAs found`** — Verify FC HBAs are installed and detected by running `esxcli storage core adapter list` without grep to confirm adapter presence.
+    | Error | Fix |
+    |---|---|
+    | `Could not get device list. Error: Permission denied` | Run the commands as root or with sudo, or ensure your account has ESXi administrator privileges. |
+    | `No matching HBAs found` | Verify FC HBAs are installed and detected by running `esxcli storage core adapter list` without grep to confirm adapter presence. |
 **Multipathing (PSP)**
 
 ```bash
@@ -388,8 +404,10 @@ vmhba6:C0:T2:L0                   active    0             2            0
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not find device naa.6001405abc123def456789abcdef0123`** — Verify the device NAA ID with `esxcli storage nmp device list` and use the correct identifier.
-    **`Error: The specified path is not valid for this device`** — Ensure all paths are properly discovered and active by rescanning storage with `esxcli storage core adapter rescan --adapter vmhbaX`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not find device naa.6001405abc123def456789abcdef0123` | Verify the device NAA ID with `esxcli storage nmp device list` and use the correct identifier. |
+    | `Error: The specified path is not valid for this device` | Ensure all paths are properly discovered and active by rescanning storage with `esxcli storage core adapter rescan --adapter vmhbaX`. |
 **VAAI plugin**
 
 Install the array vendor's VAAI plugin via VUM/LCM if the array supports hardware acceleration (XCOPY, ATS, WriteSame). Verify:
@@ -411,8 +429,10 @@ mpx.vmhba4:C0:T0:L0                     not supported
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace esxcli storage core device vaai`** — Verify the ESXi version supports VAAI (vSphere 5.0+) and that esxcli is properly initialized.
-    **`Error: Unable to connect to the local hostd agent`** — Restart the hostd service with `services.sh restart` or reboot the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace esxcli storage core device vaai` | Verify the ESXi version supports VAAI (vSphere 5.0+) and that esxcli is properly initialized. |
+    | `Error: Unable to connect to the local hostd agent` | Restart the hostd service with `services.sh restart` or reboot the ESXi host. |
 **Confirm datastores**
 
 ```bash
@@ -432,8 +452,10 @@ Mount Point                                        Volume Name      UUID        
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not get list of filesystems`** — Verify the esxcli service is running with `systemctl status esxcli` and check network connectivity to the ESXi host.
-    **`Error: Permission denied`** — Run the command as root or with appropriate vSphere credentials; non-root users cannot access esxcli storage commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not get list of filesystems` | Verify the esxcli service is running with `systemctl status esxcli` and check network connectivity to the ESXi host. |
+    | `Error: Permission denied` | Run the command as root or with appropriate vSphere credentials; non-root users cannot access esxcli storage commands. |
 ---
 
 ## Phase 5: Add Host to vCenter
@@ -466,8 +488,10 @@ esxi-host-01.domain.local Connected       PoweredOn
 ```
 
 !!! warning "Common errors"
-    **`Connect-VIServer : Cannot find a certificate or crmf request for the object named 'vcenter.domain.local'.`** — Verify the vCenter FQDN is correct and resolvable via DNS, or use the IP address instead.
-    **`Get-VMHost : The object 'esxi-host-01.domain.local' was not found on the server.`** — Confirm the ESXi hostname matches exactly in vCenter inventory (check capitalization and domain suffix).
+    | Error | Fix |
+    |---|---|
+    | `Connect-VIServer : Cannot find a certificate or crmf request for the object named 'vcenter.domain.local'.` | Verify the vCenter FQDN is correct and resolvable via DNS, or use the IP address instead. |
+    | `Get-VMHost : The object 'esxi-host-01.domain.local' was not found on the server.` | Confirm the ESXi hostname matches exactly in vCenter inventory (check capitalization and domain suffix). |
 Expected output:
 
 ```text
@@ -496,8 +520,10 @@ vmware-fdm is running (pid 2847)
 ```
 
 !!! warning "Common errors"
-    **`vmware-fdm is stopped`** — Start the service with `/etc/init.d/vmware-fdm start` and verify cluster membership with `esxcli cluster get`.
-    **`Command not found: /etc/init.d/vmware-fdm`** — Verify you are on an ESXi host with vSAN or HA enabled; if not present, the service is not installed on this host.
+    | Error | Fix |
+    |---|---|
+    | `vmware-fdm is stopped` | Start the service with `/etc/init.d/vmware-fdm start` and verify cluster membership with `esxcli cluster get`. |
+    | `Command not found: /etc/init.d/vmware-fdm` | Verify you are on an ESXi host with vSAN or HA enabled; if not present, the service is not installed on this host. |
 ---
 
 ## Phase 6: Hardening & Baseline
@@ -520,8 +546,10 @@ $hostView.EnterLockdownMode()
 ```
 
 !!! warning "Common errors"
-    **`You do not have permission to perform this operation.`** — Verify your vCenter user account has Administrator role or equivalent Host.Config.Security privileges on the target ESXi host.
-    **`The object has already been deleted or has not been completely created.`** — Ensure the ESXi host is still connected to vCenter and in a healthy state; reconnect the host if necessary.
+    | Error | Fix |
+    |---|---|
+    | `You do not have permission to perform this operation.` | Verify your vCenter user account has Administrator role or equivalent Host.Config.Security privileges on the target ESXi host. |
+    | `The object has already been deleted or has not been completely created.` | Ensure the ESXi host is still connected to vCenter and in a healthy state; reconnect the host if necessary. |
 **Disable SSH and ESXi Shell post-configuration**
 
 ```bash
@@ -540,8 +568,10 @@ vim-cmd hostsvc/disable_esx_shell
 ```
 
 !!! warning "Common errors"
-    **`vim-cmd: command not found`** — Run commands directly on the ESXi host console or via an active SSH session before disabling SSH access.
-    **`Error: The object or item referenced could not be found.`** — Verify the host is not in a disconnected state in vCenter; reconnect the host and retry the vim-cmd commands.
+    | Error | Fix |
+    |---|---|
+    | `vim-cmd: command not found` | Run commands directly on the ESXi host console or via an active SSH session before disabling SSH access. |
+    | `Error: The object or item referenced could not be found.` | Verify the host is not in a disconnected state in vCenter; reconnect the host and retry the vim-cmd commands. |
 **NTP service**
 
 ```bash
@@ -570,8 +600,10 @@ Server: ntp2.domain.local
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to set NTP server ntp1.domain.local`** — Verify the NTP server hostname is resolvable and reachable from the ESXi host using `ping` or `nslookup`.
-    **`ntpq: read: Connection refused`** — Ensure the NTP daemon is running with `systemctl start ntpd` or restart the service with `systemctl restart ntpd`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to set NTP server ntp1.domain.local` | Verify the NTP server hostname is resolvable and reachable from the ESXi host using `ping` or `nslookup`. |
+    | `ntpq: read: Connection refused` | Ensure the NTP daemon is running with `systemctl start ntpd` or restart the service with `systemctl restart ntpd`. |
 **Syslog forwarding**
 
 ```bash
@@ -602,8 +634,10 @@ Syslog Config:
 ```
 
 !!! warning "Common errors"
-    **`Error: The object has already been modified.`** — Wait 30 seconds before running the reload command, as the config set operation may still be processing.
-    **`Error: Unknown option or malformed command.`** — Verify the syslog server hostname is reachable and the UDP port 514 is not blocked by upstream firewalls; use `esxcli network firewall ruleset list` to confirm syslog ruleset exists.
+    | Error | Fix |
+    |---|---|
+    | `Error: The object has already been modified.` | Wait 30 seconds before running the reload command, as the config set operation may still be processing. |
+    | `Error: Unknown option or malformed command.` | Verify the syslog server hostname is reachable and the UDP port 514 is not blocked by upstream firewalls; use `esxcli network firewall ruleset list` to confirm syslog ruleset exists. |
 **LCM baseline remediation**
 
 1. vCenter → **Menu → Lifecycle Manager**

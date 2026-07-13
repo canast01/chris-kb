@@ -139,9 +139,11 @@ Relationship Status: broken-off
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No such relationship`** — Verify the destination path format is correct (svm-name:volume-name) and the relationship exists with `snapmirror show`.
-    **`Transfer aborted: insufficient space on destination volume`** — Increase the destination volume size with `volume modify -vserver <dest-svm> -volume <dest-vol> -size +<amount>` or enable autogrow.
-    **`Transfer failed: source volume is offline`** — Bring the source volume online with `volume online -vserver <src-svm> -volume <src-vol>` and resume the relationship with `snapmirror resume -destination-path <dest-svm>:<dest-vol>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No such relationship` | Verify the destination path format is correct (svm-name:volume-name) and the relationship exists with `snapmirror show`. |
+    | `Transfer aborted: insufficient space on destination volume` | Increase the destination volume size with `volume modify -vserver <dest-svm> -volume <dest-vol> -size +<amount>` or enable autogrow. |
+    | `Transfer failed: source volume is offline` | Bring the source volume online with `volume online -vserver <src-svm> -volume <src-vol>` and resume the relationship with `snapmirror resume -destination-path <dest-svm>:<dest-vol>`. |
 ---
 
 ## Step 2 — Check transfer history
@@ -187,9 +189,11 @@ Operation succeeded: SnapMirror update started for destination "cluster2://dr_sv
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No SnapMirror relationship found for destination path cluster2://dr_svm:prod_vol`** — Verify the destination SVM and volume names are correct using `snapmirror show` without filters.
-    **`Error: SnapMirror transfer cannot be aborted: transfer is not in progress`** — Check if the transfer has already completed or failed using `snapmirror show-history`; only active transfers can be aborted.
-    **`Error: This operation is not permitted: SnapMirror relationship is broken`** — Resynchronize the relationship with `snapmirror resync -destination-path <dest-svm>:<dest-vol>` before attempting manual updates.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No SnapMirror relationship found for destination path cluster2://dr_svm:prod_vol` | Verify the destination SVM and volume names are correct using `snapmirror show` without filters. |
+    | `Error: SnapMirror transfer cannot be aborted: transfer is not in progress` | Check if the transfer has already completed or failed using `snapmirror show-history`; only active transfers can be aborted. |
+    | `Error: This operation is not permitted: SnapMirror relationship is broken` | Resynchronize the relationship with `snapmirror resync -destination-path <dest-svm>:<dest-vol>` before attempting manual updates. |
 ---
 
 ## Step 3 — Check intercluster LIFs
@@ -243,9 +247,11 @@ Peer Cluster Name: cluster2-prod
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No entry found for intercluster LIFs`** — Verify intercluster LIFs exist by running `network interface show -role intercluster` and create them if missing using `network interface create -vserver <cluster> -lif <name> -role intercluster -home-node <node> -home-port <port> -address <ip> -netmask <mask>`.
-    **`100% packet loss`** — Check firewall rules allow UDP 11104-11105 between clusters, verify network routing with `network route show`, and confirm intercluster LIF is in "up" status.
-    **`Cluster peer show: Availability = Unavailable`** — Verify both clusters can reach each other's intercluster LIFs using `network ping`, check DNS resolution, and re-establish the peer relationship with `cluster peer create -peer-addrs <remote-ip>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No entry found for intercluster LIFs` | Verify intercluster LIFs exist by running `network interface show -role intercluster` and create them if missing using `network interface create -vserver <cluster> -lif <name> -role intercluster -home-node <node> -home-port <port> -address <ip> -netmask <mask>`. |
+    | `100% packet loss` | Check firewall rules allow UDP 11104-11105 between clusters, verify network routing with `network route show`, and confirm intercluster LIF is in "up" status. |
+    | `Cluster peer show: Availability = Unavailable` | Verify both clusters can reach each other's intercluster LIFs using `network ping`, check DNS resolution, and re-establish the peer relationship with `cluster peer create -peer-addrs <remote-ip>`. |
 ---
 
 ## Step 4 — Check ONTAP EMS for SnapMirror events
@@ -295,8 +301,10 @@ cluster1::> event log show -node * | grep -i "vol_data_prod"
 ```
 
 !!! warning "Common errors"
-    **`Error: invalid value for "-time-range" option`** — Ensure the date format matches "YYYY-MM-DD HH:MM:SS" and use two dots (..) to separate start and end times.
-    **`Error: unknown event message name "snapmirror.*"`** — Use the exact message name without wildcards in the -message-name parameter, or omit the filter to search all events and pipe to grep instead.
+    | Error | Fix |
+    |---|---|
+    | `Error: invalid value for "-time-range" option` | Ensure the date format matches "YYYY-MM-DD HH:MM:SS" and use two dots (..) to separate start and end times. |
+    | `Error: unknown event message name "snapmirror.*"` | Use the exact message name without wildcards in the -message-name parameter, or omit the filter to search all events and pipe to grep instead. |
 ---
 
 ## Step 5 — SM-BC specific diagnostics
@@ -355,9 +363,11 @@ Mediator added for peer cluster cluster2-01 with address 192.168.100.45.
 ```
 
 !!! warning "Common errors"
-    **`Error: Mediator is unreachable. Failover capability is disabled.`** — Verify mediator VM is running and network connectivity exists from both clusters to the mediator IP on port 443.
-    **`Error: curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl (`curl -k https://<mediator-ip>/api/v1/heartbeat`) or import the mediator's CA certificate into the cluster's certificate store.
-    **`Error: Mediator add failed: Authentication failed for peer cluster`** — Confirm the mediator username and password are correct and the mediator has been initialized with `mediator setup` on the mediator VM.
+    | Error | Fix |
+    |---|---|
+    | `Error: Mediator is unreachable. Failover capability is disabled.` | Verify mediator VM is running and network connectivity exists from both clusters to the mediator IP on port 443. |
+    | `Error: curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl (`curl -k https://<mediator-ip>/api/v1/heartbeat`) or import the mediator's CA certificate into the cluster's certificate store. |
+    | `Error: Mediator add failed: Authentication failed for peer cluster` | Confirm the mediator username and password are correct and the mediator has been initialized with `mediator setup` on the mediator VM. |
 ---
 
 ## Step 6 — Collect AutoSupport and EMS for NetApp SR
@@ -418,9 +428,11 @@ Diagnostic output saved to /tmp/snapmirror-diag-2024-01-15-1445.txt
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Verify you are running commands on a NetApp ONTAP cluster (not a Linux host) and have appropriate cluster admin privileges.
-    **`Error: No cluster peer relationship found`** — Establish cluster peering first using `cluster peer create` before attempting SnapMirror operations.
-    **`Error: event log show: invalid time-range format`** — Use valid time-range syntax like `"-2h".."now"` or absolute timestamps in `YYYY-MM-DD HH:MM:SS` format.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Verify you are running commands on a NetApp ONTAP cluster (not a Linux host) and have appropriate cluster admin privileges. |
+    | `Error: No cluster peer relationship found` | Establish cluster peering first using `cluster peer create` before attempting SnapMirror operations. |
+    | `Error: event log show: invalid time-range format` | Use valid time-range syntax like `"-2h".."now"` or absolute timestamps in `YYYY-MM-DD HH:MM:SS` format. |
 ---
 
 ## Log locations

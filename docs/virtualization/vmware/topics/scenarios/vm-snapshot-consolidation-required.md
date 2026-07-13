@@ -96,9 +96,11 @@ Filesystem                                      Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`find: No such file or directory`** — Verify the datastore UUID and VM folder name are correct by running `ls /vmfs/volumes/` to list available datastores.
-    **`Permission denied`** — Run the commands as root or via an SSH session with elevated privileges on the ESXi host.
-    **`Filesystem /vmfs/volumes/<datastore-uuid> not found`** — Confirm the datastore is mounted and accessible by checking `esxcli storage filesystem list`.
+    | Error | Fix |
+    |---|---|
+    | `find: No such file or directory` | Verify the datastore UUID and VM folder name are correct by running `ls /vmfs/volumes/` to list available datastores. |
+    | `Permission denied` | Run the commands as root or via an SSH session with elevated privileges on the ESXi host. |
+    | `Filesystem /vmfs/volumes/<datastore-uuid> not found` | Confirm the datastore is mounted and accessible by checking `esxcli storage filesystem list`. |
 Look for: delta files larger than the base VMDK indicate the snapshot has been accumulating changes for a long time — consolidation I/O will be heavy and may take hours. Ensure at least 20% free space on the datastore before starting.
 
 ---
@@ -158,8 +160,10 @@ Gen 14 Len 0 Owners []
 ```
 
 !!! warning "Common errors"
-    **`Failed to open the disk '/vmfs/volumes/<datastore-uuid>/<vm-folder>/<vm-flat.vmdk>': No such file or directory`** — Verify the datastore UUID and VM folder path are correct using `ls -la /vmfs/volumes/` and `find /vmfs/volumes -name "*.vmdk"`.
-    **`Failed to open the disk '/vmfs/volumes/<datastore-uuid>/<vm-folder>/<vm-flat.vmdk>': Permission denied`** — Ensure you are running the command as root or with sufficient privileges on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Failed to open the disk '/vmfs/volumes/<datastore-uuid>/<vm-folder>/<vm-flat.vmdk>': No such file or directory` | Verify the datastore UUID and VM folder path are correct using `ls -la /vmfs/volumes/` and `find /vmfs/volumes -name "*.vmdk"`. |
+    | `Failed to open the disk '/vmfs/volumes/<datastore-uuid>/<vm-folder>/<vm-flat.vmdk>': Permission denied` | Ensure you are running the command as root or with sufficient privileges on the ESXi host. |
 A backup agent (VADP proxy) or a stale ESXi process may hold the lock. Check active backup jobs in your backup console and terminate any that are stuck on this VM.
 
 **Cause 2: Insufficient disk space**
@@ -212,8 +216,10 @@ snapshot.2.createTime = "2024-01-20T11:47:08.987654Z"
 ```
 
 !!! warning "Common errors"
-    **`cat: /vmfs/volumes/<datastore-uuid>/<vm-folder>/<vm>.vmsd: No such file or directory`** — Verify the datastore UUID and VM folder path are correct by running `ls -la /vmfs/volumes/` and navigating to the correct VM directory.
-    **`Permission denied`** — Run the command as root or with appropriate ESXi host privileges; standard user accounts cannot read VMFS metadata files.
+    | Error | Fix |
+    |---|---|
+    | `cat: /vmfs/volumes/<datastore-uuid>/<vm-folder>/<vm>.vmsd: No such file or directory` | Verify the datastore UUID and VM folder path are correct by running `ls -la /vmfs/volumes/` and navigating to the correct VM directory. |
+    | `Permission denied` | Run the command as root or with appropriate ESXi host privileges; standard user accounts cannot read VMFS metadata files. |
 **Cause 4: VM has active write I/O that cannot be quiesced**
 
 Temporarily stun (quiesce) the VM by migrating it off the host with vMotion or briefly suspending it during off-hours before consolidating — this is a last resort and should be planned as a maintenance window.
@@ -263,9 +269,11 @@ Merge completed in 847 seconds.
 ```
 
 !!! warning "Common errors"
-    **`vmkfstools: Invalid virtual disk specification`** — Verify the snapshot delta number (-000001, -000002, etc.) matches the actual file in the directory by running `ls -la /vmfs/volumes/<ds>/<vm>/` first.
-    **`No such file or directory`** — Ensure you are SSH'd directly to the ESXi host (not vCenter) and the datastore path is mounted; check with `ls /vmfs/volumes/<ds>/` to confirm access.
-    **`Device or resource busy`** — Power off the VM completely and confirm no snapshots are actively consolidating; check with `vim-cmd vmsvc/snapshot.get <vmid>` before proceeding.
+    | Error | Fix |
+    |---|---|
+    | `vmkfstools: Invalid virtual disk specification` | Verify the snapshot delta number (-000001, -000002, etc.) matches the actual file in the directory by running `ls -la /vmfs/volumes/<ds>/<vm>/` first. |
+    | `No such file or directory` | Ensure you are SSH'd directly to the ESXi host (not vCenter) and the datastore path is mounted; check with `ls /vmfs/volumes/<ds>/` to confirm access. |
+    | `Device or resource busy` | Power off the VM completely and confirm no snapshots are actively consolidating; check with `vim-cmd vmsvc/snapshot.get <vmid>` before proceeding. |
 Look for: this procedure should only be used when vCenter consolidation is unavailable and the VM cannot be restored from backup. Always retain original files until the VM is confirmed healthy.
 
 ---

@@ -92,9 +92,11 @@ Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkMa
 ```
 
 !!! warning "Common errors"
-    **`Error: unknown or ambiguous command 'mod'.`** — Use `nmcli connection modify` or ensure NetworkManager version is 1.0+; older versions use `nmcli con modify` syntax differently.
-    **`Error: Connection activation failed: No suitable device found for this connection.`** — Verify the interface name is correct with `nmcli device status` and ensure the device exists and is not already managed by another connection.
-    **`Error: invalid prefix '24a' in address '<IP>/24a'.`** — Remove extra characters from the prefix value; it must be a number between 0–32 for IPv4 (e.g., `/24` not `/24a`).
+    | Error | Fix |
+    |---|---|
+    | `Error: unknown or ambiguous command 'mod'.` | Use `nmcli connection modify` or ensure NetworkManager version is 1.0+; older versions use `nmcli con modify` syntax differently. |
+    | `Error: Connection activation failed: No suitable device found for this connection.` | Verify the interface name is correct with `nmcli device status` and ensure the device exists and is not already managed by another connection. |
+    | `Error: invalid prefix '24a' in address '<IP>/24a'.` | Remove extra characters from the prefix value; it must be a number between 0–32 for IPv4 (e.g., `/24` not `/24a`). |
 Verify:
 
 ```bash
@@ -131,9 +133,11 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 ```
 
 !!! warning "Common errors"
-    **`Device "eth0" does not exist.`** — Replace `<interface>` with a valid interface name from `ip link show` output.
-    **`ping: sendto: Operation not permitted`** — Ensure the user has sufficient privileges or run with `sudo`.
-    **`ping: unknown host 8.8.8.8`** — Verify DNS resolution is working with `cat /etc/resolv.conf` and check network connectivity to the gateway first.
+    | Error | Fix |
+    |---|---|
+    | `Device "eth0" does not exist.` | Replace `<interface>` with a valid interface name from `ip link show` output. |
+    | `ping: sendto: Operation not permitted` | Ensure the user has sufficient privileges or run with `sudo`. |
+    | `ping: unknown host 8.8.8.8` | Verify DNS resolution is working with `cat /etc/resolv.conf` and check network connectivity to the gateway first. |
 **Ubuntu (Netplan):**
 
 Edit `/etc/netplan/00-installer-config.yaml`:
@@ -165,9 +169,11 @@ netplan apply
 ```
 
 !!! warning "Common errors"
-    **`Error: invalid YAML in /etc/netplan/*.yaml`** — Validate YAML syntax with `netplan validate` before applying, or check for tabs instead of spaces in the configuration file.
-    **`Error: Failed to apply network config: Permission denied`** — Run the command with `sudo netplan apply` as root or a user with sudo privileges.
-    **`Error: Cannot find netplan executable`** — Install netplan with `apt install netplan.io` on Debian/Ubuntu systems where it may not be pre-installed.
+    | Error | Fix |
+    |---|---|
+    | `Error: invalid YAML in /etc/netplan/*.yaml` | Validate YAML syntax with `netplan validate` before applying, or check for tabs instead of spaces in the configuration file. |
+    | `Error: Failed to apply network config: Permission denied` | Run the command with `sudo netplan apply` as root or a user with sudo privileges. |
+    | `Error: Cannot find netplan executable` | Install netplan with `apt install netplan.io` on Debian/Ubuntu systems where it may not be pre-installed. |
 ---
 
 ## Configure NTP
@@ -213,8 +219,10 @@ Created symlink /etc/systemd/system/multi-user.target.wants/chronyd.service → 
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to find a match: chrony`** — Ensure the system repositories are enabled with `dnf repolist` and run `dnf makecache` to refresh metadata.
-    **`Error: Failed to enable unit: Unit file /usr/lib/systemd/system/chronyd.service not found.`** — Verify the chrony package installed successfully and check `/usr/lib/systemd/system/` for the chronyd.service file.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to find a match: chrony` | Ensure the system repositories are enabled with `dnf repolist` and run `dnf makecache` to refresh metadata. |
+    | `Error: Failed to enable unit: Unit file /usr/lib/systemd/system/chronyd.service not found.` | Verify the chrony package installed successfully and check `/usr/lib/systemd/system/` for the chronyd.service file. |
 Edit `/etc/chrony.conf` — replace the default pool with your NTP server:
 
 ```text
@@ -258,9 +266,11 @@ Estimated error : 2.341 ms
 ```
 
 !!! warning "Common errors"
-    **`chronyd: command not found`** — Install chrony with `apt install chrony` (Debian/Ubuntu) or `yum install chrony` (RHEL/CentOS).
-    **`Failed to restart chronyd.service: Unit chronyd.service not found.`** — Enable and start the service with `systemctl enable chronyd && systemctl start chronyd`.
-    **`Permission denied`** — Run the commands with `sudo` or as the root user.
+    | Error | Fix |
+    |---|---|
+    | `chronyd: command not found` | Install chrony with `apt install chrony` (Debian/Ubuntu) or `yum install chrony` (RHEL/CentOS). |
+    | `Failed to restart chronyd.service: Unit chronyd.service not found.` | Enable and start the service with `systemctl enable chronyd && systemctl start chronyd`. |
+    | `Permission denied` | Run the commands with `sudo` or as the root user. |
 `Reference ID` should show your NTP server, and `System time` offset should be under 100ms.
 
 **Ubuntu:**
@@ -288,8 +298,10 @@ Human time adjustment: 0
 ```
 
 !!! warning "Common errors"
-    **`System has not been booted with systemd as init system (PID 1). Cannot operate.`** — Ensure the system is running systemd; this command is not compatible with other init systems like SysVinit.
-    **`Failed to set ntp: Unit systemd-timesyncd.service not found.`** — Install or enable the systemd-timesyncd service with `systemctl enable systemd-timesyncd`.
+    | Error | Fix |
+    |---|---|
+    | `System has not been booted with systemd as init system (PID 1). Cannot operate.` | Ensure the system is running systemd; this command is not compatible with other init systems like SysVinit. |
+    | `Failed to set ntp: Unit systemd-timesyncd.service not found.` | Install or enable the systemd-timesyncd service with `systemctl enable systemd-timesyncd`. |
 ---
 
 ## Register with Subscription Manager (RHEL)
@@ -328,9 +340,11 @@ Red Hat Enterprise Linux Server 8.6 (Ootpa) Subscribed
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid username or password`** — Verify credentials are correct and the Red Hat account has active subscriptions.
-    **`Error: This system is already registered`** — Run `subscription-manager unregister` first to clear the existing registration.
-    **`Error: Unable to reach subscription.rhsm.redhat.com`** — Ensure the system has network connectivity and firewall rules allow HTTPS traffic to Red Hat's subscription servers.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid username or password` | Verify credentials are correct and the Red Hat account has active subscriptions. |
+    | `Error: This system is already registered` | Run `subscription-manager unregister` first to clear the existing registration. |
+    | `Error: Unable to reach subscription.rhsm.redhat.com` | Ensure the system has network connectivity and firewall rules allow HTTPS traffic to Red Hat's subscription servers. |
 Verify attached subscriptions:
 
 ```bash
@@ -370,8 +384,10 @@ Ends: 06/14/2025
 ```
 
 !!! warning "Common errors"
-    **`This system is not registered with an entitlement server. See your system administrator for more information.`** — Register the system using `subscription-manager register --username <user> --password <pass>` and attach a subscription with `subscription-manager attach --auto`.
-    **`Traceback (most recent call last): ... dbus.exceptions.DBusException: org.freedesktop.DBus.Error.ServiceUnknown`** — Start the subscription manager daemon with `sudo systemctl start rhsmcertd` and ensure it is enabled.
+    | Error | Fix |
+    |---|---|
+    | `This system is not registered with an entitlement server. See your system administrator for more information.` | Register the system using `subscription-manager register --username <user> --password <pass>` and attach a subscription with `subscription-manager attach --auto`. |
+    | `Traceback (most recent call last): ... dbus.exceptions.DBusException: org.freedesktop.DBus.Error.ServiceUnknown` | Start the subscription manager daemon with `sudo systemctl start rhsmcertd` and ensure it is enabled. |
 For Rocky or AlmaLinux, repos are enabled by default — skip this step.
 
 ---
@@ -440,8 +456,10 @@ Created symlink /etc/systemd/system/multi-user.target.wants/firewalld.service �
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to find a match: aide`** — Verify the EPEL or appropriate repository is enabled with `dnf repolist` and enable it if needed.
-    **`Error: firewalld.service is masked`** — Unmask the service first with `systemctl unmask firewalld` before enabling it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to find a match: aide` | Verify the EPEL or appropriate repository is enabled with `dnf repolist` and enable it if needed. |
+    | `Error: firewalld.service is masked` | Unmask the service first with `systemctl unmask firewalld` before enabling it. |
 If SELinux is in permissive mode, set it to enforcing:
 
 ```bash
@@ -455,8 +473,10 @@ sed -i 's/^SELINUX=permissive/SELINUX=enforcing/' /etc/selinux/config
 ```
 
 !!! warning "Common errors"
-    **`setenforce: command not found`** — Install SELinux tools with `yum install policycoreutils-python-utils` or `apt install selinux-utils` depending on your distribution.
-    **`sed: can't read /etc/selinux/config: No such file or directory`** — SELinux is not installed on this system; install it first with your package manager before attempting to configure it.
+    | Error | Fix |
+    |---|---|
+    | `setenforce: command not found` | Install SELinux tools with `yum install policycoreutils-python-utils` or `apt install selinux-utils` depending on your distribution. |
+    | `sed: can't read /etc/selinux/config: No such file or directory` | SELinux is not installed on this system; install it first with your package manager before attempting to configure it. |
 Initialise AIDE (file integrity baseline) — this takes several minutes:
 
 ```bash
@@ -472,8 +492,10 @@ Database has been successfully initialized.
 ```
 
 !!! warning "Common errors"
-    **`aide: error while loading shared libraries: libmhash.so.2: cannot open shared object file`** — Install the libmhash library with `apt-get install libmhash2` (Debian/Ubuntu) or `yum install mhash` (RHEL/CentOS).
-    **`mv: cannot stat '/var/lib/aide/aide.db.new.gz': No such file or directory`** — Verify the aide --init command completed successfully and check that /var/lib/aide/ directory exists with `ls -la /var/lib/aide/`.
+    | Error | Fix |
+    |---|---|
+    | `aide: error while loading shared libraries: libmhash.so.2: cannot open shared object file` | Install the libmhash library with `apt-get install libmhash2` (Debian/Ubuntu) or `yum install mhash` (RHEL/CentOS). |
+    | `mv: cannot stat '/var/lib/aide/aide.db.new.gz': No such file or directory` | Verify the aide --init command completed successfully and check that /var/lib/aide/ directory exists with `ls -la /var/lib/aide/`. |
 Schedule a daily integrity check:
 
 ```bash
@@ -486,8 +508,10 @@ echo "0 3 * * * root /usr/sbin/aide --check" >> /etc/cron.d/aide
 ```
 
 !!! warning "Common errors"
-    **`bash: /etc/cron.d/aide: Permission denied`** — Run the command with `sudo` to gain write access to the cron.d directory.
-    **`bash: /etc/cron.d/aide: No such file or directory`** — Create the file first with `sudo touch /etc/cron.d/aide` or use `sudo tee` instead of `>>`.
+    | Error | Fix |
+    |---|---|
+    | `bash: /etc/cron.d/aide: Permission denied` | Run the command with `sudo` to gain write access to the cron.d directory. |
+    | `bash: /etc/cron.d/aide: No such file or directory` | Create the file first with `sudo touch /etc/cron.d/aide` or use `sudo tee` instead of `>>`. |
 ---
 
 ## Configure SSH Hardening
@@ -522,9 +546,11 @@ X11Forwarding no
 ```
 
 !!! warning "Common errors"
-    **`sshd: no hostkeys available -- exiting.`** — Ensure SSH host keys exist in `/etc/ssh/` before applying these settings; regenerate with `ssh-keygen -A` if missing.
-    **`sshd_config: line X: Bad cipher type 'aes256-gcm@openssh.com'`** — Verify your OpenSSH version supports the specified ciphers; use `ssh -Q cipher` to list available options and adjust accordingly.
-    **`AllowGroups: no such group 'sshusers'`** — Create the required groups with `groupadd sshusers` and `groupadd wheel` before applying the configuration, or use existing groups.
+    | Error | Fix |
+    |---|---|
+    | `sshd: no hostkeys available -- exiting.` | Ensure SSH host keys exist in `/etc/ssh/` before applying these settings; regenerate with `ssh-keygen -A` if missing. |
+    | `sshd_config: line X: Bad cipher type 'aes256-gcm@openssh.com'` | Verify your OpenSSH version supports the specified ciphers; use `ssh -Q cipher` to list available options and adjust accordingly. |
+    | `AllowGroups: no such group 'sshusers'` | Create the required groups with `groupadd sshusers` and `groupadd wheel` before applying the configuration, or use existing groups. |
 Validate the configuration and restart:
 
 ```bash
@@ -538,8 +564,10 @@ systemctl restart sshd
 ```
 
 !!! warning "Common errors"
-    **`sshd: no hostkeys available -- exiting.`** — Generate SSH host keys with `ssh-keygen -A` before starting sshd.
-    **`Job for ssh.service failed because the control process exited with error code.`** — Check `/etc/ssh/sshd_config` for syntax errors using `sshd -t` and review `/var/log/auth.log` for details.
+    | Error | Fix |
+    |---|---|
+    | `sshd: no hostkeys available -- exiting.` | Generate SSH host keys with `ssh-keygen -A` before starting sshd. |
+    | `Job for ssh.service failed because the control process exited with error code.` | Check `/etc/ssh/sshd_config` for syntax errors using `sshd -t` and review `/var/log/auth.log` for details. |
 Open the SSH port in the firewall:
 
 ```bash
@@ -554,8 +582,10 @@ success
 ```
 
 !!! warning "Common errors"
-    **`Error: INVALID_SERVICE: ssh not available`** — Verify the service is defined in `/etc/firewalld/services/ssh.xml` or use `firewall-cmd --get-services` to list available services.
-    **`Error: COMMAND_FAILED: '/usr/sbin/iptables -t filter -I INPUT_direct -p tcp -m tcp --dport 22 -j ACCEPT' failed`** — Ensure firewalld is running with `systemctl start firewalld` and iptables/nftables backend is properly configured.
+    | Error | Fix |
+    |---|---|
+    | `Error: INVALID_SERVICE: ssh not available` | Verify the service is defined in `/etc/firewalld/services/ssh.xml` or use `firewall-cmd --get-services` to list available services. |
+    | `Error: COMMAND_FAILED: '/usr/sbin/iptables -t filter -I INPUT_direct -p tcp -m tcp --dport 22 -j ACCEPT' failed` | Ensure firewalld is running with `systemctl start firewalld` and iptables/nftables backend is properly configured. |
 ---
 
 ## Configure Syslog Forwarding
@@ -596,8 +626,10 @@ Created symlink /etc/systemd/system/syslog.target.wants/rsyslog.service → /usr
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to find a match: rsyslog`** — Verify repository access with `dnf repolist` and ensure appstream repository is enabled.
-    **`Failed to enable unit: Unit file /usr/lib/systemd/system/rsyslog.service not found.`** — Confirm the package installed successfully with `rpm -q rsyslog` before enabling the service.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to find a match: rsyslog` | Verify repository access with `dnf repolist` and ensure appstream repository is enabled. |
+    | `Failed to enable unit: Unit file /usr/lib/systemd/system/rsyslog.service not found.` | Confirm the package installed successfully with `rpm -q rsyslog` before enabling the service. |
 Add a remote target to `/etc/rsyslog.conf`:
 
 ```text
@@ -619,8 +651,10 @@ logger -p local0.info "Test message from $(hostname)"
 ```
 
 !!! warning "Common errors"
-    **`Failed to restart rsyslog.service: Unit rsyslog.service not found.`** — Install rsyslog with `apt-get install rsyslog` (Debian/Ubuntu) or `yum install rsyslog` (RHEL/CentOS), then retry the restart.
-    **`sudo: systemctl: command not found`** — Run the command with `sudo systemctl restart rsyslog` or as the root user, as systemctl requires elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `Failed to restart rsyslog.service: Unit rsyslog.service not found.` | Install rsyslog with `apt-get install rsyslog` (Debian/Ubuntu) or `yum install rsyslog` (RHEL/CentOS), then retry the restart. |
+    | `sudo: systemctl: command not found` | Run the command with `sudo systemctl restart rsyslog` or as the root user, as systemctl requires elevated privileges. |
 Confirm the test message appears on the syslog server.
 
 ---
@@ -670,9 +704,11 @@ Password for corp-admin@CORP.LOCAL:
 ```
 
 !!! warning "Common errors"
-    **`realm: Couldn't resolve host: corp.local`** — Verify DNS resolution with `nslookup corp.local` and ensure the domain controller is reachable on port 389/636.
-    **`adcli: couldn't connect to corp.local: SASL(-1): generic failure`** — Confirm the domain admin credentials are correct and the user account has permission to join computers to the domain.
-    **`Error: Failed to start sssd.service`** — Run `systemctl status sssd` to check logs, then verify `/etc/sssd/sssd.conf` has correct domain and server settings.
+    | Error | Fix |
+    |---|---|
+    | `realm: Couldn't resolve host: corp.local` | Verify DNS resolution with `nslookup corp.local` and ensure the domain controller is reachable on port 389/636. |
+    | `adcli: couldn't connect to corp.local: SASL(-1): generic failure` | Confirm the domain admin credentials are correct and the user account has permission to join computers to the domain. |
+    | `Error: Failed to start sssd.service` | Run `systemctl status sssd` to check logs, then verify `/etc/sssd/sssd.conf` has correct domain and server settings. |
 Verify join status:
 
 ```bash
@@ -693,8 +729,10 @@ corp.local
 ```
 
 !!! warning "Common errors"
-    **`realm: command not found`** — Install the realmd package with `sudo apt-get install realmd` or `sudo yum install realmd`.
-    **`id: domain-user@corp.local: no such user`** — Ensure the domain user is enrolled in the realm with `sudo realm join corp.local` and SSSD is running via `sudo systemctl restart sssd`.
+    | Error | Fix |
+    |---|---|
+    | `realm: command not found` | Install the realmd package with `sudo apt-get install realmd` or `sudo yum install realmd`. |
+    | `id: domain-user@corp.local: no such user` | Ensure the domain user is enrolled in the realm with `sudo realm join corp.local` and SSSD is running via `sudo systemctl restart sssd`. |
 Configure home directory creation on first login:
 
 ```bash
@@ -712,8 +750,10 @@ oddjobd.service is being started.
 ```
 
 !!! warning "Common errors"
-    **`Error: Profile 'sssd with-mkhomedir' was not found.`** — Verify the profile name is correct and run `authselect list-profiles` to see available options.
-    **`Unit oddjobd.service could not be found.`** — Install the oddjob package first with `yum install oddjob` or `apt install oddjob`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Profile 'sssd with-mkhomedir' was not found.` | Verify the profile name is correct and run `authselect list-profiles` to see available options. |
+    | `Unit oddjobd.service could not be found.` | Install the oddjob package first with `yum install oddjob` or `apt install oddjob`. |
 Restrict SSH access to specific AD groups:
 
 ```bash
@@ -726,8 +766,10 @@ realm permit -g "Linux Admins"
 ```
 
 !!! warning "Common errors"
-    **`realm: command not found`** — Install the realmd package with `sudo apt-get install realmd` (Debian/Ubuntu) or `sudo yum install realmd` (RHEL/CentOS).
-    **`Error: Couldn't find realm configuration for domain`** — Ensure the system is already joined to an Active Directory domain with `realm join domain.com` before granting permissions.
+    | Error | Fix |
+    |---|---|
+    | `realm: command not found` | Install the realmd package with `sudo apt-get install realmd` (Debian/Ubuntu) or `sudo yum install realmd` (RHEL/CentOS). |
+    | `Error: Couldn't find realm configuration for domain` | Ensure the system is already joined to an Active Directory domain with `realm join domain.com` before granting permissions. |
 ---
 
 ## Validate the Deployment
@@ -817,9 +859,11 @@ passwordauthentication no
 ```
 
 !!! warning "Common errors"
-    **`ping: <gateway>: Name or service not known`** — Replace `<gateway>` and `<DNS-server>` placeholders with actual IP addresses (e.g., `10.0.0.1` and `8.8.8.8`).
-    **`nslookup: command not found`** — Install `bind-utils` (RHEL/CentOS) or `dnsutils` (Debian/Ubuntu) package.
-    **`Unit chrony.service could not be found`** — Verify NTP daemon is installed and running with `systemctl status chrony` or `systemctl status ntpd`.
+    | Error | Fix |
+    |---|---|
+    | `ping: <gateway>: Name or service not known` | Replace `<gateway>` and `<DNS-server>` placeholders with actual IP addresses (e.g., `10.0.0.1` and `8.8.8.8`). |
+    | `nslookup: command not found` | Install `bind-utils` (RHEL/CentOS) or `dnsutils` (Debian/Ubuntu) package. |
+    | `Unit chrony.service could not be found` | Verify NTP daemon is installed and running with `systemctl status chrony` or `systemctl status ntpd`. |
 Expected results: `systemctl --failed` returns empty, `sestatus` shows `SELinux status: enabled` and `Current mode: enforcing`, and SSH hardening settings match what was configured.
 
 ---
@@ -858,9 +902,11 @@ LISTEN  0  511  0.0.0.0:443  0.0.0.0:*  users:(("nginx",pid=2851,fd=7),("nginx",
 ```
 
 !!! warning "Common errors"
-    **`Unit <service-name>.service could not be found.`** — Verify the correct service name with `systemctl list-units --type=service` and check for typos.
-    **`Permission denied`** — Run the commands with `sudo` or as root to access systemd and socket information.
-    **`(no output from ss command)`** — Confirm the service is actually listening on the expected port and that the port number in the grep filter matches the service configuration.
+    | Error | Fix |
+    |---|---|
+    | `Unit <service-name>.service could not be found.` | Verify the correct service name with `systemctl list-units --type=service` and check for typos. |
+    | `Permission denied` | Run the commands with `sudo` or as root to access systemd and socket information. |
+    | `(no output from ss command)` | Confirm the service is actually listening on the expected port and that the port number in the grep filter matches the service configuration. |
 ---
 
 ## See also

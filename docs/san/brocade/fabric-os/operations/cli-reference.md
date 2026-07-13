@@ -68,9 +68,11 @@ Slot 3: Empty
 ```
 
 !!! warning "Common errors"
-    **`switchshow: command not found`** — Ensure you are logged into the Brocade switch CLI directly (SSH/Telnet), not a Linux host; these commands run on the switch OS, not the management station.
-    **`Switch Status: OFFLINE`** — Check physical power and network connectivity to the switch; verify all power supplies and fan modules are operational via `chassisShow`.
-    **`License Status: EXPIRED`** — Contact Brocade support or your vendor to renew the license; use `licenseShow` to identify which licenses have expired and plan renewal before they affect fabric operations.
+    | Error | Fix |
+    |---|---|
+    | `switchshow: command not found` | Ensure you are logged into the Brocade switch CLI directly (SSH/Telnet), not a Linux host; these commands run on the switch OS, not the management station. |
+    | `Switch Status: OFFLINE` | Check physical power and network connectivity to the switch; verify all power supplies and fan modules are operational via `chassisShow`. |
+    | `License Status: EXPIRED` | Contact Brocade support or your vendor to renew the license; use `licenseShow` to identify which licenses have expired and plan renewal before they affect fabric operations. |
 ```bash
 psShow      # power supplies
 fanShow     # fan status
@@ -103,8 +105,10 @@ Environmental Sensors:
 ```
 
 !!! warning "Common errors"
-    **`Command not found: psShow`** — Verify you are logged into the Brocade switch CLI (not SSH shell) and have appropriate admin privileges.
-    **`Error: Environmental monitoring not available`** — Ensure the switch has completed POST and all hardware modules are properly seated; reboot if necessary.
+    | Error | Fix |
+    |---|---|
+    | `Command not found: psShow` | Verify you are logged into the Brocade switch CLI (not SSH shell) and have appropriate admin privileges. |
+    | `Error: Environmental monitoring not available` | Ensure the switch has completed POST and all hardware modules are properly seated; reboot if necessary. |
 ```bash
 uptime
 snmpConfig --show
@@ -126,8 +130,10 @@ Syslog Protocol: UDP
 ```
 
 !!! warning "Common errors"
-    **`snmpConfig: command not found`** — Verify SNMP is enabled on the switch using `snmpEnable` and check user permissions.
-    **`syslogDIPShow: command not found`** — Use the correct command `syslogShow` or access syslog configuration via `configShow | grep syslog`.
+    | Error | Fix |
+    |---|---|
+    | `snmpConfig: command not found` | Verify SNMP is enabled on the switch using `snmpEnable` and check user permissions. |
+    | `syslogDIPShow: command not found` | Use the correct command `syslogShow` or access syslog configuration via `configShow | grep syslog`. |
 ```bash
 switchshow
 switchstatusshow
@@ -182,8 +188,10 @@ Zone Name: dr-zone
 ```
 
 !!! warning "Common errors"
-    **`error: zoneShow: invalid option -- -`** — Use `zoneShow --all` without extra dashes; if the command still fails, verify the switch firmware supports the `--all` flag.
-    **`error: command not found: switchshow`** — Ensure you are logged into the Brocade switch CLI directly (via SSH or serial console), not a management host.
+    | Error | Fix |
+    |---|---|
+    | `error: zoneShow: invalid option -- -` | Use `zoneShow --all` without extra dashes; if the command still fails, verify the switch firmware supports the `--all` flag. |
+    | `error: command not found: switchshow` | Ensure you are logged into the Brocade switch CLI directly (via SSH or serial console), not a management host. |
 ```bash
 portShow <slot/port>           # detailed port info (state, speed, WWN, connected device)
 portStatsShow <slot/port>      # TX/RX frames, errors
@@ -226,8 +234,10 @@ Port 0/0 Event Log (last 5 entries):
 ```
 
 !!! warning "Common errors"
-    **`Invalid slot/port specification`** — Verify slot and port numbers exist on your switch model (e.g., use `switchShow` to list available ports).
-    **`Port does not exist or is not accessible`** — Confirm the port is physically present and not disabled; check with `portCfgShow` to see if port is administratively disabled.
+    | Error | Fix |
+    |---|---|
+    | `Invalid slot/port specification` | Verify slot and port numbers exist on your switch model (e.g., use `switchShow` to list available ports). |
+    | `Port does not exist or is not accessible` | Confirm the port is physically present and not disabled; check with `portCfgShow` to see if port is administratively disabled. |
 ```bash
 portDisable <slot/port>
 portEnable <slot/port>
@@ -257,9 +267,11 @@ Configuration saved to flash memory.
 ```
 
 !!! warning "Common errors"
-    **`Invalid slot/port specification`** — Verify the slot and port numbers exist on your switch model using `portShow` and use the correct format (e.g., 0/5 not 0-5).
-    **`Permission denied`** — Ensure you are logged in with admin or equivalent fabric management credentials, not read-only user access.
-    **`Port does not exist`** — Confirm the physical port is present on the switch; some models have different port counts per slot.
+    | Error | Fix |
+    |---|---|
+    | `Invalid slot/port specification` | Verify the slot and port numbers exist on your switch model using `portShow` and use the correct format (e.g., 0/5 not 0-5). |
+    | `Permission denied` | Ensure you are logged in with admin or equivalent fabric management credentials, not read-only user access. |
+    | `Port does not exist` | Confirm the physical port is present on the switch; some models have different port counts per slot. |
 ```bash
 portCfgSpeed <slot/port> <speed>
 # speed: 0=auto, 4, 8, 16, 32 (Gbps)
@@ -270,8 +282,10 @@ portCfgSpeed <slot/port> <speed>
 ```
 
 !!! warning "Common errors"
-    **`portCfgSpeed: Invalid slot/port format`** — Use the correct syntax with slot and port numbers separated by a forward slash, e.g., `portCfgSpeed 0/5 16`.
-    **`portCfgSpeed: Speed not supported on this port`** — Verify the port hardware supports the requested speed; some older ports may not support 32 Gbps, so try a lower speed value like 16.
+    | Error | Fix |
+    |---|---|
+    | `portCfgSpeed: Invalid slot/port format` | Use the correct syntax with slot and port numbers separated by a forward slash, e.g., `portCfgSpeed 0/5 16`. |
+    | `portCfgSpeed: Speed not supported on this port` | Verify the port hardware supports the requested speed; some older ports may not support 32 Gbps, so try a lower speed value like 16. |
 ```bash
 portCfgLongDistance <slot/port> <mode>
 # modes: L0 (normal), L1, L2, LE, LD, LS
@@ -282,8 +296,10 @@ portCfgLongDistance <slot/port> <mode>
 ```
 
 !!! warning "Common errors"
-    **`portCfgLongDistance: Invalid slot/port format`** — Use the correct syntax with slot and port numbers separated by a forward slash, e.g., `portCfgLongDistance 0/1 L0`.
-    **`portCfgLongDistance: Invalid mode specified`** — Specify a valid mode from the list (L0, L1, L2, LE, LD, LS); check your mode parameter for typos.
+    | Error | Fix |
+    |---|---|
+    | `portCfgLongDistance: Invalid slot/port format` | Use the correct syntax with slot and port numbers separated by a forward slash, e.g., `portCfgLongDistance 0/1 L0`. |
+    | `portCfgLongDistance: Invalid mode specified` | Specify a valid mode from the list (L0, L1, L2, LE, LD, LS); check your mode parameter for typos. |
 ```bash
 portStatsShow <slot/port>
 portErrShow
@@ -312,8 +328,10 @@ Port Statistics Reset for slot 1, port 0: Success
 ```
 
 !!! warning "Common errors"
-    **`portStatsShow: Invalid slot/port format`** — Use the format `portStatsShow <slot>/<port>` (e.g., `portStatsShow 0/1`).
-    **`portStatsReset: Port is not online`** — Verify the port is in an online state using `portShow` before resetting counters.
+    | Error | Fix |
+    |---|---|
+    | `portStatsShow: Invalid slot/port format` | Use the format `portStatsShow <slot>/<port>` (e.g., `portStatsShow 0/1`). |
+    | `portStatsReset: Port is not online` | Verify the port is in an online state using `portShow` before resetting counters. |
 ```bash
 # Fabric membership — all switches in the fabric
 fabricShow
@@ -369,9 +387,11 @@ Fabric Log Events (Last 10):
 ```
 
 !!! warning "Common errors"
-    **`fabricShow: command not found`** — Verify you are logged into the Brocade switch CLI (not the host OS) and have admin privileges.
-    **`nsShow: Permission denied`** — Run the commands with appropriate user role; use `userConfig --show` to verify your account has fabric read permissions.
-    **`pathInfo: Invalid WWN format`** — Provide the target WWN in colon-separated format (e.g., `50:00:14:40:5c:2a:b1:01`) without spaces or dashes.
+    | Error | Fix |
+    |---|---|
+    | `fabricShow: command not found` | Verify you are logged into the Brocade switch CLI (not the host OS) and have admin privileges. |
+    | `nsShow: Permission denied` | Run the commands with appropriate user role; use `userConfig --show` to verify your account has fabric read permissions. |
+    | `pathInfo: Invalid WWN format` | Provide the target WWN in colon-separated format (e.g., `50:00:14:40:5c:2a:b1:01`) without spaces or dashes. |
 ```bash
 # ISL (Inter-Switch Link) status — links between switches
 islShow
@@ -404,9 +424,11 @@ Trunk Area Configuration:
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid port number <port>`** — Verify the port exists with `portShow` and use correct notation (e.g., `0/0` not `port0`).
-    **`Error: Trunk does not exist`** — Confirm the trunk is created with `trunkShow` before attempting debug operations.
-    **`Permission denied`** — Ensure you have admin or fabric engineer role; check with `userConfig --show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid port number <port>` | Verify the port exists with `portShow` and use correct notation (e.g., `0/0` not `port0`). |
+    | `Error: Trunk does not exist` | Confirm the trunk is created with `trunkShow` before attempting debug operations. |
+    | `Permission denied` | Ensure you have admin or fabric engineer role; check with `userConfig --show`. |
 ```bash
 # Name server
 nsShow
@@ -453,8 +475,10 @@ Port  Remote WWN              Remote Name             State
 ```
 
 !!! warning "Common errors"
-    **`nsLookup: Invalid WWN format`** — Ensure the WWN is in colon-separated hexadecimal format (e.g., 50:00:14:40:5d:2b:1c:f0).
-    **`portLoginShow: Fabric offline or switch unreachable`** — Verify fabric connectivity and switch IP address with `switchShow` before querying login database.
+    | Error | Fix |
+    |---|---|
+    | `nsLookup: Invalid WWN format` | Ensure the WWN is in colon-separated hexadecimal format (e.g., 50:00:14:40:5d:2b:1c:f0). |
+    | `portLoginShow: Fabric offline or switch unreachable` | Verify fabric connectivity and switch IP address with `switchShow` before querying login database. |
 ```bash
 # View current zones, config, and aliases
 zoneShow
@@ -516,9 +540,11 @@ Current active configuration: cfg_prod
 ```
 
 !!! warning "Common errors"
-    **`Alias name already exists`** — Use a unique alias name or delete the existing alias with `alidelete` before recreating it.
-    **`Invalid WWN format`** — Verify the WWN is 16 hexadecimal characters (e.g., 50:00:14:40:5d:2a:b1:c3) and properly formatted with colons.
-    **`Zone configuration is currently active — cannot modify`** — Run `cfgdisable` to deactivate the current configuration before adding or removing zones from it.
+    | Error | Fix |
+    |---|---|
+    | `Alias name already exists` | Use a unique alias name or delete the existing alias with `alidelete` before recreating it. |
+    | `Invalid WWN format` | Verify the WWN is 16 hexadecimal characters (e.g., 50:00:14:40:5d:2a:b1:c3) and properly formatted with colons. |
+    | `Zone configuration is currently active — cannot modify` | Run `cfgdisable` to deactivate the current configuration before adding or removing zones from it. |
 ```bash
 switchStatusShow       # overall health: HEALTHY / MARGINAL / DOWN
 supportShow            # full diagnostic dump (used when opening support cases)
@@ -564,9 +590,11 @@ File size: 24.3 MB
 ```
 
 !!! warning "Common errors"
-    **`supportSave: FTP connection failed - Connection refused`** — Verify the FTP/SCP server is reachable and credentials are configured with `configUpload` command.
-    **`supportShow: Insufficient memory to generate full diagnostic dump`** — Clear temporary files with `eraseFlash` or contact Brocade TAC to reduce diagnostic scope.
-    **`supportSave: Permission denied writing to remote path`** — Ensure the remote directory has write permissions for the user account configured in the switch's upload settings.
+    | Error | Fix |
+    |---|---|
+    | `supportSave: FTP connection failed - Connection refused` | Verify the FTP/SCP server is reachable and credentials are configured with `configUpload` command. |
+    | `supportShow: Insufficient memory to generate full diagnostic dump` | Clear temporary files with `eraseFlash` or contact Brocade TAC to reduce diagnostic scope. |
+    | `supportSave: Permission denied writing to remote path` | Ensure the remote directory has write permissions for the user account configured in the switch's upload settings. |
 ```bash
 errShow                # show all error log entries
 errDump                # dump full error log
@@ -590,9 +618,11 @@ Total entries: 1247 | Log size: 2.3 MB | Oldest entry: 2024-01-08 06:15:22 UTC
 ```
 
 !!! warning "Common errors"
-    **`errShow: permission denied`** — Verify your user account has admin or diagnostic privileges using `userConfig --show`.
-    **`errDump: log file locked by another session`** — Wait 30 seconds for the active dump to complete or restart the management interface with `switchDisable` then `switchEnable`.
-    **`errClear: operation failed - insufficient buffer space`** — Clear the log in safe mode by issuing `errClear --force` after confirming no active fabric operations with `fabricShow`.
+    | Error | Fix |
+    |---|---|
+    | `errShow: permission denied` | Verify your user account has admin or diagnostic privileges using `userConfig --show`. |
+    | `errDump: log file locked by another session` | Wait 30 seconds for the active dump to complete or restart the management interface with `switchDisable` then `switchEnable`. |
+    | `errClear: operation failed - insufficient buffer space` | Clear the log in safe mode by issuing `errClear --force` after confirming no active fabric operations with `fabricShow`. |
 ```bash
 # Run a port loopback test (port must be offline)
 portTest <slot/port>
@@ -633,9 +663,11 @@ Port 0/1 event log cleared successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Port 0/1 is online. Port must be offline to run loopback test`** — Disable the port with `portDisable <slot/port>` before running portTest.
-    **`Error: Invalid slot/port format. Use format: <slot>/<port>`** — Verify the slot and port numbers are correct (e.g., 0/1, not 0-1 or slot0port1).
-    **`Error: Port 0/1 not found on this switch`** — Confirm the port exists on your switch model using `portShow` to list all available ports.
+    | Error | Fix |
+    |---|---|
+    | `Error: Port 0/1 is online. Port must be offline to run loopback test` | Disable the port with `portDisable <slot/port>` before running portTest. |
+    | `Error: Invalid slot/port format. Use format: <slot>/<port>` | Verify the slot and port numbers are correct (e.g., 0/1, not 0-1 or slot0port1). |
+    | `Error: Port 0/1 not found on this switch` | Confirm the port exists on your switch model using `portShow` to list all available ports. |
 ```bash
 # Show MAPS policy status
 mapsPolicy --show
@@ -676,9 +708,11 @@ Last Update: 2024-01-15 14:35:01
 ```
 
 !!! warning "Common errors"
-    **`mapsPolicy: command not found`** — Verify MAPS is installed and enabled with `switchShow` and check if you need to run commands via the admin account.
-    **`Permission denied`** — Run commands with appropriate privileges; use `sudo` or ensure your user account has MAPS administrative rights.
-    **`MAPS database not initialized`** — Initialize MAPS with `mapsDbInit` before querying policy or alert data.
+    | Error | Fix |
+    |---|---|
+    | `mapsPolicy: command not found` | Verify MAPS is installed and enabled with `switchShow` and check if you need to run commands via the admin account. |
+    | `Permission denied` | Run commands with appropriate privileges; use `sudo` or ensure your user account has MAPS administrative rights. |
+    | `MAPS database not initialized` | Initialize MAPS with `mapsDbInit` before querying policy or alert data. |
 ```bash
 fabricShow             # all switches in fabric, domain IDs, state
 nsShow                 # name server — all logged-in devices
@@ -718,9 +752,11 @@ ISL Link: Domain 1 Port 23 <-> Domain 3 Port 23 (Standby, 16Gbps)
 ```
 
 !!! warning "Common errors"
-    **`fabricShow: command not found`** — Verify you are logged into the Brocade switch CLI (not the host OS) and have admin credentials.
-    **`nsShow: Permission denied`** — Run the command with appropriate fabric admin role or use `sudo` if configured for your user account.
-    **`topologyShow: Fabric unstable - ISL down`** — Check physical cable connections and port status with `portShow` before running topology commands.
+    | Error | Fix |
+    |---|---|
+    | `fabricShow: command not found` | Verify you are logged into the Brocade switch CLI (not the host OS) and have admin credentials. |
+    | `nsShow: Permission denied` | Run the command with appropriate fabric admin role or use `sudo` if configured for your user account. |
+    | `topologyShow: Fabric unstable - ISL down` | Check physical cable connections and port status with `portShow` before running topology commands. |
 ```bash
 sensorShow             # all environmental sensors
 tempShow
@@ -754,8 +790,10 @@ Power Supply Status:
 ```
 
 !!! warning "Common errors"
-    **`sensorShow: command not found`** — Verify you are logged into the Brocade switch via SSH/Telnet and have administrative privileges; these commands are switch-specific and not available on non-Brocade systems.
-    **`Permission denied`** — Ensure your user account has admin or read-only access to the switch; contact your fabric administrator to grant the necessary role.
+    | Error | Fix |
+    |---|---|
+    | `sensorShow: command not found` | Verify you are logged into the Brocade switch via SSH/Telnet and have administrative privileges; these commands are switch-specific and not available on non-Brocade systems. |
+    | `Permission denied` | Ensure your user account has admin or read-only access to the switch; contact your fabric administrator to grant the necessary role. |
 ```bash
 portBufShow <slot/port>     # buffer-to-buffer credits
 ```
@@ -784,8 +822,10 @@ Slot/Port: 1/5
 ```
 
 !!! warning "Common errors"
-    **`portBufShow: Invalid slot/port format`** — Use the format `slot/port` (e.g., `0/1`) without spaces or extra characters.
-    **`portBufShow: Port not found or offline`** — Verify the port exists and is online using `portShow` before checking buffer credits.
+    | Error | Fix |
+    |---|---|
+    | `portBufShow: Invalid slot/port format` | Use the format `slot/port` (e.g., `0/1`) without spaces or extra characters. |
+    | `portBufShow: Port not found or offline` | Verify the port exists and is online using `portShow` before checking buffer credits. |
 ```bash
 # Current firmware
 version
@@ -832,9 +872,11 @@ CP1 is now Standby
 ```
 
 !!! warning "Common errors"
-    **`firmwareDownload: server not reachable (192.168.1.50:21)`** — Verify the server IP is correct and accessible from the switch, and check firewall rules allow FTP/SFTP traffic.
-    **`haFailover: HA not synchronized - cannot failover`** — Wait for HA synchronization to complete (check `haShow` status) before attempting failover.
-    **`firmwareDownloadStatus: no download in progress`** — Run `firmwareDownload` command first to initiate a firmware transfer before checking status.
+    | Error | Fix |
+    |---|---|
+    | `firmwareDownload: server not reachable (192.168.1.50:21)` | Verify the server IP is correct and accessible from the switch, and check firewall rules allow FTP/SFTP traffic. |
+    | `haFailover: HA not synchronized - cannot failover` | Wait for HA synchronization to complete (check `haShow` status) before attempting failover. |
+    | `firmwareDownloadStatus: no download in progress` | Run `firmwareDownload` command first to initiate a firmware transfer before checking status. |
 ```bash
 # Upload (backup) config to a server
 configUpload -all -host <server_ip> -u <user> -f <backup_file>
@@ -872,9 +914,11 @@ Current Running Configuration:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to host 192.168.1.50 (Connection refused)`** — Verify the server IP address is correct and the SSH/management service is running on the target host.
-    **`Error: Authentication failed for user admin`** — Confirm the username and password are correct, and the user has sufficient privileges on the remote server.
-    **`Error: Cannot write to backup file /var/backups/fabric_config_20240115.txt (Permission denied)`** — Ensure the directory exists and the current user has write permissions, or specify a writable path.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to host 192.168.1.50 (Connection refused)` | Verify the server IP address is correct and the SSH/management service is running on the target host. |
+    | `Error: Authentication failed for user admin` | Confirm the username and password are correct, and the user has sufficient privileges on the remote server. |
+    | `Error: Cannot write to backup file /var/backups/fabric_config_20240115.txt (Permission denied)` | Ensure the directory exists and the current user has write permissions, or specify a writable path. |
 ```bash
 # List all user accounts
 userConfig --show
@@ -928,9 +972,11 @@ Available Roles:
 ```
 
 !!! warning "Common errors"
-    **`userConfig: user '<username>' does not exist`** — Verify the username exists with `userConfig --show` before attempting deletion or password changes.
-    **`userConfig: insufficient privileges to perform this operation`** — Ensure you are logged in as an admin user; standard users cannot create or delete accounts.
-    **`passwd: authentication failed`** — Confirm the current password is correct when prompted during the password change process.
+    | Error | Fix |
+    |---|---|
+    | `userConfig: user '<username>' does not exist` | Verify the username exists with `userConfig --show` before attempting deletion or password changes. |
+    | `userConfig: insufficient privileges to perform this operation` | Ensure you are logged in as an admin user; standard users cannot create or delete accounts. |
+    | `passwd: authentication failed` | Confirm the current password is correct when prompted during the password change process. |
 ```bash
 # Show AAA configuration
 aaaConfig --show
@@ -974,9 +1020,11 @@ TACACS+ Server Added Successfully:
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid server IP address <server_ip>`** — Verify the IP address format is valid (e.g., 192.168.1.50) and the server is reachable via ping.
-    **`Error: Authentication server unreachable on port <port>`** — Confirm the RADIUS/TACACS+ server is running and the firewall allows traffic on the specified port from the switch.
-    **`Error: Shared secret mismatch or authentication failed`** — Ensure the shared secret matches exactly on both the switch and the remote authentication server, including case sensitivity.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid server IP address <server_ip>` | Verify the IP address format is valid (e.g., 192.168.1.50) and the server is reachable via ping. |
+    | `Error: Authentication server unreachable on port <port>` | Confirm the RADIUS/TACACS+ server is running and the firewall allows traffic on the specified port from the switch. |
+    | `Error: Shared secret mismatch or authentication failed` | Ensure the shared secret matches exactly on both the switch and the remote authentication server, including case sensitivity. |
 ```bash
 secPolicyShow
 secPolicyShow "SCC_POLICY"    # Switch Connection Control — which switches can join fabric
@@ -1009,8 +1057,10 @@ Policy Name: DEFAULT_POLICY
 ```
 
 !!! warning "Common errors"
-    **`secPolicyShow: Policy "SCC_POLICY" not found`** — Verify the policy name is correct and exists in the fabric configuration using `secPolicyShow` without arguments to list all available policies.
-    **`secPolicyShow: Permission denied — user role insufficient`** — Ensure your user account has admin or security-admin role privileges by checking your account permissions with `userShow`.
+    | Error | Fix |
+    |---|---|
+    | `secPolicyShow: Policy "SCC_POLICY" not found` | Verify the policy name is correct and exists in the fabric configuration using `secPolicyShow` without arguments to list all available policies. |
+    | `secPolicyShow: Permission denied — user role insufficient` | Ensure your user account has admin or security-admin role privileges by checking your account permissions with `userShow`. |
 ```bash
 sshUtil --show
 sshUtil --genkey -t rsa
@@ -1034,8 +1084,10 @@ Keys stored in: /etc/ssh/authorized_keys
 ```
 
 !!! warning "Common errors"
-    **`sshUtil: command not found`** — Verify you are logged into the Brocade switch fabric OS CLI and not a standard Linux shell.
-    **`Error: SSH key generation failed - insufficient disk space`** — Free up space on the switch's persistent storage or remove old key backups before regenerating.
+    | Error | Fix |
+    |---|---|
+    | `sshUtil: command not found` | Verify you are logged into the Brocade switch fabric OS CLI and not a standard Linux shell. |
+    | `Error: SSH key generation failed - insufficient disk space` | Free up space on the switch's persistent storage or remove old key backups before regenerating. |
 ```bash
 # List all logical switches and their FIDs
 lscfg --show
@@ -1082,9 +1134,11 @@ Port  FID  Status      Speed
 ```
 
 !!! warning "Common errors"
-    **`FID <fid> already exists`** — Use `lscfg --show` to list existing FIDs and choose an unused number, or delete the existing FID first with `lscfg --delete <fid>`.
-    **`Cannot delete FID 1: base fabric in use`** — Base fabric (FID 1) cannot be deleted while active; switch to a different FID context first or ensure no ports are assigned to it.
-    **`Port <slot/port> already assigned to FID <fid>`** — Use `lscfg --show -slot <slot>` to verify current port assignments and reassign or unassign the port before reassigning it.
+    | Error | Fix |
+    |---|---|
+    | `FID <fid> already exists` | Use `lscfg --show` to list existing FIDs and choose an unused number, or delete the existing FID first with `lscfg --delete <fid>`. |
+    | `Cannot delete FID 1: base fabric in use` | Base fabric (FID 1) cannot be deleted while active; switch to a different FID context first or ensure no ports are assigned to it. |
+    | `Port <slot/port> already assigned to FID <fid>` | Use `lscfg --show -slot <slot>` to verify current port assignments and reassign or unassign the port before reassigning it. |
 ```bash
 setContext <fid>       # enter the context of logical switch <fid>
 # All subsequent commands run in context of that FID
@@ -1096,8 +1150,10 @@ setContext 128         # 128 = default/base fabric
 ```
 
 !!! warning "Common errors"
-    **`setContext: Invalid FID <fid>`** — Verify the FID exists by running `switchShow` and confirm you're using a valid numeric FID between 1-128.
-    **`setContext: Permission denied`** — Ensure your user account has administrative privileges; contact your fabric administrator to grant the required role.
+    | Error | Fix |
+    |---|---|
+    | `setContext: Invalid FID <fid>` | Verify the FID exists by running `switchShow` and confirm you're using a valid numeric FID between 1-128. |
+    | `setContext: Permission denied` | Ensure your user account has administrative privileges; contact your fabric administrator to grant the required role. |
 ```bash
 lscfg --port <slot/port> -lport <fid>    # assign port as XISL
 ```
@@ -1118,9 +1174,11 @@ Fabric ID Assignment: Complete
 ```
 
 !!! warning "Common errors"
-    **`Invalid slot/port specification`** — Verify the slot and port numbers exist on your switch using `switchshow` and use the correct format (e.g., `3/5` not `3-5`).
-    **`FID <fid> does not exist`** — Create the logical fabric first with `fabriccreate` or confirm the FID is already configured using `lsfabric`.
-    **`Port is already assigned to another FID`** — Remove the port from its current fabric assignment using `portcfgdefault <slot/port>` before reassigning it.
+    | Error | Fix |
+    |---|---|
+    | `Invalid slot/port specification` | Verify the slot and port numbers exist on your switch using `switchshow` and use the correct format (e.g., `3/5` not `3-5`). |
+    | `FID <fid> does not exist` | Create the logical fabric first with `fabriccreate` or confirm the FID is already configured using `lsfabric`. |
+    | `Port is already assigned to another FID` | Remove the port from its current fabric assignment using `portcfgdefault <slot/port>` before reassigning it. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

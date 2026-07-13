@@ -42,9 +42,11 @@ Retention Days:  30
 ```
 
 !!! warning "Common errors"
-    **`Error: Backup name not found`** — Verify the backup name exists by running `config backup list` and use the exact name from the output.
-    **`Error: Insufficient space for backup (need 3 GB, have 1.2 GB available)`** — Free up disk space or delete older backups with `config backup delete <backup_name>` before creating a new backup.
-    **`Error: Restore operation failed - backup corrupted`** — Verify backup integrity with `config backup validate <backup_name>` and restore from an earlier backup if the current one is damaged.
+    | Error | Fix |
+    |---|---|
+    | `Error: Backup name not found` | Verify the backup name exists by running `config backup list` and use the exact name from the output. |
+    | `Error: Insufficient space for backup (need 3 GB, have 1.2 GB available)` | Free up disk space or delete older backups with `config backup delete <backup_name>` before creating a new backup. |
+    | `Error: Restore operation failed - backup corrupted` | Verify backup integrity with `config backup validate <backup_name>` and restore from an earlier backup if the current one is damaged. |
 ```bash
 # Show SNMP configuration
 snmp show config
@@ -73,8 +75,10 @@ Alert Notification List:
 ```
 
 !!! warning "Common errors"
-    **`snmp: command not found`** — Verify you are logged into the Data Domain system directly (SSH to the management IP) rather than running from a remote host.
-    **`alerts notify-list show: permission denied`** — Ensure your user account has administrative privileges; use `su` or request elevated access from your storage administrator.
+    | Error | Fix |
+    |---|---|
+    | `snmp: command not found` | Verify you are logged into the Data Domain system directly (SSH to the management IP) rather than running from a remote host. |
+    | `alerts notify-list show: permission denied` | Ensure your user account has administrative privileges; use `su` or request elevated access from your storage administrator. |
 ```bash
 # Show syslog configuration
 log show config
@@ -104,9 +108,11 @@ Messages Forwarded (24h): 4,287
 ```
 
 !!! warning "Common errors"
-    **`Error: Syslog server unreachable at 192.168.1.45:514`** — Verify network connectivity to the syslog server and confirm the IP address and port are correct in the configuration.
-    **`Error: Permission denied - cannot modify syslog configuration`** — Ensure you are logged in with administrative privileges (sysadmin or admin role).
-    **`Error: Invalid syslog facility value 'LOCAL9'`** — Use only valid facility values (LOCAL0–LOCAL7, USER, DAEMON, etc.) as defined in RFC 3164.
+    | Error | Fix |
+    |---|---|
+    | `Error: Syslog server unreachable at 192.168.1.45:514` | Verify network connectivity to the syslog server and confirm the IP address and port are correct in the configuration. |
+    | `Error: Permission denied - cannot modify syslog configuration` | Ensure you are logged in with administrative privileges (sysadmin or admin role). |
+    | `Error: Invalid syslog facility value 'LOCAL9'` | Use only valid facility values (LOCAL0–LOCAL7, USER, DAEMON, etc.) as defined in RFC 3164. |
 ```bash
 config backup create
 system show version
@@ -151,8 +157,10 @@ Replication Job: archive-weekly
 ```
 
 !!! warning "Common errors"
-    **`Error: Backup destination /backup/system is full`** — Increase storage capacity or redirect backup destination to a different filesystem with available space.
-    **`Error: Replication connection to dd-remote-02.corp.local failed: Connection timeout`** — Verify network connectivity and firewall rules between the primary and remote Data Domain systems.
+    | Error | Fix |
+    |---|---|
+    | `Error: Backup destination /backup/system is full` | Increase storage capacity or redirect backup destination to a different filesystem with available space. |
+    | `Error: Replication connection to dd-remote-02.corp.local failed: Connection timeout` | Verify network connectivity and firewall rules between the primary and remote Data Domain systems. |
 ```bash
 # DDBoost service status and connection count
 ddboost status
@@ -195,9 +203,11 @@ Client ID: 0x4a2c91f3
 ```
 
 !!! warning "Common errors"
-    **`DDBoost Service Status: Service is not running`** — Start the DDBoost service with `sudo systemctl start ddboost` or equivalent Data Domain management command.
-    **`ddboost: command not found`** — Ensure you are logged into the Data Domain system directly (via SSH or console) and that DDBoost CLI tools are in your PATH; check `/opt/ddboost/bin/` exists.
-    **`Connection refused on port 19500`** — Verify the DDBoost service is running and listening with `netstat -tlnp | grep 19500` and check firewall rules allow access to port 19500.
+    | Error | Fix |
+    |---|---|
+    | `DDBoost Service Status: Service is not running` | Start the DDBoost service with `sudo systemctl start ddboost` or equivalent Data Domain management command. |
+    | `ddboost: command not found` | Ensure you are logged into the Data Domain system directly (via SSH or console) and that DDBoost CLI tools are in your PATH; check `/opt/ddboost/bin/` exists. |
+    | `Connection refused on port 19500` | Verify the DDBoost service is running and listening with `netstat -tlnp | grep 19500` and check firewall rules allow access to port 19500. |
 ```bash
 # List all storage units
 ddboost storage-unit list
@@ -266,9 +276,11 @@ Last Backup: 2024-02-21 03:45:22 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Storage unit 'backup-prod-01' already exists`** — Choose a unique storage unit name or delete the existing unit first.
-    **`Error: User 'ddboost_user' not found or insufficient permissions`** — Verify the ddboost user exists and has appropriate Data Domain credentials.
-    **`Error: Insufficient capacity to create storage unit`** — Check available space on the Data Domain system and reduce the requested capacity.
+    | Error | Fix |
+    |---|---|
+    | `Error: Storage unit 'backup-prod-01' already exists` | Choose a unique storage unit name or delete the existing unit first. |
+    | `Error: User 'ddboost_user' not found or insufficient permissions` | Verify the ddboost user exists and has appropriate Data Domain credentials. |
+    | `Error: Insufficient capacity to create storage unit` | Check available space on the Data Domain system and reduce the requested capacity. |
 ```bash
 # List DDBoost users
 ddboost user list
@@ -299,9 +311,11 @@ User 'backup_user' successfully assigned to storage unit 'prod-tier1'
 ```
 
 !!! warning "Common errors"
-    **`ddboost: command not found`** — Ensure the DDBoost CLI package is installed and the PATH includes the DDBoost binary directory (typically `/opt/ddboost/bin`).
-    **`Error: User 'backup_user' already exists`** — Choose a different username or use `ddboost user del <username>` to remove the existing user first.
-    **`Error: Storage unit 'prod-tier1' not found`** — Verify the storage unit name exists by running `ddboost storage list` and use the correct name.
+    | Error | Fix |
+    |---|---|
+    | `ddboost: command not found` | Ensure the DDBoost CLI package is installed and the PATH includes the DDBoost binary directory (typically `/opt/ddboost/bin`). |
+    | `Error: User 'backup_user' already exists` | Choose a different username or use `ddboost user del <username>` to remove the existing user first. |
+    | `Error: Storage unit 'prod-tier1' not found` | Verify the storage unit name exists by running `ddboost storage list` and use the correct name. |
 ```bash
 # DDBoost throughput statistics
 ddboost show stats
@@ -329,8 +343,10 @@ host: repl-gateway-01.prod, throughput: 1.392 GB/s, bytes: 11.2 TB
 ```
 
 !!! warning "Common errors"
-    **`ddboost: command not found`** — Verify DDBoost is installed and the Data Domain CLI is in your PATH, or source the appropriate environment setup script.
-    **`Permission denied`** — Ensure your user account has administrative privileges or run the command with appropriate credentials (ssh as sysadmin user or use sudo if configured).
+    | Error | Fix |
+    |---|---|
+    | `ddboost: command not found` | Verify DDBoost is installed and the Data Domain CLI is in your PATH, or source the appropriate environment setup script. |
+    | `Permission denied` | Ensure your user account has administrative privileges or run the command with appropriate credentials (ssh as sysadmin user or use sudo if configured). |
 ```bash
 # DSP status
 ddboost option show | grep -i "dist-seg"
@@ -345,8 +361,10 @@ Distributed-Segment-Processing: disabled
 ```
 
 !!! warning "Common errors"
-    **`ddboost: command not found`** — Ensure you are logged into the Data Domain system via SSH or console, not your local workstation.
-    **`Error: option 'distributed-segment-processing' is not recognized`** — Verify the Data Domain firmware version supports DSP; upgrade if running a version older than 7.0.
+    | Error | Fix |
+    |---|---|
+    | `ddboost: command not found` | Ensure you are logged into the Data Domain system via SSH or console, not your local workstation. |
+    | `Error: option 'distributed-segment-processing' is not recognized` | Verify the Data Domain firmware version supports DSP; upgrade if running a version older than 7.0. |
 ```bash
 # View system log (most recent events)
 log view
@@ -406,9 +424,11 @@ Available log files:
 ```
 
 !!! warning "Common errors"
-    **`log view: command not found`** — Ensure you are logged into the Data Domain CLI (use `ssh admin@<dd-ip>`) and have appropriate permissions.
-    **`log view <log_filename>: No such file or directory`** — Run `log list` first to verify the exact log filename, then use the correct name from the available list.
-    **`log watch: Permission denied`** — Verify your user account has read access to system logs
+    | Error | Fix |
+    |---|---|
+    | `log view: command not found` | Ensure you are logged into the Data Domain CLI (use `ssh admin@<dd-ip>`) and have appropriate permissions. |
+    | `log view <log_filename>: No such file or directory` | Run `log list` first to verify the exact log filename, then use the correct name from the available list. |
+    | `log watch: Permission denied` | Verify your user account has read access to system logs |
 ```bash
 # Create a support bundle
 support bundle create
@@ -448,9 +468,11 @@ Bundle exported successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: SSH key authentication failed for user@host`** — Verify SSH public key is installed on the remote host and permissions are correct (chmod 600 ~/.ssh/authorized_keys).
-    **`Error: FTP connection timeout - unable to reach host:21`** — Confirm the FTP server is reachable and listening on port 21, and check firewall rules allow outbound FTP from the Data Domain.
-    **`Error: Insufficient disk space - bundle creation requires 3.5 GB free space, only 1.2 GB available`** — Delete older bundles using `support bundle delete <bundle_name>` or expand storage capacity before retrying.
+    | Error | Fix |
+    |---|---|
+    | `Error: SSH key authentication failed for user@host` | Verify SSH public key is installed on the remote host and permissions are correct (chmod 600 ~/.ssh/authorized_keys). |
+    | `Error: FTP connection timeout - unable to reach host:21` | Confirm the FTP server is reachable and listening on port 21, and check firewall rules allow outbound FTP from the Data Domain. |
+    | `Error: Insufficient disk space - bundle creation requires 3.5 GB free space, only 1.2 GB available` | Delete older bundles using `support bundle delete <bundle_name>` or expand storage capacity before retrying. |
 ```bash
 # Enter the diagnostic shell
 ddsh
@@ -549,9 +571,11 @@ Interface: eth1
 ```
 
 !!! warning "Common errors"
-    **`net ping: unknown host <ip>`** — Replace `<ip>` with an actual IP address or resolvable hostname.
-    **`net traceroute: command not found`** — Verify you are in the Data Domain CLI context; use `net traceroute` only after entering the network shell.
-    **`net show stats: No such file or directory`** — Use the correct command syntax `net show interface stats` or check Data Domain OS version compatibility.
+    | Error | Fix |
+    |---|---|
+    | `net ping: unknown host <ip>` | Replace `<ip>` with an actual IP address or resolvable hostname. |
+    | `net traceroute: command not found` | Verify you are in the Data Domain CLI context; use `net traceroute` only after entering the network shell. |
+    | `net show stats: No such file or directory` | Use the correct command syntax `net show interface stats` or check Data Domain OS version compatibility. |
 ```bash
 # Overall health check (hardware + software)
 health check show
@@ -589,9 +613,11 @@ Enclosure 0:
 ```
 
 !!! warning "Common errors"
-    **`health check: command not found`** — Verify you are logged into the Data Domain management interface (SSH to the system's management IP, not a client interface).
-    **`disk show: permission denied`** — Ensure your user account has administrative privileges; use `sysadmin` or equivalent admin role.
-    **`enclosure show hardware: invalid option`** — Check Data Domain firmware version compatibility; some older versions use `enclosure show sensors` instead.
+    | Error | Fix |
+    |---|---|
+    | `health check: command not found` | Verify you are logged into the Data Domain management interface (SSH to the system's management IP, not a client interface). |
+    | `disk show: permission denied` | Ensure your user account has administrative privileges; use `sysadmin` or equivalent admin role. |
+    | `enclosure show hardware: invalid option` | Check Data Domain firmware version compatibility; some older versions use `enclosure show sensors` instead. |
 ```bash
 # Inside ddsh — capture IOPS and throughput
 iostat -x 1 30
@@ -631,9 +657,11 @@ DDBoost Statistics:
 ```
 
 !!! warning "Common errors"
-    **`ddsh: command not found`** — Ensure you are connected to the Data Domain appliance via SSH or are running commands within an active ddsh session.
-    **`filesys show stats: command not found`** — Verify you are in the correct ddsh shell context; exit and re-enter ddsh if needed.
-    **`Permission denied`** — Confirm your user account has administrative privileges on the Data Domain system.
+    | Error | Fix |
+    |---|---|
+    | `ddsh: command not found` | Ensure you are connected to the Data Domain appliance via SSH or are running commands within an active ddsh session. |
+    | `filesys show stats: command not found` | Verify you are in the correct ddsh shell context; exit and re-enter ddsh if needed. |
+    | `Permission denied` | Confirm your user account has administrative privileges on the Data Domain system. |
 ```bash
 # Export all current and historical alerts
 alert show history > /tmp/alert_history.txt
@@ -650,8 +678,10 @@ Bundle ready for upload to Dell support portal
 ```
 
 !!! warning "Common errors"
-    **`alert show history: command not found`** — Ensure you are logged into the Data Domain CLI (via SSH or console) and not a standard Linux shell; use `sysadmin` or `admin` user context.
-    **`support bundle create: insufficient disk space`** — Free up at least 5 GB on /var/tmp by removing old bundles with `support bundle delete <bundle_name>` before retrying.
+    | Error | Fix |
+    |---|---|
+    | `alert show history: command not found` | Ensure you are logged into the Data Domain CLI (via SSH or console) and not a standard Linux shell; use `sysadmin` or `admin` user context. |
+    | `support bundle create: insufficient disk space` | Free up at least 5 GB on /var/tmp by removing old bundles with `support bundle delete <bundle_name>` before retrying. |
 ```bash
 # All disks with state (normal, unknown, suspect, failed)
 disk show state
@@ -690,8 +720,10 @@ Slot 4: crc_errors 0, timeout_errors 0, media_errors 0
 ```
 
 !!! warning "Common errors"
-    **`disk show: command not found`** — Verify you are logged into the Data Domain management interface (SSH to the appliance IP, not a Linux host).
-    **`Permission denied`** — Ensure your user account has administrative privileges; use `sysadmin` or equivalent privileged account.
+    | Error | Fix |
+    |---|---|
+    | `disk show: command not found` | Verify you are logged into the Data Domain management interface (SSH to the appliance IP, not a Linux host). |
+    | `Permission denied` | Ensure your user account has administrative privileges; use `sysadmin` or equivalent privileged account. |
 ```bash
 # Enclosure hardware overview
 enclosure show hardware
@@ -731,9 +763,11 @@ NVRAM Battery           NVRAM   OK          NVRAM-3K8N9L2M
 ```
 
 !!! warning "Common errors"
-    **`enclosure: command not found`** — Verify you are logged into the Data Domain CLI (via SSH or console) and not a standard Linux shell.
-    **`Invalid enclosure ID: <enc_id>`** — Replace `<enc_id>` with a valid enclosure identifier from the `enclosure show all` output.
-    **`Permission denied`** — Ensure your user account has administrative or operator privileges on the Data Domain system.
+    | Error | Fix |
+    |---|---|
+    | `enclosure: command not found` | Verify you are logged into the Data Domain CLI (via SSH or console) and not a standard Linux shell. |
+    | `Invalid enclosure ID: <enc_id>` | Replace `<enc_id>` with a valid enclosure identifier from the `enclosure show all` output. |
+    | `Permission denied` | Ensure your user account has administrative or operator privileges on the Data Domain system. |
 ```bash
 # List all tiers (active, cloud)
 tier list
@@ -778,8 +812,10 @@ Tier Name: cloud
 ```
 
 !!! warning "Common errors"
-    **`Error: Cloud tier not licensed`** — Verify the Data Domain license includes cloud tiering by running `license show` and contact Dell support if the feature is not enabled.
-    **`Error: Tier 'cloud' does not exist`** — Initialize the cloud tier first using `tier create cloud` with appropriate cloud provider credentials and bucket configuration.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cloud tier not licensed` | Verify the Data Domain license includes cloud tiering by running `license show` and contact Dell support if the feature is not enabled. |
+    | `Error: Tier 'cloud' does not exist` | Initialize the cloud tier first using `tier create cloud` with appropriate cloud provider credentials and bucket configuration. |
 ```bash
 # RAID group state and disk members
 raid show all
@@ -819,8 +855,10 @@ Rebuilding: 67% Complete
 ```
 
 !!! warning "Common errors"
-    **`raid: command not found`** — Verify you are logged into the Data Domain management interface (SSH to the system's IP address) and not a local workstation shell.
-    **`Error: RAID group not accessible`** — Check that no disks are in Failed state by running `disk show all` and replace any failed disks before querying RAID status.
+    | Error | Fix |
+    |---|---|
+    | `raid: command not found` | Verify you are logged into the Data Domain management interface (SSH to the system's IP address) and not a local workstation shell. |
+    | `Error: RAID group not accessible` | Check that no disks are in Failed state by running `disk show all` and replace any failed disks before querying RAID status. |
 ```bash
 # Filesystem space usage
 filesys show space
@@ -854,9 +892,11 @@ Tier Name: Capacity
 ```
 
 !!! warning "Common errors"
-    **`Error: filesys command not found`** — Verify you are logged into the Data Domain CLI (use `sysconfig show` to confirm system access) and not a standard Linux shell.
-    **`Error: Permission denied - insufficient privileges`** — Ensure your user account has admin or operator role; use `user show` to check current permissions.
-    **`Error: Tier show detail: invalid syntax`** — Use the correct command `tier show` or `tier show capacity` depending on your Data Domain OS version.
+    | Error | Fix |
+    |---|---|
+    | `Error: filesys command not found` | Verify you are logged into the Data Domain CLI (use `sysconfig show` to confirm system access) and not a standard Linux shell. |
+    | `Error: Permission denied - insufficient privileges` | Ensure your user account has admin or operator role; use `user show` to check current permissions. |
+    | `Error: Tier show detail: invalid syntax` | Use the correct command `tier show` or `tier show capacity` depending on your Data Domain OS version. |
 ```bash
 # List all NFS exports
 nfs show exports
@@ -891,8 +931,10 @@ Total connections: 4
 ```
 
 !!! warning "Common errors"
-    **`NFS service is not running`** — Run `nfs start` to enable the NFS service.
-    **`Permission denied: cannot list exports`** — Verify your user account has administrative privileges or use `sudo` if available.
+    | Error | Fix |
+    |---|---|
+    | `NFS service is not running` | Run `nfs start` to enable the NFS service. |
+    | `Permission denied: cannot list exports` | Verify your user account has administrative privileges or use `sudo` if available. |
 ```bash
 # Create an NFS export for an MTree
 nfs add export /data/col1/<mtree_name> clients <ip_or_cidr>
@@ -930,9 +972,11 @@ NFS export /data/col1/backup_mtree removed successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Export path /data/col1/backup_mtree does not exist`** — Verify the MTree name is correct and the MTree has been created with `mtree create`.
-    **`Error: Invalid client IP address <ip_or_cidr>`** — Ensure the IP address or CIDR notation is properly formatted (e.g., 192.168.1.0/24 or 10.0.0.5).
-    **`Error: Client <ip> is not authorized for this export`** — Confirm the client IP exists in the export's client list before attempting to remove it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Export path /data/col1/backup_mtree does not exist` | Verify the MTree name is correct and the MTree has been created with `mtree create`. |
+    | `Error: Invalid client IP address <ip_or_cidr>` | Ensure the IP address or CIDR notation is properly formatted (e.g., 192.168.1.0/24 or 10.0.0.5). |
+    | `Error: Client <ip> is not authorized for this export` | Confirm the client IP exists in the export's client list before attempting to remove it. |
 ```bash
 # CIFS service status and configuration
 cifs show
@@ -983,9 +1027,11 @@ Share deleted successfully: /data/col1/mtree_analytics
 ```
 
 !!! warning "Common errors"
-    **`Error: Share path does not exist`** — Verify the MTree exists with `mtree show` and use the correct path `/data/col1/<mtree_name>`.
-    **`Error: Share already exists`** — Remove the existing share with `cifs share del` before attempting to add a share with the same path.
-    **`Error: Cannot delete share - active client connections`** — Disconnect all clients from the share or use `cifs share del -f` to force deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Share path does not exist` | Verify the MTree exists with `mtree show` and use the correct path `/data/col1/<mtree_name>`. |
+    | `Error: Share already exists` | Remove the existing share with `cifs share del` before attempting to add a share with the same path. |
+    | `Error: Cannot delete share - active client connections` | Disconnect all clients from the share or use `cifs share del -f` to force deletion. |
 ```bash
 # Restrict share access to specific AD groups
 cifs share modify <share_name> add-writable-users <DOMAIN>\<group>
@@ -1006,8 +1052,10 @@ Share: backup_data
 ```
 
 !!! warning "Common errors"
-    **`Error: Share 'backup_data' not found`** — Verify the share name exists with `cifs share list` and use the exact name from the output.
-    **`Error: User or group 'DOMAIN\group' not found in directory service`** — Confirm the AD group name and domain are correct, and that the Data Domain appliance has active directory connectivity via `net ads info`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Share 'backup_data' not found` | Verify the share name exists with `cifs share list` and use the exact name from the output. |
+    | `Error: User or group 'DOMAIN\group' not found in directory service` | Confirm the AD group name and domain are correct, and that the Data Domain appliance has active directory connectivity via `net ads info`. |
 ```bash
 # Filesystem state (enabled/disabled)
 filesys status
@@ -1059,9 +1107,11 @@ Space Usage Breakdown:
 ```
 
 !!! warning "Common errors"
-    **`filesys: command not found`** — Verify you are logged into the Data Domain CLI (SSH to the management IP) and not a standard Linux shell.
-    **`Permission denied`** — Ensure your user account has administrative privileges; use `user show` to verify your role is "admin".
-    **`Filesystem is disabled`** — Enable the filesystem with `filesys enable` before querying compression and space statistics.
+    | Error | Fix |
+    |---|---|
+    | `filesys: command not found` | Verify you are logged into the Data Domain CLI (SSH to the management IP) and not a standard Linux shell. |
+    | `Permission denied` | Ensure your user account has administrative privileges; use `user show` to verify your role is "admin". |
+    | `Filesystem is disabled` | Enable the filesystem with `filesys enable` before querying compression and space statistics. |
 ```bash
 # Enable the filesystem (required before accepting backup data)
 filesys enable
@@ -1084,9 +1134,11 @@ Status: OFFLINE
 ```
 
 !!! warning "Common errors"
-    **`filesys: command not found`** — Ensure you are logged into the Data Domain CLI (via SSH or console) and have administrative privileges; this command is not available in standard bash shells.
-    **`Error: Filesystem is already enabled`** — Check current filesystem status with `filesys status` before attempting to enable; skip the enable command if status shows ONLINE.
-    **`Error: Active backup jobs detected. Cannot disable filesystem.`** — Wait for all running backup jobs to complete or force-abort them with `job abort -all` before disabling the filesystem.
+    | Error | Fix |
+    |---|---|
+    | `filesys: command not found` | Ensure you are logged into the Data Domain CLI (via SSH or console) and have administrative privileges; this command is not available in standard bash shells. |
+    | `Error: Filesystem is already enabled` | Check current filesystem status with `filesys status` before attempting to enable; skip the enable command if status shows ONLINE. |
+    | `Error: Active backup jobs detected. Cannot disable filesystem.` | Wait for all running backup jobs to complete or force-abort them with `job abort -all` before disabling the filesystem. |
 ```bash
 # Start a cleaning cycle
 filesys clean start
@@ -1118,9 +1170,11 @@ Final statistics: 847 GB reclaimed, 12,453 files processed
 ```
 
 !!! warning "Common errors"
-    **`filesys clean start: Error - cleaning cycle already in progress (Cycle ID: CLEAN-20240115-0847)`** — Wait for the current cycle to complete or run `filesys clean stop` first.
-    **`filesys clean status: Error - no active cleaning cycle found`** — Start a cleaning cycle with `filesys clean start` before checking status.
-    **`filesys clean stop: Error - insufficient privileges to stop cleaning cycle`** — Run the command with appropriate administrative credentials or use `sudo`.
+    | Error | Fix |
+    |---|---|
+    | `filesys clean start: Error - cleaning cycle already in progress (Cycle ID: CLEAN-20240115-0847)` | Wait for the current cycle to complete or run `filesys clean stop` first. |
+    | `filesys clean status: Error - no active cleaning cycle found` | Start a cleaning cycle with `filesys clean start` before checking status. |
+    | `filesys clean stop: Error - insufficient privileges to stop cleaning cycle` | Run the command with appropriate administrative credentials or use `sudo`. |
 ```bash
 # Overall capacity summary
 filesys show space
@@ -1162,8 +1216,10 @@ Total: 50.0TB
 ```
 
 !!! warning "Common errors"
-    **`filesys: command not found`** — Verify you are logged into the Data Domain CLI (SSH to the management IP) and not a standard Linux shell.
-    **`permission denied`** — Ensure your user account has admin or operator privileges; request elevated access from your Data Domain administrator.
+    | Error | Fix |
+    |---|---|
+    | `filesys: command not found` | Verify you are logged into the Data Domain CLI (SSH to the management IP) and not a standard Linux shell. |
+    | `permission denied` | Ensure your user account has admin or operator privileges; request elevated access from your Data Domain administrator. |
 ```bash
 # Expire old backup data (via backup application policy — not DD CLI)
 # Data Domain only deletes data when the backup app marks it expired
@@ -1200,8 +1256,10 @@ Last cleaning: 2024-01-15 14:32:18
 ```
 
 !!! warning "Common errors"
-    **`filesys clean start: Operation already in progress`** — Wait for the current cleaning job to complete using `filesys clean status` before starting a new one.
-    **`filesys show space: Permission denied`** — Ensure your user account has administrative privileges or use `sudo` if available on your Data Domain system.
+    | Error | Fix |
+    |---|---|
+    | `filesys clean start: Operation already in progress` | Wait for the current cleaning job to complete using `filesys clean status` before starting a new one. |
+    | `filesys show space: Permission denied` | Ensure your user account has administrative privileges or use `sudo` if available on your Data Domain system. |
 ```bash
 # Check filesystem integrity
 filesys check
@@ -1231,8 +1289,10 @@ Filesystem Event Log (last 20 entries):
 ```
 
 !!! warning "Common errors"
-    **`filesys: command not found`** — Verify you are logged into the Data Domain management interface or use the correct CLI command syntax for your DD OS version.
-    **`Error: Filesystem check already in progress`** — Wait for the current check to complete or use `filesys check abort` if necessary before retrying.
+    | Error | Fix |
+    |---|---|
+    | `filesys: command not found` | Verify you are logged into the Data Domain management interface or use the correct CLI command syntax for your DD OS version. |
+    | `Error: Filesystem check already in progress` | Wait for the current check to complete or use `filesys check abort` if necessary before retrying. |
 ```bash
 # List all MTrees
 mtree list
@@ -1269,9 +1329,11 @@ Name                          Status    Capacity      Used          Available   
 ```
 
 !!! warning "Common errors"
-    **`mtree: command not found`** — Ensure you are logged into the Data Domain management interface (SSH to the DD appliance) or use the Web UI instead of your local shell.
-    **`Error: MTree /data/col1/<mtree_name> does not exist`** — Verify the exact MTree path using `mtree list` first, as the name may differ from your expected value.
-    **`Permission denied`** — Confirm your user account has administrative privileges on the Data Domain system; contact your DD administrator if needed.
+    | Error | Fix |
+    |---|---|
+    | `mtree: command not found` | Ensure you are logged into the Data Domain management interface (SSH to the DD appliance) or use the Web UI instead of your local shell. |
+    | `Error: MTree /data/col1/<mtree_name> does not exist` | Verify the exact MTree path using `mtree list` first, as the name may differ from your expected value. |
+    | `Permission denied` | Confirm your user account has administrative privileges on the Data Domain system; contact your DD administrator if needed. |
 ```bash
 # Create an MTree
 mtree create /data/col1/<mtree_name>
@@ -1293,8 +1355,10 @@ Reclaimed space: 100.0 TB
 ```
 
 !!! warning "Common errors"
-    **`Error: MTree /data/col1/backup_prod is not empty`** — Add the `--force` flag to delete a non-empty MTree, or manually purge contents first with `mtree purge`.
-    **`Error: Permission denied for operation on /data/col1/backup_prod`** — Ensure your user account has sysadmin or mtree-admin privileges on the Data Domain system.
+    | Error | Fix |
+    |---|---|
+    | `Error: MTree /data/col1/backup_prod is not empty` | Add the `--force` flag to delete a non-empty MTree, or manually purge contents first with `mtree purge`. |
+    | `Error: Permission denied for operation on /data/col1/backup_prod` | Ensure your user account has sysadmin or mtree-admin privileges on the Data Domain system. |
 ```bash
 # View current quotas
 mtree quota show
@@ -1330,9 +1394,11 @@ Quota reset successfully for /data/col1/prod-backup-01
 ```
 
 !!! warning "Common errors"
-    **`mtree: command not found`** — Ensure you are logged into the Data Domain management interface or CLI with appropriate credentials.
-    **`Error: Invalid path /data/col1/<mtree_name>`** — Replace `<mtree_name>` with the actual mtree name (e.g., `prod-backup-01`) and verify the path exists with `mtree show`.
-    **`Error: Quota limit must be greater than soft limit`** — Set the hard limit to a value larger than the soft limit (e.g., hard-limit 10 TiB, soft-limit 8 TiB).
+    | Error | Fix |
+    |---|---|
+    | `mtree: command not found` | Ensure you are logged into the Data Domain management interface or CLI with appropriate credentials. |
+    | `Error: Invalid path /data/col1/<mtree_name>` | Replace `<mtree_name>` with the actual mtree name (e.g., `prod-backup-01`) and verify the path exists with `mtree show`. |
+    | `Error: Quota limit must be greater than soft limit` | Set the hard limit to a value larger than the soft limit (e.g., hard-limit 10 TiB, soft-limit 8 TiB). |
 ```bash
 # Enable retention lock on an MTree
 mtree retention-lock enable mode enterprise /data/col1/<mtree_name>
@@ -1365,9 +1431,11 @@ Last Modified: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: MTree /data/col1/<mtree_name> does not exist or is not accessible`** — Verify the MTree name is correct and the path exists using `mtree list`.
-    **`Error: Retention lock mode 'enterprise' is not supported on this system`** — Check Data Domain firmware version supports enterprise mode; use `mtree retention-lock enable mode compliance` as an alternative.
-    **`Error: Cannot enable retention lock - MTree is currently in use by active backup jobs`** — Wait for running backup jobs to complete or pause them before enabling retention lock.
+    | Error | Fix |
+    |---|---|
+    | `Error: MTree /data/col1/<mtree_name> does not exist or is not accessible` | Verify the MTree name is correct and the path exists using `mtree list`. |
+    | `Error: Retention lock mode 'enterprise' is not supported on this system` | Check Data Domain firmware version supports enterprise mode; use `mtree retention-lock enable mode compliance` as an alternative. |
+    | `Error: Cannot enable retention lock - MTree is currently in use by active backup jobs` | Wait for running backup jobs to complete or pause them before enabling retention lock. |
 ```bash
 # Add an MTree as a replication source (see replication CLI ref for full setup)
 replication add source mtree://<src_host>/data/col1/<mtree_name> destination mtree://<dst_host>/data/col1/<mtree_name>
@@ -1387,9 +1455,11 @@ finance_backup          mtree://dd-prod-01.corp.local/data/col1/finance_backup  
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid MTree path format`** — Ensure the path follows the exact format `mtree://<hostname>/data/col1/<mtree_name>` with no trailing slashes or extra characters.
-    **`Error: Destination MTree does not exist`** — Create the destination MTree on the target Data Domain system before adding the replication relationship.
-    **`Error: Authentication failed for destination host`** — Verify network connectivity and credentials between source and destination Data Domain systems are properly configured.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid MTree path format` | Ensure the path follows the exact format `mtree://<hostname>/data/col1/<mtree_name>` with no trailing slashes or extra characters. |
+    | `Error: Destination MTree does not exist` | Create the destination MTree on the target Data Domain system before adding the replication relationship. |
+    | `Error: Authentication failed for destination host` | Verify network connectivity and credentials between source and destination Data Domain systems are properly configured. |
 ```bash
 # Space used by each MTree
 mtree list --verbose | grep -E "name|pre-comp|post-comp|quota"
@@ -1415,8 +1485,10 @@ mtree_replication_staging:   70.3% reduction
 ```
 
 !!! warning "Common errors"
-    **`mtree: command not found`** — Ensure you are logged into the Data Domain management interface or have the DD CLI tools installed in your PATH.
-    **`grep: (standard input) is empty`** — Run `mtree list` without filters first to verify mtrees exist and the command syntax is correct for your DD OS version.
+    | Error | Fix |
+    |---|---|
+    | `mtree: command not found` | Ensure you are logged into the Data Domain management interface or have the DD CLI tools installed in your PATH. |
+    | `grep: (standard input) is empty` | Run `mtree list` without filters first to verify mtrees exist and the command syntax is correct for your DD OS version. |
 ```bash
 # All interfaces — IP, speed, state
 net show all
@@ -1470,9 +1542,11 @@ eth3       0             0             0          0          0         0
 ```
 
 !!! warning "Common errors"
-    **`net: command not found`** — Verify you are logged into the Data Domain management interface (SSH to the DD system, not a separate host) and that your user role has network view permissions.
-    **`Error: Unable to retrieve network configuration`** — Restart the network management service with `service network restart` or check system connectivity with `ping 127.0.0.1`.
-    **`Permission denied`** — Ensure your user account has admin or network-operator privileges; request elevated access from your Data Domain administrator.
+    | Error | Fix |
+    |---|---|
+    | `net: command not found` | Verify you are logged into the Data Domain management interface (SSH to the DD system, not a separate host) and that your user role has network view permissions. |
+    | `Error: Unable to retrieve network configuration` | Restart the network management service with `service network restart` or check system connectivity with `ping 127.0.0.1`. |
+    | `Permission denied` | Ensure your user account has admin or network-operator privileges; request elevated access from your Data Domain administrator. |
 ```bash
 # Configure an interface IP
 net config eth1 <ip_address> netmask <mask>
@@ -1489,8 +1563,10 @@ net disable eth1
 ```
 
 !!! warning "Common errors"
-    **`Error: Interface eth1 not found`** — Verify the interface exists with `net show interfaces` and use the correct interface name.
-    **`Error: Invalid netmask format`** — Use standard dotted-decimal notation (e.g., 255.255.255.0) or CIDR prefix length (e.g., /24).
+    | Error | Fix |
+    |---|---|
+    | `Error: Interface eth1 not found` | Verify the interface exists with `net show interfaces` and use the correct interface name. |
+    | `Error: Invalid netmask format` | Use standard dotted-decimal notation (e.g., 255.255.255.0) or CIDR prefix length (e.g., /24). |
 ```bash
 # Current routing table
 net route show
@@ -1518,9 +1594,11 @@ default         10.20.1.1       0.0.0.0         UG    100    0      0   eth0
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid gateway address <gateway_ip>`** — Verify the gateway IP is reachable and correctly formatted (e.g., 10.20.1.1 not 10.20.1.256).
-    **`Error: Interface <interface> does not exist`** — Confirm the interface name with `net interface show` and use the correct name (e.g., eth0 not eth-0).
-    **`Error: Route does not exist`** — Ensure the exact destination IP and host/net type match an existing route before deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid gateway address <gateway_ip>` | Verify the gateway IP is reachable and correctly formatted (e.g., 10.20.1.1 not 10.20.1.256). |
+    | `Error: Interface <interface> does not exist` | Confirm the interface name with `net interface show` and use the correct name (e.g., eth0 not eth-0). |
+    | `Error: Route does not exist` | Ensure the exact destination IP and host/net type match an existing route before deletion. |
 ```bash
 # Hosts file entries
 net hosts show
@@ -1550,9 +1628,11 @@ dns-retries: 2
 ```
 
 !!! warning "Common errors"
-    **`net: command not found`** — Verify you are logged into the Data Domain management interface (SSH to the system's IP address) rather than a local workstation shell.
-    **`Host entry added successfully: ERROR - Invalid IP address format`** — Ensure the IP address is in valid dotted-decimal notation (e.g., 192.168.1.50) and the hostname contains only alphanumeric characters and hyphens.
-    **`ERROR: Duplicate host entry already exists`** — Remove the existing entry with `net config hosts remove <ip_address>` before adding the new one.
+    | Error | Fix |
+    |---|---|
+    | `net: command not found` | Verify you are logged into the Data Domain management interface (SSH to the system's IP address) rather than a local workstation shell. |
+    | `Host entry added successfully: ERROR - Invalid IP address format` | Ensure the IP address is in valid dotted-decimal notation (e.g., 192.168.1.50) and the hostname contains only alphanumeric characters and hyphens. |
+    | `ERROR: Duplicate host entry already exists` | Remove the existing entry with `net config hosts remove <ip_address>` before adding the new one. |
 ```bash
 # NTP server list
 ntp show
@@ -1589,9 +1669,11 @@ NTP server 10.45.12.9 removed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: NTP server 10.50.20.15 is already configured`** — Remove the duplicate entry with `ntp del timeserver 10.50.20.15` before re-adding it.
-    **`Error: Cannot remove NTP server, minimum 1 server required`** — Ensure at least one NTP server remains configured; add a replacement server before deleting the last one.
-    **`Error: Invalid NTP server address <ntp_ip>`** — Verify the IP address format is valid and the server is reachable on port 123 UDP.
+    | Error | Fix |
+    |---|---|
+    | `Error: NTP server 10.50.20.15 is already configured` | Remove the duplicate entry with `ntp del timeserver 10.50.20.15` before re-adding it. |
+    | `Error: Cannot remove NTP server, minimum 1 server required` | Ensure at least one NTP server remains configured; add a replacement server before deleting the last one. |
+    | `Error: Invalid NTP server address <ntp_ip>` | Verify the IP address format is valid and the server is reachable on port 123 UDP. |
 ```bash
 # Ping from Data Domain
 net ping <destination_ip>
@@ -1634,8 +1716,10 @@ traceroute to 10.20.30.40 (10.20.30.40), 30 hops max, 40 byte packets
 ```
 
 !!! warning "Common errors"
-    **`net ping: unknown host <destination_ip>`** — Verify the destination IP address is correct and resolvable from the Data Domain's network configuration.
-    **`net ping: sendto: No route to host`** — Confirm the destination IP is on an accessible subnet and check Data Domain network interface configuration with `net show interface`.
+    | Error | Fix |
+    |---|---|
+    | `net ping: unknown host <destination_ip>` | Verify the destination IP address is correct and resolvable from the Data Domain's network configuration. |
+    | `net ping: sendto: No route to host` | Confirm the destination IP is on an accessible subnet and check Data Domain network interface configuration with `net show interface`. |
 ```bash
 # Show bonding configuration
 net config bond show
@@ -1664,8 +1748,10 @@ Bond created successfully: bond0
 ```
 
 !!! warning "Common errors"
-    **`Error: Interface eth1 is already in use`** — Remove the interface from its current bond or configuration before adding it to a new bond.
-    **`Error: LACP mode requires at least 2 interfaces`** — Provide at least two valid physical interfaces separated by spaces in the bond create command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Interface eth1 is already in use` | Remove the interface from its current bond or configuration before adding it to a new bond. |
+    | `Error: LACP mode requires at least 2 interfaces` | Provide at least two valid physical interfaces separated by spaces in the bond create command. |
 ```bash
 # Show open ports and firewall rules
 net config firewall show
@@ -1693,8 +1779,10 @@ Open Ports:
 ```
 
 !!! warning "Common errors"
-    **`net config firewall: command not found`** — Verify you are logged into the Data Domain CLI (use `ssh admin@<dd-ip>`) and not a standard Linux shell.
-    **`Permission denied`** — Ensure your user account has administrative privileges; use `su` or contact your system administrator.
+    | Error | Fix |
+    |---|---|
+    | `net config firewall: command not found` | Verify you are logged into the Data Domain CLI (use `ssh admin@<dd-ip>`) and not a standard Linux shell. |
+    | `Permission denied` | Ensure your user account has administrative privileges; use `su` or contact your system administrator. |
 ```bash
 # All replication contexts (summary)
 replication show all
@@ -1747,9 +1835,11 @@ archive-offsite: IDLE (lag: 24+ hours, last sync: 2024-01-14 08:15:33)
 ```
 
 !!! warning "Common errors"
-    **`replication show: command not found`** — Verify you are logged into the Data Domain CLI (use `ssh admin@<dd-hostname>`) and not a standard Linux shell.
-    **`Error: Access denied for replication commands`** — Confirm your user account has replication administrator privileges; contact your Data Domain admin to grant the required role.
-    **`Context 'prod-backup-01' not found`** — Check the exact context name with `replication show all` and verify it has not been deleted or renamed.
+    | Error | Fix |
+    |---|---|
+    | `replication show: command not found` | Verify you are logged into the Data Domain CLI (use `ssh admin@<dd-hostname>`) and not a standard Linux shell. |
+    | `Error: Access denied for replication commands` | Confirm your user account has replication administrator privileges; contact your Data Domain admin to grant the required role. |
+    | `Context 'prod-backup-01' not found` | Check the exact context name with `replication show all` and verify it has not been deleted or renamed. |
 ```bash
 # Add MTree-level replication (directional — source to destination)
 replication add source mtree://<src_host>/data/col1/<mtree_name> \
@@ -1777,9 +1867,11 @@ Current throughput: 72.4 MB/s
 ```
 
 !!! warning "Common errors"
-    **`Error: destination mtree does not exist`** — Create the destination MTree on the target Data Domain system before adding the replication context.
-    **`Error: replication context already exists for this pair`** — Use `replication modify` to update an existing context instead of `replication add`.
-    **`Error: network connectivity failed to destination host`** — Verify network connectivity and firewall rules between source and destination Data Domain systems on port 7144.
+    | Error | Fix |
+    |---|---|
+    | `Error: destination mtree does not exist` | Create the destination MTree on the target Data Domain system before adding the replication context. |
+    | `Error: replication context already exists for this pair` | Use `replication modify` to update an existing context instead of `replication add`. |
+    | `Error: network connectivity failed to destination host` | Verify network connectivity and firewall rules between source and destination Data Domain systems on port 7144. |
 ```bash
 # Trigger an immediate sync (outside scheduled window)
 replication sync <context_id>
@@ -1821,9 +1913,11 @@ Replication relationship removed.
 ```
 
 !!! warning "Common errors"
-    **`Error: Context 7f3a9c2e-4b1d-11ed-a891-0050568a1234 not found`** — Verify the context ID is correct using `replication list` and check for typos.
-    **`Error: Replication sync already in progress for this context`** — Wait for the current sync to complete or use `replication abort` before triggering a new sync.
-    **`Error: Cannot break context while sync is in progress`** — Wait for the active replication sync to finish before attempting to break the context.
+    | Error | Fix |
+    |---|---|
+    | `Error: Context 7f3a9c2e-4b1d-11ed-a891-0050568a1234 not found` | Verify the context ID is correct using `replication list` and check for typos. |
+    | `Error: Replication sync already in progress for this context` | Wait for the current sync to complete or use `replication abort` before triggering a new sync. |
+    | `Error: Cannot break context while sync is in progress` | Wait for the active replication sync to finish before attempting to break the context. |
 ```bash
 # Lag in bytes (amount of data not yet replicated)
 replication show stats | grep lag
@@ -1839,8 +1933,10 @@ lag: 2 hours 14 minutes
 ```
 
 !!! warning "Common errors"
-    **`replication: command not found`** — Ensure you are logged into the Data Domain CLI (SSH to the management IP) and have appropriate admin privileges.
-    **`grep: (standard input) is empty`** — Run `replication show` first to verify replication is configured; if no output appears, replication may not be initialized on this system.
+    | Error | Fix |
+    |---|---|
+    | `replication: command not found` | Ensure you are logged into the Data Domain CLI (SSH to the management IP) and have appropriate admin privileges. |
+    | `grep: (standard input) is empty` | Run `replication show` first to verify replication is configured; if no output appears, replication may not be initialized on this system. |
 ```bash
 # Break the context (makes destination writeable)
 replication failover <context_id>
@@ -1860,9 +1956,11 @@ Replication direction: REVERSED
 ```
 
 !!! warning "Common errors"
-    **`Error: Context ctx-prod-backup-001 not found`** — Verify the context ID with `replication show` and ensure it exists on this system.
-    **`Error: Failover blocked - replication still in progress`** — Wait for the current replication cycle to complete or force abort with `replication abort <context_id>` before retrying.
-    **`Error: Destination system unreachable (192.168.1.46)`** — Confirm network connectivity to the destination Data Domain and verify it is powered on and responsive.
+    | Error | Fix |
+    |---|---|
+    | `Error: Context ctx-prod-backup-001 not found` | Verify the context ID with `replication show` and ensure it exists on this system. |
+    | `Error: Failover blocked - replication still in progress` | Wait for the current replication cycle to complete or force abort with `replication abort <context_id>` before retrying. |
+    | `Error: Destination system unreachable (192.168.1.46)` | Confirm network connectivity to the destination Data Domain and verify it is powered on and responsive. |
 ```bash
 # Step 1 — resync (when primary recovers)
 replication resync <context_id>
@@ -1892,9 +1990,11 @@ Throughput: 847 MB/s
 ```
 
 !!! warning "Common errors"
-    **`Error: Context 'ctx-8f2a9c1e' not found or is in BROKEN state`** — Verify the context exists and is active with `replication show contexts`; recreate if necessary.
-    **`Error: Resync failed — destination has uncommitted writes`** — Ensure no active replication jobs are running on the destination with `replication show jobs` before retrying resync.
-    **`Error: Cannot resync — replication lag exceeds 24 hours`** — Break the context and perform a full re-initialization instead of resync using `replication break` followed by `replication create`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Context 'ctx-8f2a9c1e' not found or is in BROKEN state` | Verify the context exists and is active with `replication show contexts`; recreate if necessary. |
+    | `Error: Resync failed — destination has uncommitted writes` | Ensure no active replication jobs are running on the destination with `replication show jobs` before retrying resync. |
+    | `Error: Cannot resync — replication lag exceeds 24 hours` | Break the context and perform a full re-initialization instead of resync using `replication break` followed by `replication create`. |
 ```bash
 # Trust a remote DD (exchange certs — required for encrypted replication)
 replication add source ... --encryption aes128
@@ -1915,9 +2015,11 @@ Replication trust established
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate exchange timeout after 60 seconds`** — Verify network connectivity between the two Data Domain systems and check firewall rules allowing port 3009 (replication service).
-    **`Error: Remote host dd-backup-02.corp.local not found or unreachable`** — Ensure the remote Data Domain hostname is resolvable via DNS and the system is powered on and network-accessible.
-    **`Error: Certificate verification failed - fingerprint mismatch`** — Confirm you are connecting to the correct remote Data Domain system and that no man-in-the-middle interference is occurring.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate exchange timeout after 60 seconds` | Verify network connectivity between the two Data Domain systems and check firewall rules allowing port 3009 (replication service). |
+    | `Error: Remote host dd-backup-02.corp.local not found or unreachable` | Ensure the remote Data Domain hostname is resolvable via DNS and the system is powered on and network-accessible. |
+    | `Error: Certificate verification failed - fingerprint mismatch` | Confirm you are connecting to the correct remote Data Domain system and that no man-in-the-middle interference is occurring. |
 ```bash
 # Full system overview
 system show all
@@ -1969,9 +2071,11 @@ Model: Dell EMC Data Domain DD9900
 ```
 
 !!! warning "Common errors"
-    **`Error: Access Denied`** — Verify your user account has admin privileges or use `sudo` if available on your Data Domain system.
-    **`Error: Command not found: system show all`** — Ensure you are connected to the Data Domain CLI (via SSH or console) and not a standard Linux shell; use `ssh admin@<dd-ip>` to connect.
-    **`Error: System is in maintenance mode`** — Wait for maintenance operations to complete or contact your system administrator before running diagnostic commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: Access Denied` | Verify your user account has admin privileges or use `sudo` if available on your Data Domain system. |
+    | `Error: Command not found: system show all` | Ensure you are connected to the Data Domain CLI (via SSH or console) and not a standard Linux shell; use `ssh admin@<dd-ip>` to connect. |
+    | `Error: System is in maintenance mode` | Wait for maintenance operations to complete or contact your system administrator before running diagnostic commands. |
 ```bash
 # Run built-in health check
 health check show
@@ -2018,9 +2122,11 @@ Alert ALR-2846-998 acknowledged successfully.
 ```
 
 !!! warning "Common errors"
-    **`alert acknowledge: invalid alert ID format`** — Verify the alert ID exists and matches the format shown in `alert show history` (e.g., ALR-2847-001).
-    **`health check show: command not found`** — Confirm you are connected to the Data Domain CLI (not the host shell); use `ssh admin@<dd-ip>` to access the correct interface.
-    **`alert show current: insufficient permissions`** — Request admin or operator role privileges from your Data Domain administrator.
+    | Error | Fix |
+    |---|---|
+    | `alert acknowledge: invalid alert ID format` | Verify the alert ID exists and matches the format shown in `alert show history` (e.g., ALR-2847-001). |
+    | `health check show: command not found` | Confirm you are connected to the Data Domain CLI (not the host shell); use `ssh admin@<dd-ip>` to access the correct interface. |
+    | `alert show current: insufficient permissions` | Request admin or operator role privileges from your Data Domain administrator. |
 ```bash
 # Show installed software packages
 system software version show
@@ -2050,8 +2156,10 @@ License Status:
 ```
 
 !!! warning "Common errors"
-    **`system software version show: command not found`** — Ensure you are logged into the Data Domain CLI (via SSH or console) and not a standard Linux shell.
-    **`elicense show: Permission denied`** — Verify your user account has administrative privileges; use `user show` to check your role.
+    | Error | Fix |
+    |---|---|
+    | `system software version show: command not found` | Ensure you are logged into the Data Domain CLI (via SSH or console) and not a standard Linux shell. |
+    | `elicense show: Permission denied` | Verify your user account has administrative privileges; use `user show` to check your role. |
 ```bash
 # Power supply status
 enclosure show hardware | grep -i power
@@ -2084,8 +2192,10 @@ Temperature Sensors:
 ```
 
 !!! warning "Common errors"
-    **`enclosure: command not found`** — Verify you are logged into the Data Domain system directly (not a remote host) and have appropriate admin privileges.
-    **`grep: (standard input) is empty`** — Run `enclosure show hardware` without grep first to confirm the command syntax and that hardware monitoring is enabled on this system.
+    | Error | Fix |
+    |---|---|
+    | `enclosure: command not found` | Verify you are logged into the Data Domain system directly (not a remote host) and have appropriate admin privileges. |
+    | `grep: (standard input) is empty` | Run `enclosure show hardware` without grep first to confirm the command syntax and that hardware monitoring is enabled on this system. |
 ```bash
 # Current time
 ntp status
@@ -2113,9 +2223,11 @@ NTP server 203.0.113.42 added successfully.
 ```
 
 !!! warning "Common errors"
-    **`ntp add: error - invalid IP address format`** — Verify the NTP server IP is in valid dotted-decimal notation (e.g., 192.0.2.1) and rerun the command.
-    **`ntp add: error - NTP server already configured`** — Check existing NTP servers with `ntp show` and use a different IP address or remove the duplicate first.
-    **`ntp: command not found`** — Ensure you are logged in with administrative privileges and the Data Domain system is running the latest firmware version.
+    | Error | Fix |
+    |---|---|
+    | `ntp add: error - invalid IP address format` | Verify the NTP server IP is in valid dotted-decimal notation (e.g., 192.0.2.1) and rerun the command. |
+    | `ntp add: error - NTP server already configured` | Check existing NTP servers with `ntp show` and use a different IP address or remove the duplicate first. |
+    | `ntp: command not found` | Ensure you are logged in with administrative privileges and the Data Domain system is running the latest firmware version. |
 ```bash
 # Safe shutdown (completes in-progress operations)
 system shutdown
@@ -2151,9 +2263,11 @@ Rebooting at 2024-01-15 14:33:45 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Cannot shutdown while replication is in progress`** — Wait for active replication jobs to complete using `job status` before attempting shutdown.
-    **`Error: DDOS restart failed - port 3009 already in use`** — Kill the existing DDOS process with `pkill -f ddos` or wait 30 seconds for the port to release, then retry.
-    **`Error: Reboot denied - active user sessions detected`** — Force disconnect users with `system session kill all` or wait for sessions to end naturally before rebooting.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cannot shutdown while replication is in progress` | Wait for active replication jobs to complete using `job status` before attempting shutdown. |
+    | `Error: DDOS restart failed - port 3009 already in use` | Kill the existing DDOS process with `pkill -f ddos` or wait 30 seconds for the port to release, then retry. |
+    | `Error: Reboot denied - active user sessions detected` | Force disconnect users with `system session kill all` or wait for sessions to end naturally before rebooting. |
 ```bash
 # Create a support bundle (for TAC cases)
 support bundle create
@@ -2185,9 +2299,11 @@ Transfer completed successfully. Transferred 2.3 GB in 4m 32s
 ```
 
 !!! warning "Common errors"
-    **`support bundle export: Authentication failed for user@host`** — Verify SSH credentials and ensure the remote user has write permissions to the destination path.
-    **`support bundle create: Insufficient disk space. Required: 5 GB, Available: 2.1 GB`** — Delete older bundles with `support bundle delete <bundle-id>` or expand storage before retrying.
-    **`support bundle export: Connection timeout connecting to host`** — Confirm network connectivity to the remote host and verify the hostname/IP is reachable from the Data Domain appliance.
+    | Error | Fix |
+    |---|---|
+    | `support bundle export: Authentication failed for user@host` | Verify SSH credentials and ensure the remote user has write permissions to the destination path. |
+    | `support bundle create: Insufficient disk space. Required: 5 GB, Available: 2.1 GB` | Delete older bundles with `support bundle delete <bundle-id>` or expand storage before retrying. |
+    | `support bundle export: Connection timeout connecting to host` | Confirm network connectivity to the remote host and verify the hostname/IP is reachable from the Data Domain appliance. |
 ```bash
 # List all local users
 user list
@@ -2230,9 +2346,11 @@ User 'newuser' deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: User 'nonexistent' not found`** — Verify the username exists with `user list` before attempting to show, modify, or delete it.
-    **`Error: Cannot delete user 'admin': system user cannot be removed`** — Use a non-system account or contact Dell support if admin account modification is required.
-    **`Error: Password does not meet complexity requirements`** — Ensure the new password meets minimum length (typically 8+ characters) and includes uppercase, lowercase, and numeric characters.
+    | Error | Fix |
+    |---|---|
+    | `Error: User 'nonexistent' not found` | Verify the username exists with `user list` before attempting to show, modify, or delete it. |
+    | `Error: Cannot delete user 'admin': system user cannot be removed` | Use a non-system account or contact Dell support if admin account modification is required. |
+    | `Error: Password does not meet complexity requirements` | Ensure the new password meets minimum length (typically 8+ characters) and includes uppercase, lowercase, and numeric characters. |
 ```bash
 # Show available roles
 user role show
@@ -2266,8 +2384,10 @@ User 'jsmith' modified successfully.
 ```
 
 !!! warning "Common errors"
-    **`user role show: command not found`** — Use the correct command syntax `role list` or check that you are logged into the Data Domain CLI with proper permissions.
-    **`user modify: invalid role 'backup_operator'`** — Verify the role name exists by running `role list` and use an exact match from the available roles.
+    | Error | Fix |
+    |---|---|
+    | `user role show: command not found` | Use the correct command syntax `role list` or check that you are logged into the Data Domain CLI with proper permissions. |
+    | `user modify: invalid role 'backup_operator'` | Verify the role name exists by running `role list` and use an exact match from the available roles. |
 ```bash
 # Show authentication configuration (local, LDAP, AD)
 auth show
@@ -2306,9 +2426,11 @@ Testing LDAP authentication...
 ```
 
 !!! warning "Common errors"
-    **`Error: LDAP server <ldap_ip> is unreachable`** — Verify network connectivity to the LDAP server IP and confirm firewall rules allow port 389 (or 636 for LDAPS).
-    **`Error: Invalid bind credentials for <dn>`** — Confirm the bind-dn and bind-password are correct by testing them directly against the LDAP server.
-    **`Error: Active Directory domain <domain> cannot be resolved`** — Ensure the domain name is correct and that DNS resolution is working on the Data Domain appliance.
+    | Error | Fix |
+    |---|---|
+    | `Error: LDAP server <ldap_ip> is unreachable` | Verify network connectivity to the LDAP server IP and confirm firewall rules allow port 389 (or 636 for LDAPS). |
+    | `Error: Invalid bind credentials for <dn>` | Confirm the bind-dn and bind-password are correct by testing them directly against the LDAP server. |
+    | `Error: Active Directory domain <domain> cannot be resolved` | Ensure the domain name is correct and that DNS resolution is working on the Data Domain appliance. |
 ```bash
 # View password policy
 user password-policy show
@@ -2337,8 +2459,10 @@ Password history: 5
 ```
 
 !!! warning "Common errors"
-    **`user password-policy: command not found`** — Verify you are connected to the Data Domain system via SSH or console and have administrative privileges.
-    **`Error: Cannot set min-length to 12: minimum supported value is 6`** — Adjust the min-length parameter to a value between 6 and 32 characters.
+    | Error | Fix |
+    |---|---|
+    | `user password-policy: command not found` | Verify you are connected to the Data Domain system via SSH or console and have administrative privileges. |
+    | `Error: Cannot set min-length to 12: minimum supported value is 6` | Adjust the min-length parameter to a value between 6 and 32 characters. |
 ```bash
 # Show authorized SSH keys for a user
 user ssh-keys show <username>
@@ -2374,9 +2498,11 @@ SSH key removed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: User 'admin' not found`** — Verify the username exists on the Data Domain system using `user list`.
-    **`Error: Invalid public key format`** — Ensure the public key string starts with `ssh-rsa`, `ssh-ed25519`, or `ecdsa-sha2-` and contains no line breaks.
-    **`Error: Key ID 2 not found for user 'admin'`** — Confirm the key ID exists by running `user ssh-keys show <username>` before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: User 'admin' not found` | Verify the username exists on the Data Domain system using `user list`. |
+    | `Error: Invalid public key format` | Ensure the public key string starts with `ssh-rsa`, `ssh-ed25519`, or `ecdsa-sha2-` and contains no line breaks. |
+    | `Error: Key ID 2 not found for user 'admin'` | Confirm the key ID exists by running `user ssh-keys show <username>` before attempting deletion. |
 ```bash
 # Active login sessions
 user login show
@@ -2397,8 +2523,10 @@ Session 2 terminated successfully.
 ```
 
 !!! warning "Common errors"
-    **`user login terminate: session not found`** — Verify the session ID exists by running `user login show` and confirm the ID matches exactly.
-    **`user login terminate: permission denied`** — Ensure your user account has administrative privileges; contact your Data Domain administrator if needed.
+    | Error | Fix |
+    |---|---|
+    | `user login terminate: session not found` | Verify the session ID exists by running `user login show` and confirm the ID matches exactly. |
+    | `user login terminate: permission denied` | Ensure your user account has administrative privileges; contact your Data Domain administrator if needed. |
 ```bash
 # View authentication audit log
 log view | grep -i "login\|auth\|failed"
@@ -2419,8 +2547,10 @@ log dump system | grep -i auth
 ```
 
 !!! warning "Common errors"
-    **`log view: command not found`** — Use the correct Data Domain CLI command `show log` or `log list` depending on your DD OS version.
-    **`grep: (standard input) is empty`** — Verify the audit log contains entries by running `log view` without filters first, or check that logging is enabled with `show system config`.
+    | Error | Fix |
+    |---|---|
+    | `log view: command not found` | Use the correct Data Domain CLI command `show log` or `log list` depending on your DD OS version. |
+    | `grep: (standard input) is empty` | Verify the audit log contains entries by running `log view` without filters first, or check that logging is enabled with `show system config`. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

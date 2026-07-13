@@ -191,11 +191,11 @@ Waiting, this may take a few minutes...
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidKeyPair.Duplicate) when calling the CreateKeyPair operation: The key pair 'my-keypair' already exists.`** — Remove the create-key-pair command or use a different `--key-name` value if reusing an existing key.
-    
-    **`An error occurred (InvalidAMIID.NotFound) when calling the RunInstances operation: The image id '[ami-0abcdef1234567890]' does not exist`** — Verify the AMI ID is correct for your region by running `aws ec2 describe-images --owners amazon --filters "Name=name,Values=amzn2-ami-hvm-*"`.
-    
-    **`An error occurred (InvalidParameterValue) when calling the RunInstances operation: Invalid id: "<instance-id>" (MalformedParameterValue)`** — Replace the literal string `<instance-id>` with the actual instance ID from the run-instances output (e.g., `i-0a1b2c3d4e5f6g7h8`).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidKeyPair.Duplicate) when calling the CreateKeyPair operation: The key pair 'my-keypair' already exists.` | Remove the create-key-pair command or use a different `--key-name` value if reusing an existing key. |
+    | `An error occurred (InvalidAMIID.NotFound) when calling the RunInstances operation: The image id '[ami-0abcdef1234567890]' does not exist` | Verify the AMI ID is correct for your region by running `aws ec2 describe-images --owners amazon --filters "Name=name,Values=amzn2-ami-hvm-*"`. |
+    | `An error occurred (InvalidParameterValue) when calling the RunInstances operation: Invalid id: "<instance-id>" (MalformedParameterValue)` | Replace the literal string `<instance-id>` with the actual instance ID from the run-instances output (e.g., `i-0a1b2c3d4e5f6g7h8`). |
 Parameters to confirm before running:
 
 | Parameter | Value |
@@ -294,9 +294,11 @@ realtime =none                   exts=4, nextents=1
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidInstanceID.NotFound) when calling the DescribeInstances operation: The instance ID '<instance-id>' does not exist`** — Replace `<instance-id>` with a valid EC2 instance ID from your account and region.
-    **`An error occurred (InvalidParameterValue) when calling the AttachVolume operation: Invalid device name /dev/sdf`** — Use `/dev/sdf` through `/dev/sdp` for EBS volumes; NVMe device names like `/dev/nvme1n1` are assigned by the OS after attachment.
-    **`mount: /data: unknown filesystem type 'xfs'`** — Install XFS tools on the instance with `sudo yum install xfsprogs` (Amazon Linux/RHEL) or `sudo apt install xfsprogs` (Ubuntu) before formatting.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidInstanceID.NotFound) when calling the DescribeInstances operation: The instance ID '<instance-id>' does not exist` | Replace `<instance-id>` with a valid EC2 instance ID from your account and region. |
+    | `An error occurred (InvalidParameterValue) when calling the AttachVolume operation: Invalid device name /dev/sdf` | Use `/dev/sdf` through `/dev/sdp` for EBS volumes; NVMe device names like `/dev/nvme1n1` are assigned by the OS after attachment. |
+    | `mount: /data: unknown filesystem type 'xfs'` | Install XFS tools on the instance with `sudo yum install xfsprogs` (Amazon Linux/RHEL) or `sudo apt install xfsprogs` (Ubuntu) before formatting. |
 ---
 
 ## Create an S3 Bucket and Set Policy
@@ -392,9 +394,11 @@ make_bucket: my-prod-bucket-20240601
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (BucketAlreadyExists) when calling the MakeBucket operation: The requested bucket name is not available. The bucket namespace is shared by all AWS accounts.`** — Choose a globally unique bucket name with a timestamp or random suffix, as S3 bucket names must be unique across all AWS accounts.
-    **`An error occurred (NoSuchBucket) when calling the PutBucketPolicy operation: The specified bucket does not exist`** — Verify the bucket was created successfully by running `aws s3 ls` and ensure the BUCKET variable is set correctly before applying the policy.
-    **`An error occurred (MalformedPolicy) when calling the PutBucketPolicy operation: Policy has invalid resource`** — Replace `<account-id>` in the policy JSON with your actual AWS account ID (12-digit number).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (BucketAlreadyExists) when calling the MakeBucket operation: The requested bucket name is not available. The bucket namespace is shared by all AWS accounts.` | Choose a globally unique bucket name with a timestamp or random suffix, as S3 bucket names must be unique across all AWS accounts. |
+    | `An error occurred (NoSuchBucket) when calling the PutBucketPolicy operation: The specified bucket does not exist` | Verify the bucket was created successfully by running `aws s3 ls` and ensure the BUCKET variable is set correctly before applying the policy. |
+    | `An error occurred (MalformedPolicy) when calling the PutBucketPolicy operation: Policy has invalid resource` | Replace `<account-id>` in the policy JSON with your actual AWS account ID (12-digit number). |
 ---
 
 ## Create a Security Group Rule
@@ -493,9 +497,11 @@ aws ec2 describe-security-groups \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidGroupId.NotFound) when calling the AuthorizeSecurityGroupIngress operation: The security group 'sg-0abc1234' does not exist`** — Verify the security group ID exists in the correct AWS region using `aws ec2 describe-security-groups --region <region>`.
-    **`An error occurred (InvalidPermission.Duplicate) when calling the AuthorizeSecurityGroupIngress operation: The specified rule already exists`** — Remove the duplicate rule first with `revoke-security-group-ingress` or check existing rules with `describe-security-groups`.
-    **`An error occurred (UnauthorizedOperation) when calling the AuthorizeSecurityGroupIngress operation: You are not authorized to perform this operation`** — Ensure your IAM user/role has `ec2:AuthorizeSecurityGroupIngress` and `ec2:AuthorizeSecurityGroupEgress` permissions.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidGroupId.NotFound) when calling the AuthorizeSecurityGroupIngress operation: The security group 'sg-0abc1234' does not exist` | Verify the security group ID exists in the correct AWS region using `aws ec2 describe-security-groups --region <region>`. |
+    | `An error occurred (InvalidPermission.Duplicate) when calling the AuthorizeSecurityGroupIngress operation: The specified rule already exists` | Remove the duplicate rule first with `revoke-security-group-ingress` or check existing rules with `describe-security-groups`. |
+    | `An error occurred (UnauthorizedOperation) when calling the AuthorizeSecurityGroupIngress operation: You are not authorized to perform this operation` | Ensure your IAM user/role has `ec2:AuthorizeSecurityGroupIngress` and `ec2:AuthorizeSecurityGroupEgress` permissions. |
 Rule parameters:
 
 | Parameter | Notes |
@@ -598,9 +604,11 @@ PING 10.1.5.42 (10.1.5.42) 56(84) bytes of data.
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidVpcID.NotFound) when calling the CreateVpcPeeringConnection operation: The vpc ID 'vpc-0requester' does not exist`** — Verify both VPC IDs exist in the requester account and use correct region context.
-    **`An error occurred (InvalidParameterValue) when calling the AcceptVpcPeeringConnection operation: The vpc peering connection 'pcx-0abc1234' does not exist`** — Ensure the peering connection ID from Step 1 output is copied exactly and the accepter account has permissions to accept it.
-    **`An error occurred (RouteAlreadyExists) when calling the CreateRoute operation: The route identified by destination CIDR 10.1.0.0/16 already exists in route table rtb-0requester`** — Delete the existing route first with `aws ec2 delete-route` or use a different destination CIDR block.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidVpcID.NotFound) when calling the CreateVpcPeeringConnection operation: The vpc ID 'vpc-0requester' does not exist` | Verify both VPC IDs exist in the requester account and use correct region context. |
+    | `An error occurred (InvalidParameterValue) when calling the AcceptVpcPeeringConnection operation: The vpc peering connection 'pcx-0abc1234' does not exist` | Ensure the peering connection ID from Step 1 output is copied exactly and the accepter account has permissions to accept it. |
+    | `An error occurred (RouteAlreadyExists) when calling the CreateRoute operation: The route identified by destination CIDR 10.1.0.0/16 already exists in route table rtb-0requester` | Delete the existing route first with `aws ec2 delete-route` or use a different destination CIDR block. |
 > Note: VPC peering does not support transitive routing. If VPC-A peers with VPC-B and VPC-B peers with VPC-C, VPC-A cannot reach VPC-C through VPC-B. Use AWS Transit Gateway for hub-and-spoke topologies.
 
 ---
@@ -715,9 +723,11 @@ AttachmentCount    PolicyName                      PolicyType
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (EntityAlreadyExists) when calling the CreateRole operation: Role with name MyAppRole already exists`** — Delete the existing role with `aws iam delete-role --role-name MyAppRole` first, or use a different role name.
-    **`An error occurred (NoSuchEntity) when calling the AssociateIamInstanceProfile operation: The instance profile with name MyAppProfile cannot be found`** — Ensure the instance profile was created successfully and the name matches exactly; wait a few seconds for eventual consistency.
-    **`An error occurred (InvalidParameterValue) when calling the AssociateIamInstanceProfile operation: The specified instance does not exist`** — Verify the instance ID is correct and the instance is in a running or stopped state (not terminated).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (EntityAlreadyExists) when calling the CreateRole operation: Role with name MyAppRole already exists` | Delete the existing role with `aws iam delete-role --role-name MyAppRole` first, or use a different role name. |
+    | `An error occurred (NoSuchEntity) when calling the AssociateIamInstanceProfile operation: The instance profile with name MyAppProfile cannot be found` | Ensure the instance profile was created successfully and the name matches exactly; wait a few seconds for eventual consistency. |
+    | `An error occurred (InvalidParameterValue) when calling the AssociateIamInstanceProfile operation: The specified instance does not exist` | Verify the instance ID is correct and the instance is in a running or stopped state (not terminated). |
 For Lambda, change the trust principal to `"Service": "lambda.amazonaws.com"` and skip the instance profile steps.
 
 ---
@@ -784,9 +794,11 @@ aws cloudwatch describe-alarms \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the CreateTopic operation: Topic names must be made up of only uppercase and lowercase ASCII letters, numbers, underscores, and hyphens, and must be between 1 and 256 characters long`** — Replace hyphens in the topic name with underscores (e.g., `ops_alerts`).
-    **`An error occurred (InvalidParameterValue) when calling the PutMetricAlarm operation: Invalid alarm action: arn:aws:sns:eu-west-1:<account>:ops-alerts`** — Verify the SNS topic ARN exists and replace `<account>` with your actual AWS account ID.
-    **`An error occurred (ValidationError) when calling the DescribeAlarms operation: 1 validation error detected: Value '<instance-id>' at 'alarmNames' failed a validation constraint: Member must satisfy regular expression pattern: [\x20-\x7E]*`** — Replace `<instance-id>` with the actual EC2 instance ID (e.g., `i-0a1b2c3d4e5f6g7h8`).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the CreateTopic operation: Topic names must be made up of only uppercase and lowercase ASCII letters, numbers, underscores, and hyphens, and must be between 1 and 256 characters long` | Replace hyphens in the topic name with underscores (e.g., `ops_alerts`). |
+    | `An error occurred (InvalidParameterValue) when calling the PutMetricAlarm operation: Invalid alarm action: arn:aws:sns:eu-west-1:<account>:ops-alerts` | Verify the SNS topic ARN exists and replace `<account>` with your actual AWS account ID. |
+    | `An error occurred (ValidationError) when calling the DescribeAlarms operation: 1 validation error detected: Value '<instance-id>' at 'alarmNames' failed a validation constraint: Member must satisfy regular expression pattern: [\x20-\x7E]*` | Replace `<instance-id>` with the actual EC2 instance ID (e.g., `i-0a1b2c3d4e5f6g7h8`). |
 Key parameters:
 
 | Parameter | Notes |
@@ -882,9 +894,11 @@ Waiting for image-available with max attempts 40 and delay 15 seconds...
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidInstanceID.NotFound) when calling the CreateImage operation: The instance ID '<instance-id>' does not exist`** — Replace `<instance-id>` with a valid running or stopped instance ID from your account and region.
-    **`An error occurred (InvalidAMIID.NotFound) when calling the WaitImageAvailable operation: The image id '[<ami-id>]' does not exist`** — Verify the AMI ID from the create-image output matches the wait command, or check that the image exists in your current AWS region.
-    **`An error occurred (InvalidKeyPair.NotFound) when calling the RunInstances operation: The key pair '<keypair>' does not exist`** — Confirm the EC2 key pair name exists in your region using `aws ec2 describe-key-pairs` and update the `--key-name` parameter.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidInstanceID.NotFound) when calling the CreateImage operation: The instance ID '<instance-id>' does not exist` | Replace `<instance-id>` with a valid running or stopped instance ID from your account and region. |
+    | `An error occurred (InvalidAMIID.NotFound) when calling the WaitImageAvailable operation: The image id '[<ami-id>]' does not exist` | Verify the AMI ID from the create-image output matches the wait command, or check that the image exists in your current AWS region. |
+    | `An error occurred (InvalidKeyPair.NotFound) when calling the RunInstances operation: The key pair '<keypair>' does not exist` | Confirm the EC2 key pair name exists in your region using `aws ec2 describe-key-pairs` and update the `--key-name` parameter. |
 > No-reboot note: `--no-reboot` does not guarantee crash-consistent images for all workloads. For databases, quiesce writes or take a reboot-based AMI during a maintenance window.
 
 ---
@@ -976,9 +990,11 @@ aws ec2 describe-instance-status \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the ModifyInstanceAttribute operation: The instance type 'm6i.xlarge' is not compatible with the instance's current architecture or availability zone.`** — Verify the target instance type is available in the instance's AZ using `aws ec2 describe-instance-types --instance-types m6i.xlarge --query 'InstanceTypes[0].SupportedArchitectures'`.
-    **`An error occurred (InvalidInstanceID.NotFound) when calling the StopInstances operation: The instance ID '<instance-id>' does not exist`** — Replace `<instance-id>` with a valid instance ID from your account, or verify the correct AWS region is configured.
-    **`An error occurred (IncorrectInstanceState) when calling the ModifyInstanceAttribute operation: The instance 'i-0a7f2c9e1b4d5f8a2' is not in the stopped state.`** — Ensure the instance has fully transitioned to "stopped" state before modifying attributes; increase the wait time or manually verify with `aws ec2 describe-instances`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the ModifyInstanceAttribute operation: The instance type 'm6i.xlarge' is not compatible with the instance's current architecture or availability zone.` | Verify the target instance type is available in the instance's AZ using `aws ec2 describe-instance-types --instance-types m6i.xlarge --query 'InstanceTypes[0].SupportedArchitectures'`. |
+    | `An error occurred (InvalidInstanceID.NotFound) when calling the StopInstances operation: The instance ID '<instance-id>' does not exist` | Replace `<instance-id>` with a valid instance ID from your account, or verify the correct AWS region is configured. |
+    | `An error occurred (IncorrectInstanceState) when calling the ModifyInstanceAttribute operation: The instance 'i-0a7f2c9e1b4d5f8a2' is not in the stopped state.` | Ensure the instance has fully transitioned to "stopped" state before modifying attributes; increase the wait time or manually verify with `aws ec2 describe-instances`. |
 Constraints:
 
 | Consideration | Notes |
@@ -1094,9 +1110,11 @@ FlowLogs:
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (BucketAlreadyExists) when calling the MakeBucket operation: The requested bucket name is not available.`** — Use a globally unique bucket name by appending a timestamp or UUID to the bucket name.
-    **`An error occurred (InvalidParameterValue) when calling the CreateFlowLogs operation: Invalid log destination ARN.`** — Verify the S3 bucket exists and the ARN format is correct: `arn:aws:s3:::bucket-name/prefix/`.
-    **`An error occurred (NoSuchEntity) when calling the PutRolePolicy operation: The role with name VPCFlowLogsRole cannot be found.`** — Ensure the IAM role creation completed successfully and wait a few seconds for IAM propagation before attaching the policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (BucketAlreadyExists) when calling the MakeBucket operation: The requested bucket name is not available.` | Use a globally unique bucket name by appending a timestamp or UUID to the bucket name. |
+    | `An error occurred (InvalidParameterValue) when calling the CreateFlowLogs operation: Invalid log destination ARN.` | Verify the S3 bucket exists and the ARN format is correct: `arn:aws:s3:::bucket-name/prefix/`. |
+    | `An error occurred (NoSuchEntity) when calling the PutRolePolicy operation: The role with name VPCFlowLogsRole cannot be found.` | Ensure the IAM role creation completed successfully and wait a few seconds for IAM propagation before attaching the policy. |
 Traffic type options:
 
 | `--traffic-type` | What is captured |

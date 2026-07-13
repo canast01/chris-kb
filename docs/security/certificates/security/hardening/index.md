@@ -74,8 +74,10 @@ OCSP Response Status: successful (0x0)
 ```
 
 !!! warning "Common errors"
-    **`OCSP Response Status: failed (0x1)`** — The OCSP responder is unreachable or the server certificate chain is incomplete; verify the OCSP responder URL in the certificate and ensure the server has intermediate certificates configured.
-    **`grep: (standard input): No such file or directory`** — The openssl command failed to connect; verify the hostname is resolvable, the server is listening on port 443, and your firewall allows outbound HTTPS connections.
+    | Error | Fix |
+    |---|---|
+    | `OCSP Response Status: failed (0x1)` | The OCSP responder is unreachable or the server certificate chain is incomplete; verify the OCSP responder URL in the certificate and ensure the server has intermediate certificates configured. |
+    | `grep: (standard input): No such file or directory` | The openssl command failed to connect; verify the hostname is resolvable, the server is listening on port 443, and your firewall allows outbound HTTPS connections. |
 ## Security Checklist
 
 - [ ] Root CA is offline and air-gapped

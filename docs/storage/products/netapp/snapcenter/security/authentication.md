@@ -203,9 +203,11 @@ Matching Entries for user snapcenter on this host:
 ```
 
 !!! warning "Common errors"
-    **`sudo: user snapcenter does not exist in the passwd file`** — Create the snapcenter user first with `useradd -m -s /bin/bash snapcenter` before adding sudoers entries.
-    **`>>> /etc/sudoers: syntax error near line X`** — Use `visudo` instead of a text editor to validate syntax, or run `sudo visudo` to fix the malformed entry.
-    **`sudo: sorry, you must have a tty to run sudo`** — Add `Defaults:snapcenter !requiretty` to the sudoers file to allow non-interactive sudo execution by the SnapCenter plugin.
+    | Error | Fix |
+    |---|---|
+    | `sudo: user snapcenter does not exist in the passwd file` | Create the snapcenter user first with `useradd -m -s /bin/bash snapcenter` before adding sudoers entries. |
+    | `>>> /etc/sudoers: syntax error near line X` | Use `visudo` instead of a text editor to validate syntax, or run `sudo visudo` to fix the malformed entry. |
+    | `sudo: sorry, you must have a tty to run sudo` | Add `Defaults:snapcenter !requiretty` to the sudoers file to allow non-interactive sudo execution by the SnapCenter plugin. |
 ---
 
 ## Session and Token Management
@@ -270,9 +272,11 @@ curl -sk -X POST "https://snapcenter.example.com/api/4.9/auth/logout" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the SnapCenter certificate into your system's trusted store.
-    **`{"Error":"Invalid credentials","ErrorCode":401}`** — Verify the username, password, and role name are correct in the UserOperationContext JSON payload.
-    **`curl: (7) Failed to connect to snapcenter.example.com port 443: Connection refused`** — Confirm the SnapCenter server hostname/IP and port are correct, and that the SnapCenter API service is running.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the SnapCenter certificate into your system's trusted store. |
+    | `{"Error":"Invalid credentials","ErrorCode":401}` | Verify the username, password, and role name are correct in the UserOperationContext JSON payload. |
+    | `curl: (7) Failed to connect to snapcenter.example.com port 443: Connection refused` | Confirm the SnapCenter server hostname/IP and port are correct, and that the SnapCenter API service is running. |
 For automation scripts, always log out at the end of the script to invalidate the token. Do not hardcode credentials in scripts — retrieve them from a secrets vault at runtime.
 ---
 

@@ -86,9 +86,11 @@ notAfter=Dec 15 09:47:32 2026 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the dcnm.crt file path is correct and the certificate was successfully returned from the CA before running the pkcs12 command.
-    **`Keystore was tampered with, or password was incorrect`** — Ensure the deststorepass value matches the actual DCNM keystore password and that the keystore file has not been corrupted.
-    **`Connection refused`** — Wait 30-60 seconds after the restart command completes for DCNM to fully initialize before running the verification command.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the dcnm.crt file path is correct and the certificate was successfully returned from the CA before running the pkcs12 command. |
+    | `Keystore was tampered with, or password was incorrect` | Ensure the deststorepass value matches the actual DCNM keystore password and that the keystore file has not been corrupted. |
+    | `Connection refused` | Wait 30-60 seconds after the restart command completes for DCNM to fully initialize before running the verification command. |
 ```bash
 # Encrypt backup with GPG
 pg_dumpall -U postgres | gzip | \
@@ -118,9 +120,11 @@ psql: connecting to database "postgres" on "localhost" via the default socket
 ```
 
 !!! warning "Common errors"
-    **`gpg: error reading passphrase from file '/root/.dcnm-backup-pass': No such file or directory`** — Create the passphrase file with `echo "your-passphrase" > /root/.dcnm-backup-pass && chmod 600 /root/.dcnm-backup-pass`.
-    **`Permission denied (publickey,password).`** — Verify SSH key authentication is configured for the bkp user or add password authentication with `ssh-keyscan backup-server.corp.example.com >> ~/.ssh/known_hosts`.
-    **`psql: error: FATAL: Ident authentication failed for user "postgres"`** — Ensure the postgres user can authenticate locally by checking `/var/lib/pgsql/data/pg_hba.conf` allows local connections with md5 or trust authentication.
+    | Error | Fix |
+    |---|---|
+    | `gpg: error reading passphrase from file '/root/.dcnm-backup-pass': No such file or directory` | Create the passphrase file with `echo "your-passphrase" > /root/.dcnm-backup-pass && chmod 600 /root/.dcnm-backup-pass`. |
+    | `Permission denied (publickey,password).` | Verify SSH key authentication is configured for the bkp user or add password authentication with `ssh-keyscan backup-server.corp.example.com >> ~/.ssh/known_hosts`. |
+    | `psql: error: FATAL: Ident authentication failed for user "postgres"` | Ensure the postgres user can authenticate locally by checking `/var/lib/pgsql/data/pg_hba.conf` allows local connections with md5 or trust authentication. |
 ```bash
 # Check DCNM certificate expiry
 openssl s_client -connect dcnm-dc1.corp.example.com:443 \
@@ -150,8 +154,10 @@ Expires in 287 days: 2025-12-15
 ```
 
 !!! warning "Common errors"
-    **`unable to get local issuer certificate`** — Add the DCNM root CA to your system's trusted certificate store or use `openssl s_client -connect dcnm-dc1.corp.example.com:443 -CAfile /path/to/ca-bundle.crt`.
-    **`Name or service not known`** — Verify DNS resolution with `nslookup dcnm-dc1.corp.example.com` and confirm the DCNM hostname is correct and reachable from your network.
+    | Error | Fix |
+    |---|---|
+    | `unable to get local issuer certificate` | Add the DCNM root CA to your system's trusted certificate store or use `openssl s_client -connect dcnm-dc1.corp.example.com:443 -CAfile /path/to/ca-bundle.crt`. |
+    | `Name or service not known` | Verify DNS resolution with `nslookup dcnm-dc1.corp.example.com` and confirm the DCNM hostname is correct and reachable from your network. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

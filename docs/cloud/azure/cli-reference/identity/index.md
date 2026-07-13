@@ -62,9 +62,11 @@ j0e1f2g3-h4i5-4j5k-8k9e-9b0c1d2e3f4a  desktop-client-app
 ```
 
 !!! warning "Common errors"
-    **`The following arguments are required: --id`** — Provide the user's UPN or object ID with the `--id` parameter (e.g., `az ad user show --id alice.johnson@contoso.com`).
-    **`Invalid password. Passwords must be at least 8 characters and contain uppercase, lowercase, numbers and special characters.`** — Use a strong password meeting complexity requirements or omit `--password` to have Azure generate one.
-    **`No subscriptions found in the current account.`** — Run `az account set --subscription <subscription_id>` to set the active subscription before creating service principals.
+    | Error | Fix |
+    |---|---|
+    | `The following arguments are required: --id` | Provide the user's UPN or object ID with the `--id` parameter (e.g., `az ad user show --id alice.johnson@contoso.com`). |
+    | `Invalid password. Passwords must be at least 8 characters and contain uppercase, lowercase, numbers and special characters.` | Use a strong password meeting complexity requirements or omit `--password` to have Azure generate one. |
+    | `No subscriptions found in the current account.` | Run `az account set --subscription <subscription_id>` to set the active subscription before creating service principals. |
 ```bash
 # Role assignments
 az role assignment list --assignee <user_or_sp>

@@ -145,9 +145,11 @@ Overall: PASS
 ```
 
 !!! warning "Common errors"
-    **`Cannot reach Keystone API endpoint — keystone.netapp.com (connection refused or DNS failure)`** — Verify DNS resolution with `nslookup keystone.netapp.com` and confirm firewall rules allow outbound HTTPS to the Keystone API host.
-    **`Last collection was 6h ago (threshold: 2h) — 2024-01-15T08:32:10`** — Check collector logs with `journalctl -u keystone-collector -n 50` for errors and restart the service if stalled.
-    **`Keystone Collector service is NOT running`** — Start the service with `sudo systemctl start keystone-collector` and verify with `sudo systemctl status keystone-collector`.
+    | Error | Fix |
+    |---|---|
+    | `Cannot reach Keystone API endpoint — keystone.netapp.com (connection refused or DNS failure)` | Verify DNS resolution with `nslookup keystone.netapp.com` and confirm firewall rules allow outbound HTTPS to the Keystone API host. |
+    | `Last collection was 6h ago (threshold: 2h) — 2024-01-15T08:32:10` | Check collector logs with `journalctl -u keystone-collector -n 50` for errors and restart the service if stalled. |
+    | `Keystone Collector service is NOT running` | Start the service with `sudo systemctl start keystone-collector` and verify with `sudo systemctl status keystone-collector`. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -184,8 +186,10 @@ keystone_health.sh                                    100%  4.2KB   2.1MB/s   00
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and ensure the collector-server hostname resolves correctly; check that youruser account exists on the remote server.
-    **`No such file or directory`** — Confirm the keystone_health.sh file exists at %USERPROFILE%\Desktop\ on the Windows machine, or adjust the source path accordingly.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and ensure the collector-server hostname resolves correctly; check that youruser account exists on the remote server. |
+    | `No such file or directory` | Confirm the keystone_health.sh file exists at %USERPROFILE%\Desktop\ on the Windows machine, or adjust the source path accordingly. |
 Or use WinSCP (winscp.net — free tool) to drag and drop the file.
 
 **Step 4 — Run the script on the collector server**
@@ -385,8 +389,10 @@ Successfully installed requests-2.31.0 tabulate-0.9.0 charset-normalizer-3.3.2 i
 ```
 
 !!! warning "Common errors"
-    **`bash: set: command not found`** — Use `export API_KEY=your-api-key-here` instead of `set` for bash environments.
-    **`ERROR: Could not find a version that satisfies the requirement requests`** — Ensure pip is connected to the internet and PyPI is accessible, or specify a mirror with `pip install -i https://pypi.org/simple/ requests tabulate`.
+    | Error | Fix |
+    |---|---|
+    | `bash: set: command not found` | Use `export API_KEY=your-api-key-here` instead of `set` for bash environments. |
+    | `ERROR: Could not find a version that satisfies the requirement requests` | Ensure pip is connected to the internet and PyPI is accessible, or specify a mirror with `pip install -i https://pypi.org/simple/ requests tabulate`. |
 **Step 5 — Run the script**
 
 ```bash
@@ -408,9 +414,11 @@ Execution time: 12.34 seconds
 ```
 
 !!! warning "Common errors"
-    **`python: command not found`** — Ensure Python is installed and added to your system PATH, or use the full path to python.exe.
-    **`FileNotFoundError: [Errno 2] No such file or directory: 'keystone_config.json'`** — Verify that keystone_config.json exists in the same directory as the script, or update the script to point to the correct configuration file path.
-    **`ConnectionError: Failed to connect to api.keystone.netapp.com`** — Check your network connectivity and ensure your Keystone API credentials in keystone_config.json are valid and not expired.
+    | Error | Fix |
+    |---|---|
+    | `python: command not found` | Ensure Python is installed and added to your system PATH, or use the full path to python.exe. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: 'keystone_config.json'` | Verify that keystone_config.json exists in the same directory as the script, or update the script to point to the correct configuration file path. |
+    | `ConnectionError: Failed to connect to api.keystone.netapp.com` | Check your network connectivity and ensure your Keystone API credentials in keystone_config.json are valid and not expired. |
 **What you should see**
 
 A table with one row per Keystone service level tier (e.g., Extreme, Performance, Standard). Each row shows committed capacity, consumed capacity, burst used, burst percentage, and percentage of committed consumed. If any tier's burst exceeds 10% of committed capacity, it is flagged with a yellow `WARN` label.
@@ -524,9 +532,11 @@ Fix: volume modify -vserver <svm> -volume <vol> -qos-policy-group <keystone-psl>
 ```
 
 !!! warning "Common errors"
-    **`ERROR: sshpass required.`** — Install sshpass with `apt-get install sshpass` (Linux) or `brew install sshpass` (macOS).
-    **`ssh: Could not resolve hostname cluster: Name or service not known`** — Verify the ONTAP cluster hostname/IP is correct and set `ONTAP_HOST` to a resolvable FQDN or IP address.
-    **`Permission denied (publickey,password).`** — Confirm the ONTAP credentials are correct by testing `sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no "${USER}@${CLUSTER}" 'version'` manually.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: sshpass required.` | Install sshpass with `apt-get install sshpass` (Linux) or `brew install sshpass` (macOS). |
+    | `ssh: Could not resolve hostname cluster: Name or service not known` | Verify the ONTAP cluster hostname/IP is correct and set `ONTAP_HOST` to a resolvable FQDN or IP address. |
+    | `Permission denied (publickey,password).` | Confirm the ONTAP credentials are correct by testing `sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no "${USER}@${CLUSTER}" 'version'` manually. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -585,9 +595,11 @@ Report saved to: /mnt/c/Users/YourName/Desktop/keystone_audit_20240115_143218.cs
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused`** — Verify the ONTAP cluster IP address is correct and the management interface is reachable with `ping 192.168.1.100`.
-    **`Error: Invalid credentials for user admin`** — Confirm the ONTAP_USER and ONTAP_PASS environment variables match valid cluster admin credentials.
-    **`bash: keystone_vol_audit.sh: No such file or directory`** — Ensure the script exists in the current directory with `ls -la keystone_vol_audit.sh` and verify the path is correct.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused` | Verify the ONTAP cluster IP address is correct and the management interface is reachable with `ping 192.168.1.100`. |
+    | `Error: Invalid credentials for user admin` | Confirm the ONTAP_USER and ONTAP_PASS environment variables match valid cluster admin credentials. |
+    | `bash: keystone_vol_audit.sh: No such file or directory` | Ensure the script exists in the current directory with `ls -la keystone_vol_audit.sh` and verify the path is correct. |
 **What you should see**
 
 A table listing every online volume with its SVM, volume name, QoS policy group, and a flag. Volumes with a QoS policy assigned show green `OK`. Volumes with no QoS policy show red `NO QOS — unclassified`. At the end, a count of unclassified volumes and a remediation command if any are found. Unclassified volumes are a billing risk in Keystone.
@@ -773,9 +785,11 @@ Script completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Cannot find path 'C:\Users\YourName\Desktop\keystone_config.json' because it does not exist.`** — Create the required keystone_config.json file in the Desktop directory with your Keystone portal credentials and API endpoint.
-    **`Exception calling "InvokeRestMethod" with "1" argument(s): "The remote server returned an error: (401) Unauthorized."`** — Verify your API credentials in keystone_config.json are current and your Keystone account has REST API access enabled.
-    **`File C:\Users\YourName\Desktop\keystone_usage_rest.ps1 cannot be loaded because running scripts is disabled on this system.`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to enable PowerShell script execution.
+    | Error | Fix |
+    |---|---|
+    | `Cannot find path 'C:\Users\YourName\Desktop\keystone_config.json' because it does not exist.` | Create the required keystone_config.json file in the Desktop directory with your Keystone portal credentials and API endpoint. |
+    | `Exception calling "InvokeRestMethod" with "1" argument(s): "The remote server returned an error: (401) Unauthorized."` | Verify your API credentials in keystone_config.json are current and your Keystone account has REST API access enabled. |
+    | `File C:\Users\YourName\Desktop\keystone_usage_rest.ps1 cannot be loaded because running scripts is disabled on this system.` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to enable PowerShell script execution. |
 **What you should see**
 
 The script authenticates, lists your Keystone subscriptions, and for each one prints a table of service level tiers (e.g., Extreme, Performance, Standard) showing committed capacity in TiB, consumed capacity in TiB, and percentage used. Tiers below 80% used appear in green, 80-89% in yellow, and 90%+ in red.
@@ -965,9 +979,11 @@ Script completed successfully in 23 seconds.
 ```
 
 !!! warning "Common errors"
-    **`Cannot find file 'C:\Users\YourName\Desktop\keystone_trending.ps1'`** — Verify the script file exists in the specified directory and check the filename spelling.
-    **`AuthenticationException: Invalid credentials or expired token`** — Update the API credentials in config.json or regenerate the authentication token from the NetApp Keystone portal.
-    **`The file 'keystone_trending.ps1' cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` in PowerShell as administrator to enable script execution.
+    | Error | Fix |
+    |---|---|
+    | `Cannot find file 'C:\Users\YourName\Desktop\keystone_trending.ps1'` | Verify the script file exists in the specified directory and check the filename spelling. |
+    | `AuthenticationException: Invalid credentials or expired token` | Update the API credentials in config.json or regenerate the authentication token from the NetApp Keystone portal. |
+    | `The file 'keystone_trending.ps1' cannot be loaded because running scripts is disabled on this system` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` in PowerShell as administrator to enable script execution. |
 **What you should see**
 
 For each Keystone subscription, the script prints a row per month showing a text bar chart. The bar fills up proportionally to how much of your committed capacity was consumed that month. Green means well within limits, yellow means approaching the limit (90%+), and red with `*** OVER COMMITTED` means that month exceeded your committed capacity — which may trigger burst billing charges. This lets you spot growth trends at a glance.

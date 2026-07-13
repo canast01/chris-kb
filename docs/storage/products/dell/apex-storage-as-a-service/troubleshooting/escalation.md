@@ -193,9 +193,11 @@ SCG Version: 2.4.1.0
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the SCG hostname is correct and your SSH credentials are valid; check with your infrastructure team if the admin account is locked.
-    **`scg: command not found`** — Ensure you are logged into the SCG appliance itself (not a different host) and that the scg CLI tool is installed in the PATH.
-    **`Disk space insufficient for log collection (need 500 MB, have 120 MB available).`** — Increase available space on the SCG appliance or specify an alternate output path on a mounted external volume.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the SCG hostname is correct and your SSH credentials are valid; check with your infrastructure team if the admin account is locked. |
+    | `scg: command not found` | Ensure you are logged into the SCG appliance itself (not a different host) and that the scg CLI tool is installed in the PATH. |
+    | `Disk space insufficient for log collection (need 500 MB, have 120 MB available).` | Increase available space on the SCG appliance or specify an alternate output path on a mounted external volume. |
 ### 4. Write the timeline
 
 ```text
@@ -332,8 +334,10 @@ speed=16Gbit
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the CloudIQ CA certificate into your system trust store.
-    **`iscsiadm: No active sessions.`** — Verify iSCSI discovery is configured with `iscsiadm -m discovery -t sendtargets -p <target-ip>` and log in with `iscsiadm -m node --login`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag (already present) or import the CloudIQ CA certificate into your system trust store. |
+    | `iscsiadm: No active sessions.` | Verify iSCSI discovery is configured with `iscsiadm -m discovery -t sendtargets -p <target-ip>` and log in with `iscsiadm -m node --login`. |
     **`nc: connect to 10.50.12.44 port 3260 (tcp) failed: No route to host`**
 ---
 

@@ -67,8 +67,10 @@ git config pack.compression 9       # max compression
 ```
 
 !!! warning "Common errors"
-    **`error: key does not contain a section: gc.auto`** — Ensure you are in a valid git repository directory (run `git rev-parse --git-dir` to verify).
-    **`error: Permission denied`** — Run the commands with appropriate permissions or use `--global` flag if configuring user-level settings instead of repo-level.
+    | Error | Fix |
+    |---|---|
+    | `error: key does not contain a section: gc.auto` | Ensure you are in a valid git repository directory (run `git rev-parse --git-dir` to verify). |
+    | `error: Permission denied` | Run the commands with appropriate permissions or use `--global` flag if configuring user-level settings instead of repo-level. |
 ```bash
 BASE="https://gitlab.example.com"
 
@@ -144,9 +146,11 @@ status: SERVING
 ```
 
 !!! warning "Common errors"
-    **`Error: No such file or directory @ rb_sysopen - /var/opt/gitlab/gitaly/gitaly.socket`** — Ensure Gitaly service is running with `sudo gitlab-ctl restart gitaly` and verify the socket path exists.
-    **`sudo: gitlab-ctl: command not found`** — Install GitLab using the official omnibus package or verify `/opt/gitlab/bin` is in your PATH.
-    **`permission denied while trying to connect to the Docker daemon`** — Run the command with proper sudo privileges or add your user to the docker group if using containerized GitLab.
+    | Error | Fix |
+    |---|---|
+    | `Error: No such file or directory @ rb_sysopen - /var/opt/gitlab/gitaly/gitaly.socket` | Ensure Gitaly service is running with `sudo gitlab-ctl restart gitaly` and verify the socket path exists. |
+    | `sudo: gitlab-ctl: command not found` | Install GitLab using the official omnibus package or verify `/opt/gitlab/bin` is in your PATH. |
+    | `permission denied while trying to connect to the Docker daemon` | Run the command with proper sudo privileges or add your user to the docker group if using containerized GitLab. |
 ```bash
 GHES="github.example.com"
 
@@ -188,9 +192,11 @@ Replication Status
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands or import the GHES certificate into your CA bundle.
-    **`Permission denied (publickey).`** — Verify `$GHES_TOKEN` and `$MANAGEMENT_CONSOLE_PASSWORD` are set, and that your SSH key is authorized on the GHES instance.
-    **`ghe-repl-status: command not found`** — Confirm GHES has HA replication enabled; this command only exists on replicated instances.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands or import the GHES certificate into your CA bundle. |
+    | `Permission denied (publickey).` | Verify `$GHES_TOKEN` and `$MANAGEMENT_CONSOLE_PASSWORD` are set, and that your SSH key is authorized on the GHES instance. |
+    | `ghe-repl-status: command not found` | Confirm GHES has HA replication enabled; this command only exists on replicated instances. |
 ```bash
 # Size of a single repository
 du -sh /var/opt/gitlab/git-data/repositories/group/project.git
@@ -245,9 +251,11 @@ f6e5d4c3b2a1 (384 MB) path/to/dataset.csv
 ```
 
 !!! warning "Common errors"
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Verify the repository path exists and is a valid git directory with `ls -la /path/to/repo.git/HEAD`.
-    **`du: cannot access '/var/opt/gitlab/git-data/repositories/*/*/*.git': No such file or directory`** — Confirm GitLab repositories directory structure matches your installation path using `ls -la /var/opt/gitlab/git-data/repositories/`.
-    **`command not found: numfmt`** — Install GNU coreutils with `apt-get install coreutils` (Debian/Ubuntu) or `yum install coreutils` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `fatal: not a git repository (or any of the parent directories): .git` | Verify the repository path exists and is a valid git directory with `ls -la /path/to/repo.git/HEAD`. |
+    | `du: cannot access '/var/opt/gitlab/git-data/repositories/*/*/*.git': No such file or directory` | Confirm GitLab repositories directory structure matches your installation path using `ls -la /var/opt/gitlab/git-data/repositories/`. |
+    | `command not found: numfmt` | Install GNU coreutils with `apt-get install coreutils` (Debian/Ubuntu) or `yum install coreutils` (RHEL/CentOS). |
 ```bash
 # GitLab disk usage summary
 sudo gitlab-rake gitlab:storage:list_hashed 2>/dev/null | tail -5
@@ -291,9 +299,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host name`** — Verify the GitLab hostname is correct and DNS is resolving; check `/etc/hosts` or network connectivity to `gitlab.example.com`.
-    **`jq: parse error: Cannot index number with string "statistics"`** — Ensure the API token has sufficient permissions and the GitLab instance is responding with valid JSON; test with `curl -s --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.example.com/api/v4/user"` first.
-    **`df: '/var/opt/gitlab/git-data': No such file or directory`** — Confirm the git-data mount point exists and is mounted; run `mount | grep git-data` to verify the filesystem is attached.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host name` | Verify the GitLab hostname is correct and DNS is resolving; check `/etc/hosts` or network connectivity to `gitlab.example.com`. |
+    | `jq: parse error: Cannot index number with string "statistics"` | Ensure the API token has sufficient permissions and the GitLab instance is responding with valid JSON; test with `curl -s --header "PRIVATE-TOKEN: $GITLAB_TOKEN" "https://gitlab.example.com/api/v4/user"` first. |
+    | `df: '/var/opt/gitlab/git-data': No such file or directory` | Confirm the git-data mount point exists and is mounted; run `mount | grep git-data` to verify the filesystem is attached. |
 ```bash
 # On the Geo Primary — check replication status
 sudo gitlab-rake geo:status
@@ -352,9 +362,11 @@ sudo gitlab-psql -c "SELECT now() - pg_last_xact_replay_timestamp() AS replicati
 ```
 
 !!! warning "Common errors"
-    **`PRIVATE-TOKEN header not provided or invalid`** — Verify the `$GITLAB_TOKEN` environment variable is set and contains a valid Personal Access Token with `api` scope.
-    **`could not translate host name "gitlab-dr.example.com" to address`** — Confirm the secondary site's hostname is resolvable and network connectivity exists from the primary to the secondary.
-    **`pg_is_in_recovery() returned 'f' on secondary node`** — Verify the secondary database is in recovery mode and replication is configured correctly in `postgresql.conf`.
+    | Error | Fix |
+    |---|---|
+    | `PRIVATE-TOKEN header not provided or invalid` | Verify the `$GITLAB_TOKEN` environment variable is set and contains a valid Personal Access Token with `api` scope. |
+    | `could not translate host name "gitlab-dr.example.com" to address` | Confirm the secondary site's hostname is resolvable and network connectivity exists from the primary to the secondary. |
+    | `pg_is_in_recovery() returned 'f' on secondary node` | Verify the secondary database is in recovery mode and replication is configured correctly in `postgresql.conf`. |
 ```bash
 #!/usr/bin/env bash
 # gitlab-health-check.sh
@@ -410,9 +422,11 @@ All health checks passed.
 ```
 
 !!! warning "Common errors"
-    **`GITLAB_TOKEN: parameter null or not set`** — Export the GITLAB_TOKEN environment variable before running the script: `export GITLAB_TOKEN="your-token"`.
-    **`[FAIL] Readiness — got: curl: (7) Failed to connect to gitlab.example.com port 443`** — Verify GitLab URL is correct and the host is reachable; check firewall rules and DNS resolution with `nslookup gitlab.example.com`.
-    **`[FAIL] Gitaly socket — got: Failed to connect to the server`** — Ensure Gitaly service is running with `sudo gitlab-ctl status gitaly` and the socket path `/var/opt/gitlab/gitaly/gitaly.socket` exists.
+    | Error | Fix |
+    |---|---|
+    | `GITLAB_TOKEN: parameter null or not set` | Export the GITLAB_TOKEN environment variable before running the script: `export GITLAB_TOKEN="your-token"`. |
+    | `[FAIL] Readiness — got: curl: (7) Failed to connect to gitlab.example.com port 443` | Verify GitLab URL is correct and the host is reachable; check firewall rules and DNS resolution with `nslookup gitlab.example.com`. |
+    | `[FAIL] Gitaly socket — got: Failed to connect to the server` | Ensure Gitaly service is running with `sudo gitlab-ctl status gitaly` and the socket path `/var/opt/gitlab/gitaly/gitaly.socket` exists. |
 ---
 
 ## Verify

@@ -129,9 +129,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/ntp_server" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to bypass certificate verification, or import the PowerStore management certificate into your system's trust store.
-    **`{"error_code": 401, "message": "Invalid or expired token"}`** — Regenerate the authentication token via the PowerStore Manager UI or re-authenticate using valid credentials.
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Verify the management IP address is correct and reachable, and confirm the PowerStore REST API service is running.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to bypass certificate verification, or import the PowerStore management certificate into your system's trust store. |
+    | `{"error_code": 401, "message": "Invalid or expired token"}` | Regenerate the authentication token via the PowerStore Manager UI or re-authenticate using valid credentials. |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Verify the management IP address is correct and reachable, and confirm the PowerStore REST API service is running. |
 ## Software Upgrade
 
 PowerStore software upgrades are non-disruptive to host I/O. The upgrade orchestrates a rolling restart of both nodes, maintaining continuous availability throughout.
@@ -219,9 +221,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/pool?select=name,percent_used" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification, or import the management node's CA certificate into your system trust store.
-    **`{"error_code":"401","message":"Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN by authenticating to the management API and ensure the token has not exceeded its 24-hour expiration window.
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Verify the management IP address is correct, the PowerStore cluster is online, and port 443 is accessible from your client (check firewall rules and network connectivity).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification, or import the management node's CA certificate into your system trust store. |
+    | `{"error_code":"401","message":"Invalid or expired token"}` | Regenerate the DELL-EMC-TOKEN by authenticating to the management API and ensure the token has not exceeded its 24-hour expiration window. |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Verify the management IP address is correct, the PowerStore cluster is online, and port 443 is accessible from your client (check firewall rules and network connectivity). |
 **Additional pre-upgrade checks:**
 
 - [ ] Check Dell PowerStore Interoperability Matrix for the target version against all connected components (vSphere, vCenter, SRA, Veeam)
@@ -294,9 +298,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/software_package/<package-id>/instal
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the PowerStore management certificate into your system's CA bundle.
-    **`{"error": "Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN via the Manager UI (Settings → API → Generate Token) and ensure it has not expired.
-    **`{"error": "Package not found or invalid checksum"}`** — Re-download the .bin file from Dell Support Portal and verify the SHA256 checksum matches the published value before uploading.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the PowerStore management certificate into your system's CA bundle. |
+    | `{"error": "Invalid or expired token"}` | Regenerate the DELL-EMC-TOKEN via the Manager UI (Settings → API → Generate Token) and ensure it has not expired. |
+    | `{"error": "Package not found or invalid checksum"}` | Re-download the .bin file from Dell Support Portal and verify the SHA256 checksum matches the published value before uploading. |
 ### Upgrade Timeline
 
 Typical upgrade durations:
@@ -349,9 +355,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/job?type=upgrade&state=running" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed).
-    **`{"error": "Unauthorized", "error_code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token via the login endpoint.
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP is correct and the PowerStore cluster is accessible on the network; check firewall rules allowing HTTPS to the management interface.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed). |
+    | `{"error": "Unauthorized", "error_code": 401}` | Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token via the login endpoint. |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Confirm the management IP is correct and the PowerStore cluster is accessible on the network; check firewall rules allowing HTTPS to the management interface. |
 ### Post-Upgrade Validation
 
 ```bash
@@ -437,9 +445,11 @@ size=500G features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to bypass certificate validation, or import the PowerStore management certificate into your system trust store.
-    **`{"error": "Invalid or expired token"}`** — Regenerate the authentication token via the PowerStore management UI or API and update the DELL-EMC-TOKEN header value.
-    **`Connection refused on <mgmt-ip>:443`** — Verify the management IP is correct and reachable; confirm the PowerStore management interface is online and the network path is not blocked by firewalls.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to bypass certificate validation, or import the PowerStore management certificate into your system trust store. |
+    | `{"error": "Invalid or expired token"}` | Regenerate the authentication token via the PowerStore management UI or API and update the DELL-EMC-TOKEN header value. |
+    | `Connection refused on <mgmt-ip>:443` | Verify the management IP is correct and reachable; confirm the PowerStore management interface is online and the network path is not blocked by firewalls. |
 ## Appliance Lifecycle
 
 ### Adding a Second Appliance to a Cluster (PowerStore T only)
@@ -471,9 +481,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/appliance/join" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the appliance's CA certificate into your trust store.
-    **`{"error": "Invalid or expired token", "error_code": 401}`** — Regenerate a valid DELL-EMC-TOKEN via PowerStore Manager or ensure the token has not expired.
-    **`{"error": "Appliance already part of cluster", "error_code": 409}`** — Verify the management IP is correct and the appliance has not already been joined to this or another cluster.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the appliance's CA certificate into your trust store. |
+    | `{"error": "Invalid or expired token", "error_code": 401}` | Regenerate a valid DELL-EMC-TOKEN via PowerStore Manager or ensure the token has not expired. |
+    | `{"error": "Appliance already part of cluster", "error_code": 409}` | Verify the management IP is correct and the appliance has not already been joined to this or another cluster. |
 After joining, the new appliance appears in the cluster and its capacity is immediately available. Existing volumes can be migrated to the new appliance non-disruptively via the Data Migration feature in PowerStore Manager.
 
 ### Decommissioning an Appliance

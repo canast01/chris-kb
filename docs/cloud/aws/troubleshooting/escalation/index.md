@@ -93,8 +93,10 @@ export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 ```
 
 !!! warning "Common errors"
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
-    **`An error occurred (UnauthorizedOperation) when calling the GetCallerIdentity operation: User: arn:aws:iam::123456789012:user/restricted-user is not authorized to perform: sts:GetCallerIdentity`** — Add the `sts:GetCallerIdentity` permission to the IAM user's policy.
+    | Error | Fix |
+    |---|---|
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
+    | `An error occurred (UnauthorizedOperation) when calling the GetCallerIdentity operation: User: arn:aws:iam::123456789012:user/restricted-user is not authorized to perform: sts:GetCallerIdentity` | Add the `sts:GetCallerIdentity` permission to the IAM user's policy. |
 ### 2. Collect CloudTrail events for the failing action
 
 ```bash
@@ -146,9 +148,11 @@ aws cloudtrail lookup-events \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidStartTime) when calling the LookupEvents operation: The start time is invalid.`** — Ensure the date command produces valid ISO 8601 format; test with `date -u -d '4 hours ago' +%FT%TZ` to verify output.
-    **`An error occurred (AccessDenied) when calling the LookupEvents operation: User is not authorized to perform: cloudtrail:LookupEvents`** — Add `cloudtrail:LookupEvents` permission to the IAM user/role executing the command.
-    **`jq: error (at <stdin>:1): Cannot index string with string "Time"`** — The CloudTrailEvent field contains a JSON string, not an object; parse it with `| fromjson` in jq or use `--output text` instead of json.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidStartTime) when calling the LookupEvents operation: The start time is invalid.` | Ensure the date command produces valid ISO 8601 format; test with `date -u -d '4 hours ago' +%FT%TZ` to verify output. |
+    | `An error occurred (AccessDenied) when calling the LookupEvents operation: User is not authorized to perform: cloudtrail:LookupEvents` | Add `cloudtrail:LookupEvents` permission to the IAM user/role executing the command. |
+    | `jq: error (at <stdin>:1): Cannot index string with string "Time"` | The CloudTrailEvent field contains a JSON string, not an object; parse it with `| fromjson` in jq or use `--output text` instead of json. |
 ### 3. Collect resource-specific diagnostics
 
 ```bash
@@ -254,7 +258,9 @@ No bucket policy
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidInstanceID.NotFound) when calling the DescribeInstanceStatus operation: The instance ID '<instance-id>' does not exist`** — Verify the instance ID is correct and exists in the current AWS region; check `aws
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidInstanceID.NotFound) when calling the DescribeInstanceStatus operation: The instance ID '<instance-id>' does not exist` | Verify the instance ID is correct and exists in the current AWS region; check `aws |
 ### 4. Collect CloudWatch metrics and logs
 
 ```bash
@@ -314,9 +320,11 @@ aws logs filter-log-events \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the GetMetricStatistics operation: The parameter StartTime is invalid.`** — Ensure the instance ID is valid and replace `<instance-id>` with an actual EC2 instance ID (e.g., `i-0a1b2c3d4e5f6g7h8`).
-    **`ResourceNotFoundException: The specified log group does not exist.`** — Verify the log group name exists by running `aws logs describe-log-groups | grep /var/log/app` and use the correct group name.
-    **`An error occurred (AccessDenied) when calling the GetMetricStatistics operation: User is not authorized to perform: cloudwatch:GetMetricStatistics`** — Add `cloudwatch:GetMetricStatistics` and `logs:FilterLogEvents` permissions to the IAM role or user policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the GetMetricStatistics operation: The parameter StartTime is invalid.` | Ensure the instance ID is valid and replace `<instance-id>` with an actual EC2 instance ID (e.g., `i-0a1b2c3d4e5f6g7h8`). |
+    | `ResourceNotFoundException: The specified log group does not exist.` | Verify the log group name exists by running `aws logs describe-log-groups | grep /var/log/app` and use the correct group name. |
+    | `An error occurred (AccessDenied) when calling the GetMetricStatistics operation: User is not authorized to perform: cloudwatch:GetMetricStatistics` | Add `cloudwatch:GetMetricStatistics` and `logs:FilterLogEvents` permissions to the IAM role or user policy. |
 ### 5. Write the timeline
 
 ```text
@@ -470,9 +478,11 @@ Timestamp            Sum
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (UnauthorizedOperation) when calling the DescribeEvents operation: You are not authorized to perform: health:DescribeEvents`** — Add `health:DescribeEvents` permission to the IAM role or user policy.
-    **`An error occurred (InvalidParameterValue) when calling the GetConsoleOutput operation: The instance ID '<instance-id>' does not exist`** — Verify the instance ID is correct and exists in the specified region using `aws ec2 describe-instances`.
-    **`An error occurred (InvalidParameterCombination) when calling the GetMetricStatistics operation: The parameter StartTime must be before EndTime`** — Ensure the start-time is earlier than end-time; check system clock synchronization with `date -u`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (UnauthorizedOperation) when calling the DescribeEvents operation: You are not authorized to perform: health:DescribeEvents` | Add `health:DescribeEvents` permission to the IAM role or user policy. |
+    | `An error occurred (InvalidParameterValue) when calling the GetConsoleOutput operation: The instance ID '<instance-id>' does not exist` | Verify the instance ID is correct and exists in the specified region using `aws ec2 describe-instances`. |
+    | `An error occurred (InvalidParameterCombination) when calling the GetMetricStatistics operation: The parameter StartTime must be before EndTime` | Ensure the start-time is earlier than end-time; check system clock synchronization with `date -u`. |
 ---
 
 ## See also

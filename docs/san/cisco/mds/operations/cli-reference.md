@@ -60,8 +60,10 @@ analytics                   1       off
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact command syntax; use `show version` instead of `show ver` on MDS switches.
-    **`% Feature not enabled`** — Enable the required feature with `config t` followed by `feature <feature-name>` before attempting to use it.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact command syntax; use `show version` instead of `show ver` on MDS switches. |
+    | `% Feature not enabled` | Enable the required feature with `config t` followed by `feature <feature-name>` before attempting to use it. |
 ```bash
 show system resources   # CPU and memory utilization
 show processes cpu      # per-process CPU breakdown
@@ -92,8 +94,10 @@ PID    Name                 MEM%    VSZ      RSS
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct CLI mode (exec or admin); use `show version` to confirm device state.
-    **`% Ambiguous command`** — Use the full command name `show processes cpu` instead of abbreviated forms like `show proc cpu`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct CLI mode (exec or admin); use `show version` to confirm device state. |
+    | `% Ambiguous command` | Use the full command name `show processes cpu` instead of abbreviated forms like `show proc cpu`. |
 ```bash
 show running-config
 show startup-config
@@ -165,8 +169,10 @@ end
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct CLI mode (use `configure terminal` before editing config, or use `show` commands in user mode).
-    **`% Incomplete command`** — Complete the command syntax; for example, use `show running-config` or `show startup-config` with proper spacing and no trailing characters.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct CLI mode (use `configure terminal` before editing config, or use `show` commands in user mode). |
+    | `% Incomplete command` | Complete the command syntax; for example, use `show running-config` or `show startup-config` with proper spacing and no trailing characters. |
 ```bash
 show logging            # recent syslog events
 show logging last 50    # last 50 log entries
@@ -186,8 +192,10 @@ show logging last 50    # last 50 log entries
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact syntax is `show logging` or `show logging last <number>` without extra arguments.
-    **`% Insufficient privileges to execute command`** — Ensure your user role has read permission for logging; contact the switch administrator to grant appropriate RBAC privileges.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact syntax is `show logging` or `show logging last <number>` without extra arguments. |
+    | `% Insufficient privileges to execute command` | Ensure your user role has read permission for logging; contact the switch administrator to grant appropriate RBAC privileges. |
 ```bash
 show version
 show running-config
@@ -237,8 +245,10 @@ FLOGI Database for VSAN 1:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact command syntax; these are show commands that should work on all MDS platforms without additional configuration.
-    **`% VSAN <number> is not configured`** — Enable the VSAN with `vsan <number>` command in config mode before querying its FLOGI database.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact command syntax; these are show commands that should work on all MDS platforms without additional configuration. |
+    | `% VSAN <number> is not configured` | Enable the VSAN with `vsan <number>` command in config mode before querying its FLOGI database. |
 ```bash
 # Summary of all interfaces
 show interface brief
@@ -290,9 +300,11 @@ SFP Serial Number is SG0K2C3A1234
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact interface format matches your switch model (e.g., `fc1/1` vs `Fabric1/1`) and use `show interface ?` to confirm syntax.
-    **`% Incomplete command`** — Complete the command with a valid interface identifier or use `show interface brief` to list all available ports.
-    **`Interface fc<slot/port> does not exist`** — Confirm the slot and port numbers are valid for your MDS switch configuration using `show module` to verify installed line cards.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact interface format matches your switch model (e.g., `fc1/1` vs `Fabric1/1`) and use `show interface ?` to confirm syntax. |
+    | `% Incomplete command` | Complete the command with a valid interface identifier or use `show interface brief` to list all available ports. |
+    | `Interface fc<slot/port> does not exist` | Confirm the slot and port numbers are valid for your MDS switch configuration using `show module` to verify installed line cards. |
 ```bash
 interface fc<slot/port>
   switchport mode F         # force F-port for host connections
@@ -305,8 +317,10 @@ interface fc<slot/port>
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in interface configuration mode by running `config t` then `interface fc1/1` before entering switchport commands.
-    **`% Incomplete command`** — Ensure the slot/port syntax matches your MDS model (e.g., `fc1/1` not `fc1-1`); check `show interface brief` to list valid port identifiers.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in interface configuration mode by running `config t` then `interface fc1/1` before entering switchport commands. |
+    | `% Incomplete command` | Ensure the slot/port syntax matches your MDS model (e.g., `fc1/1` not `fc1-1`); check `show interface brief` to list valid port identifiers. |
 ```bash
 interface fc<slot/port>
   shutdown       # disable
@@ -318,8 +332,10 @@ interface fc<slot/port>
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Ensure you are in the correct configuration mode by entering `config t` first, then `interface fc1/1`.
-    **`% Incomplete command`** — Complete the command with a valid slot/port number (e.g., `interface fc1/1`) instead of the literal `fc<slot/port>`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Ensure you are in the correct configuration mode by entering `config t` first, then `interface fc1/1`. |
+    | `% Incomplete command` | Complete the command with a valid slot/port number (e.g., `interface fc1/1`) instead of the literal `fc<slot/port>`. |
 ```bash
 # Apply config to a range of ports
 interface fc<slot/port> - fc<slot/port>
@@ -331,8 +347,10 @@ interface fc<slot/port> - fc<slot/port>
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (enter `config t` first if at the privilege prompt).
-    **`% Incomplete command`** — Use valid slot/port syntax like `interface fc1/1 - fc1/4` with spaces around the dash separator.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (enter `config t` first if at the privilege prompt). |
+    | `% Incomplete command` | Use valid slot/port syntax like `interface fc1/1 - fc1/4` with spaces around the dash separator. |
 ```bash
 show fcdomain               # domain IDs across fabric
 show fcdomain domain-list   # all domain IDs in VSAN
@@ -356,8 +374,10 @@ Domain List for VSAN 2: 10, 11, 12
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct CLI mode (use `config t` or `show` context); these commands require Fibre Channel fabric visibility.
-    **`% VSAN does not exist`** — Ensure the VSAN is created and active with `show vsan` before querying domain information.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct CLI mode (use `config t` or `show` context); these commands require Fibre Channel fabric visibility. |
+    | `% VSAN does not exist` | Ensure the VSAN is created and active with `show vsan` before querying domain information. |
 ```bash
 # All logged-in initiators and targets
 show flogi database
@@ -389,8 +409,10 @@ FLOGI Database for VSAN 2
 ```
 
 !!! warning "Common errors"
-    **`Invalid VSAN ID <id>`** — Verify the VSAN exists with `show vsan` and use a valid numeric ID between 1 and 4094.
-    **`% Invalid command`** — Ensure you are in the correct mode (exec or config) and check the MDS software version supports this command syntax.
+    | Error | Fix |
+    |---|---|
+    | `Invalid VSAN ID <id>` | Verify the VSAN exists with `show vsan` and use a valid numeric ID between 1 and 4094. |
+    | `% Invalid command` | Ensure you are in the correct mode (exec or config) and check the MDS software version supports this command syntax. |
 ```bash
 # All registered devices in the fabric
 show fcns database
@@ -425,8 +447,10 @@ FCID: 0x010003  | WWN: 50:00:14:40:5a:7b:8c:f3 | PortName: pure-array-01.fc0 | P
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the MDS switch is in the correct mode; use `config t` to enter configuration mode if needed, or check the exact command syntax for your firmware version.
-    **`% Incomplete command`** — Provide the VSAN ID number after `show fcns database vsan` (e.g., `show fcns database vsan 1`).
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the MDS switch is in the correct mode; use `config t` to enter configuration mode if needed, or check the exact command syntax for your firmware version. |
+    | `% Incomplete command` | Provide the VSAN ID number after `show fcns database vsan` (e.g., `show fcns database vsan 1`). |
 ```bash
 # Find the host HBA WWN in FLOGI
 show flogi database | grep <host_wwn>
@@ -455,9 +479,11 @@ VSAN Membership:
 ```
 
 !!! warning "Common errors"
-    **`FLOGI Database is empty`** — Verify the host HBA is logged in and the correct WWN format (50:00:xx:xx:xx:xx:xx:xx) is being searched.
-    **`No matching entries found in FCNS database`** — Confirm the storage array port is registered in the fabric and check that the storage WWN is correctly formatted and belongs to an active port.
-    **`VSAN membership mismatch`** — Ensure both the host HBA FCID and storage port FCID belong to the same VSAN ID; if not, add the ports to the same VSAN using `vsan <id>` configuration.
+    | Error | Fix |
+    |---|---|
+    | `FLOGI Database is empty` | Verify the host HBA is logged in and the correct WWN format (50:00:xx:xx:xx:xx:xx:xx) is being searched. |
+    | `No matching entries found in FCNS database` | Confirm the storage array port is registered in the fabric and check that the storage WWN is correctly formatted and belongs to an active port. |
+    | `VSAN membership mismatch` | Ensure both the host HBA FCID and storage port FCID belong to the same VSAN ID; if not, add the ports to the same VSAN using `vsan <id>` configuration. |
 ```bash
 # View zoning
 show zone
@@ -517,9 +543,11 @@ MDS9148S# copy running-config startup-config
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the VSAN ID exists with `show vsan` and use correct syntax (e.g., `show zone vsan 1` not `show zone 1`).
-    **`% Zoneset is not committed`** — Run `zoneset commit` after creating or modifying zones before attempting to activate with `zoneset activate`.
-    **`% Device-alias not found`** — Ensure the device-alias is committed with `device-alias commit` and exists in the database before referencing it in zone member statements.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the VSAN ID exists with `show vsan` and use correct syntax (e.g., `show zone vsan 1` not `show zone 1`). |
+    | `% Zoneset is not committed` | Run `zoneset commit` after creating or modifying zones before attempting to activate with `zoneset activate`. |
+    | `% Device-alias not found` | Ensure the device-alias is committed with `device-alias commit` and exists in the database before referencing it in zone member statements. |
 ```bash
 # All VSANs on the switch
 show vsan
@@ -578,8 +606,10 @@ fc1/5                       1
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the VSAN ID exists with `show vsan` before querying specific VSAN details.
-    **`% Interface does not exist`** — Confirm the slot and port numbers are valid for your switch model (e.g., `show inventory` to verify module count).
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the VSAN ID exists with `show vsan` before querying specific VSAN details. |
+    | `% Interface does not exist` | Confirm the slot and port numbers are valid for your switch model (e.g., `show inventory` to verify module count). |
 ```bash
 # Create
 vsan database
@@ -620,9 +650,11 @@ vsan 10 information
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in `vsan database` configuration mode before entering vsan commands.
-    **`% VSAN <id> does not exist`** — Create the VSAN with `vsan <id> name "<name>"` before assigning ports or modifying it.
-    **`% Port fc<slot/port> is already assigned to vsan <id>`** — Remove the port from its current VSAN with `no vsan <current-id> interface fc<slot/port>` before reassigning.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in `vsan database` configuration mode before entering vsan commands. |
+    | `% VSAN <id> does not exist` | Create the VSAN with `vsan <id> name "<name>"` before assigning ports or modifying it. |
+    | `% Port fc<slot/port> is already assigned to vsan <id>` | Remove the port from its current VSAN with `no vsan <current-id> interface fc<slot/port>` before reassigning. |
 ```bash
 interface fc<slot/port>
   switchport trunk allowed vsan add <id>
@@ -633,8 +665,10 @@ interface fc<slot/port>
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode by entering `config t` first, then `interface fc1/1`.
-    **`% Invalid VSAN ID <id>`** — Ensure the VSAN ID is between 1-4094 and has been created with `vsan <id>` before adding it to the trunk.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode by entering `config t` first, then `interface fc1/1`. |
+    | `% Invalid VSAN ID <id>` | Ensure the VSAN ID is between 1-4094 and has been created with `vsan <id>` before adding it to the trunk. |
 ```bash
 show ivr
 show ivr vsan-topology
@@ -652,8 +686,10 @@ IVR enabled successfully
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct MDS switch CLI mode; `ivr enable` requires configuration mode (enter `config t` first).
-    **`% Feature ivr not supported on this platform`** — Confirm IVR licensing is installed on the switch using `show license` and contact Cisco support if the feature license is missing.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct MDS switch CLI mode; `ivr enable` requires configuration mode (enter `config t` first). |
+    | `% Feature ivr not supported on this platform` | Confirm IVR licensing is installed on the switch using `show license` and contact Cisco support if the feature license is missing. |
 ```bash
 show topology          # fabric-wide ISL topology
 show trunk             # trunk port states and allowed VSANs
@@ -701,8 +737,10 @@ fc2/2       E       down    nwwn 50:00:09:73:a1:2c:00:04  trunk on
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct mode (device# prompt); these are exec-level commands, not config mode.
-    **`% Incomplete command`** — Use the full command syntax `show interface brief` or `show interface trunk` without partial abbreviations.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct mode (device# prompt); these are exec-level commands, not config mode. |
+    | `% Incomplete command` | Use the full command syntax `show interface brief` or `show interface trunk` without partial abbreviations. |
 ```bash
 interface fc<slot/port>
   switchport mode TE
@@ -715,8 +753,10 @@ interface fc<slot/port>
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in interface configuration mode by running `config t` then `interface fc1/1` before entering switchport commands.
-    **`% VSAN <vsan_id> does not exist`** — Create the VSAN first using `vsan <vsan_id>` in global configuration mode before assigning it to the trunk.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in interface configuration mode by running `config t` then `interface fc1/1` before entering switchport commands. |
+    | `% VSAN <vsan_id> does not exist` | Create the VSAN first using `vsan <vsan_id>` in global configuration mode before assigning it to the trunk. |
 ```bash
 interface fc<slot/port>
   switchport trunk allowed vsan add <vsan_id>
@@ -728,8 +768,10 @@ interface fc<slot/port>
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in interface configuration mode by running `config t` then `interface fc1/1` before entering switchport commands.
-    **`% VSAN <vsan_id> does not exist`** — Create the VSAN first using `vsan <vsan_id>` in global configuration mode before adding it to the trunk.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in interface configuration mode by running `config t` then `interface fc1/1` before entering switchport commands. |
+    | `% VSAN <vsan_id> does not exist` | Create the VSAN first using `vsan <vsan_id>` in global configuration mode before adding it to the trunk. |
 ```bash
 show interface fc<slot/port> counters
 show interface fc<slot/port> counters errors
@@ -760,8 +802,10 @@ Interface fc1/1 Error Counters:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the slot/port syntax matches your MDS model (e.g., fc1/1, fc2/48) and that the interface exists with `show interface brief`.
-    **`% Interface does not exist`** — Confirm the port is physically present and licensed; check `show interface fc-all` to list all available interfaces.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the slot/port syntax matches your MDS model (e.g., fc1/1, fc2/48) and that the interface exists with `show interface brief`. |
+    | `% Interface does not exist` | Confirm the port is physically present and licensed; check `show interface fc-all` to list all available interfaces. |
 ```bash
 interface port-channel <id>
   switchport mode E
@@ -797,9 +841,11 @@ Interface port-channel1 is up
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the port-channel ID exists and syntax matches your MDS OS version (use `show port-channel summary` first to confirm).
-    **`% Interface not found`** — Ensure the slot/port notation (e.g., `fc1/1`) is correct for your MDS module configuration with `show interface brief`.
-    **`% Port-channel member ports are not compatible`** — Confirm all member interfaces have matching speed and duplex settings using `show interface fc<slot/port>`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the port-channel ID exists and syntax matches your MDS OS version (use `show port-channel summary` first to confirm). |
+    | `% Interface not found` | Ensure the slot/port notation (e.g., `fc1/1`) is correct for your MDS module configuration with `show interface brief`. |
+    | `% Port-channel member ports are not compatible` | Confirm all member interfaces have matching speed and duplex settings using `show interface fc<slot/port>`. |
 ```bash
 # Port errors
 show interface fc<slot/port> counters
@@ -858,9 +904,11 @@ System Services Status:
 ```
 
 !!! warning "Common errors"
-    **`Invalid command`** — Verify the slot/port syntax matches your switch model (e.g., `fc1/1` for single-digit slots or `fc10/48` for multi-digit).
-    **`Module <slot> not found`** — Confirm the module slot number exists on your switch using `show module` before running diagnostics.
-    **`% Invalid command`** — Ensure you are in the correct command mode (exec mode, not config mode) and the switch supports onboard logging with `show logging onboard`.
+    | Error | Fix |
+    |---|---|
+    | `Invalid command` | Verify the slot/port syntax matches your switch model (e.g., `fc1/1` for single-digit slots or `fc10/48` for multi-digit). |
+    | `Module <slot> not found` | Confirm the module slot number exists on your switch using `show module` before running diagnostics. |
+    | `% Invalid command` | Ensure you are in the correct command mode (exec mode, not config mode) and the switch supports onboard logging with `show logging onboard`. |
 ```bash
 show monitor session all
 monitor session <n> source interface fc<slot/port>
@@ -883,9 +931,11 @@ Monitor session 5 removed.
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the slot and port numbers exist on your MDS switch using `show interface brief`.
-    **`% Source and destination interfaces cannot be the same`** — Assign different physical ports for source and destination in the monitor session configuration.
-    **`% Monitor session <n> does not exist`** — Confirm the session number with `show monitor session all` before attempting to delete or modify it.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the slot and port numbers exist on your MDS switch using `show interface brief`. |
+    | `% Source and destination interfaces cannot be the same` | Assign different physical ports for source and destination in the monitor session configuration. |
+    | `% Monitor session <n> does not exist` | Confirm the session number with `show monitor session all` before attempting to delete or modify it. |
 ```bash
 # Current version
 show version
@@ -937,9 +987,11 @@ Install preview for kickstart and system images:
 ```
 
 !!! warning "Common errors"
-    **`Error: Image file not found at tftp://192.168.1.50/mds9148-kickstart.9.1.3.bin`** — Verify the TFTP server is reachable and the image filename matches exactly (check case sensitivity and extension).
-    **`Error: Incompatible image version. Current: 9.1(1), Target: 9.1(3). Downgrade not supported.`** — Ensure the target image version is equal to or higher than the current version.
-    **`Error: Insufficient bootflash space. Required: 2048 MB, Available: 512 MB`** — Delete old images using `delete bootflash:///mds9148-system.9.0.*.bin` to free space before staging.
+    | Error | Fix |
+    |---|---|
+    | `Error: Image file not found at tftp://192.168.1.50/mds9148-kickstart.9.1.3.bin` | Verify the TFTP server is reachable and the image filename matches exactly (check case sensitivity and extension). |
+    | `Error: Incompatible image version. Current: 9.1(1), Target: 9.1(3). Downgrade not supported.` | Ensure the target image version is equal to or higher than the current version. |
+    | `Error: Insufficient bootflash space. Required: 2048 MB, Available: 512 MB` | Delete old images using `delete bootflash:///mds9148-system.9.0.*.bin` to free space before staging. |
 ```bash
 # Save running to startup (before any change)
 copy running-config startup-config
@@ -997,9 +1049,11 @@ feature ssh
 ```
 
 !!! warning "Common errors"
-    **`Error opening tftp://192.168.1.50/mds-backup-20240115.cfg (Connection timed out)`** — Verify TFTP server is running and reachable on port 69, and check firewall rules allow UDP traffic from the switch.
-    **`Error opening scp://admin@192.168.1.50/backups/mds-config.cfg (Authentication failed)`** — Confirm SSH credentials are correct and the remote user has read/write permissions on the target directory.
-    **`% Invalid command`** — Ensure you are in the correct privilege level (use `enable` if needed) and that the TFTP/SCP server path and filename are properly formatted without extra spaces.
+    | Error | Fix |
+    |---|---|
+    | `Error opening tftp://192.168.1.50/mds-backup-20240115.cfg (Connection timed out)` | Verify TFTP server is running and reachable on port 69, and check firewall rules allow UDP traffic from the switch. |
+    | `Error opening scp://admin@192.168.1.50/backups/mds-config.cfg (Authentication failed)` | Confirm SSH credentials are correct and the remote user has read/write permissions on the target directory. |
+    | `% Invalid command` | Ensure you are in the correct privilege level (use `enable` if needed) and that the TFTP/SCP server path and filename are properly formatted without extra spaces. |
 ```bash
 # Save a named checkpoint
 checkpoint <checkpoint_name>
@@ -1029,8 +1083,10 @@ Running configuration has been restored to checkpoint: prod-backup-2024
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (use `config terminal` first if needed).
-    **`% Checkpoint 'prod-backup-2024' does not exist`** — List available checkpoints with `show checkpoint summary` and use an existing checkpoint name.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (use `config terminal` first if needed). |
+    | `% Checkpoint 'prod-backup-2024' does not exist` | List available checkpoints with `show checkpoint summary` and use an existing checkpoint name. |
 ```bash
 # Show all local users
 show users
@@ -1068,9 +1124,11 @@ read-only                 Read Only Access
 ```
 
 !!! warning "Common errors"
-    **`Error: User already exists`** — Choose a different username or delete the existing user with `no username <user>` first.
-    **`Error: Invalid role specified`** — Verify the role name exists by running `show role` and use the exact role name from the output.
-    **`Error: Password does not meet complexity requirements`** — Ensure the password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters.
+    | Error | Fix |
+    |---|---|
+    | `Error: User already exists` | Choose a different username or delete the existing user with `no username <user>` first. |
+    | `Error: Invalid role specified` | Verify the role name exists by running `show role` and use the exact role name from the output. |
+    | `Error: Password does not meet complexity requirements` | Ensure the password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters. |
 ```bash
 # Show AAA config
 show aaa
@@ -1115,9 +1173,11 @@ RADIUS Server Information:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the TACACS+ server IP address format is correct (e.g., 192.168.100.50, not a hostname without DNS configured).
-    **`% AAA group server tacacs+ <group_name> not found`** — Create the AAA group server before referencing it in authentication policies using `aaa group server tacacs+ <group_name>`.
-    **`% Connection refused to TACACS+ server 192.168.100.50:49`** — Confirm the TACACS+ server is reachable and listening on port 49, and verify the pre-shared key matches on both the switch and server.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the TACACS+ server IP address format is correct (e.g., 192.168.100.50, not a hostname without DNS configured). |
+    | `% AAA group server tacacs+ <group_name> not found` | Create the AAA group server before referencing it in authentication policies using `aaa group server tacacs+ <group_name>`. |
+    | `% Connection refused to TACACS+ server 192.168.100.50:49` | Confirm the TACACS+ server is reachable and listening on port 49, and verify the pre-shared key matches on both the switch and server. |
 ```bash
 show ssh server
 show users
@@ -1166,8 +1226,10 @@ SNMP communities:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Replace angle brackets with actual values: `snmp-server user netmon_user netmon_group v3 auth sha MyAuthPass123 priv aes 128 MyPrivPass456`.
-    **`% Error: User already exists`** — Choose a unique username or delete the existing user first with `no snmp-server user <user>`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Replace angle brackets with actual values: `snmp-server user netmon_user netmon_group v3 auth sha MyAuthPass123 priv aes 128 MyPrivPass456`. |
+    | `% Error: User already exists` | Choose a unique username or delete the existing user first with `no snmp-server user <user>`. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

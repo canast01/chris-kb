@@ -105,9 +105,11 @@ Disk Write Bytes                      Microsoft.Insights/metrics                
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM' could not be found.`** — Verify the subscription ID, resource group name, and VM name are correct using `az vm list --output table`.
-    **`InvalidMetricName: The metric 'Percentage CPU' is not valid for this resource type.`** — List available metrics for your resource type with `az monitor metrics list-definitions --resource <resource-id>` to find the correct metric name.
-    **`AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'microsoft.insights/metrics/read' over scope '<scope>'.`** — Ensure your Azure account has the "Monitoring Reader" role assigned to the resource group or subscription.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM' could not be found.` | Verify the subscription ID, resource group name, and VM name are correct using `az vm list --output table`. |
+    | `InvalidMetricName: The metric 'Percentage CPU' is not valid for this resource type.` | List available metrics for your resource type with `az monitor metrics list-definitions --resource <resource-id>` to find the correct metric name. |
+    | `AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'microsoft.insights/metrics/read' over scope '<scope>'.` | Ensure your Azure account has the "Monitoring Reader" role assigned to the resource group or subscription. |
 ## Aggregation Types
 
 | Aggregation | Description                                     |
@@ -209,7 +211,9 @@ az monitor metrics alert create \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM' could not be found.`** — Verify the VM exists in the specified resource group and subscription using `az vm list -g myRG`.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM' could not be found.` | Verify the VM exists in the specified resource group and subscription using `az vm list -g myRG`. |
     **`
 ## Dimension Filtering
 
@@ -240,9 +244,11 @@ Timestamp            Aggregation    Value
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound`** — Verify the subscription ID, resource group name, and VM name are correct using `az vm list --resource-group myRG`.
-    **`InvalidDimension`** — Replace `--dimension VMName` with a valid dimension like `--dimension "Processor Number"` or remove it if the metric doesn't support dimensions.
-    **`AuthorizationFailed`** — Ensure your Azure account has `Microsoft.Insights/metrics/read` permissions on the VM resource.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound` | Verify the subscription ID, resource group name, and VM name are correct using `az vm list --resource-group myRG`. |
+    | `InvalidDimension` | Replace `--dimension VMName` with a valid dimension like `--dimension "Processor Number"` or remove it if the metric doesn't support dimensions. |
+    | `AuthorizationFailed` | Ensure your Azure account has `Microsoft.Insights/metrics/read` permissions on the VM resource. |
 ## Custom Metrics via REST
 
 Applications can emit custom metrics directly to the Azure Monitor ingestion endpoint.
@@ -277,9 +283,11 @@ curl -X POST \
 ```
 
 !!! warning "Common errors"
-    **`401 Unauthorized`** — Verify the access token is valid and not expired by regenerating it with `az account get-access-token --resource https://monitoring.azure.com`.
-    **`400 Bad Request: Invalid metric namespace`** — Ensure the namespace matches your custom metrics namespace registered in Azure Monitor; check with `az monitor metrics list-definitions --resource /subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM`.
-    **`404 Not Found`** — Confirm the subscription ID, resource group name, and VM name are correct and that the resource exists in the specified region.
+    | Error | Fix |
+    |---|---|
+    | `401 Unauthorized` | Verify the access token is valid and not expired by regenerating it with `az account get-access-token --resource https://monitoring.azure.com`. |
+    | `400 Bad Request: Invalid metric namespace` | Ensure the namespace matches your custom metrics namespace registered in Azure Monitor; check with `az monitor metrics list-definitions --resource /subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM`. |
+    | `404 Not Found` | Confirm the subscription ID, resource group name, and VM name are correct and that the resource exists in the specified region. |
 ## Metric Explorer Tips
 
 - Pin charts directly to a shared dashboard from Metrics Explorer

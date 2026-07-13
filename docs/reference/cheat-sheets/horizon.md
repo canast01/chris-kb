@@ -67,9 +67,11 @@ Machine desktop01 removed from inventory.
 ```
 
 !!! warning "Common errors"
-    **`Error: Pool mypool not found`** — Verify the pool ID exists with `vdmadmin -L` and check for typos in the pool name.
-    **`Error: Access Denied. Administrator privileges required`** — Run the Command Prompt as Administrator or use an account with Horizon administrator role.
-    **`Error: Machine desktop01 is currently in use by domain\username`** — Log off the user first with `vdmadmin -O -u domain\username` before removing the machine.
+    | Error | Fix |
+    |---|---|
+    | `Error: Pool mypool not found` | Verify the pool ID exists with `vdmadmin -L` and check for typos in the pool name. |
+    | `Error: Access Denied. Administrator privileges required` | Run the Command Prompt as Administrator or use an account with Horizon administrator role. |
+    | `Error: Machine desktop01 is currently in use by domain\username` | Log off the user first with `vdmadmin -O -u domain\username` before removing the machine. |
 ## PowerShell (VMware.Hv.Helper module)
 
 ```powershell

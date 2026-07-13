@@ -100,9 +100,11 @@ workload-ns-staging    Active   8d
 ```
 
 !!! warning "Common errors"
-    **`error: the server has asked for the client to provide credentials`** — Verify the username and password are correct, and that the Supervisor API endpoint is accessible from your network.
-    **`error: x509: certificate signed by unknown authority`** — Remove the `--insecure-skip-tls-verify` flag once you have installed the proper CA certificate in your system's trust store, or keep the flag if testing in a lab environment.
-    **`error: unable to connect to the server: dial tcp: lookup supervisor.example.local: no such host`** — Ensure the Supervisor Cluster FQDN is correct and resolvable via DNS from your client machine.
+    | Error | Fix |
+    |---|---|
+    | `error: the server has asked for the client to provide credentials` | Verify the username and password are correct, and that the Supervisor API endpoint is accessible from your network. |
+    | `error: x509: certificate signed by unknown authority` | Remove the `--insecure-skip-tls-verify` flag once you have installed the proper CA certificate in your system's trust store, or keep the flag if testing in a lab environment. |
+    | `error: unable to connect to the server: dial tcp: lookup supervisor.example.local: no such host` | Ensure the Supervisor Cluster FQDN is correct and resolvable via DNS from your client machine. |
 ---
 
 ## TKG Cluster Health
@@ -157,9 +159,11 @@ velero               velero-backup-job-1234-abcde                  0/1     Error
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "cluster"`** — Ensure the Tanzu CLI is properly installed and authenticated with `tanzu login` to the management cluster.
-    **`Unable to connect to the server: dial tcp: lookup <cluster-context> on 8.8.8.8:53: no such host`** — Verify the kubeconfig context exists with `kubectl config get-contexts` and use the correct context name.
-    **`error: You must be logged in to the server (Unauthorized)`** — Re-authenticate to the cluster using `tanzu cluster kubeconfig get <cluster-name> --admin` and merge it into your kubeconfig.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "cluster"` | Ensure the Tanzu CLI is properly installed and authenticated with `tanzu login` to the management cluster. |
+    | `Unable to connect to the server: dial tcp: lookup <cluster-context> on 8.8.8.8:53: no such host` | Verify the kubeconfig context exists with `kubectl config get-contexts` and use the correct context name. |
+    | `error: You must be logged in to the server (Unauthorized)` | Re-authenticate to the cluster using `tanzu cluster kubeconfig get <cluster-name> --admin` and merge it into your kubeconfig. |
 ---
 
 ## Node Resource Utilization
@@ -215,7 +219,9 @@ Conditions:
 ```
 
 !!! warning "Common errors"
-    **`error: Metrics API not available`** — Install metrics-server with `kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml` and wait 30 seconds for it to
+    | Error | Fix |
+    |---|---|
+    | `error: Metrics API not available` | Install metrics-server with `kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml` and wait 30 seconds for it to |
 ---
 
 ## PVC and Storage Health
@@ -270,8 +276,10 @@ persistentvolumeclaim "test-pvc" deleted
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "storageclass"`** — Ensure the Kubernetes cluster is fully initialized and the storage provisioner (e.g., vSphere CSI driver) is installed with `kubectl apply -f vsphere-csi-driver.yaml`.
-    **`Error from server (NotFound): storageclass.storage.k8s.io "<your-storage-class>" not found`** — Replace `<your-storage-class>` with an actual StorageClass name from the `kubectl get storageclass` output (e.g., `vsphere-csi`).
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "storageclass"` | Ensure the Kubernetes cluster is fully initialized and the storage provisioner (e.g., vSphere CSI driver) is installed with `kubectl apply -f vsphere-csi-driver.yaml`. |
+    | `Error from server (NotFound): storageclass.storage.k8s.io "<your-storage-class>" not found` | Replace `<your-storage-class>` with an actual StorageClass name from the `kubectl get storageclass` output (e.g., `vsphere-csi`). |
 ---
 
 ## Load Balancer / Service Health
@@ -297,8 +305,10 @@ tanzu-system-auth    dex-service                   LoadBalancer   10.96.88.22   
 ```
 
 !!! warning "Common errors"
-    **`No resources found`** — Verify the cluster is running and you have proper kubeconfig context set with `kubectl config current-context`.
-    **`error: the server doesn't have a resource type "svc"`** — Ensure you are connected to a valid Kubernetes cluster; run `kubectl cluster-info` to verify connectivity.
+    | Error | Fix |
+    |---|---|
+    | `No resources found` | Verify the cluster is running and you have proper kubeconfig context set with `kubectl config current-context`. |
+    | `error: the server doesn't have a resource type "svc"` | Ensure you are connected to a valid Kubernetes cluster; run `kubectl cluster-info` to verify connectivity. |
 ---
 
 ## Harbor Registry Health
@@ -364,9 +374,11 @@ Status: Downloaded newer image for harbor.example.local/library/busybox:test
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification, or install Harbor's CA certificate in your system trust store.
-    **`Error response from daemon: Get "https://harbor.example.local/v2/": dial tcp: lookup harbor.example.local on [IP]: no such host`** — Verify Harbor's DNS name resolves correctly with `nslookup harbor.example.local` and check network connectivity to the Harbor registry endpoint.
-    **`Error response from daemon: unauthorized: unauthorized to access repository: library/busybox, action: push`** — Ensure the admin user credentials are correct and the `library` project exists in Harbor; create it via the Harbor UI if missing.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification, or install Harbor's CA certificate in your system trust store. |
+    | `Error response from daemon: Get "https://harbor.example.local/v2/": dial tcp: lookup harbor.example.local on [IP]: no such host` | Verify Harbor's DNS name resolves correctly with `nslookup harbor.example.local` and check network connectivity to the Harbor registry endpoint. |
+    | `Error response from daemon: unauthorized: unauthorized to access repository: library/busybox, action: push` | Ensure the admin user credentials are correct and the `library` project exists in Harbor; create it via the Harbor UI if missing. |
 ---
 
 ## Certificate Expiry
@@ -399,9 +411,11 @@ notAfter=Mar 10 10:15:33 2026 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Ensure the openssl x509 command receives valid certificate data by checking that the s_client connection succeeded and the host is reachable.
-    **`connect: Connection refused`** — Verify the hostname resolves correctly and the target service is running and listening on port 443 using `nslookup` and `nc -zv`.
-    **`command not found: kubectl`** — Install kubectl or ensure it is in your PATH before attempting to extract the cluster API endpoint.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Ensure the openssl x509 command receives valid certificate data by checking that the s_client connection succeeded and the host is reachable. |
+    | `connect: Connection refused` | Verify the hostname resolves correctly and the target service is running and listening on port 443 using `nslookup` and `nc -zv`. |
+    | `command not found: kubectl` | Install kubectl or ensure it is in your PATH before attempting to extract the cluster API endpoint. |
 ---
 
 ## CSR and Cert Manager Health
@@ -443,9 +457,11 @@ tanzu-system           tanzu-webhook-req-xyz789                  True       Fals
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "csr"`** — Ensure you're connected to the correct cluster with `kubectl cluster-info` and that the API server is responding.
-    **`No resources found in cert-manager namespace.`** — Install cert-manager with `helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace` or verify the namespace name is correct.
-    **`READY False` on certificates** — Check the certificate status with `kubectl describe certificate <name> -n <namespace>` to see if the issuer is misconfigured or the secret is missing.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "csr"` | Ensure you're connected to the correct cluster with `kubectl cluster-info` and that the API server is responding. |
+    | `No resources found in cert-manager namespace.` | Install cert-manager with `helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace` or verify the namespace name is correct. |
+    | `READY False` on certificates` | Check the certificate status with `kubectl describe certificate <name> -n <namespace>` to see if the issuer is misconfigured or the secret is missing. |
 ---
 
 ## See also

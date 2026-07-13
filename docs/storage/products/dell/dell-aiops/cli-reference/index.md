@@ -18,9 +18,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbGllbnRfYWlvcHNfMDEyMzQ1Njc4OTA
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.cloudiq.dell.com`** — Verify network connectivity and DNS resolution; check if the CloudIQ API endpoint is accessible from your network.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure `CLIENT_ID` and `CLIENT_SECRET` environment variables are set correctly and the API endpoint is responding with valid JSON.
-    **`jq: error (at <stdin>:1): Cannot index string with string "access_token"`** — Verify the credentials are valid; an authentication failure returns an error object instead of a token object.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.cloudiq.dell.com` | Verify network connectivity and DNS resolution; check if the CloudIQ API endpoint is accessible from your network. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure `CLIENT_ID` and `CLIENT_SECRET` environment variables are set correctly and the API endpoint is responding with valid JSON. |
+    | `jq: error (at <stdin>:1): Cannot index string with string "access_token"` | Verify the credentials are valid; an authentication failure returns an error object instead of a token object. |
 ```bash
 # List active anomalies
 curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/anomalies?filter=state%20eq%20'ACTIVE'" \
@@ -55,9 +57,11 @@ curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/anomalies?filter=created_a
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.cloudiq.dell.com`** — Verify network connectivity and DNS resolution; check if CloudIQ API endpoint is accessible from your network.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the API token is valid and has not expired; re-authenticate and regenerate the Bearer token.
-    **`date: illegal time format`** — Use `date -u -d "1 day ago" +"%Y-%m-%dT%H:%M:%SZ"` on Linux systems instead of the BSD `-v` flag.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.cloudiq.dell.com` | Verify network connectivity and DNS resolution; check if CloudIQ API endpoint is accessible from your network. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the API token is valid and has not expired; re-authenticate and regenerate the Bearer token. |
+    | `date: illegal time format` | Use `date -u -d "1 day ago" +"%Y-%m-%dT%H:%M:%SZ"` on Linux systems instead of the BSD `-v` flag. |
 ```bash
 # List all active alerts
 curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/alerts?filter=state%20eq%20'ACTIVE'" \
@@ -100,9 +104,11 @@ curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/alerts?filter=system_id%20
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Add `-k` flag to curl or configure your CA bundle with `--cacert /path/to/ca-bundle.crt`.
-    **`jq: parse error: Cannot index number with string "id"`** — Verify the API response is valid JSON and the filter returned results; check that `${TOKEN}` and `${SYSTEM_ID}` variables are set correctly.
-    **`curl: (401) Unauthorized`** — Regenerate your API token and ensure it is exported as `TOKEN` environment variable before running the command.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Add `-k` flag to curl or configure your CA bundle with `--cacert /path/to/ca-bundle.crt`. |
+    | `jq: parse error: Cannot index number with string "id"` | Verify the API response is valid JSON and the filter returned results; check that `${TOKEN}` and `${SYSTEM_ID}` variables are set correctly. |
+    | `curl: (401) Unauthorized` | Regenerate your API token and ensure it is exported as `TOKEN` environment variable before running the command. |
 ```bash
 # Capacity data for a specific system
 curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/systems/${SYSTEM_ID}/capacity" \
@@ -118,9 +124,11 @@ curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/systems/${SYSTEM_ID}/capac
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.cloudiq.dell.com`** — Verify network connectivity and DNS resolution; check if your firewall allows outbound HTTPS to Dell CloudIQ endpoints.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the API token is valid and not expired; run `curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/systems/${SYSTEM_ID}/capacity" -H "Authorization: Bearer ${TOKEN}"` without jq to inspect the raw response.
-    **`curl: (401) Unauthorized`** — Confirm the Bearer token is correctly set in the `TOKEN` variable and has not expired; regenerate the token from the CloudIQ portal if necessary.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.cloudiq.dell.com` | Verify network connectivity and DNS resolution; check if your firewall allows outbound HTTPS to Dell CloudIQ endpoints. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the API token is valid and not expired; run `curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/systems/${SYSTEM_ID}/capacity" -H "Authorization: Bearer ${TOKEN}"` without jq to inspect the raw response. |
+    | `curl: (401) Unauthorized` | Confirm the Bearer token is correctly set in the `TOKEN` variable and has not expired; regenerate the token from the CloudIQ portal if necessary. |
 ```bash
 # Paginated request — first 50 results
 curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?limit=50&offset=0" \

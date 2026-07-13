@@ -221,9 +221,11 @@ Audit complete.
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to CURL_OPTS or import the NSX Manager's CA certificate into your system trust store.
-    **`jq: command not found` / `python3: command not found`** — Install python3 and ensure it is in your PATH, or replace JSON parsing with `jq` if preferred.
-    **`HTTP 401 Unauthorized`** — Verify NSX_USER and NSX_PASS environment variables are set correctly and the user has API access permissions.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to CURL_OPTS or import the NSX Manager's CA certificate into your system trust store. |
+    | `jq: command not found` / `python3: command not found` | Install python3 and ensure it is in your PATH, or replace JSON parsing with `jq` if preferred. |
+    | `HTTP 401 Unauthorized` | Verify NSX_USER and NSX_PASS environment variables are set correctly and the user has API access permissions. |
 ```bash
 chmod +x ~/nsxt_dfw_audit.sh
 ```
@@ -233,8 +235,10 @@ chmod +x ~/nsxt_dfw_audit.sh
 ```
 
 !!! warning "Common errors"
-    **`chmod: cannot access '/home/admin/nsxt_dfw_audit.sh': No such file or directory`** — Verify the script exists in the home directory with `ls -la ~/nsxt_dfw_audit.sh` before running chmod.
-    **`chmod: changing permissions of '/home/admin/nsxt_dfw_audit.sh': Operation not permitted`** — Ensure you own the file or have sudo privileges; use `sudo chmod +x ~/nsxt_dfw_audit.sh` if needed.
+    | Error | Fix |
+    |---|---|
+    | `chmod: cannot access '/home/admin/nsxt_dfw_audit.sh': No such file or directory` | Verify the script exists in the home directory with `ls -la ~/nsxt_dfw_audit.sh` before running chmod. |
+    | `chmod: changing permissions of '/home/admin/nsxt_dfw_audit.sh': Operation not permitted` | Ensure you own the file or have sudo privileges; use `sudo chmod +x ~/nsxt_dfw_audit.sh` if needed. |
 ```bash
 NSX_HOST="192.168.1.200" NSX_USER="admin" NSX_PASS="YourPassword" ~/nsxt_dfw_audit.sh
 ```
@@ -481,8 +485,10 @@ nano ~/nsxt_operational.yml
 ```
 
 !!! warning "Common errors"
-    **`nano: Error reading /root/nsxt_operational.yml: No such file or directory`** — Create the file first with `touch ~/nsxt_operational.yml` or ensure the correct path exists.
-    **`nano: terminal is not fully functional`** — Run `export TERM=xterm` before launching nano, or use a different editor like `vi` if terminal support is limited.
+    | Error | Fix |
+    |---|---|
+    | `nano: Error reading /root/nsxt_operational.yml: No such file or directory` | Create the file first with `touch ~/nsxt_operational.yml` or ensure the correct path exists. |
+    | `nano: terminal is not fully functional` | Run `export TERM=xterm` before launching nano, or use a different editor like `vi` if terminal support is limited. |
 ```bash
 export NSX_USER="admin"
 export NSX_PASS="YourPassword"
@@ -493,8 +499,10 @@ export NSX_PASS="YourPassword"
 ```
 
 !!! warning "Common errors"
-    **`bash: export: `YourPassword': not a valid identifier`** — Wrap the password in quotes if it contains special characters: `export NSX_PASS="Your\$Password"` or use single quotes for literal strings.
-    **`bash: NSX_USER: command not found`** — Ensure you're using `export` keyword before the variable name, not running it as a separate command.
+    | Error | Fix |
+    |---|---|
+    | `bash: export: `YourPassword': not a valid identifier` | Wrap the password in quotes if it contains special characters: `export NSX_PASS="Your\$Password"` or use single quotes for literal strings. |
+    | `bash: NSX_USER: command not found` | Ensure you're using `export` keyword before the variable name, not running it as a separate command. |
 ```bash
 echo "localhost ansible_connection=local" > ~/inventory
 ```
@@ -504,8 +512,10 @@ echo "localhost ansible_connection=local" > ~/inventory
 ```
 
 !!! warning "Common errors"
-    **`bash: ~/inventory: Permission denied`** — Ensure the home directory is writable with `chmod u+w ~` or use an absolute path like `/home/username/inventory`.
-    **`bash: /root/inventory: Read-only file system`** — Verify the filesystem is mounted read-write with `mount | grep home` and remount if necessary using `sudo mount -o remount,rw /`.
+    | Error | Fix |
+    |---|---|
+    | `bash: ~/inventory: Permission denied` | Ensure the home directory is writable with `chmod u+w ~` or use an absolute path like `/home/username/inventory`. |
+    | `bash: /root/inventory: Read-only file system` | Verify the filesystem is mounted read-write with `mount | grep home` and remount if necessary using `sudo mount -o remount,rw /`. |
 ```bash
 ansible-playbook -i ~/inventory ~/nsxt_operational.yml
 ```
@@ -738,9 +748,11 @@ Summary: All connectivity checks passed (9/9 successful)
 ```
 
 !!! warning "Common errors"
-    **`The system cannot find the file specified.`** — Verify the script is located in C:\Users\YourName\Desktop and run from that directory.
-    **`'nsxt_plink_check.bat' is not recognized as an internal or external command`** — Ensure you are in the correct directory (C:\Users\YourName\Desktop) before executing the batch file.
-    **`Connection timeout to 192.168.1.10:443`** — Check network connectivity and firewall rules allowing access to NSX Manager nodes on port 443.
+    | Error | Fix |
+    |---|---|
+    | `The system cannot find the file specified.` | Verify the script is located in C:\Users\YourName\Desktop and run from that directory. |
+    | `'nsxt_plink_check.bat' is not recognized as an internal or external command` | Ensure you are in the correct directory (C:\Users\YourName\Desktop) before executing the batch file. |
+    | `Connection timeout to 192.168.1.10:443` | Check network connectivity and firewall rules allowing access to NSX Manager nodes on port 443. |
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

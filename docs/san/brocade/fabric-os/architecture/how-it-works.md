@@ -150,8 +150,10 @@ Port  Status  Speed  Connected Node Name        Connected WWPN
 ```
 
 !!! warning "Common errors"
-    **`nslookup: command not found`** — Use `nsshow` or `nslookup wwpn` with the full WWPN format (50:xx:xx:xx:xx:xx:xx:xx) instead.
-    **`portloginshow: Access denied`** — Run the command with admin credentials or ensure your user role has fabric-wide read permissions.
+    | Error | Fix |
+    |---|---|
+    | `nslookup: command not found` | Use `nsshow` or `nslookup wwpn` with the full WWPN format (50:xx:xx:xx:xx:xx:xx:xx) instead. |
+    | `portloginshow: Access denied` | Run the command with admin credentials or ensure your user role has fabric-wide read permissions. |
 ## Zoning
 
 | Zone Type | Definition | Use Case |
@@ -203,8 +205,10 @@ Operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`porttrunkarea: Invalid slot/port format`** — Use the format `slot/port` (e.g., `1/0`) and verify the port exists with `islshow`.
-    **`porttrunkarea: Port is not an ISL`** — Trunk area can only be enabled on ISL ports; confirm the port is online and connected to another switch.
+    | Error | Fix |
+    |---|---|
+    | `porttrunkarea: Invalid slot/port format` | Use the format `slot/port` (e.g., `1/0`) and verify the port exists with `islshow`. |
+    | `porttrunkarea: Port is not an ISL` | Trunk area can only be enabled on ISL ports; confirm the port is online and connected to another switch. |
 ## Virtual Fabrics
 
 Virtual Fabrics (VF) partition a single physical chassis into multiple independent logical switches, each with its own Fabric ID (FID). Ports are assigned to exactly one logical switch at a time.
@@ -234,9 +238,11 @@ Configuration saved to flash memory
 ```
 
 !!! warning "Common errors"
-    **`error: invalid FID <fid> -- FID does not exist`** — Verify the FID exists with `lscfg --show` and use a valid numeric FID value.
-    **`error: port <slot/port> already assigned to FID <fid>`** — Remove the port from its current FID using `lscfg --config <current_fid> -port <slot/port> -remove` before reassigning it.
-    **`error: insufficient privileges to modify fabric configuration`** — Ensure your user account has admin or fabric-admin role; check with `userconfig --show`.
+    | Error | Fix |
+    |---|---|
+    | `error: invalid FID <fid> -- FID does not exist` | Verify the FID exists with `lscfg --show` and use a valid numeric FID value. |
+    | `error: port <slot/port> already assigned to FID <fid>` | Remove the port from its current FID using `lscfg --config <current_fid> -port <slot/port> -remove` before reassigning it. |
+    | `error: insufficient privileges to modify fabric configuration` | Ensure your user account has admin or fabric-admin role; check with `userconfig --show`. |
 ## MAPS — Monitoring and Alerting Policy Suite
 
 MAPS provides threshold-based automated health monitoring. It monitors port error counters, ISL utilization, C3 discard rates, BB credit zero (slow drain), switch environment, fabric events, and security events.
@@ -272,9 +278,11 @@ Active MAPS Policy:
 ```
 
 !!! warning "Common errors"
-    **`mapsdashboard: command not found`** — Verify MAPS is installed and the admin CLI is in your PATH, or use the full path `/opt/brocade/bin/mapsdashboard`.
-    **`MAPS service is not running`** — Start the MAPS daemon with `systemctl start brocade-maps` or equivalent on your platform.
-    **`Permission denied`** — Run the commands with appropriate admin privileges using `sudo` or ensure your user is in the `brocade-admin` group.
+    | Error | Fix |
+    |---|---|
+    | `mapsdashboard: command not found` | Verify MAPS is installed and the admin CLI is in your PATH, or use the full path `/opt/brocade/bin/mapsdashboard`. |
+    | `MAPS service is not running` | Start the MAPS daemon with `systemctl start brocade-maps` or equivalent on your platform. |
+    | `Permission denied` | Run the commands with appropriate admin privileges using `sudo` or ensure your user is in the `brocade-admin` group. |
 ## FCIP — Fibre Channel over IP
 
 FCIP extends a Fibre Channel fabric over an IP WAN connection for long-distance replication (SRDF, RecoverPoint). Brocade 7810/7840 extension platforms provide FCIP gateway functionality. Target IP network latency: <5 ms one-way for synchronous replication.
@@ -301,9 +309,11 @@ circuit-dr-backup    tunnel-2       412.8             3.7          0.0          
 ```
 
 !!! warning "Common errors"
-    **`fciptunnel: command not found`** — Verify Fabric OS version supports FCIP and load the appropriate license module with `licenseadd`.
-    **`No tunnels configured`** — Create at least one FCIP tunnel using `fciptunnel --create` before querying status.
-    **`Permission denied`** — Run commands with admin privileges using `sudo` or ensure your user account has fabric admin role assigned.
+    | Error | Fix |
+    |---|---|
+    | `fciptunnel: command not found` | Verify Fabric OS version supports FCIP and load the appropriate license module with `licenseadd`. |
+    | `No tunnels configured` | Create at least one FCIP tunnel using `fciptunnel --create` before querying status. |
+    | `Permission denied` | Run commands with admin privileges using `sudo` or ensure your user account has fabric admin role assigned. |
 ---
 
 ## See also

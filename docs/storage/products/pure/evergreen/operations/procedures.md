@@ -113,9 +113,11 @@ Status: READY
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or add the installation directory to your PATH environment variable.
-    **`Error: Authentication failed. Invalid API token.`** — Verify the FA_API_TOKEN environment variable is set correctly and the token has not expired.
-    **`Error: Connection refused on flasharray01.example.com:443`** — Confirm FA_HOST is reachable and the management IP is correct; check network connectivity and firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or add the installation directory to your PATH environment variable. |
+    | `Error: Authentication failed. Invalid API token.` | Verify the FA_API_TOKEN environment variable is set correctly and the token has not expired. |
+    | `Error: Connection refused on flasharray01.example.com:443` | Confirm FA_HOST is reachable and the management IP is correct; check network connectivity and firewall rules. |
 Confirm the target version with Pure Support. Pure will specify the upgrade path — never skip more than two minor versions without Pure's guidance. Verify the target version is compatible with the current controller generation using the [Pure compatibility matrix](https://support.purestorage.com/).
 
 ### Step 2 — Pre-Upgrade Actions
@@ -153,9 +155,11 @@ dev-test-vol     100         100                  2
 ```
 
 !!! warning "Common errors"
-    **`purevol: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/pureapp/bin`).
-    **`Permission denied`** — Run the commands with appropriate credentials or use `sudo` if the user lacks Pure Storage administrative privileges.
-    **`Connection refused`** — Verify the management IP of the Pure array is reachable and the CLI is configured with `purearray connect <mgmt-ip>`.
+    | Error | Fix |
+    |---|---|
+    | `purevol: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/pureapp/bin`). |
+    | `Permission denied` | Run the commands with appropriate credentials or use `sudo` if the user lacks Pure Storage administrative privileges. |
+    | `Connection refused` | Verify the management IP of the Pure array is reachable and the CLI is configured with `purearray connect <mgmt-ip>`. |
 ### Step 3 — Execute the Upgrade
 
 ![Step 3 — Execute the Upgrade](../../../../../assets/evergreen-proc-step-3-execute-the-upgrade.svg)
@@ -185,8 +189,10 @@ pure-array-04    192.168.1.103   6.4.2.0          FlashArray//X20
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the `purearray` binary is in your PATH.
-    **`Connection refused on 192.168.1.100:443`** — Verify the management IP is reachable and the array is powered on and responsive.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or ensure the `purearray` binary is in your PATH. |
+    | `Connection refused on 192.168.1.100:443` | Verify the management IP is reachable and the array is powered on and responsive. |
 **Host-side monitoring during upgrade:**
 
 ```bash
@@ -280,9 +286,11 @@ Total Capacity    Used          Available       Reduction
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`).
-    **`Error: Unable to connect to array at 192.168.1.100`** — Verify network connectivity and that the management IP is reachable; check firewall rules and DNS resolution.
-    **`diff: /tmp/pre-upgrade-space-20240115.txt: No such file or directory`** — Create the baseline file before the upgrade by running `purearray list --space > /tmp/pre-upgrade-space-$(date +%Y%m%d).txt` beforehand.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`). |
+    | `Error: Unable to connect to array at 192.168.1.100` | Verify network connectivity and that the management IP is reachable; check firewall rules and DNS resolution. |
+    | `diff: /tmp/pre-upgrade-space-20240115.txt: No such file or directory` | Create the baseline file before the upgrade by running `purearray list --space > /tmp/pre-upgrade-space-$(date +%Y%m%d).txt` beforehand. |
 ---
 
 ## Controller Refresh Procedure (Ever Modern)
@@ -357,9 +365,11 @@ backup-weekly.2024-01-01              289.1      2024-01-01 22:30:00
 ```
 
 !!! warning "Common errors"
-    **`Error: Host host-esx04.lab.local has only 1 path — upgrade cannot proceed`** — Add a second iSCSI or FC path to the host before running the upgrade.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl or import the mediator's certificate into your system trust store.
-    **`Error: Insufficient space for upgrade — 200 GB required, 89 GB available`** — Eradicate old snapshots using `puresnap eradicate <snapshot-name>` to free space before retrying the upgrade check.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host host-esx04.lab.local has only 1 path — upgrade cannot proceed` | Add a second iSCSI or FC path to the host before running the upgrade. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl or import the mediator's certificate into your system trust store. |
+    | `Error: Insufficient space for upgrade — 200 GB required, 89 GB available` | Eradicate old snapshots using `puresnap eradicate <snapshot-name>` to free space before retrying the upgrade check. |
 ### During the Refresh Window
 
 ![During the Refresh Window](../../../../../assets/evergreen-proc-during-the-refresh-window.svg)
@@ -407,8 +417,10 @@ size=5T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`device-mapper: multipath: ioctl error for add_wwid`** — Ensure multipathd daemon is running with `systemctl start multipathd` and multipath.conf is properly configured.
-    **`grep: (standard input): No such device or address`** — The multipath command failed; verify array connectivity and that the host has active Fibre Channel or iSCSI sessions with `iscsiadm -m session` or `fcstat`.
+    | Error | Fix |
+    |---|---|
+    | `device-mapper: multipath: ioctl error for add_wwid` | Ensure multipathd daemon is running with `systemctl start multipathd` and multipath.conf is properly configured. |
+    | `grep: (standard input): No such device or address` | The multipath command failed; verify array connectivity and that the host has active Fibre Channel or iSCSI sessions with `iscsiadm -m session` or `fcstat`. |
 ### Post-Refresh Validation
 
 ![Post-Refresh Validation](../../../../../assets/evergreen-proc-post-refresh-validation.svg)
@@ -465,9 +477,11 @@ array-01         50.0TB       18.5TB       31.5TB       45.2TB
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Verify the Pure Storage CLI tools are installed and the PATH includes the installation directory.
-    **`Error: Array unreachable at 192.168.1.100`** — Confirm network connectivity to the array management IP and that credentials are valid with `pureadmin login`.
-    **`AlertID 12345: Controller-1 temperature warning`** — Check controller-1 cooling system and verify fan operation before proceeding with production traffic.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Verify the Pure Storage CLI tools are installed and the PATH includes the installation directory. |
+    | `Error: Array unreachable at 192.168.1.100` | Confirm network connectivity to the array management IP and that credentials are valid with `pureadmin login`. |
+    | `AlertID 12345: Controller-1 temperature warning` | Check controller-1 cooling system and verify fan operation before proceeding with production traffic. |
 **Update CMDB records:** Document the new controller generation, the refresh date, and the next scheduled refresh window. Update subscription renewal date tracking if the refresh resets the lifecycle clock.
 
 ---
@@ -518,9 +532,11 @@ Device naa.60001405a1b2c3d4e5f6g7h8i9j0k1l2m: PURE FlashArray//X (naa.60001405a1
 ```
 
 !!! warning "Common errors"
-    **`Error: Host group 'prod-oracle-cluster' not found`** — Verify the host group exists with `purevol list --hgroup` and create it if needed using `purevol hgroup create`.
-    **`multipathd: command not found`** — Install device-mapper-multipath package with `apt-get install multipath-tools` or `yum install device-mapper-multipath` depending on your Linux distribution.
-    **`Error: LUN not visible after rescan`** — Ensure the volume connection was successful and check Pure array connectivity by running `purevol list --connection` to confirm the host group binding.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host group 'prod-oracle-cluster' not found` | Verify the host group exists with `purevol list --hgroup` and create it if needed using `purevol hgroup create`. |
+    | `multipathd: command not found` | Install device-mapper-multipath package with `apt-get install multipath-tools` or `yum install device-mapper-multipath` depending on your Linux distribution. |
+    | `Error: LUN not visible after rescan` | Ensure the volume connection was successful and check Pure array connectivity by running `purevol list --connection` to confirm the host group binding. |
 ### Expanding an Existing Volume
 
 ![Expanding an Existing Volume](../../../../../assets/evergreen-proc-expanding-an-existing-volume.svg)
@@ -560,8 +576,10 @@ size=20T features='0' hwhandler='1:alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`bash: /sys/block/sdb/device/rescan: Permission denied`** — Run the rescan command with `sudo` or as root user.
-    **`multipathd: can't find device <device_name> in multipath table`** — Verify the device name matches multipath output exactly (e.g., `mpatha`) and ensure multipath daemon is running with `sudo systemctl status multipathd`.
+    | Error | Fix |
+    |---|---|
+    | `bash: /sys/block/sdb/device/rescan: Permission denied` | Run the rescan command with `sudo` or as root user. |
+    | `multipathd: can't find device <device_name> in multipath table` | Verify the device name matches multipath output exactly (e.g., `mpatha`) and ensure multipath daemon is running with `sudo systemctl status multipathd`. |
 ### Protection Group Management
 
 ![Protection Group Management](../../../../../assets/evergreen-proc-protection-group-management.svg)
@@ -607,9 +625,11 @@ Replication lag: 127 seconds
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection group 'prod-oracle-pg' already exists`** — Use `purepgroup list` to verify existing groups, or delete with `purepgroup destroy prod-oracle-pg` before recreating.
-    **`Error: Volume 'prod-oracle-vol02' not found or not available`** — Verify volume names with `purevol list` and ensure all volumes are provisioned before adding to the protection group.
-    **`Error: Remote target 'remote-lon02' is unreachable or not configured`** — Confirm the remote array is online and replication link is established with `purepgroup list --replication`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection group 'prod-oracle-pg' already exists` | Use `purepgroup list` to verify existing groups, or delete with `purepgroup destroy prod-oracle-pg` before recreating. |
+    | `Error: Volume 'prod-oracle-vol02' not found or not available` | Verify volume names with `purevol list` and ensure all volumes are provisioned before adding to the protection group. |
+    | `Error: Remote target 'remote-lon02' is unreachable or not configured` | Confirm the remote array is online and replication link is established with `purepgroup list --replication`. |
 ---
 
 ## Subscription Lifecycle Procedures
@@ -655,9 +675,11 @@ dev-analytics-vol-04.snap.20250113   2156           2025-01-13T18:30:45Z
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Verify the Pure Storage CLI is installed and the PATH includes the Pure bin directory, or source the Pure environment setup script.
-    **`Error: Array connection failed - unable to authenticate`** — Ensure PURE_APITOKEN environment variable is set and the array hostname is reachable via network.
-    **`Permission denied: ~/true-forward-capacity-*.txt`** — Check that your user has write permissions to the home directory or specify an alternative writable path.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Verify the Pure Storage CLI is installed and the PATH includes the Pure bin directory, or source the Pure environment setup script. |
+    | `Error: Array connection failed - unable to authenticate` | Ensure PURE_APITOKEN environment variable is set and the array hostname is reachable via network. |
+    | `Permission denied: ~/true-forward-capacity-*.txt` | Check that your user has write permissions to the home directory or specify an alternative writable path. |
 Prepare the following for the True Forward meeting with the Pure account team:
 
 | Data Point | Source |
@@ -758,9 +780,11 @@ pure-array-prod-02            4756.1            8201.4           12977.5
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (e.g., `export PATH=$PATH:/opt/purearray/bin`).
-    **`Authentication failed: Invalid credentials`** — Verify your Pure array credentials are set via environment variables or config file (e.g., `export PURE_API_TOKEN=<token>`).
-    **`Connection refused: Unable to reach array at <ip>`** — Confirm network connectivity to the array management IP and that the array is online with `ping <array-mgmt-ip>`.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (e.g., `export PATH=$PATH:/opt/purearray/bin`). |
+    | `Authentication failed: Invalid credentials` | Verify your Pure array credentials are set via environment variables or config file (e.g., `export PURE_API_TOKEN=<token>`). |
+    | `Connection refused: Unable to reach array at <ip>` | Confirm network connectivity to the array management IP and that the array is online with `ping <array-mgmt-ip>`. |
 Application-layer validation:
 
 - [ ] Confirm production workload I/O is normal — check application response times and error logs
@@ -795,8 +819,10 @@ controller1       Online    FA-m70             6.4.2.1234        Passive
 ```
 
 !!! warning "Common errors"
-    **`Error: Array connection failed`** — Verify network connectivity to the array management IP and confirm firewall rules allow access to port 443.
-    **`Error: Invalid credentials`** — Re-authenticate using `purearray login` with valid administrative credentials before running list commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: Array connection failed` | Verify network connectivity to the array management IP and confirm firewall rules allow access to port 443. |
+    | `Error: Invalid credentials` | Re-authenticate using `purearray login` with valid administrative credentials before running list commands. |
 Confirm no new alerts appeared after the refresh and that all host paths are fully restored before closing the change record.
 
 ## Track Hardware Refresh Timeline
@@ -844,9 +870,11 @@ Next step: Review upgrade window and confirm to proceed
 ```
 
 !!! warning "Common errors"
-    **`Error: Target version 6.3.1 not available for this array model`** — Verify the target version is compatible with your Pure array model using `purearray list-versions`.
-    **`Error: Upgrade cannot proceed - active snapshots detected on 3 volumes`** — Delete or complete all active snapshots before upgrade using `purearray snapshot list` and `purearray snapshot delete`.
-    **`Error: Replication link to secondary array is unhealthy`** — Verify network connectivity and replication status with `purearray replication status` before retrying the upgrade.
+    | Error | Fix |
+    |---|---|
+    | `Error: Target version 6.3.1 not available for this array model` | Verify the target version is compatible with your Pure array model using `purearray list-versions`. |
+    | `Error: Upgrade cannot proceed - active snapshots detected on 3 volumes` | Delete or complete all active snapshots before upgrade using `purearray snapshot list` and `purearray snapshot delete`. |
+    | `Error: Replication link to secondary array is unhealthy` | Verify network connectivity and replication status with `purearray replication status` before retrying the upgrade. |
 Confirm the upgrade readiness check passes without blockers before setting the maintenance window: `purearray upgrade --check`.
 
 ---

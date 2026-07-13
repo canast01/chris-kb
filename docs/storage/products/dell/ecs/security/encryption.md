@@ -119,8 +119,10 @@ Cipher    : ECDHE-RSA-AES256-GCM-SHA384
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the ECS node is running and port 9021 is accessible; check firewall rules and that the management service is listening with `netstat -tlnp | grep 9021`.
-    **`error:1409E0E5:SSL routines:SSL_CONNECT_EX:ssl/tls alert handshake failure`** — This is expected output when TLS 1.0 is correctly rejected; it confirms the security policy is working as intended.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the ECS node is running and port 9021 is accessible; check firewall rules and that the management service is listening with `netstat -tlnp | grep 9021`. |
+    | `error:1409E0E5:SSL routines:SSL_CONNECT_EX:ssl/tls alert handshake failure` | This is expected output when TLS 1.0 is correctly rejected; it confirms the security policy is working as intended. |
 ### HTTP Disablement
 
 Disable HTTP (port 9021 plain HTTP) in production. Only HTTPS should be accessible for S3 clients.
@@ -182,9 +184,11 @@ curl -s -k -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it's not removed).
-    **`{"error_code":401,"error_message":"Invalid or expired authentication token"}`** — Regenerate the authentication token with `curl -s -k -X GET -H "Authorization: Basic $(echo -n 'root:PASSWORD' | base64)" https://<ecs-node>:4443/login` and export it to `$TOKEN`.
-    **`{"error_code":400,"error_message":"Invalid replication group ID"}`** — Verify the replication group ID exists by running `curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" https://<ecs-node>:4443/object/replication-groups | python3 -m json.tool` and use a valid `id` from the output.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it's not removed). |
+    | `{"error_code":401,"error_message":"Invalid or expired authentication token"}` | Regenerate the authentication token with `curl -s -k -X GET -H "Authorization: Basic $(echo -n 'root:PASSWORD' | base64)" https://<ecs-node>:4443/login` and export it to `$TOKEN`. |
+    | `{"error_code":400,"error_message":"Invalid replication group ID"}` | Verify the replication group ID exists by running `curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" https://<ecs-node>:4443/object/replication-groups | python3 -m json.tool` and use a valid `id` from the output. |
 ### Key Management
 
 **Internal ECS KMS:**
@@ -264,9 +268,11 @@ Certificate expires in 287 days
 ```
 
 !!! warning "Common errors"
-    **`unable to connect to <ecs-node>:4443`** — Verify the ECS node hostname/IP is correct and the Management API port 4443 is accessible from your client (check firewall rules and node status).
-    **`date: invalid date '<date-string>'`** — Ensure your system's `date` command supports the `-d` flag (use `date -j` on macOS, or install GNU coreutils on BSD systems).
-    **`error in x509 parsing`** — Confirm the certificate chain is valid by running `openssl s_client -connect <ecs-node>:4443 -showcerts` to inspect the full certificate output.
+    | Error | Fix |
+    |---|---|
+    | `unable to connect to <ecs-node>:4443` | Verify the ECS node hostname/IP is correct and the Management API port 4443 is accessible from your client (check firewall rules and node status). |
+    | `date: invalid date '<date-string>'` | Ensure your system's `date` command supports the `-d` flag (use `date -j` on macOS, or install GNU coreutils on BSD systems). |
+    | `error in x509 parsing` | Confirm the certificate chain is valid by running `openssl s_client -connect <ecs-node>:4443 -showcerts` to inspect the full certificate output. |
 ---
 
 ## See also

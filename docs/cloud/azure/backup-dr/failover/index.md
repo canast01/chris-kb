@@ -80,9 +80,11 @@ Succeeded
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound`** — Verify the subscription ID, resource group name, and vault name are correct and exist in the target region.
-    **`AuthorizationFailed`** — Ensure your Azure CLI account has Reader or Contributor permissions on the Recovery Services vault and target resource group.
-    **`The resource 'Microsoft.Network/virtualNetworks/<target-vnet-name>' under resource group '<dr-rg>' was not found`** — Confirm the target virtual network has been pre-created in the DR region before initiating failover.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound` | Verify the subscription ID, resource group name, and vault name are correct and exist in the target region. |
+    | `AuthorizationFailed` | Ensure your Azure CLI account has Reader or Contributor permissions on the Recovery Services vault and target resource group. |
+    | `The resource 'Microsoft.Network/virtualNetworks/<target-vnet-name>' under resource group '<dr-rg>' was not found` | Confirm the target virtual network has been pre-created in the DR region before initiating failover. |
 ---
 
 ## Test Failover
@@ -145,9 +147,11 @@ Name                                      State
 ```
 
 !!! warning "Common errors"
-    **`The provided URI is invalid or the resource does not exist.`** — Verify all placeholder values (<sub-id>, <vault-name>, <item-name>) are replaced with actual resource names and IDs from your Azure environment.
-    **`Authorization failed for request. Caller is not authorized to perform action 'Microsoft.RecoveryServices/vaults/replicationJobs/read' on resource.`** — Ensure your Azure CLI account has the "Site Recovery Operator" or "Contributor" role assigned on the Recovery Services vault.
-    **`The test failover cannot be initiated because the protected item is not in a valid state.`** — Verify the replication item has completed initial replication and is in "Protected" state using `az rest --method GET --uri "...replicationProtectedItems/<item-name>?api-version=2022-10-01"`.
+    | Error | Fix |
+    |---|---|
+    | `The provided URI is invalid or the resource does not exist.` | Verify all placeholder values (<sub-id>, <vault-name>, <item-name>) are replaced with actual resource names and IDs from your Azure environment. |
+    | `Authorization failed for request. Caller is not authorized to perform action 'Microsoft.RecoveryServices/vaults/replicationJobs/read' on resource.` | Ensure your Azure CLI account has the "Site Recovery Operator" or "Contributor" role assigned on the Recovery Services vault. |
+    | `The test failover cannot be initiated because the protected item is not in a valid state.` | Verify the replication item has completed initial replication and is in "Protected" state using `az rest --method GET --uri "...replicationProtectedItems/<item-name>?api-version=2022-10-01"`. |
 ---
 
 ## Planned Failover
@@ -187,9 +191,11 @@ az rest --method POST \
 ```
 
 !!! warning "Common errors"
-    **`AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/plannedFailover/action'`** — Ensure your Azure user or service principal has the "Site Recovery Operator" or "Contributor" role assigned to the Recovery Services vault.
-    **`ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>/replicationFabrics/<source-fabric>/replicationProtectionContainers/<source-container>/replicationProtectedItems/<item-name>' under resource group '<dr-rg>' was not found.`** — Verify the subscription ID, resource group name, vault name, fabric name, container name, and protected item name are correct and exist in your subscription.
-    **`BadRequest: The item is not in a state that allows failover. Current state: 'NotStarted'. Replication must be enabled and synchronized before failover.`** — Enable replication for the item and wait for initial synchronization to complete before attempting failover.
+    | Error | Fix |
+    |---|---|
+    | `AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/plannedFailover/action'` | Ensure your Azure user or service principal has the "Site Recovery Operator" or "Contributor" role assigned to the Recovery Services vault. |
+    | `ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>/replicationFabrics/<source-fabric>/replicationProtectionContainers/<source-container>/replicationProtectedItems/<item-name>' under resource group '<dr-rg>' was not found.` | Verify the subscription ID, resource group name, vault name, fabric name, container name, and protected item name are correct and exist in your subscription. |
+    | `BadRequest: The item is not in a state that allows failover. Current state: 'NotStarted'. Replication must be enabled and synchronized before failover.` | Enable replication for the item and wait for initial synchronization to complete before attempting failover. |
 ---
 
 ## Unplanned Failover
@@ -235,9 +241,11 @@ az rest --method POST \
 ```
 
 !!! warning "Common errors"
-    **`AuthorizationFailed : The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/unplannedFailover/action' over scope '/subscriptions/<sub-id>/resourceGroups/<dr-rg>'`** — Assign the user or service principal the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault.
-    **`ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>/replicationFabrics/<source-fabric>/replicationProtectionContainers/<source-container>/replicationProtectedItems/<item-name>' under resource group '<dr-rg>' was not found.`** — Verify the subscription ID, resource group, vault name, fabric name, container name, and protected item name are correct using `az recovery-services-backup container list`.
-    **`BadRequest : Failover cannot be triggered because the replication health is 'Critical' or the item is in 'NotStarted' state.`** — Check replication status with `az rest --method GET --uri "https://management.azure.com/subscriptions/<sub-id>/resourceGroups/<dr-rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>/replicationFabrics/<source-fabric>/replicationProtectionContainers/<source-container>/replicationProtectedItems/<item-name>?api-version=2022-10-01"` and ensure replication is healthy before retrying.
+    | Error | Fix |
+    |---|---|
+    | `AuthorizationFailed : The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/unplannedFailover/action' over scope '/subscriptions/<sub-id>/resourceGroups/<dr-rg>'` | Assign the user or service principal the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault. |
+    | `ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>/replicationFabrics/<source-fabric>/replicationProtectionContainers/<source-container>/replicationProtectedItems/<item-name>' under resource group '<dr-rg>' was not found.` | Verify the subscription ID, resource group, vault name, fabric name, container name, and protected item name are correct using `az recovery-services-backup container list`. |
+    | `BadRequest : Failover cannot be triggered because the replication health is 'Critical' or the item is in 'NotStarted' state.` | Check replication status with `az rest --method GET --uri "https://management.azure.com/subscriptions/<sub-id>/resourceGroups/<dr-rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>/replicationFabrics/<source-fabric>/replicationProtectionContainers/<source-container>/replicationProtectedItems/<item-name>?api-version=2022-10-01"` and ensure replication is healthy before retrying. |
 ---
 
 ## Recovery Plans
@@ -282,9 +290,11 @@ web-tier-recovery-plan        4
 ```
 
 !!! warning "Common errors"
-    **`AuthorizationFailed : The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationRecoveryPlans/plannedFailover/action' over scope '/subscriptions/<sub-id>/resourceGroups/<dr-rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>'`** — Assign the Site Recovery Contributor role to your user or service principal on the Recovery Services vault.
-    **`ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>/replicationRecoveryPlans/<plan-name>' under resource group '<dr-rg>' was not found.`** — Verify the vault name, resource group, and recovery plan name are correct using `az recovery-services vault list` and `az site-recovery recovery-plan list`.
-    **`BadRequest : Invalid failover direction. Allowed values are 'PrimaryToRecovery' or 'RecoveryToPrimary'.`** — Ensure the failoverDirection property matches the current replication state and use the correct direction for your scenario.
+    | Error | Fix |
+    |---|---|
+    | `AuthorizationFailed : The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationRecoveryPlans/plannedFailover/action' over scope '/subscriptions/<sub-id>/resourceGroups/<dr-rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>'` | Assign the Site Recovery Contributor role to your user or service principal on the Recovery Services vault. |
+    | `ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>/replicationRecoveryPlans/<plan-name>' under resource group '<dr-rg>' was not found.` | Verify the vault name, resource group, and recovery plan name are correct using `az recovery-services vault list` and `az site-recovery recovery-plan list`. |
+    | `BadRequest : Invalid failover direction. Allowed values are 'PrimaryToRecovery' or 'RecoveryToPrimary'.` | Ensure the failoverDirection property matches the current replication state and use the correct direction for your scenario. |
 ---
 
 ## Commit Failover
@@ -316,9 +326,11 @@ az rest --method POST \
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (AuthorizationFailed) The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/failoverCommit/action' over scope '/subscriptions/<sub-id>/resourceGroups/<dr-rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>'`** — Assign the user or service principal the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault.
-    **`ERROR: (ResourceNotFound) The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>/replicationFabrics/<source-fabric>/replicationProtectionContainers/<source-container>/replicationProtectedItems/<item-name>' under resource group '<dr-rg>' was not found.`** — Verify the vault name, fabric name, container name, and protected item name are correct using `az recovery-services-backup item list`.
-    **`ERROR: (InvalidRequestContent) The request content was invalid and could not be deserialized: 'Missing required property: api-version in query parameters.'`** — Ensure the `api-version=2022-10-01` parameter is included in the URI query string without modification.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (AuthorizationFailed) The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationFabrics/replicationProtectionContainers/replicationProtectedItems/failoverCommit/action' over scope '/subscriptions/<sub-id>/resourceGroups/<dr-rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>'` | Assign the user or service principal the "Site Recovery Operator" or "Contributor" role on the Recovery Services vault. |
+    | `ERROR: (ResourceNotFound) The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>/replicationFabrics/<source-fabric>/replicationProtectionContainers/<source-container>/replicationProtectedItems/<item-name>' under resource group '<dr-rg>' was not found.` | Verify the vault name, fabric name, container name, and protected item name are correct using `az recovery-services-backup item list`. |
+    | `ERROR: (InvalidRequestContent) The request content was invalid and could not be deserialized: 'Missing required property: api-version in query parameters.'` | Ensure the `api-version=2022-10-01` parameter is included in the URI query string without modification. |
 ---
 
 ## Post-Failover Validation
@@ -353,5 +365,7 @@ Time                          Op                                    Status
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<dr-vm-name>' under resource group '<dr-rg>' was not found.`** — Verify the resource group name and DR VM name are correct and exist in your subscription.
-    **`AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '/subscriptions/<sub-id>/resourceGroups/<dr-rg>/providers/Microsoft.Compute/virtualMachines/<dr-vm-name>'.`** — Ensure your Azure CLI account has Reader or Contributor role assigned to the DR resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<dr-vm-name>' under resource group '<dr-rg>' was not found.` | Verify the resource group name and DR VM name are correct and exist in your subscription. |
+    | `AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '/subscriptions/<sub-id>/resourceGroups/<dr-rg>/providers/Microsoft.Compute/virtualMachines/<dr-vm-name>'.` | Ensure your Azure CLI account has Reader or Contributor role assigned to the DR resource group. |

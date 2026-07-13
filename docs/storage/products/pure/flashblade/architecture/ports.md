@@ -115,9 +115,11 @@ Test Result: PASSED
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if error occurs, verify HTTPS is enabled on management interface).
-    **`mount.nfs: access denied by server while mounting 192.168.10.45:/data/nfs-share`** — Verify the client IP is in the NFS export ACL and that the export path exists on FlashBlade.
-    **`purealertalert: command not found`** — Ensure you are logged into the FlashBlade CLI via SSH or console; this command only runs in Purity//FB shell, not on external hosts.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if error occurs, verify HTTPS is enabled on management interface). |
+    | `mount.nfs: access denied by server while mounting 192.168.10.45:/data/nfs-share` | Verify the client IP is in the NFS export ACL and that the export path exists on FlashBlade. |
+    | `purealertalert: command not found` | Ensure you are logged into the FlashBlade CLI via SSH or console; this command only runs in Purity//FB shell, not on external hosts. |
 ## See also
 
 - [Pure Storage FlashBlade — Architecture](../how-it-works/)

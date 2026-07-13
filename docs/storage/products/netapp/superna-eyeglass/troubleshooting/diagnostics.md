@@ -125,9 +125,11 @@ Days Remaining: 187
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the Eyeglass hostname/IP is correct and the appliance is reachable with `ping <eyeglass-hostname>`.
-    **`RAPA Service:         Stopped`** — Restart the service with `igls adm restart rapa` and verify with `igls adm status`.
-    **`Status: Expired`** — Contact NetApp support or your reseller to renew the license key using `igls license update <new-key>`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the Eyeglass hostname/IP is correct and the appliance is reachable with `ping <eyeglass-hostname>`. |
+    | `RAPA Service:         Stopped` | Restart the service with `igls adm restart rapa` and verify with `igls adm status`. |
+    | `Status: Expired` | Contact NetApp support or your reseller to renew the license key using `igls license update <new-key>`. |
 **If a service is stopped:**
 1. Check appliance disk space: `df -h /opt/superna/` — full disk can crash services
 2. Check memory: `free -m` — if swap is high, the appliance may need a reboot
@@ -204,9 +206,11 @@ Monitored Path                    Status              Quarantine Events
 ```
 
 !!! warning "Common errors"
-    **`Error: Job Failed`** — Check the SyncIQ job logs with `igls synciq logs dr-policy-test` to identify network, authentication, or capacity issues on the target cluster.
-    **`Out of Sync`** — Verify network connectivity between clusters and ensure the Eyeglass service is running on both source and target with `igls service status`.
-    **`Connection refused on port 8443`** — Confirm the Eyeglass management interface is accessible and the target cluster IP/hostname is correctly configured in `igls config show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Job Failed` | Check the SyncIQ job logs with `igls synciq logs dr-policy-test` to identify network, authentication, or capacity issues on the target cluster. |
+    | `Out of Sync` | Verify network connectivity between clusters and ensure the Eyeglass service is running on both source and target with `igls service status`. |
+    | `Connection refused on port 8443` | Confirm the Eyeglass management interface is accessible and the target cluster IP/hostname is correctly configured in `igls config show`. |
 ---
 
 ## Step 3 — Check SyncIQ on the PowerScale cluster
@@ -284,8 +288,10 @@ dr-cluster.local   repl-finance-data        2024-01-15 14:15:22  Active
 ```
 
 !!! warning "Common errors"
-    **`Connection timeout to target host`** — Verify network connectivity between clusters with `ping <dr-cluster>` and confirm firewall rules allow port 8080 for SyncIQ.
-    **`Target path does not exist: /ifs/backup/hourly`** — Create the target directory on the DR cluster with `isi
+    | Error | Fix |
+    |---|---|
+    | `Connection timeout to target host` | Verify network connectivity between clusters with `ping <dr-cluster>` and confirm firewall rules allow port 8080 for SyncIQ. |
+    | `Target path does not exist: /ifs/backup/hourly` | Create the target directory on the DR cluster with `isi |
 **Common SyncIQ failure patterns:**
 - `"Source path not found"` → files moved since the policy was created; update source path in Eyeglass → Configuration Replication
 - `"Target host unreachable"` → network issue between clusters; check ICMP and TCP 445 between cluster SmartConnect zones
@@ -338,9 +344,11 @@ Address:	192.168.10.47
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.10.45 port 8080: Connection refused`** — Verify the OneFS cluster API service is running with `isi status -s` on the cluster, and confirm port 8080 is not blocked by firewall rules between Eyeglass and the cluster.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should suppress this, but if it persists, ensure you are using the exact SmartConnect FQDN and that SSL certificate validation is disabled with `-k` in the curl command.
-    **`nslookup: can't resolve '<cluster-smartconnect-zone>': No address associated with hostname`** — Verify the SmartConnect zone name is correct and that DNS is properly configured on the Eyeglass appliance (check `/etc/resolv.conf` and test with `dig` or `host` as alternatives).
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.10.45 port 8080: Connection refused` | Verify the OneFS cluster API service is running with `isi status -s` on the cluster, and confirm port 8080 is not blocked by firewall rules between Eyeglass and the cluster. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag should suppress this, but if it persists, ensure you are using the exact SmartConnect FQDN and that SSL certificate validation is disabled with `-k` in the curl command. |
+    | `nslookup: can't resolve '<cluster-smartconnect-zone>': No address associated with hostname` | Verify the SmartConnect zone name is correct and that DNS is properly configured on the Eyeglass appliance (check `/etc/resolv.conf` and test with `dig` or `host` as alternatives). |
 ---
 
 ## Step 5 — Read Eyeglass log files

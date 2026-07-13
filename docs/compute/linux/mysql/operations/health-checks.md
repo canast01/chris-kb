@@ -77,9 +77,11 @@ mysql-bin.000849	536870912
 ```
 
 !!! warning "Common errors"
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)`** — Add `-p` flag or set `MYSQL_PWD` environment variable if root requires a password.
-    **`ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)`** — Verify mysqld is running with `systemctl status mysqld` and socket path exists at `/var/run/mysqld/mysqld.sock`.
-    **`Slave_IO_Running: No`** — Check replica connectivity to primary with `SHOW SLAVE STATUS\G` and verify network/firewall rules and primary binary logging is enabled.
+    | Error | Fix |
+    |---|---|
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)` | Add `-p` flag or set `MYSQL_PWD` environment variable if root requires a password. |
+    | `ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)` | Verify mysqld is running with `systemctl status mysqld` and socket path exists at `/var/run/mysqld/mysqld.sock`. |
+    | `Slave_IO_Running: No` | Check replica connectivity to primary with `SHOW SLAVE STATUS\G` and verify network/firewall rules and primary binary logging is enabled. |
 **Pass criteria:** service active, connectivity returns `1`, no threads blocked >300s, replication lag <30s, disk <80%.
 
 ---
@@ -165,9 +167,11 @@ Connection to <db-host> 1433 port [tcp/mssql-s] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "<host>" to address: Name or service not known`** — Verify the hostname is correct and resolvable with `nslookup <host>` or `dig <host>`.
-    **`mysql: [ERROR] Access denied for user '<user>'@'<host>' (using password: YES)`** — Confirm the username, password, and host permissions are correct in the database user grant tables.
-    **`nc: connect to <db-host> port 3306 (tcp) failed: Connection refused`** — Ensure the database service is running on the target host and the firewall allows inbound traffic on that port.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "<host>" to address: Name or service not known` | Verify the hostname is correct and resolvable with `nslookup <host>` or `dig <host>`. |
+    | `mysql: [ERROR] Access denied for user '<user>'@'<host>' (using password: YES)` | Confirm the username, password, and host permissions are correct in the database user grant tables. |
+    | `nc: connect to <db-host> port 3306 (tcp) failed: Connection refused` | Ensure the database service is running on the target host and the firewall allows inbound traffic on that port. |
 ## Database — Capacity Monitoring
 
 ![Database — Capacity Monitoring](../../../../assets/compute-linux-mysql-hc-database-capacity-monitoring.svg)
@@ -243,8 +247,10 @@ du: cannot access '/var/lib/mysql/mysql-bin.*': No such file or directory
 ```
 
 !!! warning "Common errors"
-    **`du: cannot access '/var/lib/mysql/mysql-bin.*': No such file or directory`** — MySQL binary logging may be disabled; check `SHOW VARIABLES LIKE 'log_bin';` to verify if binary logs are enabled.
-    **`Permission denied`** — Run the script with `sudo` or ensure the user has read permissions on database directories with `sudo chmod +r /var/lib/mysql /var/lib/postgresql`.
+    | Error | Fix |
+    |---|---|
+    | `du: cannot access '/var/lib/mysql/mysql-bin.*': No such file or directory` | MySQL binary logging may be disabled; check `SHOW VARIABLES LIKE 'log_bin';` to verify if binary logs are enabled. |
+    | `Permission denied` | Run the script with `sudo` or ensure the user has read permissions on database directories with `sudo chmod +r /var/lib/mysql /var/lib/postgresql`. |
 ```bash
 # Weekly snapshots — capture to track growth
 psql -U postgres -Atc "SELECT pg_database_size('mydb');" >> /var/log/db-size-mydb.log
@@ -361,9 +367,11 @@ pg_basebackup: base backup completed
 ```
 
 !!! warning "Common errors"
-    **`pg_basebackup: could not connect to server: FATAL: Ident authentication failed for user "replication"`** — Verify the replication user exists on the primary and pg_hba.conf allows replication connections from the replica's IP address.
-    **`pg_basebackup: directory "/var/lib/postgresql/data-new" exists but is not empty`** — Remove or rename the existing directory with `rm -rf /var/lib/postgresql/data-new` before running pg_basebackup.
-    **`pg_basebackup: could not create directory "/var/lib/postgresql/data-new": Permission denied`** — Ensure the postgresql system user owns the parent directory and has write permissions: `chown -R postgres:postgres /var/lib/postgresql`.
+    | Error | Fix |
+    |---|---|
+    | `pg_basebackup: could not connect to server: FATAL: Ident authentication failed for user "replication"` | Verify the replication user exists on the primary and pg_hba.conf allows replication connections from the replica's IP address. |
+    | `pg_basebackup: directory "/var/lib/postgresql/data-new" exists but is not empty` | Remove or rename the existing directory with `rm -rf /var/lib/postgresql/data-new` before running pg_basebackup. |
+    | `pg_basebackup: could not create directory "/var/lib/postgresql/data-new": Permission denied` | Ensure the postgresql system user owns the parent directory and has write permissions: `chown -R postgres:postgres /var/lib/postgresql`. |
 ---
 
 ## Verify

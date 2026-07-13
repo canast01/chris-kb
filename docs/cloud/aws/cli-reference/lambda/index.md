@@ -108,8 +108,10 @@ aws lambda delete-event-source-mapping --uuid <mapping-uuid>
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFoundException: Event source mapping not found`** — Verify the UUID is correct and the mapping exists using `aws lambda list-event-source-mappings --function-name <name>`.
-    **`InvalidParameterValueException: The role is invalid or does not have permission to access the event source`** — Ensure the Lambda execution role has `sqs:ReceiveMessage` or `kinesis:GetRecords` permissions for the event source ARN.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFoundException: Event source mapping not found` | Verify the UUID is correct and the mapping exists using `aws lambda list-event-source-mappings --function-name <name>`. |
+    | `InvalidParameterValueException: The role is invalid or does not have permission to access the event source` | Ensure the Lambda execution role has `sqs:ReceiveMessage` or `kinesis:GetRecords` permissions for the event source ARN. |
     **`Resource
 ## Layers
 
@@ -267,9 +269,11 @@ aws lambda update-alias \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the PublishVersion operation: The resource you requested does not exist.`** — Verify the function name matches exactly and the function exists in the current AWS region.
-    **`An error occurred (InvalidParameterValueException) when calling the UpdateAlias operation: The function version 8 does not exist.`** — Publish version 8 first using `aws lambda publish-version --function-name <name>` before updating the alias to point to it.
-    **`An error occurred (ResourceConflictException) when calling the CreateAlias operation: Cannot create Alias for this function. The Alias prod already exists.`** — Use `update-alias` instead of `create-alias` if the alias already exists, or delete it first with `aws lambda delete-alias`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the PublishVersion operation: The resource you requested does not exist.` | Verify the function name matches exactly and the function exists in the current AWS region. |
+    | `An error occurred (InvalidParameterValueException) when calling the UpdateAlias operation: The function version 8 does not exist.` | Publish version 8 first using `aws lambda publish-version --function-name <name>` before updating the alias to point to it. |
+    | `An error occurred (ResourceConflictException) when calling the CreateAlias operation: Cannot create Alias for this function. The Alias prod already exists.` | Use `update-alias` instead of `create-alias` if the alias already exists, or delete it first with `aws lambda delete-alias`. |
 ## Concurrency
 
 ```bash
@@ -303,8 +307,10 @@ aws lambda delete-reserved-concurrency-config --function-name <name>
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the PutReservedConcurrency operation: The resource you requested does not exist.`** — Verify the function name exists in the current AWS region using `aws lambda list-functions`.
-    **`An error occurred (InvalidParameterValueException) when calling the PutProvisionedConcurrencyConfig operation: The qualifier does not exist.`** — Ensure the alias or version (e.g., `prod`) exists; list versions with `aws lambda list-versions-by-function --function-name <name>`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the PutReservedConcurrency operation: The resource you requested does not exist.` | Verify the function name exists in the current AWS region using `aws lambda list-functions`. |
+    | `An error occurred (InvalidParameterValueException) when calling the PutProvisionedConcurrencyConfig operation: The qualifier does not exist.` | Ensure the alias or version (e.g., `prod`) exists; list versions with `aws lambda list-versions-by-function --function-name <name>`. |
 ## Function URLs
 
 ```bash
@@ -346,9 +352,11 @@ aws lambda get-function-url-config --function-name <name>
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceConflictException) when calling the CreateFunctionUrlConfig operation: The resource already exists.`** — Delete the existing URL config with `aws lambda delete-function-url-config --function-name <name>` before creating a new one.
-    **`An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.`** — Verify the function name is correct and a URL config has been created for this function.
-    **`An error occurred (InvalidParameterValueException) when calling the CreateFunctionUrlConfig operation: Invalid auth type specified.`** — Use only `NONE` or `AWS_IAM` as the `--auth-type` value.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceConflictException) when calling the CreateFunctionUrlConfig operation: The resource already exists.` | Delete the existing URL config with `aws lambda delete-function-url-config --function-name <name>` before creating a new one. |
+    | `An error occurred (ResourceNotFoundException) when calling the GetFunctionUrlConfig operation: The resource you requested does not exist.` | Verify the function name is correct and a URL config has been created for this function. |
+    | `An error occurred (InvalidParameterValueException) when calling the CreateFunctionUrlConfig operation: Invalid auth type specified.` | Use only `NONE` or `AWS_IAM` as the `--auth-type` value. |
 ## Logs
 
 ```bash
@@ -390,8 +398,10 @@ aws logs filter-log-events \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFoundException: The specified log group does not exist.`** — Verify the function name is correct and the Lambda function has CloudWatch Logs permissions in its execution role.
-    **`InvalidParameterException: Invalid filter pattern syntax`** — Ensure filter patterns use valid CloudWatch Logs syntax (e.g., `[ERROR]` for bracketed terms or quoted strings for exact matches).
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFoundException: The specified log group does not exist.` | Verify the function name is correct and the Lambda function has CloudWatch Logs permissions in its execution role. |
+    | `InvalidParameterException: Invalid filter pattern syntax` | Ensure filter patterns use valid CloudWatch Logs syntax (e.g., `[ERROR]` for bracketed terms or quoted strings for exact matches). |
 ## See also
 
 - [AWS CLI Reference](../index.md)

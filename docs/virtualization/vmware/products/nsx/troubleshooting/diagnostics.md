@@ -185,9 +185,11 @@ abcdef12-3456-7890-abcd-ef1234567890 192.168.1.12    nsx-mgr-03.lab.local  UP
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify NSX Manager IP is correct and SSH service is running; check firewall rules allowing port 22 to the management interface.
-    **`Cluster Status: UNSTABLE`** — Check node connectivity and disk space on all three managers using `get system resources`; restart the manager service if a node is stuck.
-    **`Corfu-cluster status: QUORUM_LOST`** — Ensure all three NSX Manager nodes are running and network connectivity between them is healthy; check for split-brain conditions with `get cluster history`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify NSX Manager IP is correct and SSH service is running; check firewall rules allowing port 22 to the management interface. |
+    | `Cluster Status: UNSTABLE` | Check node connectivity and disk space on all three managers using `get system resources`; restart the manager service if a node is stuck. |
+    | `Corfu-cluster status: QUORUM_LOST` | Ensure all three NSX Manager nodes are running and network connectivity between them is healthy; check for split-brain conditions with `get cluster history`. |
 ---
 
 ## Step 2 — Check alarms and transport node status
@@ -267,9 +269,11 @@ Transport failures: []
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification, or import the NSX Manager CA certificate into your system trust store.
-    **`jq: command not found` or `python3: command not found`** — Install the missing tool (e.g., `apt-get install python3-minimal` on Ubuntu or `yum install python3` on RHEL) or use the native `grep` and `awk` alternatives instead of JSON parsing.
-    **`401 Unauthorized`** — Verify the admin credentials are correct and the user has API access permissions; check NSX Manager audit logs for authentication failures.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification, or import the NSX Manager CA certificate into your system trust store. |
+    | `jq: command not found` or `python3: command not found` | Install the missing tool (e.g., `apt-get install python3-minimal` on Ubuntu or `yum install python3` on RHEL) or use the native `grep` and `awk` alternatives instead of JSON parsing. |
+    | `401 Unauthorized` | Verify the admin credentials are correct and the user has API access permissions; check NSX Manager audit logs for authentication failures. |
 ---
 
 ## Step 3 — Diagnose TEP connectivity on ESXi hosts
@@ -330,9 +334,11 @@ PING 172.16.1.30 (172.16.1.30): 1572 data bytes
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input): No such file or directory`** — Verify NSX VIBs are actually installed by running `esxcli software vib list` without piping first to confirm the command executes.
-    **`PING 172.16.1.30 (172.16.1.30): 1572 data bytes`** followed by **`100% packet loss`** — Check physical switch and NIC MTU settings; ensure all underlay network interfaces are configured for at least 1600 bytes MTU with `esxcli network nic get -n vmnicX | grep MTU`.
-    **`Network is unreachable`** — Verify the TEP subnet route exists and the vmk2 interface is up by running `esxcli network ip interface list` and confirming the TEP interface is enabled and has a valid IP address.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input): No such file or directory` | Verify NSX VIBs are actually installed by running `esxcli software vib list` without piping first to confirm the command executes. |
+    | `PING 172.16.1.30 (172.16.1.30): 1572 data bytes`** followed by **`100% packet loss` | Check physical switch and NIC MTU settings; ensure all underlay network interfaces are configured for at least 1600 bytes MTU with `esxcli network nic get -n vmnicX | grep MTU`. |
+    | `Network is unreachable` | Verify the TEP subnet route exists and the vmk2 interface is up by running `esxcli network ip interface list` and confirming the TEP interface is enabled and has a valid IP address. |
 ---
 
 ## Step 4 — Inspect DFW filters on ESXi
@@ -403,8 +409,10 @@ VNI 5002 -> VLAN 102 (vxlan)
 ```
 
 !!! warning "Common errors"
-    **`vsipioctl: filter nic-123456-eth0-vmware-sfw.2 not found`** — Verify the exact filter name from `summarize-dvfilter` output and ensure the VM is powered on.
-    **`command not found: vsipioctl`** — Confirm you are logged into the ESXi host directly (not vCenter) and that NSX is installed on this cluster.
+    | Error | Fix |
+    |---|---|
+    | `vsipioctl: filter nic-123456-eth0-vmware-sfw.2 not found` | Verify the exact filter name from `summarize-dvfilter` output and ensure the VM is powered on. |
+    | `command not found: vsipioctl` | Confirm you are logged into the ESXi host directly (not vCenter) and that NSX is installed on this cluster. |
     **`net-vdl2: command not found`** —
 ---
 
@@ -600,9 +608,11 @@ Tier-0 state: REALIZED
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store.
-    **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify the NSX Manager admin password is correct and the user account has API access permissions.
-    **`{"error_code":404,"error_message":"Traceflow not found"}`** — Ensure the traceflow ID is correct and wait a few seconds for the traceflow to complete processing before polling results.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store. |
+    | `{"error_code":401,"error_message":"Invalid credentials"}` | Verify the NSX Manager admin password is correct and the user account has API access permissions. |
+    | `{"error_code":404,"error_message":"Traceflow not found"}` | Ensure the traceflow ID is correct and wait a few seconds for the traceflow to complete processing before polling results. |
 ---
 
 ## Step 7 — Packet capture and collect support bundle
@@ -693,9 +703,11 @@ Down: 0
 ```
 
 !!! warning "Common errors"
-    **`Packet capture failed: interface fp-eth0 not found`** — Verify the correct uplink interface name with `show interface` on the Edge node.
-    **`Permission denied (publickey,password)`** — Ensure SSH credentials are correct and the admin account is enabled on the NSX Edge node.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification or import the NSX Manager CA certificate into your trust store.
+    | Error | Fix |
+    |---|---|
+    | `Packet capture failed: interface fp-eth0 not found` | Verify the correct uplink interface name with `show interface` on the Edge node. |
+    | `Permission denied (publickey,password)` | Ensure SSH credentials are correct and the admin account is enabled on the NSX Edge node. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification or import the NSX Manager CA certificate into your trust store. |
 ---
 
 ## Log locations

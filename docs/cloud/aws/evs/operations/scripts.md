@@ -94,9 +94,11 @@ echo "  PASSED: $PASS  FAILED: $FAIL"
 ```
 
 !!! warning "Common errors"
-    **`Set EVS_ENV_ID`** — Export the required environment variable with `export EVS_ENV_ID=<your-environment-id>` before running the script.
-    **`curl: (7) Failed to connect to <NSX_MANAGER_URL> port 443: Connection timed out`** — Verify NSX Manager is reachable and the NSX_MANAGER_URL is correct, then check network/firewall connectivity with `curl -v -k https://<NSX_MANAGER_URL>/api/v1/cluster/status`.
-    **`jq: parse error: Invalid JSON`** — Ensure NSX Manager credentials are correct and the API endpoint is responding with valid JSON by testing `curl -sk -u admin:$NSX_PASS "$NSX_URL/api/v1/cluster/status"` directly.
+    | Error | Fix |
+    |---|---|
+    | `Set EVS_ENV_ID` | Export the required environment variable with `export EVS_ENV_ID=<your-environment-id>` before running the script. |
+    | `curl: (7) Failed to connect to <NSX_MANAGER_URL> port 443: Connection timed out` | Verify NSX Manager is reachable and the NSX_MANAGER_URL is correct, then check network/firewall connectivity with `curl -v -k https://<NSX_MANAGER_URL>/api/v1/cluster/status`. |
+    | `jq: parse error: Invalid JSON` | Ensure NSX Manager credentials are correct and the API endpoint is responding with valid JSON by testing `curl -sk -u admin:$NSX_PASS "$NSX_URL/api/v1/cluster/status"` directly. |
 ## vsan-capacity.ps1
 
 ```powershell
@@ -166,9 +168,11 @@ curl -sk -u "admin:$HCX_PASS" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl (already present in the script; if still occurring, verify HCX_MANAGER_IP is correct and reachable on port 443).
-    **`bash: HCX_MANAGER_IP: parameter null or not set`** — Export the environment variables before running the script: `export HCX_MANAGER_IP=<ip> HCX_PASSWORD=<password>`.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify HCX API is responding by testing `curl -sk -u "admin:$HCX_PASS" "https://$HCX_IP/hybridity/api/about"` directly; the endpoint may be unavailable or authentication may have failed.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl (already present in the script; if still occurring, verify HCX_MANAGER_IP is correct and reachable on port 443). |
+    | `bash: HCX_MANAGER_IP: parameter null or not set` | Export the environment variables before running the script: `export HCX_MANAGER_IP=<ip> HCX_PASSWORD=<password>`. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify HCX API is responding by testing `curl -sk -u "admin:$HCX_PASS" "https://$HCX_IP/hybridity/api/about"` directly; the endpoint may be unavailable or authentication may have failed. |
 ## host-remove.sh
 
 Automates the safe host removal sequence. Refuses to proceed if vSAN has outstanding resync data.
@@ -341,9 +345,11 @@ host-4e1h7g2i5f9d6n0s       esx-prod-05.corp.local  RUNNING
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Only 3 host(s) in cluster. Cannot remove — minimum is 3 remaining.`** — Ensure the cluster has at least 4 hosts before attempting removal, or add additional hosts first.
-    **`ERROR: vSAN BytesToSync=2147483648. Cluster has outstanding resync data.`** — Wait for vSAN rebalancing to complete by monitoring the cluster health in vCenter before retrying the removal.
-    **`Connect-VIServer : Cannot find a vCenter Server system at '${VCENTER}'.`** — Verify the VCENTER_HOST environment variable is set to a valid vCenter hostname/IP and is reachable from the host running this script.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Only 3 host(s) in cluster. Cannot remove — minimum is 3 remaining.` | Ensure the cluster has at least 4 hosts before attempting removal, or add additional hosts first. |
+    | `ERROR: vSAN BytesToSync=2147483648. Cluster has outstanding resync data.` | Wait for vSAN rebalancing to complete by monitoring the cluster health in vCenter before retrying the removal. |
+    | `Connect-VIServer : Cannot find a vCenter Server system at '${VCENTER}'.` | Verify the VCENTER_HOST environment variable is set to a valid vCenter hostname/IP and is reachable from the host running this script. |
 ## vcf-password-rotate.sh
 
 Automates VCF credential rotation via SDDC Manager REST API.
@@ -502,9 +508,11 @@ ESXi Cluster Node 02                     ESXI                 root
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Failed to get access token. Check credentials.`** — Verify SDDC_MANAGER_HOST, SDDC_MANAGER_USER, and SDDC_MANAGER_PASSWORD environment variables are set correctly and the SDDC Manager is reachable.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl commands (already present) or import the SDDC Manager's CA certificate into your system trust store.
-    **`ERROR: Task did not complete within 1800s.`** — Increase POLL_TIMEOUT value or check SDDC Manager logs for rotation task failures; the operation may require more time in large environments.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Failed to get access token. Check credentials.` | Verify SDDC_MANAGER_HOST, SDDC_MANAGER_USER, and SDDC_MANAGER_PASSWORD environment variables are set correctly and the SDDC Manager is reachable. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl commands (already present) or import the SDDC Manager's CA certificate into your system trust store. |
+    | `ERROR: Task did not complete within 1800s.` | Increase POLL_TIMEOUT value or check SDDC Manager logs for rotation task failures; the operation may require more time in large environments. |
 ## evs-capacity-report.sh
 
 Generates a consolidated capacity report covering AWS host inventory, vSAN storage, and VM density.
@@ -629,9 +637,11 @@ evs-host-03.aws.local   m5.4xlarge      RUNNING
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to locate credentials. You can configure credentials by running "aws configure".`** — Ensure AWS credentials are configured via `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
-    **`Connect-VIServer : Cannot find an overload for "Connect-VIServer" and the argument count: "6".`** — Verify PowerShell Core (pwsh) is installed; if using Windows PowerShell, replace `pwsh` with `powershell` in the script.
-    **`The term 'pwsh' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Install PowerShell Core with `apt-get install -y powershell` (Linux) or download from Microsoft's GitHub releases.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to locate credentials. You can configure credentials by running "aws configure".` | Ensure AWS credentials are configured via `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
+    | `Connect-VIServer : Cannot find an overload for "Connect-VIServer" and the argument count: "6".` | Verify PowerShell Core (pwsh) is installed; if using Windows PowerShell, replace `pwsh` with `powershell` in the script. |
+    | `The term 'pwsh' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Install PowerShell Core with `apt-get install -y powershell` (Linux) or download from Microsoft's GitHub releases. |
 ---
 
 ## See also

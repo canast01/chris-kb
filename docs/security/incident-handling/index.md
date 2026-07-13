@@ -101,9 +101,11 @@ iptables -P FORWARD DROP
 ```
 
 !!! warning "Common errors"
-    **`iptables: No chain/target/match by that name`** — Ensure iptables is installed and the kernel module is loaded with `modprobe ip_tables`.
-    **`iptables: Permission denied`** — Run the commands with `sudo` or as root; iptables requires elevated privileges.
-    **`Bad argument '<mgmt-ip>'`** — Replace `<mgmt-ip>` with an actual IP address (e.g., `192.168.1.100`) before executing the script.
+    | Error | Fix |
+    |---|---|
+    | `iptables: No chain/target/match by that name` | Ensure iptables is installed and the kernel module is loaded with `modprobe ip_tables`. |
+    | `iptables: Permission denied` | Run the commands with `sudo` or as root; iptables requires elevated privileges. |
+    | `Bad argument '<mgmt-ip>'` | Replace `<mgmt-ip>` with an actual IP address (e.g., `192.168.1.100`) before executing the script. |
 **CyberArk — rotate or suspend compromised accounts immediately:**
 1. CyberArk PVWA → Accounts → locate account → Change password (immediate rotation)
 2. For suspected account compromise: suspend account in AD and rotate all credentials
@@ -159,9 +161,11 @@ tcp    ESTAB       0      0      10.42.1.15:3306             10.42.1.20:45678   
 ```
 
 !!! warning "Common errors"
-    **`ausearch: command not found`** — Install auditd with `apt-get install auditd` or `yum install audit` and ensure the audit daemon is running.
-    **`grep: /var/log/auth.log: No such file or directory`** — Check the correct log path for your system; on some distributions use `/var/log/secure` instead of `/var/log/auth.log`.
-    **`netstat: command not found`** — Use `ss` instead (already shown in the block) or install net-tools with `apt-get install net-tools`.
+    | Error | Fix |
+    |---|---|
+    | `ausearch: command not found` | Install auditd with `apt-get install auditd` or `yum install audit` and ensure the audit daemon is running. |
+    | `grep: /var/log/auth.log: No such file or directory` | Check the correct log path for your system; on some distributions use `/var/log/secure` instead of `/var/log/auth.log`. |
+    | `netstat: command not found` | Use `ss` instead (already shown in the block) or install net-tools with `apt-get install net-tools`. |
 ## Phase 4 — Eradicate and Recover
 
 - Remove malicious files, scheduled tasks, persistence mechanisms

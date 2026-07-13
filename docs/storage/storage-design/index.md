@@ -332,8 +332,10 @@ dm-1  253:1    0    1T  0 lvm
 ```
 
 !!! warning "Common errors"
-    **`multipath: command not found`** — Install device-mapper-multipath package with `apt-get install device-mapper-multipath` or `yum install device-mapper-multipath`.
-    **`device-mapper: ioctl: 4.45.1-1.1 (2021-03-22) initialisation failed: Device or resource busy`** — Ensure no processes are actively using the multipath devices and reload the device-mapper module with `systemctl restart multipathd`.
+    | Error | Fix |
+    |---|---|
+    | `multipath: command not found` | Install device-mapper-multipath package with `apt-get install device-mapper-multipath` or `yum install device-mapper-multipath`. |
+    | `device-mapper: ioctl: 4.45.1-1.1 (2021-03-22) initialisation failed: Device or resource busy` | Ensure no processes are actively using the multipath devices and reload the device-mapper module with `systemctl restart multipathd`. |
 Expected output: all paths `active ready`, queue depth per path as configured, DM device visible under `/dev/mapper/`.
 
 ## Filesystem Layout and Mount Points
@@ -382,9 +384,11 @@ Filesystem     Type     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`mkfs.xfs: /dev/mapper/wsql01_mssql_data_01 appears to contain an existing filesystem`** — Add the `-f` flag to force overwrite: `mkfs.xfs -f -L mssql_data_01 /dev/mapper/wsql01_mssql_data_01`
-    **`mount: /mssql/data does not exist`** — Create the mount point directory before mounting: `mkdir -p /mssql/data`
-    **`mount: can't find LABEL=mssql_data_01 in /etc/fstab`** — Verify the label matches exactly between mkfs and fstab; use `blkid` to confirm the actual label assigned.
+    | Error | Fix |
+    |---|---|
+    | `mkfs.xfs: /dev/mapper/wsql01_mssql_data_01 appears to contain an existing filesystem` | Add the `-f` flag to force overwrite: `mkfs.xfs -f -L mssql_data_01 /dev/mapper/wsql01_mssql_data_01` |
+    | `mount: /mssql/data does not exist` | Create the mount point directory before mounting: `mkdir -p /mssql/data` |
+    | `mount: can't find LABEL=mssql_data_01 in /etc/fstab` | Verify the label matches exactly between mkfs and fstab; use `blkid` to confirm the actual label assigned. |
 For multipath devices, use the DM persistent name (`/dev/mapper/{alias}`) in fstab, not the dm-N path.
 
 ## Snapshot and Backup Standards

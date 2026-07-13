@@ -113,9 +113,11 @@ Lag Time State    Healthy Is-Healthy
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Ensure you are logged into the ONTAP cluster CLI (SSH to cluster management IP) and not a local shell.
-    **`Error: There are no entries matching your query`** — Verify the relationship exists with `snapmirror show` and confirm the filter criteria (e.g., `-health-status unhealthy`) matches actual relationships.
-    **`Error: Invalid field name "is-healthy"`** — Use `healthy` instead of `is-healthy` for SnapMirror Asynchronous relationships; `is-healthy` is only valid for Synchronous relationships.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Ensure you are logged into the ONTAP cluster CLI (SSH to cluster management IP) and not a local shell. |
+    | `Error: There are no entries matching your query` | Verify the relationship exists with `snapmirror show` and confirm the filter criteria (e.g., `-health-status unhealthy`) matches actual relationships. |
+    | `Error: Invalid field name "is-healthy"` | Use `healthy` instead of `is-healthy` for SnapMirror Asynchronous relationships; `is-healthy` is only valid for Synchronous relationships. |
 ## Relationship States
 
 ![Relationship States](../../../../../assets/storage-netapp-snapmirror-hc-relationship-states.svg)
@@ -152,9 +154,11 @@ vserver3:vol_temp vserver4:vol_temp_mirror 01:45:56
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found`** — Ensure you are logged into the NetApp cluster CLI (ssh to cluster IP) rather than a Linux shell.
-    **`Error: Invalid field name "lag-time"`** — Use the correct field name `lag-time` or run `snapmirror show -fields ?` to list available fields for your ONTAP version.
-    **`No SnapMirror relationships found`** — Verify that SnapMirror relationships exist on this cluster by running `snapmirror list-destinations` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found` | Ensure you are logged into the NetApp cluster CLI (ssh to cluster IP) rather than a Linux shell. |
+    | `Error: Invalid field name "lag-time"` | Use the correct field name `lag-time` or run `snapmirror show -fields ?` to list available fields for your ONTAP version. |
+    | `No SnapMirror relationships found` | Verify that SnapMirror relationships exist on this cluster by running `snapmirror list-destinations` first. |
 ---
 
 ## Verify

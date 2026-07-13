@@ -81,8 +81,10 @@ stargate-worker-3                    RUNNING                 19259
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to localhost port 2009: Connection refused`** — Verify Stargate is running with `genesis status | grep stargate` and check that the CVM network interface is accessible.
-    **`tail: cannot open '/home/nutanix/data/logs/stargate.ERROR' for reading: No such file or directory`** — Confirm you are running this command on a Nutanix CVM (Controller VM) and that Stargate has been initialized with `genesis start stargate`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to localhost port 2009: Connection refused` | Verify Stargate is running with `genesis status | grep stargate` and check that the CVM network interface is accessible. |
+    | `tail: cannot open '/home/nutanix/data/logs/stargate.ERROR' for reading: No such file or directory` | Confirm you are running this command on a Nutanix CVM (Controller VM) and that Stargate has been initialized with `genesis start stargate`. |
 ---
 
 ## Cassandra — Distributed Metadata Store
@@ -126,8 +128,10 @@ node-02: Pending tasks: 0
 ```
 
 !!! warning "Common errors"
-    **`nodetool: command not found`** — Ensure Cassandra is installed and `$CASSANDRA_HOME/bin` is in your PATH, or use the full path `/opt/cassandra/bin/nodetool`.
-    **`Connection refused`** — Verify Cassandra JMX port (default 7199) is listening with `netstat -tlnp | grep 7199` and restart Cassandra if needed.
+    | Error | Fix |
+    |---|---|
+    | `nodetool: command not found` | Ensure Cassandra is installed and `$CASSANDRA_HOME/bin` is in your PATH, or use the full path `/opt/cassandra/bin/nodetool`. |
+    | `Connection refused` | Verify Cassandra JMX port (default 7199) is listening with `netstat -tlnp | grep 7199` and restart Cassandra if needed. |
     **`DN  192.168.1.102`** (node showing DOWN status) — Restart the down node with `systemctl restart cassandra` and wait 30 seconds for it to rejoin the ring.
 ---
 
@@ -178,8 +182,10 @@ JLine support is enabled
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify ZooKeeper service is running with `systemctl status zookeeper` and listening on port 9876.
-    **`zeus_config_printer: command not found`** — Ensure you are running this command on a Nutanix cluster node with the Acropolis OS installed, not a remote management station.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify ZooKeeper service is running with `systemctl status zookeeper` and listening on port 9876. |
+    | `zeus_config_printer: command not found` | Ensure you are running this command on a Nutanix cluster node with the Acropolis OS installed, not a remote management station. |
 ---
 
 ## Curator — Background Worker
@@ -224,8 +230,10 @@ Scan Details for scan_20240115_093847:
 ```
 
 !!! warning "Common errors"
-    **`curator_cli: command not found`** — Ensure the Nutanix curator CLI is installed and its path is added to your system PATH variable.
-    **`Error: Invalid scan_id format or scan not found`** — Verify the scan ID exists by running `curator_cli get_last_successful_scans` first and use the exact Scan ID from the output.
+    | Error | Fix |
+    |---|---|
+    | `curator_cli: command not found` | Ensure the Nutanix curator CLI is installed and its path is added to your system PATH variable. |
+    | `Error: Invalid scan_id format or scan not found` | Verify the scan ID exists by running `curator_cli get_last_successful_scans` first and use the exact Scan ID from the output. |
 ---
 
 ## Medusa — Metadata Access Layer
@@ -291,8 +299,10 @@ Manager "br0"
 ```
 
 !!! warning "Common errors"
-    **`error: failed to connect to the hypervisor`** — Ensure you are running as root and the libvirtd service is active with `systemctl status libvirtd`.
-    **`ovs-vsctl: unix:/var/run/openvswitch/db.sock: database connection failed`** — Verify Open vSwitch is running with `systemctl status openvswitch` and restart if necessary.
+    | Error | Fix |
+    |---|---|
+    | `error: failed to connect to the hypervisor` | Ensure you are running as root and the libvirtd service is active with `systemctl status libvirtd`. |
+    | `ovs-vsctl: unix:/var/run/openvswitch/db.sock: database connection failed` | Verify Open vSwitch is running with `systemctl status openvswitch` and restart if necessary. |
 ---
 
 ## Genesis — Service Manager
@@ -323,8 +333,10 @@ All services restarted successfully. Elapsed time: 47 seconds
 ```
 
 !!! warning "Common errors"
-    **`genesis: command not found`** — Ensure you are running this command on a Nutanix Controller VM (CVM), not a hypervisor host; SSH to the CVM first.
-    **`Permission denied`** — Run the command with sudo or as the root user: `sudo genesis restart`.
+    | Error | Fix |
+    |---|---|
+    | `genesis: command not found` | Ensure you are running this command on a Nutanix Controller VM (CVM), not a hypervisor host; SSH to the CVM first. |
+    | `Permission denied` | Run the command with sudo or as the root user: `sudo genesis restart`. |
 Genesis itself is started by the OS init system. If genesis is completely crashed, it must be restarted at the OS level:
 ```bash
 sudo systemctl restart nutanix-genesis
@@ -336,9 +348,11 @@ sudo systemctl restart nutanix-genesis
 ```
 
 !!! warning "Common errors"
-    **`Failed to restart nutanix-genesis.service: Unit nutanix-genesis.service not found.`** — Verify the Nutanix cluster node is properly initialized and the genesis service is installed with `systemctl list-unit-files | grep nutanix`.
-    **`sudo: systemctl: command not found`** — Ensure you are running this command on a Nutanix cluster node (CVM or host) where systemd is available, not on an unsupported OS.
-    **`Failed to restart nutanix-genesis.service: Access denied`** — Run the command with proper sudo privileges or as root; verify your user account has passwordless sudo configured for this service.
+    | Error | Fix |
+    |---|---|
+    | `Failed to restart nutanix-genesis.service: Unit nutanix-genesis.service not found.` | Verify the Nutanix cluster node is properly initialized and the genesis service is installed with `systemctl list-unit-files | grep nutanix`. |
+    | `sudo: systemctl: command not found` | Ensure you are running this command on a Nutanix cluster node (CVM or host) where systemd is available, not on an unsupported OS. |
+    | `Failed to restart nutanix-genesis.service: Access denied` | Run the command with proper sudo privileges or as root; verify your user account has passwordless sudo configured for this service. |
 ---
 
 ## See also

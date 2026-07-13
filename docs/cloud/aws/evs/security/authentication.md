@@ -128,9 +128,11 @@ curl -sk -u "admin:$NSX_PASSWORD" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present; if still failing, verify NSX_URL uses https://).
-    **`{"error_code": 401, "error_message": "Invalid credentials"}`** — Ensure NSX_PASSWORD environment variable is set correctly and the admin user has API access permissions.
-    **`{"error_code": 400, "error_message": "Invalid bind_dn or bind_password"}`** — Verify the service account credentials and DN path match your Active Directory schema exactly.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present; if still failing, verify NSX_URL uses https://). |
+    | `{"error_code": 401, "error_message": "Invalid credentials"}` | Ensure NSX_PASSWORD environment variable is set correctly and the admin user has API access permissions. |
+    | `{"error_code": 400, "error_message": "Invalid bind_dn or bind_password"}` | Verify the service account credentials and DN path match your Active Directory schema exactly. |
 ## AWS IAM Identity Center Integration
 
 For organizations using AWS IAM Identity Center (formerly AWS SSO), EVS console and API access is governed through IAM Identity Center permission sets. The vCenter and NSX-T UIs, however, maintain their own SSO — IAM Identity Center does not automatically provide access to these.
@@ -196,9 +198,11 @@ Status: RUNNING - Rotate credentials for VCENTER
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify SDDC Manager hostname resolves correctly).
-    **`curl: (7) Failed to connect to sddc-manager.vcf.internal port 443: Name or service not known`** — Ensure DNS resolution for sddc-manager.vcf.internal is configured or add the IP to `/etc/hosts`.
-    **`jq: error (at <stdin>:1): Cannot index string with string "status"`** — Verify the API response is valid JSON and that `$SDDC_USER` and `$SDDC_PASS` credentials are correct (401 responses return HTML error pages).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify SDDC Manager hostname resolves correctly). |
+    | `curl: (7) Failed to connect to sddc-manager.vcf.internal port 443: Name or service not known` | Ensure DNS resolution for sddc-manager.vcf.internal is configured or add the IP to `/etc/hosts`. |
+    | `jq: error (at <stdin>:1): Cannot index string with string "status"` | Verify the API response is valid JSON and that `$SDDC_USER` and `$SDDC_PASS` credentials are correct (401 responses return HTML error pages). |
 HCX credentials must be rotated separately because HCX Manager stores its own local admin password and the service mesh uses HCX-specific credentials for inter-site authentication:
 
 ```bash
@@ -230,9 +234,11 @@ Mesh-Link-04: UP
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify HCX_MANAGER_IP is correct if error persists).
-    **`jq: error (at <stdin>:1): Cannot index string with string "items"`** — Ensure the HCX API endpoint returns valid JSON and the admin credentials are correct; test with `curl -sk -u "admin:$NEW_HCX_PASSWORD" "https://$HCX_MANAGER_IP/hybridity/api/interconnect/links" | head -c 200` first.
-    **`An error occurred (InvalidParameterException) when calling the PutSecretValue operation`** — Verify the secret JSON is valid by testing with `echo '{"username":"admin","password":"NEW_PASSWORD"}' | jq .` before passing to AWS Secrets Manager.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but verify HCX_MANAGER_IP is correct if error persists). |
+    | `jq: error (at <stdin>:1): Cannot index string with string "items"` | Ensure the HCX API endpoint returns valid JSON and the admin credentials are correct; test with `curl -sk -u "admin:$NEW_HCX_PASSWORD" "https://$HCX_MANAGER_IP/hybridity/api/interconnect/links" | head -c 200` first. |
+    | `An error occurred (InvalidParameterException) when calling the PutSecretValue operation` | Verify the secret JSON is valid by testing with `echo '{"username":"admin","password":"NEW_PASSWORD"}' | jq .` before passing to AWS Secrets Manager. |
 ## AWS Console MFA Enforcement
 
 ```json
@@ -284,8 +290,10 @@ MFADevices:
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchEntity) when calling the PutUserPolicy operation: The user with name evs-operator cannot be found.`** — Verify the EVS operator user exists with `aws iam get-user --user-name evs-operator` before attaching the policy.
-    **`An error occurred (MalformedPolicyDocument) when calling the PutUserPolicy operation: Invalid principal in policy: "Principal": {"AWS": "arn:aws:iam::ACCOUNT:user/evs-operator"}`** — Ensure the require-mfa.json file contains valid IAM policy syntax without a Principal element (use only for trust policies, not inline user policies).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchEntity) when calling the PutUserPolicy operation: The user with name evs-operator cannot be found.` | Verify the EVS operator user exists with `aws iam get-user --user-name evs-operator` before attaching the policy. |
+    | `An error occurred (MalformedPolicyDocument) when calling the PutUserPolicy operation: Invalid principal in policy: "Principal": {"AWS": "arn:aws:iam::ACCOUNT:user/evs-operator"}` | Ensure the require-mfa.json file contains valid IAM policy syntax without a Principal element (use only for trust policies, not inline user policies). |
 vCenter SSO cannot enforce MFA natively. The correct approach is to use AD as the identity source and enforce MFA at the AD layer (e.g., Microsoft Entra ID Conditional Access, or Okta MFA for AD-integrated login). When users authenticate to vCenter using their `username@corp.example.com` credentials, MFA is enforced by the IdP before the LDAP bind succeeds. This makes MFA coverage consistent across both AWS console and vSphere access without requiring vCenter-specific MFA configuration.
 
 ## SSH Key Management (ESXi Hosts)
@@ -334,9 +342,11 @@ Updating key on host: host-esx-004.us-west-2b
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidKeyPair.Duplicate) when calling the CreateKeyPair operation: The key pair 'evs-cluster-key-new' already exists.`** — Delete the existing key with `aws ec2 delete-key-pair --key-name evs-cluster-key-new` before creating a new one.
-    **`An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID: $ENV_ID`** — Set the ENV_ID variable with `export ENV_ID=<your-environment-id>` before running the loop.
-    **`An error occurred (InvalidKeyPair.NotFound) when calling the DeleteKeyPair operation: The key pair 'evs-cluster-key' does not exist.`** — Verify the old key name exists with `aws ec2 describe-key-pairs` before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidKeyPair.Duplicate) when calling the CreateKeyPair operation: The key pair 'evs-cluster-key-new' already exists.` | Delete the existing key with `aws ec2 delete-key-pair --key-name evs-cluster-key-new` before creating a new one. |
+    | `An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID: $ENV_ID` | Set the ENV_ID variable with `export ENV_ID=<your-environment-id>` before running the loop. |
+    | `An error occurred (InvalidKeyPair.NotFound) when calling the DeleteKeyPair operation: The key pair 'evs-cluster-key' does not exist.` | Verify the old key name exists with `aws ec2 describe-key-pairs` before attempting deletion. |
 ## See also
 
 - [Amazon EVS — Access Control](../access-control/)

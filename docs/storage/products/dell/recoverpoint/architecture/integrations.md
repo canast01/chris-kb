@@ -122,9 +122,11 @@ Body: {"scenario": "LOGGED_ACCESS", "consistency": "CRASH_CONSISTENT"}
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the RPA's certificate into your trusted store.
-    **`HTTP/1.1 401 Unauthorized`** — Verify the admin credentials are correct and the user has API access permissions enabled in RecoverPoint.
-    **`HTTP/1.1 404 Not Found`** — Confirm the consistency group ID and cluster ID exist by listing them first with GET /rest/consistency_groups and GET /rest/clusters.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the RPA's certificate into your trusted store. |
+    | `HTTP/1.1 401 Unauthorized` | Verify the admin credentials are correct and the user has API access permissions enabled in RecoverPoint. |
+    | `HTTP/1.1 404 Not Found` | Confirm the consistency group ID and cluster ID exist by listing them first with GET /rest/consistency_groups and GET /rest/clusters. |
 ---
 
 ## See also

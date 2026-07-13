@@ -180,9 +180,11 @@ e0c            svm_prod         node-02      up      down
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: cluster show`** — Verify you are connected to the ONTAP cluster management interface (SSH to cluster IP, not node IP).
-    **`Error: More than one match found for "snapmirror show"`** — Add the `-instance` flag or filter by source/destination path to narrow results.
-    **`Warning: Aggregate aggr1_ssd is 91% full`** — Add capacity or move volumes to lower-utilization aggregates immediately to prevent write failures above 95%.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: cluster show` | Verify you are connected to the ONTAP cluster management interface (SSH to cluster IP, not node IP). |
+    | `Error: More than one match found for "snapmirror show"` | Add the `-instance` flag or filter by source/destination path to narrow results. |
+    | `Warning: Aggregate aggr1_ssd is 91% full` | Add capacity or move volumes to lower-utilization aggregates immediately to prevent write failures above 95%. |
 ## Cluster Health
 
 ![Cluster Health](../../../../../assets/storage-netapp-ontap-hc-cluster-health.svg)
@@ -219,8 +221,10 @@ Status: ok
 ```
 
 !!! warning "Common errors"
-    **`Node prod-node-02 health: false`** — Check node logs with `system node run -node prod-node-02 syslog tail` and resolve hardware or software faults before proceeding.
-    **`Eligibility: false for prod-node-03`** — Verify the node has completed boot and cluster join with `cluster ring show -node prod-node-03`, then wait for automatic recovery or manually rejoin if needed.
+    | Error | Fix |
+    |---|---|
+    | `Node prod-node-02 health: false` | Check node logs with `system node run -node prod-node-02 syslog tail` and resolve hardware or software faults before proceeding. |
+    | `Eligibility: false for prod-node-03` | Verify the node has completed boot and cluster join with `cluster ring show -node prod-node-03`, then wait for automatic recovery or manually rejoin if needed. |
 ### Node Health
 
 ![Node Health](../../../../../assets/storage-netapp-ontap-hc-node-health.svg)
@@ -246,8 +250,10 @@ node-02   730 days 14:28:45
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: system`** — Ensure you are connected to the ONTAP cluster CLI (SSH to cluster management IP) rather than the local shell.
-    **`Error: This operation is not permitted: insufficient privileges`** — Log in with an admin-level account or request cluster administrator credentials.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: system` | Ensure you are connected to the ONTAP cluster CLI (SSH to cluster management IP) rather than the local shell. |
+    | `Error: This operation is not permitted: insufficient privileges` | Log in with an admin-level account or request cluster administrator credentials. |
 ### HA Pair Status
 
 ![HA Pair Status](../../../../../assets/storage-netapp-ontap-hc-ha-pair-status.svg)
@@ -267,8 +273,10 @@ node-02        node-01        Connected Not in takeover
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: storage`** — Ensure you are logged into the ONTAP cluster CLI (SSH to the cluster management IP), not the local shell.
-    **`Error: This operation is not permitted: insufficient privileges`** — Verify your ONTAP user account has the "admin" or equivalent role with cluster-wide permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: storage` | Ensure you are logged into the ONTAP cluster CLI (SSH to the cluster management IP), not the local shell. |
+    | `Error: This operation is not permitted: insufficient privileges` | Verify your ONTAP user account has the "admin" or equivalent role with cluster-wide permissions. |
 | State | Meaning |
 |---|---|
 | Connected, Not in takeover | Healthy — HA active |
@@ -303,8 +311,10 @@ Shelf Bay Container Type Owner Disk Type Size Status
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: storage`** — Ensure you are logged into the ONTAP cluster CLI (not the local shell); use `ssh admin@<cluster-ip>` to connect.
-    **`Error: No disks match the criteria`** — This is informational output indicating no broken disks exist; if spares also show no output, contact NetApp support as the cluster may have insufficient spare capacity.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: storage` | Ensure you are logged into the ONTAP cluster CLI (not the local shell); use `ssh admin@<cluster-ip>` to connect. |
+    | `Error: No disks match the criteria` | This is informational output indicating no broken disks exist; if spares also show no output, contact NetApp support as the cluster may have insufficient spare capacity. |
 ### Aggregate Health
 
 ![Aggregate Health](../../../../../assets/storage-netapp-ontap-hc-aggregate-health.svg)
@@ -327,8 +337,10 @@ data_svm01                      online           normal
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: storage`** — Ensure you are running this command in the ONTAP CLI (SSH to cluster management IP), not in a bash shell.
-    **`Error: more than one administrative Vserver matches the supplied name`** — Specify the SVM explicitly with `-vserver <svm_name>` if multiple SVMs exist on the cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: storage` | Ensure you are running this command in the ONTAP CLI (SSH to cluster management IP), not in a bash shell. |
+    | `Error: more than one administrative Vserver matches the supplied name` | Specify the SVM explicitly with `-vserver <svm_name>` if multiple SVMs exist on the cluster. |
 ### Volume Health
 
 ![Volume Health](../../../../../assets/storage-netapp-ontap-hc-volume-health.svg)
@@ -353,8 +365,10 @@ vol_temp          online     true
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: volume`** — Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a standard Linux shell.
-    **`Error: invalid field name "state"`** — Verify the field name is correct for your ONTAP version; use `volume show -help` to list available fields.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: volume` | Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a standard Linux shell. |
+    | `Error: invalid field name "state"` | Verify the field name is correct for your ONTAP version; use `volume show -help` to list available fields. |
 ### Interface Health
 
 ![Interface Health](../../../../../assets/storage-netapp-ontap-hc-interface-health.svg)
@@ -378,9 +392,11 @@ svm_nfs         e0e             172.16.8.20     up/down
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found`** — Ensure you are running this command in the ONTAP CLI (SSH to cluster management IP), not your local shell.
-    **`Error: Invalid command`** — Verify the ONTAP version supports the `-status-oper` parameter; use `network interface show` without filters on older releases and pipe to grep instead.
-    **`Error: No entries were displayed`** — This is expected if no interfaces are down; check interface status with `network interface show` to confirm all are operational.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found` | Ensure you are running this command in the ONTAP CLI (SSH to cluster management IP), not your local shell. |
+    | `Error: Invalid command` | Verify the ONTAP version supports the `-status-oper` parameter; use `network interface show` without filters on older releases and pipe to grep instead. |
+    | `Error: No entries were displayed` | This is expected if no interfaces are down; check interface status with `network interface show` to confirm all are operational. |
 ### EMS Events (Recent Errors)
 
 ![EMS Events (Recent Errors)](../../../../../assets/storage-netapp-ontap-hc-ems-events-recent-errors.svg)
@@ -407,8 +423,10 @@ Time                Severity Event
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid time range format`** — Use valid time range syntax like "1h", "24h", or "7d" without quotes in the command.
-    **`Error: Unknown severity level`** — Specify severity as one of: EMERGENCY, ALERT, CRITICAL, ERROR, WARNING, NOTICE, INFO, or DEBUG.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid time range format` | Use valid time range syntax like "1h", "24h", or "7d" without quotes in the command. |
+    | `Error: Unknown severity level` | Specify severity as one of: EMERGENCY, ALERT, CRITICAL, ERROR, WARNING, NOTICE, INFO, or DEBUG. |
 ## Pre-Change Checklist
 
 - [ ] All nodes `health: true`

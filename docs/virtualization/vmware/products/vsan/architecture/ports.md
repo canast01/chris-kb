@@ -114,8 +114,10 @@ vSAN iSCSI Target: vsan-iscsi-target-3
 ```
 
 !!! warning "Common errors"
-    **`Error: vSAN is not enabled on this host`** — Enable vSAN on the ESXi host using the vSAN management interface or `esxcli vsan cluster new`.
-    **`Error: Unknown command or namespace`** — Verify the ESXi version supports iSCSI targets (vSAN 6.2+) and that the vSAN iSCSI service is installed.
+    | Error | Fix |
+    |---|---|
+    | `Error: vSAN is not enabled on this host` | Enable vSAN on the ESXi host using the vSAN management interface or `esxcli vsan cluster new`. |
+    | `Error: Unknown command or namespace` | Verify the ESXi version supports iSCSI targets (vSAN 6.2+) and that the vSAN iSCSI service is installed. |
 ---
 
 ## HCI Mesh — Cross-Cluster Storage (vSAN 7.0+)
@@ -216,9 +218,11 @@ VsanVcNetworkConfigSystem-vsan-vc-network-config-system
 ```
 
 !!! warning "Common errors"
-    **`vmkping: Unknown network device vmk2`** — Verify the VMkernel adapter name with `esxcli vsan network list` and use the correct interface name.
-    **`Error: The object 'VsanVcNetworkConfigSystem-vsan-vc-network-config-system' could not be found`** — Ensure vSAN is licensed and enabled on the cluster, and run the command from a vCenter PowerCLI session connected to the vCenter Server managing the cluster.
-    **`PING 192.168.50.42 (192.168.50.42): 56 data bytes — No response from host`** — Check network connectivity, firewall rules, and vSAN VMkernel adapter configuration on both the source and peer hosts.
+    | Error | Fix |
+    |---|---|
+    | `vmkping: Unknown network device vmk2` | Verify the VMkernel adapter name with `esxcli vsan network list` and use the correct interface name. |
+    | `Error: The object 'VsanVcNetworkConfigSystem-vsan-vc-network-config-system' could not be found` | Ensure vSAN is licensed and enabled on the cluster, and run the command from a vCenter PowerCLI session connected to the vCenter Server managing the cluster. |
+    | `PING 192.168.50.42 (192.168.50.42): 56 data bytes — No response from host` | Check network connectivity, firewall rules, and vSAN VMkernel adapter configuration on both the source and peer hosts. |
 ---
 
 ## See also

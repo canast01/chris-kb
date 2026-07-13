@@ -78,9 +78,11 @@ SNMPv2-MIB::sysDescr.0 = STRING: Cisco NX-OS Software, Nexus 9000 Series
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the ND's CA certificate into your system trust store.
-    **`nc: connect to 192.168.100.50 port 22 (tcp) failed: Connection refused`** — Verify the switch IP is correct and SSH is enabled on the switch with `show feature | grep ssh`.
-    **`snmpget: Unknown Object Identifier (Sub-id not found: (top))`** — Confirm the SNMP community string matches the switch configuration and the OID is valid for your NX-OS version.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the ND's CA certificate into your system trust store. |
+    | `nc: connect to 192.168.100.50 port 22 (tcp) failed: Connection refused` | Verify the switch IP is correct and SSH is enabled on the switch with `show feature | grep ssh`. |
+    | `snmpget: Unknown Object Identifier (Sub-id not found: (top))` | Confirm the SNMP community string matches the switch configuration and the OID is valid for your NX-OS version. |
 ## See also
 
 - [Cisco Nexus Dashboard — Architecture](../how-it-works/)

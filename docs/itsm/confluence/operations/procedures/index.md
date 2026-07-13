@@ -72,9 +72,11 @@ curl -u user:token -X PUT \
 ```
 
 !!! warning "Common errors"
-    **`{"statusCode":401,"data":{"authorized":false,"valid":true,"errors":["AUTHENTICATION_DENIED"]}}`** — Verify the API token is valid and has not expired; regenerate it in Confluence user settings if needed.
-    **`{"statusCode":404,"data":{"authorized":true,"valid":true,"errors":["The content with id 12345 does not exist or you do not have permission to see it."]}}`** — Confirm the page ID exists and your user account has edit permissions on that page in the target space.
-    **`{"statusCode":409,"data":{"authorized":true,"valid":true,"errors":["Conflict: The version number you provided does not match the current version."]}}`** — Fetch the current page version number using a GET request before updating, then increment it by one in the PUT request.
+    | Error | Fix |
+    |---|---|
+    | `{"statusCode":401,"data":{"authorized":false,"valid":true,"errors":["AUTHENTICATION_DENIED"]}}` | Verify the API token is valid and has not expired; regenerate it in Confluence user settings if needed. |
+    | `{"statusCode":404,"data":{"authorized":true,"valid":true,"errors":["The content with id 12345 does not exist or you do not have permission to see it."]}}` | Confirm the page ID exists and your user account has edit permissions on that page in the target space. |
+    | `{"statusCode":409,"data":{"authorized":true,"valid":true,"errors":["Conflict: The version number you provided does not match the current version."]}}` | Fetch the current page version number using a GET request before updating, then increment it by one in the PUT request. |
 ```bash
 # Get current restrictions
 curl -u user:token \
@@ -117,9 +119,11 @@ curl -u user:token -X DELETE \
 ```
 
 !!! warning "Common errors"
-    **`{"statusCode":401,"message":"Authentication failed; invalid username, password, or token."}`** — Verify the API token is valid and has not expired; regenerate in Atlassian account settings if needed.
-    **`{"statusCode":404,"message":"The content with id 12345 could not be found."}`** — Confirm the page ID is correct by checking the page URL or using the Confluence API to list content IDs.
-    **`{"statusCode":403,"message":"You do not have permission to restrict this content."}`** — Ensure your user account has Edit permissions on the page and Admin role in the space.
+    | Error | Fix |
+    |---|---|
+    | `{"statusCode":401,"message":"Authentication failed; invalid username, password, or token."}` | Verify the API token is valid and has not expired; regenerate in Atlassian account settings if needed. |
+    | `{"statusCode":404,"message":"The content with id 12345 could not be found."}` | Confirm the page ID is correct by checking the page URL or using the Confluence API to list content IDs. |
+    | `{"statusCode":403,"message":"You do not have permission to restrict this content."}` | Ensure your user account has Edit permissions on the page and Admin role in the space. |
 ```bash
 # Watch a page (receive change notifications)
 curl -u user:token -X POST \
@@ -167,9 +171,11 @@ curl -u user:token \
 ```
 
 !!! warning "Common errors"
-    **`401 Unauthorized`** — Verify your Confluence API token is valid and base64-encoded correctly in the `-u user:token` parameter.
-    **`404 Not Found`** — Confirm the page ID (12345) exists and you have permission to access it; use `GET /content` to list available pages.
-    **`403 Forbidden`** — Ensure your user account has the required permissions to watch content or view watchers in the space.
+    | Error | Fix |
+    |---|---|
+    | `401 Unauthorized` | Verify your Confluence API token is valid and base64-encoded correctly in the `-u user:token` parameter. |
+    | `404 Not Found` | Confirm the page ID (12345) exists and you have permission to access it; use `GET /content` to list available pages. |
+    | `403 Forbidden` | Ensure your user account has the required permissions to watch content or view watchers in the space. |
 ```bash
 # Archive a single page via REST API
 curl -u user:token -X PUT \
@@ -189,9 +195,11 @@ curl -u user:token \
 ```
 
 !!! warning "Common errors"
-    **`{"statusCode":401,"data":{"authorized":false,"valid":false,"errors":["INVALID_USER_OR_PASSWORD"]}}`** — Verify the API token is valid and has not expired; regenerate it in your Atlassian account settings if needed.
-    **`{"statusCode":403,"data":{"authorized":true,"valid":true,"errors":["You do not have permission to modify this page"]}}`** — Ensure your user account has Edit or Admin permissions on the target page or space.
-    **`{"statusCode":404,"data":{"errors":["Could not find content with id 12345"]}}`** — Confirm the page ID exists and has not already been deleted; retrieve the correct ID from the page URL or via a content search API call.
+    | Error | Fix |
+    |---|---|
+    | `{"statusCode":401,"data":{"authorized":false,"valid":false,"errors":["INVALID_USER_OR_PASSWORD"]}}` | Verify the API token is valid and has not expired; regenerate it in your Atlassian account settings if needed. |
+    | `{"statusCode":403,"data":{"authorized":true,"valid":true,"errors":["You do not have permission to modify this page"]}}` | Ensure your user account has Edit or Admin permissions on the target page or space. |
+    | `{"statusCode":404,"data":{"errors":["Could not find content with id 12345"]}}` | Confirm the page ID exists and has not already been deleted; retrieve the correct ID from the page URL or via a content search API call. |
 ```bash
 # Find pages with no parent using CQL in Advanced Search:
 # space = "ENG" AND ancestor = null AND status = current
@@ -226,9 +234,11 @@ curl -u user:token \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-instance.atlassian.net port 443: Name or service not known`** — Replace `your-instance` with your actual Confluence domain name (e.g., `company.atlassian.net`).
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API token is valid and the user has API access enabled; expired or revoked tokens return HTML error pages instead of JSON.
-    **`401 Unauthorized`** — Ensure the user account and API token are correct; regenerate the token in Atlassian account settings if authentication fails.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-instance.atlassian.net port 443: Name or service not known` | Replace `your-instance` with your actual Confluence domain name (e.g., `company.atlassian.net`). |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the API token is valid and the user has API access enabled; expired or revoked tokens return HTML error pages instead of JSON. |
+    | `401 Unauthorized` | Ensure the user account and API token are correct; regenerate the token in Atlassian account settings if authentication fails. |
 ```bash
 # Delete a page by ID
 curl -u user:token -X DELETE \
@@ -262,9 +272,11 @@ $ cat space_audit.csv
 ```
 
 !!! warning "Common errors"
-    **`{"statusCode":401,"data":{"authorized":false,"valid":true,"allowedInPublicMode":false,"errors":[]}}`** — Verify the Atlassian API token is valid and has not expired; regenerate it in your account settings if needed.
-    **`{"statusCode":404,"data":{"authorized":true,"valid":true,"errors":[{"message":"The content with id 67890 was not found or you do not have permission to view it."}]}}`** — Confirm the page ID exists and your user account has delete/edit permissions on that space.
-    **`jq: parse error: Invalid numeric literal at line 1 column 6`** — Ensure the API response is valid JSON by checking that your Confluence instance URL is correct and the API endpoint is accessible.
+    | Error | Fix |
+    |---|---|
+    | `{"statusCode":401,"data":{"authorized":false,"valid":true,"allowedInPublicMode":false,"errors":[]}}` | Verify the Atlassian API token is valid and has not expired; regenerate it in your account settings if needed. |
+    | `{"statusCode":404,"data":{"authorized":true,"valid":true,"errors":[{"message":"The content with id 67890 was not found or you do not have permission to view it."}]}}` | Confirm the page ID exists and your user account has delete/edit permissions on that space. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 6` | Ensure the API response is valid JSON by checking that your Confluence instance URL is correct and the API endpoint is accessible. |
 ```bash
 # Find pages not updated in 365+ days (paste in Advanced Search CQL box)
 # space = "ENG" AND lastModified < "2025-05-01" AND status = current
@@ -296,9 +308,11 @@ curl -u user:token \
 ```
 
 !!! warning "Common errors"
-    **`curl: (401) Unauthorized`** — Verify your API token is valid and base64-encoded correctly in the Authorization header, or use `-u user:token` format with proper credentials.
-    **`jq: parse error: Cannot index string with string "storage"`** — Ensure the `expand=body.storage` parameter is included in the URL and the Confluence instance is returning valid JSON with nested body objects.
-    **`curl: (403) Forbidden`** — Confirm your user account has read access to the ENG space and the API token has the `read:confluence-content.all` permission scope.
+    | Error | Fix |
+    |---|---|
+    | `curl: (401) Unauthorized` | Verify your API token is valid and base64-encoded correctly in the Authorization header, or use `-u user:token` format with proper credentials. |
+    | `jq: parse error: Cannot index string with string "storage"` | Ensure the `expand=body.storage` parameter is included in the URL and the Confluence instance is returning valid JSON with nested body objects. |
+    | `curl: (403) Forbidden` | Confirm your user account has read access to the ENG space and the API token has the `read:confluence-content.all` permission scope. |
 ```bash
 # List attachments for a page
 curl -u user:token \
@@ -343,9 +357,11 @@ curl -u user:token -X DELETE \
 ```
 
 !!! warning "Common errors"
-    **`{"statusCode":401,"data":{"authorized":false,"valid":true,"errors":["INVALID_USER_OR_PASSWORD"]}}`** — Verify your Confluence API token is valid and base64-encoded correctly in the `-u user:token` parameter.
-    **`{"statusCode":404,"data":{"authorized":true,"valid":true,"errors":["The content with id 12345 does not exist or you do not have permission to view it."]}}`** — Confirm the page ID (12345) exists and your user has read access to that Confluence space.
-    **`{"statusCode":403,"data":{"authorized":true,"valid":true,"errors":["You do not have permission to delete this attachment."]}}`** — Ensure your API token has edit/delete permissions on the page, or contact your Confluence space administrator.
+    | Error | Fix |
+    |---|---|
+    | `{"statusCode":401,"data":{"authorized":false,"valid":true,"errors":["INVALID_USER_OR_PASSWORD"]}}` | Verify your Confluence API token is valid and base64-encoded correctly in the `-u user:token` parameter. |
+    | `{"statusCode":404,"data":{"authorized":true,"valid":true,"errors":["The content with id 12345 does not exist or you do not have permission to view it."]}}` | Confirm the page ID (12345) exists and your user has read access to that Confluence space. |
+    | `{"statusCode":403,"data":{"authorized":true,"valid":true,"errors":["You do not have permission to delete this attachment."]}}` | Ensure your API token has edit/delete permissions on the page, or contact your Confluence space administrator. |
 ```bash
 # Pages in a space modified in the last 30 days
 space = "ENG" AND lastModified > "2025-04-01" AND type = page
@@ -386,9 +402,11 @@ space IN ("ENG", "OPS") AND label = "on-call" AND status = current
 ```
 
 !!! warning "Common errors"
-    **`Invalid CQL: Unexpected character at position 5`** — Remove spaces around the `=` operator; use `space="ENG"` instead of `space = "ENG"`.
-    **`User 'jsmith' not found or permission denied`** — Verify the username exists in your Confluence instance and you have permission to search by creator; use the full display name if a username is not recognized.
-    **`Label 'incident' does not exist in space 'ENG'`** — Confirm the label is applied to at least one page in the target space; check label spelling and capitalization.
+    | Error | Fix |
+    |---|---|
+    | `Invalid CQL: Unexpected character at position 5` | Remove spaces around the `=` operator; use `space="ENG"` instead of `space = "ENG"`. |
+    | `User 'jsmith' not found or permission denied` | Verify the username exists in your Confluence instance and you have permission to search by creator; use the full display name if a username is not recognized. |
+    | `Label 'incident' does not exist in space 'ENG'` | Confirm the label is applied to at least one page in the target space; check label spelling and capitalization. |
 ```bash
 # Filter by content type
 type IN (page, blogpost, comment, attachment)
@@ -416,9 +434,11 @@ curl -u admin:token "https://confluence.example.com/rest/api/content/search?cql=
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443`** — Verify the Confluence hostname is correct and the server is reachable from your network.
-    **`{"statusCode":401,"message":"Unauthorized"}`** — Ensure your API token is valid and has appropriate permissions; regenerate the token in Confluence user settings if needed.
-    **`Invalid CQL: unexpected character`** — Check that special characters in the CQL query are properly URL-encoded (spaces as %20, quotes as %22) when passed via curl.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443` | Verify the Confluence hostname is correct and the server is reachable from your network. |
+    | `{"statusCode":401,"message":"Unauthorized"}` | Ensure your API token is valid and has appropriate permissions; regenerate the token in Confluence user settings if needed. |
+    | `Invalid CQL: unexpected character` | Check that special characters in the CQL query are properly URL-encoded (spaces as %20, quotes as %22) when passed via curl. |
 ```bash
 # Run a CQL query from the command line
 curl -u user:token -G \
@@ -464,9 +484,11 @@ done
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused`** — Replace `your-instance` with your actual Confluence domain name (e.g., `company.atlassian.net`).
-    **`jq: parse error: Invalid JSON text at line 1`** — Add `-s` flag to curl to silence progress output, or verify the API token has read permissions on the space.
-    **`401 Unauthorized`** — Ensure the API token is valid and has not expired; generate a new token from your Atlassian account settings if needed.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused` | Replace `your-instance` with your actual Confluence domain name (e.g., `company.atlassian.net`). |
+    | `jq: parse error: Invalid JSON text at line 1` | Add `-s` flag to curl to silence progress output, or verify the API token has read permissions on the space. |
+    | `401 Unauthorized` | Ensure the API token is valid and has not expired; generate a new token from your Atlassian account settings if needed. |
 ```bash
 # Add a label to a page
 curl -u user:token -X POST \
@@ -496,9 +518,11 @@ curl -u user:token -G \
 ```
 
 !!! warning "Common errors"
-    **`{"statusCode":401,"message":"Unauthorized"}`** — Verify the username and API token are correct, and that the token has API access permissions enabled.
-    **`{"statusCode":404,"message":"Content with id 12345 not found"}`** — Confirm the page ID exists and is accessible to the authenticated user by checking the page URL or listing space contents.
-    **`curl: (6) Could not resolve host: your-instance.atlassian.net`** — Replace `your-instance` with your actual Confluence domain name (e.g., `mycompany.atlassian.net`).
+    | Error | Fix |
+    |---|---|
+    | `{"statusCode":401,"message":"Unauthorized"}` | Verify the username and API token are correct, and that the token has API access permissions enabled. |
+    | `{"statusCode":404,"message":"Content with id 12345 not found"}` | Confirm the page ID exists and is accessible to the authenticated user by checking the page URL or listing space contents. |
+    | `curl: (6) Could not resolve host: your-instance.atlassian.net` | Replace `your-instance` with your actual Confluence domain name (e.g., `mycompany.atlassian.net`). |
 ```bash
 # Export search results to a file for reporting
 curl -s -u user:token -G \
@@ -519,9 +543,11 @@ Load Balancer Configuration	https://your-instance.atlassian.net/wiki/pages/viewp
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused`** — Replace `your-instance` with your actual Confluence domain name (e.g., `company.atlassian.net`).
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API token is valid and the user has permission to access the Confluence REST API; expired or revoked tokens return HTML error pages instead of JSON.
-    **`bash: jq: command not found`** — Install jq using your package manager (`apt-get install jq` on Debian/Ubuntu or `brew install jq` on macOS).
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused` | Replace `your-instance` with your actual Confluence domain name (e.g., `company.atlassian.net`). |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the API token is valid and the user has permission to access the Confluence REST API; expired or revoked tokens return HTML error pages instead of JSON. |
+    | `bash: jq: command not found` | Install jq using your package manager (`apt-get install jq` on Debian/Ubuntu or `brew install jq` on macOS). |
 ---
 
 ```d2

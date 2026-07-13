@@ -124,8 +124,10 @@ Issues Detected:
 ```
 
 !!! warning "Common errors"
-    **`sudo: command not found`** — Ensure you are logged in as a user with sudo privileges; if using a restricted shell, request admin access.
-    **`/var/log/vmware/vcf/lcm/lcm-debug.log: No such file or directory`** — Verify the LCM service is running with `systemctl status vmware-vcf-lcm` and check the correct log path for your
+    | Error | Fix |
+    |---|---|
+    | `sudo: command not found` | Ensure you are logged in as a user with sudo privileges; if using a restricted shell, request admin access. |
+    | `/var/log/vmware/vcf/lcm/lcm-debug.log: No such file or directory` | Verify the LCM service is running with `systemctl status vmware-vcf-lcm` and check the correct log path for your |
 Look for: the specific exception class or error message. Common patterns:
 
 ```text
@@ -175,9 +177,11 @@ Address: 10.20.1.67
 ```
 
 !!! warning "Common errors"
-    **`command not found: sddc-manager-cli`** — Ensure the SDDC Manager CLI is installed and in your PATH, or run this command directly from the SDDC Manager appliance.
-    **`UNREACHABLE`** — Verify the ESXi host is powered on, check network connectivity from SDDC Manager, and confirm firewall rules allow ICMP traffic.
-    **`nslookup: can't resolve 'vcenter.domain.local': No answer`** — Verify DNS servers are configured correctly on SDDC Manager and that the DNS zone contains the required A records.
+    | Error | Fix |
+    |---|---|
+    | `command not found: sddc-manager-cli` | Ensure the SDDC Manager CLI is installed and in your PATH, or run this command directly from the SDDC Manager appliance. |
+    | `UNREACHABLE` | Verify the ESXi host is powered on, check network connectivity from SDDC Manager, and confirm firewall rules allow ICMP traffic. |
+    | `nslookup: can't resolve 'vcenter.domain.local': No answer` | Verify DNS servers are configured correctly on SDDC Manager and that the DNS zone contains the required A records. |
 **Certificate issue — expiry or trust:**
 
 ```bash
@@ -193,8 +197,10 @@ notAfter=Jan 15 10:23:45 2024 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Ensure the vCenter FQDN is correct and the host is reachable on port 443; verify network connectivity with `ping <vcenter-fqdn>` first.
-    **`error in x509 parsing`** — The certificate chain may not be complete; add `-showcerts` to `openssl s_client` to inspect the full chain and identify parsing issues.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Ensure the vCenter FQDN is correct and the host is reachable on port 443; verify network connectivity with `ping <vcenter-fqdn>` first. |
+    | `error in x509 parsing` | The certificate chain may not be complete; add `-showcerts` to `openssl s_client` to inspect the full chain and identify parsing issues. |
 For certificate rotation in SDDC Manager, see the [Certificate Expiry and Rotation](certificate-expiry-rotation.md) scenario.
 
 **vSAN health blocking upgrade:**
@@ -227,8 +233,10 @@ ETA: 0 seconds
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan`** — Ensure you are connected to an ESXi 6.5+ host with vSAN enabled; run `esxcli vsan cluster get` to verify vSAN is active.
-    **`Error: Permission denied`** — SSH to the ESXi host with root credentials or a user with vSAN admin privileges.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan` | Ensure you are connected to an ESXi 6.5+ host with vSAN enabled; run `esxcli vsan cluster get` to verify vSAN is active. |
+    | `Error: Permission denied` | SSH to the ESXi host with root credentials or a user with vSAN admin privileges. |
 Do not retry the upgrade workflow while a vSAN resync is in progress — the upgrade stall is protecting data integrity.
 
 **NSX precheck failure:**
@@ -294,9 +302,11 @@ curl -sk -X PATCH -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vCenter CA certificate into your system trust store.
-    **`{"error":"Unauthorized","code":401}`** — Verify the admin password is correct and URL-encoded if it contains special characters; use `-u admin:$(echo -n 'password' | jq -sRr @uri)` for special chars.
-    **`{"error":"Not Found","code":404}`** — Confirm the `<upgrade-id>` and `<task-id>` values exist by running the first curl command to list active upgrades and their task IDs.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the vCenter CA certificate into your system trust store. |
+    | `{"error":"Unauthorized","code":401}` | Verify the admin password is correct and URL-encoded if it contains special characters; use `-u admin:$(echo -n 'password' | jq -sRr @uri)` for special chars. |
+    | `{"error":"Not Found","code":404}` | Confirm the `<upgrade-id>` and `<task-id>` values exist by running the first curl command to list active upgrades and their task IDs. |
 Look for: some tasks cannot be retried individually and require retrying the entire upgrade operation from the beginning. If the component was partially upgraded (e.g., one NSX Manager node upgraded), check whether rollback or completion is the safer path before retrying.
 
 ---
@@ -337,9 +347,11 @@ Photon OS: 4.0 Rev 2
 ```
 
 !!! warning "Common errors"
-    **`sudo: /opt/vmware/sddc-support/sos: command not found`** — Verify the SOS tool is installed by running `ls -la /opt/vmware/sddc-support/` and confirm the SDDC Manager support bundle is present.
-    **`Error: Domain '<workload-domain-name>' not found in SDDC Manager inventory`** — Replace `<workload-domain-name>` with the actual workload domain name from your environment (e.g., `workload-domain-01`).
-    **`Permission denied`** — Ensure you are running the command with `sudo` and that your user account has sufficient privileges in the SDDC Manager appliance.
+    | Error | Fix |
+    |---|---|
+    | `sudo: /opt/vmware/sddc-support/sos: command not found` | Verify the SOS tool is installed by running `ls -la /opt/vmware/sddc-support/` and confirm the SDDC Manager support bundle is present. |
+    | `Error: Domain '<workload-domain-name>' not found in SDDC Manager inventory` | Replace `<workload-domain-name>` with the actual workload domain name from your environment (e.g., `workload-domain-01`). |
+    | `Permission denied` | Ensure you are running the command with `sudo` and that your user account has sufficient privileges in the SDDC Manager appliance. |
 Expected results:
 
 ```text

@@ -119,9 +119,11 @@ notAfter=Mar 18 12:00:00 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`command not found: openssl`** — Install openssl with `apt install openssl` (Debian/Ubuntu) or `yum install openssl` (RHEL/CentOS).
-    **`Connection refused`** — Verify the hostname and port are correct, and the service is listening on that port with `netstat -tlnp | grep :443`.
-    **`journalctl: No entries found`** — Check that the service name matches exactly with `systemctl list-units --all | grep backup` and adjust the `--since` parameter if needed.
+    | Error | Fix |
+    |---|---|
+    | `command not found: openssl` | Install openssl with `apt install openssl` (Debian/Ubuntu) or `yum install openssl` (RHEL/CentOS). |
+    | `Connection refused` | Verify the hostname and port are correct, and the service is listening on that port with `netstat -tlnp | grep :443`. |
+    | `journalctl: No entries found` | Check that the service name matches exactly with `systemctl list-units --all | grep backup` and adjust the `--since` parameter if needed. |
 Add environment-specific commands as you test and verify them.
 
 ## See also

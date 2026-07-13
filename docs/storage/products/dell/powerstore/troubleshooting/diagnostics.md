@@ -165,9 +165,11 @@ FAN FAN_Module_3: Degraded
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify it's not being removed).
-    **`jq: command not found` or `python3: command not found`** — Install required JSON parser (`apt-get install python3` or `brew install jq`) on the management workstation.
-    **`{"error_code":-1,"error_msg":"Invalid session"}`** — Re-run the login curl command to refresh the session cookie in `/tmp/ps-cookie.txt` before retrying API calls.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but verify it's not being removed). |
+    | `jq: command not found` or `python3: command not found` | Install required JSON parser (`apt-get install python3` or `brew install jq`) on the management workstation. |
+    | `{"error_code":-1,"error_msg":"Invalid session"}` | Re-run the login curl command to refresh the session cookie in `/tmp/ps-cookie.txt` before retrying API calls. |
 ---
 
 ## Step 2 — Check recent critical events
@@ -216,9 +218,11 @@ curl -sk -b /tmp/ps-cookie.txt \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify `/tmp/ps-cookie.txt` exists from prior authentication).
-    **`jq: command not found`** — Use `python3 -m json.tool` instead of piping to `jq`, or install jq with your package manager.
-    **`HTTP/1.1 401 Unauthorized`** — Re-authenticate and refresh the session cookie with `curl -sk -u admin:password "https://<powerstore-mgmt-ip>/api/rest/login" -c /tmp/ps-cookie.txt` before querying events.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but verify `/tmp/ps-cookie.txt` exists from prior authentication). |
+    | `jq: command not found` | Use `python3 -m json.tool` instead of piping to `jq`, or install jq with your package manager. |
+    | `HTTP/1.1 401 Unauthorized` | Re-authenticate and refresh the session cookie with `curl -sk -u admin:password "https://<powerstore-mgmt-ip>/api/rest/login" -c /tmp/ps-cookie.txt` before querying events. |
 ---
 
 ## Step 3 — Check volume and host connectivity
@@ -286,9 +290,11 @@ PROBLEM: vol_test_dr state=Unavailable
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present; if error persists, verify PowerStore management IP is reachable on port 443).
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify the authentication cookie in `/tmp/ps-cookie.txt` is valid by re-running the login curl command with correct credentials.
-    **`curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused`** — Confirm the PowerStore management IP address is correct and the array is online and accessible from your network.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification (already present; if error persists, verify PowerStore management IP is reachable on port 443). |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify the authentication cookie in `/tmp/ps-cookie.txt` is valid by re-running the login curl command with correct credentials. |
+    | `curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused` | Confirm the PowerStore management IP address is correct and the array is online and accessible from your network. |
 ---
 
 ## Step 4 — Check FC and Ethernet port health
@@ -352,9 +358,11 @@ FC port b1: link_state=Degraded, speed=8Gbps
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the command).
-    **`jq: command not found` or `python3: command not found`** — Install the missing tool with `apt-get install python3` or `yum install python3` on the management station.
-    **`401 Unauthorized` in JSON response** — Regenerate the authentication cookie by running the login command: `curl -sk -X POST -d '{"username":"admin","password":"<pwd>"}' https://<powerstore-mgmt-ip>/api/rest/login -c /tmp/ps-cookie.txt`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the command). |
+    | `jq: command not found` or `python3: command not found` | Install the missing tool with `apt-get install python3` or `yum install python3` on the management station. |
+    | `401 Unauthorized` in JSON response` | Regenerate the authentication cookie by running the login command: `curl -sk -X POST -d '{"username":"admin","password":"<pwd>"}' https://<powerstore-mgmt-ip>/api/rest/login -c /tmp/ps-cookie.txt`. |
 ---
 
 ## Step 5 — Check NAS server and file system health
@@ -447,9 +455,11 @@ curl -sk -b /tmp/ps-cookie.txt \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the PowerStore CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused`** — Verify the PowerStore management IP is correct and reachable; check network connectivity with `ping` and confirm the REST API service is running on the array.
-    **`jq: parse error: Invalid JSON at line 1`** — Ensure the authentication cookie in `/tmp/ps-cookie.txt` is valid by re-authenticating to PowerStore; expired sessions will return HTML error pages instead of JSON.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the PowerStore CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to <powerstore-mgmt-ip> port 443: Connection refused` | Verify the PowerStore management IP is correct and reachable; check network connectivity with `ping` and confirm the REST API service is running on the array. |
+    | `jq: parse error: Invalid JSON at line 1` | Ensure the authentication cookie in `/tmp/ps-cookie.txt` is valid by re-authenticating to PowerStore; expired sessions will return HTML error pages instead of JSON. |
 ---
 
 ## Step 6 — Check replication sessions
@@ -500,8 +510,10 @@ vault-archive: state=Synchronized, lag=0, last_sync=2024-01-15T14:30:45Z
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify the management IP is correct and reachable on port 443).
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the authentication cookie in `/tmp/ps-cookie.txt` is valid by re-running the login curl command that created it.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify the management IP is correct and reachable on port 443). |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify the authentication cookie in `/tmp/ps-cookie.txt` is valid by re-running the login curl command that created it. |
 ---
 
 ## Step 7 — Collect SupportAssist bundle for Dell case
@@ -570,9 +582,11 @@ curl -sk -b /tmp/ps-cookie.txt \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in examples; if error persists, verify `/tmp/ps-cookie.txt` exists and contains valid session token).
-    **`curl: (35) error:1400D102:SSL routines:SSL_CTX_use_certificate:no certificates client cert`** — Ensure PowerStore Manager authentication cookie was created with `curl -sk -c /tmp/ps-cookie.txt -u admin:password https://<powerstore-mgmt-ip>/api/rest/login` before running API calls.
-    **`json.tool: error: Expecting value: line 1 column 1 (char 0)`** — Verify the REST API endpoint is correct and the session cookie has not expired; re-authenticate if needed.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in examples; if error persists, verify `/tmp/ps-cookie.txt` exists and contains valid session token). |
+    | `curl: (35) error:1400D102:SSL routines:SSL_CTX_use_certificate:no certificates client cert` | Ensure PowerStore Manager authentication cookie was created with `curl -sk -c /tmp/ps-cookie.txt -u admin:password https://<powerstore-mgmt-ip>/api/rest/login` before running API calls. |
+    | `json.tool: error: Expecting value: line 1 column 1 (char 0)` | Verify the REST API endpoint is correct and the session cookie has not expired; re-authenticate if needed. |
 ---
 
 ## Log locations

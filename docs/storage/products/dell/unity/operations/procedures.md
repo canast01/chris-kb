@@ -148,9 +148,11 @@ Last Modified: 2024-01-15 14:32:18
 ```
 
 !!! warning "Common errors"
-    **`Error: The system cannot be reached at <ip>`** — Verify the storage array IP address is correct and reachable with `ping <ip>`.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the admin credentials are correct and the user account is not locked; reset the password if needed.
-    **`Error: LUN ID <lun_id> not found`** — List all available LUNs with `uemcli -d <ip> -u admin /stor/config/lun show` to verify the correct LUN ID exists.
+    | Error | Fix |
+    |---|---|
+    | `Error: The system cannot be reached at <ip>` | Verify the storage array IP address is correct and reachable with `ping <ip>`. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin credentials are correct and the user account is not locked; reset the password if needed. |
+    | `Error: LUN ID <lun_id> not found` | List all available LUNs with `uemcli -d <ip> -u admin /stor/config/lun show` to verify the correct LUN ID exists. |
 ### Create a LUN
 
 ![Create a LUN](../../../../../assets/unity-proc-create-a-lun.svg)
@@ -201,9 +203,11 @@ Created: 2024-01-15 14:32:45
 ```
 
 !!! warning "Common errors"
-    **`Error: Pool pool_1 not found or is offline`** — Verify the pool ID exists and is healthy using `uemcli -d <ip> -u admin /stor/config/pool show`.
-    **`Error: Insufficient space in pool pool_1 (available: 450G, requested: 1T)`** — Reduce the LUN size or add capacity to the pool before retrying the create command.
-    **`Error: Authentication failed for user admin`** — Ensure the Unity array IP is correct and admin credentials are valid, or use `-p` flag to prompt for password interactively.
+    | Error | Fix |
+    |---|---|
+    | `Error: Pool pool_1 not found or is offline` | Verify the pool ID exists and is healthy using `uemcli -d <ip> -u admin /stor/config/pool show`. |
+    | `Error: Insufficient space in pool pool_1 (available: 450G, requested: 1T)` | Reduce the LUN size or add capacity to the pool before retrying the create command. |
+    | `Error: Authentication failed for user admin` | Ensure the Unity array IP is correct and admin credentials are valid, or use `-p` flag to prompt for password interactively. |
 ### Modify and Expand
 
 ![Modify and Expand](../../../../../assets/unity-proc-modify-and-expand.svg)
@@ -229,9 +233,11 @@ LUN 123 description updated to 'Updated description' successfully.
 ```
 
 !!! warning "Common errors"
-    **`You are not authenticated. Please login first.`** — Add `-u admin -p <password>` or configure credentials in `~/.uemcli/credentials` before running the command.
-    **`LUN size can only be increased, not decreased.`** — Specify a new size larger than the current size; shrinking LUNs is not supported.
-    **`LUN <lun_id> not found.`** — Verify the LUN ID exists by running `uemcli -d <ip> -u admin /stor/config/lun list` and use the correct ID from the output.
+    | Error | Fix |
+    |---|---|
+    | `You are not authenticated. Please login first.` | Add `-u admin -p <password>` or configure credentials in `~/.uemcli/credentials` before running the command. |
+    | `LUN size can only be increased, not decreased.` | Specify a new size larger than the current size; shrinking LUNs is not supported. |
+    | `LUN <lun_id> not found.` | Verify the LUN ID exists by running `uemcli -d <ip> -u admin /stor/config/lun list` and use the correct ID from the output. |
 ### Host Access (LUN Mapping)
 
 ![Host Access (LUN Mapping)](../../../../../assets/unity-proc-host-access-lun-mapping.svg)
@@ -265,9 +271,11 @@ The operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error Code: 0x7d13c401 - The specified LUN does not exist.`** — Verify the LUN ID exists by running `uemcli -d <ip> -u admin /stor/config/lun show` and use a valid LUN ID.
-    **`Error Code: 0x7d13c402 - The specified host does not exist.`** — Confirm the host ID is registered on the array by running `uemcli -d <ip> -u admin /stor/config/host show` before granting access.
-    **`Error Code: 0x7d13c403 - Access control entry already exists for this LUN and host pair.`** — Remove the existing ACL first using the ACL ID, or modify the existing entry instead of creating a duplicate.
+    | Error | Fix |
+    |---|---|
+    | `Error Code: 0x7d13c401 - The specified LUN does not exist.` | Verify the LUN ID exists by running `uemcli -d <ip> -u admin /stor/config/lun show` and use a valid LUN ID. |
+    | `Error Code: 0x7d13c402 - The specified host does not exist.` | Confirm the host ID is registered on the array by running `uemcli -d <ip> -u admin /stor/config/host show` before granting access. |
+    | `Error Code: 0x7d13c403 - Access control entry already exists for this LUN and host pair.` | Remove the existing ACL first using the ACL ID, or modify the existing entry instead of creating a duplicate. |
 ### LUN Snapshots
 
 ![LUN Snapshots](../../../../../assets/unity-proc-lun-snapshots.svg)
@@ -321,9 +329,11 @@ Name: prod-lun-snap-copy-20240115
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid resource ID <lun_id>`** — Verify the LUN ID exists by running `uemcli -d <ip> -u admin /stor/lun show` and use the correct ID from the output.
-    **`Error: Authentication failed for user admin`** — Ensure the Unity array IP is reachable, credentials are correct, and the admin user has snapshot management privileges assigned.
-    **`Error: Snapshot <snap_id> is in use and cannot be deleted`** — Detach or unexport the snapshot from all hosts before deletion, or use the `-force` flag if the array permits it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid resource ID <lun_id>` | Verify the LUN ID exists by running `uemcli -d <ip> -u admin /stor/lun show` and use the correct ID from the output. |
+    | `Error: Authentication failed for user admin` | Ensure the Unity array IP is reachable, credentials are correct, and the admin user has snapshot management privileges assigned. |
+    | `Error: Snapshot <snap_id> is in use and cannot be deleted` | Detach or unexport the snapshot from all hosts before deletion, or use the `-force` flag if the array permits it. |
 ### Delete a LUN
 
 ![Delete a LUN](../../../../../assets/unity-proc-delete-a-lun.svg)
@@ -360,9 +370,11 @@ Operation completed in 12.3 seconds.
 ```
 
 !!! warning "Common errors"
-    **`Error: LUN is still mapped to hosts. Remove all host access before deletion.`** — Use `uemcli -d <ip> -u admin /stor/config/lunacl show` to list all ACLs, then delete each one before attempting LUN deletion.
-    **`Error: Snapshots exist for this LUN. Delete all snapshots before proceeding.`** — Run `uemcli -d <ip> -u admin /prot/snap show -res <lun_id>` to identify all snapshots and delete them individually with the `-id` parameter.
-    **`Error: You are not authenticated. Please login first.`** — Add `-p <password>` to the uemcli command or set the UEMCLI_PASSWORD environment variable before executing.
+    | Error | Fix |
+    |---|---|
+    | `Error: LUN is still mapped to hosts. Remove all host access before deletion.` | Use `uemcli -d <ip> -u admin /stor/config/lunacl show` to list all ACLs, then delete each one before attempting LUN deletion. |
+    | `Error: Snapshots exist for this LUN. Delete all snapshots before proceeding.` | Run `uemcli -d <ip> -u admin /prot/snap show -res <lun_id>` to identify all snapshots and delete them individually with the `-id` parameter. |
+    | `Error: You are not authenticated. Please login first.` | Add `-p <password>` to the uemcli command or set the UEMCLI_PASSWORD environment variable before executing. |
 ### Host-Side Validation (After Mapping)
 
 ![Host-Side Validation (After Mapping)](../../../../../assets/unity-proc-host-side-validation-after-mapping.svg)
@@ -425,9 +437,11 @@ Size : 500 GB
 ```
 
 !!! warning "Common errors"
-    **`rescan-scsi-bus.sh: command not found`** — Install sg3-utils package with `apt-get install sg3-utils` or `yum install sg3-utils`.
-    **`Get-Disk : No matching SCSI disks were found`** — Verify the LUN is presented to the Windows host and visible in Disk Management; check Dell Unity array for export/masking configuration.
-    **`Initialize-Disk : Access Denied`** — Run PowerShell as Administrator or use `sudo` equivalent for the session.
+    | Error | Fix |
+    |---|---|
+    | `rescan-scsi-bus.sh: command not found` | Install sg3-utils package with `apt-get install sg3-utils` or `yum install sg3-utils`. |
+    | `Get-Disk : No matching SCSI disks were found` | Verify the LUN is presented to the Windows host and visible in Disk Management; check Dell Unity array for export/masking configuration. |
+    | `Initialize-Disk : Access Denied` | Run PowerShell as Administrator or use `sudo` equivalent for the session. |
 ## NAS Server Management
 
 NAS server lifecycle management — create, configure, and troubleshoot NAS servers on Dell Unity.
@@ -476,9 +490,11 @@ nas_2                       | NAS_Server_02     | spb               | OK        
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (111)`** — Verify the Unity array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is accessible.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the admin credentials are correct and the user account has not been locked; reset the password via the Unisphere GUI if needed.
-    **`Error: Invalid NAS server ID '<nas_id>'`** — List all available NAS server IDs using the first command without the `-id` parameter to find the correct identifier.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (111)` | Verify the Unity array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is accessible. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin credentials are correct and the user account has not been locked; reset the password via the Unisphere GUI if needed. |
+    | `Error: Invalid NAS server ID '<nas_id>'` | List all available NAS server IDs using the first command without the `-id` parameter to find the correct identifier. |
 ### Create a NAS Server
 
 ![Create a NAS Server](../../../../../assets/unity-proc-create-a-nas-server.svg)
@@ -514,9 +530,11 @@ NAS Server ID: nas_1
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid pool ID <pool_id>`** — Verify the pool exists and is available by running `uemcli -d <ip> -u admin /pool list`.
-    **`Error: SP <spa_or_spb> not found or not operational`** — Confirm the Storage Processor is online and use the correct identifier (SPA or SPB) with `uemcli -d <ip> -u admin /sp list`.
-    **`Error: NAS server <nas_id> not found`** — Ensure the NAS server was created successfully in the first command before attempting to configure its file interface.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid pool ID <pool_id>` | Verify the pool exists and is available by running `uemcli -d <ip> -u admin /pool list`. |
+    | `Error: SP <spa_or_spb> not found or not operational` | Confirm the Storage Processor is online and use the correct identifier (SPA or SPB) with `uemcli -d <ip> -u admin /sp list`. |
+    | `Error: NAS server <nas_id> not found` | Ensure the NAS server was created successfully in the first command before attempting to configure its file interface. |
 ### AD / LDAP Authentication
 
 ![AD / LDAP Authentication](../../../../../assets/unity-proc-ad-ldap-authentication.svg)
@@ -558,9 +576,11 @@ ldap_2      nas-02          Enabled     LDAP+SSL
 ```
 
 !!! warning "Common errors"
-    **`Error: The specified organizational unit does not exist`** — Verify the OU path exists in Active Directory using `dsquery ou -name "Servers"` on a domain controller.
-    **`Error: Authentication failed for user <ad_admin_user>`** — Confirm the AD admin credentials are correct and the account has sufficient permissions to join computers to the domain.
-    **`Error: Unable to resolve domain corp.local`** — Ensure the NAS server can reach the domain controller by checking DNS resolution with `nslookup corp.local` from the NAS management interface.
+    | Error | Fix |
+    |---|---|
+    | `Error: The specified organizational unit does not exist` | Verify the OU path exists in Active Directory using `dsquery ou -name "Servers"` on a domain controller. |
+    | `Error: Authentication failed for user <ad_admin_user>` | Confirm the AD admin credentials are correct and the account has sufficient permissions to join computers to the domain. |
+    | `Error: Unable to resolve domain corp.local` | Ensure the NAS server can reach the domain controller by checking DNS resolution with `nslookup corp.local` from the NAS management interface. |
 ### File Interfaces (Network)
 
 ![File Interfaces (Network)](../../../../../assets/unity-proc-file-interfaces-network.svg)
@@ -599,9 +619,11 @@ The specified NAS server object nas_3 does not exist.
 ```
 
 !!! warning "Common errors"
-    **`The specified NAS server object <nas_id> does not exist.`** — Verify the NAS server ID exists by running `uemcli -d <ip> -u admin /net/nas show` and use a valid server identifier.
-    **`The specified port <sp_port_id> is not available or already in use.`** — Check available ports with `uemcli -d <ip> -u admin /net/nas/if show` and select an unused port on the target storage processor.
-    **`Invalid IP address <ip_address> or netmask <mask> format.`** — Ensure the IP address and netmask are in valid dotted-decimal notation (e.g., 192.168.1.100 and 255.255.255.0).
+    | Error | Fix |
+    |---|---|
+    | `The specified NAS server object <nas_id> does not exist.` | Verify the NAS server ID exists by running `uemcli -d <ip> -u admin /net/nas show` and use a valid server identifier. |
+    | `The specified port <sp_port_id> is not available or already in use.` | Check available ports with `uemcli -d <ip> -u admin /net/nas/if show` and select an unused port on the target storage processor. |
+    | `Invalid IP address <ip_address> or netmask <mask> format.` | Ensure the IP address and netmask are in valid dotted-decimal notation (e.g., 192.168.1.100 and 255.255.255.0). |
 ### File Systems (on the NAS Server)
 
 ![File Systems (on the NAS Server)](../../../../../assets/unity-proc-file-systems-on-the-nas-server.svg)
@@ -662,9 +684,11 @@ Share Name: user_share
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid pool ID 'pool_invalid'. Available pools: pool_sas_01, pool_sas_02, pool_nl_sas_01`** — Verify the pool ID exists by running `uemcli -d <ip> -u admin /stor/config/pool show` and use a valid pool name.
-    **`Error: NAS Server 'nas_99' not found or not responding`** — Confirm the NAS server ID is correct and the server is online using `uemcli -d <ip> -u admin /net/nas show`.
-    **`Error: File system size 5T exceeds available pool capacity`** — Check available pool space with `uemcli -d <ip> -u admin /stor/config/pool show -detail` and request a smaller size or use a different pool.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid pool ID 'pool_invalid'. Available pools: pool_sas_01, pool_sas_02, pool_nl_sas_01` | Verify the pool ID exists by running `uemcli -d <ip> -u admin /stor/config/pool show` and use a valid pool name. |
+    | `Error: NAS Server 'nas_99' not found or not responding` | Confirm the NAS server ID is correct and the server is online using `uemcli -d <ip> -u admin /net/nas show`. |
+    | `Error: File system size 5T exceeds available pool capacity` | Check available pool space with `uemcli -d <ip> -u admin /stor/config/pool show -detail` and request a smaller size or use a different pool. |
 ### Failover / SP Rebalance
 
 ![Failover / SP Rebalance](../../../../../assets/unity-proc-failover-sp-rebalance.svg)
@@ -689,8 +713,10 @@ SP: SP B
 ```
 
 !!! warning "Common errors"
-    **`Error Code: 0x7d000001 - The NAS server is not in the expected state for this operation`** — Ensure the NAS server is in a healthy state and not currently processing other operations by running `uemcli -d <ip> -u admin /nas/server show -id <nas_id>` first.
-    **`Error Code: 0x7d000009 - SP B is not available or does not have sufficient resources`** — Verify SP B is online and has adequate capacity by checking `uemcli -d <ip> -u admin /spa show` and `uemcli -d <ip> -u admin /spb show`.
+    | Error | Fix |
+    |---|---|
+    | `Error Code: 0x7d000001 - The NAS server is not in the expected state for this operation` | Ensure the NAS server is in a healthy state and not currently processing other operations by running `uemcli -d <ip> -u admin /nas/server show -id <nas_id>` first. |
+    | `Error Code: 0x7d000009 - SP B is not available or does not have sufficient resources` | Verify SP B is online and has adequate capacity by checking `uemcli -d <ip> -u admin /spa show` and `uemcli -d <ip> -u admin /spb show`. |
 ### Troubleshooting
 
 ![Troubleshooting](../../../../../assets/unity-proc-troubleshooting.svg)
@@ -730,9 +756,11 @@ ID    Client_IP        User              Domain         Connected_Since
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (10.0.0.1:443)`** — Verify the NAS IP address is correct and the management interface is reachable with `ping <ip>`.
-    **`Error: Invalid credentials for user 'admin'`** — Confirm the admin password is correct and hasn't expired; reset credentials in the Unity web UI if needed.
-    **`Error: NAS server <nas_id> not found`** — Replace `<nas_id>` with a valid server ID from `uemcli -d <ip> -u admin /nas/server show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (10.0.0.1:443)` | Verify the NAS IP address is correct and the management interface is reachable with `ping <ip>`. |
+    | `Error: Invalid credentials for user 'admin'` | Confirm the admin password is correct and hasn't expired; reset credentials in the Unity web UI if needed. |
+    | `Error: NAS server <nas_id> not found` | Replace `<nas_id>` with a valid server ID from `uemcli -d <ip> -u admin /nas/server show`. |
 ## Create a LUN
 
 Use this procedure to provision a new block LUN on Dell Unity. Confirm pool capacity headroom is at least 20% before starting.
@@ -767,9 +795,11 @@ lun_4           test_lun_04           pool_2     100 GB    Ready    OK
 ```
 
 !!! warning "Common errors"
-    **`Error Code: 0x7d13d001 - Pool does not exist or is not available`** — Verify the pool ID exists by running `uemcli /stor/prov/pools/pool show` and use a valid pool ID.
-    **`Error Code: 0x7d13d004 - Insufficient space in pool`** — Reduce the requested LUN size or add capacity to the pool using `uemcli /stor/prov/pools/pool expand`.
-    **`Error Code: 0x7d13d005 - LUN name already exists`** — Choose a unique LUN name that does not conflict with existing LUNs in the system.
+    | Error | Fix |
+    |---|---|
+    | `Error Code: 0x7d13d001 - Pool does not exist or is not available` | Verify the pool ID exists by running `uemcli /stor/prov/pools/pool show` and use a valid pool ID. |
+    | `Error Code: 0x7d13d004 - Insufficient space in pool` | Reduce the requested LUN size or add capacity to the pool using `uemcli /stor/prov/pools/pool expand`. |
+    | `Error Code: 0x7d13d005 - LUN name already exists` | Choose a unique LUN name that does not conflict with existing LUNs in the system. |
 Note the LUN ID returned by the create command — it is needed for host access mapping and snapshot operations. Grant host access with: `uemcli /stor/config/lunacl create -lun <lun-id> -host <host-id>`.
 
 ## Create an NFS File System and Share
@@ -818,9 +848,11 @@ nfs_3       | archive_vol  | /    | 10.0.0.0/8
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid pool ID '<pool-id>'`** — Replace `<pool-id>` with an actual pool identifier from `uemcli /stor/prov/pool show`.
-    **`Error: NAS Server '<nas-id>' not found`** — Verify the NAS server exists and is online using `uemcli /nas/server show`.
-    **`Error: File system '<fs-id>' does not exist`** — Ensure the file system creation completed successfully before creating the NFS export; check the returned `fs_` ID from Step 1.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid pool ID '<pool-id>'` | Replace `<pool-id>` with an actual pool identifier from `uemcli /stor/prov/pool show`. |
+    | `Error: NAS Server '<nas-id>' not found` | Verify the NAS server exists and is online using `uemcli /nas/server show`. |
+    | `Error: File system '<fs-id>' does not exist` | Ensure the file system creation completed successfully before creating the NFS export; check the returned `fs_` ID from Step 1. |
 After the export is created, mount it from a client: `mount -t nfs <nas-ip>:/<fs-name> /mnt/target`. Confirm read/write access before closing the change.
 
 ## Create a Snapshot Schedule
@@ -867,9 +899,11 @@ Size:                      500 GB
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid rule name '<rule>'`** — Replace `<rule>` with an alphanumeric string (e.g., `hourly_backup`) and ensure the name doesn't exceed 63 characters.
-    **`Error: LUN ID '<id>' not found`** — Verify the LUN ID exists by running `uemcli /stor/prov/luns/lun show` and use the correct ID from the output.
-    **`Error: Snapshot rule '<rule-id>' does not exist`** — Confirm the rule was created successfully in Step 1 and use the correct rule ID returned from the creation command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid rule name '<rule>'` | Replace `<rule>` with an alphanumeric string (e.g., `hourly_backup`) and ensure the name doesn't exceed 63 characters. |
+    | `Error: LUN ID '<id>' not found` | Verify the LUN ID exists by running `uemcli /stor/prov/luns/lun show` and use the correct ID from the output. |
+    | `Error: Snapshot rule '<rule-id>' does not exist` | Confirm the rule was created successfully in Step 1 and use the correct rule ID returned from the creation command. |
 The same rule can be attached to a file system using `uemcli /stor/prov/fs modify -id <fs-id> -snapRule <rule-id>`. Verify that auto-snapshots begin appearing after the first scheduled interval.
 
 ## Expand a Pool
@@ -915,8 +949,10 @@ Last Modified: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error Code: 0x7d000001 — Invalid pool ID specified`** — Verify the pool ID exists by running `uemcli /stor/config/pool show` and use the correct pool identifier.
-    **`Error Code: 0x7d000009 — Insufficient available drives in the system`** — Ensure enough unbound speed-class drives are available; check with `uemcli /stor/config/drive show -filter "health==OK,speed_class==SAS_15K"`.
+    | Error | Fix |
+    |---|---|
+    | `Error Code: 0x7d000001 — Invalid pool ID specified` | Verify the pool ID exists by running `uemcli /stor/config/pool show` and use the correct pool identifier. |
+    | `Error Code: 0x7d000009 — Insufficient available drives in the system` | Ensure enough unbound speed-class drives are available; check with `uemcli /stor/config/drive show -filter "health==OK,speed_class==SAS_15K"`. |
 Alternatively, add drives to the pool via Unisphere: navigate to **Storage → Pools → select pool → Add Drives** and select the drive count and type. Monitor pool rebuild progress in Unisphere until the pool returns to `Normal` health status. Confirm the new usable capacity is visible before closing the change.
 
 ---

@@ -126,8 +126,10 @@ VPlexcli:/> ll /clusters/cluster-2/consistency-groups/
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid path /clusters/cluster-2/consistency-groups/`** — Verify cluster-2 exists with `ll /clusters/` and confirm the cluster name spelling.
-    **`Error: Permission denied accessing consistency-groups`** — Ensure your VPlexcli user role has read permissions for consistency group objects; contact your VPLEX administrator.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid path /clusters/cluster-2/consistency-groups/` | Verify cluster-2 exists with `ll /clusters/` and confirm the cluster name spelling. |
+    | `Error: Permission denied accessing consistency-groups` | Ensure your VPlexcli user role has read permissions for consistency group objects; contact your VPLEX administrator. |
 ### View CG Details
 
 ![View CG Details](../../../../../assets/vplex-proc-view-cg-details.svg)
@@ -147,8 +149,10 @@ consistency-group-1/replication-sets    -         2024-01-15 14:32:18
 ```
 
 !!! warning "Common errors"
-    **`No such object: /clusters/cluster-1/consistency-groups/<cg_name>/`** — Replace `<cg_name>` with the actual consistency group name (e.g., `cg-prod-db-01`).
-    **`Permission denied`** — Verify your VPLEX user account has read access to the consistency group; contact your VPLEX administrator if needed.
+    | Error | Fix |
+    |---|---|
+    | `No such object: /clusters/cluster-1/consistency-groups/<cg_name>/` | Replace `<cg_name>` with the actual consistency group name (e.g., `cg-prod-db-01`). |
+    | `Permission denied` | Verify your VPLEX user account has read access to the consistency group; contact your VPLEX administrator if needed. |
 Key attributes:
 - `operational-status` — should be `ok`
 - `type` — `local` or `distributed`
@@ -170,8 +174,10 @@ Consistency group is now available on cluster-1
 ```
 
 !!! warning "Common errors"
-    **`Error: Consistency group 'prod-cg-01' already exists`** — Use a unique name or delete the existing consistency group with `consistency-group delete --name prod-cg-01` first.
-    **`Error: Cluster 'cluster-1' not found or is offline`** — Verify the cluster name with `cluster list` and ensure both cluster nodes are online and communicating.
+    | Error | Fix |
+    |---|---|
+    | `Error: Consistency group 'prod-cg-01' already exists` | Use a unique name or delete the existing consistency group with `consistency-group delete --name prod-cg-01` first. |
+    | `Error: Cluster 'cluster-1' not found or is offline` | Verify the cluster name with `cluster list` and ensure both cluster nodes are online and communicating. |
 ### Add Volumes to a CG
 
 ![Add Volumes to a CG](../../../../../assets/vplex-proc-add-volumes-to-a-cg.svg)
@@ -192,8 +198,10 @@ Consistency group updated. Current member count: 8
 ```
 
 !!! warning "Common errors"
-    **`Error: Consistency group '/clusters/cluster-1/consistency-groups/<cg_name>' not found`** — Verify the consistency group name exists using `consistency-group list` and confirm the full path is correct.
-    **`Error: Virtual volume '/clusters/cluster-1/virtual-volumes/<vol_name>' is already a member of another consistency group`** — Remove the virtual volume from its current consistency group first using `consistency-group remove-virtual-volume` before adding it to a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: Consistency group '/clusters/cluster-1/consistency-groups/<cg_name>' not found` | Verify the consistency group name exists using `consistency-group list` and confirm the full path is correct. |
+    | `Error: Virtual volume '/clusters/cluster-1/virtual-volumes/<vol_name>' is already a member of another consistency group` | Remove the virtual volume from its current consistency group first using `consistency-group remove-virtual-volume` before adding it to a new one. |
 ### Remove a Volume from a CG
 
 ![Remove a Volume from a CG](../../../../../assets/vplex-proc-remove-a-volume-from-a-cg.svg)
@@ -213,9 +221,11 @@ Operation completed in 2.341 seconds.
 ```
 
 !!! warning "Common errors"
-    **`Error: Consistency group not found: /clusters/cluster-1/consistency-groups/<cg_name>`** — Verify the consistency group name exists by running `consistency-group list` and use the exact path shown in the output.
-    **`Error: Virtual volume is not a member of this consistency group`** — Confirm the virtual volume belongs to the target consistency group using `consistency-group show --consistency-group <cg_name>` before removal.
-    **`Error: Cannot remove virtual volume while replication is in progress`** — Wait for any active replication or snapshot operations to complete before attempting removal.
+    | Error | Fix |
+    |---|---|
+    | `Error: Consistency group not found: /clusters/cluster-1/consistency-groups/<cg_name>` | Verify the consistency group name exists by running `consistency-group list` and use the exact path shown in the output. |
+    | `Error: Virtual volume is not a member of this consistency group` | Confirm the virtual volume belongs to the target consistency group using `consistency-group show --consistency-group <cg_name>` before removal. |
+    | `Error: Cannot remove virtual volume while replication is in progress` | Wait for any active replication or snapshot operations to complete before attempting removal. |
 ### Distributed Consistency Groups
 
 ![Distributed Consistency Groups](../../../../../assets/vplex-proc-distributed-consistency-groups.svg)
@@ -250,8 +260,10 @@ VPlexcli:/> ll /clusters/cluster-1/consistency-groups/cg-prod-db-01/
 ```
 
 !!! warning "Common errors"
-    **`Invalid path: /clusters/cluster-1/consistency-groups/<cg_name>/`** — Replace `<cg_name>` with the actual consistency group name (e.g., `cg-prod-db-01`).
-    **`operational-status = degraded`** — Check cluster connectivity and array backend status with `ll /clusters/cluster-1/` and verify no storage array failures exist.
+    | Error | Fix |
+    |---|---|
+    | `Invalid path: /clusters/cluster-1/consistency-groups/<cg_name>/` | Replace `<cg_name>` with the actual consistency group name (e.g., `cg-prod-db-01`). |
+    | `operational-status = degraded` | Check cluster connectivity and array backend status with `ll /clusters/cluster-1/` and verify no storage array failures exist. |
 ### Detach / Re-attach CG (Metro Failover)
 
 ![Detach / Re-attach CG (Metro Failover)](../../../../../assets/vplex-proc-detach-re-attach-cg-metro-failover.svg)
@@ -290,9 +302,11 @@ Attach completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Consistency group /clusters/cluster-1/consistency-groups/<cg_name> not found`** — Verify the consistency group name matches exactly and use `consistency-group list` to confirm it exists.
-    **`Error: Cannot detach consistency group in use by active I/O operations`** — Quiesce all application I/O to the consistency group before attempting detach.
-    **`Error: Cluster-2 is unreachable or in degraded state`** — Check cluster connectivity with `cluster status` and ensure both clusters are healthy before re-attaching.
+    | Error | Fix |
+    |---|---|
+    | `Error: Consistency group /clusters/cluster-1/consistency-groups/<cg_name> not found` | Verify the consistency group name matches exactly and use `consistency-group list` to confirm it exists. |
+    | `Error: Cannot detach consistency group in use by active I/O operations` | Quiesce all application I/O to the consistency group before attempting detach. |
+    | `Error: Cluster-2 is unreachable or in degraded state` | Check cluster connectivity with `cluster status` and ensure both clusters are healthy before re-attaching. |
 ## Metro Operations
 
 VPLEX Metro stretches virtual volumes across two sites with synchronous mirroring, enabling transparent failover.
@@ -362,8 +376,10 @@ rebuild-progress                  100%
 ```
 
 !!! warning "Common errors"
-    **`No such object: /distributed-storage/distributed-devices/<device_name>/`** — Replace `<device_name>` with an actual device name from the first command output (e.g., `device-1`).
-    **`Connection refused`** — Ensure you are connected to the VPLEX CLI with valid credentials and the management server is reachable.
+    | Error | Fix |
+    |---|---|
+    | `No such object: /distributed-storage/distributed-devices/<device_name>/` | Replace `<device_name>` with an actual device name from the first command output (e.g., `device-1`). |
+    | `Connection refused` | Ensure you are connected to the VPLEX CLI with valid credentials and the management server is reachable. |
 Key attributes:
 - `service-status: running` — both legs active
 - `operational-status: ok`
@@ -396,9 +412,11 @@ Device /distributed-storage/distributed-devices/prod-lun-001 is now active on cl
 ```
 
 !!! warning "Common errors"
-    **`Error: Device /distributed-storage/distributed-devices/<device_name> not found`** — Verify the device name is correct and exists by running `device list` to confirm the full path.
-    **`Error: Cannot migrate device - active I/O detected on target cluster`** — Wait for I/O operations to complete or quiesce the device with `device quiesce` before retrying the migration.
-    **`Error: Cluster cluster-2 is not in a healthy state`** — Check cluster-2 status with `cluster status` and resolve any connectivity or component failures before attempting migration.
+    | Error | Fix |
+    |---|---|
+    | `Error: Device /distributed-storage/distributed-devices/<device_name> not found` | Verify the device name is correct and exists by running `device list` to confirm the full path. |
+    | `Error: Cannot migrate device - active I/O detected on target cluster` | Wait for I/O operations to complete or quiesce the device with `device quiesce` before retrying the migration. |
+    | `Error: Cluster cluster-2 is not in a healthy state` | Check cluster-2 status with `cluster status` and resolve any connectivity or component failures before attempting migration. |
 ### Witness Configuration
 
 ![Witness Configuration](../../../../../assets/vplex-proc-witness-configuration.svg)
@@ -422,8 +440,10 @@ witness-connectivity = connected
 ```
 
 !!! warning "Common errors"
-    **`witness-connectivity = disconnected`** — Verify network connectivity between VPLEX cluster and witness appliance, and confirm witness service is running with `service witness status`.
-    **`ls: cannot access '/distributed-storage/witness/': No such file or directory`** — Ensure you are logged into the VPLEX management console and the witness path is mounted; check with `df -h | grep witness`.
+    | Error | Fix |
+    |---|---|
+    | `witness-connectivity = disconnected` | Verify network connectivity between VPLEX cluster and witness appliance, and confirm witness service is running with `service witness status`. |
+    | `ls: cannot access '/distributed-storage/witness/': No such file or directory` | Ensure you are logged into the VPLEX management console and the witness path is mounted; check with `df -h | grep witness`. |
 ### Split-Brain Recovery
 
 ![Split-Brain Recovery](../../../../../assets/vplex-proc-split-brain-recovery.svg)
@@ -455,9 +475,11 @@ Suspension completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Device not found at path /distributed-storage/distributed-devices/<device_name>`** — Verify the device name exists by running `device list` and use the correct path from the output.
-    **`Error: Cluster cluster-2 is not reachable or does not exist`** — Confirm cluster-2 is online and accessible using `cluster list`, then retry the suspension.
-    **`Error: Device is already in SUSPENDED state`** — The device is already suspended; use `device resume` if you need to restore I/O operations.
+    | Error | Fix |
+    |---|---|
+    | `Error: Device not found at path /distributed-storage/distributed-devices/<device_name>` | Verify the device name exists by running `device list` and use the correct path from the output. |
+    | `Error: Cluster cluster-2 is not reachable or does not exist` | Confirm cluster-2 is online and accessible using `cluster list`, then retry the suspension. |
+    | `Error: Device is already in SUSPENDED state` | The device is already suspended; use `device resume` if you need to restore I/O operations. |
 5. After link recovery, resync:
 
 ```bash
@@ -477,9 +499,11 @@ Rebuild started at: 2024-01-15 14:23:47 UTC
 ```
 
 !!! warning "Common errors"
-    **`Device not found: /distributed-storage/distributed-devices/<device_name>`** — Verify the device name exists by running `device list` and use the correct path from the output.
-    **`Device is already rebuilding`** — Wait for the current rebuild to complete or cancel it with `device rebuild --cancel` before initiating a new rebuild.
-    **`Insufficient cluster resources for rebuild operation`** — Check cluster health with `cluster status` and ensure both nodes have adequate free capacity before retrying.
+    | Error | Fix |
+    |---|---|
+    | `Device not found: /distributed-storage/distributed-devices/<device_name>` | Verify the device name exists by running `device list` and use the correct path from the output. |
+    | `Device is already rebuilding` | Wait for the current rebuild to complete or cancel it with `device rebuild --cancel` before initiating a new rebuild. |
+    | `Insufficient cluster resources for rebuild operation` | Check cluster health with `cluster status` and ensure both nodes have adequate free capacity before retrying. |
 ### WAN COM Health
 
 ![WAN COM Health](../../../../../assets/vplex-proc-wan-com-health.svg)
@@ -501,8 +525,10 @@ backend-storage-arrays                  -         Nov 15 10:12
 ```
 
 !!! warning "Common errors"
-    **`Invalid path /clusters/cluster-1/connectivity/`** — Verify the cluster name with `ll /clusters/` and confirm the connectivity directory exists in your VPLEX version.
-    **`Permission denied`** — Ensure your VPLEX user account has read permissions for the cluster connectivity paths; contact your VPLEX administrator to grant access.
+    | Error | Fix |
+    |---|---|
+    | `Invalid path /clusters/cluster-1/connectivity/` | Verify the cluster name with `ll /clusters/` and confirm the connectivity directory exists in your VPLEX version. |
+    | `Permission denied` | Ensure your VPLEX user account has read permissions for the cluster connectivity paths; contact your VPLEX administrator to grant access. |
 Monitor inter-cluster latency — VPLEX Metro requires < 5ms RTT between sites.
 
 ### Common Metro Issues
@@ -573,9 +599,11 @@ Capacity: 500.00 GB
 ```
 
 !!! warning "Common errors"
-    **`Error: Storage volume sv-prod-lun-01 is already claimed`** — Verify the storage volume is unclaimed using `storage-volume list` and unclaim it if necessary with `storage-volume unclaim-storage-volumes`.
-    **`Error: Extent extent-prod-01 already exists`** — Use a unique extent name or delete the existing extent with `extent delete --name extent-prod-01` before recreating.
-    **`Error: Device path /clusters/cluster-1/devices/device-prod-01 not found`** — Ensure the device was created successfully in the previous step and verify the exact device name matches the path.
+    | Error | Fix |
+    |---|---|
+    | `Error: Storage volume sv-prod-lun-01 is already claimed` | Verify the storage volume is unclaimed using `storage-volume list` and unclaim it if necessary with `storage-volume unclaim-storage-volumes`. |
+    | `Error: Extent extent-prod-01 already exists` | Use a unique extent name or delete the existing extent with `extent delete --name extent-prod-01` before recreating. |
+    | `Error: Device path /clusters/cluster-1/devices/device-prod-01 not found` | Ensure the device was created successfully in the previous step and verify the exact device name matches the path. |
 After creation, expose the virtual volume to hosts by adding it to a storage view: `storage-view add-virtual-volumes --storage-view /clusters/cluster-1/exports/storage-views/<sv-name> --virtual-volumes /clusters/cluster-1/virtual-volumes/<vv-name>`.
 
 ## Add a Storage Volume to a Device
@@ -611,8 +639,10 @@ Last Modified:         2024-01-15 14:22:33 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Extent extent_005 is already in use by device device_lun_02`** — Choose a different extent that is not currently assigned to another device.
-    **`Error: Device device_lun_01 does not support additional extents (max capacity reached)`** — Verify the device's extent limit has not been exceeded or create a new device instead.
+    | Error | Fix |
+    |---|---|
+    | `Error: Extent extent_005 is already in use by device device_lun_02` | Choose a different extent that is not currently assigned to another device. |
+    | `Error: Device device_lun_01 does not support additional extents (max capacity reached)` | Verify the device's extent limit has not been exceeded or create a new device instead. |
 Confirm the device shows the expected number of extents and that `operational-status` is `ok` before considering the procedure complete. If the device is part of a distributed virtual volume, allow time for the Metro resync to complete.
 
 ## Migrate a Virtual Volume to New Storage
@@ -648,9 +678,11 @@ VPlexcli:/> data-migration show
 ```
 
 !!! warning "Common errors"
-    **`data-migration show: command not found`** — Ensure you are logged into the VPLEX CLI with proper credentials and in the correct management context (use `connect-mgmt-server` first).
-    **`Error: No active migrations found`** — Verify the migration was actually started in the GUI under Data Services → Data Migration and that the source and target volumes are properly claimed into VPLEX.
-    **`Permission denied: insufficient privileges for data-migration operations`** — Confirm your VPLEX user account has the Administrator or Data Migration operator role assigned in the management server's access control settings.
+    | Error | Fix |
+    |---|---|
+    | `data-migration show: command not found` | Ensure you are logged into the VPLEX CLI with proper credentials and in the correct management context (use `connect-mgmt-server` first). |
+    | `Error: No active migrations found` | Verify the migration was actually started in the GUI under Data Services → Data Migration and that the source and target volumes are properly claimed into VPLEX. |
+    | `Permission denied: insufficient privileges for data-migration operations` | Confirm your VPLEX user account has the Administrator or Data Migration operator role assigned in the management server's access control settings. |
 Migration runs in the background without interrupting host I/O. Monitor until `status: complete` is shown. After migration completes, verify the virtual volume now points to the new backend storage before decommissioning the old storage volumes.
 
 ## Test Metro Node Failover
@@ -705,8 +737,10 @@ VPlexcli:/> ll /distributed-storage/distributed-devices/*/health-indications/
 ```
 
 !!! warning "Common errors"
-    **`consistency-group suspend: consistency group not found`** — Verify the consistency group name matches exactly and use `consistency-group list` to confirm it exists on cluster-1.
-    **`consistency-group resume: operation failed — replication link down`** — Check WAN connectivity between cluster-1 and cluster-2 using `cluster connectivity-status` before resuming.
+    | Error | Fix |
+    |---|---|
+    | `consistency-group suspend: consistency group not found` | Verify the consistency group name matches exactly and use `consistency-group list` to confirm it exists on cluster-1. |
+    | `consistency-group resume: operation failed — replication link down` | Check WAN connectivity between cluster-1 and cluster-2 using `cluster connectivity-status` before resuming. |
 After the test, confirm all distributed devices return to `in-sync` status and that the Witness connection is healthy on both clusters before closing the change record.
 
 ---

@@ -79,9 +79,11 @@ result: 0 Success
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked in Active Directory.
-    **`Can't contact LDAP server (-1)`** — Confirm the LDAP server hostname/IP is resolvable and port 636 is open from the Unisphere management network.
-    **`No such object (32)`** — Ensure the base DN "DC=corp,DC=example,DC=com" matches your Active Directory domain structure exactly.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account is not locked in Active Directory. |
+    | `Can't contact LDAP server (-1)` | Confirm the LDAP server hostname/IP is resolvable and port 636 is open from the Unisphere management network. |
+    | `No such object (32)` | Ensure the base DN "DC=corp,DC=example,DC=com" matches your Active Directory domain structure exactly. |
 ### TLS Hardening
 
 ```bash
@@ -138,9 +140,11 @@ Nmap done at 2024-01-15 14:32:18 UTC; 1 IP address (1 host up) scanned in 3.12 s
 ```
 
 !!! warning "Common errors"
-    **`SSL_ERROR_SSL:14094410:SSL routines:SSL_CTX_set_cipher_list:sslv3 alert handshake failure`** — Verify the Unisphere host is reachable on port 8443 and the hostname resolves correctly with `nslookup <unisphere-host>`.
-    **`unable to get local issuer certificate`** — Add the Unisphere CA certificate to your system's trusted store with `sudo cp unisphere-ca.pem /etc/ssl/certs/ && sudo update-ca-certificates`.
-    **`Nmap done; 0 hosts up`** — Ensure the Unisphere host is online and firewall rules permit outbound connections to port 8443 from your scanning host.
+    | Error | Fix |
+    |---|---|
+    | `SSL_ERROR_SSL:14094410:SSL routines:SSL_CTX_set_cipher_list:sslv3 alert handshake failure` | Verify the Unisphere host is reachable on port 8443 and the hostname resolves correctly with `nslookup <unisphere-host>`. |
+    | `unable to get local issuer certificate` | Add the Unisphere CA certificate to your system's trusted store with `sudo cp unisphere-ca.pem /etc/ssl/certs/ && sudo update-ca-certificates`. |
+    | `Nmap done; 0 hosts up` | Ensure the Unisphere host is online and firewall rules permit outbound connections to port 8443 from your scanning host. |
 ### Certificate Hardening
 
 Replace the factory-installed self-signed certificate before going into production:
@@ -185,9 +189,11 @@ notAfter=Jan 15 10:23:45 2026 GMT
 ```
 
 !!! warning "Common errors"
-    **`error: /tmp/unisphere.key: No such file or directory`** — Ensure /tmp has write permissions and sufficient disk space; run `ls -ld /tmp` to verify.
-    **`unable to load certificate`** — Verify the certificate file is in PEM format and the CA chain is appended in correct order (leaf → intermediate → root) using `openssl x509 -in <cert> -text -noout`.
-    **`Connection refused`** — Wait 30–60 seconds after service restart for Unisphere to fully initialize, then retry the s_client command.
+    | Error | Fix |
+    |---|---|
+    | `error: /tmp/unisphere.key: No such file or directory` | Ensure /tmp has write permissions and sufficient disk space; run `ls -ld /tmp` to verify. |
+    | `unable to load certificate` | Verify the certificate file is in PEM format and the CA chain is appended in correct order (leaf → intermediate → root) using `openssl x509 -in <cert> -text -noout`. |
+    | `Connection refused` | Wait 30–60 seconds after service restart for Unisphere to fully initialize, then retry the s_client command. |
 | Certificate Parameter | Requirement |
 |---|---|
 | Key size | RSA 4096 or ECDSA P-256/P-384 |
@@ -224,8 +230,10 @@ nc: connect to 192.168.10.200 port 8443 (tcp) failed: Connection refused
 ```
 
 !!! warning "Common errors"
-    **`Error: INVALID_RULE`** — Verify the rich rule syntax matches firewalld XML format and escape special characters correctly with backslashes.
-    **`nc: connect to <management-host-ip> port 8443 (tcp) failed: Connection refused`** — Confirm Unisphere service is running on the target host with `systemctl status unisphere` and that port 8443 is listening via `netstat -tlnp | grep 8443`.
+    | Error | Fix |
+    |---|---|
+    | `Error: INVALID_RULE` | Verify the rich rule syntax matches firewalld XML format and escape special characters correctly with backslashes. |
+    | `nc: connect to <management-host-ip> port 8443 (tcp) failed: Connection refused` | Confirm Unisphere service is running on the target host with `systemctl status unisphere` and that port 8443 is listening via `netstat -tlnp | grep 8443`. |
 ## Solutions Enabler Hardening
 
 ### SYMAPI Daemon Hardening
@@ -266,9 +274,11 @@ tcp        0      0 192.168.1.11:2707      0.0.0.0:*               LISTEN      4
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/symapi/config/daemon_users: No such file or directory`** — Ensure the netcnfg file is written first and the /var/symapi/config directory exists; create it with `mkdir -p /var/symapi/config` if needed.
-    **`Failed to restart storsrvd: Unit storsrvd.service not found.`** — Verify the correct daemon name with `systemctl list-units | grep stor` and use the actual service name (may be `Symmetrix` or `emc-storsrvd` depending on version).
-    **`netstat: command not found`** — Install net-tools with `apt-get install net-tools` or use `ss -tlnp | grep 2707` as a modern alternative.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/symapi/config/daemon_users: No such file or directory` | Ensure the netcnfg file is written first and the /var/symapi/config directory exists; create it with `mkdir -p /var/symapi/config` if needed. |
+    | `Failed to restart storsrvd: Unit storsrvd.service not found.` | Verify the correct daemon name with `systemctl list-units | grep stor` and use the actual service name (may be `Symmetrix` or `emc-storsrvd` depending on version). |
+    | `netstat: command not found` | Install net-tools with `apt-get install net-tools` or use `ss -tlnp | grep 2707` as a modern alternative. |
 ### SE Host OS Hardening
 
 The Solutions Enabler host (typically a Linux VM) requires its own OS hardening:
@@ -300,9 +310,11 @@ grep -E "storadm|symcli" /etc/sudoers /etc/sudoers.d/*
 ```
 
 !!! warning "Common errors"
-    **`grep: /etc/sudoers.d/*: No such file or directory`** — Create the `/etc/sudoers.d/` directory with `mkdir -p /etc/sudoers.d/` if it does not exist, or adjust the grep pattern to `grep -r "storadm\|symcli" /etc/sudoers* 2>/dev/null`.
-    **`chown: changing ownership of '/usr/symcli/bin/sym*': No such file or directory`** — Verify the SYMCLI package is installed with `rpm -qa | grep symcli` and install it if missing before applying ownership changes.
-    **`chmod: cannot access '/var/symapi/config/daemon_users': No such file or directory`** — Ensure the Symmetrix SE daemon is installed and initialized with `symcfg discover` to create the required configuration files.
+    | Error | Fix |
+    |---|---|
+    | `grep: /etc/sudoers.d/*: No such file or directory` | Create the `/etc/sudoers.d/` directory with `mkdir -p /etc/sudoers.d/` if it does not exist, or adjust the grep pattern to `grep -r "storadm\|symcli" /etc/sudoers* 2>/dev/null`. |
+    | `chown: changing ownership of '/usr/symcli/bin/sym*': No such file or directory` | Verify the SYMCLI package is installed with `rpm -qa | grep symcli` and install it if missing before applying ownership changes. |
+    | `chmod: cannot access '/var/symapi/config/daemon_users': No such file or directory` | Ensure the Symmetrix SE daemon is installed and initialized with `symcfg discover` to create the required configuration files. |
 ### Logging and Audit on SE Host
 
 ```bash
@@ -336,9 +348,11 @@ No rules loaded
 ```
 
 !!! warning "Common errors"
-    **`augenrules: No such file or directory`** — Install audit-libs package with `yum install audit-libs` or use `auditctl -R /etc/audit/rules.d/powermax.rules` directly instead.
-    **`Error: audit rules directory does not exist: /etc/audit/rules.d`** — Create the directory with `mkdir -p /etc/audit/rules.d` before appending rules.
-    **`No rules loaded`** — Restart auditd with `systemctl restart auditd` after loading rules to activate them in the kernel.
+    | Error | Fix |
+    |---|---|
+    | `augenrules: No such file or directory` | Install audit-libs package with `yum install audit-libs` or use `auditctl -R /etc/audit/rules.d/powermax.rules` directly instead. |
+    | `Error: audit rules directory does not exist: /etc/audit/rules.d` | Create the directory with `mkdir -p /etc/audit/rules.d` before appending rules. |
+    | `No rules loaded` | Restart auditd with `systemctl restart auditd` after loading rules to activate them in the kernel. |
 ## Host Connectivity Hardening
 
 ### Zoning and Initiator Group Isolation
@@ -398,8 +412,10 @@ host-backup-04-ig             Fibre      (*)         3
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_ERROR (5): The specified Symmetrix does not exist`** — Verify the SID value matches your array's actual Symmetrix ID using `symcfg list -v`.
-    **`awk: syntax error: unexpected newline or statement`** — Correct the awk syntax; use `awk 'NR>2 && $NF > 4 {print $0}'` with proper field separator if needed.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_ERROR (5): The specified Symmetrix does not exist` | Verify the SID value matches your array's actual Symmetrix ID using `symcfg list -v`. |
+    | `awk: syntax error: unexpected newline or statement` | Correct the awk syntax; use `awk 'NR>2 && $NF > 4 {print $0}'` with proper field separator if needed. |
 ### Port Group Isolation
 
 ```bash
@@ -446,8 +462,10 @@ DEV_TEST_FABRIC_PG: 8 ports
 ```
 
 !!! warning "Common errors"
-    **`symaccess: Error: Invalid Symmetrix ID <SID>`** — Replace `<SID>` with the actual Symmetrix serial number (e.g., `000297900001`) or use `-sid all` to query all arrays.
-    **`symaccess: Error: Port group <name> not found`** — Verify the port group name exists with `symaccess list -sid <SID> -type port` and check for typos or case sensitivity.
+    | Error | Fix |
+    |---|---|
+    | `symaccess: Error: Invalid Symmetrix ID <SID>` | Replace `<SID>` with the actual Symmetrix serial number (e.g., `000297900001`) or use `-sid all` to query all arrays. |
+    | `symaccess: Error: Port group <name> not found` | Verify the port group name exists with `symaccess list -sid <SID> -type port` and check for typos or case sensitivity. |
 ### Unused Object Cleanup
 
 Regularly remove stale masking views, initiator groups, and port groups from decommissioned hosts:
@@ -483,9 +501,11 @@ Initiator group IG_legacy_db_02 deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`symaccess: Command not found`** — Ensure the PowerMax CLI tools are installed and the `$PATH` includes the Symantec/Dell EMC bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`Error: Masking view MV_legacy_db_02_prod is still in use by active host connections`** — Verify the host is truly decommissioned by checking fabric logins with `symaccess list logins -sid <SID>` before deletion.
-    **`Error: Initiator group IG_legacy_db_02 not found`** — Confirm the exact initiator group name using `symaccess list -sid <SID> -name IG_legacy_db_02 -type initiator` before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `symaccess: Command not found` | Ensure the PowerMax CLI tools are installed and the `$PATH` includes the Symantec/Dell EMC bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `Error: Masking view MV_legacy_db_02_prod is still in use by active host connections` | Verify the host is truly decommissioned by checking fabric logins with `symaccess list logins -sid <SID>` before deletion. |
+    | `Error: Initiator group IG_legacy_db_02 not found` | Confirm the exact initiator group name using `symaccess list -sid <SID> -name IG_legacy_db_02 -type initiator` before attempting deletion. |
 ## SupportAssist and Remote Access Hardening
 
 SupportAssist enables Dell to proactively monitor the array and create automated service requests for hardware faults. It also enables remote support sessions.

@@ -143,9 +143,11 @@ MTrees:
 ```
 
 !!! warning "Common errors"
-    **`Error: filesystem is DISABLED`** — Run `filesys enable` to activate the filesystem before proceeding with replication or backups.
-    **`Error: replication context not found or in FAILED state`** — Verify network connectivity between Data Domain systems and check `replication show details` for sync errors.
-    **`Error: MTrees at capacity (quota exceeded)`** — Increase MTree quota with `mtree modify <name> -quota <size>` or delete old snapshots to free space.
+    | Error | Fix |
+    |---|---|
+    | `Error: filesystem is DISABLED` | Run `filesys enable` to activate the filesystem before proceeding with replication or backups. |
+    | `Error: replication context not found or in FAILED state` | Verify network connectivity between Data Domain systems and check `replication show details` for sync errors. |
+    | `Error: MTrees at capacity (quota exceeded)` | Increase MTree quota with `mtree modify <name> -quota <size>` or delete old snapshots to free space. |
 ---
 
 ## See also

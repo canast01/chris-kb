@@ -114,9 +114,11 @@ issuer=CN = Example Corp Intermediate CA, O = Example Corp, C = US
 ```
 
 !!! warning "Common errors"
-    **`error: certificate file not found: /tmp/vra-prod-01.pem`** — Verify the certificate file exists and the path is correct with `ls -la /tmp/vra-prod-01.pem`.
-    **`error: certificate and key do not match`** — Ensure the certificate and private key pair are from the same CSR by comparing their modulus with `openssl x509 -noout -modulus -in /tmp/vra-prod-01.pem | openssl md5` and `openssl rsa -noout -modulus -in /tmp/vra-prod-01.key | openssl md5`.
-    **`error: CA certificate chain is invalid or incomplete`** — Verify the chain file contains all intermediate certificates in the correct order (leaf to root) and is in PEM format with `openssl crl2pkcs7 -nocrl -certfile /tmp/chain.pem | openssl pkcs7 -print_certs -text -noout`.
+    | Error | Fix |
+    |---|---|
+    | `error: certificate file not found: /tmp/vra-prod-01.pem` | Verify the certificate file exists and the path is correct with `ls -la /tmp/vra-prod-01.pem`. |
+    | `error: certificate and key do not match` | Ensure the certificate and private key pair are from the same CSR by comparing their modulus with `openssl x509 -noout -modulus -in /tmp/vra-prod-01.pem | openssl md5` and `openssl rsa -noout -modulus -in /tmp/vra-prod-01.key | openssl md5`. |
+    | `error: CA certificate chain is invalid or incomplete` | Verify the chain file contains all intermediate certificates in the correct order (leaf to root) and is in PEM format with `openssl crl2pkcs7 -nocrl -certfile /tmp/chain.pem | openssl pkcs7 -print_certs -text -noout`. |
 ### Certificate Requirements
 
 | Requirement | Value |
@@ -147,8 +149,10 @@ vra-prod-03.example.local: notAfter=Dec 15 14:32:18 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to get local issuer certificate`** — Add `-showcerts` to capture the full chain, or disable verification with `-servername` and check against your internal CA bundle.
-    **`Connection refused`** — Verify the node hostname resolves correctly with `nslookup node.example.local` and confirm port 443 is listening with `netstat -tlnp | grep 443` on the target node.
+    | Error | Fix |
+    |---|---|
+    | `unable to get local issuer certificate` | Add `-showcerts` to capture the full chain, or disable verification with `-servername` and check against your internal CA bundle. |
+    | `Connection refused` | Verify the node hostname resolves correctly with `nslookup node.example.local` and confirm port 443 is listening with `netstat -tlnp | grep 443` on the target node. |
 Set a calendar reminder or monitoring alert 60 days before expiry.
 
 ---
@@ -192,8 +196,10 @@ prelude-api-key                         Opaque                                1 
 ```
 
 !!! warning "Common errors"
-    **`error: You must be logged in to the server (Unauthorized)`** — Verify your kubeconfig is valid and your user has cluster-admin or namespace-level permissions with `kubectl auth can-i get secrets -n prelude`.
-    **`Error from server (Forbidden): secrets is forbidden: User "system:serviceaccount:default:viewer" cannot list resource "secrets" in API group "" in the namespace "prelude"`** — Request cluster-admin to grant your service account the `list` and `get` verbs on secrets via a ClusterRole or Role binding.
+    | Error | Fix |
+    |---|---|
+    | `error: You must be logged in to the server (Unauthorized)` | Verify your kubeconfig is valid and your user has cluster-admin or namespace-level permissions with `kubectl auth can-i get secrets -n prelude`. |
+    | `Error from server (Forbidden): secrets is forbidden: User "system:serviceaccount:default:viewer" cannot list resource "secrets" in API group "" in the namespace "prelude"` | Request cluster-admin to grant your service account the `list` and `get` verbs on secrets via a ClusterRole or Role binding. |
 The embedded Kubernetes cluster on Aria Automation appliances does not expose etcd encryption configuration to administrators. Protect the appliance disk using storage-layer encryption as the primary control.
 
 ## See also

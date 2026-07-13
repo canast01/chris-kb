@@ -51,9 +51,11 @@ c4e9f1a3-2d5b-48f7-9a1e-6c3b8d2f4a9e Critical  Replication     2024-01-15T14:28:
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Install the Pure Storage CLI package or add it to your PATH environment variable.
-    **`Error: Unable to connect to array at <ip>. Connection refused`** — Verify the array management IP is reachable and the management service is running with `ssh admin@<array-ip> pureadmin status`.
-    **`Error: Authentication failed. Invalid credentials`** — Confirm your Pure Storage credentials are configured correctly in `~/.purerc` or via environment variables.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Install the Pure Storage CLI package or add it to your PATH environment variable. |
+    | `Error: Unable to connect to array at <ip>. Connection refused` | Verify the array management IP is reachable and the management service is running with `ssh admin@<array-ip> pureadmin status`. |
+    | `Error: Authentication failed. Invalid credentials` | Confirm your Pure Storage credentials are configured correctly in `~/.purerc` or via environment variables. |
 Via Pure1:
 - **Pure1 → Alerts** — consolidated alerts across all arrays
 
@@ -111,9 +113,11 @@ Upload Interval: 24 hours
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Install the Pure Storage CLI tools or add the installation directory to your PATH environment variable.
-    **`Error: Unable to connect to array at <ip>. Connection refused`** — Verify the array management IP is reachable and the purecli credentials are configured correctly with `purecli login`.
-    **`Error: Authentication failed. Invalid API token`** — Re-authenticate using `purecli login` with valid credentials or refresh the API token in your Pure Storage management console.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Install the Pure Storage CLI tools or add the installation directory to your PATH environment variable. |
+    | `Error: Unable to connect to array at <ip>. Connection refused` | Verify the array management IP is reachable and the purecli credentials are configured correctly with `purecli login`. |
+    | `Error: Authentication failed. Invalid API token` | Re-authenticate using `purecli login` with valid credentials or refresh the API token in your Pure Storage management console. |
 If phone-home fails, Pure Support cannot proactively monitor the array.
 
 ## Alert Notifications
@@ -140,8 +144,10 @@ Alert 123456 acknowledged successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Alert ID not found`** — Verify the alert ID exists by running `purecli alert list` or `purefb alert list` first.
-    **`Error: Authentication failed`** — Ensure you are authenticated to the Pure array with valid credentials using `purecli login` or `purefb login`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Alert ID not found` | Verify the alert ID exists by running `purecli alert list` or `purefb alert list` first. |
+    | `Error: Authentication failed` | Ensure you are authenticated to the Pure array with valid credentials using `purecli login` or `purefb login`. |
 ## Pre-Change Alert Check
 
 Before any maintenance:
@@ -167,9 +173,11 @@ capacity_threshold_exceeded    warning   open       2024-01-14T19:44:19Z
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Install the Pure Storage CLI package or add it to your PATH environment variable.
-    **`Error: Unable to connect to array at <ip>. Connection refused`** — Verify the array management IP is reachable and the management service is running with `ping` and `ssh`.
-    **`Error: Invalid credentials for user '<user>'`** — Ensure your Pure Storage credentials are correctly configured in `~/.purerc` or via environment variables.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Install the Pure Storage CLI package or add it to your PATH environment variable. |
+    | `Error: Unable to connect to array at <ip>. Connection refused` | Verify the array management IP is reachable and the management service is running with `ping` and `ssh`. |
+    | `Error: Invalid credentials for user '<user>'` | Ensure your Pure Storage credentials are correctly configured in `~/.purerc` or via environment variables. |
 Do not proceed if critical alerts are active.
 
 ---

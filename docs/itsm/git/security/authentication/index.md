@@ -44,8 +44,10 @@ SHA256:xYz9AbCdEfGhIjKlMnOpQrStUvWxYz2A3b4C5d6E7f8G user@corp.example.com
 ```
 
 !!! warning "Common errors"
-    **`Permissions 0644 for '/home/user/.ssh/id_ed25519_git' are too open.`** — Run `chmod 600 ~/.ssh/id_ed25519_git` to restrict key file permissions to owner-read/write only.
-    **`ssh-keygen: No such file or directory`** — Ensure the `~/.ssh` directory exists by running `mkdir -p ~/.ssh` before generating keys.
+    | Error | Fix |
+    |---|---|
+    | `Permissions 0644 for '/home/user/.ssh/id_ed25519_git' are too open.` | Run `chmod 600 ~/.ssh/id_ed25519_git` to restrict key file permissions to owner-read/write only. |
+    | `ssh-keygen: No such file or directory` | Ensure the `~/.ssh` directory exists by running `mkdir -p ~/.ssh` before generating keys. |
 ```bash
 # Display public key for upload to GitHub/GitLab/Bitbucket
 cat ~/.ssh/id_ed25519_git.pub
@@ -66,9 +68,11 @@ Welcome to GitLab, @username!
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the key exists at `~/.ssh/id_ed25519_git` and the public key is registered in your Git platform's SSH settings.
-    **`Could not resolve hostname git@gitlab.corp.example.com`** — Check the GitLab hostname is correct and your DNS/network can reach it; use `nslookup gitlab.corp.example.com` to verify.
-    **`No such file or directory`** — Generate the SSH key first with `ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_git -C "your-email@example.com"`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the key exists at `~/.ssh/id_ed25519_git` and the public key is registered in your Git platform's SSH settings. |
+    | `Could not resolve hostname git@gitlab.corp.example.com` | Check the GitLab hostname is correct and your DNS/network can reach it; use `nslookup gitlab.corp.example.com` to verify. |
+    | `No such file or directory` | Generate the SSH key first with `ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_git -C "your-email@example.com"`. |
 ```bash
 # Generate a deploy key (no passphrase — stored securely in CI)
 ssh-keygen -t ed25519 -C "deploy-key-repo-name" -f ~/.ssh/deploy_key_reponame -N ""
@@ -91,8 +95,10 @@ The key's randomart image is:
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Ensure the generated public key is added to the repository's deploy keys in your Git hosting platform (GitHub/GitLab/Bitbucket).
-    **`ssh-keygen: No such file or directory`** — Create the ~/.ssh directory first with `mkdir -p ~/.ssh && chmod 700 ~/.ssh`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Ensure the generated public key is added to the repository's deploy keys in your Git hosting platform (GitHub/GitLab/Bitbucket). |
+    | `ssh-keygen: No such file or directory` | Create the ~/.ssh directory first with `mkdir -p ~/.ssh && chmod 700 ~/.ssh`. |
 ```bash
 # Store a PAT securely using Git credential helper
 git config --global credential.helper osxkeychain          # macOS
@@ -225,9 +231,11 @@ gpg: Good signature from "DevOps Team <devops@company.internal>"
 ```
 
 !!! warning "Common errors"
-    **`error: gpg failed to sign the data`** — Ensure GPG agent is running with `gpg-agent --daemon` and your GPG key is properly configured.
-    **`error: no signature found`** — The commit or tag was not signed; use `git commit -S` or `git tag -s` to create signed commits/tags going forward.
-    **`gpg: Can't check signature: No public key`** — Import the signer's public key using `gpg --import <keyfile>` or retrieve it from your organization's key server.
+    | Error | Fix |
+    |---|---|
+    | `error: gpg failed to sign the data` | Ensure GPG agent is running with `gpg-agent --daemon` and your GPG key is properly configured. |
+    | `error: no signature found` | The commit or tag was not signed; use `git commit -S` or `git tag -s` to create signed commits/tags going forward. |
+    | `gpg: Can't check signature: No public key` | Import the signer's public key using `gpg --import <keyfile>` or retrieve it from your organization's key server. |
 ```bash
 # Sign a user key with an SSH CA (on the CA host)
 ssh-keygen -s /etc/ssh/ca_key \
@@ -255,9 +263,11 @@ Certificate: /home/gitadmin/.ssh/id_ed25519_git-cert.pub
 ```
 
 !!! warning "Common errors"
-    **`sign_and_send_pubkey: signing failed for "git@gitlab.corp.example.com" from agent: agent refused operation`** — Ensure the CA private key has correct permissions (600) and the signing user has read access to `/etc/ssh/ca_key`.
-    **`Could not open a connection to your authentication agent`** — Start ssh-agent with `eval $(ssh-agent -s)` before attempting to sign keys or authenticate.
-    **`Permission denied (publickey,gssapi-keyex,gssapi-with-mic)`** — Verify the certificate validity period hasn't expired by checking `ssh-keygen -L -f ~/.ssh/id_ed25519_git-cert.pub` and confirm the CA public key is in the GitLab server's `/etc/ssh/ssh_known_hosts`.
+    | Error | Fix |
+    |---|---|
+    | `sign_and_send_pubkey: signing failed for "git@gitlab.corp.example.com" from agent: agent refused operation` | Ensure the CA private key has correct permissions (600) and the signing user has read access to `/etc/ssh/ca_key`. |
+    | `Could not open a connection to your authentication agent` | Start ssh-agent with `eval $(ssh-agent -s)` before attempting to sign keys or authenticate. |
+    | `Permission denied (publickey,gssapi-keyex,gssapi-with-mic)` | Verify the certificate validity period hasn't expired by checking `ssh-keygen -L -f ~/.ssh/id_ed25519_git-cert.pub` and confirm the CA public key is in the GitLab server's `/etc/ssh/ssh_known_hosts`. |
 ```bash
 # List all SSH keys registered on GitHub via API
 gh api /user/keys --jq '.[].title'

@@ -117,8 +117,10 @@ az vm disk attach \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure it exists in the target subscription.
-    **`InvalidDiskSize`** — Confirm the disk size in GB
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure it exists in the target subscription. |
+    | `InvalidDiskSize` | Confirm the disk size in GB |
 ## Resizing Disks
 
 ```bash
@@ -164,8 +166,10 @@ The filesystem on /dev/sda1 is now 524288 (4k) blocks long.
 ```
 
 !!! warning "Common errors"
-    **`The resource 'Microsoft.Compute/disks/vm01-datadisk01' under resource group 'rg-compute-prod' was not found.`** — Verify the disk name and resource group match your environment using `az disk list --resource-group rg-compute-prod`.
-    **`Operation failed because the VM is still in a running state.`** — Ensure the VM is fully deallocated by waiting 30 seconds and checking status with `az vm get-instance-view --resource-group rg-compute-prod --name vm01 | grep powerState`.
+    | Error | Fix |
+    |---|---|
+    | `The resource 'Microsoft.Compute/disks/vm01-datadisk01' under resource group 'rg-compute-prod' was not found.` | Verify the disk name and resource group match your environment using `az disk list --resource-group rg-compute-prod`. |
+    | `Operation failed because the VM is still in a running state.` | Ensure the VM is fully deallocated by waiting 30 seconds and checking status with `az vm get-instance-view --resource-group rg-compute-prod --name vm01 | grep powerState`. |
 ## SKU Comparison and Selection
 
 ```bash
@@ -219,8 +223,10 @@ UltraSSD_LRS             Ultra   65536
 ```
 
 !!! warning "Common errors"
-    **`The resource 'Microsoft.Compute/disks/vm01-datadisk01' under resource group 'rg-compute-prod' was not found.`** — Verify the disk name and resource group name match exactly with `az disk list --resource-group rg-compute-prod`.
-    **`Operation failed. The VM 'vm01' using disk 'vm01-datadisk01' is not in a deallocated state.`** — Stop the VM with `az vm deallocate --resource-group rg-compute-prod --name vm01` before updating the disk SKU.
+    | Error | Fix |
+    |---|---|
+    | `The resource 'Microsoft.Compute/disks/vm01-datadisk01' under resource group 'rg-compute-prod' was not found.` | Verify the disk name and resource group name match exactly with `az disk list --resource-group rg-compute-prod`. |
+    | `Operation failed. The VM 'vm01' using disk 'vm01-datadisk01' is not in a deallocated state.` | Stop the VM with `az vm deallocate --resource-group rg-compute-prod --name vm01` before updating the disk SKU. |
 ## Shared Disks
 
 Premium SSD, Premium SSD v2, and Ultra Disk support shared access for clustered workloads:
@@ -276,9 +282,11 @@ az vm disk attach \
 ```
 
 !!! warning "Common errors"
-    **`The shared disk 'shared-disk-cluster01' cannot be attached to more VMs than the max-shares value of 2.`** — Increase the `--max-shares` parameter to 3 or higher before attaching to additional nodes.
-    **`The resource 'cluster-node02' does not exist in the resource group 'rg-compute-prod'.`** — Verify the VM name and resource group match your deployment using `az vm list --resource-group rg-compute-prod`.
-    **`Premium_LRS shared disks are only supported in specific regions and VM sizes.`** — Confirm both VMs support shared disk attachments by checking their SKU compatibility in the Azure documentation.
+    | Error | Fix |
+    |---|---|
+    | `The shared disk 'shared-disk-cluster01' cannot be attached to more VMs than the max-shares value of 2.` | Increase the `--max-shares` parameter to 3 or higher before attaching to additional nodes. |
+    | `The resource 'cluster-node02' does not exist in the resource group 'rg-compute-prod'.` | Verify the VM name and resource group match your deployment using `az vm list --resource-group rg-compute-prod`. |
+    | `Premium_LRS shared disks are only supported in specific regions and VM sizes.` | Confirm both VMs support shared disk attachments by checking their SKU compatibility in the Azure documentation. |
 ## Disk Management Operations
 
 ```bash
@@ -322,5 +330,7 @@ Deleting disk 'vm01-datadisk01-old' in resource group 'rg-compute-prod'.
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/disks/vm01-datadisk01-old' under resource group 'rg-compute-prod' was not found.`** — Verify the disk name and resource group are correct using `az disk list`.
-    **`AuthorizationFailed : The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Compute/disks/delete' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/disks/vm01-datadisk01-old'.`** — Ensure your account has Contributor or Owner role on the resource group using `az role assignment list --resource-group rg-compute-prod`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/disks/vm01-datadisk01-old' under resource group 'rg-compute-prod' was not found.` | Verify the disk name and resource group are correct using `az disk list`. |
+    | `AuthorizationFailed : The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Compute/disks/delete' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-compute-prod/providers/Microsoft.Compute/disks/vm01-datadisk01-old'.` | Ensure your account has Contributor or Owner role on the resource group using `az role assignment list --resource-group rg-compute-prod`. |

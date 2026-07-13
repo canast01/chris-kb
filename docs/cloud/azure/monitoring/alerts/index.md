@@ -136,7 +136,9 @@ az monitor scheduled-query create \
 ```
 
 !!! warning "Common errors"
-    **`(InvalidResourceId) : The provided resource id '<resource-id>' is invalid.`** — Verify the subscription ID and resource path are correct by running `az resource list --resource-group myRG` to confirm the exact resource ID.
+    | Error | Fix |
+    |---|---|
+    | `(InvalidResourceId) : The provided resource id '<resource-id>' is invalid.` | Verify the subscription ID and resource path are correct by running `az resource list --resource-group myRG` to confirm the exact resource ID. |
     **`(ResourceNotFound) : The resource 'Microsoft.Insights/actionGroups/ops-
 ## Action Groups
 
@@ -190,8 +192,10 @@ backup-action-group   myRG             BAG               global
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) Resource 'Microsoft.Insights/actionGroups/ops-action-group' does not exist in resource group 'myRG'.`** — Verify the resource group name matches and the action group was created successfully in the correct subscription.
-    **`(InvalidParameter) The action group short name 'OpsAG' is invalid. It must be 1-12 characters.`** — Reduce the short-name to 12 characters or fewer.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) Resource 'Microsoft.Insights/actionGroups/ops-action-group' does not exist in resource group 'myRG'.` | Verify the resource group name matches and the action group was created successfully in the correct subscription. |
+    | `(InvalidParameter) The action group short name 'OpsAG' is invalid. It must be 1-12 characters.` | Reduce the short-name to 12 characters or fewer. |
 ## Alert Processing Rules
 
 Alert processing rules allow you to suppress, add action groups, or modify alerts after they fire — without changing the alert rule itself. Useful for maintenance windows.
@@ -239,9 +243,11 @@ critical-alert-filter         myRG             Suppression   True
 ```
 
 !!! warning "Common errors"
-    **`Invalid resource ID format. The scope must be a valid Azure resource ID.`** — Ensure the subscription ID in the `--scopes` parameter is a valid UUID and matches your actual subscription.
-    **`The resource group 'myRG' could not be found.`** — Verify the resource group exists in your subscription using `az group list` and correct the `--resource-group` parameter.
-    **`The provided schedule times are invalid: start time must be before end time.`** — Confirm that `--schedule-start-datetime` is earlier than `--schedule-end-datetime` in ISO 8601 format.
+    | Error | Fix |
+    |---|---|
+    | `Invalid resource ID format. The scope must be a valid Azure resource ID.` | Ensure the subscription ID in the `--scopes` parameter is a valid UUID and matches your actual subscription. |
+    | `The resource group 'myRG' could not be found.` | Verify the resource group exists in your subscription using `az group list` and correct the `--resource-group` parameter. |
+    | `The provided schedule times are invalid: start time must be before end time.` | Confirm that `--schedule-start-datetime` is earlier than `--schedule-end-datetime` in ISO 8601 format. |
 ## Alert Severity Levels
 
 | Severity | Label     | Typical Meaning                         |
@@ -292,8 +298,10 @@ LastModifiedBy: System
 ```
 
 !!! warning "Common errors"
-    **`The resource with id '/subscriptions/<sub-id>/providers/Microsoft.AlertsManagement/alerts/<alert-id>' does not exist.`** — Replace `<sub-id>` and `<alert-id>` with actual values from the `az monitor alerts-management list` output.
-    **`AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'microsoft.alertsManagement/alerts/read' over scope '/subscriptions/<sub-id>/resourceGroups/myRG'.`** — Ensure your Azure account has the "Monitoring Contributor" or "Alert Management Operator" role assigned to the resource group or subscription.
+    | Error | Fix |
+    |---|---|
+    | `The resource with id '/subscriptions/<sub-id>/providers/Microsoft.AlertsManagement/alerts/<alert-id>' does not exist.` | Replace `<sub-id>` and `<alert-id>` with actual values from the `az monitor alerts-management list` output. |
+    | `AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'microsoft.alertsManagement/alerts/read' over scope '/subscriptions/<sub-id>/resourceGroups/myRG'.` | Ensure your Azure account has the "Monitoring Contributor" or "Alert Management Operator" role assigned to the resource group or subscription. |
 ## Alert Rule Maintenance
 
 ```bash
@@ -340,5 +348,7 @@ az monitor metrics alert delete \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The alert rule 'high-cpu-alert' does not exist in resource group 'myRG'.`** — Verify the alert name and resource group with `az monitor metrics alert list --resource-group myRG`.
-    **`(AuthorizationFailed) The client 'user@example.com' with object id 'abc123...' does not have authorization to perform action 'microsoft.insights/metricsAlerts/write' over scope '/subscriptions/...'.`** — Ensure your Azure account has the Monitoring Contributor role assigned to the subscription or resource group.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The alert rule 'high-cpu-alert' does not exist in resource group 'myRG'.` | Verify the alert name and resource group with `az monitor metrics alert list --resource-group myRG`. |
+    | `(AuthorizationFailed) The client 'user@example.com' with object id 'abc123...' does not have authorization to perform action 'microsoft.insights/metricsAlerts/write' over scope '/subscriptions/...'.` | Ensure your Azure account has the Monitoring Contributor role assigned to the subscription or resource group. |

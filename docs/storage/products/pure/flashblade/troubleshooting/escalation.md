@@ -89,9 +89,11 @@ Last collection timestamp: 2024-01-15 14:30:45 UTC
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure you are logged into the FlashBlade management interface or have the Pure Storage CLI tools installed and in your PATH.
-    **`Error: Unable to connect to phone home server`** — Verify network connectivity and firewall rules allow outbound HTTPS to phonehome.purestorage.com on port 443.
-    **`Error: Authentication failed`** — Confirm your array credentials are valid and you have administrative privileges to query phone home status.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure you are logged into the FlashBlade management interface or have the Pure Storage CLI tools installed and in your PATH. |
+    | `Error: Unable to connect to phone home server` | Verify network connectivity and firewall rules allow outbound HTTPS to phonehome.purestorage.com on port 443. |
+    | `Error: Authentication failed` | Confirm your array credentials are valid and you have administrative privileges to query phone home status. |
 ## Opening a Case
 
 When opening a case manually, provide the following information to reduce time to resolution:
@@ -184,9 +186,11 @@ fs-backup-to-dr               synced            2.3s              flashblade-dr-
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to array management interface`** — Verify network connectivity to the array management IP and confirm firewall rules allow port 443.
-    **`Error: Authentication failed - invalid credentials`** — Ensure your Pure Storage API token is valid and has not expired; regenerate credentials in the management console if needed.
-    **`Error: Drive 3.4 failed in enclosure 2 - immediate replacement required`** — Schedule a maintenance window and replace the failed drive using the Pure Storage support portal to obtain the correct replacement part.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to array management interface` | Verify network connectivity to the array management IP and confirm firewall rules allow port 443. |
+    | `Error: Authentication failed - invalid credentials` | Ensure your Pure Storage API token is valid and has not expired; regenerate credentials in the management console if needed. |
+    | `Error: Drive 3.4 failed in enclosure 2 - immediate replacement required` | Schedule a maintenance window and replace the failed drive using the Pure Storage support portal to obtain the correct replacement part. |
 The `purediag` command generates a diagnostic bundle that Pure Support can pull directly via phonehome if the support tunnel is active. If phonehome is offline, download the diagnostic output and attach it to the case via the support portal.
 
 ## SLA Tiers

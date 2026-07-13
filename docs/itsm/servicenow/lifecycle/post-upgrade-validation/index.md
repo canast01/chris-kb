@@ -72,9 +72,11 @@ Release Date: 2023-09-15
 ```
 
 !!! warning "Common errors"
-    **`System Health Status: Yellow`** — Check `esxcli system health status list` to identify which subsystem is degraded (typically storage or memory), then remediate the specific component before proceeding.
-    **`vim-cmd: Unknown command`** — Verify the vSphere API is running with `service-control --status vmware-vpxd` and restart if needed; if persists, the ESXi host may need a reboot.
-    **`grep: (standard input) is empty`** — Confirm storage devices are detected with `esxcli storage core device list`; if no devices appear, rescan HBAs using `esxcli storage core adapter rescan --adapter=vmhba0`.
+    | Error | Fix |
+    |---|---|
+    | `System Health Status: Yellow` | Check `esxcli system health status list` to identify which subsystem is degraded (typically storage or memory), then remediate the specific component before proceeding. |
+    | `vim-cmd: Unknown command` | Verify the vSphere API is running with `service-control --status vmware-vpxd` and restart if needed; if persists, the ESXi host may need a reboot. |
+    | `grep: (standard input) is empty` | Confirm storage devices are detected with `esxcli storage core device list`; if no devices appear, rescan HBAs using `esxcli storage core adapter rescan --adapter=vmhba0`. |
 ## 2. Service Health
 
 ```bash
@@ -115,9 +117,11 @@ Stopped  WinDefend          Automatic
 ```
 
 !!! warning "Common errors"
-    **`nginx: FAILED`** — Run `systemctl start nginx && systemctl enable nginx` to start the service and enable it on boot.
-    **`ss: command not found`** — Install iproute2 with `apt-get install iproute2` or use `netstat -tulnp` as a fallback.
-    **`Get-Service : The term 'Get-Service' is not recognized`** — Run the PowerShell command on Windows only; use `wmic service list brief` on Windows systems without PowerShell.
+    | Error | Fix |
+    |---|---|
+    | `nginx: FAILED` | Run `systemctl start nginx && systemctl enable nginx` to start the service and enable it on boot. |
+    | `ss: command not found` | Install iproute2 with `apt-get install iproute2` or use `netstat -tulnp` as a fallback. |
+    | `Get-Service : The term 'Get-Service' is not recognized` | Run the PowerShell command on Windows only; use `wmic service list brief` on Windows systems without PowerShell. |
 | Service | Expected Port | Check Command | Status |
 |---|---|---|---|
 | Web / App | 443, 80 | `curl -sk https://localhost/health` | ☐ |
@@ -163,9 +167,11 @@ Jan 15 14:31:05 app-prod-01 myapp[2847]: WARNING: Slow query detected (2.3s) on 
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command or use `--cacert /path/to/ca.crt` with a valid certificate.
-    **`psql: error: could not translate host name "<db-host>" to address: Name or service not known`** — Replace `<db-host>` with the actual database hostname (e.g., `db-prod-01.internal`) and verify network connectivity with `ping`.
-    **`Unit myapp.service not found`** — Verify the systemd service name with `systemctl list-units --type=service | grep myapp` and update the `journalctl -u` parameter accordingly.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command or use `--cacert /path/to/ca.crt` with a valid certificate. |
+    | `psql: error: could not translate host name "<db-host>" to address: Name or service not known` | Replace `<db-host>` with the actual database hostname (e.g., `db-prod-01.internal`) and verify network connectivity with `ping`. |
+    | `Unit myapp.service not found` | Verify the systemd service name with `systemctl list-units --type=service | grep myapp` and update the `journalctl -u` parameter accordingly. |
 ## 4. Monitoring Validation
 
 ```bash
@@ -205,9 +211,11 @@ node_time_seconds 2847392.45
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to prometheus:9090: Connection refused`** — Verify Prometheus service is running with `systemctl status prometheus` and check firewall rules allow port 9090.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Confirm the Prometheus endpoint is responding with valid JSON by testing `curl -s http://prometheus:9090/api/v1/alerts` directly.
-    **`curl: (7) Failed to connect to <host>:9100: No route to host`** — Replace `<host>` with the actual hostname/IP and verify node_exporter is listening on port 9100 with `netstat -tlnp | grep 9100`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to prometheus:9090: Connection refused` | Verify Prometheus service is running with `systemctl status prometheus` and check firewall rules allow port 9090. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Confirm the Prometheus endpoint is responding with valid JSON by testing `curl -s http://prometheus:9090/api/v1/alerts` directly. |
+    | `curl: (7) Failed to connect to <host>:9100: No route to host` | Replace `<host>` with the actual hostname/IP and verify node_exporter is listening on port 9100 with `netstat -tlnp | grep 9100`. |
 ## 5. Performance Baseline Comparison
 
 ```bash
@@ -254,9 +262,11 @@ Avg: 0.487s
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command or use `--cacert /path/to/ca-bundle.crt` with your organization's CA certificate.
-    **`command not found: mpstat`** — Install sysstat package with `sudo apt-get install sysstat` (Debian/Ubuntu) or `sudo yum install sysstat` (RHEL/CentOS).
-    **`Name or service not known`** — Verify the `<app-url>` placeholder is replaced with the actual application hostname and that DNS resolution is working with `nslookup <app-url>`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command or use `--cacert /path/to/ca-bundle.crt` with your organization's CA certificate. |
+    | `command not found: mpstat` | Install sysstat package with `sudo apt-get install sysstat` (Debian/Ubuntu) or `sudo yum install sysstat` (RHEL/CentOS). |
+    | `Name or service not known` | Verify the `<app-url>` placeholder is replaced with the actual application hostname and that DNS resolution is working with `nslookup <app-url>`. |
 ## 6. Replication and Data Integrity
 
 ```bash
@@ -296,9 +306,11 @@ prod_svm:prod_vol_03 prod_svm:prod_vol_03_dr SnapMirrored 3m 8s
 ```
 
 !!! warning "Common errors"
-    **`Get-SpbmReplicationGroup : The term 'Get-SpbmReplicationGroup' is not recognized`** — Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the cmdlet.
-    **`Error: command not found: snapmirror`** — Ensure you are connected to the NetApp cluster management interface via SSH or execute the command from the NetApp cluster console directly.
-    **`psql: could not translate host name "localhost" to address`** — Specify the correct PostgreSQL host with `-h <hostname>` and verify the database is running and accessible on that host.
+    | Error | Fix |
+    |---|---|
+    | `Get-SpbmReplicationGroup : The term 'Get-SpbmReplicationGroup' is not recognized` | Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the cmdlet. |
+    | `Error: command not found: snapmirror` | Ensure you are connected to the NetApp cluster management interface via SSH or execute the command from the NetApp cluster console directly. |
+    | `psql: could not translate host name "localhost" to address` | Specify the correct PostgreSQL host with `-h <hostname>` and verify the database is running and accessible on that host. |
 ## 7. Post-Upgrade Cleanup
 
 ```bash
@@ -332,9 +344,11 @@ Validation notes appended: Post-upgrade stability confirmed. All snapshots remov
 ```
 
 !!! warning "Common errors"
-    **`Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Ensure PowerShell is running on a Windows system with Hyper-V or VMware PowerCLI module installed, or use the appropriate hypervisor CLI for your platform.
-    **`rm: cannot remove '/tmp/pre-upgrade-backup-*.tar.gz': No such file or directory`** — Verify the backup files exist with `ls /tmp/pre-upgrade-backup-*.tar.gz` before removal, or adjust the glob pattern to match actual filenames.
-    **`Error: CMDB API authentication failed (401 Unauthorized)`** — Confirm your ServiceNow API credentials and token are valid, and that your user account has write permissions to the CMDB table.
+    | Error | Fix |
+    |---|---|
+    | `Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Ensure PowerShell is running on a Windows system with Hyper-V or VMware PowerCLI module installed, or use the appropriate hypervisor CLI for your platform. |
+    | `rm: cannot remove '/tmp/pre-upgrade-backup-*.tar.gz': No such file or directory` | Verify the backup files exist with `ls /tmp/pre-upgrade-backup-*.tar.gz` before removal, or adjust the glob pattern to match actual filenames. |
+    | `Error: CMDB API authentication failed (401 Unauthorized)` | Confirm your ServiceNow API credentials and token are valid, and that your user account has write permissions to the CMDB table. |
 ## Validation Sign-Off
 
 | Check | Result | Notes |

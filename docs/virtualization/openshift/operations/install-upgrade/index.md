@@ -81,8 +81,10 @@ Updates available:
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "clusterversion" in group "config.openshift.io" in the namespace "default"`** — Ensure you are connected to an OpenShift cluster with `oc login` and have cluster-admin permissions.
-    **`Error from server (Forbidden): clusterversions.config.openshift.io "version" is forbidden: User "system:serviceaccount:default:deployer" cannot patch resource "clusterversions" in API group "config.openshift.io" at the cluster scope`** — Run the command as a user with cluster-admin role using `oc adm policy add-cluster-role-to-user cluster-admin <username>`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "clusterversion" in group "config.openshift.io" in the namespace "default"` | Ensure you are connected to an OpenShift cluster with `oc login` and have cluster-admin permissions. |
+    | `Error from server (Forbidden): clusterversions.config.openshift.io "version" is forbidden: User "system:serviceaccount:default:deployer" cannot patch resource "clusterversions" in API group "config.openshift.io" at the cluster scope` | Run the command as a user with cluster-admin role using `oc adm policy add-cluster-role-to-user cluster-admin <username>`. |
 **EUS channels** apply only to even-numbered minor versions (4.10, 4.12, 4.14, 4.16). Subscriptions to an EUS channel unlock the EUS-to-EUS upgrade path; odd-version intermediate releases are not available in EUS channels.
 
 ## Upgrade Prerequisites Checklist
@@ -118,8 +120,10 @@ Pre-checks PASSED
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "co"`** — Ensure you are connected to a valid OpenShift cluster with `oc login` and have sufficient permissions.
-    **`grep: (standard input) is empty`** — This occurs when all cluster operators are healthy; add `|| true` at the end of each grep chain to allow the script to continue on empty results.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "co"` | Ensure you are connected to a valid OpenShift cluster with `oc login` and have sufficient permissions. |
+    | `grep: (standard input) is empty` | This occurs when all cluster operators are healthy; add `|| true` at the end of each grep chain to allow the script to continue on empty results. |
 ## Standard Upgrade Procedure
 
 ```bash
@@ -248,8 +252,10 @@ worker   rendered-worker-f8g7h6i5e4d3c2b1a     False     True       False      5
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "mcp"`** — Use the full resource name `machineconfigpool` or ensure the OpenShift CLI is updated to version 4.10+.
-    **`Unable to connect to the server: dial tcp: lookup api.cluster.local on 127.0.0.1:53: no such host`** — Verify your kubeconfig is set correctly with `export KUBECONFIG=/path/to/kubeconfig` and the cluster API is reachable.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "mcp"` | Use the full resource name `machineconfigpool` or ensure the OpenShift CLI is updated to version 4.10+. |
+    | `Unable to connect to the server: dial tcp: lookup api.cluster.local on 127.0.0.1:53: no such host` | Verify your kubeconfig is set correctly with `export KUBECONFIG=/path/to/kubeconfig` and the cluster API is reachable. |
 > **Warning:** Do not leave worker MCP paused after upgrade completes. Nodes will be out of sync with the cluster config until resumed.
 
 ## EUS-to-EUS Upgrade (e.g. 4.12 → 4.14)
@@ -306,9 +312,11 @@ worker   rendered-worker-x9y8z7w6v5u4t3s2r1q0   False     True       False      
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "clusterversion"`** — Ensure you are logged in with `oc login` to a valid OpenShift cluster and have cluster-admin permissions.
-    **`Unable to find version 4.13.27 in the available updates`** — Run `oc adm upgrade` without arguments to list available versions, then use a valid intermediate z-stream from the output.
-    **`machine-config-daemon on node worker-0 is degraded`** — Wait for the worker node to finish applying the paused MachineConfig before unpausing, or check `oc describe node worker-0` for blocking conditions.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "clusterversion"` | Ensure you are logged in with `oc login` to a valid OpenShift cluster and have cluster-admin permissions. |
+    | `Unable to find version 4.13.27 in the available updates` | Run `oc adm upgrade` without arguments to list available versions, then use a valid intermediate z-stream from the output. |
+    | `machine-config-daemon on node worker-0 is degraded` | Wait for the worker node to finish applying the paused MachineConfig before unpausing, or check `oc describe node worker-0` for blocking conditions. |
 ## Multi-Hop Upgrade
 
 OCP upgrade graph enforces version adjacency. Some versions require traversing an intermediate release. The upgrade graph at `access.redhat.com/labs/ocpupgradegraph` shows valid paths.
@@ -351,9 +359,11 @@ Cluster is updating: 4.14.5 -> 4.14.5 (disconnected, 12 of 180 seconds)
 ```
 
 !!! warning "Common errors"
-    **`error: the server has asked for the client to provide credentials`** — Ensure your kubeconfig is valid and you are logged in with `oc login` to the cluster.
-    **`error: unable to find image "quay.local:8443/ocp4/openshift/release:4.14.5-x86_64" locally`** — Verify the image digest exists in your disconnected registry and the registry hostname/port are accessible from all nodes.
-    **`error: upgrade cannot proceed: DesiredReleaseInvalid`** — Confirm the target version exists in the update graph by running `oc adm upgrade` without arguments, or use an intermediate version if a direct path is unavailable.
+    | Error | Fix |
+    |---|---|
+    | `error: the server has asked for the client to provide credentials` | Ensure your kubeconfig is valid and you are logged in with `oc login` to the cluster. |
+    | `error: unable to find image "quay.local:8443/ocp4/openshift/release:4.14.5-x86_64" locally` | Verify the image digest exists in your disconnected registry and the registry hostname/port are accessible from all nodes. |
+    | `error: upgrade cannot proceed: DesiredReleaseInvalid` | Confirm the target version exists in the update graph by running `oc adm upgrade` without arguments, or use an intermediate version if a direct path is unavailable. |
 ## OCP Version Lifecycle
 
 | Version | Type | GA | Full support end | Maintenance end |
@@ -434,9 +444,11 @@ poddisruptionbudget-ingress-controller  2               60d
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "co"`** — Use the full resource name `clusteroperator` instead of the alias `co`, or verify the API group with `oc api-resources | grep operator`.
-    **`Error from server (NotFound): clusteroperators.config.openshift.io "<operator>" not found`** — Verify the operator name exists with `oc get clusteroperator` and check for typos in the degraded operator name.
-    **`error: unable to patch the resource with name "<operator>"`** — Ensure you have cluster-admin privileges with `oc auth can-i patch clusteroperators` and only apply patches on explicit Red Hat support guidance.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "co"` | Use the full resource name `clusteroperator` instead of the alias `co`, or verify the API group with `oc api-resources | grep operator`. |
+    | `Error from server (NotFound): clusteroperators.config.openshift.io "<operator>" not found` | Verify the operator name exists with `oc get clusteroperator` and check for typos in the degraded operator name. |
+    | `error: unable to patch the resource with name "<operator>"` | Ensure you have cluster-admin privileges with `oc auth can-i patch clusteroperators` and only apply patches on explicit Red Hat support guidance. |
 ---
 
 ## See also

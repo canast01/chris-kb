@@ -55,9 +55,11 @@ SFP Information for fc1/3:
 ```
 
 !!! warning "Common errors"
-    **`Invalid command`** — Verify the interface exists with `show interface brief` and use correct syntax like `show interface fc1/3` (not `show interface fc 1/3`).
-    **`% Invalid command`** — Ensure you are in the correct CLI mode; use `config terminal` if configuration commands are needed, or exit to privileged EXEC mode with `exit`.
-    **`Interface fc1/3 does not exist`** — Confirm the port number is valid for your MDS model using `show interface brief | grep fc` and check if the module is installed.
+    | Error | Fix |
+    |---|---|
+    | `Invalid command` | Verify the interface exists with `show interface brief` and use correct syntax like `show interface fc1/3` (not `show interface fc 1/3`). |
+    | `% Invalid command` | Ensure you are in the correct CLI mode; use `config terminal` if configuration commands are needed, or exit to privileged EXEC mode with `exit`. |
+    | `Interface fc1/3 does not exist` | Confirm the port number is valid for your MDS model using `show interface brief | grep fc` and check if the module is installed. |
 ```bash
 # Find the reason for errDisabled
 show interface fc1/4 | include err
@@ -87,8 +89,10 @@ fc1/4 is Ethernet, SFP 8Gfc
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct mode (enable mode required); use `enable` command first.
-    **`% Ambiguous command: "show interface fc1/4 | include err"`** — Use pipe syntax correctly with `show interface fc1/4 | include "err-disabled"` or remove the pipe and use `show interface fc1/4` to view full details.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct mode (enable mode required); use `enable` command first. |
+    | `% Ambiguous command: "show interface fc1/4 | include err"` | Use pipe syntax correctly with `show interface fc1/4 | include "err-disabled"` or remove the pipe and use `show interface fc1/4` to view full details. |
 ```bash
 # After resolving the root cause:
 interface fc1/4
@@ -170,9 +174,11 @@ Interface fc5/8 is in VSAN 10
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact PWWN format (50:00:xx:xx:xx:xx:xx:xx) and ensure you're using the correct show command syntax for your MDS firmware version.
-    **`% No matching entries found`** — Check that the host HBA has completed FLOGI login by verifying port status with `show interface fc<x/y>` and confirming the VSAN is assigned to that port.
-    **`Zone member not found in active zoneset`** — Activate the zoneset containing both devices using `zoneset activate name <zoneset-name> vsan 10` and verify with `show zoneset active vsan 10`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact PWWN format (50:00:xx:xx:xx:xx:xx:xx) and ensure you're using the correct show command syntax for your MDS firmware version. |
+    | `% No matching entries found` | Check that the host HBA has completed FLOGI login by verifying port status with `show interface fc<x/y>` and confirming the VSAN is assigned to that port. |
+    | `Zone member not found in active zoneset` | Activate the zoneset containing both devices using `zoneset activate name <zoneset-name> vsan 10` and verify with `show zoneset active vsan 10`. |
 ```bash
 # Check zone status for errors
 show zone status vsan 10
@@ -206,9 +212,11 @@ Zoneset 'production-zoneset' activated successfully for VSAN 10.
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the zoneset name exists with `show zoneset name <zoneset-name> vsan 10` before activation.
-    **`% Zoning session in progress. Commit required.`** — Run `zone commit vsan 10` to commit pending changes before attempting activation.
-    **`% VSAN 10 does not exist`** — Confirm the VSAN is created and active with `show vsan` before executing zone commands.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the zoneset name exists with `show zoneset name <zoneset-name> vsan 10` before activation. |
+    | `% Zoning session in progress. Commit required.` | Run `zone commit vsan 10` to commit pending changes before attempting activation. |
+    | `% VSAN 10 does not exist` | Confirm the VSAN is created and active with `show vsan` before executing zone commands. |
 ```bash
 # Verify current alias-to-WWPN mapping
 show device-alias database | grep <alias-name>
@@ -236,8 +244,10 @@ Zoneset name prod-zoneset vsan 10 activated
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (enter `config t` first if needed).
-    **`% Zoneset activation failed: database commit in progress`** — Wait 30 seconds for the previous commit to complete, then retry the zoneset activation.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (enter `config t` first if needed). |
+    | `% Zoneset activation failed: database commit in progress` | Wait 30 seconds for the previous commit to complete, then retry the zoneset activation. |
 ```bash
 # List all zones in VSAN
 show zone vsan 10
@@ -279,9 +289,11 @@ Copy complete
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Zone <zone-name> does not exist in VSAN 10`** — Verify the exact zone name with `show zone vsan 10` and ensure you're in the correct VSAN.
-    **`ERROR: Member device-alias <old-alias> not found in zone <zone-name>`** — Confirm the device-alias exists in the zone using `show zone member` before attempting removal.
-    **`ERROR: Zoneset <zoneset-name> is currently active and cannot be modified`** — Deactivate the zoneset first with `no zoneset activate name <zoneset-name> vsan 10` before making changes.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Zone <zone-name> does not exist in VSAN 10` | Verify the exact zone name with `show zone vsan 10` and ensure you're in the correct VSAN. |
+    | `ERROR: Member device-alias <old-alias> not found in zone <zone-name>` | Confirm the device-alias exists in the zone using `show zone member` before attempting removal. |
+    | `ERROR: Zoneset <zoneset-name> is currently active and cannot be modified` | Deactivate the zoneset first with `no zoneset activate name <zoneset-name> vsan 10` before making changes. |
 ```bash
 # Check ISL port detail
 show interface fc2/1
@@ -345,8 +357,10 @@ Domain List for VSAN 10
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct mode (use `config terminal` for configuration commands, or ensure you are in exec mode for show commands).
-    **`% Port fc2/1 does not exist`** — Confirm the port number is valid for your MDS model and that the module is installed and online using `show module`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct mode (use `config terminal` for configuration commands, or ensure you are in exec mode for show commands). |
+    | `% Port fc2/1 does not exist` | Confirm the port number is valid for your MDS model and that the module is installed and online using `show module`. |
 ```bash
 # Confirm rapid flap events in log
 show logging last 100 | grep fc1/6
@@ -395,9 +409,11 @@ SFP Information for fc1/6:
 ```
 
 !!! warning "Common errors"
-    **`show: command not found`** — Prepend the command with `conf t` context or use the full `show` syntax; if in bash, use `ssh admin@switch "show logging last 100 | grep fc1/6"` to run on the MDS device.
-    **`Interface fc1/6 is administratively down`** — Enable the interface with `no shutdown` in interface configuration mode before checking counters.
-    **`Current Rx Power: -24.3 dBm`** — Replace the SFP transceiver as optical power is below the -20 dBm minimum threshold for reliable operation.
+    | Error | Fix |
+    |---|---|
+    | `show: command not found` | Prepend the command with `conf t` context or use the full `show` syntax; if in bash, use `ssh admin@switch "show logging last 100 | grep fc1/6"` to run on the MDS device. |
+    | `Interface fc1/6 is administratively down` | Enable the interface with `no shutdown` in interface configuration mode before checking counters. |
+    | `Current Rx Power: -24.3 dBm` | Replace the SFP transceiver as optical power is below the -20 dBm minimum threshold for reliable operation. |
 ```bash
 interface fc1/6
   shutdown
@@ -408,8 +424,10 @@ interface fc1/6
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Ensure you are in the correct configuration mode by entering `config t` before issuing interface commands.
-    **`% Interface does not exist`** — Verify the interface exists on your MDS switch using `show interface brief` before attempting to configure it.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Ensure you are in the correct configuration mode by entering `config t` before issuing interface commands. |
+    | `% Interface does not exist` | Verify the interface exists on your MDS switch using `show interface brief` before attempting to configure it. |
 ```bash
 # Check overall CPU
 show system resources
@@ -450,9 +468,11 @@ PID    Name                 CPU Time   %CPU
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact command syntax for your MDS firmware version using `show ?` to list available commands.
-    **`% Incomplete command`** — Add the full command path; try `show system resources` instead of partial command names.
-    **`% Permission denied`** — Ensure your user role has "network-admin" or equivalent privileges; check with `show role name <your-role>`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact command syntax for your MDS firmware version using `show ?` to list available commands. |
+    | `% Incomplete command` | Add the full command path; try `show system resources` instead of partial command names. |
+    | `% Permission denied` | Ensure your user role has "network-admin" or equivalent privileges; check with `show role name <your-role>`. |
 ```bash
 show fcdomain vsan 10
 show fcdomain domain-list vsan 10
@@ -475,8 +495,10 @@ Domain List for VSAN 10:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the VSAN exists with `show vsan` and confirm you are in the correct mode (use `config t` if needed).
-    **`VSAN 10 does not exist`** — Create the VSAN first using `vsan 10` in config mode, then enable it with `no shutdown`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the VSAN exists with `show vsan` and confirm you are in the correct mode (use `config t` if needed). |
+    | `VSAN 10 does not exist` | Create the VSAN first using `vsan 10` in config mode, then enable it with `no shutdown`. |
 ```bash
 fcdomain domain 3 static vsan 10
 # Then bring up the ISL
@@ -493,8 +515,10 @@ interface fc2/1
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (use `config t` first) and that the syntax matches your MDS firmware version.
-    **`% VSAN 10 does not exist`** — Create the VSAN first using `vsan 10` command before assigning it to the fcdomain.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (use `config t` first) and that the syntax matches your MDS firmware version. |
+    | `% VSAN 10 does not exist` | Create the VSAN first using `vsan 10` command before assigning it to the fcdomain. |
 ```bash
 # Review install status
 show install all status
@@ -516,8 +540,10 @@ Install Failure Reason:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct mode (use `config terminal` if needed) and that the MDS switch supports these install commands.
-    **`% Feature not enabled: install`** — Enable the install feature with `feature install` in configuration mode before running install status commands.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct mode (use `config terminal` if needed) and that the MDS switch supports these install commands. |
+    | `% Feature not enabled: install` | Enable the install feature with `feature install` in configuration mode before running install status commands. |
 ```bash
 install all nxos bootflash:<image-name>
 ```
@@ -534,9 +560,11 @@ Reboot is required to activate the image. Issue "reload" command.
 ```
 
 !!! warning "Common errors"
-    **`Error: Image file not found at bootflash:<image-name>`** — Verify the image filename exists in bootflash using `dir bootflash:` and correct any typos in the image name.
-    **`Error: Insufficient space in bootflash. Required: 2048 MB, Available: 512 MB`** — Delete old images with `delete bootflash:<old-image>` or add additional storage before retrying the install command.
-    **`Error: Image verification failed - corrupted or invalid image`** — Re-copy the image file to bootflash using SCP or SFTP and verify the checksum matches the release notes.
+    | Error | Fix |
+    |---|---|
+    | `Error: Image file not found at bootflash:<image-name>` | Verify the image filename exists in bootflash using `dir bootflash:` and correct any typos in the image name. |
+    | `Error: Insufficient space in bootflash. Required: 2048 MB, Available: 512 MB` | Delete old images with `delete bootflash:<old-image>` or add additional storage before retrying the install command. |
+    | `Error: Image verification failed - corrupted or invalid image` | Re-copy the image file to bootflash using SCP or SFTP and verify the checksum matches the release notes. |
 ```bash
 # Always save after any change
 copy running-config startup-config
@@ -556,8 +584,10 @@ Created: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (enable mode for `copy` command); use `enable` first if needed.
-    **`% Destination filename [startup-config]?`** — Press Enter to confirm the default destination or specify an alternative filename; the command requires explicit confirmation.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (enable mode for `copy` command); use `enable` first if needed. |
+    | `% Destination filename [startup-config]?` | Press Enter to confirm the default destination or specify an alternative filename; the command requires explicit confirmation. |
 ```bash
 show startup-config | head -20
 # Confirm timestamp matches the last intended save
@@ -589,8 +619,10 @@ feature fcns
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct mode (exec or config) and that the `show` command is supported on this MDS version.
-    **`% Incomplete command`** — Ensure the pipe character and `head` command are properly supported; some MDS versions require `show startup-config | grep` instead.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct mode (exec or config) and that the `show` command is supported on this MDS version. |
+    | `% Incomplete command` | Ensure the pipe character and `head` command are properly supported; some MDS versions require `show startup-config | grep` instead. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

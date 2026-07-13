@@ -117,9 +117,11 @@ alive paths: 16
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install EMC PowerPath package (e.g., `rpm -ivh PowerPath*.rpm`) or verify the installation path is in $PATH.
-    **`powermt display: ERROR: No devices found`** — Ensure PowerPath daemon is running with `systemctl start PowerPath` and devices are properly zoned in SAN.
-    **`powermt display: Permission denied`** — Run the command with `sudo` or ensure your user is in the appropriate group (typically `disk` or `powerpath`).
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install EMC PowerPath package (e.g., `rpm -ivh PowerPath*.rpm`) or verify the installation path is in $PATH. |
+    | `powermt display: ERROR: No devices found` | Ensure PowerPath daemon is running with `systemctl start PowerPath` and devices are properly zoned in SAN. |
+    | `powermt display: Permission denied` | Run the command with `sudo` or ensure your user is in the appropriate group (typically `disk` or `powerpath`). |
 ## Pre-Maintenance Health Check
 
 ![Pre-Maintenance Health Check](../../../../../assets/storage-dell-powerpath-hc-pre-maintenance-health-check.svg)
@@ -212,9 +214,11 @@ Scanning for new or removed devices...
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Verify PowerPath is installed with `rpm -qa | grep PowerPath` and add the PowerPath bin directory to PATH.
-    **`powermt: insufficient privileges`** — Run the command with `sudo` or as root user, as PowerPath operations require elevated permissions.
-    **`powermt: No devices found`** — Ensure HBA ports are connected and zoned correctly in the SAN fabric, then run `powermt config` to rescan.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Verify PowerPath is installed with `rpm -qa | grep PowerPath` and add the PowerPath bin directory to PATH. |
+    | `powermt: insufficient privileges` | Run the command with `sudo` or as root user, as PowerPath operations require elevated permissions. |
+    | `powermt: No devices found` | Ensure HBA ports are connected and zoned correctly in the SAN fabric, then run `powermt config` to rescan. |
 ## Path State Verification
 
 ![Path State Verification](../../../../../assets/storage-dell-powerpath-hc-path-state-verification.svg)
@@ -245,9 +249,11 @@ c5t500009730814A5F2d0 emc_clariion2 SP B 1 enabled alua round-robin enabled aliv
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install EMC PowerPath package (e.g., `rpm -ivh PowerPath*.rpm`) or verify the installation path is in $PATH.
-    **`powermt: error: No devices found`** — Ensure PowerPath is initialized with `powermt config` and storage arrays are properly zoned and visible to the host.
-    **`powermt: error: Permission denied`** — Run the command with sudo or as root user since PowerPath requires elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install EMC PowerPath package (e.g., `rpm -ivh PowerPath*.rpm`) or verify the installation path is in $PATH. |
+    | `powermt: error: No devices found` | Ensure PowerPath is initialized with `powermt config` and storage arrays are properly zoned and visible to the host. |
+    | `powermt: error: Permission denied` | Run the command with sudo or as root user since PowerPath requires elevated privileges. |
 Expected output per path:
 ```text
 ============================================================
@@ -294,8 +300,10 @@ Director=FA-4D Port=3 (standby)
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install EMC PowerPath package or verify the installation path is in $PATH.
-    **`powermt display: No such device`** — Ensure PowerPath is running with `systemctl start powerpath` and devices are properly initialized.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install EMC PowerPath package or verify the installation path is in $PATH. |
+    | `powermt display: No such device` | Ensure PowerPath is running with `systemctl start powerpath` and devices are properly initialized. |
 ## Policy Verification
 
 ![Policy Verification](../../../../../assets/storage-dell-powerpath-hc-policy-verification.svg)
@@ -322,8 +330,10 @@ Logical device name=emc_clariion_5
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Install EMC PowerPath software or ensure the PowerPath bin directory is in your PATH environment variable.
-    **`grep: (standard input) is empty`** — Run `powermt display dev=all` without grep to verify PowerPath is initialized; if no devices appear, rescan storage with `powermt config`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Install EMC PowerPath software or ensure the PowerPath bin directory is in your PATH environment variable. |
+    | `grep: (standard input) is empty` | Run `powermt display dev=all` without grep to verify PowerPath is initialized; if no devices appear, rescan storage with `powermt config`. |
 Expected: `CLAROpt` (CLARiiON optimized) or `co` for Active/Optimized.
 
 ## Health Summary Table
@@ -369,9 +379,11 @@ License Status: Valid (expires 2025-12-31)
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Install PowerPath EMC client package or add `/opt/powerpath/bin` to your PATH environment variable.
-    **`powermt: Permission denied`** — Run the command with `sudo` or ensure your user is in the powerpath group with `sudo usermod -aG powerpath $USER`.
-    **`powermt: error opening /dev/emcpower: No such file or directory`** — Reload the PowerPath kernel module with `sudo powermt load` or restart the PowerPath daemon with `sudo systemctl restart powerpath`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Install PowerPath EMC client package or add `/opt/powerpath/bin` to your PATH environment variable. |
+    | `powermt: Permission denied` | Run the command with `sudo` or ensure your user is in the powerpath group with `sudo usermod -aG powerpath $USER`. |
+    | `powermt: error opening /dev/emcpower: No such file or directory` | Reload the PowerPath kernel module with `sudo powermt load` or restart the PowerPath daemon with `sudo systemctl restart powerpath`. |
 ### Verify PowerPath is Running
 
 ![Verify PowerPath is Running](../../../../../assets/storage-dell-powerpath-hc-verify-powerpath-is-running.svg)
@@ -412,9 +424,11 @@ SERVICE_NAME: EMCPower
 ```
 
 !!! warning "Common errors"
-    **`Unit PowerPath.service could not be found.`** — Install PowerPath package with `apt-get install powerpath` or `yum install powerpath` depending on your distribution.
-    **`permission denied`** — Run the command with `sudo` or as root user: `sudo systemctl status PowerPath`.
-    **`The specified service does not exist as an installed service.`** — Verify PowerPath is installed on Windows with `sc query | findstr EMCPower` and reinstall if missing.
+    | Error | Fix |
+    |---|---|
+    | `Unit PowerPath.service could not be found.` | Install PowerPath package with `apt-get install powerpath` or `yum install powerpath` depending on your distribution. |
+    | `permission denied` | Run the command with `sudo` or as root user: `sudo systemctl status PowerPath`. |
+    | `The specified service does not exist as an installed service.` | Verify PowerPath is installed on Windows with `sc query | findstr EMCPower` and reinstall if missing. |
 ### Device Discovery
 
 ![Device Discovery](../../../../../assets/storage-dell-powerpath-hc-device-discovery.svg)
@@ -457,9 +471,11 @@ Total Devices: 3
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Install EMC PowerPath package using `yum install EMCpower.LINUX-<version>.x86_64.rpm` or equivalent for your distribution.
-    **`powermt: Permission denied`** — Run the commands with `sudo` or as root user since PowerPath operations require elevated privileges.
-    **`Symmetrix ID: UNKNOWN`** — Verify SAN connectivity and zoning are correct, then rescan HBAs with `powermt config` and wait 30 seconds before retrying.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Install EMC PowerPath package using `yum install EMCpower.LINUX-<version>.x86_64.rpm` or equivalent for your distribution. |
+    | `powermt: Permission denied` | Run the commands with `sudo` or as root user since PowerPath operations require elevated privileges. |
+    | `Symmetrix ID: UNKNOWN` | Verify SAN connectivity and zoning are correct, then rescan HBAs with `powermt config` and wait 30 seconds before retrying. |
 ### Path Count Validation
 
 ![Path Count Validation](../../../../../assets/storage-dell-powerpath-hc-path-count-validation.svg)
@@ -492,9 +508,11 @@ Total Devices: 3
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install EMC PowerPath software or verify the installation path is in your $PATH environment variable.
-    **`powermt: error: You must be root to run this command`** — Run the command with sudo or as the root user.
-    **`powermt: error: No devices found`** — Verify that PowerPath-managed storage devices are configured and that the powermt daemon is running with `systemctl status powermt`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install EMC PowerPath software or verify the installation path is in your $PATH environment variable. |
+    | `powermt: error: You must be root to run this command` | Run the command with sudo or as the root user. |
+    | `powermt: error: No devices found` | Verify that PowerPath-managed storage devices are configured and that the powermt daemon is running with `systemctl status powermt`. |
 Count `alive` paths per pseudo device. Compare against expected path count from the storage array zoning design.
 
 ### Host Registration on Array
@@ -542,9 +560,11 @@ Restoring 0 dead paths...
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Verify PowerPath is installed with `rpm -qa | grep EMCpower` and install the PowerPath package if missing.
-    **`powermt: Unable to open Symmetrix device`** — Ensure the Symmetrix array is accessible and multipath devices are properly configured by running `powermt config` to refresh device discovery.
-    **`powermt: Insufficient privileges`** — Run the command with `sudo` or as root user since PowerPath operations require elevated permissions.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Verify PowerPath is installed with `rpm -qa | grep EMCpower` and install the PowerPath package if missing. |
+    | `powermt: Unable to open Symmetrix device` | Ensure the Symmetrix array is accessible and multipath devices are properly configured by running `powermt config` to refresh device discovery. |
+    | `powermt: Insufficient privileges` | Run the command with `sudo` or as root user since PowerPath operations require elevated permissions. |
 ### Multipath Conflict Check (Linux)
 
 ![Multipath Conflict Check (Linux)](../../../../../assets/storage-dell-powerpath-hc-multipath-conflict-check-linux.svg)
@@ -565,8 +585,10 @@ systemctl status multipathd
 ```
 
 !!! warning "Common errors"
-    **`Unit multipathd.service could not be found.`** — Install the device-mapper-multipath package with `yum install device-mapper-multipath` or `apt-get install multipath-tools`.
-    **`● multipathd.service - Device-Mapper Multipath Device Controller Active: active (running)`** — Disable multipathd with `systemctl disable multipathd && systemctl stop multipathd` to prevent conflicts with PowerPath.
+    | Error | Fix |
+    |---|---|
+    | `Unit multipathd.service could not be found.` | Install the device-mapper-multipath package with `yum install device-mapper-multipath` or `apt-get install multipath-tools`. |
+    | `● multipathd.service - Device-Mapper Multipath Device Controller Active: active (running)` | Disable multipathd with `systemctl disable multipathd && systemctl stop multipathd` to prevent conflicts with PowerPath. |
 ### Validation Checklist
 
 ![Validation Checklist](../../../../../assets/storage-dell-powerpath-hc-validation-checklist.svg)

@@ -178,9 +178,11 @@ Connection to 10.40.10.8 636 (ldapssl) succeeded!
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification, or use `--cacert` with your organization's CA bundle.
-    **`nc: connect to <vault-ip> port 1858 (tcp) failed: Connection refused`** — Verify the Vault service is running on the target system with `systemctl status vault` and confirm the port is listening with `netstat -tlnp | grep 1858`.
-    **`nc: getaddrinfo failed: Name or service not known`** — Replace the placeholder variables (e.g., `<vault-ip>`, `<dc-ip>`) with actual IP addresses or resolvable hostnames, or check DNS resolution with `nslookup <hostname>`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification, or use `--cacert` with your organization's CA bundle. |
+    | `nc: connect to <vault-ip> port 1858 (tcp) failed: Connection refused` | Verify the Vault service is running on the target system with `systemctl status vault` and confirm the port is listening with `netstat -tlnp | grep 1858`. |
+    | `nc: getaddrinfo failed: Name or service not known` | Replace the placeholder variables (e.g., `<vault-ip>`, `<dc-ip>`) with actual IP addresses or resolvable hostnames, or check DNS resolution with `nslookup <hostname>`. |
 ---
 
 ## See also

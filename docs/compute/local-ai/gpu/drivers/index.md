@@ -74,9 +74,11 @@ ii  nvidia-utils                         550.90.07-1ubuntu1              amd64  
 ```
 
 !!! warning "Common errors"
-    **`NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.`** — Reload the kernel module with `sudo modprobe -r nvidia && sudo modprobe nvidia`.
-    **`cat: /proc/driver/nvidia/version: No such file or directory`** — Ensure the NVIDIA kernel module is loaded by running `sudo modprobe nvidia`.
-    **`nvcc: command not found`** — Install the CUDA toolkit with `sudo apt install nvidia-cuda-toolkit` or download it from NVIDIA's developer site.
+    | Error | Fix |
+    |---|---|
+    | `NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.` | Reload the kernel module with `sudo modprobe -r nvidia && sudo modprobe nvidia`. |
+    | `cat: /proc/driver/nvidia/version: No such file or directory` | Ensure the NVIDIA kernel module is loaded by running `sudo modprobe nvidia`. |
+    | `nvcc: command not found` | Install the CUDA toolkit with `sudo apt install nvidia-cuda-toolkit` or download it from NVIDIA's developer site. |
 The NVIDIA driver includes a CUDA driver (minimum CUDA version). The CUDA toolkit is installed separately and must be compatible but can be newer than the driver's minimum.
 
 ## Installing Drivers on Ubuntu/Debian
@@ -134,9 +136,11 @@ Fri Jan 17 14:32:18 2025
 ```
 
 !!! warning "Common errors"
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the entire script with `sudo` or prepend `sudo` to each apt command.
-    **`ERROR: Unable to locate package nvidia-driver-535`** — Run `apt-get update` after adding the CUDA repository keyring before attempting to install the driver package.
-    **`NVIDIA-SMI has FAILED because it couldn't communicate with the NVIDIA driver`** — Reboot the system to load the newly installed kernel module, or check `/var/log/nvidia-installer.log` for installation failures.
+    | Error | Fix |
+    |---|---|
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the entire script with `sudo` or prepend `sudo` to each apt command. |
+    | `ERROR: Unable to locate package nvidia-driver-535` | Run `apt-get update` after adding the CUDA repository keyring before attempting to install the driver package. |
+    | `NVIDIA-SMI has FAILED because it couldn't communicate with the NVIDIA driver` | Reboot the system to load the newly installed kernel module, or check `/var/log/nvidia-installer.log` for installation failures. |
 ## Installing Drivers on RHEL/Rocky Linux
 
 ```bash
@@ -197,9 +201,11 @@ Fri Jan 17 14:32:45 2025
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to find a match: nvidia-driver:535`** — Verify the CUDA repo was added successfully with `dnf repolist` and check your RHEL 9 architecture matches x86_64.
-    **`modprobe: FATAL: Module nvidia not found in /lib/modules/5.14.0-427.el9.x86_64/kernel/`** — Rebuild the kernel module with `dkms install nvidia/535.104.05` or reinstall the driver with `dnf reinstall nvidia-driver`.
-    **`NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver`** — Reboot the system with `reboot` to fully load the kernel module and reinitialize the GPU.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to find a match: nvidia-driver:535` | Verify the CUDA repo was added successfully with `dnf repolist` and check your RHEL 9 architecture matches x86_64. |
+    | `modprobe: FATAL: Module nvidia not found in /lib/modules/5.14.0-427.el9.x86_64/kernel/` | Rebuild the kernel module with `dkms install nvidia/535.104.05` or reinstall the driver with `dnf reinstall nvidia-driver`. |
+    | `NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver` | Reboot the system with `reboot` to fully load the kernel module and reinitialize the GPU. |
 ## CUDA Toolkit Installation
 
 ```bash
@@ -232,9 +238,11 @@ Build cuda_12.3.r12.3/compiler.33567101_0
 ```
 
 !!! warning "Common errors"
-    **`E: Unable to locate package cuda-toolkit-12-3`** — Ensure the NVIDIA CUDA repository is added with `apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC` and `add-apt-repository ppa:graphics-drivers/ppa` before running apt-get.
-    **`nvcc: command not found`** — Run `source ~/.bashrc` to reload the environment variables, or verify the CUDA installation path matches your system with `ls /usr/local/cuda/bin/nvcc`.
-    **`error while loading shared libraries: libcuda.so.1`** — Install the NVIDIA GPU driver separately with `apt-get install -y nvidia-driver-545` before or after the toolkit installation.
+    | Error | Fix |
+    |---|---|
+    | `E: Unable to locate package cuda-toolkit-12-3` | Ensure the NVIDIA CUDA repository is added with `apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC` and `add-apt-repository ppa:graphics-drivers/ppa` before running apt-get. |
+    | `nvcc: command not found` | Run `source ~/.bashrc` to reload the environment variables, or verify the CUDA installation path matches your system with `ls /usr/local/cuda/bin/nvcc`. |
+    | `error while loading shared libraries: libcuda.so.1` | Install the NVIDIA GPU driver separately with `apt-get install -y nvidia-driver-545` before or after the toolkit installation. |
 ## Driver and CUDA Compatibility Matrix
 
 | Driver Version | Max CUDA Version | Notes |
@@ -285,9 +293,11 @@ GPU 1: NVIDIA A100 80GB  On   | 00:1F.0     Off |                  0 |
 ```
 
 !!! warning "Common errors"
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the command with `sudo` or as root user.
-    **`ERROR: Unable to locate package nvidia-driver-550`** — Run `apt-get update` first to refresh the package cache, then retry the installation.
-    **`Error: No matching Modules to switch to`** — Verify the module stream exists with `dnf module list nvidia-driver` and use the correct version string (e.g., `550-dkms` instead of `550`).
+    | Error | Fix |
+    |---|---|
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the command with `sudo` or as root user. |
+    | `ERROR: Unable to locate package nvidia-driver-550` | Run `apt-get update` first to refresh the package cache, then retry the installation. |
+    | `Error: No matching Modules to switch to` | Verify the module stream exists with `dnf module list nvidia-driver` and use the correct version string (e.g., `550-dkms` instead of `550`). |
 Never update drivers mid-workload. Schedule updates during maintenance windows and test thoroughly — driver updates occasionally require CUDA toolkit and framework updates as well.
 
 ## DKMS and Kernel Updates
@@ -326,6 +336,8 @@ linux-headers-generic set to manually installed.
 ```
 
 !!! warning "Common errors"
-    **`Error! Could not locate dkms.conf file.`** — Verify the driver package is installed with `apt install nvidia-driver-535` and contains `/usr/src/nvidia-driver-535/dkms.conf`.
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the entire block with `sudo` or as root user.
-    **`WARNING: apt-mark does not have a stable CLI interface. Use with caution in scripts.`** — This is informational; the hold command still succeeds, but consider using `apt-mark hold --quiet` in automation.
+    | Error | Fix |
+    |---|---|
+    | `Error! Could not locate dkms.conf file.` | Verify the driver package is installed with `apt install nvidia-driver-535` and contains `/usr/src/nvidia-driver-535/dkms.conf`. |
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the entire block with `sudo` or as root user. |
+    | `WARNING: apt-mark does not have a stable CLI interface. Use with caution in scripts.` | This is informational; the hold command still succeeds, but consider using `apt-mark hold --quiet` in automation. |

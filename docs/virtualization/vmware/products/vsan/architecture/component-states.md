@@ -53,8 +53,10 @@ Object UUID                              Owner Node    Status
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input): No such file or directory`** — Verify the ESXi host is vSAN-enabled and the vSAN service is running with `systemctl status vsanvpd`.
-    **`Error: Unknown command or namespace vsan.debug`** — Ensure you are running the command on a vSAN cluster member; this command is not available on non-vSAN hosts.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input): No such file or directory` | Verify the ESXi host is vSAN-enabled and the vSAN service is running with `systemctl status vsanvpd`. |
+    | `Error: Unknown command or namespace vsan.debug` | Ensure you are running the command on a vSAN cluster member; this command is not available on non-vSAN hosts. |
 **Risk during ABSENT:** The object is running with reduced redundancy but is fully accessible. One more failure of a different component means data loss (for FTT=1 objects). For FTT=2, one absent + one degraded still leaves the object accessible.
 
 ---
@@ -102,9 +104,11 @@ Free Capacity: 1.2 TB
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input): No such file or directory`** — Ensure vSAN is enabled on the cluster and the ESXi host is part of a vSAN cluster; run `esxcli vsan cluster get` to verify.
-    **`Error: Unknown command or namespace`** — Update ESXi to a supported version that includes the vsan debug command set, or verify vSAN license is active.
-    **`Resync Queue Summary: (empty)`** — This is normal if no objects are degraded; check actual object health with `esxcli vsan object list` to confirm cluster state.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input): No such file or directory` | Ensure vSAN is enabled on the cluster and the ESXi host is part of a vSAN cluster; run `esxcli vsan cluster get` to verify. |
+    | `Error: Unknown command or namespace` | Update ESXi to a supported version that includes the vsan debug command set, or verify vSAN license is active. |
+    | `Resync Queue Summary: (empty)` | This is normal if no objects are degraded; check actual object health with `esxcli vsan object list` to confirm cluster state. |
 **Risk during DEGRADED:** The object has zero redundancy for FTT=1. Any further failure of the remaining component causes data loss and the object becomes INACCESSIBLE. Treat all DEGRADED objects as P1 until rebuild completes.
 
 ---
@@ -184,8 +188,10 @@ Object UUID                              Object Name          Bytes Remaining  P
 ```
 
 !!! warning "Common errors"
-    **`vsan cluster is not healthy`** — Verify all hosts are online and network connectivity is stable with `esxcli vsan cluster get`.
-    **`Permission denied`** — Run the command with root privileges or ensure your vSphere user has the required VSAN administrator role.
+    | Error | Fix |
+    |---|---|
+    | `vsan cluster is not healthy` | Verify all hosts are online and network connectivity is stable with `esxcli vsan cluster get`. |
+    | `Permission denied` | Run the command with root privileges or ensure your vSphere user has the required VSAN administrator role. |
 **Throttle rebuild during business hours:**
 
 ```bash
@@ -203,8 +209,10 @@ esxcli vsan debug resync throttle set --throttle 0
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan debug resync`** — Verify vSAN is licensed and enabled on the cluster; this command requires vSAN to be active on the host.
-    **`Error: The object or item could not be found`** — Ensure the ESXi host is part of a vSAN cluster; standalone hosts do not support vSAN resync throttling commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan debug resync` | Verify vSAN is licensed and enabled on the cluster; this command requires vSAN to be active on the host. |
+    | `Error: The object or item could not be found` | Ensure the ESXi host is part of a vSAN cluster; standalone hosts do not support vSAN resync throttling commands. |
 **Risk during REBUILDING:** Same as DEGRADED — the object still has only one copy until the rebuild completes. Do not perform any maintenance on other hosts during a rebuild unless it is unavoidable.
 
 ---
@@ -283,8 +291,10 @@ Automatic Repair: true
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan`** — Ensure vSAN is licensed and enabled on the cluster, and run the command on an ESXi host that is part of the vSAN cluster.
-    **`Error: Could not connect to the vSAN cluster`** — Verify the host has network connectivity to other cluster members and that vSAN clustering is properly initialized with `esxcli vsan cluster list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan` | Ensure vSAN is licensed and enabled on the cluster, and run the command on an ESXi host that is part of the vSAN cluster. |
+    | `Error: Could not connect to the vSAN cluster` | Verify the host has network connectivity to other cluster members and that vSAN clustering is properly initialized with `esxcli vsan cluster list`. |
 ---
 
 ## When Objects Become INACCESSIBLE
@@ -323,6 +333,8 @@ d4e5f6a7-b8c9-d0e1-f2a3-b4c5-d6e7f8a9   2
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input): No such file or directory`** — Verify the VSAN cluster is healthy and the ESXi host has VSAN enabled by running `esxcli vsan cluster get`.
-    **`Unknown command or namespace`** — Ensure you are running this command on a VSAN-enabled ESXi host with VSAN service running; check with `esxcli vsan cluster get`.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input): No such file or directory` | Verify the VSAN cluster is healthy and the ESXi host has VSAN enabled by running `esxcli vsan cluster get`. |
+    | `Unknown command or namespace` | Ensure you are running this command on a VSAN-enabled ESXi host with VSAN service running; check with `esxcli vsan cluster get`. |
 Escalate immediately to VMware GSS for any inaccessible object state — see Troubleshooting → Escalation.

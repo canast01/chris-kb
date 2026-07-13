@@ -96,9 +96,11 @@ curl -sk -H "vmware-api-session-id: <token>" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the vCenter CA certificate into your system trust store.
-    **`{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"default_message":"Invalid session.","id":"Com.Vmware.Vapi.Std.Errors.Unauthenticated"}]}}`** — Ensure the session token from the first curl command is correctly passed in the `vmware-api-session-id` header and hasn't expired (tokens expire after 30 minutes of inactivity).
-    **`curl: (7) Failed to connect to <vcenter>: Name or service not known`** — Verify the vCenter hostname or IP address is correct and resolvable; check DNS or use the FQDN instead of a short hostname.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the vCenter CA certificate into your system trust store. |
+    | `{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"default_message":"Invalid session.","id":"Com.Vmware.Vapi.Std.Errors.Unauthenticated"}]}}` | Ensure the session token from the first curl command is correctly passed in the `vmware-api-session-id` header and hasn't expired (tokens expire after 30 minutes of inactivity). |
+    | `curl: (7) Failed to connect to <vcenter>: Name or service not known` | Verify the vCenter hostname or IP address is correct and resolvable; check DNS or use the FQDN instead of a short hostname. |
 ### Syslog / SIEM
 
 vCenter forwards events as syslog (RFC 5424). Configure in VAMI or via PowerCLI:

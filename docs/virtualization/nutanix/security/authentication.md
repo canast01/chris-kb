@@ -62,8 +62,10 @@ User Information
 ```
 
 !!! warning "Common errors"
-    **`Error: User 'admin' already exists`** — Choose a different username or delete the existing user first with `ncli user delete name=admin`.
-    **`Error: Current password is incorrect`** — Verify the current password is correct and try the change-password command again.
+    | Error | Fix |
+    |---|---|
+    | `Error: User 'admin' already exists` | Choose a different username or delete the existing user first with `ncli user delete name=admin`. |
+    | `Error: Current password is incorrect` | Verify the current password is correct and try the change-password command again. |
 ### Default Local Accounts
 
 | Account | Default state | Notes |
@@ -124,9 +126,11 @@ User Information
     ```
 
     !!! warning "Common errors"
-        **`Error: Connection refused (111)`** — Verify the LDAP server is reachable and listening on port 389 with `nc -zv dc1.corp.local 389`.
-        **`Error: Invalid credentials for service account 'svc-nutanix'`** — Confirm the service account password is correct and the account has directory query permissions in Active Directory.
-        **`Error: Domain 'corp.local' not found or unreachable`** — Ensure DNS resolution works for the domain with `nslookup corp.local` and that the domain name matches your Active Directory configuration.
+        | Error | Fix |
+        |---|---|
+        | `Error: Connection refused (111)` | Verify the LDAP server is reachable and listening on port 389 with `nc -zv dc1.corp.local 389`. |
+        | `Error: Invalid credentials for service account 'svc-nutanix'` | Confirm the service account password is correct and the account has directory query permissions in Active Directory. |
+        | `Error: Domain 'corp.local' not found or unreachable` | Ensure DNS resolution works for the domain with `nslookup corp.local` and that the domain name matches your Active Directory configuration. |
 
 === "Prism Central"
 
@@ -260,9 +264,11 @@ Health check completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account has not been locked out in Active Directory.
-    **`Can't contact LDAP server (-1)`** — Confirm the LDAP server hostname/IP and port are correct, and that network connectivity exists from the CVM to the domain controller.
-    **`ncc: command not found`** — Ensure you are running the command from a Nutanix CVM with NCC installed, or source the appropriate environment setup script.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account has not been locked out in Active Directory. |
+    | `Can't contact LDAP server (-1)` | Confirm the LDAP server hostname/IP and port are correct, and that network connectivity exists from the CVM to the domain controller. |
+    | `ncc: command not found` | Ensure you are running the command from a Nutanix CVM with NCC installed, or source the appropriate environment setup script. |
 **From Prism:**
 - Settings → Authentication → Test Directory → login with an AD user
 - Confirm role mapping applies: log in with an AD group member and verify their role

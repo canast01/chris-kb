@@ -146,9 +146,11 @@ aws s3api get-object-lock-configuration \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ObjectLockConfigurationNotFoundError) when calling the PutObjectLockConfiguration operation: Object Lock configuration does not exist`** — Ensure the bucket was created with Object Lock enabled using the `--object-lock-enabled-for-bucket` flag during bucket creation.
-    **`An error occurred (InvalidArgument) when calling the PutObjectLockConfiguration operation: Invalid retention period`** — Set `Days` to a positive integer between 1 and 36500 (100 years); 2557 days is valid, but verify the value matches your compliance requirements.
-    **`Unable to locate credentials for profile 'ecs'`** — Verify the `ecs` profile exists in `~/.aws/credentials` or `~/.aws/config` with valid access key and secret key configured.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ObjectLockConfigurationNotFoundError) when calling the PutObjectLockConfiguration operation: Object Lock configuration does not exist` | Ensure the bucket was created with Object Lock enabled using the `--object-lock-enabled-for-bucket` flag during bucket creation. |
+    | `An error occurred (InvalidArgument) when calling the PutObjectLockConfiguration operation: Invalid retention period` | Set `Days` to a positive integer between 1 and 36500 (100 years); 2557 days is valid, but verify the value matches your compliance requirements. |
+    | `Unable to locate credentials for profile 'ecs'` | Verify the `ecs` profile exists in `~/.aws/credentials` or `~/.aws/config` with valid access key and secret key configured. |
 ## Secrets Management Integration
 
 Do not embed ECS credentials (management passwords, S3 access keys/secret keys, KMIP certificates) in configuration files, scripts, or source code.
@@ -188,9 +190,11 @@ aws s3 ls s3://analytics-prod-raw \
 ```
 
 !!! warning "Common errors"
-    **`Error reading secret/ecs/svc-spark-prod: permission denied`** — Verify your Vault token has read permissions on the secret path using `vault policy read` and ensure the token hasn't expired.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is present but the endpoint certificate may still be invalid; confirm the ECS endpoint hostname matches the certificate CN or use a valid CA bundle instead of disabling verification.
-    **`InvalidAccessKeyId`** — The credentials retrieved from Vault are stale or the service account was rotated; rotate the secret in Vault using `vault kv put secret/ecs/svc-spark-prod access_key=<new_key> secret_key=<new_secret>`.
+    | Error | Fix |
+    |---|---|
+    | `Error reading secret/ecs/svc-spark-prod: permission denied` | Verify your Vault token has read permissions on the secret path using `vault policy read` and ensure the token hasn't expired. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | The `--no-verify-ssl` flag is present but the endpoint certificate may still be invalid; confirm the ECS endpoint hostname matches the certificate CN or use a valid CA bundle instead of disabling verification. |
+    | `InvalidAccessKeyId` | The credentials retrieved from Vault are stale or the service account was rotated; rotate the secret in Vault using `vault kv put secret/ecs/svc-spark-prod access_key=<new_key> secret_key=<new_secret>`. |
 ## Security Validation
 
 Run these checks at each quarterly security review and after any security-relevant configuration change:
@@ -257,9 +261,11 @@ Namespace: ns-archive
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <ecs-node>:4443: Connection refused`** — Verify the management API port is open and the ECS node is reachable; check firewall rules and node status with `ecscli node list`.
-    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Add the corporate CA certificate to your system trust store with `sudo cp ca-cert.pem /etc/pki/ca-trust/source/anchors/ && sudo update-ca-trust`.
-    **`error: invalid token`** — Regenerate the authentication token by running `curl -k -u admin:password https://<ecs-node>:4443/login` and export the returned token to `$TOKEN`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <ecs-node>:4443: Connection refused` | Verify the management API port is open and the ECS node is reachable; check firewall rules and node status with `ecscli node list`. |
+    | `error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed` | Add the corporate CA certificate to your system trust store with `sudo cp ca-cert.pem /etc/pki/ca-trust/source/anchors/ && sudo update-ca-trust`. |
+    | `error: invalid token` | Regenerate the authentication token by running `curl -k -u admin:password https://<ecs-node>:4443/login` and export the returned token to `$TOKEN`. |
 ---
 
 ## See also

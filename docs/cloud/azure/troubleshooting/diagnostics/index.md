@@ -150,8 +150,10 @@ Legacy-Subscription          AzureCloud   55aa44bb-33cc-2211-0099-8877665544ff  
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify you are in the correct subscription using `az account set --subscription "<id>"` and confirm the resource group name spelling.
-    **`Authorization failed for template deployment. Insufficient privileges to complete the operation.`** — Request elevated RBAC permissions (Contributor or Owner role) for the target subscription from your Azure administrator.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify you are in the correct subscription using `az account set --subscription "<id>"` and confirm the resource group name spelling. |
+    | `Authorization failed for template deployment. Insufficient privileges to complete the operation.` | Request elevated RBAC permissions (Contributor or Owner role) for the target subscription from your Azure administrator. |
 ---
 
 ## Step 2 — Check VM state and health
@@ -227,9 +229,11 @@ LISTEN  tcp  0  0 0.0.0.0:443  0.0.0.0:*  root/nginx
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the VM name and resource group name are correct and the VM exists in the target subscription.
-    **`(AuthorizationFailed) The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.`** — Ensure your Azure account has at least Reader role on the resource group or VM.
-    **`(VMExtensionProvisioningError) Enable failed for extension 'CustomScriptExtension' with message 'Handler status failed with exitCode: 1 StdErr: /bin/bash: line 1: df: command not found'.`** — Verify the script commands are available on the target OS and the guest agent is running; check VM logs via `az vm boot-diagnostics get-boot-log`.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the VM name and resource group name are correct and the VM exists in the target subscription. |
+    | `(AuthorizationFailed) The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.` | Ensure your Azure account has at least Reader role on the resource group or VM. |
+    | `(VMExtensionProvisioningError) Enable failed for extension 'CustomScriptExtension' with message 'Handler status failed with exitCode: 1 StdErr: /bin/bash: line 1: df: command not found'.` | Verify the script commands are available on the target OS and the guest agent is running; check VM logs via `az vm boot-diagnostics get-boot-log`. |
 ---
 
 ## Step 3 — Read boot diagnostics
@@ -268,8 +272,10 @@ Boot diagnostics enabled on VM 'myvm' in resource group 'prod-rg'.
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/myvm' under resource group 'prod-rg' was not found.`** — Verify the VM name and resource group name are correct using `az vm list -g <rg>`.
-    **`StorageAccountNotFound: The storage account 'diagstorage' was not found in the current subscription.`** — Ensure the storage account exists in
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/myvm' under resource group 'prod-rg' was not found.` | Verify the VM name and resource group name are correct using `az vm list -g <rg>`. |
+    | `StorageAccountNotFound: The storage account 'diagstorage' was not found in the current subscription.` | Ensure the storage account exists in |
 ---
 
 ## Step 4 — Check NSG and routing
@@ -393,9 +399,11 @@ EventTimestamp                    Caller                         OperationName  
 ```
 
 !!! warning "Common errors"
-    **`The subscription has no activity logs matching the specified criteria.`** — Verify the time window is correct and the resource group exists; activity logs are retained for 90 days.
-    **`Invalid query string: [?status.value==\`Failed\`]`** — Use `status.localizedValue=='Failed'` instead of `status.value==\`Failed\`` in the JMESPath query.
-    **`ResourceGroupNotFound: Resource group '<rg>' could not be found.`** — Replace `<rg>` with an actual resource group name from your subscription using `az group list`.
+    | Error | Fix |
+    |---|---|
+    | `The subscription has no activity logs matching the specified criteria.` | Verify the time window is correct and the resource group exists; activity logs are retained for 90 days. |
+    | `Invalid query string: [?status.value==\`Failed\`]` | Use `status.localizedValue=='Failed'` instead of `status.value==\`Failed\`` in the JMESPath query. |
+    | `ResourceGroupNotFound: Resource group '<rg>' could not be found.` | Replace `<rg>` with an actual resource group name from your subscription using `az group list`. |
 ---
 
 ## Step 6 — Query Log Analytics

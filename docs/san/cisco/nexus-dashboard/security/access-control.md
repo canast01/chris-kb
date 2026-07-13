@@ -56,9 +56,11 @@ curl -sk -X POST https://nd-dc1.corp.example.com/nexus/api/v1/users \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present; if still failing, verify the Nexus Dashboard hostname resolves correctly).
-    **`jq: error (at <stdin>:0): Cannot index string with string "token"`** — Verify the login credentials are correct and the `/login` endpoint returned valid JSON; check the response with `curl -sk -X POST https://nd-dc1.corp.example.com/login ... | python3 -m json.tool` to inspect the actual response structure.
-    **`{"error":"Invalid role name: Viewer"}`** — Confirm the role name matches exactly what exists in Nexus Dashboard (check available roles via `curl -sk -H "Authorization: Bearer ${TOKEN}" https://nd-dc1.corp.example.com/nexus/api/v1/roles`).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present; if still failing, verify the Nexus Dashboard hostname resolves correctly). |
+    | `jq: error (at <stdin>:0): Cannot index string with string "token"` | Verify the login credentials are correct and the `/login` endpoint returned valid JSON; check the response with `curl -sk -X POST https://nd-dc1.corp.example.com/login ... | python3 -m json.tool` to inspect the actual response structure. |
+    | `{"error":"Invalid role name: Viewer"}` | Confirm the role name matches exactly what exists in Nexus Dashboard (check available roles via `curl -sk -H "Authorization: Bearer ${TOKEN}" https://nd-dc1.corp.example.com/nexus/api/v1/roles`). |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

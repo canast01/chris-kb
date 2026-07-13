@@ -24,9 +24,11 @@ Token acquired
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: netapp-cloud-account.auth0.com`** — Verify network connectivity and DNS resolution; check if your firewall allows outbound HTTPS to auth0.com.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify your client_id and client_secret are correct; check the curl response by removing the python3 pipe temporarily to see the actual error message from Auth0.
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Update your CA certificate bundle or add `-k` flag to curl (not recommended for production); ensure your system's certificate store is current.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: netapp-cloud-account.auth0.com` | Verify network connectivity and DNS resolution; check if your firewall allows outbound HTTPS to auth0.com. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify your client_id and client_secret are correct; check the curl response by removing the python3 pipe temporarily to see the actual error message from Auth0. |
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Update your CA certificate bundle or add `-k` flag to curl (not recommended for production); ensure your system's certificate store is current. |
 ```bash
 # List service levels (tiers) available under a subscription
 curl -s "https://api.activeiq.netapp.com/v1/keystone/subscriptions/${SUBSCRIPTION_ID}/service-levels" \
@@ -67,9 +69,11 @@ curl -s "https://api.activeiq.netapp.com/v1/keystone/subscriptions/${SUBSCRIPTIO
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.activeiq.netapp.com`** — Verify network connectivity and DNS resolution; check if your firewall allows HTTPS outbound traffic to the ActiveIQ API endpoint.
-    **`{"error": "Unauthorized", "message": "Invalid or expired token"}`** — Regenerate your Bearer token using the ActiveIQ authentication endpoint and ensure `$TOKEN` is set correctly.
-    **`curl: (7) Failed to connect to api.activeiq.netapp.com port 443: Connection refused`** — Confirm the API endpoint URL is correct and that ActiveIQ services are operational; check your organization's proxy settings if applicable.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.activeiq.netapp.com` | Verify network connectivity and DNS resolution; check if your firewall allows HTTPS outbound traffic to the ActiveIQ API endpoint. |
+    | `{"error": "Unauthorized", "message": "Invalid or expired token"}` | Regenerate your Bearer token using the ActiveIQ authentication endpoint and ensure `$TOKEN` is set correctly. |
+    | `curl: (7) Failed to connect to api.activeiq.netapp.com port 443: Connection refused` | Confirm the API endpoint URL is correct and that ActiveIQ services are operational; check your organization's proxy settings if applicable. |
 ```bash
 # Check if any tier is in burst (consumed > committed)
 curl -s "https://api.activeiq.netapp.com/v1/keystone/subscriptions/${SUBSCRIPTION_ID}/usage" \
@@ -97,9 +101,11 @@ BURST    Extreme                  105.7%  (127.0 / 120.0 TiB)
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.activeiq.netapp.com`** — Verify network connectivity and DNS resolution; check if a proxy or firewall is blocking access to the ActiveIQ API endpoint.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Confirm that `$TOKEN` is valid and not expired by regenerating it in the ActiveIQ portal, then retry the request.
-    **`KeyError: 'usageDetails'`** — Verify that `$SUBSCRIPTION_ID` is correct and that the subscription has active usage data; check subscription status in ActiveIQ console.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.activeiq.netapp.com` | Verify network connectivity and DNS resolution; check if a proxy or firewall is blocking access to the ActiveIQ API endpoint. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Confirm that `$TOKEN` is valid and not expired by regenerating it in the ActiveIQ portal, then retry the request. |
+    | `KeyError: 'usageDetails'` | Verify that `$SUBSCRIPTION_ID` is correct and that the subscription has active usage data; check subscription status in ActiveIQ console. |
 ```bash
 # All volumes: size, used, available
 volume show -fields size,used,available,percent-used
@@ -170,8 +176,10 @@ vol_backup   volume           2TB        1.2TB
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: volume show`** — Ensure you are logged into the NetApp cluster management interface (SSH to cluster IP) and not a local shell.
-    **`Error: access denied for command "volume show"`** — Verify your RBAC role includes the "volume" command capability; contact your cluster administrator to grant necessary permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: volume show` | Ensure you are logged into the NetApp cluster management interface (SSH to cluster IP) and not a local shell. |
+    | `Error: access denied for command "volume show"` | Verify your RBAC role includes the "volume" command capability; contact your cluster administrator to grant necessary permissions. |
 ```bash
 # Volumes with thick guarantee (count against committed immediately)
 volume show -space-guarantee volume -fields size,used,space-guarantee
@@ -196,8 +204,10 @@ svm-dev   vol_thin_03  1.5TB      340GB      none
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: volume`** — Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a standard Linux shell.
-    **`Error: invalid field name "space-guarantee"`** — Verify your ONTAP version supports the space-guarantee field; use `volume show -fields ?` to list available fields.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: volume` | Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a standard Linux shell. |
+    | `Error: invalid field name "space-guarantee"` | Verify your ONTAP version supports the space-guarantee field; use `volume show -fields ?` to list available fields. |
 ```bash
 BLUEXP_TOKEN="<bluexp_bearer_token>"
 

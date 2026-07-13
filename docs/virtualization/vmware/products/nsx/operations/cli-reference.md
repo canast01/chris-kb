@@ -80,9 +80,11 @@ Service: controller
 ```
 
 !!! warning "Common errors"
-    **`Error: Not connected to NSX Manager`** — Run `connect <nsx-manager-ip>` before executing get commands.
-    **`Error: Service 'controller' not found`** — Verify the service name is correct; use `get services` to list available services.
-    **`Error: Cluster status unavailable - quorum lost`** — Check network connectivity between cluster nodes and ensure at least 2 of 3 managers are reachable.
+    | Error | Fix |
+    |---|---|
+    | `Error: Not connected to NSX Manager` | Run `connect <nsx-manager-ip>` before executing get commands. |
+    | `Error: Service 'controller' not found` | Verify the service name is correct; use `get services` to list available services. |
+    | `Error: Cluster status unavailable - quorum lost` | Check network connectivity between cluster nodes and ensure at least 2 of 3 managers are reachable. |
 ```bash
 # Check NTP status
 get service ntp
@@ -105,8 +107,10 @@ NTP servers:
 ```
 
 !!! warning "Common errors"
-    **`error: NTP service is not running`** — Start the NTP service with `start service ntp` before configuring servers.
-    **`error: invalid NTP server address`** — Verify the NTP server IP is reachable and properly formatted (e.g., `set service ntp server 10.45.128.1`).
+    | Error | Fix |
+    |---|---|
+    | `error: NTP service is not running` | Start the NTP service with `start service ntp` before configuring servers. |
+    | `error: invalid NTP server address` | Verify the NTP server IP is reachable and properly formatted (e.g., `set service ntp server 10.45.128.1`). |
 ```bash
 # List installed certificates
 get certificate api
@@ -134,8 +138,10 @@ API Certificate Thumbprint:
 ```
 
 !!! warning "Common errors"
-    **`error: certificate not found`** — Verify the NSX Manager is fully initialized and the certificate API service is responding with `get certificate api status`.
-    **`error: permission denied`** — Ensure your user account has admin or certificate-read privileges; check permissions with `get user`.
+    | Error | Fix |
+    |---|---|
+    | `error: certificate not found` | Verify the NSX Manager is fully initialized and the certificate API service is responding with `get certificate api status`. |
+    | `error: permission denied` | Ensure your user account has admin or certificate-read privileges; check permissions with `get user`. |
 ```bash
 # Show configured syslog exporters
 get service syslog exporters
@@ -159,9 +165,11 @@ syslog-archive         UDP         172.16.0.100      514     debug
 ```
 
 !!! warning "Common errors"
-    **`Error: Exporter '<name>' already exists`** — Use `del service syslog exporter <name>` first, then re-add with a unique name or modify the existing configuration.
-    **`Error: Invalid server IP address '<syslog_ip>'`** — Verify the syslog server IP is reachable and correctly formatted (e.g., 192.168.1.50, not 192.168.1.500).
-    **`Error: Exporter '<name>' not found`** — Confirm the exporter name exists by running `get service syslog exporters` and use the exact name from the list.
+    | Error | Fix |
+    |---|---|
+    | `Error: Exporter '<name>' already exists` | Use `del service syslog exporter <name>` first, then re-add with a unique name or modify the existing configuration. |
+    | `Error: Invalid server IP address '<syslog_ip>'` | Verify the syslog server IP is reachable and correctly formatted (e.g., 192.168.1.50, not 192.168.1.500). |
+    | `Error: Exporter '<name>' not found` | Confirm the exporter name exists by running `get service syslog exporters` and use the exact name from the list. |
 ```bash
 # View backup configuration
 get service manager backup
@@ -185,9 +193,11 @@ Backup Configuration:
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to NSX Manager API`** — Verify NSX Manager is running and accessible at the configured IP/hostname, and check network connectivity.
-    **`Error: Insufficient permissions to view backup configuration`** — Ensure your user account has admin or backup operator role assigned in NSX Manager.
-    **`Error: Backup location unreachable: nfs://backup-server.corp.local/nsx-backups`** — Verify NFS mount is accessible from NSX Manager and check firewall rules and NFS server availability.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to NSX Manager API` | Verify NSX Manager is running and accessible at the configured IP/hostname, and check network connectivity. |
+    | `Error: Insufficient permissions to view backup configuration` | Ensure your user account has admin or backup operator role assigned in NSX Manager. |
+    | `Error: Backup location unreachable: nfs://backup-server.corp.local/nsx-backups` | Verify NFS mount is accessible from NSX Manager and check firewall rules and NFS server availability. |
 ```bash
 nsxcli
 
@@ -249,9 +259,11 @@ Transport Node Status Summary:
 ```
 
 !!! warning "Common errors"
-    **`Error: Transport node <id> not found`** — Verify the node ID exists by running `get transport-nodes` and copy the exact ID string.
-    **`Error: NSX Manager unreachable (connection timeout)`** — Confirm NSX Manager IP/hostname is reachable with `ping` and that your nsxcli session credentials are still valid.
-    **`Error: Permission denied - insufficient privileges`** — Ensure your NSX user account has the appropriate role assigned (e.g., Enterprise Admin or Network Admin) in NSX.
+    | Error | Fix |
+    |---|---|
+    | `Error: Transport node <id> not found` | Verify the node ID exists by running `get transport-nodes` and copy the exact ID string. |
+    | `Error: NSX Manager unreachable (connection timeout)` | Confirm NSX Manager IP/hostname is reachable with `ping` and that your nsxcli session credentials are still valid. |
+    | `Error: Permission denied - insufficient privileges` | Ensure your NSX user account has the appropriate role assigned (e.g., Enterprise Admin or Network Admin) in NSX. |
 ```bash
 # List transport zones (overlay and VLAN backed)
 get transport-zone
@@ -289,9 +301,11 @@ transport-node
 ```
 
 !!! warning "Common errors"
-    **`get: command not found`** — Ensure you are logged into the NSX Manager CLI or use the full API endpoint path (e.g., `curl -u admin:password https://nsx-manager/api/v1/transport-zones`).
-    **`No transport zones found`** — Verify that transport zones have been created in NSX Manager and that your user account has sufficient permissions to view them.
-    **`grep: (standard input) is empty`** — The specified zone name does not exist or no transport nodes are assigned to that zone; verify the zone name spelling and check zone membership in the NSX UI.
+    | Error | Fix |
+    |---|---|
+    | `get: command not found` | Ensure you are logged into the NSX Manager CLI or use the full API endpoint path (e.g., `curl -u admin:password https://nsx-manager/api/v1/transport-zones`). |
+    | `No transport zones found` | Verify that transport zones have been created in NSX Manager and that your user account has sufficient permissions to view them. |
+    | `grep: (standard input) is empty` | The specified zone name does not exist or no transport nodes are assigned to that zone; verify the zone name spelling and check zone membership in the NSX UI. |
 ```bash
 # List all TEP IPs and associated hosts
 get tunnel endpoints
@@ -325,9 +339,11 @@ MTU: 1600
 ```
 
 !!! warning "Common errors"
-    **`command not found: get tunnel endpoints`** — Verify you are running this command from the NSX Manager CLI or ensure the NSX CLI tools are properly installed and in your PATH.
-    **`Error: Unable to retrieve tunnel status - Connection timeout`** — Check network connectivity between TEPs and verify NSX Manager is reachable on port 443.
-    **`Error: Invalid TEP IP address <remote_tep_ip>`** — Confirm the remote TEP IP exists in your transport zone by running `get tunnel endpoints` first.
+    | Error | Fix |
+    |---|---|
+    | `command not found: get tunnel endpoints` | Verify you are running this command from the NSX Manager CLI or ensure the NSX CLI tools are properly installed and in your PATH. |
+    | `Error: Unable to retrieve tunnel status - Connection timeout` | Check network connectivity between TEPs and verify NSX Manager is reachable on port 443. |
+    | `Error: Invalid TEP IP address <remote_tep_ip>` | Confirm the remote TEP IP exists in your transport zone by running `get tunnel endpoints` first. |
 ```bash
 # NSX VIBs installed
 esxcli software vib list | grep -i nsx
@@ -362,9 +378,11 @@ vmk11                   true    VDS-NSX-VLAN     00:50:56:c0:00:0b  1500   10.0.
 ```
 
 !!! warning "Common errors"
-    **`grep: vmk: No such file or directory`** — Ensure the grep filter matches your actual VMkernel interface naming convention (vmk10, vmk11, etc.) or remove the filter to see all interfaces.
-    **`(Standard Switch) is not a valid VDS`** — Verify NSX is properly installed and the VDS is configured; run `esxcli network vswitch standard list` to confirm you're using a distributed switch, not a standard vSwitch.
-    **`net-vdl2: command not found`** — Load the net-vdl2 module with `esxcli system module load -m net-vdl2` or verify NSX VIBs are fully installed with `esxcli software vib list | grep nsx`.
+    | Error | Fix |
+    |---|---|
+    | `grep: vmk: No such file or directory` | Ensure the grep filter matches your actual VMkernel interface naming convention (vmk10, vmk11, etc.) or remove the filter to see all interfaces. |
+    | `(Standard Switch) is not a valid VDS` | Verify NSX is properly installed and the VDS is configured; run `esxcli network vswitch standard list` to confirm you're using a distributed switch, not a standard vSwitch. |
+    | `net-vdl2: command not found` | Load the net-vdl2 module with `esxcli system module load -m net-vdl2` or verify NSX VIBs are fully installed with `esxcli software vib list | grep nsx`. |
 ```bash
 # Edge interfaces (uplinks + overlay)
 get interfaces
@@ -403,8 +421,10 @@ Interface: fp-eth1
 ```
 
 !!! warning "Common errors"
-    **`Interface fp-eth1 not found`** — Verify the uplink interface name matches your NSX Edge configuration with `get interfaces` and check physical NIC connectivity.
-    **`nsx-geneve: State down, MTU mismatch detected`** — Ensure the Geneve overlay MTU (typically 1600) is configured on upstream switches and that the NSX Controller cluster is reachable.
+    | Error | Fix |
+    |---|---|
+    | `Interface fp-eth1 not found` | Verify the uplink interface name matches your NSX Edge configuration with `get interfaces` and check physical NIC connectivity. |
+    | `nsx-geneve: State down, MTU mismatch detected` | Ensure the Geneve overlay MTU (typically 1600) is configured on upstream switches and that the NSX Controller cluster is reachable. |
 ```bash
 # Before putting ESXi host in maintenance mode:
 # 1. Check no active vSAN resync
@@ -440,8 +460,10 @@ tunnel status:
 ```
 
 !!! warning "Common errors"
-    **`transport-node <id> status: Unknown command`** — Ensure you are in the nsxcli shell context and use the correct syntax `get transport-node <id> status` without extra parameters.
-    **`vsan debug resync list: Unknown command or namespace`** — Verify the ESXi host has vSAN enabled and the command should be `esxcli vsan debug resync list` run directly on the host, not through vCenter.
+    | Error | Fix |
+    |---|---|
+    | `transport-node <id> status: Unknown command` | Ensure you are in the nsxcli shell context and use the correct syntax `get transport-node <id> status` without extra parameters. |
+    | `vsan debug resync list: Unknown command or namespace` | Verify the ESXi host has vSAN enabled and the command should be `esxcli vsan debug resync list` run directly on the host, not through vCenter. |
 ```bash
 nsxcli
 
@@ -494,8 +516,10 @@ Errors: 0
 ```
 
 !!! warning "Common errors"
-    **`Error: Logical switch <id> not found`** — Verify the segment ID exists by running `get logical-switches` and confirm the exact ID spelling.
-    **`Error: nsxcli: command not found`** — Ensure you are connected to an NSX Manager node and have the NSX CLI tools installed in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Logical switch <id> not found` | Verify the segment ID exists by running `get logical-switches` and confirm the exact ID spelling. |
+    | `Error: nsxcli: command not found` | Ensure you are connected to an NSX Manager node and have the NSX CLI tools installed in your PATH. |
 ```bash
 # List all logical ports
 get logical-ports
@@ -552,9 +576,11 @@ Port Statistics (lport-1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p):
 ```
 
 !!! warning "Common errors"
-    **`error: logical port <id> not found`** — Verify the port ID exists by running `get logical-ports` and confirm the exact UUID format.
-    **`error: unable to connect to NSX manager`** — Check network connectivity to the NSX Manager appliance and verify credentials are still valid.
-    **`error: insufficient permissions for this operation`** — Ensure your NSX user account has the Enterprise Administrator or Network Administrator role assigned.
+    | Error | Fix |
+    |---|---|
+    | `error: logical port <id> not found` | Verify the port ID exists by running `get logical-ports` and confirm the exact UUID format. |
+    | `error: unable to connect to NSX manager` | Check network connectivity to the NSX Manager appliance and verify credentials are still valid. |
+    | `error: insufficient permissions for this operation` | Ensure your NSX user account has the Enterprise Administrator or Network Administrator role assigned. |
 ```bash
 # List tunnel endpoints (TEPs) — shows VTEP IPs and state
 get tunnel endpoints
@@ -590,9 +616,11 @@ Source TEP              Dest TEP                Status    Last Change
 ```
 
 !!! warning "Common errors"
-    **`error: invalid TEP IP format`** — Verify the remote TEP IP address is valid and reachable in your NSX fabric.
-    **`error: tunnel endpoint not found`** — Confirm the TEP IP exists in your NSX deployment by running `get tunnel endpoints` first.
-    **`error: command not supported in this context`** — Ensure you are executing these commands from the NSX Manager CLI or appropriate management interface, not a hypervisor shell.
+    | Error | Fix |
+    |---|---|
+    | `error: invalid TEP IP format` | Verify the remote TEP IP address is valid and reachable in your NSX fabric. |
+    | `error: tunnel endpoint not found` | Confirm the TEP IP exists in your NSX deployment by running `get tunnel endpoints` first. |
+    | `error: command not supported in this context` | Ensure you are executing these commands from the NSX Manager CLI or appropriate management interface, not a hypervisor shell. |
 ```bash
 # Is the segment UP?
 get logical-switch <id> status
@@ -648,9 +676,11 @@ Destination     Netmask         Gateway         Interface
 ```
 
 !!! warning "Common errors"
-    **`logical-switch <id> not found`** — Verify the segment ID exists in NSX Manager and use the correct UUID format.
-    **`Unable to reach TEP 192.168.100.12: timeout`** — Confirm the transport node is UP and the TEP subnet routing is configured on all hosts.
-    **`vmk10: no such interface`** — Ensure the VXLAN/Geneve vmkernel adapter is created and bound to the transport zone on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `logical-switch <id> not found` | Verify the segment ID exists in NSX Manager and use the correct UUID format. |
+    | `Unable to reach TEP 192.168.100.12: timeout` | Confirm the transport node is UP and the TEP subnet routing is configured on all hosts. |
+    | `vmk10: no such interface` | Ensure the VXLAN/Geneve vmkernel adapter is created and bound to the transport zone on the ESXi host. |
 ```bash
 # Check replication mode for a segment
 get logical-switch <id> | grep -i replication
@@ -665,8 +695,10 @@ replication-sync-status: in-sync
 ```
 
 !!! warning "Common errors"
-    **`get: command not found`** — Source the NSX CLI environment or use the full path to the NSX management API client tool.
-    **`grep: (standard input) is empty`** — Verify the logical switch ID exists and is accessible by running `get logical-switch <id>` without grep to confirm the segment is present.
+    | Error | Fix |
+    |---|---|
+    | `get: command not found` | Source the NSX CLI environment or use the full path to the NSX management API client tool. |
+    | `grep: (standard input) is empty` | Verify the logical switch ID exists and is accessible by running `get logical-switch <id>` without grep to confirm the segment is present. |
 ```bash
 nsxcli
 get logical-routers
@@ -690,8 +722,10 @@ Total: 5 logical routers
 ```
 
 !!! warning "Common errors"
-    **`error: not authenticated to NSX Manager`** — Run `nsxcli connect <manager-ip>` and provide valid credentials before executing commands.
-    **`error: edge-cluster not found or unreachable`** — Verify the edge cluster is deployed and healthy using `get edge-clusters` and check network connectivity to edge nodes.
+    | Error | Fix |
+    |---|---|
+    | `error: not authenticated to NSX Manager` | Run `nsxcli connect <manager-ip>` and provide valid credentials before executing commands. |
+    | `error: edge-cluster not found or unreachable` | Verify the edge cluster is deployed and healthy using `get edge-clusters` and check network connectivity to edge nodes. |
 ```bash
 # List all router VRFs on this Edge
 get logical-routers
@@ -718,8 +752,10 @@ edge-1>
 ```
 
 !!! warning "Common errors"
-    **`Unknown command: get logical-routers`** — Ensure you are in the correct NSX Edge CLI context (not in a sub-menu like `vrf` or `routing`); use `exit` to return to the main prompt first.
-    **`Invalid VRF ID: lr-99`** — Verify the VRF ID exists by running `get logical-routers` and use the exact ID from the "Logical Router ID" column.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command: get logical-routers` | Ensure you are in the correct NSX Edge CLI context (not in a sub-menu like `vrf` or `routing`); use `exit` to return to the main prompt first. |
+    | `Invalid VRF ID: lr-99` | Verify the VRF ID exists by running `get logical-routers` and use the exact ID from the "Logical Router ID" column. |
 ```bash
 # Show routing table (all protocols)
 vrf <vrf_id>
@@ -781,8 +817,10 @@ Codes: > - selected route, * - FIB route, r - recursive
 ```
 
 !!! warning "Common errors"
-    **`% Invalid VRF <vrf_id>`** — Verify the VRF ID exists with `get vrf` and use the correct numeric identifier.
-    **`% Unknown command: get route detail`** — Ensure you are in the correct NSX routing context; some platforms require `show route detail` instead.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid VRF <vrf_id>` | Verify the VRF ID exists with `get vrf` and use the correct numeric identifier. |
+    | `% Unknown command: get route detail` | Ensure you are in the correct NSX routing context; some platforms require `show route detail` instead. |
 ```bash
 # BGP neighbor summary (all peers, state, prefixes)
 get bgp neighbor summary
@@ -836,9 +874,11 @@ Route Reflector: disabled
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the NSX Edge or BGP process is running with `show bgp summary` and confirm you have BGP enabled in the routing configuration.
-    **`% Unknown neighbor <neighbor_ip>`** — Ensure the neighbor IP address is correctly formatted and exists in the BGP configuration; use `get bgp neighbor summary` to list all configured peers.
-    **`% BGP is not running`** — Enable BGP on the NSX Edge by configuring it in the NSX Manager UI or via API, then retry the command.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the NSX Edge or BGP process is running with `show bgp summary` and confirm you have BGP enabled in the routing configuration. |
+    | `% Unknown neighbor <neighbor_ip>` | Ensure the neighbor IP address is correctly formatted and exists in the BGP configuration; use `get bgp neighbor summary` to list all configured peers. |
+    | `% BGP is not running` | Enable BGP on the NSX Edge by configuring it in the NSX Manager UI or via API, then retry the command. |
 ```bash
 # Static routes on this gateway
 get route static
@@ -857,8 +897,10 @@ Total: 5 static routes configured
 ```
 
 !!! warning "Common errors"
-    **`error: unknown command 'get route static'`** — Verify you are in the correct NSX CLI context (use `configure` or `show route static` depending on your NSX version).
-    **`error: permission denied`** — Ensure your user account has read permissions for routing configuration; contact your NSX administrator to grant the necessary role.
+    | Error | Fix |
+    |---|---|
+    | `error: unknown command 'get route static'` | Verify you are in the correct NSX CLI context (use `configure` or `show route static` depending on your NSX version). |
+    | `error: permission denied` | Ensure your user account has read permissions for routing configuration; contact your NSX administrator to grant the necessary role. |
 ```bash
 # All interfaces (uplinks, downlinks, loopback)
 get interfaces
@@ -919,8 +961,10 @@ Interface: eth0
 ```
 
 !!! warning "Common errors"
-    **`Interface <name> not found`** — Verify the interface name matches output from `get interfaces` and check for typos.
-    **`Command not available in current context`** — Ensure you are connected to the NSX manager or edge node CLI and have appropriate permissions.
+    | Error | Fix |
+    |---|---|
+    | `Interface <name> not found` | Verify the interface name matches output from `get interfaces` and check for typos. |
+    | `Command not available in current context` | Ensure you are connected to the NSX manager or edge node CLI and have appropriate permissions. |
 ```bash
 # HA state (Active/Standby)
 get edge-cluster status
@@ -964,9 +1008,11 @@ High Availability Status:
 ```
 
 !!! warning "Common errors"
-    **`Error: Cannot execute failover on Standby node`** — Run the failover command only on the currently Active Edge node, not the Standby.
-    **`Error: HA channels DOWN - failover blocked`** — Verify all HA channel connectivity (VLAN trunks, MTU settings) between Edge nodes before attempting failover.
-    **`Error: Nodes out of sync - failover unsafe`** — Wait for cluster synchronization to complete (check `get high-availability status` for Sync Status: IN_SYNC) before forcing failover.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cannot execute failover on Standby node` | Run the failover command only on the currently Active Edge node, not the Standby. |
+    | `Error: HA channels DOWN - failover blocked` | Verify all HA channel connectivity (VLAN trunks, MTU settings) between Edge nodes before attempting failover. |
+    | `Error: Nodes out of sync - failover unsafe` | Wait for cluster synchronization to complete (check `get high-availability status` for Sync Status: IN_SYNC) before forcing failover. |
 ```bash
 # Connect to Edge Node via SSH (admin) and run:
 
@@ -1114,8 +1160,10 @@ dfw stats:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to NSX Manager at 192.168.1.50`** — Verify NSX Manager is running and reachable with `ping` and check network connectivity.
-    **`Error: Authentication failed - invalid credentials`** — Ensure you are logged in with valid NSX admin credentials using `nsxcli login`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to NSX Manager at 192.168.1.50` | Verify NSX Manager is running and reachable with `ping` and check network connectivity. |
+    | `Error: Authentication failed - invalid credentials` | Ensure you are logged in with valid NSX admin credentials using `nsxcli login`. |
 ```bash
 # List all DFW filters attached to VMs on this host
 summarize-dvfilter
@@ -1142,8 +1190,10 @@ Total vNICs protected: 7
 ```
 
 !!! warning "Common errors"
-    **`summarize-dvfilter: command not found`** — Ensure you are running this command on an ESXi host with NSX installed, or source the NSX environment setup script first.
-    **`Permission denied`** — Run the command with root privileges using `sudo summarize-dvfilter` or log in as root.
+    | Error | Fix |
+    |---|---|
+    | `summarize-dvfilter: command not found` | Ensure you are running this command on an ESXi host with NSX installed, or source the NSX environment setup script first. |
+    | `Permission denied` | Run the command with root privileges using `sudo summarize-dvfilter` or log in as root. |
 ```bash
 # Get DFW rules applied to a specific filter
 vsipioctl getrules -f <filter_name>
@@ -1183,8 +1233,10 @@ Service: DNS (udp/53)
 ```
 
 !!! warning "Common errors"
-    **`Error: Filter '<filter_name>' not found in kernel`** — Verify the filter name matches an active DFW rule set using `vsipioctl listfilters`.
-    **`Error: vsipioctl: command not found`** — Ensure you are running this command on an NSX Edge or hypervisor with vsipioctl installed; it is not available on management nodes.
+    | Error | Fix |
+    |---|---|
+    | `Error: Filter '<filter_name>' not found in kernel` | Verify the filter name matches an active DFW rule set using `vsipioctl listfilters`. |
+    | `Error: vsipioctl: command not found` | Ensure you are running this command on an NSX Edge or hypervisor with vsipioctl installed; it is not available on management nodes. |
 ```bash
 # Step 1 — find the VM's world ID
 esxcli vm process list | grep -A5 <vm_name>
@@ -1222,8 +1274,10 @@ filter-db-internal: 891 pkts, 156432 bytes
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input) is empty`** — Verify the VM name matches exactly (case-sensitive) and the VM has DFW rules applied; run `summarize-dvfilter | head` to confirm the command works.
-    **`vsipioctl: command not found`** — Ensure you are running this command on the ESXi host where the VM resides, not from NSX Manager or a remote system.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input) is empty` | Verify the VM name matches exactly (case-sensitive) and the VM has DFW rules applied; run `summarize-dvfilter | head` to confirm the command works. |
+    | `vsipioctl: command not found` | Ensure you are running this command on the ESXi host where the VM resides, not from NSX Manager or a remote system. |
 ```bash
 vrf <lr_id>
 
@@ -1274,9 +1328,11 @@ Active NAT Translations:
 ```
 
 !!! warning "Common errors"
-    **`error: invalid logical router id`** — Verify the logical router ID exists with `get logical-routers` and use the correct UUID or numeric identifier.
-    **`error: nat rules not found`** — Ensure NAT rules are configured on the logical router; check that the logical router is in the correct VRF context.
-    **`error: permission denied`** — Confirm your NSX user account has the required NAT management role assigned in the NSX security policy.
+    | Error | Fix |
+    |---|---|
+    | `error: invalid logical router id` | Verify the logical router ID exists with `get logical-routers` and use the correct UUID or numeric identifier. |
+    | `error: nat rules not found` | Ensure NAT rules are configured on the logical router; check that the logical router is in the correct VRF context. |
+    | `error: permission denied` | Confirm your NSX user account has the required NAT management role assigned in the NSX security policy. |
 ```bash
 # Confirm rule exists for expected source
 get nat rules | grep <source_ip>
@@ -1303,8 +1359,10 @@ eth3 name internal-vlan11 mtu 1500 status up ip 192.168.11.1/24
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input): No such file or directory`** — Verify the `get nat rules` command syntax is correct for your NSX version and that you have sufficient permissions.
-    **`No matching translation entries found`** — Confirm the internal IP address is currently active and generating traffic; idle connections may have aged out of the translation table.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input): No such file or directory` | Verify the `get nat rules` command syntax is correct for your NSX version and that you have sufficient permissions. |
+    | `No matching translation entries found` | Confirm the internal IP address is currently active and generating traffic; idle connections may have aged out of the translation table. |
 ```bash
 # Overall load balancer status
 get load-balancer status
@@ -1362,9 +1420,11 @@ Virtual Server Stats (vs-web-prod-01):
 ```
 
 !!! warning "Common errors"
-    **`error: load-balancer command not found`** — Verify you are connected to the NSX Manager or load balancer appliance with appropriate CLI access; use `show system version` to confirm connectivity.
-    **`error: pool <pool_id> does not exist`** — Run `get load-balancer pools` first to list valid pool IDs and use the exact ID from the output.
-    **`error: insufficient permissions to execute command`** — Confirm your NSX user account has the "Load Balancer Admin" or equivalent role assigned in NSX role-based access control.
+    | Error | Fix |
+    |---|---|
+    | `error: load-balancer command not found` | Verify you are connected to the NSX Manager or load balancer appliance with appropriate CLI access; use `show system version` to confirm connectivity. |
+    | `error: pool <pool_id> does not exist` | Run `get load-balancer pools` first to list valid pool IDs and use the exact ID from the output. |
+    | `error: insufficient permissions to execute command` | Confirm your NSX user account has the "Load Balancer Admin" or equivalent role assigned in NSX role-based access control. |
 ```bash
 # Are pool members passing health checks?
 get load-balancer pools
@@ -1404,8 +1464,10 @@ dataplane-stats:
 ```
 
 !!! warning "Common errors"
-    **`error: pool member 192.168.10.46:8080 health check timeout after 5s`** — Verify the DFW rule allows inbound traffic on port 8080 from the Edge appliance management IP and confirm the application is listening on that port.
-    **`error: unable to retrieve dataplane stats — edge service unavailable`** — Restart the NSX Edge service or check that the Edge appliance is in a healthy state using `get edge status`.
+    | Error | Fix |
+    |---|---|
+    | `error: pool member 192.168.10.46:8080 health check timeout after 5s` | Verify the DFW rule allows inbound traffic on port 8080 from the Edge appliance management IP and confirm the application is listening on that port. |
+    | `error: unable to retrieve dataplane stats — edge service unavailable` | Restart the NSX Edge service or check that the Edge appliance is in a healthy state using `get edge status`. |
 ```bash
 # Interactive CLI
 nsxcli
@@ -1428,9 +1490,11 @@ nsxcli> exit
 ```
 
 !!! warning "Common errors"
-    **`nsxcli: command not found`** — Ensure NSX Manager is installed and the nsxcli binary path is in your $PATH, or run with the full path `/opt/vmware/nsx-cli/bin/nsxcli`.
-    **`Error: Unable to connect to manager at 192.168.1.10:443`** — Verify network connectivity to the NSX Manager IP and confirm the management interface is up with `ping` and `nc -zv`.
-    **`Authentication failed for user 'admin'`** — Check your NSX Manager credentials and ensure the user account has CLI access permissions in the NSX Manager UI.
+    | Error | Fix |
+    |---|---|
+    | `nsxcli: command not found` | Ensure NSX Manager is installed and the nsxcli binary path is in your $PATH, or run with the full path `/opt/vmware/nsx-cli/bin/nsxcli`. |
+    | `Error: Unable to connect to manager at 192.168.1.10:443` | Verify network connectivity to the NSX Manager IP and confirm the management interface is up with `ping` and `nc -zv`. |
+    | `Authentication failed for user 'admin'` | Check your NSX Manager credentials and ensure the user account has CLI access permissions in the NSX Manager UI. |
 ```bash
 # List active traceflows
 get traceflows
@@ -1462,8 +1526,10 @@ Traceflows:
 ```
 
 !!! warning "Common errors"
-    **`error: No active traceflows found`** — Ensure traceflows have been initiated from the NSX Manager UI or via API before querying results.
-    **`error: Permission denied - insufficient privileges`** — Verify your NSX Manager user account has the required "Traceflow" permission in the role assignment.
+    | Error | Fix |
+    |---|---|
+    | `error: No active traceflows found` | Ensure traceflows have been initiated from the NSX Manager UI or via API before querying results. |
+    | `error: Permission denied - insufficient privileges` | Verify your NSX Manager user account has the required "Traceflow" permission in the role assignment. |
 ```bash
 # Capture on uplink (physical interface)
 debug packet capture interface fp-eth0 count 500
@@ -1508,9 +1574,11 @@ Packet capture started on interface fp-eth0 to file
 ```
 
 !!! warning "Common errors"
-    **`Error: Interface fp-eth0 not found or not available`** — Verify the physical uplink interface name with `show interface` and confirm the NSX host transport node is properly configured.
-    **`Error: Invalid BPF filter syntax "host 10.0.0.1"`** — Use valid tcpdump/BPF syntax such as `"src host 10.0.0.1"` or `"dst host 10.0.0.1"` instead.
-    **`Error: Permission denied writing to /tmp/cap.pcap`** — Ensure the NSX manager or host process has write permissions to the target directory, or use a path like `/var/log/` instead.
+    | Error | Fix |
+    |---|---|
+    | `Error: Interface fp-eth0 not found or not available` | Verify the physical uplink interface name with `show interface` and confirm the NSX host transport node is properly configured. |
+    | `Error: Invalid BPF filter syntax "host 10.0.0.1"` | Use valid tcpdump/BPF syntax such as `"src host 10.0.0.1"` or `"dst host 10.0.0.1"` instead. |
+    | `Error: Permission denied writing to /tmp/cap.pcap` | Ensure the NSX manager or host process has write permissions to the target directory, or use a path like `/var/log/` instead. |
 ```bash
 # View recent logs
 get logs
@@ -1551,9 +1619,11 @@ edge.log  edge-datapath.log  edge-syslog.log
 ```
 
 !!! warning "Common errors"
-    **`error: unknown command 'get logs'`** — Use the correct NSX CLI syntax: `show log` or access logs via SSH to `/var/log/vmware/nsx-*/` directories instead.
-    **`tail: cannot open '/var/log/vmware/nsx-manager/manager.log' for reading: Permission denied`** — Ensure you have SSH access to the NSX node and sufficient privileges; use `sudo tail -f` if available or request elevated credentials.
-    **`Connection refused`** — Verify the NSX Manager node is running and accessible on the network; check connectivity with `ping` or `ssh` to the management IP address first.
+    | Error | Fix |
+    |---|---|
+    | `error: unknown command 'get logs'` | Use the correct NSX CLI syntax: `show log` or access logs via SSH to `/var/log/vmware/nsx-*/` directories instead. |
+    | `tail: cannot open '/var/log/vmware/nsx-manager/manager.log' for reading: Permission denied` | Ensure you have SSH access to the NSX node and sufficient privileges; use `sudo tail -f` if available or request elevated credentials. |
+    | `Connection refused` | Verify the NSX Manager node is running and accessible on the network; check connectivity with `ping` or `ssh` to the management IP address first. |
 ```bash
 # Ping from NSX Manager node
 vrf <lr_id>
@@ -1598,9 +1668,11 @@ Address: 192.168.100.50
 ```
 
 !!! warning "Common errors"
-    **`vrf <lr_id>: command not found`** — Ensure you are logged into the NSX Edge or Manager CLI (use `ssh admin@<nsx-manager-ip>` and authenticate first).
-    **`PING 192.168.100.50: sendto: No route to host`** — Verify the logical router is connected to the correct segment and check routing table with `get logical-router <lr_id> route`.
-    **`Server can't find <hostname>: NXDOMAIN`** — Confirm DNS forwarder is configured on the Edge with `get dns` and verify upstream DNS servers are reachable.
+    | Error | Fix |
+    |---|---|
+    | `vrf <lr_id>: command not found` | Ensure you are logged into the NSX Edge or Manager CLI (use `ssh admin@<nsx-manager-ip>` and authenticate first). |
+    | `PING 192.168.100.50: sendto: No route to host` | Verify the logical router is connected to the correct segment and check routing table with `get logical-router <lr_id> route`. |
+    | `Server can't find <hostname>: NXDOMAIN` | Confirm DNS forwarder is configured on the Edge with `get dns` and verify upstream DNS servers are reachable. |
 ```bash
 # Check BGP session state (run on Edge in gateway VRF)
 vrf <lr_id>
@@ -1745,9 +1817,11 @@ Degraded: 0
 ```
 
 !!! warning "Common errors"
-    **`error: connection refused on 192.168.1.10:443`** — Verify NSX Manager is running and accessible; check firewall rules and network connectivity to the management IP.
-    **`error: cluster consensus not achieved - quorum lost`** — Restart the NSX Manager cluster or restore from backup if multiple nodes are down; ensure all three managers are reachable on the network.
-    **`error: transport node connection timeout after 30s`** — Check ESXi host connectivity to NSX Manager, verify NSX VIBs are installed, and confirm firewall rules allow port 5671 between hosts and managers.
+    | Error | Fix |
+    |---|---|
+    | `error: connection refused on 192.168.1.10:443` | Verify NSX Manager is running and accessible; check firewall rules and network connectivity to the management IP. |
+    | `error: cluster consensus not achieved - quorum lost` | Restart the NSX Manager cluster or restore from backup if multiple nodes are down; ensure all three managers are reachable on the network. |
+    | `error: transport node connection timeout after 30s` | Check ESXi host connectivity to NSX Manager, verify NSX VIBs are installed, and confirm firewall rules allow port 5671 between hosts and managers. |
 ```bash
 get ip-pools
 get ip-pool <id>
@@ -1780,8 +1854,10 @@ IP_ADDRESS          ALLOCATION_ID                         ALLOCATED_AT         A
 ```
 
 !!! warning "Common errors"
-    **`Error: IP pool not found: <id>`** — Verify the pool ID is correct by running `get ip-pools` to list all available pools.
-    **`Error: Authentication failed or insufficient permissions`** — Ensure your NSX credentials are valid and your user account has IP pool read permissions in the NSX role-based access control policy.
+    | Error | Fix |
+    |---|---|
+    | `Error: IP pool not found: <id>` | Verify the pool ID is correct by running `get ip-pools` to list all available pools. |
+    | `Error: Authentication failed or insufficient permissions` | Ensure your NSX credentials are valid and your user account has IP pool read permissions in the NSX role-based access control policy. |
 ```bash
 get certificates
 get certificate <id>
@@ -1815,8 +1891,10 @@ external-ca-trust-obj-004      External CA       Inactive    2023-12-01 11:30:00
 ```
 
 !!! warning "Common errors"
-    **`error: certificate not found: <id>`** — Verify the certificate ID exists by running `get certificates` first and copy the exact ID string.
-    **`error: trust-objects: permission denied`** — Ensure your NSX user account has the appropriate role assigned (typically NSX Administrator or equivalent).
+    | Error | Fix |
+    |---|---|
+    | `error: certificate not found: <id>` | Verify the certificate ID exists by running `get certificates` first and copy the exact ID string. |
+    | `error: trust-objects: permission denied` | Ensure your NSX user account has the appropriate role assigned (typically NSX Administrator or equivalent). |
 ```bash
 get backup status
 set backup schedule daily time 02:00
@@ -1848,9 +1926,11 @@ Backup History:
 ```
 
 !!! warning "Common errors"
-    **`Error: Backup location /mnt/nsx-backups is not accessible`** — Verify the backup storage mount point exists and has read-write permissions for the NSX service account.
-    **`Error: Manual backup failed - insufficient disk space (required: 3.5 GB, available: 1.2 GB)`** — Free up disk space on the backup destination or configure an alternate backup location with adequate capacity.
-    **`Error: Backup schedule time format invalid - use HH:MM in 24-hour format`** — Correct the time parameter to valid 24-hour format (e.g., `set backup schedule daily time 14:30`).
+    | Error | Fix |
+    |---|---|
+    | `Error: Backup location /mnt/nsx-backups is not accessible` | Verify the backup storage mount point exists and has read-write permissions for the NSX service account. |
+    | `Error: Manual backup failed - insufficient disk space (required: 3.5 GB, available: 1.2 GB)` | Free up disk space on the backup destination or configure an alternate backup location with adequate capacity. |
+    | `Error: Backup schedule time format invalid - use HH:MM in 24-hour format` | Correct the time parameter to valid 24-hour format (e.g., `set backup schedule daily time 14:30`). |
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

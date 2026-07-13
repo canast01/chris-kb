@@ -52,9 +52,11 @@ nd-dc1-3   Ready    worker   287d   v1.24.8
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify SSH connectivity and that the Nexus Dashboard management IP is reachable from your admin workstation.
-    **`command not found: acs`** — Ensure you are logged into the Nexus Dashboard CLI (not a standard Linux shell) and have appropriate admin privileges.
-    **`The connection to the server was refused`** — Restart the Kubernetes API server using `acs services restart kubernetes-api` if kubectl commands fail despite node connectivity.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify SSH connectivity and that the Nexus Dashboard management IP is reachable from your admin workstation. |
+    | `command not found: acs` | Ensure you are logged into the Nexus Dashboard CLI (not a standard Linux shell) and have appropriate admin privileges. |
+    | `The connection to the server was refused` | Restart the Kubernetes API server using `acs services restart kubernetes-api` if kubectl commands fail despite node connectivity. |
 ```bash
 # Check NDI pods
 kubectl get pods -n ndi
@@ -87,9 +89,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`error: unable to forward port because pod is not running`** — Verify the pod is in Running state with `kubectl get pods -n ndi` and wait for readiness probes to complete.
-    **`Circuit breaker triggered: heap memory at 89%`** — Delete old indices with `kubectl exec -n ndi deployment/ndi-elasticsearch -- curl -X DELETE "localhost:9200/ndi-flow-*"` or expand storage and increase `es.indices.memory.index_buffer_size`.
-    **`Failed to write flow records to Elasticsearch`** — Check Elasticsearch cluster health with `kubectl exec -n ndi deployment/ndi-elasticsearch -- curl localhost:9200/_cluster/health` and verify all nodes are in green status.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to forward port because pod is not running` | Verify the pod is in Running state with `kubectl get pods -n ndi` and wait for readiness probes to complete. |
+    | `Circuit breaker triggered: heap memory at 89%` | Delete old indices with `kubectl exec -n ndi deployment/ndi-elasticsearch -- curl -X DELETE "localhost:9200/ndi-flow-*"` or expand storage and increase `es.indices.memory.index_buffer_size`. |
+    | `Failed to write flow records to Elasticsearch` | Check Elasticsearch cluster health with `kubectl exec -n ndi deployment/ndi-elasticsearch -- curl localhost:9200/_cluster/health` and verify all nodes are in green status. |
 ```bash
 # Test remote backup connectivity
 ssh ndadmin@nd-dc1-1.corp.example.com
@@ -119,9 +123,11 @@ Connection to nd-dc1-1.corp.example.com closed.
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host nd-dc1-1.corp.example.com port 22: Connection timed out`** — Verify network connectivity and firewall rules allow SSH (port 22) from your admin workstation to the Nexus Dashboard appliance.
-    **`Permission denied (publickey,password)`** — Ensure the SSH key at `/home/ndadmin/.ssh/nd-backup-key` exists with correct permissions (600) and the public key is authorized on the backup server.
-    **`Remote path /backups/nexus-dashboard: Permission denied`** — Verify the nd-bkp user has write permissions on the backup server's target directory using `ls -ld /backups/nexus-dashboard`.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host nd-dc1-1.corp.example.com port 22: Connection timed out` | Verify network connectivity and firewall rules allow SSH (port 22) from your admin workstation to the Nexus Dashboard appliance. |
+    | `Permission denied (publickey,password)` | Ensure the SSH key at `/home/ndadmin/.ssh/nd-backup-key` exists with correct permissions (600) and the public key is authorized on the backup server. |
+    | `Remote path /backups/nexus-dashboard: Permission denied` | Verify the nd-bkp user has write permissions on the backup server's target directory using `ls -ld /backups/nexus-dashboard`. |
 ```bash
 # Check ND authentication service logs for SAML errors
 kubectl logs -n nd-platform deployment/nd-keycloak --tail=100 | grep -i "saml\|assertion\|redirect"
@@ -137,9 +143,11 @@ kubectl logs -n nd-platform deployment/nd-keycloak --tail=100 | grep -i "saml\|a
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "deployment"`** — Verify the correct namespace with `kubectl get ns | grep nd` and check that Keycloak is deployed as a StatefulSet instead using `kubectl get statefulset -n nd-platform`.
-    **`No resources found in nd-platform namespace`** — Confirm the Keycloak pod is running with `kubectl get pods -n nd-platform | grep keycloak` and verify the namespace name matches your ND installation.
-    **`connection refused` or `Unable to connect to the server`** — Ensure kubectl context is set to the correct cluster with `kubectl config current-context` and verify API server connectivity.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "deployment"` | Verify the correct namespace with `kubectl get ns | grep nd` and check that Keycloak is deployed as a StatefulSet instead using `kubectl get statefulset -n nd-platform`. |
+    | `No resources found in nd-platform namespace` | Confirm the Keycloak pod is running with `kubectl get pods -n nd-platform | grep keycloak` and verify the namespace name matches your ND installation. |
+    | `connection refused` or `Unable to connect to the server` | Ensure kubectl context is set to the correct cluster with `kubectl config current-context` and verify API server connectivity. |
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -196,9 +204,11 @@ nd-dc1-3              2.9 cores    4.0 cores    7.8 GB          8.0 GB
 ```
 
 !!! warning "Common errors"
-    **`0/3 nodes available: 3 Insufficient memory`** — Scale down non-critical apps with `acs apps scale <app> <replicas>` or add memory to cluster nodes.
-    **`ImagePullBackOff`** — Verify image registry credentials with `acs registry status` and confirm the image tag exists in your repository.
-    **`CrashLoopBackOff`** — Check pod logs with `kubectl logs -n <namespace> <pod-name>` to identify application startup failures.
+    | Error | Fix |
+    |---|---|
+    | `0/3 nodes available: 3 Insufficient memory` | Scale down non-critical apps with `acs apps scale <app> <replicas>` or add memory to cluster nodes. |
+    | `ImagePullBackOff` | Verify image registry credentials with `acs registry status` and confirm the image tag exists in your repository. |
+    | `CrashLoopBackOff` | Check pod logs with `kubectl logs -n <namespace> <pod-name>` to identify application startup failures. |
 ```bash
 # Check NTP on all nodes
 acs system ntp show

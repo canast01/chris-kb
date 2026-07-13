@@ -78,9 +78,11 @@ host-05                  ACPI       4.8.1.1              MAINTENANCE_MODE       
 ```
 
 !!! warning "Common errors"
-    **`Error: Host host-05 has running VMs that cannot be migrated`** — Verify HA policy allows migration and check for pinned VMs with `acli vm.get <vm-name> | grep pin`.
-    **`Error: Connection refused to host host-05`** — Ensure the host is reachable and Prism Element cluster is healthy with `acli cluster.status`.
-    **`Error: host-05 is already in MAINTENANCE_MODE`** — The host is already in maintenance mode; proceed with updates or use `acli host.exit_maintenance_mode <host-name>` to exit first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host host-05 has running VMs that cannot be migrated` | Verify HA policy allows migration and check for pinned VMs with `acli vm.get <vm-name> | grep pin`. |
+    | `Error: Connection refused to host host-05` | Ensure the host is reachable and Prism Element cluster is healthy with `acli cluster.status`. |
+    | `Error: host-05 is already in MAINTENANCE_MODE` | The host is already in maintenance mode; proceed with updates or use `acli host.exit_maintenance_mode <host-name>` to exit first. |
 **Expected:** Host shows `MAINTENANCE_MODE` state. No VMs running on it.
 
 ```bash
@@ -103,8 +105,10 @@ Memory Available: 512 GB
 ```
 
 !!! warning "Common errors"
-    **`Error: Host <host-name> not found in cluster`** — Verify the exact hostname matches the output from `acli host.list` and check cluster connectivity.
-    **`Error: Host is not in maintenance mode`** — Confirm the host is currently in maintenance mode using `acli host.get <host-name> | grep maintenance_mode` before attempting to exit.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host <host-name> not found in cluster` | Verify the exact hostname matches the output from `acli host.list` and check cluster connectivity. |
+    | `Error: Host is not in maintenance mode` | Confirm the host is currently in maintenance mode using `acli host.get <host-name> | grep maintenance_mode` before attempting to exit. |
 ---
 
 ## AOS / AHV Upgrade via LCM
@@ -138,9 +142,11 @@ FAIL: Certificate expiration within 30 days on prism-master-01
 ```
 
 !!! warning "Common errors"
-    **`ncc: command not found`** — Ensure you are running this command on a Nutanix cluster node with ncc installed, or source the appropriate environment.
-    **`FAIL: Cluster not in healthy state`** — Resolve all FAIL conditions (especially NTP and certificates) before proceeding with upgrade; WARN conditions can typically proceed but should be documented.
-    **`Permission denied`** — Run the command with appropriate sudo privileges or as the admin user with ncc access rights.
+    | Error | Fix |
+    |---|---|
+    | `ncc: command not found` | Ensure you are running this command on a Nutanix cluster node with ncc installed, or source the appropriate environment. |
+    | `FAIL: Cluster not in healthy state` | Resolve all FAIL conditions (especially NTP and certificates) before proceeding with upgrade; WARN conditions can typically proceed but should be documented. |
+    | `Permission denied` | Run the command with appropriate sudo privileges or as the admin user with ncc access rights. |
 **Estimated time:**
 - AOS upgrade: ~20–30 minutes per node
 - AHV upgrade: ~30–45 minutes per node (includes VM migration time)
@@ -191,9 +197,11 @@ nutanix@cvm-01:~$ ncli host list
 ```
 
 !!! warning "Common errors"
-    **`cluster: command not found`** — Ensure you are logged into a CVM as the nutanix user and the cluster services are running (check with `service cluster-agent status`).
-    **`Connection refused`** — Verify the new CVM IP is reachable from the existing CVM and that the new node has completed imaging with the same AOS/AHV version using Foundation.
-    **`Cluster expansion failed: Node already exists`** — Confirm the new node's CVM has a unique IP address and has not been previously added to a different cluster.
+    | Error | Fix |
+    |---|---|
+    | `cluster: command not found` | Ensure you are logged into a CVM as the nutanix user and the cluster services are running (check with `service cluster-agent status`). |
+    | `Connection refused` | Verify the new CVM IP is reachable from the existing CVM and that the new node has completed imaging with the same AOS/AHV version using Foundation. |
+    | `Cluster expansion failed: Node already exists` | Confirm the new node's CVM has a unique IP address and has not been previously added to a different cluster. |
 **After node is added:**
 ```bash
 # Verify new disks are claimed
@@ -215,8 +223,10 @@ task-curator-002                  Rebalance              QUEUED      0%
 ```
 
 !!! warning "Common errors"
-    **`ncli: command not found`** — Ensure you are running this command on a Nutanix cluster node with ncli in the PATH, or source the Nutanix environment setup script.
-    **`No such file or directory`** — Verify the serial number variable `<new-host-serial>` is correctly substituted with the actual host serial (e.g., `SN-NX-5060-123456`) before running the grep command.
+    | Error | Fix |
+    |---|---|
+    | `ncli: command not found` | Ensure you are running this command on a Nutanix cluster node with ncli in the PATH, or source the Nutanix environment setup script. |
+    | `No such file or directory` | Verify the serial number variable `<new-host-serial>` is correctly substituted with the actual host serial (e.g., `SN-NX-5060-123456`) before running the grep command. |
 ---
 
 ## Remove a Node from Cluster
@@ -272,9 +282,11 @@ Cluster Hosts:
 ```
 
 !!! warning "Common errors"
-    **`Error: Cluster cannot tolerate node failure. CAN_TOLERATE_FAILURE_COUNT: 0`** — Add another node or reduce RF before removal, or wait for rebalancing to complete.
-    **`Error: Host removal already in progress for id=<host-id>`** — Wait for the current removal to complete or use `ncli host remove-abort id=<host-id>` to cancel.
-    **`Error: Cannot remove host with running VMs. Migrate or power off all VMs first.`** — Manually migrate remaining VMs using `acli vm.migrate` or wait for automatic evacuation to finish.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cluster cannot tolerate node failure. CAN_TOLERATE_FAILURE_COUNT: 0` | Add another node or reduce RF before removal, or wait for rebalancing to complete. |
+    | `Error: Host removal already in progress for id=<host-id>` | Wait for the current removal to complete or use `ncli host remove-abort id=<host-id>` to cancel. |
+    | `Error: Cannot remove host with running VMs. Migrate or power off all VMs first.` | Manually migrate remaining VMs using `acli vm.migrate` or wait for automatic evacuation to finish. |
 ---
 
 ## Expand Storage (Add Disks)
@@ -319,9 +331,11 @@ Task ID: curator-task-20240115-001
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid host-id '<host-id>'`** — Replace `<host-id>` with the actual numeric host ID from `ncli host list` output.
-    **`Error: Disk already claimed or in use`** — Verify the disk is not already assigned to another host or in a failed state using `ncli disk list --detailed`.
-    **`Error: curator_cli: command not found`** — Run the command from a Nutanix node with SSH access or use `acli vm.list` to verify cluster connectivity first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid host-id '<host-id>'` | Replace `<host-id>` with the actual numeric host ID from `ncli host list` output. |
+    | `Error: Disk already claimed or in use` | Verify the disk is not already assigned to another host or in a failed state using `ncli disk list --detailed`. |
+    | `Error: curator_cli: command not found` | Run the command from a Nutanix node with SSH access or use `acli vm.list` to verify cluster connectivity first. |
 ---
 
 ## Clone a VM
@@ -347,9 +361,11 @@ New VM 'prod-web-01-clone' created with UUID: 12345678-abcd-ef01-2345-6789abcdef
 ```
 
 !!! warning "Common errors"
-    **`Error: VM 'prod-web-01' not found`** — Verify the source VM name exists by running `acli vm.list` and use the exact VM name from the output.
-    **`Error: Snapshot 'snap-name' not found on VM`** — Confirm the snapshot exists on the source VM using `acli vm.snapshot_list <source-vm-name>` before cloning.
-    **`Error: Insufficient cluster resources to complete clone operation`** — Check available cluster capacity with `acli cluster.status` and free up storage or compute resources as needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: VM 'prod-web-01' not found` | Verify the source VM name exists by running `acli vm.list` and use the exact VM name from the output. |
+    | `Error: Snapshot 'snap-name' not found on VM` | Confirm the snapshot exists on the source VM using `acli vm.snapshot_list <source-vm-name>` before cloning. |
+    | `Error: Insufficient cluster resources to complete clone operation` | Check available cluster capacity with `acli cluster.status` and free up storage or compute resources as needed. |
 From Prism: right-click VM → Clone → specify name and count.
 
 ---
@@ -405,9 +421,11 @@ Snapshot deleted successfully. Freed 2.1 GB
 ```
 
 !!! warning "Common errors"
-    **`Error: VM prod-web-01 is powered on. Cannot revert snapshot while VM is running.`** — Power off the VM first using `acli vm.off <vm-name>` before attempting snapshot revert.
-    **`Error: Snapshot 'app-snap-prod-web-01' requires APPLICATION_CONSISTENT but NGT is not installed on VM prod-web-01.`** — Install Nutanix Guest Tools (NGT) on the VM or use `vm_consistency_type=CRASH_CONSISTENT` instead.
-    **`Error: Snapshot 'daily-backup-2024-01-15' not found on VM prod-web-01.`** — Verify the snapshot name with `acli vm.snapshot_list <vm-name>` and ensure you are using the correct VM and snapshot identifiers.
+    | Error | Fix |
+    |---|---|
+    | `Error: VM prod-web-01 is powered on. Cannot revert snapshot while VM is running.` | Power off the VM first using `acli vm.off <vm-name>` before attempting snapshot revert. |
+    | `Error: Snapshot 'app-snap-prod-web-01' requires APPLICATION_CONSISTENT but NGT is not installed on VM prod-web-01.` | Install Nutanix Guest Tools (NGT) on the VM or use `vm_consistency_type=CRASH_CONSISTENT` instead. |
+    | `Error: Snapshot 'daily-backup-2024-01-15' not found on VM prod-web-01.` | Verify the snapshot name with `acli vm.snapshot_list <vm-name>` and ensure you are using the correct VM and snapshot identifiers. |
 ---
 
 ## Create and Manage Protection Domains (Legacy DR)
@@ -451,9 +469,11 @@ Replication to remote-dr in progress
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection domain 'pd-name' does not exist`** — Replace `<pd-name>` with an actual protection domain name created via `ncli pd list`.
-    **`Error: VM 'vm1' not found in cluster`** — Verify VM names match exactly with `ncli vm list` and use comma-separated format without spaces.
-    **`Error: Remote site 'remote-name' is unreachable at address 10.20.30.40`** — Confirm the remote CVM IP is correct and network connectivity exists between clusters using `ping` or `ncli remote-site test-connection`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection domain 'pd-name' does not exist` | Replace `<pd-name>` with an actual protection domain name created via `ncli pd list`. |
+    | `Error: VM 'vm1' not found in cluster` | Verify VM names match exactly with `ncli vm list` and use comma-separated format without spaces. |
+    | `Error: Remote site 'remote-name' is unreachable at address 10.20.30.40` | Confirm the remote CVM IP is correct and network connectivity exists between clusters using `ping` or `ncli remote-site test-connection`. |
 ---
 
 ## Register Nutanix Guest Tools (NGT)
@@ -494,9 +514,11 @@ A reboot is recommended to apply all changes
 ```
 
 !!! warning "Common errors"
-    **`mount: /dev/sr0: No such file or directory`** — Verify the ISO is attached to the VM and the device exists with `ls -la /dev/sr*`.
-    **`python: command not found`** — Install Python 2.7 or modify the shebang in install_ngt.py to use `python3` if Python 3 is available.
-    **`Permission denied`** — Run the installer with `sudo` or as root: `sudo /mnt/installer/linux/install_ngt.py`.
+    | Error | Fix |
+    |---|---|
+    | `mount: /dev/sr0: No such file or directory` | Verify the ISO is attached to the VM and the device exists with `ls -la /dev/sr*`. |
+    | `python: command not found` | Install Python 2.7 or modify the shebang in install_ngt.py to use `python3` if Python 3 is available. |
+    | `Permission denied` | Run the installer with `sudo` or as root: `sudo /mnt/installer/linux/install_ngt.py`. |
 ---
 
 ## Increase Container Capacity Limit
@@ -530,8 +552,10 @@ Container updated successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Container 'prod-container-01' not found`** — Verify the exact container name with `ncli ctr ls` and ensure you have the correct spelling.
-    **`Error: Invalid advertised-capacity value: value must be greater than used capacity`** — Set the advertised capacity to a value larger than the current used capacity shown in the container details.
+    | Error | Fix |
+    |---|---|
+    | `Error: Container 'prod-container-01' not found` | Verify the exact container name with `ncli ctr ls` and ensure you have the correct spelling. |
+    | `Error: Invalid advertised-capacity value: value must be greater than used capacity` | Set the advertised capacity to a value larger than the current used capacity shown in the container details. |
 ---
 
 ---

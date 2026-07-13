@@ -112,8 +112,10 @@ CurrentSecureScore    MaxScore    Percentage    ControlsStatus
 ```
 
 !!! warning "Common errors"
-    **`(AuthorizationFailed) The client '12a34b5c-6789-0def-1234-567890abcdef' with object id '98765432-1098-7654-3210-fedcba987654' does not have authorization to perform action 'Microsoft.Security/pricings/write' over scope '/subscriptions/12a34b5c-6789-0def-1234-567890abcdef'.`** — Ensure your user account or service principal has the Security Admin or Owner role on the subscription.
-    **`(InvalidResourceType) The resource type 'VirtualMachines' is not valid for the current subscription.`** — Verify the subscription has at least one VM deployed; Defender pricing cannot be enabled for resource types that don't exist in the subscription.
+    | Error | Fix |
+    |---|---|
+    | `(AuthorizationFailed) The client '12a34b5c-6789-0def-1234-567890abcdef' with object id '98765432-1098-7654-3210-fedcba987654' does not have authorization to perform action 'Microsoft.Security/pricings/write' over scope '/subscriptions/12a34b5c-6789-0def-1234-567890abcdef'.` | Ensure your user account or service principal has the Security Admin or Owner role on the subscription. |
+    | `(InvalidResourceType) The resource type 'VirtualMachines' is not valid for the current subscription.` | Verify the subscription has at least one VM deployed; Defender pricing cannot be enabled for resource types that don't exist in the subscription. |
 ### Unhealthy Recommendations
 
 ```bash
@@ -164,9 +166,11 @@ security-assessments-20240122.json
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --name, --assessed-resource-id`** — Provide the exact assessment name and resource ID from the list output, or use `az security assessment list --query "[0].[name,id]"` to retrieve them.
-    **`ERROR: No subscriptions found. Run 'az login' to set up account.`** — Authenticate with `az login` and set the correct subscription using `az account set --subscription <subscription-id>`.
-    **`ERROR: The client '<client-id>' does not have authorization to perform action 'Microsoft.Security/assessments/read'`** — Ensure your Azure account has the Security Reader or higher role assigned at the subscription scope.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --name, --assessed-resource-id` | Provide the exact assessment name and resource ID from the list output, or use `az security assessment list --query "[0].[name,id]"` to retrieve them. |
+    | `ERROR: No subscriptions found. Run 'az login' to set up account.` | Authenticate with `az login` and set the correct subscription using `az account set --subscription <subscription-id>`. |
+    | `ERROR: The client '<client-id>' does not have authorization to perform action 'Microsoft.Security/assessments/read'` | Ensure your Azure account has the Security Reader or higher role assigned at the subscription scope. |
 ---
 
 ## Network Security Groups
@@ -446,9 +450,11 @@ az security jit-policy initiate \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The resource '/subscriptions/.../jitNetworkAccessPolicies/default' could not be found.`** — Ensure the VM exists in the specified resource group and region, and that Azure Security Center is enabled for the subscription.
-    **`(InvalidRequestContent) The request body is invalid.`** — Validate the JSON syntax in the ports array and ensure the endTimeUtc timestamp is in ISO 8601 format and in the future.
-    **`(AuthorizationFailed) The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Security/locations/jitNetworkAccessPolicies/initiate/action'.`** — Assign the Security Admin or higher role to the user on the subscription or resource group.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The resource '/subscriptions/.../jitNetworkAccessPolicies/default' could not be found.` | Ensure the VM exists in the specified resource group and region, and that Azure Security Center is enabled for the subscription. |
+    | `(InvalidRequestContent) The request body is invalid.` | Validate the JSON syntax in the ports array and ensure the endTimeUtc timestamp is in ISO 8601 format and in the future. |
+    | `(AuthorizationFailed) The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Security/locations/jitNetworkAccessPolicies/initiate/action'.` | Assign the Security Admin or higher role to the user on the subscription or resource group. |
 ---
 
 ## Azure Policy for Security
@@ -582,8 +588,10 @@ lock-prod-vnet-readonly   prod-rg          prod-vnet       Microsoft.Network/vir
 ```
 
 !!! warning "Common errors"
-    **`The resource group '<rg-name>' could not be found.`** — Replace `<rg-name>` with the actual resource group name, or verify it exists with `az group list`.
-    **`The resource 'Microsoft.Network/virtualNetworks/<vnet-name>' does not exist in resource group '<rg-name>'.`** — Verify the virtual network name and resource group are correct using `az network vnet list --resource-group <rg-name>`.
+    | Error | Fix |
+    |---|---|
+    | `The resource group '<rg-name>' could not be found.` | Replace `<rg-name>` with the actual resource group name, or verify it exists with `az group list`. |
+    | `The resource 'Microsoft.Network/virtualNetworks/<vnet-name>' does not exist in resource group '<rg-name>'.` | Verify the virtual network name and resource group are correct using `az network vnet list --resource-group <rg-name>`. |
 Apply `CanNotDelete` locks to all production resource groups, key vaults, virtual networks, and storage accounts that hold critical data.
 
 ---
@@ -625,9 +633,11 @@ scan-20240115-003      analyticsdb  sql-prod-02      In Progress 2024-01-15T11:0
 ```
 
 !!! warning "Common errors"
-    **`The provided resource group <rg-name> does not exist.`** — Verify the resource group name with `az group list` and ensure it matches your subscription.
-    **`No assessments found matching the query.`** — Check that Defender for Cloud is enabled on your subscription with `az security auto-provisioning-setting list`.
-    **`Server '<server>' not found in resource group '<rg-name>'.`** — Confirm the SQL server name exists in the specified resource group using `az sql server list --resource-group <rg-name>`.
+    | Error | Fix |
+    |---|---|
+    | `The provided resource group <rg-name> does not exist.` | Verify the resource group name with `az group list` and ensure it matches your subscription. |
+    | `No assessments found matching the query.` | Check that Defender for Cloud is enabled on your subscription with `az security auto-provisioning-setting list`. |
+    | `Server '<server>' not found in resource group '<rg-name>'.` | Confirm the SQL server name exists in the specified resource group using `az sql server list --resource-group <rg-name>`. |
 ---
 
 ## Security Baseline Hardening Checklist
@@ -669,9 +679,11 @@ backupvault-east: TLS < 1.2
 ```
 
 !!! warning "Common errors"
-    **`jq: command not found`** — Install jq with `apt-get install jq` or use the built-in Python JSON parser as shown in the example.
-    **`ERROR: The following arguments are required: --resource-group`** — Add `--resource-group <group-name>` or use `--query "[].{name:name, https:enableHttpsTrafficOnly}"` to filter specific subscriptions.
-    **`ModuleNotFoundError: No module named 'json'`** — The json module is built-in to Python 3; verify Python 3 is installed with `python3 --version` and that the script syntax is correct.
+    | Error | Fix |
+    |---|---|
+    | `jq: command not found` | Install jq with `apt-get install jq` or use the built-in Python JSON parser as shown in the example. |
+    | `ERROR: The following arguments are required: --resource-group` | Add `--resource-group <group-name>` or use `--query "[].{name:name, https:enableHttpsTrafficOnly}"` to filter specific subscriptions. |
+    | `ModuleNotFoundError: No module named 'json'` | The json module is built-in to Python 3; verify Python 3 is installed with `python3 --version` and that the script syntax is correct. |
 ---
 
 ## See also

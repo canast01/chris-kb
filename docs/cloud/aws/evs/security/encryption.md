@@ -148,8 +148,10 @@ Arn: arn:aws:kms:us-east-1:123456789012:key/a1b2c3d4-e5f6-7890-abcd-ef1234567890
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NotFoundException) when calling the DescribeKey operation: Key 'arn:aws:kms:us-east-1:123456789012:key/invalid-key-id' does not exist`** — Replace `<key-id>` with the actual key ID or ARN returned from the create-key command.
-    **`An error occurred (InvalidStateException) when calling the EnableKeyRotation operation: arn:aws:kms:us-east-1:123456789012:key/a1b2c3d4-e5f6-7890-abcd-ef1234567890 is pending deletion.`** — Wait for the key deletion period to complete or use a different key that is not scheduled for deletion.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NotFoundException) when calling the DescribeKey operation: Key 'arn:aws:kms:us-east-1:123456789012:key/invalid-key-id' does not exist` | Replace `<key-id>` with the actual key ID or ARN returned from the create-key command. |
+    | `An error occurred (InvalidStateException) when calling the EnableKeyRotation operation: arn:aws:kms:us-east-1:123456789012:key/a1b2c3d4-e5f6-7890-abcd-ef1234567890 is pending deletion.` | Wait for the key deletion period to complete or use a different key that is not scheduled for deletion. |
 When using an external KMS, ensure the KMS cluster is highly available. A vSAN cluster that loses connectivity to its KMS cannot power on encrypted VMs or decrypt new reads from disk. Deploy the KMIP proxy or CloudHSM cluster with redundancy across Availability Zones.
 
 ## VM Encryption
@@ -268,9 +270,11 @@ curl -sk -u "$SDDC_USER:$SDDC_PASS" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or configure proper CA certificates in your curl environment.
-    **`{"error":"Invalid credentials","status":401}`** — Verify `$SDDC_USER` and `$SDDC_PASS` environment variables are set correctly and the user has API permissions in SDDC Manager.
-    **`{"error":"Certificate chain validation failed","status":400}`** — Ensure the PEM-encoded certificate and CA chain are properly formatted with correct BEGIN/END markers and match the CSR FQDN exactly.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or configure proper CA certificates in your curl environment. |
+    | `{"error":"Invalid credentials","status":401}` | Verify `$SDDC_USER` and `$SDDC_PASS` environment variables are set correctly and the user has API permissions in SDDC Manager. |
+    | `{"error":"Certificate chain validation failed","status":400}` | Ensure the PEM-encoded certificate and CA chain are properly formatted with correct BEGIN/END markers and match the CSR FQDN exactly. |
 ```bash
 # Verify current TLS configuration on vCenter
 openssl s_client -connect $VCENTER:443 </dev/null 2>/dev/null | grep -E "Protocol|Cipher"
@@ -303,9 +307,11 @@ esxi-02.vcf.internal: expires 2025-10-11T23:59:59Z
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification in lab/test environments, or import the CA certificate into your system trust store.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the API endpoint URL is correct and the service is running; check credentials with `curl -sk -u "$SDDC_USER:$SDDC_PASS" https://sddc-manager.vcf.internal/v1/system/version` first.
-    **`Protocol  : TLSv1.0` or `Protocol  : TLSv1.1`** — Update vCenter or NSX-T to a supported version that enforces TLS 1.2 minimum; check VMware release notes for required patches.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification in lab/test environments, or import the CA certificate into your system trust store. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify the API endpoint URL is correct and the service is running; check credentials with `curl -sk -u "$SDDC_USER:$SDDC_PASS" https://sddc-manager.vcf.internal/v1/system/version` first. |
+    | `Protocol  : TLSv1.0` or `Protocol  : TLSv1.1` | Update vCenter or NSX-T to a supported version that enforces TLS 1.2 minimum; check VMware release notes for required patches. |
 ## In-Transit Encryption
 
 ```bash
@@ -335,8 +341,10 @@ Cipher Suite : TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 ```
 
 !!! warning "Common errors"
-    **`unable to connect to $VCENTER:443`** — Replace `$VCENTER` with the actual vCenter hostname or IP address (e.g., `vcenter.corp.local`).
-    **`Protocol  : TLSv1.1`** — Update vCenter to the latest patch level or configure `sslProtocols` in `/etc/vmware-vpx/vpxd.cfg` to disable TLS 1.1 and earlier.
+    | Error | Fix |
+    |---|---|
+    | `unable to connect to $VCENTER:443` | Replace `$VCENTER` with the actual vCenter hostname or IP address (e.g., `vcenter.corp.local`). |
+    | `Protocol  : TLSv1.1` | Update vCenter to the latest patch level or configure `sslProtocols` in `/etc/vmware-vpx/vpxd.cfg` to disable TLS 1.1 and earlier. |
 ## See also
 
 - [Amazon EVS — Hardening](../hardening/)

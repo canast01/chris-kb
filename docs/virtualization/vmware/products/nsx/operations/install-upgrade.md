@@ -84,9 +84,11 @@ curl -sk -u 'admin:password' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the NSX Manager's certificate into your system trust store.
-    **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify the admin username and password are correct and the account has not been locked after failed login attempts.
-    **`curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused`** — Confirm the NSX Manager hostname/IP is correct, reachable on the network, and the management service is running with `systemctl status nsx-manager`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the NSX Manager's certificate into your system trust store. |
+    | `{"error_code":401,"error_message":"Invalid credentials"}` | Verify the admin username and password are correct and the account has not been locked after failed login attempts. |
+    | `curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused` | Confirm the NSX Manager hostname/IP is correct, reachable on the network, and the management service is running with `systemctl status nsx-manager`. |
 ```bash
 # On Edge node CLI
 get version
@@ -108,8 +110,10 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd
 ```
 
 !!! warning "Common errors"
-    **`State/PfxRcd: Connect`** — Verify BGP neighbor configuration and network connectivity; check firewall rules allowing TCP 179 between Edge and peer.
-    **`State/PfxRcd: Idle`** — Confirm BGP neighbor IP address is reachable and the remote AS number matches the configuration on both sides.
+    | Error | Fix |
+    |---|---|
+    | `State/PfxRcd: Connect` | Verify BGP neighbor configuration and network connectivity; check firewall rules allowing TCP 179 between Edge and peer. |
+    | `State/PfxRcd: Idle` | Confirm BGP neighbor IP address is reachable and the remote AS number matches the configuration on both sides. |
 ```bash
 # Verify backup is restorable before the upgrade window
 # Check backup files are present on SFTP server
@@ -204,9 +208,11 @@ Member: edge-node-02 (Standby)
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification, or import the NSX Manager certificate into your CA bundle.
-    **`401 Unauthorized`** — Verify the admin credentials in the curl command are correct and the user has API access permissions in NSX Manager.
-    **`Cluster Status: UNSTABLE`** — Check the NSX Manager node connectivity and logs with `get log follow` to identify which manager is down, then restart the failed node's services.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification, or import the NSX Manager certificate into your CA bundle. |
+    | `401 Unauthorized` | Verify the admin credentials in the curl command are correct and the user has API access permissions in NSX Manager. |
+    | `Cluster Status: UNSTABLE` | Check the NSX Manager node connectivity and logs with `get log follow` to identify which manager is down, then restart the failed node's services. |
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

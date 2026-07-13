@@ -156,7 +156,9 @@ Adapter vmhba5 Driver: lpfc Model: Emulex LPe16000 State: online
 ```
 
 !!! warning "Common errors"
-    **`Error: Fabric login failed`** — Verify switch connectivity and ensure the initiator PWWN is zoned correctly in the active
+    | Error | Fix |
+    |---|---|
+    | `Error: Fabric login failed` | Verify switch connectivity and ensure the initiator PWWN is zoned correctly in the active |
 ## Common Issues Reference
 
 | Symptom | Likely cause | First check |
@@ -193,8 +195,10 @@ Port m, "FC3/4": OK
 ```
 
 !!! warning "Common errors"
-    **`porterrshow: command not found`** — Verify you are logged into the fabric switch CLI (not the host) and that the switch OS is loaded.
-    **`Error: No such command`** — Confirm the switch model supports porterrshow (some older models use portshow with error flags instead).
+    | Error | Fix |
+    |---|---|
+    | `porterrshow: command not found` | Verify you are logged into the fabric switch CLI (not the host) and that the switch OS is loaded. |
+    | `Error: No such command` | Confirm the switch model supports porterrshow (some older models use portshow with error flags instead). |
 | Counter | Acceptable | Investigate if |
 |---|---|---|
 | CRC | 0 | > 0 in last hour |

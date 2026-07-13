@@ -118,9 +118,11 @@ community.mysql    3.8.0
 ```
 
 !!! warning "Common errors"
-    **`ansible-inventory: error: unrecognized arguments: -i <inventory>`** — Replace `<inventory>` with actual inventory path (e.g., `-i /etc/ansible/hosts` or `-i inventory/production/`).
-    **`ERROR! Decryption failed`** — Verify vault password file exists and contains correct password, or use `--ask-vault-pass` instead of `--vault-password-file`.
-    **`ERROR! the playbook: <playbook.yml> could not be found`** — Confirm playbook path is correct and file exists in current working directory or use absolute path.
+    | Error | Fix |
+    |---|---|
+    | `ansible-inventory: error: unrecognized arguments: -i <inventory>` | Replace `<inventory>` with actual inventory path (e.g., `-i /etc/ansible/hosts` or `-i inventory/production/`). |
+    | `ERROR! Decryption failed` | Verify vault password file exists and contains correct password, or use `--ask-vault-pass` instead of `--vault-password-file`. |
+    | `ERROR! the playbook: <playbook.yml> could not be found` | Confirm playbook path is correct and file exists in current working directory or use absolute path. |
 **Count hosts per group**
 
 ```bash
@@ -133,8 +135,10 @@ ansible-inventory --list -i <inventory> | python3 -m json.tool | grep -c "hosts"
 ```
 
 !!! warning "Common errors"
-    **`ansible-inventory: command not found`** — Install ansible with `pip install ansible` or `apt install ansible`.
-    **`No such file or directory`** — Verify the inventory file path exists and use the correct `-i` flag syntax (e.g., `-i ./hosts` or `-i /etc/ansible/hosts`).
+    | Error | Fix |
+    |---|---|
+    | `ansible-inventory: command not found` | Install ansible with `pip install ansible` or `apt install ansible`. |
+    | `No such file or directory` | Verify the inventory file path exists and use the correct `-i` flag syntax (e.g., `-i ./hosts` or `-i /etc/ansible/hosts`). |
 **Validate inventory syntax**
 
 ```bash
@@ -174,9 +178,11 @@ all:
 ```
 
 !!! warning "Common errors"
-    **`[WARNING]: Unable to parse <inventory> as an inventory source`** — Verify the inventory file path is correct and the file exists in the current directory or use an absolute path.
-    **`[ERROR]: Unable to parse <inventory> as YAML`** — Check that the inventory file is valid YAML with proper indentation and syntax using `yamllint <inventory>`.
-    **`[WARNING]: No inventory was parsed`** — Ensure the inventory file contains at least one host or group definition; an empty file will produce this warning.
+    | Error | Fix |
+    |---|---|
+    | `[WARNING]: Unable to parse <inventory> as an inventory source` | Verify the inventory file path is correct and the file exists in the current directory or use an absolute path. |
+    | `[ERROR]: Unable to parse <inventory> as YAML` | Check that the inventory file is valid YAML with proper indentation and syntax using `yamllint <inventory>`. |
+    | `[WARNING]: No inventory was parsed` | Ensure the inventory file contains at least one host or group definition; an empty file will produce this warning. |
 **Check for unreachable hosts in a dry run**
 
 ```bash
@@ -199,9 +205,11 @@ lb-secondary-04 | SUCCESS => {"ping": "pong"}
 ```
 
 !!! warning "Common errors"
-    **`Failed to connect to the host via ssh: ssh: connect to host 10.42.18.55 port 22: Connection timed out`** — Verify the target host is online, SSH port 22 is open, and network connectivity exists from the Ansible control node.
-    **`Aborting, target uses selinux without python selinux bindings installed`** — Install the `python3-selinux` package on the target host or disable SELinux enforcement temporarily.
-    **`Permission denied (publickey,password)`** — Ensure the SSH key specified in the inventory or ansible.cfg is correct and the target host has the public key in `~/.ssh/authorized_keys`.
+    | Error | Fix |
+    |---|---|
+    | `Failed to connect to the host via ssh: ssh: connect to host 10.42.18.55 port 22: Connection timed out` | Verify the target host is online, SSH port 22 is open, and network connectivity exists from the Ansible control node. |
+    | `Aborting, target uses selinux without python selinux bindings installed` | Install the `python3-selinux` package on the target host or disable SELinux enforcement temporarily. |
+    | `Permission denied (publickey,password)` | Ensure the SSH key specified in the inventory or ansible.cfg is correct and the target host has the public key in `~/.ssh/authorized_keys`. |
 **Key health indicators**
 
 | Indicator | Healthy | Action Required |
@@ -254,9 +262,11 @@ node-cache-01 | UNREACHABLE! => {
 ```
 
 !!! warning "Common errors"
-    **`[WARNING]: Unable to parse <inventory> as an inventory source`** — Verify the inventory file path is correct and readable with `cat <inventory>`.
-    **`fatal: [node-web-01]: UNREACHABLE! => ... Connection refused`** — Ensure SSH is running on the target host and the control node has network connectivity and correct SSH keys configured.
-    **`[ERROR]: Inventory parsing failed: expected key=value pairs`** — Check that the inventory file uses valid INI or YAML syntax with proper host definitions.
+    | Error | Fix |
+    |---|---|
+    | `[WARNING]: Unable to parse <inventory> as an inventory source` | Verify the inventory file path is correct and readable with `cat <inventory>`. |
+    | `fatal: [node-web-01]: UNREACHABLE! => ... Connection refused` | Ensure SSH is running on the target host and the control node has network connectivity and correct SSH keys configured. |
+    | `[ERROR]: Inventory parsing failed: expected key=value pairs` | Check that the inventory file uses valid INI or YAML syntax with proper host definitions. |
 **Ping a specific group**
 
 ```bash
@@ -294,9 +304,11 @@ cache-server-01 | UNREACHABLE! => {
 ```
 
 !!! warning "Common errors"
-    **`[WARNING]: Unable to parse <inventory> as an inventory source`** — Verify the inventory file path is correct and readable with `cat <inventory>`.
-    **`fatal: [<hostname>]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh"}`** — Confirm SSH connectivity to the host with `ssh -vvv <hostname>` and verify the host is online and port 22 is open.
-    **`[ERROR]: Syntax Error while loading YAML from <inventory>`** — Check the inventory file for YAML formatting errors using `ansible-inventory -i <inventory> --list`.
+    | Error | Fix |
+    |---|---|
+    | `[WARNING]: Unable to parse <inventory> as an inventory source` | Verify the inventory file path is correct and readable with `cat <inventory>`. |
+    | `fatal: [<hostname>]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh"}` | Confirm SSH connectivity to the host with `ssh -vvv <hostname>` and verify the host is online and port 22 is open. |
+    | `[ERROR]: Syntax Error while loading YAML from <inventory>` | Check the inventory file for YAML formatting errors using `ansible-inventory -i <inventory> --list`. |
 **Test with verbose output to see SSH details**
 
 ```bash
@@ -316,9 +328,11 @@ ansible all -i <inventory> -m ping -vvv 2>&1 | grep -E "SSH|ESTABLISH|FAILED"
 ```
 
 !!! warning "Common errors"
-    **`Failed to connect to the host via ssh: ssh: connect to host <IP> port 22: Connection refused`** — Verify the target host is running and SSH daemon is listening on port 22, or check firewall rules blocking the connection.
-    **`Permission denied (publickey,password)`** — Ensure the SSH key specified in ansible.cfg or -u flag exists and has correct permissions (600), and the public key is in the target's ~/.ssh/authorized_keys.
-    **`[Errno -2] Name or service not known`** — Verify the hostname in your inventory file resolves correctly by running `getent hosts <hostname>` or use IP addresses instead.
+    | Error | Fix |
+    |---|---|
+    | `Failed to connect to the host via ssh: ssh: connect to host <IP> port 22: Connection refused` | Verify the target host is running and SSH daemon is listening on port 22, or check firewall rules blocking the connection. |
+    | `Permission denied (publickey,password)` | Ensure the SSH key specified in ansible.cfg or -u flag exists and has correct permissions (600), and the public key is in the target's ~/.ssh/authorized_keys. |
+    | `[Errno -2] Name or service not known` | Verify the hostname in your inventory file resolves correctly by running `getent hosts <hostname>` or use IP addresses instead. |
 **Check SSH key and user**
 
 ```bash
@@ -344,9 +358,10 @@ root
 ```
 
 !!! warning "Common errors"
-    **`fatal: [node1.prod]: FAILED! => {"msg": "Missing sudo password, unable to continue. Disable 'require_tty' in sudoers or set the 'ANSIBLE_SUDO_FLAGS' environment variable (default -H -S -n -u %s)."}`** — Add `-k` flag to prompt for sudo password or configure passwordless sudo in sudoers with `NOPASSWD`.
-    
-    **`fatal: [node2.prod]: FAILED! => {"msg": "Unable to parse /etc/ansible/hosts as an inventory source"}`** — Verify the inventory file path is correct and readable with `cat <inventory>` before running the command.
+    | Error | Fix |
+    |---|---|
+    | `fatal: [node1.prod]: FAILED! => {"msg": "Missing sudo password, unable to continue. Disable 'require_tty' in sudoers or set the 'ANSIBLE_SUDO_FLAGS' environment variable (default -H -S -n -u %s)."}` | Add `-k` flag to prompt for sudo password or configure passwordless sudo in sudoers with `NOPASSWD`. |
+    | `fatal: [node2.prod]: FAILED! => {"msg": "Unable to parse /etc/ansible/hosts as an inventory source"}` | Verify the inventory file path is correct and readable with `cat <inventory>` before running the command. |
 **Verify Python interpreter on managed nodes**
 
 ```bash
@@ -372,8 +387,10 @@ node-app-03 | FAILED | rc=127 >>
 ```
 
 !!! warning "Common errors"
-    **`[Errno 2] No such file or directory`** — Verify the inventory file path is correct and readable with `cat <inventory>`.
-    **`fatal: [node-app-03]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh"}`** — Ensure SSH connectivity to all hosts with `ansible all -i <inventory> -m ping` and verify SSH keys/credentials are configured.
+    | Error | Fix |
+    |---|---|
+    | `[Errno 2] No such file or directory` | Verify the inventory file path is correct and readable with `cat <inventory>`. |
+    | `fatal: [node-app-03]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh"}` | Ensure SSH connectivity to all hosts with `ansible all -i <inventory> -m ping` and verify SSH keys/credentials are configured. |
 **Key health indicators**
 
 | Indicator | Healthy | Action Required |
@@ -410,9 +427,11 @@ slack_webhook_url: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXX
 ```
 
 !!! warning "Common errors"
-    **`Decryption failed`** — Verify the vault password file exists and contains the correct password used to encrypt the file.
-    **`[Errno 2] No such file or directory: '<encrypted-file>'`** — Confirm the encrypted file path is correct and the file exists in the current directory or provide an absolute path.
-    **`[Errno 13] Permission denied: '<vault-pass>'`** — Ensure the vault password file is readable by the current user with `chmod 600 <vault-pass>`.
+    | Error | Fix |
+    |---|---|
+    | `Decryption failed` | Verify the vault password file exists and contains the correct password used to encrypt the file. |
+    | `[Errno 2] No such file or directory: '<encrypted-file>'` | Confirm the encrypted file path is correct and the file exists in the current directory or provide an absolute path. |
+    | `[Errno 13] Permission denied: '<vault-pass>'` | Ensure the vault password file is readable by the current user with `chmod 600 <vault-pass>`. |
 **Verify vault-encrypted variable is readable in a playbook context**
 
 ```bash
@@ -446,9 +465,11 @@ staging-db-01              : ok=1    changed=0    unreachable=0    failed=0
 ```
 
 !!! warning "Common errors"
-    **`ERROR! Decryption failed`** — Verify the vault password file is correct and matches the vault that encrypted the variable.
-    **`fatal: [prod-web-01]: FAILED! => {"msg": "The variable <vault_variable> is undefined"}`** — Ensure the variable name is spelled correctly and exists in your group_vars or host_vars encrypted files.
-    **`[Errno 2] No such file or directory: '<inventory>'`** — Provide the correct path to your inventory file (e.g., `inventory/production.ini` or `inventory/hosts.yml`).
+    | Error | Fix |
+    |---|---|
+    | `ERROR! Decryption failed` | Verify the vault password file is correct and matches the vault that encrypted the variable. |
+    | `fatal: [prod-web-01]: FAILED! => {"msg": "The variable <vault_variable> is undefined"}` | Ensure the variable name is spelled correctly and exists in your group_vars or host_vars encrypted files. |
+    | `[Errno 2] No such file or directory: '<inventory>'` | Provide the correct path to your inventory file (e.g., `inventory/production.ini` or `inventory/hosts.yml`). |
 **Re-key vault file (rotate vault password)**
 
 ```bash
@@ -461,9 +482,11 @@ Rekey successful
 ```
 
 !!! warning "Common errors"
-    **`Decryption failed`** — Verify the old vault password file is correct and the encrypted file hasn't been corrupted.
-    **`[Errno 2] No such file or directory: '<old-vault-pass>'`** — Ensure the old vault password file path is absolute or relative to your current working directory, and the file exists.
-    **`[Errno 13] Permission denied: '<new-vault-pass>'`** — Make sure the new vault password file is readable (chmod 600) and owned by the user running ansible-vault.
+    | Error | Fix |
+    |---|---|
+    | `Decryption failed` | Verify the old vault password file is correct and the encrypted file hasn't been corrupted. |
+    | `[Errno 2] No such file or directory: '<old-vault-pass>'` | Ensure the old vault password file path is absolute or relative to your current working directory, and the file exists. |
+    | `[Errno 13] Permission denied: '<new-vault-pass>'` | Make sure the new vault password file is readable (chmod 600) and owned by the user running ansible-vault. |
 **List all vault-encrypted files in the project**
 
 ```bash
@@ -481,8 +504,10 @@ grep -rl '\$ANSIBLE_VAULT' . --include="*.yml" --include="*.yaml"
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input): No such file or directory`** — Ensure the command is run from the Ansible project root directory where YAML files exist.
-    **`grep: ./roles: No such file or directory`** — Verify the directory structure exists; if running in a different location, provide the correct path to the Ansible project.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input): No such file or directory` | Ensure the command is run from the Ansible project root directory where YAML files exist. |
+    | `grep: ./roles: No such file or directory` | Verify the directory structure exists; if running in a different location, provide the correct path to the Ansible project. |
 **Key health indicators**
 
 | Indicator | Healthy | Action Required |
@@ -521,9 +546,11 @@ id     name                                    organization  status   created   
 ```
 
 !!! warning "Common errors"
-    **`Error: The provided token is invalid or expired`** — Re-authenticate with `awx login` using valid credentials.
-    **`Error: No such option: --status`** — Verify AWX CLI version supports the `--status` flag; update with `pip install --upgrade awx-cli`.
-    **`Error: Connection refused to http://localhost:8052`** — Ensure AWX controller is running and accessible; check `awx config host` points to correct URL.
+    | Error | Fix |
+    |---|---|
+    | `Error: The provided token is invalid or expired` | Re-authenticate with `awx login` using valid credentials. |
+    | `Error: No such option: --status` | Verify AWX CLI version supports the `--status` flag; update with `pip install --upgrade awx-cli`. |
+    | `Error: Connection refused to http://localhost:8052` | Ensure AWX controller is running and accessible; check `awx config host` points to correct URL. |
 **List running jobs**
 
 ```bash
@@ -541,9 +568,11 @@ id     name                                    organization  status    created  
 ```
 
 !!! warning "Common errors"
-    **`Error: The server could not be reached`** — Verify AWX/Tower is running and accessible, then check your AWX_HOST and AWX_VERIFY_SSL environment variables.
-    **`Error: Invalid OAuth2 token`** — Re-authenticate using `awx login` with valid credentials for your AWX instance.
-    **`Error: You do not have permission to perform this action`** — Ensure your AWX user account has the "System Auditor" or "Admin" role to view job status.
+    | Error | Fix |
+    |---|---|
+    | `Error: The server could not be reached` | Verify AWX/Tower is running and accessible, then check your AWX_HOST and AWX_VERIFY_SSL environment variables. |
+    | `Error: Invalid OAuth2 token` | Re-authenticate using `awx login` with valid credentials for your AWX instance. |
+    | `Error: You do not have permission to perform this action` | Ensure your AWX user account has the "System Auditor" or "Admin" role to view job status. |
 **Check AWX service pods (Kubernetes deployment)**
 
 ```bash
@@ -562,8 +591,10 @@ awx-ee-default-execution-environment-pull-xyzab   0/1     ImagePullBackOff   0  
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "pods" on API group ""`** — Verify the Kubernetes cluster is accessible with `kubectl cluster-info` and check your kubeconfig context.
-    **`Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:default:default" cannot list resource "pods" in API group "" in the namespace "awx"`** — Ensure your service account has RBAC permissions by applying the appropriate ClusterRole and ClusterRoleBinding for pod listing.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "pods" on API group ""` | Verify the Kubernetes cluster is accessible with `kubectl cluster-info` and check your kubeconfig context. |
+    | `Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:default:default" cannot list resource "pods" in API group "" in the namespace "awx"` | Ensure your service account has RBAC permissions by applying the appropriate ClusterRole and ClusterRoleBinding for pod listing. |
 All pods should show `Running` status. Pods in `CrashLoopBackOff` or `Error` state require immediate investigation.
 
 **Check AWX capacity (forks headroom)**
@@ -585,9 +616,11 @@ id     hostname                    instance_group  cpu_explanation              
 ```
 
 !!! warning "Common errors"
-    **`Error: The server could not be reached`** — Verify the AWX API endpoint is accessible and the AWX service is running with `systemctl status awx`.
-    **`Error: Invalid credentials or authentication token`** — Ensure your AWX authentication token is valid by checking `awx config` and re-authenticating with `awx login`.
-    **`Error: command not found: awx`** — Install the AWX CLI tool with `pip install awxkit` or verify it is in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: The server could not be reached` | Verify the AWX API endpoint is accessible and the AWX service is running with `systemctl status awx`. |
+    | `Error: Invalid credentials or authentication token` | Ensure your AWX authentication token is valid by checking `awx config` and re-authenticating with `awx login`. |
+    | `Error: command not found: awx` | Install the AWX CLI tool with `pip install awxkit` or verify it is in your PATH. |
 Review the `capacity` and `consumed_capacity` fields. High consumption indicates a need to scale the instance group.
 
 **Review credential expiry**

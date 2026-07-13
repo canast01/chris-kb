@@ -147,9 +147,11 @@ aws_s3_bucket.assets: Import complete!
 ```
 
 !!! warning "Common errors"
-    **`Error: Backend initialization required: please run "terraform init"`** — Run `terraform init` in the working directory before executing other terraform commands.
-    **`Error: resource aws_s3_bucket.assets does not exist in the state`** — Ensure the resource identifier matches the actual AWS resource name and that the resource type is correct in your configuration.
-    **`Error: Error reading state file: stat .terraform/terraform.tfstate: no such file or directory`** — Verify the working directory contains a valid Terraform configuration and run `terraform init` to initialize the backend.
+    | Error | Fix |
+    |---|---|
+    | `Error: Backend initialization required: please run "terraform init"` | Run `terraform init` in the working directory before executing other terraform commands. |
+    | `Error: resource aws_s3_bucket.assets does not exist in the state` | Ensure the resource identifier matches the actual AWS resource name and that the resource type is correct in your configuration. |
+    | `Error: Error reading state file: stat .terraform/terraform.tfstate: no such file or directory` | Verify the working directory contains a valid Terraform configuration and run `terraform init` to initialize the backend. |
 ---
 
 ## See also

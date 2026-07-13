@@ -61,8 +61,10 @@ aws evs list-environments \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (UnauthorizedOperation) exception has occurred: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: evs:ListEnvironments on resource: *`** — Ensure the IAM user or role has the `evs:ListEnvironments` permission attached in their policy.
-    **`Unable to locate credentials. You can configure credentials by running "aws configure".`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (UnauthorizedOperation) exception has occurred: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: evs:ListEnvironments on resource: *` | Ensure the IAM user or role has the `evs:ListEnvironments` permission attached in their policy. |
+    | `Unable to locate credentials. You can configure credentials by running "aws configure".` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
 Expected output structure:
 
 ```text
@@ -109,9 +111,11 @@ aws evs get-environment --environment-id env-0a1b2c3d
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the GetEnvironment operation: Environment env-0a1b2c3d not found`** — Verify the environment ID is correct and exists in the current region using `aws evs list-environments`.
-    **`An error occurred (AccessDeniedException) when calling the GetEnvironment operation: User is not authorized to perform: evs:GetEnvironment`** — Add the `evs:GetEnvironment` permission to your IAM user or role policy.
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the GetEnvironment operation: Environment env-0a1b2c3d not found` | Verify the environment ID is correct and exists in the current region using `aws evs list-environments`. |
+    | `An error occurred (AccessDeniedException) when calling the GetEnvironment operation: User is not authorized to perform: evs:GetEnvironment` | Add the `evs:GetEnvironment` permission to your IAM user or role policy. |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
 Extract key fields with `--query`:
 
 ```bash
@@ -134,9 +138,11 @@ aws evs get-environment --environment-id env-0a1b2c3d \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidEnvironmentId.NotFound) when calling the GetEnvironment operation: Environment env-0a1b2c3d not found`** — Verify the environment ID exists in your region using `aws evs list-environments`.
-    **`An error occurred (AccessDenied) when calling the GetEnvironment operation: User is not authorized to perform: evs:GetEnvironment`** — Add the `evs:GetEnvironment` permission to your IAM user or role policy.
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidEnvironmentId.NotFound) when calling the GetEnvironment operation: Environment env-0a1b2c3d not found` | Verify the environment ID exists in your region using `aws evs list-environments`. |
+    | `An error occurred (AccessDenied) when calling the GetEnvironment operation: User is not authorized to perform: evs:GetEnvironment` | Add the `evs:GetEnvironment` permission to your IAM user or role policy. |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
 ### create-environment
 
 ```bash
@@ -167,9 +173,11 @@ aws evs create-environment \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterException) when calling the CreateEnvironment operation: Invalid KMS key ARN format or key does not exist`** — Verify the KMS key ARN exists in the specified region and your IAM principal has kms:DescribeKey permissions.
-    **`An error occurred (ValidationException) when calling the CreateEnvironment operation: VCF version VCF-5.1 is not supported in this region`** — Check the AWS documentation for supported VCF versions in us-east-1 or switch to a supported version.
-    **`An error occurred (InvalidParameterException) when calling the CreateEnvironment operation: Invalid VLAN configuration: MTU 9000 exceeds maximum allowed value`** — Reduce the MTU value to 1500 or verify your network infrastructure supports jumbo frames before retrying.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterException) when calling the CreateEnvironment operation: Invalid KMS key ARN format or key does not exist` | Verify the KMS key ARN exists in the specified region and your IAM principal has kms:DescribeKey permissions. |
+    | `An error occurred (ValidationException) when calling the CreateEnvironment operation: VCF version VCF-5.1 is not supported in this region` | Check the AWS documentation for supported VCF versions in us-east-1 or switch to a supported version. |
+    | `An error occurred (InvalidParameterException) when calling the CreateEnvironment operation: Invalid VLAN configuration: MTU 9000 exceeds maximum allowed value` | Reduce the MTU value to 1500 or verify your network infrastructure supports jumbo frames before retrying. |
 ### create-environment-host
 
 ```bash
@@ -202,9 +210,11 @@ aws evs create-environment-host \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the CreateEnvironmentHost operation: Invalid environment ID: env-0a1b2c3d`** — Verify the environment exists with `aws evs describe-environments` and use a valid environment ID.
-    **`An error occurred (InvalidKeyPair.NotFound) when calling the CreateEnvironmentHost operation: The key pair 'evs-cluster-key' does not exist`** — Create the key pair first with `aws ec2 create-key-pair --key-name evs-cluster-key` or use an existing key name.
-    **`An error occurred (InvalidParameterValue) when calling the CreateEnvironmentHost operation: Placement group pg-xxx does not exist or is not available`** — Create the placement group with `aws ec2 create-placement-group --group-name pg-xxx --strategy cluster` before launching the host.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the CreateEnvironmentHost operation: Invalid environment ID: env-0a1b2c3d` | Verify the environment exists with `aws evs describe-environments` and use a valid environment ID. |
+    | `An error occurred (InvalidKeyPair.NotFound) when calling the CreateEnvironmentHost operation: The key pair 'evs-cluster-key' does not exist` | Create the key pair first with `aws ec2 create-key-pair --key-name evs-cluster-key` or use an existing key name. |
+    | `An error occurred (InvalidParameterValue) when calling the CreateEnvironmentHost operation: Placement group pg-xxx does not exist or is not available` | Create the placement group with `aws ec2 create-placement-group --group-name pg-xxx --strategy cluster` before launching the host. |
 Expected output:
 
 ```json
@@ -243,9 +253,11 @@ aws evs list-environment-hosts --environment-id env-0a1b2c3d \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the ListEnvironmentHosts operation: Environment env-0a1b2c3d not found`** — Verify the environment ID is correct using `aws evs list-environments`.
-    **`An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation: User is not authorized to perform: evs:ListEnvironmentHosts`** — Add the `evs:ListEnvironmentHosts` permission to your IAM policy.
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_PROFILE`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` environment variables.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the ListEnvironmentHosts operation: Environment env-0a1b2c3d not found` | Verify the environment ID is correct using `aws evs list-environments`. |
+    | `An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation: User is not authorized to perform: evs:ListEnvironmentHosts` | Add the `evs:ListEnvironmentHosts` permission to your IAM policy. |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_PROFILE`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` environment variables. |
 Filter only ACTIVE hosts:
 
 ```bash
@@ -268,8 +280,10 @@ aws evs list-environment-hosts --environment-id env-0a1b2c3d \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID format`** — Verify the environment ID matches the format `env-` followed by alphanumeric characters using `aws evs describe-environments`.
-    **`An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation: User is not authorized to perform: evs:ListEnvironmentHosts`** — Add the `evs:ListEnvironmentHosts` permission to your IAM policy or assume a role with EVS read access.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID format` | Verify the environment ID matches the format `env-` followed by alphanumeric characters using `aws evs describe-environments`. |
+    | `An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation: User is not authorized to perform: evs:ListEnvironmentHosts` | Add the `evs:ListEnvironmentHosts` permission to your IAM policy or assume a role with EVS read access. |
 ### delete-environment-host
 
 Always put the ESXi host in vSphere maintenance mode and verify vSAN BytesToSync is 0 before running this command.
@@ -292,9 +306,11 @@ aws evs delete-environment-host \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the DeleteEnvironmentHost operation: Environment env-0a1b2c3d not found`** — Verify the environment ID exists with `aws evs describe-environments` and use the correct ID.
-    **`An error occurred (InvalidParameterException) when calling the DeleteEnvironmentHost operation: Host host-01abcdef is not part of environment env-0a1b2c3d`** — Confirm the host belongs to the specified environment using `aws evs describe-environment-hosts --environment-id env-0a1b2c3d`.
-    **`An error occurred (ConflictException) when calling the DeleteEnvironmentHost operation: Cannot delete host in DELETION_IN_PROGRESS state`** — Wait for the previous deletion to complete before attempting another delete operation.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the DeleteEnvironmentHost operation: Environment env-0a1b2c3d not found` | Verify the environment ID exists with `aws evs describe-environments` and use the correct ID. |
+    | `An error occurred (InvalidParameterException) when calling the DeleteEnvironmentHost operation: Host host-01abcdef is not part of environment env-0a1b2c3d` | Confirm the host belongs to the specified environment using `aws evs describe-environment-hosts --environment-id env-0a1b2c3d`. |
+    | `An error occurred (ConflictException) when calling the DeleteEnvironmentHost operation: Cannot delete host in DELETION_IN_PROGRESS state` | Wait for the previous deletion to complete before attempting another delete operation. |
 Poll until the host is removed:
 
 ```bash
@@ -316,9 +332,11 @@ Every 30.0s: aws evs list-environment-hosts --environment-id env-0a1b2c3d --quer
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID format`** — Verify the environment ID matches the pattern `env-` followed by alphanumeric characters using `aws evs describe-environments --query 'environments[*].environmentId'`.
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or ensure the `AWS_PROFILE`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` environment variables are set.
-    **`An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation: User is not authorized to perform: evs:ListEnvironmentHosts`** — Add the `evs:ListEnvironmentHosts` permission to your IAM user or role policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID format` | Verify the environment ID matches the pattern `env-` followed by alphanumeric characters using `aws evs describe-environments --query 'environments[*].environmentId'`. |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or ensure the `AWS_PROFILE`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` environment variables are set. |
+    | `An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation: User is not authorized to perform: evs:ListEnvironmentHosts` | Add the `evs:ListEnvironmentHosts` permission to your IAM user or role policy. |
 ## vSphere PowerCLI
 
 Connect to vCenter before running any PowerCLI commands:
@@ -433,8 +451,10 @@ NSX_PASS="VMware1!VMware1!"
 ```
 
 !!! warning "Common errors"
-    **`bash: NSX_MANAGER: command not found`** — Ensure you are using `export` before the variable name if you intend to set it as an environment variable, or remove the leading space if copy-pasted incorrectly.
-    **`bash: syntax error near unexpected token '!'`** — Escape the exclamation mark in the password with a backslash (`VMware1\!VMware1\!`) or wrap the entire password in single quotes instead of double quotes.
+    | Error | Fix |
+    |---|---|
+    | `bash: NSX_MANAGER: command not found` | Ensure you are using `export` before the variable name if you intend to set it as an environment variable, or remove the leading space if copy-pasted incorrectly. |
+    | `bash: syntax error near unexpected token '!'` | Escape the exclamation mark in the password with a backslash (`VMware1\!VMware1\!`) or wrap the entire password in single quotes instead of double quotes. |
 ### Cluster Status
 
 ```bash
@@ -451,9 +471,11 @@ mgmt_cluster_status: STABLE
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store.
-    **`jq: command not found`** — Use `python3 -c` with json module (as shown) instead of piping to jq, or install jq with `apt-get install jq` / `yum install jq`.
-    **`curl: (7) Failed to connect to <NSX_MANAGER>: Name or service not known`** — Verify the `NSX_MANAGER` environment variable is set correctly with `echo $NSX_MANAGER` and that the hostname/IP is resolvable from your network.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store. |
+    | `jq: command not found` | Use `python3 -c` with json module (as shown) instead of piping to jq, or install jq with `apt-get install jq` / `yum install jq`. |
+    | `curl: (7) Failed to connect to <NSX_MANAGER>: Name or service not known` | Verify the `NSX_MANAGER` environment variable is set correctly with `echo $NSX_MANAGER` and that the hostname/IP is resolvable from your network. |
 ### Transport Nodes
 
 ```bash
@@ -503,9 +525,11 @@ host-node-esx03.lab.local UP
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.50 port 443: Connection refused`** — Verify NSX_MANAGER variable is set correctly and the NSX appliance is reachable on the network.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Confirm NSX_USER and NSX_PASS credentials are correct; invalid credentials return HTML error pages instead of JSON.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag only if using a trusted certificate, or ensure your CA bundle includes the NSX manager's certificate.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.50 port 443: Connection refused` | Verify NSX_MANAGER variable is set correctly and the NSX appliance is reachable on the network. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Confirm NSX_USER and NSX_PASS credentials are correct; invalid credentials return HTML error pages instead of JSON. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag only if using a trusted certificate, or ensure your CA bundle includes the NSX manager's certificate. |
 ### Logical Routers
 
 ```bash
@@ -529,9 +553,11 @@ edge-cluster-router TIER0 ACTIVE-ACTIVE
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify NSX_MANAGER, NSX_USER, and NSX_PASS environment variables are set correctly and the API endpoint is reachable.
-    **`curl: (7) Failed to connect to <hostname> port 443: Connection refused`** — Confirm the NSX Manager hostname/IP is correct and the management cluster is running and accessible from your network.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify NSX_MANAGER, NSX_USER, and NSX_PASS environment variables are set correctly and the API endpoint is reachable. |
+    | `curl: (7) Failed to connect to <hostname> port 443: Connection refused` | Confirm the NSX Manager hostname/IP is correct and the management cluster is running and accessible from your network. |
 ### Firewall Sections
 
 ```bash
@@ -557,9 +583,11 @@ Default-Drop                             rules=1    type=LAYER3
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.50 port 443: Connection refused`** — Verify NSX Manager is running and accessible at the hostname/IP specified in `$NSX_MANAGER`, and check network connectivity.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Confirm `$NSX_USER` and `$NSX_PASS` credentials are correct; invalid credentials return HTML error pages instead of JSON.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag only if using a trusted certificate, or ensure your environment accepts self-signed certificates for NSX Manager.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.50 port 443: Connection refused` | Verify NSX Manager is running and accessible at the hostname/IP specified in `$NSX_MANAGER`, and check network connectivity. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Confirm `$NSX_USER` and `$NSX_PASS` credentials are correct; invalid credentials return HTML error pages instead of JSON. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag only if using a trusted certificate, or ensure your environment accepts self-signed certificates for NSX Manager. |
 ## HCX API
 
 Set variables before running HCX commands:
@@ -576,8 +604,10 @@ HCX_PASS="P@ssw0rd"
 ```
 
 !!! warning "Common errors"
-    **`bash: HCX_MANAGER: command not found`** — Ensure you are using `=` without spaces around the equals sign for variable assignment.
-    **`bash: administrator@vsphere.local: command not found`** — Verify the entire variable assignment is on one line and properly quoted if the value contains special characters.
+    | Error | Fix |
+    |---|---|
+    | `bash: HCX_MANAGER: command not found` | Ensure you are using `=` without spaces around the equals sign for variable assignment. |
+    | `bash: administrator@vsphere.local: command not found` | Verify the entire variable assignment is on one line and properly quoted if the value contains special characters. |
 Authenticate and get a session token:
 
 ```bash
@@ -594,9 +624,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTcwOTMxNjgwMCw
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to port 443: Connection refused`** — Verify the HCX_MANAGER variable is set correctly and the HCX appliance is reachable on the network.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Check that HCX_USER and HCX_PASS credentials are correct; the API returned an error response instead of valid JSON.
-    **`KeyError: 'data'`** — Confirm the HCX API version matches your documentation; the response structure may differ if the token is at a different path in the JSON hierarchy.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to port 443: Connection refused` | Verify the HCX_MANAGER variable is set correctly and the HCX appliance is reachable on the network. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Check that HCX_USER and HCX_PASS credentials are correct; the API returned an error response instead of valid JSON. |
+    | `KeyError: 'data'` | Confirm the HCX API version matches your documentation; the response structure may differ if the token is at a different path in the JSON hierarchy. |
 ### Service Mesh Status
 
 ```bash
@@ -620,9 +652,11 @@ HCX-Link-05 DEGRADED ON_PREMISES
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify the HCX_TOKEN and HCX_MANAGER environment variables are set correctly with `echo $HCX_TOKEN` and `echo $HCX_MANAGER`.
-    **`curl: (7) Failed to connect to <manager-ip> port 443: Connection refused`** — Confirm the HCX Manager is running and accessible at the specified endpoint with `curl -sk https://${HCX_MANAGER}/hybridity/api/health`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify the HCX_TOKEN and HCX_MANAGER environment variables are set correctly with `echo $HCX_TOKEN` and `echo $HCX_MANAGER`. |
+    | `curl: (7) Failed to connect to <manager-ip> port 443: Connection refused` | Confirm the HCX Manager is running and accessible at the specified endpoint with `curl -sk https://${HCX_MANAGER}/hybridity/api/health`. |
 ### Migration Job Status
 
 ```bash
@@ -647,9 +681,11 @@ vMotion-VM-prod-06 COMPLETED 100 %
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify HCX_MANAGER URL is correct).
-    **`curl: (7) Failed to connect to <ip>: Connection refused`** — Ensure HCX Manager is running and accessible; verify HCX_MANAGER environment variable is set to the correct IP/hostname and port (e.g., `export HCX_MANAGER="https://192.168.1.100:443"`).
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the HCX_TOKEN is valid and not expired; check that the API endpoint returns valid JSON by testing `curl -sk -H "x-hm-authorization: ${HCX_TOKEN}" "${HCX_MANAGER}/hybridity/api/vmotion/jobs"` directly.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify HCX_MANAGER URL is correct). |
+    | `curl: (7) Failed to connect to <ip>: Connection refused` | Ensure HCX Manager is running and accessible; verify HCX_MANAGER environment variable is set to the correct IP/hostname and port (e.g., `export HCX_MANAGER="https://192.168.1.100:443"`). |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify the HCX_TOKEN is valid and not expired; check that the API endpoint returns valid JSON by testing `curl -sk -H "x-hm-authorization: ${HCX_TOKEN}" "${HCX_MANAGER}/hybridity/api/vmotion/jobs"` directly. |
 ### Start a vMotion Migration
 
 ```bash
@@ -704,9 +740,11 @@ curl -sk -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to hcx-manager.corp.local port 443: Connection refused`** — Verify HCX_MANAGER environment variable is set correctly and the HCX Manager appliance is running and network-accessible.
-    **`{"error": "Invalid token", "code": 401}`** — Ensure HCX_TOKEN is valid and not expired; regenerate the token from the HCX Manager UI if necessary.
-    **`{"error": "Network 'on-prem-pg' not found", "code": 404}`** — Confirm the source network name matches exactly in the on-premises vCenter and that network mappings are configured in HCX before initiating migration.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to hcx-manager.corp.local port 443: Connection refused` | Verify HCX_MANAGER environment variable is set correctly and the HCX Manager appliance is running and network-accessible. |
+    | `{"error": "Invalid token", "code": 401}` | Ensure HCX_TOKEN is valid and not expired; regenerate the token from the HCX Manager UI if necessary. |
+    | `{"error": "Network 'on-prem-pg' not found", "code": 404}` | Confirm the source network name matches exactly in the on-premises vCenter and that network mappings are configured in HCX before initiating migration. |
 ## esxcli — ESXi Host Diagnostics
 
 SSH to an ESXi host (enable SSH via vCenter or DCUI first):
@@ -726,9 +764,11 @@ Last login: Wed Jan 15 14:32:18 2025 from 10.42.10.8
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname evs-host-01.vcf.internal: Name or service not known`** — Verify DNS resolution with `nslookup evs-host-01.vcf.internal` or update `/etc/hosts` with the correct IP address.
-    **`Permission denied (publickey,gssapi-keyex,gssapi-with-mic)`** — Ensure your SSH key is added to the remote host's `~/.ssh/authorized_keys` or configure password authentication in `/etc/ssh/sshd_config`.
-    **`ssh: connect to host evs-host-01.vcf.internal port 22: Connection timed out`** — Check network connectivity and firewall rules; verify the host is reachable with `ping evs-host-01.vcf.internal` or `nc -zv evs-host-01.vcf.internal 22`.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname evs-host-01.vcf.internal: Name or service not known` | Verify DNS resolution with `nslookup evs-host-01.vcf.internal` or update `/etc/hosts` with the correct IP address. |
+    | `Permission denied (publickey,gssapi-keyex,gssapi-with-mic)` | Ensure your SSH key is added to the remote host's `~/.ssh/authorized_keys` or configure password authentication in `/etc/ssh/sshd_config`. |
+    | `ssh: connect to host evs-host-01.vcf.internal port 22: Connection timed out` | Check network connectivity and firewall rules; verify the host is reachable with `ping evs-host-01.vcf.internal` or `nc -zv evs-host-01.vcf.internal 22`. |
 ```bash
 # Storage adapter list
 esxcli storage core adapter list

@@ -102,8 +102,10 @@ node-04      AFF A400    9.13.1P5       8ABC123459
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found`** — Verify you are connected to the ONTAP cluster management interface and have admin privileges; use `cluster show` to confirm cluster connectivity first.
-    **`Error: access denied for command`** — Ensure your user account has the "admin" role; contact your cluster administrator to grant the necessary RBAC permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found` | Verify you are connected to the ONTAP cluster management interface and have admin privileges; use `cluster show` to confirm cluster connectivity first. |
+    | `Error: access denied for command` | Ensure your user account has the "admin" role; contact your cluster administrator to grant the necessary RBAC permissions. |
 ### 2. Invoke AutoSupport (ties your system data to the case)
 
 ```bash
@@ -142,8 +144,10 @@ node-02: AutoSupport notification sent successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: AutoSupport is not configured. Please configure the AutoSupport destination.`** — Run `system node autosupport modify -node * -to support@netapp.com -enabled true` to enable and configure AutoSupport.
-    **`Error: Failed to send AutoSupport notification to the configured destination`** — Verify network connectivity to the AutoSupport destination and check firewall rules with `network ping -vserver admin_vserver -destination support.netapp.com`.
+    | Error | Fix |
+    |---|---|
+    | `Error: AutoSupport is not configured. Please configure the AutoSupport destination.` | Run `system node autosupport modify -node * -to support@netapp.com -enabled true` to enable and configure AutoSupport. |
+    | `Error: Failed to send AutoSupport notification to the configured destination` | Verify network connectivity to the AutoSupport destination and check firewall rules with `network ping -vserver admin_vserver -destination support.netapp.com`. |
 ### 3. Collect the current health state
 
 ```bash
@@ -199,8 +203,10 @@ Disk                 State
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: permission denied`** — Verify you are logged in with cluster admin credentials using `security login show`.
-    **`Error: No such command or command not found`** — Confirm you are connected to the ONTAP cluster management interface, not a node shell; exit node shell with `exit` if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: permission denied` | Verify you are logged in with cluster admin credentials using `security login show`. |
+    | `Error: No such command or command not found` | Confirm you are connected to the ONTAP cluster management interface, not a node shell; exit node shell with `exit` if needed. |
 ### 4. Collect the aggregate and volume state
 
 ```bash
@@ -245,9 +251,11 @@ svm2:vol_test svm1:vol_test_dr Broken-off   -       false broken-off
 ```
 
 !!! warning "Common errors"
-    **`Error: entry doesn't have a value for field "state"`** — Ensure the aggregate exists and the field name matches your ONTAP version (use `storage aggregate show -fields ?` to list available fields).
-    **`Error: No matching aggregates found`** — Verify the aggregate name spelling with `storage aggregate show` and confirm you have cluster admin privileges.
-    **`SnapMirror relationship not found`** — Check that both source and destination SVMs/volumes exist and the relationship hasn't been deleted; use `snapmirror list-destinations` to verify active relationships.
+    | Error | Fix |
+    |---|---|
+    | `Error: entry doesn't have a value for field "state"` | Ensure the aggregate exists and the field name matches your ONTAP version (use `storage aggregate show -fields ?` to list available fields). |
+    | `Error: No matching aggregates found` | Verify the aggregate name spelling with `storage aggregate show` and confirm you have cluster admin privileges. |
+    | `SnapMirror relationship not found` | Check that both source and destination SVMs/volumes exist and the relationship hasn't been deleted; use `snapmirror list-destinations` to verify active relationships. |
 ### 5. Write the timeline
 
 ```text

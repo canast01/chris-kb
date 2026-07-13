@@ -101,8 +101,10 @@ legacy-service              c9e5h0g4-3d6f-6e1c-0h4g-5f7e9d1c3g6c  f1g4h6c3-7e0d-
 ```
 
 !!! warning "Common errors"
-    **`Insufficient privileges to complete the operation.`** — Ensure your Azure account has Application Administrator or Cloud Application Administrator role in the tenant.
-    **`Invalid value provided for parameter 'id': <app-id>. The value should be a valid UUID or object ID.`** — Replace `<app-id>` or `<app-id-or-
+    | Error | Fix |
+    |---|---|
+    | `Insufficient privileges to complete the operation.` | Ensure your Azure account has Application Administrator or Cloud Application Administrator role in the tenant. |
+    | `Invalid value provided for parameter 'id': <app-id>. The value should be a valid UUID or object ID.` | Replace `<app-id>` or `<app-id-or- |
 ## Client Secrets
 
 Client secrets are password credentials used by confidential clients (server-side applications) to authenticate.
@@ -140,8 +142,10 @@ b2c3d4e5-f6a7-8901-bcde-f12345678901 key2           2023-06-20T14:45:12Z   2024-
 ```
 
 !!! warning "Common errors"
-    **`Invalid value: '<app-id>' is not a valid UUID or application name.`** — Replace `<app-id>` with the actual application ID (UUID format) or registered app name from your Azure AD tenant.
-    **`Authorization_RequestDenied: Insufficient privileges to complete the operation.`** — Ensure your Azure CLI account has Application Administrator or Global Administrator role in the Azure AD tenant.
+    | Error | Fix |
+    |---|---|
+    | `Invalid value: '<app-id>' is not a valid UUID or application name.` | Replace `<app-id>` with the actual application ID (UUID format) or registered app name from your Azure AD tenant. |
+    | `Authorization_RequestDenied: Insufficient privileges to complete the operation.` | Ensure your Azure CLI account has Application Administrator or Global Administrator role in the Azure AD tenant. |
 ### Secret Rotation Checklist
 
 | Step | Action |
@@ -195,9 +199,11 @@ Credential with keyId 'xyz789uvw012' has been added to app registration.
 ```
 
 !!! warning "Common errors"
-    **`Certificate file not found: /path/to/certificate.pem`** — Verify the certificate file path exists and is readable with `ls -la /path/to/certificate.pem`.
-    **`The Key Vault 'keyvault-name' was not found in subscription`** — Confirm the Key Vault name is correct and exists in the current subscription with `az keyvault list --query "[].name"`.
-    **`Insufficient privileges to perform action on resource`** — Ensure your Azure account has the Application Administrator or Global Administrator role assigned in the tenant.
+    | Error | Fix |
+    |---|---|
+    | `Certificate file not found: /path/to/certificate.pem` | Verify the certificate file path exists and is readable with `ls -la /path/to/certificate.pem`. |
+    | `The Key Vault 'keyvault-name' was not found in subscription` | Confirm the Key Vault name is correct and exists in the current subscription with `az keyvault list --query "[].name"`. |
+    | `Insufficient privileges to perform action on resource` | Ensure your Azure account has the Application Administrator or Global Administrator role assigned in the tenant. |
 ## API Permissions
 
 App registrations request permissions to other APIs (Microsoft Graph, Azure Resource Manager, custom APIs) through the `requiredResourceAccess` manifest field.
@@ -237,9 +243,11 @@ ResourceAppId                        PermissionId                         Permis
 ```
 
 !!! warning "Common errors"
-    **`Operation failed with status: 'Bad Request'. Details: Code: Authorization_RequestDenied`** — Ensure you have Application Administrator or Global Administrator role in the Azure AD tenant.
-    **`No registered application found with identifier '<app-id>'.`** — Verify the app ID is correct and exists in your tenant by running `az ad app list --filter "appId eq '<app-id>'"`.
-    **`The permission ID '7ab1d382-f21e-4acd-a863-ba3e13f7da61' does not exist for resource '00000003-0000-0000-c000-000000000000'.`** — Confirm the permission ID is valid for Microsoft Graph by checking the Microsoft Graph permissions reference documentation.
+    | Error | Fix |
+    |---|---|
+    | `Operation failed with status: 'Bad Request'. Details: Code: Authorization_RequestDenied` | Ensure you have Application Administrator or Global Administrator role in the Azure AD tenant. |
+    | `No registered application found with identifier '<app-id>'.` | Verify the app ID is correct and exists in your tenant by running `az ad app list --filter "appId eq '<app-id>'"`. |
+    | `The permission ID '7ab1d382-f21e-4acd-a863-ba3e13f7da61' does not exist for resource '00000003-0000-0000-c000-000000000000'.` | Confirm the permission ID is valid for Microsoft Graph by checking the Microsoft Graph permissions reference documentation. |
 ### Common API Permission Types
 
 | Permission Type | Description | Consent |
@@ -271,9 +279,11 @@ az ad app update \
 ```
 
 !!! warning "Common errors"
-    **`Request_BadRequest: Invalid object identifier '<app-id>'.`** — Verify the app ID is a valid UUID format (e.g., `00000000-0000-0000-0000-000000000000`) and exists in your Azure AD tenant.
-    **`FileNotFoundError: [Errno 2] No such file or directory: 'app-roles.json'`** — Ensure the `app-roles.json` file exists in the current working directory and contains valid JSON matching the appRoles schema.
-    **`AuthorizationError: Insufficient privileges to complete the operation.`** — Confirm your Azure CLI account has Application Administrator or Global Administrator role in the tenant.
+    | Error | Fix |
+    |---|---|
+    | `Request_BadRequest: Invalid object identifier '<app-id>'.` | Verify the app ID is a valid UUID format (e.g., `00000000-0000-0000-0000-000000000000`) and exists in your Azure AD tenant. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: 'app-roles.json'` | Ensure the `app-roles.json` file exists in the current working directory and contains valid JSON matching the appRoles schema. |
+    | `AuthorizationError: Insufficient privileges to complete the operation.` | Confirm your Azure CLI account has Application Administrator or Global Administrator role in the tenant. |
 ## Service Principal
 
 Every app registration has an associated service principal (enterprise application) in the tenant. Use the service principal for role assignments.
@@ -324,9 +334,11 @@ az role assignment create \
 ```
 
 !!! warning "Common errors"
-    **`Operation failed with status: 'Bad Request'. Details: Code: Authorization_RequestDenied`** — Ensure your Azure account has sufficient permissions (Owner or User Access Administrator role) on the subscription.
-    **`Operation failed with status: 'Not Found'. Details: Code: ResourceNotFound`** — Verify the app-id exists by running `az ad app list --filter "appId eq '<app-id>'"` and use the correct application ID.
-    **`The role assignment already exists.`** — Remove the existing role assignment with `az role assignment delete --assignee <app-id> --role Contributor --scope <scope>` before reassigning.
+    | Error | Fix |
+    |---|---|
+    | `Operation failed with status: 'Bad Request'. Details: Code: Authorization_RequestDenied` | Ensure your Azure account has sufficient permissions (Owner or User Access Administrator role) on the subscription. |
+    | `Operation failed with status: 'Not Found'. Details: Code: ResourceNotFound` | Verify the app-id exists by running `az ad app list --filter "appId eq '<app-id>'"` and use the correct application ID. |
+    | `The role assignment already exists.` | Remove the existing role assignment with `az role assignment delete --assignee <app-id> --role Contributor --scope <scope>` before reassigning. |
 ## Common App Registration Patterns
 
 | Pattern | Description |

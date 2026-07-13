@@ -85,9 +85,11 @@ notAfter=Dec 15 23:59:59 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`vecs-cli: command not found`** — Run the command directly on the VCSA appliance shell (SSH to vCenter), not from a remote host.
-    **`unable to get local issuer certificate`** — Add `-CAfile /etc/ssl/certs/ca-bundle.crt` to the openssl command or use `-servername <vcenter-fqdn>` for SNI support on the vCenter host.
-    **`Connection refused`** — Verify vCenter is running and accessible on port 443 by testing with `curl -k https://<vcenter-fqdn>` first.
+    | Error | Fix |
+    |---|---|
+    | `vecs-cli: command not found` | Run the command directly on the VCSA appliance shell (SSH to vCenter), not from a remote host. |
+    | `unable to get local issuer certificate` | Add `-CAfile /etc/ssl/certs/ca-bundle.crt` to the openssl command or use `-servername <vcenter-fqdn>` for SNI support on the vCenter host. |
+    | `Connection refused` | Verify vCenter is running and accessible on port 443 by testing with `curl -k https://<vcenter-fqdn>` first. |
 ---
 
 ## Browser Certificate Warning on vCenter Login
@@ -110,8 +112,10 @@ notAfter=Jan 15 10:23:45 2026 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the vCenter FQDN is correct and the host is reachable on port 443 with `nc -zv <vcenter-fqdn> 443`.
-    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — This is expected if vCenter uses a self-signed cert; add `-servername <vcenter-fqdn>` to the openssl command for SNI support and ignore verification warnings for lab environments.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the vCenter FQDN is correct and the host is reachable on port 443 with `nc -zv <vcenter-fqdn> 443`. |
+    | `error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed` | This is expected if vCenter uses a self-signed cert; add `-servername <vcenter-fqdn>` to the openssl command for SNI support and ignore verification warnings for lab environments. |
 **Step 2 — Renew via VAMI if expired:**
 
 1. Browse to `https://<vcenter-fqdn>:5480`
@@ -159,9 +163,11 @@ All services started successfully.
 ```
 
 !!! warning "Common errors"
-    **`vecs-cli: command not found`** — Verify the vmafd service is running with `systemctl status vmware-vmafd` and ensure you're executing on the vCenter appliance, not a remote host.
-    **`Error: Failed to start service vpxd. Check /var/log/vmware/vpxd/vpxd.log for details.`** — Review the vpxd log for startup errors (often certificate or database connectivity issues) before attempting to restart dependent services.
-    **`Error: Cannot stop all services — some services are locked by running processes.`** — Wait 30–60 seconds for in-flight requests to complete, then retry `service-control --stop --all`, or use `service-control --stop --all --force` if the delay is unacceptable.
+    | Error | Fix |
+    |---|---|
+    | `vecs-cli: command not found` | Verify the vmafd service is running with `systemctl status vmware-vmafd` and ensure you're executing on the vCenter appliance, not a remote host. |
+    | `Error: Failed to start service vpxd. Check /var/log/vmware/vpxd/vpxd.log for details.` | Review the vpxd log for startup errors (often certificate or database connectivity issues) before attempting to restart dependent services. |
+    | `Error: Cannot stop all services — some services are locked by running processes.` | Wait 30–60 seconds for in-flight requests to complete, then retry `service-control --stop --all`, or use `service-control --stop --all --force` if the delay is unacceptable. |
 **If STS cert is expired** — this requires special remediation:
 
 1. Reference VMware KB 79248 for the `fixsts.sh` procedure.
@@ -190,8 +196,10 @@ SHA256 Fingerprint=AB:CD:EF:12:34:56:78:90:AB:CD:EF:12:34:56:78:90:AB:CD:EF:12:3
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the vCenter FQDN is correct and the host is reachable on port 443 using `ping` or `nc -zv <vcenter-fqdn> 443`.
-    **`unable to load certificate`** — The server is not responding with a valid SSL certificate; check that vCenter is running and accessible with `curl -kv https://<vcenter-fqdn>`.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the vCenter FQDN is correct and the host is reachable on port 443 using `ping` or `nc -zv <vcenter-fqdn> 443`. |
+    | `unable to load certificate` | The server is not responding with a valid SSL certificate; check that vCenter is running and accessible with `curl -kv https://<vcenter-fqdn>`. |
 **Step 2 — Re-register or accept the new certificate in each product:**
 
 | Product | Where to update |
@@ -237,8 +245,10 @@ GET /api/v1/fabric/compute-managers
 ```
 
 !!! warning "Common errors"
-    **`{"error_code": 401, "error_message": "Unauthorized"}`** — Verify NSX API credentials and ensure the user account has API access permissions.
-    **`{"error_code": 404, "error_message": "Not Found"}`** — Confirm the NSX Manager hostname/IP is correct and the API endpoint is accessible on port 443.
+    | Error | Fix |
+    |---|---|
+    | `{"error_code": 401, "error_message": "Unauthorized"}` | Verify NSX API credentials and ensure the user account has API access permissions. |
+    | `{"error_code": 404, "error_message": "Not Found"}` | Confirm the NSX Manager hostname/IP is correct and the API endpoint is accessible on port 443. |
 If the thumbprint mismatch persists after resync:
 1. Remove the compute manager from NSX Manager (Infrastructure → vCenter Server → Delete).
 2. Re-add it — NSX will prompt to accept the new certificate.
@@ -263,9 +273,11 @@ notAfter=Jan 15 10:23:45 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the ESXi host is reachable on port 443 and the management network is accessible (ping the FQDN first).
-    **`unable to load certificate`** — Ensure you're piping valid SSL certificate data; replace `<esxi-fqdn>` with the actual ESXi hostname or IP address.
-    **`Name or service not known`** — Resolve the ESXi FQDN to an IP address by checking DNS or using the IP directly instead of the hostname.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the ESXi host is reachable on port 443 and the management network is accessible (ping the FQDN first). |
+    | `unable to load certificate` | Ensure you're piping valid SSL certificate data; replace `<esxi-fqdn>` with the actual ESXi hostname or IP address. |
+    | `Name or service not known` | Resolve the ESXi FQDN to an IP address by checking DNS or using the IP directly instead of the hostname. |
 **Renew from vCenter UI:**
 - Select host → Configure → Certificate → Renew
 
@@ -313,9 +325,11 @@ Certificate replacement completed.
 ```
 
 !!! warning "Common errors"
-    **`Error: VMCA service is not running`** — Start the VMCA service with `systemctl start vmware-vmca` before running certificate-manager.
-    **`Error: Certificate generation failed - Invalid PNID`** — Ensure the PNID matches the FQDN exactly and that DNS resolves correctly with `nslookup vcsa.corp.local`.
-    **`Error: vCenter services failed to restart`** — Check service status with `systemctl status vmware-*` and manually restart critical services if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: VMCA service is not running` | Start the VMCA service with `systemctl start vmware-vmca` before running certificate-manager. |
+    | `Error: Certificate generation failed - Invalid PNID` | Ensure the PNID matches the FQDN exactly and that DNS resolves correctly with `nslookup vcsa.corp.local`. |
+    | `Error: vCenter services failed to restart` | Check service status with `systemctl status vmware-*` and manually restart critical services if needed. |
 ---
 
 ## Certificate Expiry Monitoring

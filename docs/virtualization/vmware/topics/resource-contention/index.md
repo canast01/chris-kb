@@ -168,8 +168,10 @@ Press 'q' to quit, 'c' for CPU, 'm' for memory, 'd' for disk, 'n' for network
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Ensure you are logged into an ESXi host directly via SSH (not vCenter); esxtop is only available on ESXi.
-    **`Error: Unable to initialize display`** — Run esxtop with a terminal that supports interactive mode (avoid non-interactive SSH sessions); use `ssh -t` to force pseudo-terminal allocation.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Ensure you are logged into an ESXi host directly via SSH (not vCenter); esxtop is only available on ESXi. |
+    | `Error: Unable to initialize display` | Run esxtop with a terminal that supports interactive mode (avoid non-interactive SSH sessions); use `ssh -t` to force pseudo-terminal allocation. |
 ## Memory Contention
 
 | Indicator | Threshold | Meaning |
@@ -208,8 +210,10 @@ esxtop   # press 'm'
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Ensure you are running this command directly on an ESXi host (not a vCenter server) with SSH access enabled.
-    **`Cannot open /proc/vmware/sched: Permission denied`** — Run esxtop with root privileges or as a user in the root group.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Ensure you are running this command directly on an ESXi host (not a vCenter server) with SSH access enabled. |
+    | `Cannot open /proc/vmware/sched: Permission denied` | Run esxtop with root privileges or as a user in the root group. |
 ## Storage Latency
 
 | Latency | State |
@@ -257,8 +261,10 @@ vmnic3  no     0       0       0.0    0.0    0     0
 ```
 
 !!! warning "Common errors"
-    **`Could not get network stats for vmnic0: Unknown option`** — Verify the NIC name with `esxcli network nic list` and ensure you're using the correct vmnic identifier.
-    **`esxtop: command not found`** — Install or enable esxtop; if using ESXi 7.0+, use `esxcli stats` or vSphere Client instead as esxtop may be deprecated.
+    | Error | Fix |
+    |---|---|
+    | `Could not get network stats for vmnic0: Unknown option` | Verify the NIC name with `esxcli network nic list` and ensure you're using the correct vmnic identifier. |
+    | `esxtop: command not found` | Install or enable esxtop; if using ESXi 7.0+, use `esxcli stats` or vSphere Client instead as esxtop may be deprecated. |
 ## Contention Response Actions
 
 | Resource | Contention | Response |

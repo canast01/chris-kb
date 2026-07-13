@@ -76,9 +76,11 @@ Heap Memory (MB): 28672 / 32768
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and that the admin user exists on the target node with `ssh-keyscan vrli-prod-01.example.local` to confirm connectivity.
-    **`nodetool: command not found`** — Ensure you are in the Cassandra installation directory or add `$CASSANDRA_HOME/bin` to your PATH with `export PATH=$PATH:/opt/cassandra/bin`.
-    **`tail: cannot open '/var/log/loginsight/query.log' for reading: Permission denied`** — Run the tail command with `sudo` or ensure the admin user has read permissions on the loginsight log directory.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and that the admin user exists on the target node with `ssh-keyscan vrli-prod-01.example.local` to confirm connectivity. |
+    | `nodetool: command not found` | Ensure you are in the Cassandra installation directory or add `$CASSANDRA_HOME/bin` to your PATH with `export PATH=$PATH:/opt/cassandra/bin`. |
+    | `tail: cannot open '/var/log/loginsight/query.log' for reading: Permission denied` | Run the tail command with `sudo` or ensure the admin user has read permissions on the loginsight log directory. |
 ```bash
 # Check the cluster nodes via API from the master
 curl -sk -u 'admin:<password>' \
@@ -122,9 +124,11 @@ Connection to vrli-prod-01.example.local 16520 [tcp/*] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the master's CA certificate into your system trust store.
-    **`Connection refused`** — Verify the loginsight service is running on the master node with `systemctl status loginsight` and check firewall rules allow traffic on ports 443 and 16520.
-    **`ssh: Could not resolve hostname vrli-prod-02.example.local: Name or service not known`** — Ensure DNS resolution is working or add the worker node IP to `/etc/hosts` on the master node.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the master's CA certificate into your system trust store. |
+    | `Connection refused` | Verify the loginsight service is running on the master node with `systemctl status loginsight` and check firewall rules allow traffic on ports 443 and 16520. |
+    | `ssh: Could not resolve hostname vrli-prod-02.example.local: Name or service not known` | Ensure DNS resolution is working or add the worker node IP to `/etc/hosts` on the master node. |
 ```bash
 # Verify alert is enabled
 curl -sk -u 'admin:<password>' \
@@ -157,9 +161,11 @@ Test notification sent successfully to channel: email-prod-alerts (ID: ch-8f2a9c
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vRLI certificate into your system CA bundle.
-    **`jq: parse error: Cannot index number with string "name"`** — Verify the alert ID exists and is valid by listing alerts with `curl -sk -u 'admin:<password>' "https://vrli-prod-01.example.local/api/v2/alerts" | jq '.alerts[] | {id, name}'`.
-    **`grep: /var/log/loginsight/runtime.log: No such file or directory`** — SSH into the vRLI appliance and check the correct log path with `find /var/log -name "*runtime*" -o -name "*notification*"`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the vRLI certificate into your system CA bundle. |
+    | `jq: parse error: Cannot index number with string "name"` | Verify the alert ID exists and is valid by listing alerts with `curl -sk -u 'admin:<password>' "https://vrli-prod-01.example.local/api/v2/alerts" | jq '.alerts[] | {id, name}'`. |
+    | `grep: /var/log/loginsight/runtime.log: No such file or directory` | SSH into the vRLI appliance and check the correct log path with `find /var/log -name "*runtime*" -o -name "*notification*"`. |
 ```bash
 # Check NTP on the Aria Ops for Logs appliance
 chronyc tracking
@@ -201,9 +207,11 @@ vrli-prod-03.example.local: System time : 0.000167234 seconds fast of NTP time
 ```
 
 !!! warning "Common errors"
-    **`Temporary failure in name resolution`** — Verify DNS resolution is working with `nslookup vrli-prod-01.example.local` and ensure all cluster nodes are reachable via SSH.
-    **`Permission denied (publickey,password)`** — Ensure the admin SSH key is configured on all cluster nodes or use `ssh-copy-id admin@$node.example.local` to deploy your public key.
-    **`Stratum : 16` or `Leap status : Not synchronised`** — Restart chronyd with `systemctl restart chronyd` and verify NTP server connectivity with `chronyc sources`.
+    | Error | Fix |
+    |---|---|
+    | `Temporary failure in name resolution` | Verify DNS resolution is working with `nslookup vrli-prod-01.example.local` and ensure all cluster nodes are reachable via SSH. |
+    | `Permission denied (publickey,password)` | Ensure the admin SSH key is configured on all cluster nodes or use `ssh-copy-id admin@$node.example.local` to deploy your public key. |
+    | `Stratum : 16` or `Leap status : Not synchronised` | Restart chronyd with `systemctl restart chronyd` and verify NTP server connectivity with `chronyc sources`. |
 ```bash
 # Confirm disk usage
 df -h /var/log/loginsight

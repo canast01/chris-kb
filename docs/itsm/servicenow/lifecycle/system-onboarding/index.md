@@ -87,9 +87,11 @@ success
 ```
 
 !!! warning "Common errors"
-    **`ansible-playbook: command not found`** — Install Ansible with `pip install ansible` or `yum install ansible`.
-    **`sed: can't read /etc/selinux/config: No such file or directory`** — Verify SELinux is installed with `yum install selinux-policy` before running sed.
-    **`Error: INVALID_ZONE: drop`** — Use a valid firewalld zone name like `drop` is valid; check firewall-cmd --get-zones and ensure firewalld service is running with `systemctl start firewalld`.
+    | Error | Fix |
+    |---|---|
+    | `ansible-playbook: command not found` | Install Ansible with `pip install ansible` or `yum install ansible`. |
+    | `sed: can't read /etc/selinux/config: No such file or directory` | Verify SELinux is installed with `yum install selinux-policy` before running sed. |
+    | `Error: INVALID_ZONE: drop` | Use a valid firewalld zone name like `drop` is valid; check firewall-cmd --get-zones and ensure firewalld service is running with `systemctl start firewalld`. |
 ### CyberArk PAM Registration
 
 ```yaml
@@ -153,9 +155,11 @@ UP
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to localhost port 9100: Connection refused`** — Wait 2–3 seconds after `systemctl enable --now node_exporter` for the service to start, then retry the curl command.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify Prometheus is running and accessible at `http://prometheus:9090`, and replace `<hostname>` with the actual node hostname (e.g., `web-server-01`).
-    **`useradd: user 'node_exporter' already exists`** — Remove the existing user with `userdel node_exporter` before re-running the installation, or skip the useradd step if upgrading.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to localhost port 9100: Connection refused` | Wait 2–3 seconds after `systemctl enable --now node_exporter` for the service to start, then retry the curl command. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify Prometheus is running and accessible at `http://prometheus:9090`, and replace `<hostname>` with the actual node hostname (e.g., `web-server-01`). |
+    | `useradd: user 'node_exporter' already exists` | Remove the existing user with `userdel node_exporter` before re-running the installation, or skip the useradd step if upgrading. |
 ## 4. Backup Configuration
 
 ```powershell
@@ -206,9 +210,11 @@ web-app-prod-01.example.com | SUCCESS => {
 ```
 
 !!! warning "Common errors"
-    **`[WARNING]: Unable to parse <hostname>.example.com as an inventory source`** — Replace `<hostname>` and `<ip>` placeholders with actual values before running the commands.
-    **`fatal: [web-app-prod-01.example.com]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure the Ansible control node has SSH key-based authentication configured for the target host and the key is added to ssh-agent.
-    **`[ERROR]: inventory/production/hosts.yml is not a valid YAML file`** — Verify YAML indentation is consistent (use spaces, not tabs) and that the hostname entry aligns with existing inventory structure.
+    | Error | Fix |
+    |---|---|
+    | `[WARNING]: Unable to parse <hostname>.example.com as an inventory source` | Replace `<hostname>` and `<ip>` placeholders with actual values before running the commands. |
+    | `fatal: [web-app-prod-01.example.com]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Ensure the Ansible control node has SSH key-based authentication configured for the target host and the key is added to ssh-agent. |
+    | `[ERROR]: inventory/production/hosts.yml is not a valid YAML file` | Verify YAML indentation is consistent (use spaces, not tabs) and that the hostname entry aligns with existing inventory structure. |
 ## 6. CMDB Entry
 
 | Field | Value |

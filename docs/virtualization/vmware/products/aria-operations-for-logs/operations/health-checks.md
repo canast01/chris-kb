@@ -72,9 +72,11 @@ curl -sk -u 'admin:<password>' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vRLI certificate into your system trust store.
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API endpoint is correct and the vRLI service is running; test with `curl -sk -u 'admin:<password>' "https://vrli-prod-01.example.local/api/v2/cluster/nodes"` without piping to jq first.
-    **`curl: (401) Unauthorized`** — Confirm the admin password is correct and the user account has API access permissions in vRLI.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the vRLI certificate into your system trust store. |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the API endpoint is correct and the vRLI service is running; test with `curl -sk -u 'admin:<password>' "https://vrli-prod-01.example.local/api/v2/cluster/nodes"` without piping to jq first. |
+    | `curl: (401) Unauthorized` | Confirm the admin password is correct and the user account has API access permissions in vRLI. |
 ## Alert Configuration Commands
 
 ![Alert Configuration Commands](../../../../../assets/virtualization-vmware-aria-operations-fo-hc-alert-configuration-commands.svg)
@@ -92,8 +94,10 @@ curl -sk -u 'admin:<password>' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the vRLi certificate into your system's CA bundle.
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API endpoint is correct and the vRLi service is responding; check that the credentials are valid by testing with `curl -sk -u 'admin:<password>' "https://vrli-prod-01.example.local/api/v2/alerts" | head -c 200`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the vRLi certificate into your system's CA bundle. |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the API endpoint is correct and the vRLi service is responding; check that the credentials are valid by testing with `curl -sk -u 'admin:<password>' "https://vrli-prod-01.example.local/api/v2/alerts" | head -c 200`. |
 ## Ingestion and Source Activity
 
 ![Ingestion and Source Activity](../../../../../assets/virtualization-vmware-aria-operations-fo-hc-ingestion-and-source-activity.svg)
@@ -123,9 +127,11 @@ load-balancer-01.example.local
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example; if still failing, verify the hostname matches the certificate CN).
-    **`jq: parse error: Invalid JSON`** — Ensure the API response is valid JSON by checking the endpoint URL and authentication credentials with a test query.
-    **`error: "Invalid query syntax"`** — Verify the query field is properly formatted and the content-pack-fields array contains valid field names for your Aria Operations for Logs instance.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example; if still failing, verify the hostname matches the certificate CN). |
+    | `jq: parse error: Invalid JSON` | Ensure the API response is valid JSON by checking the endpoint URL and authentication credentials with a test query. |
+    | `error: "Invalid query syntax"` | Verify the query field is properly formatted and the content-pack-fields array contains valid field names for your Aria Operations for Logs instance. |
 Notification channel test: **Administration → Notification Channels → select channel → Test**
 
 ## Platform Log Checks
@@ -219,9 +225,11 @@ root@vrli-master01:~# curl -sk -u 'admin:P@ssw0rd123' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the vRLI certificate into your system CA bundle.
-    **`jq: command not found`** — Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS), or pipe the curl output to `grep` instead.
-    **`Authentication failed: 401 Unauthorized`** — Verify the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u 'admin:password' https://<vrli-master-fqdn>/api/v2/cluster/nodes`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the vRLI certificate into your system CA bundle. |
+    | `jq: command not found` | Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS), or pipe the curl output to `grep` instead. |
+    | `Authentication failed: 401 Unauthorized` | Verify the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u 'admin:password' https://<vrli-master-fqdn>/api/v2/cluster/nodes`. |
 vRLI UI: **Administration → Cluster** — verify all nodes show **Status: Connected**. Any node in **Disconnected** or **Degraded** state must be investigated before the next change window.
 
 ---
@@ -273,9 +281,11 @@ sdc               1.0     0.9     0.04    0.04    0.0     0.1     2.3   0.8   0.
 ```
 
 !!! warning "Common errors"
-    **`command not found: netstat`** — Install net-tools package with `apt-get install net-tools` or use `ss -s` as a modern alternative.
-    **`command not found: iostat`** — Install sysstat package with `apt-get install sysstat` or `yum install sysstat`.
-    **`Permission denied`** — Run the commands with `sudo` or as root user to access kernel statistics.
+    | Error | Fix |
+    |---|---|
+    | `command not found: netstat` | Install net-tools package with `apt-get install net-tools` or use `ss -s` as a modern alternative. |
+    | `command not found: iostat` | Install sysstat package with `apt-get install sysstat` or `yum install sysstat`. |
+    | `Permission denied` | Run the commands with `sudo` or as root user to access kernel statistics. |
 If backpressure is confirmed: syslog senders receive TCP RST (TCP) or silent UDP drop. Reduce ingest rate by filtering at source, adding worker nodes, or temporarily reducing retention to free disk I/O.
 
 ---
@@ -307,8 +317,10 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`df: cannot access '/storage/var/loginsight': No such file or directory`** — Verify the vRLI node is fully initialized and mounted; check `/var/log/vmware/loginsight/` for startup errors.
-    **`Permission denied`** — Ensure your SSH user has sudo privileges or is part of the loginsight group; run `id` to verify group membership.
+    | Error | Fix |
+    |---|---|
+    | `df: cannot access '/storage/var/loginsight': No such file or directory` | Verify the vRLI node is fully initialized and mounted; check `/var/log/vmware/loginsight/` for startup errors. |
+    | `Permission denied` | Ensure your SSH user has sudo privileges or is part of the loginsight group; run `id` to verify group membership. |
 vRLI UI → **Administration** → **General** → **Storage** — shows current **Retention Period (days)** and **Disk Usage** per partition.
 
 Actions when disk > 75%:
@@ -358,9 +370,11 @@ notAfter=Nov 07 14:12:09 2024 GMT
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the vRLI service is running with `systemctl status vrlid` and the port is listening with `netstat -tlnp | grep <port>`.
-    **`unable to parse dates, time skew?`** — Ensure the system clock is synchronized with NTP by running `timedatectl status` and adjusting with `ntpdate -s <ntp-server>` if needed.
-    **`date: invalid date format`** — Use GNU date syntax compatible with your OS; on macOS replace `date -d` with `date -j -f "%b %d %H:%M:%S %Y %Z"`.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the vRLI service is running with `systemctl status vrlid` and the port is listening with `netstat -tlnp | grep <port>`. |
+    | `unable to parse dates, time skew?` | Ensure the system clock is synchronized with NTP by running `timedatectl status` and adjusting with `ntpdate -s <ntp-server>` if needed. |
+    | `date: invalid date format` | Use GNU date syntax compatible with your OS; on macOS replace `date -d` with `date -j -f "%b %d %H:%M:%S %Y %Z"`. |
 If expiry < 60 days: follow the **Rotate the vRLI Certificate** procedure. Certificate expiry on port 1514 silently breaks encrypted syslog sources without UI warning.
 
 ---
@@ -394,9 +408,11 @@ Displaying results 1-50 of 2,847
 ```
 
 !!! warning "Common errors"
-    **`No results found for hostname = <source-fqdn>`** — Replace `<source-fqdn>` with the actual fully qualified domain name (e.g., `hostname = web-prod-01.example.com`).
-    **`Query syntax error: unexpected token`** — Ensure the query uses proper Aria Logs syntax with correct operators; verify hostname field exists in your data source configuration.
-    **`No events within expected time range`** — Check that the source hostname is actively sending logs and that the log collection pipeline is not blocked or misconfigured.
+    | Error | Fix |
+    |---|---|
+    | `No results found for hostname = <source-fqdn>` | Replace `<source-fqdn>` with the actual fully qualified domain name (e.g., `hostname = web-prod-01.example.com`). |
+    | `Query syntax error: unexpected token` | Ensure the query uses proper Aria Logs syntax with correct operators; verify hostname field exists in your data source configuration. |
+    | `No events within expected time range` | Check that the source hostname is actively sending logs and that the log collection pipeline is not blocked or misconfigured. |
 **Silent source alert rule (create once, run as ongoing alert):**
 - Build a query: `hostname = <critical-source>` with time range = last 15 minutes
 - Create alert: **count < 1 in 15-minute window** → fires when no events received
@@ -447,9 +463,11 @@ Server: nginx
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the vRLI certificate into your system's trusted store.
-    **`HTTP/1.1 401 Unauthorized`** — Verify the admin credentials are correct and the user has notification channel management permissions.
-    **`HTTP/1.1 404 Not Found`** — Confirm the channel ID is valid by listing channels with `curl -sk -u admin:<password> "https://<vrli-fqdn>/api/v1/notification/channels"`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the vRLI certificate into your system's trusted store. |
+    | `HTTP/1.1 401 Unauthorized` | Verify the admin credentials are correct and the user has notification channel management permissions. |
+    | `HTTP/1.1 404 Not Found` | Confirm the channel ID is valid by listing channels with `curl -sk -u admin:<password> "https://<vrli-fqdn>/api/v1/notification/channels"`. |
 **Check alert history for gaps:**
 - vRLI UI → **Alerts** → select an alert → **Alert History** → confirm expected firing events appear; a gap > 2× the alert evaluation window indicates the alert evaluation engine may have restarted
 

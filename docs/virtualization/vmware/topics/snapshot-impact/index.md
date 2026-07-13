@@ -180,9 +180,11 @@ backup-vm-03         12.3     4.5       5.1     2.1     0.3%
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Ensure you are connected to an ESXi host via SSH or use vSphere Client; esxtop only runs on ESXi hosts, not vCenter.
-    **`ESXTOP: Unable to open /proc/vmware/sched/pcpu/cpu0/stats`** — Verify the user account has root or equivalent ESXi administrative privileges; standard users cannot access performance metrics.
-    **`ESXTOP: No such file or directory`** — Confirm the ESXi host is fully booted and the hostd service is running with `systemctl status hostd`; esxtop requires the management daemon to be active.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Ensure you are connected to an ESXi host via SSH or use vSphere Client; esxtop only runs on ESXi hosts, not vCenter. |
+    | `ESXTOP: Unable to open /proc/vmware/sched/pcpu/cpu0/stats` | Verify the user account has root or equivalent ESXi administrative privileges; standard users cannot access performance metrics. |
+    | `ESXTOP: No such file or directory` | Confirm the ESXi host is fully booted and the hostd service is running with `systemctl status hostd`; esxtop requires the management daemon to be active. |
 ## Backup-Induced Snapshots
 
 Backup tools (Veeam, NBU, Commvault) create and delete a snapshot per job run. If the delta disk grows large during backup and consolidation is slow:

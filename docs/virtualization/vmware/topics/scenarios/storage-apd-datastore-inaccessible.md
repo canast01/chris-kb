@@ -131,7 +131,9 @@ grep -i "APD\|path.*dead" /var/log/vmkernel.log | head -20
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vmkernel.log: No such file or directory`** — Verify you are running the command directly on the ESXi host
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vmkernel.log: No such file or directory` | Verify you are running the command directly on the ESXi host |
 Common vmkernel.log entries:
 
 ```text
@@ -190,9 +192,11 @@ PortName: 50:00:14:40:5a:2b:c1:a2
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Verify you are running this command on an ESXi host with direct SSH access, not a vCenter Server.
-    **`grep: /var/log/vmkernel.log: No such file or directory`** — Confirm the ESXi host is fully booted and the /var/log directory is mounted; try `ls -la /var/log/` to verify.
-    **`No such FC HBA found`** — Check that FC HBAs are installed and recognized by running `esxcli storage san fc list` without filters to see all available adapters.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Verify you are running this command on an ESXi host with direct SSH access, not a vCenter Server. |
+    | `grep: /var/log/vmkernel.log: No such file or directory` | Confirm the ESXi host is fully booted and the /var/log directory is mounted; try `ls -la /var/log/` to verify. |
+    | `No such FC HBA found` | Check that FC HBAs are installed and recognized by running `esxcli storage san fc list` without filters to see all available adapters. |
 **iSCSI:**
 
 ```bash
@@ -231,8 +235,10 @@ vmhba65  2            192.168.1.102:3260  ACTIVE
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace iscsi.adapter`** — Verify the iSCSI software adapter is installed and loaded with `esxcli iscsi adapter list`; if empty, enable it via vSphere Client or `esxcli iscsi adapter set --adapter=vmhba64 -e true`.
-    **`Error: Could not find adapter vmhba64`** — Confirm the adapter name is correct by running `esxcli iscsi adapter list` first, as adapter numbers vary by host configuration.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace iscsi.adapter` | Verify the iSCSI software adapter is installed and loaded with `esxcli iscsi adapter list`; if empty, enable it via vSphere Client or `esxcli iscsi adapter set --adapter=vmhba64 -e true`. |
+    | `Error: Could not find adapter vmhba64` | Confirm the adapter name is correct by running `esxcli iscsi adapter list` first, as adapter numbers vary by host configuration. |
 **NFS:**
 
 ```bash
@@ -267,9 +273,11 @@ round-trip min/avg/max = 2.156, 2.261, 2.341 ms
 ```
 
 !!! warning "Common errors"
-    **`NFS mount failed: Permission denied`** — Verify NFS server export permissions include the ESXi host IP and that the export is readable/writable.
-    **`vmkping: Unknown host 192.168.10.45`** — Confirm the NFS server IP is correct and that the vmk1 interface has network connectivity and a valid route to the NFS server subnet.
-    **`NFS datastore nfs-datastore-prod is still mounted`** — Unmount the datastore from all VMs and remove any locks using `esxcli storage nfs list` before attempting removal.
+    | Error | Fix |
+    |---|---|
+    | `NFS mount failed: Permission denied` | Verify NFS server export permissions include the ESXi host IP and that the export is readable/writable. |
+    | `vmkping: Unknown host 192.168.10.45` | Confirm the NFS server IP is correct and that the vmk1 interface has network connectivity and a valid route to the NFS server subnet. |
+    | `NFS datastore nfs-datastore-prod is still mounted` | Unmount the datastore from all VMs and remove any locks using `esxcli storage nfs list` before attempting removal. |
 Look for: if FC HBA shows `LinkState = Link Down`, the issue is the physical link or SFP. If iSCSI sessions are absent, check network reachability from the VMkernel port. For NFS, a ping failure to the NFS server confirms a network or server outage.
 
 ---
@@ -308,9 +316,11 @@ VmMoterationForPDLCleared    : disabled
 ```
 
 !!! warning "Common errors"
-    **`Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Import the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the command.
-    **`Get-Cluster : Could not find cluster with name 'cluster-name'.`** — Replace `"cluster-name"` with the actual cluster name; verify it exists with `Get-Cluster | Select-Object Name`.
-    **`Access to the resource is forbidden.`** — Ensure your vCenter user account has at least read-only permissions on the cluster object.
+    | Error | Fix |
+    |---|---|
+    | `Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Import the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the command. |
+    | `Get-Cluster : Could not find cluster with name 'cluster-name'.` | Replace `"cluster-name"` with the actual cluster name; verify it exists with `Get-Cluster | Select-Object Name`. |
+    | `Access to the resource is forbidden.` | Ensure your vCenter user account has at least read-only permissions on the cluster object. |
 Look for: `vmReactionOnAPDCleared = reset` means vCenter automatically restores VMs when paths recover — monitor whether this triggers correctly after fabric is restored.
 
 ---
@@ -345,9 +355,11 @@ nfs-backup-vol    192.168.1.52  false      false    false
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option --all`** — Use `-a` instead of `--all` for the rescan command.
-    **`Error: Could not find HBA adapter vmhba0`** — Verify the HBA name with `esxcli storage core adapter list` before rescanning.
-    **`NFS mount timeout or stale NFS handle detected`** — Remount the NFS datastore using `esxcli storage nfs remove -v <volume-name>` followed by `esxcli storage nfs add`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option --all` | Use `-a` instead of `--all` for the rescan command. |
+    | `Error: Could not find HBA adapter vmhba0` | Verify the HBA name with `esxcli storage core adapter list` before rescanning. |
+    | `NFS mount timeout or stale NFS handle detected` | Remount the NFS datastore using `esxcli storage nfs remove -v <volume-name>` followed by `esxcli storage nfs add`. |
 In vCenter: **Storage → Datastores → right-click affected datastore → Rescan Storage**.
 
 After paths recover, monitor vmkernel.log:
@@ -369,8 +381,10 @@ grep -i "path.*active\|APD cleared\|PDL cleared" /var/log/vmkernel.log | tail -2
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vmkernel.log: No such file or directory`** — Verify the ESXi host is accessible and the vmkernel.log path is correct; on some versions it may be in `/var/log/vmkernel` or rotated to dated files like `vmkernel.1.log`.
-    **`grep: (standard input): No such file or directory`** — Ensure you have read permissions on the vmkernel.log file; run the command with `sudo` or as root if access is denied.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vmkernel.log: No such file or directory` | Verify the ESXi host is accessible and the vmkernel.log path is correct; on some versions it may be in `/var/log/vmkernel` or rotated to dated files like `vmkernel.1.log`. |
+    | `grep: (standard input): No such file or directory` | Ensure you have read permissions on the vmkernel.log file; run the command with `sudo` or as root if access is denied. |
 Look for: `APD cleared` entries confirm all paths are restored. VMs that were not powered off by VMCP will resume I/O automatically within seconds.
 
 ---

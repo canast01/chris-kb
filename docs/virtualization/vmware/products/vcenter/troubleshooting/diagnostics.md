@@ -128,8 +128,10 @@ root@vcenter-01 [ ~ ]#
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host <vcenter-ip> port 22 (Connection refused)`** — Verify SSH is enabled on VCSA (Administration > System Configuration > Services) and the IP address is correct.
-    **`Permission denied (publickey,password).`** — Confirm you are using the root account (not a domain user) and the VCSA root password is correct.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host <vcenter-ip> port 22 (Connection refused)` | Verify SSH is enabled on VCSA (Administration > System Configuration > Services) and the IP address is correct. |
+    | `Permission denied (publickey,password).` | Confirm you are using the root account (not a domain user) and the VCSA root password is correct. |
 Key partitions and alert thresholds:
 
 | Partition | Purpose | Alert Threshold |
@@ -191,9 +193,11 @@ netdumper                                  STOPPED
 ```
 
 !!! warning "Common errors"
-    **`journalctl: command not found`** — Use `tail -f /var/log/vmware/vpxd/vpxd.log` instead on vCenter versions prior to 7.0.
-    **`find: '/storage/log': No such file or directory`** — Remove the `/storage/log` find command if vCenter uses only `/var/log/vmware` for log storage.
-    **`Permission denied`** — Run the entire troubleshooting script with `sudo` or as root user.
+    | Error | Fix |
+    |---|---|
+    | `journalctl: command not found` | Use `tail -f /var/log/vmware/vpxd/vpxd.log` instead on vCenter versions prior to 7.0. |
+    | `find: '/storage/log': No such file or directory` | Remove the `/storage/log` find command if vCenter uses only `/var/log/vmware` for log storage. |
+    | `Permission denied` | Run the entire troubleshooting script with `sudo` or as root user. |
 ---
 
 ## Step 2 — Review key log files
@@ -232,9 +236,11 @@ tail -100 /var/log/vmware/vsphere-ui/logs/vsphere_client_virgo.log | grep -i "er
 ```
 
 !!! warning "Common errors"
-    **`[FATAL] vpxd Database connection pool exhausted, max connections: 100`** — Increase the database connection pool size in /etc/vmware-vpx/vpxd.cfg by setting `maxConnections` to a higher value (e.g., 150) and restart vpxd service.
-    **`LDAP bind failed for user admin@vsphere.local: Invalid credentials`** — Verify SSO admin credentials and LDAP connectivity; check that the identity source is properly configured in vCenter Administration > Single Sign-On > Configuration.
-    **`Certificate validation error - cert expired on 2024-01-10`** — Regenerate and install a new vCenter certificate using `/usr/lib/vmware-vpx/bin/certificate-manager` or request a new one from your CA and import it.
+    | Error | Fix |
+    |---|---|
+    | `[FATAL] vpxd Database connection pool exhausted, max connections: 100` | Increase the database connection pool size in /etc/vmware-vpx/vpxd.cfg by setting `maxConnections` to a higher value (e.g., 150) and restart vpxd service. |
+    | `LDAP bind failed for user admin@vsphere.local: Invalid credentials` | Verify SSO admin credentials and LDAP connectivity; check that the identity source is properly configured in vCenter Administration > Single Sign-On > Configuration. |
+    | `Certificate validation error - cert expired on 2024-01-10` | Regenerate and install a new vCenter certificate using `/usr/lib/vmware-vpx/bin/certificate-manager` or request a new one from your CA and import it. |
 All logs on the VCSA appliance:
 
 | Component | Primary Log Path |
@@ -325,9 +331,11 @@ Leap status     : Normal
 ```
 
 !!! warning "Common errors"
-    **`nslookup: can't resolve 'vcenter.example.local': No address associated with hostname`** — Verify DNS server is reachable and vCenter's A record exists; check `/etc/resolv.conf` points to correct nameserver.
-    **`50.1.168.192.in-addr.arpa	name = esxi-01.example.local.`** — Reverse DNS PTR record mismatch indicates forward and reverse zones are inconsistent; update PTR record to match the forward FQDN exactly.
-    **`System clock synchronized: no`** — Restart chronyd service with `systemctl restart chronyd` and verify NTP pool servers are reachable on port 123.
+    | Error | Fix |
+    |---|---|
+    | `nslookup: can't resolve 'vcenter.example.local': No address associated with hostname` | Verify DNS server is reachable and vCenter's A record exists; check `/etc/resolv.conf` points to correct nameserver. |
+    | `50.1.168.192.in-addr.arpa	name = esxi-01.example.local.` | Reverse DNS PTR record mismatch indicates forward and reverse zones are inconsistent; update PTR record to match the forward FQDN exactly. |
+    | `System clock synchronized: no` | Restart chronyd service with `systemctl restart chronyd` and verify NTP pool servers are reachable on port 123. |
 NTP drift over 5 minutes breaks Kerberos — SSO login failures for AD-backed accounts will occur. Fix NTP before investigating SSO.
 
 ---
@@ -390,9 +398,11 @@ Not After: 2023-12-25 09:44:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`error in x509 lookup v3 signature verification`** — Ensure the openssl command successfully connects by checking network connectivity to the vCenter port and that the certificate chain is complete.
-    **`vecs-cli: command not found`** — SSH directly into the VCSA appliance (not a Windows vCenter) as root or use the full path `/usr/lib/vmware-vmafd/bin/vecs-cli`.
-    **`VECS store 'vpxd-extension' does not exist`** — Verify the store name is correct for your vCenter version; use `vecs-cli store list` first to confirm available stores.
+    | Error | Fix |
+    |---|---|
+    | `error in x509 lookup v3 signature verification` | Ensure the openssl command successfully connects by checking network connectivity to the vCenter port and that the certificate chain is complete. |
+    | `vecs-cli: command not found` | SSH directly into the VCSA appliance (not a Windows vCenter) as root or use the full path `/usr/lib/vmware-vmafd/bin/vecs-cli`. |
+    | `VECS store 'vpxd-extension' does not exist` | Verify the store name is correct for your vCenter version; use `vecs-cli store list` first to confirm available stores. |
 Certificate renewals: **VAMI → `https://<vcenter>:5480` → Certificate Management** — shows all certs with expiry and a renewal button.
 
 ---
@@ -456,9 +466,11 @@ cn=DCAdmins,cn=Builtin,dc=vsphere,dc=local
 ```
 
 !!! warning "Common errors"
-    **`ldapsearch: error code 81 (Server Down) - Errno 113 (No route to host)`** — Verify DC01 hostname resolves and is reachable via `ping dc01.example.local` and `telnet dc01.example.local 636` from the VCSA.
-    **`ldapsearch: error code 49 (Invalid Credentials) - Bind failed`** — Confirm the svc-vcenter-ldap account password is correct and the account is not locked in Active Directory.
-    **`SERVICE vmware-stsd (pid XXXX) is stopped.`** — Restart the SSO service with `service-control --start vmware-stsd` and wait 60 seconds for dependent services to initialize.
+    | Error | Fix |
+    |---|---|
+    | `ldapsearch: error code 81 (Server Down) - Errno 113 (No route to host)` | Verify DC01 hostname resolves and is reachable via `ping dc01.example.local` and `telnet dc01.example.local 636` from the VCSA. |
+    | `ldapsearch: error code 49 (Invalid Credentials) - Bind failed` | Confirm the svc-vcenter-ldap account password is correct and the account is not locked in Active Directory. |
+    | `SERVICE vmware-stsd (pid XXXX) is stopped.` | Restart the SSO service with `service-control --start vmware-stsd` and wait 60 seconds for dependent services to initialize. |
 ---
 
 ## Step 6 — Query vCenter REST API health
@@ -500,9 +512,11 @@ PROBLEM: esx-backup-01.dc1.local state=NOT_RESPONDING
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands to skip SSL verification, or import the vCenter CA certificate into your system trust store.
-    **`{"type.name":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[]}}`** — Verify the vCenter password is correct and the user account is not locked; re-authenticate to obtain a fresh token.
-    **`jq: command not found`** — Install `jq` package (`apt-get install jq` on Debian/Ubuntu or `yum install jq` on RHEL) or use the Python JSON parser shown in the example instead.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands to skip SSL verification, or import the vCenter CA certificate into your system trust store. |
+    | `{"type.name":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[]}}` | Verify the vCenter password is correct and the user account is not locked; re-authenticate to obtain a fresh token. |
+    | `jq: command not found` | Install `jq` package (`apt-get install jq` on Debian/Ubuntu or `yum install jq` on RHEL) or use the Python JSON parser shown in the example instead. |
 ---
 
 ## Step 7 — Run PowerCLI diagnostics
@@ -570,9 +584,11 @@ esx-20240115-143022.tgz                    100%  847MB   12.3MB/s   01:09
 ```
 
 !!! warning "Common errors"
-    **`/usr/bin/vm-support: command not found`** — Verify you are logged into the VCSA appliance directly (not an ESXi host) and check that vm-support is installed with `which vm-support`.
-    **`Permission denied`** — Run the command with `sudo` or ensure your user account has root privileges on the VCSA appliance.
-    **`No space left on device`** — Check available disk space with `df -h /var/core/` and delete older bundles or increase the partition size before retrying.
+    | Error | Fix |
+    |---|---|
+    | `/usr/bin/vm-support: command not found` | Verify you are logged into the VCSA appliance directly (not an ESXi host) and check that vm-support is installed with `which vm-support`. |
+    | `Permission denied` | Run the command with `sudo` or ensure your user account has root privileges on the VCSA appliance. |
+    | `No space left on device` | Check available disk space with `df -h /var/core/` and delete older bundles or increase the partition size before retrying. |
 Evidence to collect before escalation:
 
 | Evidence Item | How to Collect |

@@ -119,8 +119,10 @@ PID: FAN-C9396-F  ,  VID: V01 ,  SN: FAN2K4A8N2P4
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct mode (use `enable` if needed) and check NX-OS version compatibility for the `show` command.
-    **`% Incomplete command`** — Type the complete command `show version` or `show inventory` without truncation or typos.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct mode (use `enable` if needed) and check NX-OS version compatibility for the `show` command. |
+    | `% Incomplete command` | Type the complete command `show version` or `show inventory` without truncation or typos. |
 ### 2. Capture switch state (before anything changes)
 
 ```bash
@@ -188,7 +190,9 @@ PWWN: 50:00:09:73:a2:5f:b4:22  FCID: 0x630100  NodeName: 50:00:09:73:a2:5f:b4:21
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact VSAN number exists with `show vsan` before
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact VSAN number exists with `show vsan` before |
 Save all output to a text file and paste the critical sections into the TAC case description.
 
 ### 3. Run show tech-support (takes 2–5 minutes)
@@ -232,9 +236,11 @@ Output file size: 4.2 MB
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the MDS model supports direct output redirection; older NX-OS versions require `copy` command instead of `>` operator.
-    **`% No space left on device`** — Free bootflash space with `delete bootflash:old-files` before attempting to write the tech-support bundle.
-    **`Connection refused`** — Ensure SSH is enabled on the MDS (`feature ssh`) and the management IP is reachable from your workstation before attempting remote SCP transfer.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the MDS model supports direct output redirection; older NX-OS versions require `copy` command instead of `>` operator. |
+    | `% No space left on device` | Free bootflash space with `delete bootflash:old-files` before attempting to write the tech-support bundle. |
+    | `Connection refused` | Ensure SSH is enabled on the MDS (`feature ssh`) and the management IP is reachable from your workstation before attempting remote SCP transfer. |
 Run show tech-support on EVERY MDS switch in the affected fabric, not just the one where the issue first appeared.
 
 ### 4. Capture zone configuration history (if zoning issue)
@@ -277,8 +283,10 @@ VSAN 1 Zone Status:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the VSAN ID exists with `show vsan` and confirm you are in the correct mode (device# not device(config)#).
-    **`% VSAN <id> does not exist`** — Check that the VSAN is created and active using `show vsan id <id>` before querying zone configuration.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the VSAN ID exists with `show vsan` and confirm you are in the correct mode (device# not device(config)#). |
+    | `% VSAN <id> does not exist` | Check that the VSAN is created and active using `show vsan id <id>` before querying zone configuration. |
 ### 5. Write the timeline
 
 ```text

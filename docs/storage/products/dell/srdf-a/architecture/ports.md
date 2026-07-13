@@ -72,8 +72,10 @@ Write Pending (tracks): 0
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the PowerMax certificate into your system's CA bundle.
-    **`symcli error: (0x00000001) SYMAPI_C_PROC_FAILURE - Could not connect to the Symmetrix`** — Verify the Symmetrix ID is correct, the SYMAPI daemon is running on the admin workstation, and network connectivity exists to the PowerMax management interface.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the PowerMax certificate into your system's CA bundle. |
+    | `symcli error: (0x00000001) SYMAPI_C_PROC_FAILURE - Could not connect to the Symmetrix` | Verify the Symmetrix ID is correct, the SYMAPI daemon is running on the admin workstation, and network connectivity exists to the PowerMax management interface. |
 ## See also
 
 - [Dell SRDF/A — Architecture](../how-it-works/)

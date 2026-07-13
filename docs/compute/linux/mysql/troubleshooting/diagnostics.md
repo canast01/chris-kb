@@ -151,9 +151,11 @@ Jan 17 17:06:12 db-prod-01 mysqld[2847]: 2024-01-17T17:06:12.891234Z 6 [Warning]
 ```
 
 !!! warning "Common errors"
-    **`sudo: tail: command not found`** — Ensure you have sudo privileges and tail is installed; try `which tail` to verify the path.
-    **`[ERROR] [MY-013146] [Server] Can't create a new thread (errno 11)`** — Increase the OS thread limit by raising `ulimit -u` or adjusting `/etc/security/limits.conf` and restarting mysqld.
-    **`[ERROR] [MY-012345] [InnoDB] Detected table corruption in table 'production/users'`** — Run `REPAIR TABLE production.users;` from the MySQL client, or restore from a backup if repair fails.
+    | Error | Fix |
+    |---|---|
+    | `sudo: tail: command not found` | Ensure you have sudo privileges and tail is installed; try `which tail` to verify the path. |
+    | `[ERROR] [MY-013146] [Server] Can't create a new thread (errno 11)` | Increase the OS thread limit by raising `ulimit -u` or adjusting `/etc/security/limits.conf` and restarting mysqld. |
+    | `[ERROR] [MY-012345] [InnoDB] Detected table corruption in table 'production/users'` | Run `REPAIR TABLE production.users;` from the MySQL client, or restore from a backup if repair fails. |
 ---
 
 ## Step 2 — Check active connections and long-running queries
@@ -313,9 +315,11 @@ possible_keys: NULL
 ```
 
 !!! warning "Common errors"
-    **`Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`** — Ensure MySQL service is running with `systemctl start mysql` and verify socket path in `/etc/mysql/mysql.conf.d/mysqld.cnf`.
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost'`** — Verify MySQL root password is correct or use `-p` flag without password if authentication plugin allows it.
-    **`No such file or directory: /var/log/mysql/slow.log`** — Enable slow query logging in MySQL with `SET GLOBAL slow_query_log = 'ON';` and verify log file path matches your MySQL configuration.
+    | Error | Fix |
+    |---|---|
+    | `Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'` | Ensure MySQL service is running with `systemctl start mysql` and verify socket path in `/etc/mysql/mysql.conf.d/mysqld.cnf`. |
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost'` | Verify MySQL root password is correct or use `-p` flag without password if authentication plugin allows it. |
+    | `No such file or directory: /var/log/mysql/slow.log` | Enable slow query logging in MySQL with `SET GLOBAL slow_query_log = 'ON';` and verify log file path matches your MySQL configuration. |
 ---
 
 ## Step 6 — Check replication status

@@ -80,9 +80,11 @@ svm1:vol_prod_data         00:15:32  2.4GB               2024-01-15 14:32:18 +00
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Verify you are connected to an ONTAP cluster with `cluster show` and have appropriate admin credentials.
-    **`Error: invalid field name "lag-time"`** — Use `snapmirror show -fields ?` to list valid field names for your ONTAP version, as field names vary between releases.
-    **`Error: no records found`** — Confirm the source path format is correct (use `svm:volume` syntax) and the relationship exists with `snapmirror list-destinations`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Verify you are connected to an ONTAP cluster with `cluster show` and have appropriate admin credentials. |
+    | `Error: invalid field name "lag-time"` | Use `snapmirror show -fields ?` to list valid field names for your ONTAP version, as field names vary between releases. |
+    | `Error: no records found` | Confirm the source path format is correct (use `svm:volume` syntax) and the relationship exists with `snapmirror list-destinations`. |
 Compare current lag to your RPO target:
 
 | RPO Target | Lag | Severity |
@@ -143,8 +145,10 @@ svm_src:vol_prod_01 svm_dr:vol_dr_mirror SnapMirrored In-Sync 0s 100% 847.2GB
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Verify you are connected to the correct cluster with `cluster show` and that SnapMirror is licensed with `system license show`.
-    **`Error: There is no data to display`** — Confirm the volume name is correct and exists in the specified SVM using `volume show -vserver <dstsvm>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Verify you are connected to the correct cluster with `cluster show` and that SnapMirror is licensed with `system license show`. |
+    | `Error: There is no data to display` | Confirm the volume name is correct and exists in the specified SVM using `volume show -vserver <dstsvm>`. |
 ## Fix — Option A: Force Immediate Update
 
 Use when lag is recoverable and bandwidth is available:
@@ -168,9 +172,11 @@ cluster1:svm_prod:vol_config cluster2:svm_dr:vol_config_mirror idle - -
 ```
 
 !!! warning "Common errors"
-    **`Error: "snapmirror update" command requires source and destination paths in the format svm:volume`** — Verify both source and destination paths follow the exact format `<svm_name>:<volume_name>` with no extra spaces or special characters.
-    **`Error: SnapMirror relationship does not exist for source-path <svm:vol>`** — Initialize the SnapMirror relationship first using `snapmirror create -source-path <svm:vol> -destination-path <dstsvm:dstvol> -type XDP` before attempting an update.
-    **`Error: Transfer already in progress for this relationship`** — Wait for the current transfer to complete or abort it with `snapmirror abort -source-path <svm:vol> -destination-path <dstsvm:dstvol>` before issuing a new update command.
+    | Error | Fix |
+    |---|---|
+    | `Error: "snapmirror update" command requires source and destination paths in the format svm:volume` | Verify both source and destination paths follow the exact format `<svm_name>:<volume_name>` with no extra spaces or special characters. |
+    | `Error: SnapMirror relationship does not exist for source-path <svm:vol>` | Initialize the SnapMirror relationship first using `snapmirror create -source-path <svm:vol> -destination-path <dstsvm:dstvol> -type XDP` before attempting an update. |
+    | `Error: Transfer already in progress for this relationship` | Wait for the current transfer to complete or abort it with `snapmirror abort -source-path <svm:vol> -destination-path <dstsvm:dstvol>` before issuing a new update command. |
 ## Fix — Option B: Remove Throttle for Catch-Up
 
 Use when throttle is limiting catch-up speed:
@@ -190,8 +196,10 @@ Operation succeeded: SnapMirror of "cluster2://svm_dr:vol_backup" is now unthrot
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Invalid destination path format`** — Ensure the destination path follows the format `cluster-name://svm-name:volume-name` with proper colons and slashes.
-    **`Error: This operation is not permitted on the source of an active SnapMirror relationship`** — Run the command on the destination cluster/SVM, not the source.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Invalid destination path format` | Ensure the destination path follows the format `cluster-name://svm-name:volume-name` with proper colons and slashes. |
+    | `Error: This operation is not permitted on the source of an active SnapMirror relationship` | Run the command on the destination cluster/SVM, not the source. |
 ## Fix — Option C: Expand Destination Volume
 
 Use when destination is full and blocking replication:
@@ -214,8 +222,10 @@ prod-svm    data_vol    487.6GB
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: no such volume <dstvol>`** — Verify the destination volume name matches exactly and the vserver is online with `vserver show`.
-    **`Error: Insufficient space in aggregate to grow volume by 200GB`** — Check aggregate free space with `storage aggregate show -fields available` and reduce the growth size or add disks to the aggregate.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: no such volume <dstvol>` | Verify the destination volume name matches exactly and the vserver is online with `vserver show`. |
+    | `Error: Insufficient space in aggregate to grow volume by 200GB` | Check aggregate free space with `storage aggregate show -fields available` and reduce the growth size or add disks to the aggregate. |
 ## If RPO Is Breached
 
 1. **Notify DR owner and IT management** — document breach start time and cause
@@ -252,8 +262,10 @@ svm3:vol_logs svm4:vol_logs_mirror SnapMirror Snapmirrored 2024-01-15 14:15:22 +
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Ensure you are logged into the ONTAP cluster CLI (not the local shell) and have SnapMirror licensed.
-    **`Error: No SnapMirror relationships found`** — Verify SnapMirror relationships exist with `snapmirror list-destinations` and confirm source and destination SVMs are peered.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Ensure you are logged into the ONTAP cluster CLI (not the local shell) and have SnapMirror licensed. |
+    | `Error: No SnapMirror relationships found` | Verify SnapMirror relationships exist with `snapmirror list-destinations` and confirm source and destination SVMs are peered. |
 Also confirm:
 - SRM alarm cleared in vCenter
 - RecoverPoint shows RPO met

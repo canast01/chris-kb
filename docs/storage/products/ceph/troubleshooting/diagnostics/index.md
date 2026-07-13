@@ -105,9 +105,11 @@ HEALTH_WARN 1 nearfull osd(s); 2 pool(s) near full
 ```
 
 !!! warning "Common errors"
-    **`Error initializing cluster client: ('error calling remote procedure server', -5)`** — Verify ceph.conf exists in /etc/ceph/ and cluster name matches; run `ceph --version` to confirm connectivity.
-    **`HEALTH_ERR: 3 osds down; 24 pg degraded`** — Check OSD daemon status with `systemctl status ceph-osd@*` and OSD logs at `/var/log/ceph/ceph-osd.*.log` to identify disk or network failures.
-    **`HEALTH_CRITICAL: 1 mon down; quorum lost`** — Restart the downed monitor daemon with `systemctl restart ceph-mon@<hostname>` and verify NTP sync across all monitor nodes with `chronyc sources`.
+    | Error | Fix |
+    |---|---|
+    | `Error initializing cluster client: ('error calling remote procedure server', -5)` | Verify ceph.conf exists in /etc/ceph/ and cluster name matches; run `ceph --version` to confirm connectivity. |
+    | `HEALTH_ERR: 3 osds down; 24 pg degraded` | Check OSD daemon status with `systemctl status ceph-osd@*` and OSD logs at `/var/log/ceph/ceph-osd.*.log` to identify disk or network failures. |
+    | `HEALTH_CRITICAL: 1 mon down; quorum lost` | Restart the downed monitor daemon with `systemctl restart ceph-mon@<hostname>` and verify NTP sync across all monitor nodes with `chronyc sources`. |
 ## Crash Collection
 
 ```bash
@@ -150,8 +152,10 @@ drwxr-x--- 2 ceph ceph 4096 Jan 14 23:55 20240114t235511z-osd-8-pqr345stu678
 ```
 
 !!! warning "Common errors"
-    **`Error: crash id not found`** — Verify the crash ID exists with `ceph crash ls` and ensure you're using the exact ID from the output.
-    **`Error: EACCES: permission denied, open '/var/lib/ceph/crash/'`** — Run the command with `sudo` or ensure your user is in the `ceph` group with `sudo usermod -aG ceph $USER`.
+    | Error | Fix |
+    |---|---|
+    | `Error: crash id not found` | Verify the crash ID exists with `ceph crash ls` and ensure you're using the exact ID from the output. |
+    | `Error: EACCES: permission denied, open '/var/lib/ceph/crash/'` | Run the command with `sudo` or ensure your user is in the `ceph` group with `sudo usermod -aG ceph $USER`. |
 ## OSD Daemon Diagnostics
 
 ```bash
@@ -212,9 +216,11 @@ ceph daemon osd.<id> perf dump | python3 -m json.tool | grep -E "cache_|throttle
 ```
 
 !!! warning "Common errors"
-    **`Error connecting to daemon: (2) No such file or directory`** — Verify the OSD is running with `systemctl status ceph-osd@<id>` and confirm the correct socket path exists in `/var/run/ceph/`.
-    **`command not found: python3`** — Install Python 3 with `apt install python3` or `yum install python3`, or pipe to `jq` instead if available.
-    **`No such file or directory`** — Replace `<id>` with an actual OSD number (e.g., `osd.0`) and verify it exists with `ceph osd tree`.
+    | Error | Fix |
+    |---|---|
+    | `Error connecting to daemon: (2) No such file or directory` | Verify the OSD is running with `systemctl status ceph-osd@<id>` and confirm the correct socket path exists in `/var/run/ceph/`. |
+    | `command not found: python3` | Install Python 3 with `apt install python3` or `yum install python3`, or pipe to `jq` instead if available. |
+    | `No such file or directory` | Replace `<id>` with an actual OSD number (e.g., `osd.0`) and verify it exists with `ceph osd tree`. |
 ## OSD Log Analysis
 
 ```bash
@@ -257,9 +263,11 @@ Nov 15 09:42:33 ceph-node-02 ceph-osd[4521]: 2024-11-15T09:42:33.847+0000 osd.5 
 ```
 
 !!! warning "Common errors"
-    **`Error: No such daemon osd.5`** — Verify the OSD exists with `ceph osd tree` and confirm the correct OSD ID.
-    **`error: unable to connect to the cluster`** — Ensure you have valid Ceph credentials in `/etc/ceph/ceph.client.admin.keyring` and the monitor addresses are reachable.
-    **`jq: command not found`** — Install `jq` with `apt install jq` or `yum install jq`, or use `python3 -m json.tool` instead for pretty-printing JSON.
+    | Error | Fix |
+    |---|---|
+    | `Error: No such daemon osd.5` | Verify the OSD exists with `ceph osd tree` and confirm the correct OSD ID. |
+    | `error: unable to connect to the cluster` | Ensure you have valid Ceph credentials in `/etc/ceph/ceph.client.admin.keyring` and the monitor addresses are reachable. |
+    | `jq: command not found` | Install `jq` with `apt install jq` or `yum install jq`, or use `python3 -m json.tool` instead for pretty-printing JSON. |
 ## Log Levels (Debugging)
 
 ```bash
@@ -300,9 +308,11 @@ Jan 15 14:23:49 ceph-node-03 ceph-osd[4521]: 2024-01-15T14:23:49.234+0000 7f8c3a
 ```
 
 !!! warning "Common errors"
-    **`Error: osd not found`** — Verify the OSD ID exists with `ceph osd tree` and use the correct numeric ID in place of `<id>`.
-    **`Error: EACCES: permission denied`** — Run journalctl commands with `sudo` or as root, or add your user to the `systemd-journal` group.
-    **`Error: unrecognized config option 'debug_osd'`** — Ensure you are running a compatible Ceph version; use `ceph config help osd`
+    | Error | Fix |
+    |---|---|
+    | `Error: osd not found` | Verify the OSD ID exists with `ceph osd tree` and use the correct numeric ID in place of `<id>`. |
+    | `Error: EACCES: permission denied` | Run journalctl commands with `sudo` or as root, or add your user to the `systemd-journal` group. |
+    | `Error: unrecognized config option 'debug_osd'` | Ensure you are running a compatible Ceph version; use `ceph config help osd` |
 ## Crash Dump Analysis
 
 ```bash
@@ -350,8 +360,10 @@ $ ls /var/lib/ceph/crash/
 ```
 
 !!! warning "Common errors"
-    **`Error: crash_id not found`** — Verify the crash ID exists with `ceph crash ls` before attempting to archive.
-    **`Error: EACCES: permission denied, open '/var/lib/ceph/crash/'`** — Run the command with appropriate privileges (sudo) or ensure your user is in the ceph group.
+    | Error | Fix |
+    |---|---|
+    | `Error: crash_id not found` | Verify the crash ID exists with `ceph crash ls` before attempting to archive. |
+    | `Error: EACCES: permission denied, open '/var/lib/ceph/crash/'` | Run the command with appropriate privileges (sudo) or ensure your user is in the ceph group. |
 ## Network Diagnostics
 
 ```bash
@@ -412,9 +424,11 @@ Rcv:    100
 ```
 
 !!! warning "Common errors"
-    **`iperf3: error - unable to connect to server`** — Verify the receiver is listening on the correct interface with `iperf3 -s -B 10.0.1.11` and check firewall rules allow port 5201.
-    **`connect: Network is unreachable`** — Confirm both nodes are on the same cluster network subnet and routing is configured with `ip route show`.
-    **`ping: sendmsg: No route to host`** — Verify the cluster network interface is up with `ip link show` and check that 10.0.1.11 is reachable from the sender's network segment.
+    | Error | Fix |
+    |---|---|
+    | `iperf3: error - unable to connect to server` | Verify the receiver is listening on the correct interface with `iperf3 -s -B 10.0.1.11` and check firewall rules allow port 5201. |
+    | `connect: Network is unreachable` | Confirm both nodes are on the same cluster network subnet and routing is configured with `ip route show`. |
+    | `ping: sendmsg: No route to host` | Verify the cluster network interface is up with `ip link show` and check that 10.0.1.11 is reachable from the sender's network segment. |
 ## PG Inconsistency Deep Dive
 
 ```bash
@@ -481,8 +495,10 @@ instructing pg 12.4a on osd.3 to repair
 ```
 
 !!! warning "Common errors"
-    **`error: pg 12.4a not found`** — Verify the PG ID format is correct (e.g., `12.4a`) and the pool exists with `ceph osd pool ls`.
-    **`Error ENOENT: error code 2`** — Ensure the pool name is valid and contains data by running `rados ls -p <pool>` first.
+    | Error | Fix |
+    |---|---|
+    | `error: pg 12.4a not found` | Verify the PG ID format is correct (e.g., `12.4a`) and the pool exists with `ceph osd pool ls`. |
+    | `Error ENOENT: error code 2` | Ensure the pool name is valid and contains data by running `rados ls -p <pool>` first. |
 ## sosreport for Red Hat Ceph Storage
 
 ```bash
@@ -522,9 +538,11 @@ sosreport-ceph-node01-20240215-kxvj4wd.tar.xz.md5
 ```
 
 !!! warning "Common errors"
-    **`sosreport: command not found`** — Install sos package with `yum install sos` or `dnf install sos`.
-    **`ERROR: insufficient permissions to run sosreport, root access is required`** — Run the command with `sudo` or as the root user.
-    **`ERROR: plugin ceph not found`** — Install ceph-common package with `yum install ceph-common` to enable Ceph plugin support.
+    | Error | Fix |
+    |---|---|
+    | `sosreport: command not found` | Install sos package with `yum install sos` or `dnf install sos`. |
+    | `ERROR: insufficient permissions to run sosreport, root access is required` | Run the command with `sudo` or as the root user. |
+    | `ERROR: plugin ceph not found` | Install ceph-common package with `yum install ceph-common` to enable Ceph plugin support. |
 ## Gather Support Data
 
 ```bash
@@ -592,9 +610,11 @@ ceph-support-2024-01-15.tar.gz created successfully (847 MB)
 ```
 
 !!! warning "Common errors"
-    **`Error: error connecting to the cluster`** — Verify CEPH_CONF environment variable points to a valid ceph.conf and the user has read permissions on /etc/ceph/ceph.client.admin.keyring.
-    **`ssh: Could not resolve hostname mon0: Name or service not known`** — Replace the hostname extraction logic with explicit mon hostnames: `for mon in mon0 mon1 mon2; do` instead of parsing `ceph mon dump`.
-    **`ceph orch daemon logs osd.5: No such daemon`** — Verify the OSD exists and is registered with ceph-orch by running `ceph orch ps | grep osd.5` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: error connecting to the cluster` | Verify CEPH_CONF environment variable points to a valid ceph.conf and the user has read permissions on /etc/ceph/ceph.client.admin.keyring. |
+    | `ssh: Could not resolve hostname mon0: Name or service not known` | Replace the hostname extraction logic with explicit mon hostnames: `for mon in mon0 mon1 mon2; do` instead of parsing `ceph mon dump`. |
+    | `ceph orch daemon logs osd.5: No such daemon` | Verify the OSD exists and is registered with ceph-orch by running `ceph orch ps | grep osd.5` first. |
 ---
 
 ## See also

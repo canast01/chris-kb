@@ -85,9 +85,11 @@ Data Transferred: 847.3 GB / 1.2 TB
 ```
 
 !!! warning "Common errors"
-    **`Error: Job '<job_name>' not found in failback queue`** — Verify the exact job name using `igls failback list` and ensure it exists before running.
-    **`Error: Cannot start failback job - job already in progress`** — Wait for the current failback to complete or use `igls failback cancel --job <job_name>` to stop it first.
-    **`Error: Authentication failed - invalid credentials`** — Ensure you are logged into the Eyeglass appliance with `igls login` and have appropriate failback permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: Job '<job_name>' not found in failback queue` | Verify the exact job name using `igls failback list` and ensure it exists before running. |
+    | `Error: Cannot start failback job - job already in progress` | Wait for the current failback to complete or use `igls failback cancel --job <job_name>` to stop it first. |
+    | `Error: Authentication failed - invalid credentials` | Ensure you are logged into the Eyeglass appliance with `igls login` and have appropriate failback permissions. |
 ---
 
 ## OneFS SyncIQ (Supporting Commands)
@@ -141,9 +143,11 @@ SyncIQ Service Status
 ```
 
 !!! warning "Common errors"
-    **`Error: policy '<policy_name>' not found`** — Verify the policy name with `isi sync policies list` and use the exact ID or name from the output.
-    **`Error: target cluster unreachable (192.168.x.x)`** — Confirm network connectivity to the target cluster and verify the target IP address is correct in the policy configuration.
-    **`Error: SyncIQ service is not running`** — Start the SyncIQ service with `isi sync settings modify --service-enabled=true` and verify with `isi sync settings view`.
+    | Error | Fix |
+    |---|---|
+    | `Error: policy '<policy_name>' not found` | Verify the policy name with `isi sync policies list` and use the exact ID or name from the output. |
+    | `Error: target cluster unreachable (192.168.x.x)` | Confirm network connectivity to the target cluster and verify the target IP address is correct in the policy configuration. |
+    | `Error: SyncIQ service is not running` | Start the SyncIQ service with `isi sync settings modify --service-enabled=true` and verify with `isi sync settings view`. |
 ---
 
 ## REST API
@@ -180,9 +184,11 @@ curl -k -X GET https://<eyeglass_ip>/eca/api/v1/jobs/failover \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or install the Eyeglass CA certificate in your system trust store.
-    **`{"error":"Invalid token","code":401}`** — Ensure the Bearer token from the login response is current and correctly formatted in the Authorization header.
-    **`curl: (7) Failed to connect to <eyeglass_ip> port 443: Connection refused`** — Verify the Eyeglass IP address is correct, the service is running, and port 443 is accessible from your network.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or install the Eyeglass CA certificate in your system trust store. |
+    | `{"error":"Invalid token","code":401}` | Ensure the Bearer token from the login response is current and correctly formatted in the Authorization header. |
+    | `curl: (7) Failed to connect to <eyeglass_ip> port 443: Connection refused` | Verify the Eyeglass IP address is correct, the service is running, and port 443 is accessible from your network. |
 ---
 
 ## Verify

@@ -47,8 +47,10 @@ Session logged out
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Set ND_PASS environment variable`** — Export the ND_PASS variable before running the script: `export ND_PASS='your-password'`
-    **`ERROR: Failed to obtain ND token — check credentials and ND_HOST`** — Verify ND_HOST is reachable and ND_USER/ND_PASS credentials are correct; test with `curl -sk "${ND_HOST}/login"` to confirm API endpoint responds.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Set ND_PASS environment variable` | Export the ND_PASS variable before running the script: `export ND_PASS='your-password'` |
+    | `ERROR: Failed to obtain ND token — check credentials and ND_HOST` | Verify ND_HOST is reachable and ND_USER/ND_PASS credentials are correct; test with `curl -sk "${ND_HOST}/login"` to confirm API endpoint responds. |
 ```bash
 #!/usr/bin/env bash
 # nd-zone-export.sh

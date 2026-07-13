@@ -165,9 +165,11 @@ Event ID    Timestamp            Severity  Message
 ```
 
 !!! warning "Common errors"
-    **`symevent: command not found`** — Ensure the Symmetrix management tools are installed and the PATH includes the bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`SYMCLI_CONNECT error: Could not connect to the Symmetrix`** — Verify the R1 SID is correct and the Symmetrix engine is reachable via the management network.
-    **`grep: (standard input) is empty`** — Run `symevent -sid <r1_sid> list -last 100` without grep first to confirm events exist in the log.
+    | Error | Fix |
+    |---|---|
+    | `symevent: command not found` | Ensure the Symmetrix management tools are installed and the PATH includes the bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `SYMCLI_CONNECT error: Could not connect to the Symmetrix` | Verify the R1 SID is correct and the Symmetrix engine is reachable via the management network. |
+    | `grep: (standard input) is empty` | Run `symevent -sid <r1_sid> list -last 100` without grep first to confirm events exist in the log. |
 **Resolution (R1 is authoritative — no real failover occurred):**
 
 ```bash
@@ -191,9 +193,11 @@ Last Update Time: 2024-01-15 14:32:47
 ```
 
 !!! warning "Common errors"
-    **`SYMRDF ERROR: RDF group <dgname> not found`** — Verify the RDF group name matches the output of `symrdf list -g all` and check spelling.
-    **`SYMRDF ERROR: Symmetrix <r1_sid> is not available`** — Confirm the R1 Symmetrix ID is correct and the array is online with `symcfg list -v`.
-    **`SYMRDF ERROR: RDF link is not in a valid state for resync`** — Check RDF link status with `symrdf -g <dgname> -sid <r1_sid> query` and resolve any link failures before retrying.
+    | Error | Fix |
+    |---|---|
+    | `SYMRDF ERROR: RDF group <dgname> not found` | Verify the RDF group name matches the output of `symrdf list -g all` and check spelling. |
+    | `SYMRDF ERROR: Symmetrix <r1_sid> is not available` | Confirm the R1 Symmetrix ID is correct and the array is online with `symcfg list -v`. |
+    | `SYMRDF ERROR: RDF link is not in a valid state for resync` | Check RDF link status with `symrdf -g <dgname> -sid <r1_sid> query` and resolve any link failures before retrying. |
 **Resolution (R2 has the latest data — a real failover occurred):**
 
 ```bash
@@ -221,9 +225,11 @@ RDF group 0 is now in Synchronized state.
 ```
 
 !!! warning "Common errors"
-    **`SYMRDF Error (4) : RDF group is not in a valid state for failback`** — Verify the RDF group is in Consistent or Synchronized state using `symrdf -g <dgname> query` before attempting failback.
-    **`SYMRDF Error (2) : Invalid Symmetrix ID <r2_sid>`** — Confirm the R2 Symmetrix ID is correct and matches the remote array in the RDF pair using `symcfg list -v`.
-    **`SYMRDF Error (6) : RDF link is not ready`** — Check RDF link connectivity and ensure both arrays are online using `symrdf -g <dgname> query` and verify network paths are active.
+    | Error | Fix |
+    |---|---|
+    | `SYMRDF Error (4) : RDF group is not in a valid state for failback` | Verify the RDF group is in Consistent or Synchronized state using `symrdf -g <dgname> query` before attempting failback. |
+    | `SYMRDF Error (2) : Invalid Symmetrix ID <r2_sid>` | Confirm the R2 Symmetrix ID is correct and matches the remote array in the RDF pair using `symcfg list -v`. |
+    | `SYMRDF Error (6) : RDF link is not ready` | Check RDF link connectivity and ensure both arrays are online using `symrdf -g <dgname> query` and verify network paths are active. |
 **Do not resync or restore without first confirming which side has the authoritative data.** An incorrect resync will permanently overwrite data.
 
 ---
@@ -257,8 +263,10 @@ Modified                            07/15/2024 14:31:55 UTC (R2 Side)
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid SID <r1_sid>`** — Replace `<r1_sid>` with the actual R1 array SID (e.g., `000123456789`).
-    **`Error: Device <dev_id> not found in this array`** — Verify the device ID exists on the specified array using `symdev -sid <r1_sid> list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid SID <r1_sid>` | Replace `<r1_sid>` with the actual R1 array SID (e.g., `000123456789`). |
+    | `Error: Device <dev_id> not found in this array` | Verify the device ID exists on the specified array using `symdev -sid <r1_sid> list`. |
 **Never re-establish a split pair without application team sign-off.** Restoring R1 overwrites any R2 writes made during the split period and vice versa.
 
 ---
@@ -309,9 +317,11 @@ portName=4,2  portState=Offline portSpeed=16Gb
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Verify Symmetrix CLI is installed and $PATH includes the SymCLI bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`FCIP Session Information: No entries found`** — Confirm FCIP tunnels are configured on the switch and check that remote director IP is reachable via `ping` from the switch management interface.
-    **`portState=Offline`** — Verify the physical cable is connected, the remote director port is online, and check for link errors with `portcfgshow` to identify speed/duplex mismatches.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Verify Symmetrix CLI is installed and $PATH includes the SymCLI bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `FCIP Session Information: No entries found` | Confirm FCIP tunnels are configured on the switch and check that remote director IP is reachable via `ping` from the switch management interface. |
+    | `portState=Offline` | Verify the physical cable is connected, the remote director port is online, and check for link errors with `portcfgshow` to identify speed/duplex mismatches. |
 **Recovery after link restoration:**
 
 ```bash
@@ -341,9 +351,11 @@ Consistency State: Consistent
 ```
 
 !!! warning "Common errors"
-    **`SRDF pair is not in a valid state for resume operation`** — Verify the pair is in Suspended state using `symrdf -g <dgname> -sid <r1_sid> query` before attempting resume.
-    **`RDF link is offline or unavailable`** — Check physical RDF link connectivity and confirm remote array is reachable with `symrdf -g <dgname> -sid <r1_sid> query`.
-    **`Invalid device group name or SID`** — Confirm the device group exists and SID is correct by running `symcfg list -g` to list all configured groups.
+    | Error | Fix |
+    |---|---|
+    | `SRDF pair is not in a valid state for resume operation` | Verify the pair is in Suspended state using `symrdf -g <dgname> -sid <r1_sid> query` before attempting resume. |
+    | `RDF link is offline or unavailable` | Check physical RDF link connectivity and confirm remote array is reachable with `symrdf -g <dgname> -sid <r1_sid> query`. |
+    | `Invalid device group name or SID` | Confirm the device group exists and SID is correct by running `symcfg list -g` to list all configured groups. |
 ---
 
 ## Unintended Failover During Maintenance
@@ -394,8 +406,10 @@ RDF Health: Optimal
 ```
 
 !!! warning "Common errors"
-    **`SRDF pair is not in a valid state for this operation`** — Verify the pair is not already in a transitional state by running `symrdf -g <dgname> -sid <r1_sid> query` and wait for any pending operations to complete.
-    **`Cannot connect to remote array <r2_sid>`** — Confirm network connectivity between the SRDF directors and that the remote array is online using `symcfg -sid <r2_sid> list -v`.
+    | Error | Fix |
+    |---|---|
+    | `SRDF pair is not in a valid state for this operation` | Verify the pair is not already in a transitional state by running `symrdf -g <dgname> -sid <r1_sid> query` and wait for any pending operations to complete. |
+    | `Cannot connect to remote array <r2_sid>` | Confirm network connectivity between the SRDF directors and that the remote array is online using `symcfg -sid <r2_sid> list -v`. |
 ---
 
 ## Verify resolution

@@ -78,9 +78,11 @@ cert.crt: OK
 ```
 
 !!! warning "Common errors"
-    **`verify error:num=20:unable to get local issuer certificate`** — Add the intermediate CA certificate to your trust store or use the `-CApath` flag pointing to the directory containing CA bundles.
-    **`error in x509 lookup`** — Ensure the certificate file path is correct and readable; verify with `ls -la /etc/ssl/certs/cert.crt`.
-    **`Verify return code: 1 (self signed certificate)`** — For self-signed certificates in testing, use `openssl verify -CAfile cert.crt cert.crt` or add the cert to your trust store.
+    | Error | Fix |
+    |---|---|
+    | `verify error:num=20:unable to get local issuer certificate` | Add the intermediate CA certificate to your trust store or use the `-CApath` flag pointing to the directory containing CA bundles. |
+    | `error in x509 lookup` | Ensure the certificate file path is correct and readable; verify with `ls -la /etc/ssl/certs/cert.crt`. |
+    | `Verify return code: 1 (self signed certificate)` | For self-signed certificates in testing, use `openssl verify -CAfile cert.crt cert.crt` or add the cert to your trust store. |
 **Expected output:** Chain check shows `verify return:1` for each cert in the chain and `Verification: OK` at the end. `openssl verify` returns `cert.crt: OK`. Absence of `OK` or presence of `verify error:num=` indicates a chain or trust store problem.
 
 See [TLS Troubleshooting](../../networking/protocols/tls/troubleshooting/) for detailed steps.
@@ -113,8 +115,10 @@ SERVICE_NAME: CyberArk_CPM
 ```
 
 !!! warning "Common errors"
-    **`nc: getaddrinfo for name=vault.corp.local port=1858: Name or service not known`** — Verify DNS resolution with `nslookup vault.corp.local` and confirm the hostname is correct in your network.
-    **`SERVICE_NAME: CyberArk_CPM STATE              : 1  STOPPED`** — Start the CyberArk CPM service using `sc start CyberArk_CPM` or the Windows Services GUI.
+    | Error | Fix |
+    |---|---|
+    | `nc: getaddrinfo for name=vault.corp.local port=1858: Name or service not known` | Verify DNS resolution with `nslookup vault.corp.local` and confirm the hostname is correct in your network. |
+    | `SERVICE_NAME: CyberArk_CPM STATE              : 1  STOPPED` | Start the CyberArk CPM service using `sc start CyberArk_CPM` or the Windows Services GUI. |
 **Expected output:** `nc` returns `Connection to vault.corp.local port 1858 [tcp] succeeded`. `sc query CyberArk_CPM` shows `STATE: 4 RUNNING`. If connection refused, check firewall rule for TCP 1858 between the CPM server and the Vault.
 
 ## MFA / Duo Troubleshooting
@@ -179,5 +183,7 @@ cn: hostname
 ```
 
 !!! warning "Common errors"
-    **`kinit: Clients credentials have been revoked while getting initial credentials`** — Verify the user account is active in Active Directory and hasn't exceeded password expiration or failed login attempts.
-    **`ldapsearch: Invalid credentials (49)`** — Ensure the admin account credentials are correct and the LDAP bind DN format matches your domain structure (e.g., "CN=admin,CN=Users,DC=corp,DC=local").
+    | Error | Fix |
+    |---|---|
+    | `kinit: Clients credentials have been revoked while getting initial credentials` | Verify the user account is active in Active Directory and hasn't exceeded password expiration or failed login attempts. |
+    | `ldapsearch: Invalid credentials (49)` | Ensure the admin account credentials are correct and the LDAP bind DN format matches your domain structure (e.g., "CN=admin,CN=Users,DC=corp,DC=local"). |

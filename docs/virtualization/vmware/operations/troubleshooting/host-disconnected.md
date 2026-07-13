@@ -91,9 +91,11 @@ Address:	192.168.1.42
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <esxi-mgmt-ip>`** — Verify the IP address is correct and the host is reachable on the network; check firewall rules blocking ICMP.
-    **`ssh: connect to host 192.168.1.42 port 22: Connection refused`** — Confirm SSH is enabled on the ESXi host (Configuration > Security Profile > Services > SSH) and the management network is properly configured.
-    **`** server can't find <esxi-fqdn>: NXDOMAIN`** — Add the ESXi host FQDN to your DNS server or /etc/hosts file on the jump host.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <esxi-mgmt-ip>` | Verify the IP address is correct and the host is reachable on the network; check firewall rules blocking ICMP. |
+    | `ssh: connect to host 192.168.1.42 port 22: Connection refused` | Confirm SSH is enabled on the ESXi host (Configuration > Security Profile > Services > SSH) and the management network is properly configured. |
+    | `** server can't find <esxi-fqdn>: NXDOMAIN` | Add the ESXi host FQDN to your DNS server or /etc/hosts file on the jump host. |
 If ping works but vCenter shows "Not Responding", skip to [Management Agent Reset](#management-agent-reset).
 
 If ping fails entirely, skip to [Management Network Down](#management-network-down).
@@ -141,9 +143,11 @@ Starting hostd...                                          [  OK  ]
 ```
 
 !!! warning "Common errors"
-    **`vpxa (pid XXXX) is not running`** — Run `/etc/init.d/vpxa start` to restart the service, then check `/var/log/vpxa.log` for startup errors.
-    **`hostd (pid XXXX) is not running`** — Run `/etc/init.d/hostd start` and verify the service started with `/etc/init.d/hostd status`.
-    **`tail: cannot open '/var/log/vpxa.log' for reading: Permission denied`** — Run the tail commands with `sudo` or as root user to access ESXi system logs.
+    | Error | Fix |
+    |---|---|
+    | `vpxa (pid XXXX) is not running` | Run `/etc/init.d/vpxa start` to restart the service, then check `/var/log/vpxa.log` for startup errors. |
+    | `hostd (pid XXXX) is not running` | Run `/etc/init.d/hostd start` and verify the service started with `/etc/init.d/hostd status`. |
+    | `tail: cannot open '/var/log/vpxa.log' for reading: Permission denied` | Run the tail commands with `sudo` or as root user to access ESXi system logs. |
 **Step 3 — Re-add the host in vCenter** if the agent restart does not help. In vCenter, right-click the host → Disconnect → Remove from Inventory → Re-add with Add Host wizard.
 
 ---
@@ -192,8 +196,10 @@ PID   COMMAND
 ```
 
 !!! warning "Common errors"
-    **`hostd stopped (timeout)`** — Increase the timeout or check for hung processes with `lsof -p <PID>` before forcing a kill.
-    **`vpxa: error while loading shared libraries: libssl.so.1.0.0: cannot open shared object file`** — Install the missing OpenSSL library with `esxcli software vib install -d /path/to/openssl-vib.zip`.
+    | Error | Fix |
+    |---|---|
+    | `hostd stopped (timeout)` | Increase the timeout or check for hung processes with `lsof -p <PID>` before forcing a kill. |
+    | `vpxa: error while loading shared libraries: libssl.so.1.0.0: cannot open shared object file` | Install the missing OpenSSL library with `esxcli software vib install -d /path/to/openssl-vib.zip`. |
 If hostd is repeatedly crashing, check disk space — a full `/` or `/scratch` partition prevents hostd from writing its state file:
 
 ```bash
@@ -214,8 +220,10 @@ vdf: command not found
 ```
 
 !!! warning "Common errors"
-    **`vdf: command not found`** — Replace `vdf` with `df` (the correct command for disk free space); if you need VMware-specific storage info, use `esxcli storage filesystem list` on ESXi hosts instead.
-    **`Permission denied`** — Run the command with `sudo df -h` if you lack read permissions on mounted filesystems.
+    | Error | Fix |
+    |---|---|
+    | `vdf: command not found` | Replace `vdf` with `df` (the correct command for disk free space); if you need VMware-specific storage info, use `esxcli storage filesystem list` on ESXi hosts instead. |
+    | `Permission denied` | Run the command with `sudo df -h` if you lack read permissions on mounted filesystems. |
 ---
 
 ## Management Network Down
@@ -267,9 +275,11 @@ round-trip min/avg/max = 2.156/2.297/2.401 ms
 ```
 
 !!! warning "Common errors"
-    **`Network error: Unable to resolve host <vcenter-ip>`** — Verify vCenter IP is correct and DNS resolution is working with `esxcli network ip dns server list`.
-    **`PING: sendto: No route to host`** — Confirm the default gateway in the route table matches your network configuration and vmk0 is on the correct VLAN.
-    **`Interface vmk0 is not enabled`** — Enable vmk0 with `esxcli network ip interface set -i vmk0 -e true` if it shows `Enabled: false`.
+    | Error | Fix |
+    |---|---|
+    | `Network error: Unable to resolve host <vcenter-ip>` | Verify vCenter IP is correct and DNS resolution is working with `esxcli network ip dns server list`. |
+    | `PING: sendto: No route to host` | Confirm the default gateway in the route table matches your network configuration and vmk0 is on the correct VLAN. |
+    | `Interface vmk0 is not enabled` | Enable vmk0 with `esxcli network ip interface set -i vmk0 -e true` if it shows `Enabled: false`. |
 4. **Firewall** — Confirm the management VLAN firewall rules allow TCP 443, 902, and 8080 from vCenter to the host.
 
 ---
@@ -301,8 +311,10 @@ Bundle size: 487 MB
 ```
 
 !!! warning "Common errors"
-    **`vm-support: error writing to /tmp: No space left on device`** — Free up disk space on the host or specify an alternate writable directory with sufficient capacity (e.g., `/var/log` or a mounted datastore).
-    **`vm-support: Permission denied`** — Run the command with root privileges using `sudo` or ensure your user account has write permissions to the target directory.
+    | Error | Fix |
+    |---|---|
+    | `vm-support: error writing to /tmp: No space left on device` | Free up disk space on the host or specify an alternate writable directory with sufficient capacity (e.g., `/var/log` or a mounted datastore). |
+    | `vm-support: Permission denied` | Run the command with root privileges using `sudo` or ensure your user account has write permissions to the target directory. |
 5. Review `/var/log/vmkernel.log` and `/var/log/vobd.log` for hardware errors preceding the crash.
 
 ---
@@ -376,8 +388,10 @@ Sync completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`vim-cmd: Unknown command 'hostsvc/firmware/sync_config'`** — Verify the correct vim-cmd syntax with `vim-cmd hostsvc/firmware/sync_config` or use `esxcli system firmware get` instead for firmware information.
-    **`esxcli: Unknown command or namespace 'hardware platform'`** — Use `esxcli hardware platform get` only on ESXi 6.5+; for older versions, use `esxcli system hardware get` instead.
+    | Error | Fix |
+    |---|---|
+    | `vim-cmd: Unknown command 'hostsvc/firmware/sync_config'` | Verify the correct vim-cmd syntax with `vim-cmd hostsvc/firmware/sync_config` or use `esxcli system firmware get` instead for firmware information. |
+    | `esxcli: Unknown command or namespace 'hardware platform'` | Use `esxcli hardware platform get` only on ESXi 6.5+; for older versions, use `esxcli system hardware get` instead. |
 From iDRAC/iLO, review:
 - PSU status
 - Memory DIMM errors
@@ -433,9 +447,11 @@ Starting ntpd: [  OK  ]
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the NTP server IP is reachable from the ESXi host using `ping <ntp-server-ip>` and check firewall rules allowing UDP port 123.
-    **`ntpq: read: Connection refused`** — Restart the NTP daemon with `/etc/init.d/ntpd restart` and wait 10-15 seconds before running `ntpq -p` again.
-    **`Error: Unable to set NTP server`** — Ensure you have root privileges and the NTP server parameter uses valid IP format without extra spaces.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the NTP server IP is reachable from the ESXi host using `ping <ntp-server-ip>` and check firewall rules allowing UDP port 123. |
+    | `ntpq: read: Connection refused` | Restart the NTP daemon with `/etc/init.d/ntpd restart` and wait 10-15 seconds before running `ntpq -p` again. |
+    | `Error: Unable to set NTP server` | Ensure you have root privileges and the NTP server parameter uses valid IP format without extra spaces. |
 Hosts more than 5 minutes out of sync with vCenter will trigger authentication errors and HA isolation warnings.
 
 ---

@@ -101,9 +101,11 @@ Service vmware-sts-idmd started successfully.
 ```
 
 !!! warning "Common errors"
-    **`Service vmware-sso is stopped.`** — Run `service-control --start vmware-sso` to bring the service online before attempting restart.
-    **`Error: Unable to restart vmware-sts-idmd: Service dependency vmware-sso is not running.`** — Ensure vmware-sso is started first, as vmware-sts-idmd depends on it.
-    **`grep: (standard input) is empty`** — The grep filter is too restrictive; remove the filter or use `service-control --status --all` without piping to see all services.
+    | Error | Fix |
+    |---|---|
+    | `Service vmware-sso is stopped.` | Run `service-control --start vmware-sso` to bring the service online before attempting restart. |
+    | `Error: Unable to restart vmware-sts-idmd: Service dependency vmware-sso is not running.` | Ensure vmware-sso is started first, as vmware-sts-idmd depends on it. |
+    | `grep: (standard input) is empty` | The grep filter is too restrictive; remove the filter or use `service-control --status --all` without piping to see all services. |
 **Step 3 — Check for a locked account:**
 
 ```bash
@@ -126,8 +128,10 @@ badPwdCount: 0
 ```
 
 !!! warning "Common errors"
-    **`Error: Cannot connect to directory service on localhost:389`** — Verify the vCenter SSO service is running with `systemctl status vmware-vmafd` and check network connectivity to the SSO endpoint.
-    **`Error: [LDAP_INVALID_CREDENTIALS] Failed to authenticate as administrator@vsphere.local`** — Ensure you are running the command as root or with appropriate permissions, and verify the SSO service credentials are correct.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cannot connect to directory service on localhost:389` | Verify the vCenter SSO service is running with `systemctl status vmware-vmafd` and check network connectivity to the SSO endpoint. |
+    | `Error: [LDAP_INVALID_CREDENTIALS] Failed to authenticate as administrator@vsphere.local` | Ensure you are running the command as root or with appropriate permissions, and verify the SSO service credentials are correct. |
 In vCenter UI (if another admin can log in): Administration → Single Sign-On → Users and Groups → check account status.
 
 ---
@@ -172,9 +176,11 @@ Address: 192.168.1.51
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Can't contact LDAP server (-1)`** — Verify the DC IP address is correct and port 389 is open in firewall rules between VCSA and domain controller.
-    **`ldapsearch: No such file or directory`** — Install the ldap-utils package on VCSA using `yum install openldap-clients`.
-    **`Server can't find <ad-domain-fqdn>: NXDOMAIN`** — Confirm the VCSA has the correct DNS server configured in `/etc/resolv.conf` pointing to a working AD-integrated DNS server.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Can't contact LDAP server (-1)` | Verify the DC IP address is correct and port 389 is open in firewall rules between VCSA and domain controller. |
+    | `ldapsearch: No such file or directory` | Install the ldap-utils package on VCSA using `yum install openldap-clients`. |
+    | `Server can't find <ad-domain-fqdn>: NXDOMAIN` | Confirm the VCSA has the correct DNS server configured in `/etc/resolv.conf` pointing to a working AD-integrated DNS server. |
 **Step 2 — Check for AD password expiry on the service account** used by vCenter for LDAP binding. vCenter uses a bind account to query AD — if its password expires, all AD authentication fails.
 
 **Step 3 — Verify time sync** — Kerberos authentication fails if the vCenter appliance is more than 5 minutes out of sync with the domain controllers:
@@ -203,9 +209,11 @@ System clock synchronized: yes
 ```
 
 !!! warning "Common errors"
-    **`System clock synchronized: no`** — Run `timedatectl set-ntp true` to enable NTP synchronization.
-    **`ntpq: read: Connection refused`** — Ensure ntpd or systemd-timesyncd is running with `systemctl start ntp` or `systemctl start systemd-timesyncd`.
-    **`No association ID's returned`** — Wait 30-60 seconds for NTP to establish peer connections, then rerun `ntpq -p`.
+    | Error | Fix |
+    |---|---|
+    | `System clock synchronized: no` | Run `timedatectl set-ntp true` to enable NTP synchronization. |
+    | `ntpq: read: Connection refused` | Ensure ntpd or systemd-timesyncd is running with `systemctl start ntp` or `systemctl start systemd-timesyncd`. |
+    | `No association ID's returned` | Wait 30-60 seconds for NTP to establish peer connections, then rerun `ntpq -p`. |
 **Step 4 — Check AD group membership** for the user — vCenter grants access by group, not just individual accounts. Confirm the user is still in the correct AD group.
 
 ---
@@ -293,8 +301,10 @@ Leap status     : Normal
 ```
 
 !!! warning "Common errors"
-    **`chronyc: Could not get tracking data`** — Verify chrony service is running with `systemctl status chrony` and check network connectivity to NTP servers.
-    **`System clock synchronized: no`** — Wait 2–3 minutes for NTP synchronization to complete, or manually sync with `ntpdate <ntp-server>` if available.
+    | Error | Fix |
+    |---|---|
+    | `chronyc: Could not get tracking data` | Verify chrony service is running with `systemctl status chrony` and check network connectivity to NTP servers. |
+    | `System clock synchronized: no` | Wait 2–3 minutes for NTP synchronization to complete, or manually sync with `ntpdate <ntp-server>` if available. |
 ---
 
 ## Verify

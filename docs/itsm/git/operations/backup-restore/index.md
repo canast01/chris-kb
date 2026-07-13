@@ -46,9 +46,11 @@ size-garbage: 0
 ```
 
 !!! warning "Common errors"
-    **`fatal: unable to access 'https://github.com/org/repo.git/': Could not resolve host: github.com`** — Verify network connectivity and DNS resolution; check firewall rules if behind a proxy.
-    **`fatal: destination path '/backup/repo.git' already exists and is not an empty directory`** — Remove the existing directory with `rm -rf /backup/repo.git` before re-cloning, or use `git remote update` if updating an existing mirror.
-    **`error: Could not read object database`** — Run `git fsck --full --strict` to identify corrupted objects and restore from a known-good backup if necessary.
+    | Error | Fix |
+    |---|---|
+    | `fatal: unable to access 'https://github.com/org/repo.git/': Could not resolve host: github.com` | Verify network connectivity and DNS resolution; check firewall rules if behind a proxy. |
+    | `fatal: destination path '/backup/repo.git' already exists and is not an empty directory` | Remove the existing directory with `rm -rf /backup/repo.git` before re-cloning, or use `git remote update` if updating an existing mirror. |
+    | `error: Could not read object database` | Run `git fsck --full --strict` to identify corrupted objects and restore from a known-good backup if necessary. |
 ```bash
 # Create a full backup (stops writes briefly for consistency)
 sudo gitlab-backup create
@@ -80,9 +82,11 @@ total 2.3G
 ```
 
 !!! warning "Common errors"
-    **`Backup failed: permission denied writing to /var/opt/gitlab/backups/`** — Ensure the `git` user owns the backups directory with `sudo chown -R git:git /var/opt/gitlab/backups/`.
-    **`Error: database is locked`** — Stop any running GitLab processes or wait for active transactions to complete, then retry the backup.
-    **`tar: error is not recoverable: exiting now`** — Verify sufficient disk space exists with `df -h` and ensure the backup directory is writable.
+    | Error | Fix |
+    |---|---|
+    | `Backup failed: permission denied writing to /var/opt/gitlab/backups/` | Ensure the `git` user owns the backups directory with `sudo chown -R git:git /var/opt/gitlab/backups/`. |
+    | `Error: database is locked` | Stop any running GitLab processes or wait for active transactions to complete, then retry the backup. |
+    | `tar: error is not recoverable: exiting now` | Verify sufficient disk space exists with `df -h` and ensure the backup directory is writable. |
 ```bash
 # Always backup configuration separately — it contains secrets
 sudo tar -czf /secure/gitlab-config-$(date +%Y%m%d).tar.gz \
@@ -95,9 +99,11 @@ sudo tar -czf /secure/gitlab-config-$(date +%Y%m%d).tar.gz \
 ```
 
 !!! warning "Common errors"
-    **`tar: /secure: Cannot open: No such file or directory`** — Create the backup directory first with `sudo mkdir -p /secure` and ensure it has appropriate permissions.
-    **`sudo: tar: command not found`** — Install tar with `sudo apt-get install tar` (Debian/Ubuntu) or `sudo yum install tar` (RHEL/CentOS).
-    **`tar: /etc/gitlab/gitlab-secrets.json: Cannot stat: No such file or directory`** — Verify GitLab is installed and the secrets file exists; if using a different GitLab installation path, adjust the paths accordingly.
+    | Error | Fix |
+    |---|---|
+    | `tar: /secure: Cannot open: No such file or directory` | Create the backup directory first with `sudo mkdir -p /secure` and ensure it has appropriate permissions. |
+    | `sudo: tar: command not found` | Install tar with `sudo apt-get install tar` (Debian/Ubuntu) or `sudo yum install tar` (RHEL/CentOS). |
+    | `tar: /etc/gitlab/gitlab-secrets.json: Cannot stat: No such file or directory` | Verify GitLab is installed and the secrets file exists; if using a different GitLab installation path, adjust the paths accordingly. |
 ```bash
 # /etc/cron.d/gitlab-backup
 0 2 * * * root /opt/gitlab/bin/gitlab-backup create CRON=1 2>&1 | tee -a /var/log/gitlab-backup.log
@@ -142,8 +148,10 @@ remote: Resolving deltas: 100% (5634/5634), done.
 ```
 
 !!! warning "Common errors"
-    **`curl: (22) The requested URL returned error: 401 Unauthorized`** — Verify `$GITHUB_TOKEN` is set and has `repo` scope permissions with `echo $GITHUB_TOKEN | wc -c`.
-    **`fatal: Could not read from remote repository. Please make sure you have the correct access rights and the repository exists.`** — Confirm SSH key is loaded with `ssh-add -l` and GitHub SSH access works via `ssh -T git@github.com`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (22) The requested URL returned error: 401 Unauthorized` | Verify `$GITHUB_TOKEN` is set and has `repo` scope permissions with `echo $GITHUB_TOKEN | wc -c`. |
+    | `fatal: Could not read from remote repository. Please make sure you have the correct access rights and the repository exists.` | Confirm SSH key is loaded with `ssh-add -l` and GitHub SSH access works via `ssh -T git@github.com`. |
 ```bash
 # Install
 git clone https://github.com/github/backup-utils.git /opt/github-backup-utils
@@ -184,9 +192,11 @@ Backup verification successful
 ```
 
 !!! warning "Common errors"
-    **`fatal: destination path '/opt/github-backup-utils' already exists and is not an empty directory`** — Remove the existing directory with `rm -rf /opt/github-backup-utils` before cloning.
-    **`Error: GHE_HOSTNAME not set or unreachable`** — Verify the hostname is correct in `/etc/github-backup/backup.config` and that the GitHub Enterprise instance is accessible from this host.
-    **`Error: Insufficient disk space. Required: 500GB, Available: 250GB`** — Increase available disk space on `/backup/ghes` or adjust `GHE_EXTRA_USER_DISK_REQUIRED_PERCENTAGE` to a lower value.
+    | Error | Fix |
+    |---|---|
+    | `fatal: destination path '/opt/github-backup-utils' already exists and is not an empty directory` | Remove the existing directory with `rm -rf /opt/github-backup-utils` before cloning. |
+    | `Error: GHE_HOSTNAME not set or unreachable` | Verify the hostname is correct in `/etc/github-backup/backup.config` and that the GitHub Enterprise instance is accessible from this host. |
+    | `Error: Insufficient disk space. Required: 500GB, Available: 250GB` | Increase available disk space on `/backup/ghes` or adjust `GHE_EXTRA_USER_DISK_REQUIRED_PERCENTAGE` to a lower value. |
 ```bash
 # /etc/cron.d/ghes-backup
 0 */4 * * * root /opt/github-backup-utils/bin/ghe-backup >> /var/log/ghes-backup.log 2>&1
@@ -197,9 +207,11 @@ Backup verification successful
 ```
 
 !!! warning "Common errors"
-    **`/opt/github-backup-utils/bin/ghe-backup: No such file or directory`** — Verify the GitHub Enterprise Server backup utilities are installed at the correct path with `ls -la /opt/github-backup-utils/bin/ghe-backup`.
-    **`Permission denied`** — Ensure the ghe-backup script has execute permissions by running `chmod +x /opt/github-backup-utils/bin/ghe-backup`.
-    **`/var/log/ghes-backup.log: Permission denied`** — Verify the /var/log directory is writable by the root user and the log file exists with `touch /var/log/ghes-backup.log && chmod 644 /var/log/ghes-backup.log`.
+    | Error | Fix |
+    |---|---|
+    | `/opt/github-backup-utils/bin/ghe-backup: No such file or directory` | Verify the GitHub Enterprise Server backup utilities are installed at the correct path with `ls -la /opt/github-backup-utils/bin/ghe-backup`. |
+    | `Permission denied` | Ensure the ghe-backup script has execute permissions by running `chmod +x /opt/github-backup-utils/bin/ghe-backup`. |
+    | `/var/log/ghes-backup.log: Permission denied` | Verify the /var/log directory is writable by the root user and the log file exists with `touch /var/log/ghes-backup.log && chmod 644 /var/log/ghes-backup.log`. |
 ```bash
 # Option 1: Push mirror to a new remote
 cd /backup/repo.git
@@ -232,8 +244,10 @@ Resolving deltas: 100% (1644/1644), done.
 ```
 
 !!! warning "Common errors"
-    **`fatal: 'https://github.com/org/new-repo.git' does not appear to be a 'git' repository`** — Verify the target repository URL is correct and the repository exists on GitHub with proper access permissions.
-    **`fatal: destination path '/root/restored-repo' already exists and is not an empty directory`** — Remove or rename the existing directory before cloning, or use `git clone /backup/repo.git ~/restored-repo-v2` with a different target path.
+    | Error | Fix |
+    |---|---|
+    | `fatal: 'https://github.com/org/new-repo.git' does not appear to be a 'git' repository` | Verify the target repository URL is correct and the repository exists on GitHub with proper access permissions. |
+    | `fatal: destination path '/root/restored-repo' already exists and is not an empty directory` | Remove or rename the existing directory before cloning, or use `git clone /backup/repo.git ~/restored-repo-v2` with a different target path. |
 ```bash
 # 1. Ensure GitLab version matches the backup version
 sudo gitlab-rake gitlab:env:info | grep "GitLab information"
@@ -297,9 +311,11 @@ All checks passed
 ```
 
 !!! warning "Common errors"
-    **`BACKUP=1715000000_2024_05_06_16.11.0 does not exist`** — Verify the backup filename exists in `/var/opt/gitlab/backups/` and use the correct timestamp prefix without the `.tar` extension.
-    **`FATAL: database "gitlabhq_production" does not exist`** — Ensure the database was not manually dropped; restore the database backup before restoring repositories or run `sudo gitlab-rake db:create` first.
-    **`tar: /etc/gitlab/gitlab-secrets.json: Cannot open: Permission denied`** — Run the tar extraction with `sudo` or ensure the backup archive was created with proper permissions for the gitlab user.
+    | Error | Fix |
+    |---|---|
+    | `BACKUP=1715000000_2024_05_06_16.11.0 does not exist` | Verify the backup filename exists in `/var/opt/gitlab/backups/` and use the correct timestamp prefix without the `.tar` extension. |
+    | `FATAL: database "gitlabhq_production" does not exist` | Ensure the database was not manually dropped; restore the database backup before restoring repositories or run `sudo gitlab-rake db:create` first. |
+    | `tar: /etc/gitlab/gitlab-secrets.json: Cannot open: Permission denied` | Run the tar extraction with `sudo` or ensure the backup archive was created with proper permissions for the gitlab user. |
 ```bash
 # Restore to a fresh GHES appliance (same version)
 /opt/github-backup-utils/bin/ghe-restore github-new.example.com
@@ -325,9 +341,11 @@ Appliance is rebooting. Please wait...
 ```
 
 !!! warning "Common errors"
-    **`fatal: Backup version 3.10.5 does not match appliance version 3.11.0`** — Ensure the target GHES appliance is running the exact same version as the backup source, or use a backup from a matching version.
-    **`ssh: connect to host github-new.example.com port 22: Connection refused`** — Verify the target appliance is powered on, reachable on the network, and has completed its initial boot sequence.
-    **`ghe-restore: snapshot not found at /backup/ghes/20240506T020000`** — Confirm the snapshot path exists and is readable by running `ls -la /backup/ghes/` to list available backups.
+    | Error | Fix |
+    |---|---|
+    | `fatal: Backup version 3.10.5 does not match appliance version 3.11.0` | Ensure the target GHES appliance is running the exact same version as the backup source, or use a backup from a matching version. |
+    | `ssh: connect to host github-new.example.com port 22: Connection refused` | Verify the target appliance is powered on, reachable on the network, and has completed its initial boot sequence. |
+    | `ghe-restore: snapshot not found at /backup/ghes/20240506T020000` | Confirm the snapshot path exists and is readable by running `ls -la /backup/ghes/` to list available backups. |
 ```bash
 # Create bare backup
 git clone --bare https://github.com/org/repo.git /backup/repo.git
@@ -370,9 +388,11 @@ From https://github.com/org/repo.git
 ```
 
 !!! warning "Common errors"
-    **`fatal: repository '/backup/repo.git' does not exist`** — Ensure the parent directory `/backup/` exists and you have write permissions; create it with `mkdir -p /backup` if needed.
-    **`fatal: Could not read from remote repository. Please make sure you have the correct access rights`** — Verify your SSH key or GitHub token is configured; test with `git ls-remote https://github.com/org/repo.git`.
-    **`error: pathspec 'origin' did not match any files`** — The bundle clone creates a detached state; add `git -C ~/restored-repo checkout main` after cloning to switch to a tracking branch.
+    | Error | Fix |
+    |---|---|
+    | `fatal: repository '/backup/repo.git' does not exist` | Ensure the parent directory `/backup/` exists and you have write permissions; create it with `mkdir -p /backup` if needed. |
+    | `fatal: Could not read from remote repository. Please make sure you have the correct access rights` | Verify your SSH key or GitHub token is configured; test with `git ls-remote https://github.com/org/repo.git`. |
+    | `error: pathspec 'origin' did not match any files` | The bundle clone creates a detached state; add `git -C ~/restored-repo checkout main` after cloning to switch to a tracking branch. |
 ```bash
 #!/usr/bin/env bash
 # verify-backup.sh

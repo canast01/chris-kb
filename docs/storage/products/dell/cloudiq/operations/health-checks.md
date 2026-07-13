@@ -123,8 +123,10 @@ curl -s -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems" \
 ```
 
 !!! warning "Common errors"
-    **`401 Unauthorized`** — Token expired or invalid; regenerate in CloudIQ → Settings → API Keys and update `$CLOUDIQ_TOKEN`.
-    **`curl: (6) Could not resolve host`** — Verify network access to `cloudiq.apis.dell.com` and that outbound HTTPS (port 443) is permitted from the management host.
+    | Error | Fix |
+    |---|---|
+    | `401 Unauthorized` | Token expired or invalid; regenerate in CloudIQ → Settings → API Keys and update `$CLOUDIQ_TOKEN`. |
+    | `curl: (6) Could not resolve host` | Verify network access to `cloudiq.apis.dell.com` and that outbound HTTPS (port 443) is permitted from the management host. |
 
 ---
 

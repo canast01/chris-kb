@@ -112,9 +112,11 @@ rtt min/avg/max/stddev = 3.05/3.15/3.28/0.11 ms
 ```
 
 !!! warning "Common errors"
-    **`ping: sendto: No route to host`** — Verify the jump host is on the OOB management VLAN and routing to the iDRAC subnet is configured.
-    **`ping: unknown host <node1-idrac-ip>`** — Confirm the iDRAC IP addresses are correct and resolvable, or use explicit IP addresses instead of hostnames.
-    **`100% packet loss`** — Check that iDRAC interfaces are powered on, network cables are connected, and firewall rules allow ICMP on the OOB management network.
+    | Error | Fix |
+    |---|---|
+    | `ping: sendto: No route to host` | Verify the jump host is on the OOB management VLAN and routing to the iDRAC subnet is configured. |
+    | `ping: unknown host <node1-idrac-ip>` | Confirm the iDRAC IP addresses are correct and resolvable, or use explicit IP addresses instead of hostnames. |
+    | `100% packet loss` | Check that iDRAC interfaces are powered on, network cables are connected, and firewall rules allow ICMP on the OOB management network. |
 **DNS pre-creation**
 
 Create A and PTR records for ALL of the following FQDNs before starting the wizard. Missing DNS records cause wizard failure or post-deploy vCenter join errors.
@@ -157,8 +159,10 @@ Address:	10.0.1.10#53
 ```
 
 !!! warning "Common errors"
-    **`** server can't find vxrail-manager.example.local: NXDOMAIN`** — Verify the hostname exists in DNS and check the domain suffix matches your environment (use `nslookup vxrail-manager.example.local <dns-server-ip>` to test against the correct nameserver).
-    **`** server can't find 10.0.1.20.in-addr.arpa: NXDOMAIN`** — Confirm reverse DNS zones are configured on your DNS server and the PTR record exists for the vCenter IP address.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find vxrail-manager.example.local: NXDOMAIN` | Verify the hostname exists in DNS and check the domain suffix matches your environment (use `nslookup vxrail-manager.example.local <dns-server-ip>` to test against the correct nameserver). |
+    | `** server can't find 10.0.1.20.in-addr.arpa: NXDOMAIN` | Confirm reverse DNS zones are configured on your DNS server and the PTR record exists for the vCenter IP address. |
 **NTP reachability**
 
 ```bash
@@ -174,8 +178,10 @@ server 10.20.50.13, stratum 3, offset -0.001876, delay 0.041567
 ```
 
 !!! warning "Common errors"
-    **`no server suitable for synchronization found`** — Verify NTP servers are reachable from the management VLAN by running `ping ntp1.example.local` and check firewall rules allow UDP port 123.
-    **`getaddrinfo: Name or service not known`** — Confirm DNS resolution works on the jump host with `nslookup ntp1.example.local` and verify the NTP server hostnames are correct in your environment.
+    | Error | Fix |
+    |---|---|
+    | `no server suitable for synchronization found` | Verify NTP servers are reachable from the management VLAN by running `ping ntp1.example.local` and check firewall rules allow UDP port 123. |
+    | `getaddrinfo: Name or service not known` | Confirm DNS resolution works on the jump host with `nslookup ntp1.example.local` and verify the NTP server hostnames are correct in your environment. |
 **Switch VLAN and MTU configuration**
 
 | Network | VLAN ID | MTU | Notes |
@@ -216,9 +222,11 @@ The VxRail bootstrap wizard loads in your browser at:
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused`** — Verify node 1 is powered on, bootstrap agent is running, and the management VLAN network is correctly configured on your client.
-    **`SSL_ERROR_BAD_CERT_DOMAIN`** — The certificate is self-signed during bootstrap; add a security exception in your browser or use `curl -k` if testing via CLI.
-    **`ERR_NAME_NOT_RESOLVED` or `nodename nor servname provided`** — Ensure the node1 management IP is reachable from your client and DNS/hosts file is configured if using a hostname instead of an IP address.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused` | Verify node 1 is powered on, bootstrap agent is running, and the management VLAN network is correctly configured on your client. |
+    | `SSL_ERROR_BAD_CERT_DOMAIN` | The certificate is self-signed during bootstrap; add a security exception in your browser or use `curl -k` if testing via CLI. |
+    | `ERR_NAME_NOT_RESOLVED` or `nodename nor servname provided` | Ensure the node1 management IP is reachable from your client and DNS/hosts file is configured if using a hostname instead of an IP address. |
 Accept the self-signed certificate warning. Default credentials at first access: no login required — the wizard prompts for all passwords as part of setup.
 
 **Wizard input sequence**
@@ -301,8 +309,10 @@ Summary Health Status:
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to VSAN cluster`** — Ensure VSAN is enabled on the cluster and the host is part of a valid VSAN cluster; run `esxcli vsan cluster get` to verify cluster membership.
-    **`Error: Permission denied`** — Log in with root credentials or an account with VSAN administration privileges; use `esxcli system permission list` to verify your role.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to VSAN cluster` | Ensure VSAN is enabled on the cluster and the host is part of a valid VSAN cluster; run `esxcli vsan cluster get` to verify cluster membership. |
+    | `Error: Permission denied` | Log in with root credentials or an account with VSAN administration privileges; use `esxcli system permission list` to verify your role. |
 **Create production SPBM policy**
 
 The default vSAN storage policy (FTT=0) provides no redundancy. Always create and apply a production policy before placing any workload VMs.
@@ -351,9 +361,11 @@ curl -sk -u 'mystic:password' https://<vxm-ip>/rest/vxm/v1/system | python3 -m j
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, so ensure it's not being removed).
-    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Verify the VxRail Manager IP address is correct and the management interface is reachable with `ping <vxm-ip>`.
-    **`jq: parse error: Invalid JSON at line 1`** — Ensure `python3 -m json.tool` is installed; if unavailable, use `jq` instead or remove the formatter to see the raw response.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, so ensure it's not being removed). |
+    | `curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused` | Verify the VxRail Manager IP address is correct and the management interface is reachable with `ping <vxm-ip>`. |
+    | `jq: parse error: Invalid JSON at line 1` | Ensure `python3 -m json.tool` is installed; if unavailable, use `jq` instead or remove the formatter to see the raw response. |
 **Exit criterion:** vSAN health all green. VxRail Manager reports cluster healthy. Production SPBM policy created and applied to VxRail Manager and vCenter VMs.
 
 ---
@@ -405,8 +417,10 @@ vmk3  10.20.30.45       255.255.255.0   10.20.30.255        false  10.20.30.1
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the host. The host may not be running, or a network error may have occurred.`** — Verify SSH connectivity to the VxRail node and confirm the ESXi host is powered on and responsive.
-    **`Unknown command or namespace.`** — Ensure you are connected to an ESXi host with esxcli enabled; this command does not work on vCenter or management appliances.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the host. The host may not be running, or a network error may have occurred.` | Verify SSH connectivity to the VxRail node and confirm the ESXi host is powered on and responsive. |
+    | `Unknown command or namespace.` | Ensure you are connected to an ESXi host with esxcli enabled; this command does not work on vCenter or management appliances. |
 **MTU test on vSAN network**
 
 Run from each node to each peer node vSAN VMkernel IP. All tests must succeed (0% packet loss) before the cluster is considered production-ready.
@@ -441,9 +455,11 @@ PING 192.168.100.13 (192.168.100.13): 8972 data bytes
 ```
 
 !!! warning "Common errors"
-    **`PING 192.168.100.12 (192.168.100.12): 8972 data bytes (100% packet loss)`** — Verify vSAN VMkernel interface MTU is set to 9000 on both nodes using `esxcli network ip interface list`.
-    **`sendto() failed (Message too long)`** — Reduce packet size or confirm physical switch and vSAN portgroup MTU settings match 9000 bytes across all uplinks.
-    **`Unable to route to host`** — Verify vSAN VMkernel IP is correct and the vSAN network is properly isolated and routable between nodes.
+    | Error | Fix |
+    |---|---|
+    | `PING 192.168.100.12 (192.168.100.12): 8972 data bytes (100% packet loss)` | Verify vSAN VMkernel interface MTU is set to 9000 on both nodes using `esxcli network ip interface list`. |
+    | `sendto() failed (Message too long)` | Reduce packet size or confirm physical switch and vSAN portgroup MTU settings match 9000 bytes across all uplinks. |
+    | `Unable to route to host` | Verify vSAN VMkernel IP is correct and the vSAN network is properly isolated and routable between nodes. |
 **Verify OMIVV plugin in vCenter**
 
 After wizard: vCenter → Menu → OpenManage Integration for VMware vCenter should appear. If the plugin is not present, see Phase 5 for manual installation.
@@ -505,9 +521,11 @@ curl -sk https://supportassist.emc.com
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to esrs.emc.com port 443: Connection timed out`** — Verify network connectivity from VxRail Manager VM, check firewall rules allow outbound HTTPS to EMC domains, and confirm DNS resolution with `nslookup esrs.emc.com`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if you need strict certificate validation, or ensure the VxRail Manager VM has current CA certificates installed via `update-ca-certificates` or equivalent.
-    **`curl: (6) Could not resolve host: esrs.emc.com`** — Verify DNS servers are configured correctly on the VxRail Manager VM with `cat /etc/resolv.conf` and test with `nslookup 8.8.8.8`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to esrs.emc.com port 443: Connection timed out` | Verify network connectivity from VxRail Manager VM, check firewall rules allow outbound HTTPS to EMC domains, and confirm DNS resolution with `nslookup esrs.emc.com`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag if you need strict certificate validation, or ensure the VxRail Manager VM has current CA certificates installed via `update-ca-certificates` or equivalent. |
+    | `curl: (6) Could not resolve host: esrs.emc.com` | Verify DNS servers are configured correctly on the VxRail Manager VM with `cat /etc/resolv.conf` and test with `nslookup 8.8.8.8`. |
 If a proxy is required, configure it in VxRail Manager: Settings → Network → Proxy.
 
 **Verify hardware monitoring**
@@ -541,9 +559,11 @@ curl -sk -X PUT -u 'mystic:currentpassword' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, so ensure you're using the exact command provided).
-    **`curl: (401) Unauthorized`** — Verify the current password is correct and the mystic user exists; check VxRail Manager credentials in your environment.
-    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Confirm the VxRail Manager IP address is correct and reachable, and that the REST API service is running on the target node.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present in the example, so ensure you're using the exact command provided). |
+    | `curl: (401) Unauthorized` | Verify the current password is correct and the mystic user exists; check VxRail Manager credentials in your environment. |
+    | `curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused` | Confirm the VxRail Manager IP address is correct and reachable, and that the REST API service is running on the target node. |
 **Change iDRAC default passwords on all nodes**
 
 Default iDRAC credentials (root / Calvin) must be changed on every node. Do this via RACADM from each node's ESXi SSH session or from a jump host with RACADM installed.
@@ -566,8 +586,10 @@ root
 ```
 
 !!! warning "Common errors"
-    **`RACADM.1.1 -- Unexpected EOF while processing command`** — Ensure the iDRAC IP is reachable and RACADM is authenticated; add `-r <iDRAC_IP> -u root -p <current_password>` flags if running remotely.
-    **`Error: IPMI command failed: Insufficient privilege`** — Verify you are running RACADM as root or with sudo, or that the current iDRAC user has administrator privileges.
+    | Error | Fix |
+    |---|---|
+    | `RACADM.1.1 -- Unexpected EOF while processing command` | Ensure the iDRAC IP is reachable and RACADM is authenticated; add `-r <iDRAC_IP> -u root -p <current_password>` flags if running remotely. |
+    | `Error: IPMI command failed: Insufficient privilege` | Verify you are running RACADM as root or with sudo, or that the current iDRAC user has administrator privileges. |
 Alternatively use the iDRAC web UI: iDRAC Settings → User Authentication → Local Users → root → Change Password.
 
 **Enable lockdown mode on all hosts**
@@ -624,8 +646,10 @@ ESX Shell has been disabled.
 ```
 
 !!! warning "Common errors"
-    **`vim-cmd: command not found`** — Ensure you are logged into an ESXi host directly via SSH, not a vCenter or management appliance where vim-cmd is not available.
-    **`Error: Permission denied`** — Verify you are logged in as root or a user with administrative privileges on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `vim-cmd: command not found` | Ensure you are logged into an ESXi host directly via SSH, not a vCenter or management appliance where vim-cmd is not available. |
+    | `Error: Permission denied` | Verify you are logged in as root or a user with administrative privileges on the ESXi host. |
 Or via PowerCLI:
 
 ```powershell

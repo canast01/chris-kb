@@ -157,9 +157,11 @@ aws ec2 describe-flow-logs --filter Name=resource-id,Values=<vpc-id>
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to ec2.us-east-1.amazonaws.com port 443: Connection timed out`** — Verify on-premises firewall allows outbound HTTPS (port 443) to AWS API endpoints, or check if the instance has internet connectivity.
-    **`An error occurred (UnauthorizedOperation) when calling the DescribeSecurityGroups operation: You are not authorized to perform: ec2:DescribeSecurityGroups`** — Ensure the IAM user or role has the `ec2:DescribeSecurityGroups` permission attached via an inline or managed policy.
-    **`Invalid id: "sg-invalid" does not exist`** — Verify the security group ID is correct and exists in the current AWS region by running `aws ec2 describe-security-groups --region <region>`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to ec2.us-east-1.amazonaws.com port 443: Connection timed out` | Verify on-premises firewall allows outbound HTTPS (port 443) to AWS API endpoints, or check if the instance has internet connectivity. |
+    | `An error occurred (UnauthorizedOperation) when calling the DescribeSecurityGroups operation: You are not authorized to perform: ec2:DescribeSecurityGroups` | Ensure the IAM user or role has the `ec2:DescribeSecurityGroups` permission attached via an inline or managed policy. |
+    | `Invalid id: "sg-invalid" does not exist` | Verify the security group ID is correct and exists in the current AWS region by running `aws ec2 describe-security-groups --region <region>`. |
 ## See also
 
 - [AWS EVS — Ports](../evs/architecture/ports.md)

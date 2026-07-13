@@ -85,9 +85,11 @@ Last Snapshot                 2024-01-15T09:47:22Z
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection group 'prod-oracle-pg' already exists`** — Use `purepgroup list` to verify existing groups, or delete the group first with `purepgroup destroy prod-oracle-pg`.
-    **`Error: Volume 'prod-oracle-data-02' not found or not available`** — Verify volume names with `purevol list` and ensure all volumes are provisioned before adding to the protection group.
-    **`Error: Cannot set schedule on protection group without replication target`** — Configure a replication target with `purepgroup setreplication prod-oracle-pg --target <target-array>` before enabling snapshot schedules.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection group 'prod-oracle-pg' already exists` | Use `purepgroup list` to verify existing groups, or delete the group first with `purepgroup destroy prod-oracle-pg`. |
+    | `Error: Volume 'prod-oracle-data-02' not found or not available` | Verify volume names with `purevol list` and ensure all volumes are provisioned before adding to the protection group. |
+    | `Error: Cannot set schedule on protection group without replication target` | Configure a replication target with `purepgroup setreplication prod-oracle-pg --target <target-array>` before enabling snapshot schedules. |
 **Schedule parameter guidance:**
 
 | Parameter | Value | Meaning |
@@ -154,9 +156,11 @@ Snapshots Replicated: 847
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection failed to 10.20.50.15 — verify the remote management IP is reachable and the arrays have network connectivity on both management and replication networks.`** — Verify network connectivity and correct IP addresses with `ping` and `traceroute`.
-    **`Error: Protection group 'prod-oracle-pg' not found`** — Confirm the protection group name exists on the local array using `purepgroup list`.
-    **`Error: Remote array 'remote-dr-fa-01' is not connected`** — Ensure the initial `purearray connect` command completed successfully before attempting to add it as a replication target.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection failed to 10.20.50.15 — verify the remote management IP is reachable and the arrays have network connectivity on both management and replication networks.` | Verify network connectivity and correct IP addresses with `ping` and `traceroute`. |
+    | `Error: Protection group 'prod-oracle-pg' not found` | Confirm the protection group name exists on the local array using `purepgroup list`. |
+    | `Error: Remote array 'remote-dr-fa-01' is not connected` | Ensure the initial `purearray connect` command completed successfully before attempting to add it as a replication target. |
 ---
 
 ### Take an On-Demand Snapshot
@@ -195,8 +199,10 @@ prod-oracle-pg.premigration-20240312    1          108.9         512.8        4.
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection group 'prod-oracle-pg' not found`** — Verify the protection group name with `purepgroup list` and ensure it exists on the array.
-    **`Error: Insufficient space to create snapshot`** — Check available capacity with `purearray list --space` and delete old snapshots or add capacity if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection group 'prod-oracle-pg' not found` | Verify the protection group name with `purepgroup list` and ensure it exists on the array. |
+    | `Error: Insufficient space to create snapshot` | Check available capacity with `purearray list --space` and delete old snapshots or add capacity if needed. |
 ---
 
 ## Restore Procedures
@@ -235,8 +241,10 @@ prod-oracle-pg.premigration-20260501.oratemp     prod-oracle-pg.premigration-202
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection group 'prod-oracle-pg' not found`** — Verify the protection group name with `purepgroup list` and ensure it exists on the array.
-    **`Error: No snapshots found matching 'prod-oracle-pg.premigration-20260501.*'`** — Check that the snapshot name is spelled correctly and exists using `purepgroup listsnaps prod-oracle-pg`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection group 'prod-oracle-pg' not found` | Verify the protection group name with `purepgroup list` and ensure it exists on the array. |
+    | `Error: No snapshots found matching 'prod-oracle-pg.premigration-20260501.*'` | Check that the snapshot name is spelled correctly and exists using `purepgroup listsnaps prod-oracle-pg`. |
 **Step 2 — Clone the snapshot to a temporary volume for validation:**
 
 ```bash
@@ -268,8 +276,10 @@ Ready for mount and validation on validate-host-01
 ```
 
 !!! warning "Common errors"
-    **`Error: Volume 'prod-oracle-pg.premigration-20260501.prod-oracle-data-01' not found`** — Verify the snapshot name matches exactly using `purevol list --snap` and check for typos in the source volume name.
-    **`Error: Host 'validate-host-01' not found or not initialized`** — Ensure the validation host exists and is registered on the array with `purehost list`, and that its WWNs are properly configured.
+    | Error | Fix |
+    |---|---|
+    | `Error: Volume 'prod-oracle-pg.premigration-20260501.prod-oracle-data-01' not found` | Verify the snapshot name matches exactly using `purevol list --snap` and check for typos in the source volume name. |
+    | `Error: Host 'validate-host-01' not found or not initialized` | Ensure the validation host exists and is registered on the array with `purehost list`, and that its WWNs are properly configured. |
 **Step 3 — Overwrite production volume (disruptive — requires host quiesce):**
 
 ```bash
@@ -306,9 +316,11 @@ Connection details:
 ```
 
 !!! warning "Common errors"
-    **`Error: Volume prod-oracle-data-01 is still connected to 1 host(s). Use --force to disconnect.`** — Add the `--force` flag to the disconnect command if the volume must be forcibly unmapped despite active connections.
-    **`Error: Snapshot prod-oracle-pg.premigration-20260501.prod-oracle-data-01 not found`** — Verify the snapshot name matches exactly (check with `purevol list --snap`) and confirm the snapshot has not expired or been deleted.
-    **`Error: Cannot overwrite volume prod-oracle-data-01: insufficient space in pod`** — Ensure the target volume has sufficient capacity to accommodate the snapshot data, or expand the volume before retrying the copy operation.
+    | Error | Fix |
+    |---|---|
+    | `Error: Volume prod-oracle-data-01 is still connected to 1 host(s). Use --force to disconnect.` | Add the `--force` flag to the disconnect command if the volume must be forcibly unmapped despite active connections. |
+    | `Error: Snapshot prod-oracle-pg.premigration-20260501.prod-oracle-data-01 not found` | Verify the snapshot name matches exactly (check with `purevol list --snap`) and confirm the snapshot has not expired or been deleted. |
+    | `Error: Cannot overwrite volume prod-oracle-data-01: insufficient space in pod` | Ensure the target volume has sufficient capacity to accommodate the snapshot data, or expand the volume before retrying the copy operation. |
 ---
 
 ### Restore a Volume from a Volume-Level Snapshot
@@ -348,8 +360,10 @@ WARNING: Production volume prod-oracle-data-01 has been overwritten
 ```
 
 !!! warning "Common errors"
-    **`Error: Volume prod-oracle-data-01 is currently connected to host oracle-prod-01`** — Disconnect the volume from all hosts using `purevol disconnect prod-oracle-data-01 --host oracle-prod-01` before attempting overwrite.
-    **`Error: Snapshot prod-oracle-data-01.preupgrade-20260501 not found`** — Verify the snapshot name exists by running `purevol list prod-oracle-data-01.*` and use the exact name from the output.
+    | Error | Fix |
+    |---|---|
+    | `Error: Volume prod-oracle-data-01 is currently connected to host oracle-prod-01` | Disconnect the volume from all hosts using `purevol disconnect prod-oracle-data-01 --host oracle-prod-01` before attempting overwrite. |
+    | `Error: Snapshot prod-oracle-data-01.preupgrade-20260501 not found` | Verify the snapshot name exists by running `purevol list prod-oracle-data-01.*` and use the exact name from the output. |
 ---
 
 ### Restore from an Async Replication Snapshot at the DR Site
@@ -387,9 +401,11 @@ Host IQN: iqn.1991-05.com.example:dr-oracle-01.storage
 ```
 
 !!! warning "Common errors"
-    **`Error: Snapshot prod-oracle-pg.premigration-20260501.prod-oracle-data-01 not found`** — Verify the snapshot name matches exactly with `purepgroup listsnaps prod-oracle-pg --on local` output, including the date and source volume suffix.
-    **`Error: Volume dr-restore-oracle-data-01 already exists`** — Use a unique volume name or delete the existing volume with `purevol destroy dr-restore-oracle-data-01` before retrying the copy command.
-    **`Error: Host dr-oracle-01 not found on array`** — Register the DR host first using `purehost create dr-oracle-01 --iqn <host-iqn>` before attempting to connect volumes.
+    | Error | Fix |
+    |---|---|
+    | `Error: Snapshot prod-oracle-pg.premigration-20260501.prod-oracle-data-01 not found` | Verify the snapshot name matches exactly with `purepgroup listsnaps prod-oracle-pg --on local` output, including the date and source volume suffix. |
+    | `Error: Volume dr-restore-oracle-data-01 already exists` | Use a unique volume name or delete the existing volume with `purevol destroy dr-restore-oracle-data-01` before retrying the copy command. |
+    | `Error: Host dr-oracle-01 not found on array` | Register the DR host first using `purehost create dr-oracle-01 --iqn <host-iqn>` before attempting to connect volumes. |
 ---
 
 ### ActiveDR: Pod Promotion for DR Failover
@@ -440,8 +456,10 @@ dr-oracle-pod::ora_archive    250GB     210GB          Yes     0
 ```
 
 !!! warning "Common errors"
-    **`Error: Pod 'prod-oracle-pod' is not in a replicable state`** — Verify the pod exists on the production array and has an active replica-link before attempting demotion.
-    **`Error: Cannot promote pod 'dr-oracle-pod' — replica-link status is 'Disconnected'`** — Check network connectivity between arrays and ensure the replica-link is in 'Connected' state using `purepod replica-link list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Pod 'prod-oracle-pod' is not in a replicable state` | Verify the pod exists on the production array and has an active replica-link before attempting demotion. |
+    | `Error: Cannot promote pod 'dr-oracle-pod' — replica-link status is 'Disconnected'` | Check network connectivity between arrays and ensure the replica-link is in 'Connected' state using `purepod replica-link list`. |
 For unplanned failover (production array is offline), promote the DR pod without demoting production first, then reconcile after production is restored.
 
 ---
@@ -481,9 +499,11 @@ Connection established: prod-oracle-01 → prod-oracle-data-01 (LUN 3)
 ```
 
 !!! warning "Common errors"
-    **`Error: Volume prod-oracle-data-01 not found in pending eradication queue`** — Verify the volume name is correct and check if it has already been eradicated with `purevol list --destroyed`.
-    **`Error: Host prod-oracle-01 not found or offline`** — Confirm the host exists and is registered in Pure with `purehost list` before attempting reconnection.
-    **`Error: Volume prod-oracle-data-01 is already connected to host prod-oracle-01`** — Remove the redundant connection attempt or use `purehost disconnect` first if reassigning the volume.
+    | Error | Fix |
+    |---|---|
+    | `Error: Volume prod-oracle-data-01 not found in pending eradication queue` | Verify the volume name is correct and check if it has already been eradicated with `purevol list --destroyed`. |
+    | `Error: Host prod-oracle-01 not found or offline` | Confirm the host exists and is registered in Pure with `purehost list` before attempting reconnection. |
+    | `Error: Volume prod-oracle-data-01 is already connected to host prod-oracle-01` | Remove the redundant connection attempt or use `purehost disconnect` first if reassigning the volume. |
 > If `purealert list` shows a volume was eradicated (permanent deletion after 24 hours), recovery is not possible from the array. Recovery requires restoring from a protection group snapshot.
 
 ---
@@ -518,8 +538,10 @@ prod-oracle-pg.weekly-20260428          2026-04-28 22:00:01Z    prod-oracle-pg  
 ```
 
 !!! warning "Common errors"
-    **`Error: Snapshot prod-oracle-pg.premigration-20260501 not found`** — Verify the exact snapshot name with `puresnap list --pending` and check for typos in the recovery command.
-    **`Error: Permission denied`** — Ensure your user account has array administrator or snapshot recovery privileges on the Pure FlashArray.
+    | Error | Fix |
+    |---|---|
+    | `Error: Snapshot prod-oracle-pg.premigration-20260501 not found` | Verify the exact snapshot name with `puresnap list --pending` and check for typos in the recovery command. |
+    | `Error: Permission denied` | Ensure your user account has array administrator or snapshot recovery privileges on the Pure FlashArray. |
 ---
 
 ## Backup Validation
@@ -587,9 +609,11 @@ Eradicated 23 snapshots (847.2G freed)
 ```
 
 !!! warning "Common errors"
-    **`Error: Array connection failed. Check credentials and array IP.`** — Verify the Pure array hostname/IP is reachable and credentials are configured in `~/.purerc` or environment variables.
-    **`Error: Snapshot 'prod-oracle-pg.old-snapshot-20250101' not found or already eradicated.`** — Confirm the snapshot name exists using `puresnap list` before attempting eradication.
-    **`Error: Cannot eradicate snapshot—still referenced by active replication or clone.`** — Wait for dependent clones/replicas to complete or break the relationship before eradicating the source snapshot.
+    | Error | Fix |
+    |---|---|
+    | `Error: Array connection failed. Check credentials and array IP.` | Verify the Pure array hostname/IP is reachable and credentials are configured in `~/.purerc` or environment variables. |
+    | `Error: Snapshot 'prod-oracle-pg.old-snapshot-20250101' not found or already eradicated.` | Confirm the snapshot name exists using `puresnap list` before attempting eradication. |
+    | `Error: Cannot eradicate snapshot—still referenced by active replication or clone.` | Wait for dependent clones/replicas to complete or break the relationship before eradicating the source snapshot. |
 **Capacity thresholds:**
 
 | Snapshot Capacity | Action |
@@ -636,8 +660,10 @@ veeam-protection-group-02               host-hyperv-04, host-hyperv-05
 ```
 
 !!! warning "Common errors"
-    **`puresnap: command not found`** — Verify the Pure Storage FlashArray CLI tools are installed and the PATH environment variable includes the installation directory.
-    **`No matches found`** — This is expected output if no Veeam snapshots or protection groups exist; confirm Veeam backup jobs have run and are configured to use this FlashArray.
+    | Error | Fix |
+    |---|---|
+    | `puresnap: command not found` | Verify the Pure Storage FlashArray CLI tools are installed and the PATH environment variable includes the installation directory. |
+    | `No matches found` | This is expected output if no Veeam snapshots or protection groups exist; confirm Veeam backup jobs have run and are configured to use this FlashArray. |
 > The service account API token provided to Veeam requires `storage_admin` role — it needs to create and delete snapshots and protection groups. Do not give it `array_admin`.
 
 ---

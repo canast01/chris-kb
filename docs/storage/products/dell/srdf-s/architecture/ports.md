@@ -77,9 +77,11 @@ Current Latency Status                    Within Tolerance
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Command not found`** — Ensure the PowerMax management tools are installed and the `$PATH` includes the Symmetrix CLI bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`SRDF group <rdfg-number> not found`** — Verify the RDF group number is correct by running `symrdf list` to display all configured SRDF groups.
-    **`RDF Link Latency: 12.4 ms — exceeds threshold of 5.0 ms`** — Check network connectivity and WAN link utilization between the local and remote PowerMax arrays; consider increasing the latency threshold if the link is intentionally long-distance.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Command not found` | Ensure the PowerMax management tools are installed and the `$PATH` includes the Symmetrix CLI bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `SRDF group <rdfg-number> not found` | Verify the RDF group number is correct by running `symrdf list` to display all configured SRDF groups. |
+    | `RDF Link Latency: 12.4 ms — exceeds threshold of 5.0 ms` | Check network connectivity and WAN link utilization between the local and remote PowerMax arrays; consider increasing the latency threshold if the link is intentionally long-distance. |
 ## See also
 
 - [Dell SRDF/S — Architecture](../how-it-works/)

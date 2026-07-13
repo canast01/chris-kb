@@ -154,9 +154,11 @@ configmap/cluster-monitoring-config created
 ```
 
 !!! warning "Common errors"
-    **`error: node "<node>" not found`** — Replace `<node>` with the actual node hostname (e.g., `worker-infra-01`).
-    **`Error from server (NotFound): ingresscontrollers.operator.openshift.io "default" not found`** — Verify the ingress operator is installed with `oc get ingresscontroller -n openshift-ingress-operator`.
-    **`error: error validating "STDIN": error validating data: ValidationError(ConfigMap.data.config.yaml): invalid type for io.openshift.config.v1.ClusterMonitoringConfig: got "string", expected "object"`** — Remove the `config.yaml:` key and pipe the YAML object directly as the ConfigMap data value.
+    | Error | Fix |
+    |---|---|
+    | `error: node "<node>" not found` | Replace `<node>` with the actual node hostname (e.g., `worker-infra-01`). |
+    | `Error from server (NotFound): ingresscontrollers.operator.openshift.io "default" not found` | Verify the ingress operator is installed with `oc get ingresscontroller -n openshift-ingress-operator`. |
+    | `error: error validating "STDIN": error validating data: ValidationError(ConfigMap.data.config.yaml): invalid type for io.openshift.config.v1.ClusterMonitoringConfig: got "string", expected "object"` | Remove the `config.yaml:` key and pipe the YAML object directly as the ConfigMap data value. |
 ## etcd Disk Sizing and Validation
 
 etcd is the most I/O-sensitive component. Slow disk causes fsync latency, leader elections, and cluster instability.
@@ -207,9 +209,11 @@ fsync/fdatasync/sync_file_range:
 ```
 
 !!! warning "Common errors"
-    **`etcd-fio: IO Error: ENOSPC (No space left on device)`** — Ensure /var/lib/etcd has at least 50GB free space before running the test.
-    **`fio: command not found`** — Install fio with `yum install fio` (RHEL/CentOS) or `apt-get install fio` (Ubuntu).
-    **`Permission denied`** — Run the fio command with `sudo` or as root user since /var/lib/etcd requires elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `etcd-fio: IO Error: ENOSPC (No space left on device)` | Ensure /var/lib/etcd has at least 50GB free space before running the test. |
+    | `fio: command not found` | Install fio with `yum install fio` (RHEL/CentOS) or `apt-get install fio` (Ubuntu). |
+    | `Permission denied` | Run the fio command with `sudo` or as root user since /var/lib/etcd requires elevated privileges. |
 ## Network CIDR Planning
 
 Set at install time — cannot change after cluster creation without reinstalling.
@@ -264,8 +268,10 @@ oc debug node/<node> -- ip link show eth0
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "network.operator"`** — Verify the cluster-network-operator is installed with `oc get clusteroperator cluster-network-operator`.
-    **`Error from server (NotFound): nodes "<node>" not found`** — Replace `<node>` with an actual node name from `oc get nodes`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "network.operator"` | Verify the cluster-network-operator is installed with `oc get clusteroperator cluster-network-operator`. |
+    | `Error from server (NotFound): nodes "<node>" not found` | Replace `<node>` with an actual node name from `oc get nodes`. |
 **VLAN segmentation recommendation:**
 
 Separate VLANs for: (1) machine/node network, (2) storage network (iSCSI/NFS/ODF replication), (3) cluster API/management. Avoids broadcast domain pollution and simplifies firewall rules.
@@ -337,8 +343,10 @@ test-pvc   Pending                                      thin-csi        3s
 ```
 
 !!! warning "Common errors"
-    **`error: unable to recognize "STDIN": no kind "PersistentVolumeClaim" in version "v1"`** — Verify the API group is correct and the cluster supports the v1 API version for PVCs.
-    **`Error from server (Forbidden): persistentvolumeclaims is forbidden: User "system:serviceaccount:default:deployer" cannot create resource "persistentvolumeclaims"`** — Grant the service account or user the `create` verb on `persistentvolumeclaims` via a ClusterRole or Role binding.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to recognize "STDIN": no kind "PersistentVolumeClaim" in version "v1"` | Verify the API group is correct and the cluster supports the v1 API version for PVCs. |
+    | `Error from server (Forbidden): persistentvolumeclaims is forbidden: User "system:serviceaccount:default:deployer" cannot create resource "persistentvolumeclaims"` | Grant the service account or user the `create` verb on `persistentvolumeclaims` via a ClusterRole or Role binding. |
 ## MachineSet Design
 
 ```yaml
@@ -397,9 +405,11 @@ machineautoscaler.autoscaling.openshift.io/worker-autoscaler created
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "machineset"`** — Verify the machine-api-operator is running with `oc get pods -n openshift-machine-api` and check your cluster version supports MachineSets.
-    **`Error from server (NotFound): machinesets.machine.openshift.io "cluster-worker-0" not found`** — Confirm the exact MachineSet name with `oc get machineset -n openshift-machine-api` and use the correct namespace.
-    **`error: error validating "machineautoscaler.yaml": error validating data: ValidationError(MachineAutoscaler): unknown field "replicaCount"`** — Use correct field names `minReplicas` and `maxReplicas` in the MachineAutoscaler spec, not `replicaCount`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "machineset"` | Verify the machine-api-operator is running with `oc get pods -n openshift-machine-api` and check your cluster version supports MachineSets. |
+    | `Error from server (NotFound): machinesets.machine.openshift.io "cluster-worker-0" not found` | Confirm the exact MachineSet name with `oc get machineset -n openshift-machine-api` and use the correct namespace. |
+    | `error: error validating "machineautoscaler.yaml": error validating data: ValidationError(MachineAutoscaler): unknown field "replicaCount"` | Use correct field names `minReplicas` and `maxReplicas` in the MachineAutoscaler spec, not `replicaCount`. |
 ## See also
 
 - [OpenShift — How It Works](../how-it-works/)

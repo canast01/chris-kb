@@ -176,9 +176,11 @@ Top 10 directories in shared home:
 ```
 
 !!! warning "Common errors"
-    **`df: '/mnt/confluence-shared': No such file or directory`** — Verify the shared home mount point exists and is mounted with `mount | grep confluence-shared`.
-    **`awk: syntax error in regex at or near `%'`** — Ensure the df output format is standard; run `df -h /opt/atlassian/confluence` manually to confirm column 5 contains the percentage value.
-    **`du: cannot access '/mnt/confluence-shared/*': Permission denied`** — Run the script with sudo or ensure the executing user has read permissions on the shared home directory.
+    | Error | Fix |
+    |---|---|
+    | `df: '/mnt/confluence-shared': No such file or directory` | Verify the shared home mount point exists and is mounted with `mount | grep confluence-shared`. |
+    | `awk: syntax error in regex at or near `%'` | Ensure the df output format is standard; run `df -h /opt/atlassian/confluence` manually to confirm column 5 contains the percentage value. |
+    | `du: cannot access '/mnt/confluence-shared/*': Permission denied` | Run the script with sudo or ensure the executing user has read permissions on the shared home directory. |
 ---
 
 ## 4. Database Connectivity and Latency
@@ -214,11 +216,11 @@ PostgreSQL 12.14 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 9.3.0, 64-bit
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "db.internal.example.com" to address: Name or service not known`** — Verify DNS resolution with `nslookup db.internal.example.com` and confirm the hostname is correct in your network configuration.
-    
-    **`psql: error: FATAL: password authentication failed for user "confluence"`** — Check that the confluence database user password is correct and that the `.pgpass` file (if used) has the right credentials with permissions set to 0600.
-    
-    **`psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections`** — Increase the `max_connections` parameter in postgresql.conf and restart PostgreSQL, or reduce active connections by terminating idle sessions.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "db.internal.example.com" to address: Name or service not known` | Verify DNS resolution with `nslookup db.internal.example.com` and confirm the hostname is correct in your network configuration. |
+    | `psql: error: FATAL: password authentication failed for user "confluence"` | Check that the confluence database user password is correct and that the `.pgpass` file (if used) has the right credentials with permissions set to 0600. |
+    | `psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections` | Increase the `max_connections` parameter in postgresql.conf and restart PostgreSQL, or reduce active connections by terminating idle sessions. |
 ### Latency Test
 
 ```bash
@@ -248,9 +250,11 @@ sys	0m0.032s
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "db.internal.example.com" to address: Name or service not known`** — Verify DNS resolution with `ndig db.internal.example.com` or update the hostname to match your actual database server FQDN.
-    **`psql: error: FATAL: password authentication failed for user "confluence"`** — Confirm the confluence user password is correct and check that the `.pgpass` file exists with proper permissions (`chmod 600 ~/.pgpass`) or use the `-W` flag to prompt for password.
-    **`psql: error: FATAL: database "confluencedb" does not exist`** — Connect to the postgres database first with `-d postgres` and run `\l` to list available databases, then use the correct database name.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "db.internal.example.com" to address: Name or service not known` | Verify DNS resolution with `ndig db.internal.example.com` or update the hostname to match your actual database server FQDN. |
+    | `psql: error: FATAL: password authentication failed for user "confluence"` | Confirm the confluence user password is correct and check that the `.pgpass` file exists with proper permissions (`chmod 600 ~/.pgpass`) or use the `-W` flag to prompt for password. |
+    | `psql: error: FATAL: database "confluencedb" does not exist` | Connect to the postgres database first with `-d postgres` and run `\l` to list available databases, then use the correct database name. |
 | Metric | OK | Warning | Critical |
 |---|---|---|---|
 | DB connect time | < 100 ms | 100–500 ms | > 500 ms |
@@ -285,9 +289,11 @@ curl -s -H "Authorization: Bearer $CF_TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the Confluence hostname is correct and the instance is running with `curl -I https://confluence.example.com`.
-    **`jq: parse error: Invalid JSON text at line 1`** — Check that `$CF_TOKEN` is valid and has API permissions by testing with `curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/user/current" | jq '.'`.
-    **`{"statusCode":401,"message":"Unauthorized"}`** — Regenerate the API token in Confluence (Settings > Personal > API tokens) and re-export it as `export CF_TOKEN="your_new_token"`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443: Connection refused` | Verify the Confluence hostname is correct and the instance is running with `curl -I https://confluence.example.com`. |
+    | `jq: parse error: Invalid JSON text at line 1` | Check that `$CF_TOKEN` is valid and has API permissions by testing with `curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/user/current" | jq '.'`. |
+    | `{"statusCode":401,"message":"Unauthorized"}` | Regenerate the API token in Confluence (Settings > Personal > API tokens) and re-export it as `export CF_TOKEN="your_new_token"`. |
 Via the admin console, check:
 
 - **Index state**: Should be `CONNECTED` or `NORMAL`
@@ -308,9 +314,11 @@ curl -s -X POST -H "Authorization: Bearer $CF_TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`{"error":"Unauthorized","statusCode":401}`** — Verify the `CF_TOKEN` environment variable is set and contains a valid bearer token with admin permissions.
-    **`{"error":"Forbidden","statusCode":403}`** — Ensure the token's associated user account has the "Confluence Administrator" global permission.
-    **`curl: (6) Could not resolve host: confluence.example.com`** — Replace `confluence.example.com` with your actual Confluence instance hostname and verify network connectivity.
+    | Error | Fix |
+    |---|---|
+    | `{"error":"Unauthorized","statusCode":401}` | Verify the `CF_TOKEN` environment variable is set and contains a valid bearer token with admin permissions. |
+    | `{"error":"Forbidden","statusCode":403}` | Ensure the token's associated user account has the "Confluence Administrator" global permission. |
+    | `curl: (6) Could not resolve host: confluence.example.com` | Replace `confluence.example.com` with your actual Confluence instance hostname and verify network connectivity. |
 ---
 
 ## 6. Cluster Node Status (Data Center)
@@ -359,9 +367,11 @@ curl -s -H "Authorization: Bearer $CF_TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the Confluence server is running and accessible at the specified hostname/port.
-    **`{"statusCode":401,"message":"Unauthorized"}`** — Ensure the CF_TOKEN environment variable is set to a valid API token with cluster admin permissions.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip SSL verification, or configure proper certificates in your Confluence instance.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443: Connection refused` | Verify the Confluence server is running and accessible at the specified hostname/port. |
+    | `{"statusCode":401,"message":"Unauthorized"}` | Ensure the CF_TOKEN environment variable is set to a valid API token with cluster admin permissions. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl to skip SSL verification, or configure proper certificates in your Confluence instance. |
 Cluster checks:
 
 | Check | Expected | Alert If |
@@ -385,9 +395,11 @@ OK
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 10.0.1.11 port 5801 (tcp) failed: Connection refused`** — Verify the service listening on port 5801 is running on node-1 with `systemctl status <service-name>`.
-    **`nc: getaddrinfo for host "10.0.1.11" port 5801 failed: Name or service not known`** — Confirm the IP address 10.0.1.11 is correct and reachable by pinging it first: `ping -c 1 10.0.1.11`.
-    **`nc: connect to 10.0.1.11 port 5801 (tcp) failed: No route to host`** — Check network connectivity and firewall rules between node-2 and node-1; verify the route exists with `ip route show`.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 10.0.1.11 port 5801 (tcp) failed: Connection refused` | Verify the service listening on port 5801 is running on node-1 with `systemctl status <service-name>`. |
+    | `nc: getaddrinfo for host "10.0.1.11" port 5801 failed: Name or service not known` | Confirm the IP address 10.0.1.11 is correct and reachable by pinging it first: `ping -c 1 10.0.1.11`. |
+    | `nc: connect to 10.0.1.11 port 5801 (tcp) failed: No route to host` | Check network connectivity and firewall rules between node-2 and node-1; verify the route exists with `ip route show`. |
 ---
 
 ## 7. Scheduled Jobs
@@ -484,9 +496,11 @@ Health check complete. Failures: 0
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443`** — Verify CF_URL is correct and Confluence is running; check network connectivity with `ping confluence.example.com`.
-    **`psql: error: connection to server at "db.internal.example.com" (10.42.1.15), port 5432 failed`** — Ensure the PostgreSQL host is reachable, credentials in the psql command are correct, and the database user has login privileges.
-    **`jq: parse error: Invalid JSON text at line 1`** — Confirm the `/status` endpoint returns valid JSON; test manually with `curl -sf "${CF_URL}/status" | jq .` to see the actual response.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443` | Verify CF_URL is correct and Confluence is running; check network connectivity with `ping confluence.example.com`. |
+    | `psql: error: connection to server at "db.internal.example.com" (10.42.1.15), port 5432 failed` | Ensure the PostgreSQL host is reachable, credentials in the psql command are correct, and the database user has login privileges. |
+    | `jq: parse error: Invalid JSON text at line 1` | Confirm the `/status` endpoint returns valid JSON; test manually with `curl -sf "${CF_URL}/status" | jq .` to see the actual response. |
 ---
 
 ## Verify

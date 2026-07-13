@@ -48,9 +48,11 @@ tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 byt
 ```
 
 !!! warning "Common errors"
-    **`snmpconfig: command not found`** — Ensure you are running this command on the Brocade switch (via SSH to the switch IP), not from a remote host.
-    **`tcpdump: Permission denied`** — Run tcpdump with `sudo` or as root to capture packets on the SANnav management network interface.
-    **`No such file or directory: /opt/sannav/logs/event-engine.log`** — Verify SANnav is installed and the event engine service is running with `systemctl status sannav-event-engine`.
+    | Error | Fix |
+    |---|---|
+    | `snmpconfig: command not found` | Ensure you are running this command on the Brocade switch (via SSH to the switch IP), not from a remote host. |
+    | `tcpdump: Permission denied` | Run tcpdump with `sudo` or as root to capture packets on the SANnav management network interface. |
+    | `No such file or directory: /opt/sannav/logs/event-engine.log` | Verify SANnav is installed and the event engine service is running with `systemctl status sannav-event-engine`. |
 ```bash
 # Test LDAP connectivity from SANnav appliance
 openssl s_client -connect ldap.corp.example.com:636 -brief
@@ -82,9 +84,11 @@ numEntries: 1
 ```
 
 !!! warning "Common errors"
-    **`ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839`** — Verify the bind password is correct and the service account is not locked or expired in Active Directory.
-    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Add the LDAP server's CA certificate to the SANnav appliance's trusted CA store or use `openssl s_client -connect ldap.corp.example.com:636 -CAfile /path/to/ca.pem` to validate the certificate chain.
-    **`ldapsearch: error code 1 - 000004DC: LdapErr: DSID-0C0906E8, comment: In order to perform this operation a successful bind must be completed before the request is processed, data 0, v3839`** — Ensure the LDAP server hostname, port (636 for LDAPS), and bind DN are correct and that network connectivity exists on port 636.
+    | Error | Fix |
+    |---|---|
+    | `ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839` | Verify the bind password is correct and the service account is not locked or expired in Active Directory. |
+    | `error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed` | Add the LDAP server's CA certificate to the SANnav appliance's trusted CA store or use `openssl s_client -connect ldap.corp.example.com:636 -CAfile /path/to/ca.pem` to validate the certificate chain. |
+    | `ldapsearch: error code 1 - 000004DC: LdapErr: DSID-0C0906E8, comment: In order to perform this operation a successful bind must be completed before the request is processed, data 0, v3839` | Ensure the LDAP server hostname, port (636 for LDAPS), and bind DN are correct and that network connectivity exists on port 636. |
 ```bash
 # On the switch (FOS CLI)
 firmwareshow
@@ -120,9 +124,11 @@ System Error Log (Last 10 entries):
 ```
 
 !!! warning "Common errors"
-    **`firmwareshow: command not found`** — Ensure you are logged into the switch FOS CLI directly (not the management interface); use `sshfos` or telnet to the switch IP.
-    **`errdump: Access denied`** — Verify your user account has administrative privileges on the switch; request elevated permissions from your fabric administrator.
-    **`firmwaredownload --status: Download in progress (98%) - Do not power off`** — Wait for the download to complete or contact Brocade support if it stalls beyond 30 minutes; do not interrupt the process.
+    | Error | Fix |
+    |---|---|
+    | `firmwareshow: command not found` | Ensure you are logged into the switch FOS CLI directly (not the management interface); use `sshfos` or telnet to the switch IP. |
+    | `errdump: Access denied` | Verify your user account has administrative privileges on the switch; request elevated permissions from your fabric administrator. |
+    | `firmwaredownload --status: Download in progress (98%) - Do not power off` | Wait for the download to complete or contact Brocade support if it stalls beyond 30 minutes; do not interrupt the process. |
 ```bash
 # Verify switch firmware from SANnav after reconnect
 # Inventory > Switches > [Switch] > Details
@@ -160,9 +166,11 @@ testfile.txt                                          100%  1024     512.3KB/s  
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials for sannav-bkp user on backup-server and ensure the private key is loaded in ssh-agent or explicitly specified with `-i` flag.
-    **`Connection refused`** — Confirm TCP port 22 is open on backup-server.corp.example.com by running `telnet backup-server.corp.example.com 22` from the SANnav host.
-    **`No such file or directory: /opt/sannav/logs/server.log`** — Check the correct log path with `find /opt/sannav -name "*.log" -type f` or verify SANnav is installed and running.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials for sannav-bkp user on backup-server and ensure the private key is loaded in ssh-agent or explicitly specified with `-i` flag. |
+    | `Connection refused` | Confirm TCP port 22 is open on backup-server.corp.example.com by running `telnet backup-server.corp.example.com 22` from the SANnav host. |
+    | `No such file or directory: /opt/sannav/logs/server.log` | Check the correct log path with `find /opt/sannav -name "*.log" -type f` or verify SANnav is installed and running. |
 ```bash
 df -h | grep backup
 # If not mounted: sudo mount -a

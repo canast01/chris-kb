@@ -46,9 +46,11 @@ pstcli>
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused on 192.168.1.50:443`** — Verify the management IP is correct and reachable; check that PowerStore management interface is running with `ping 192.168.1.50`.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the admin password is correct and the account is not locked; reset credentials via the PowerStore web UI if needed.
-    **`Error: pstcli: command not found`** — Install the PowerStore CLI package or add its installation directory to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused on 192.168.1.50:443` | Verify the management IP is correct and reachable; check that PowerStore management interface is running with `ping 192.168.1.50`. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin password is correct and the account is not locked; reset credentials via the PowerStore web UI if needed. |
+    | `Error: pstcli: command not found` | Install the PowerStore CLI package or add its installation directory to your PATH environment variable. |
 ---
 
 ## Array & System Management
@@ -112,9 +114,11 @@ Active Alerts:
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused on <ip>:443`** — Verify the PowerStore management IP is reachable and pstcli credentials are correct with `ping <ip>` and check firewall rules.
-    **`Error: Invalid credentials for user 'admin'`** — Reset the admin password via the PowerStore web UI or use the correct credentials; ensure the user account has CLI access enabled.
-    **`Error: Command 'show /appliance' not recognized`** — Verify the pstcli version matches the PowerStore firmware version; update pstcli if the command syntax has changed in newer releases.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused on <ip>:443` | Verify the PowerStore management IP is reachable and pstcli credentials are correct with `ping <ip>` and check firewall rules. |
+    | `Error: Invalid credentials for user 'admin'` | Reset the admin password via the PowerStore web UI or use the correct credentials; ensure the user account has CLI access enabled. |
+    | `Error: Command 'show /appliance' not recognized` | Verify the pstcli version matches the PowerStore firmware version; update pstcli if the command syntax has changed in newer releases. |
 ---
 
 ## Volume Operations
@@ -169,9 +173,11 @@ LUN: 3
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused on <ip>:443`** — Verify the PowerStore IP address is correct and the management interface is reachable with `ping <ip>`.
-    **`Error: Invalid credentials for user admin`** — Confirm the admin password is correct and the user account is not locked; reset credentials in PowerStore GUI if needed.
-    **`Error: Volume <id> is currently mapped to hosts`** — Unmap the volume from all hosts using `delete /volume/<id>/host_volume_mapping` before deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused on <ip>:443` | Verify the PowerStore IP address is correct and the management interface is reachable with `ping <ip>`. |
+    | `Error: Invalid credentials for user admin` | Confirm the admin password is correct and the user account is not locked; reset credentials in PowerStore GUI if needed. |
+    | `Error: Volume <id> is currently mapped to hosts` | Unmap the volume from all hosts using `delete /volume/<id>/host_volume_mapping` before deletion. |
 ---
 
 ## Host Management
@@ -211,9 +217,11 @@ hg-4e7a1b3c-5i6g-11ed-f7h9-010512    dr-failover-group
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused on <ip>:443`** — Verify the PowerStore array IP is reachable and the management interface is online with `ping <ip>`.
-    **`Error: Invalid credentials for user admin`** — Confirm the admin password is correct and the user account has not been locked after failed login attempts.
-    **`Error: Host with name <name> already exists`** — Choose a unique hostname or delete the existing host entry before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused on <ip>:443` | Verify the PowerStore array IP is reachable and the management interface is online with `ping <ip>`. |
+    | `Error: Invalid credentials for user admin` | Confirm the admin password is correct and the user account has not been locked after failed login attempts. |
+    | `Error: Host with name <name> already exists` | Choose a unique hostname or delete the existing host entry before recreating it. |
 ---
 
 ## Snapshots & Protection
@@ -249,9 +257,11 @@ ID                                   Name              Source Volume        Targ
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (10.20.30.40:443)`** — Verify the PowerStore array IP address is correct and the management interface is reachable with `ping` or `nc`.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the admin password is correct and the user account has not been locked; reset credentials in the PowerStore GUI if needed.
-    **`Error: Invalid volume_id <id>: Volume not found`** — Verify the volume ID exists by running `pstcli -d <ip> -u admin "show /volume"` and use the correct UUID from the output.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (10.20.30.40:443)` | Verify the PowerStore array IP address is correct and the management interface is reachable with `ping` or `nc`. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin password is correct and the user account has not been locked; reset credentials in the PowerStore GUI if needed. |
+    | `Error: Invalid volume_id <id>: Volume not found` | Verify the volume ID exists by running `pstcli -d <ip> -u admin "show /volume"` and use the correct UUID from the output. |
 ---
 
 ## Capacity & Performance
@@ -292,9 +302,11 @@ Drive Health Status:
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid appliance ID format`** — Verify the appliance ID matches the system's UUID (use `pstcli -d <ip> -u admin "show /appliance"` to list valid IDs).
-    **`Error: Authentication failed for user admin`** — Confirm admin credentials are correct and the user has sufficient permissions on the PowerStore array.
-    **`Error: Connection timeout to <ip>:443`** — Verify network connectivity to the PowerStore management IP and ensure the array is online and accessible.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid appliance ID format` | Verify the appliance ID matches the system's UUID (use `pstcli -d <ip> -u admin "show /appliance"` to list valid IDs). |
+    | `Error: Authentication failed for user admin` | Confirm admin credentials are correct and the user has sufficient permissions on the PowerStore array. |
+    | `Error: Connection timeout to <ip>:443` | Verify network connectivity to the PowerStore management IP and ensure the array is online and accessible. |
 ---
 
 ## REST API (Alternative)
@@ -322,9 +334,11 @@ curl -k -X GET https://<ip>/api/rest/alert \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify if using different curl version).
-    **`{"error":"Invalid credentials","error_code":401}`** — Verify username and password are correct and the admin account is not locked; check PowerStore web UI login.
-    **`curl: (7) Failed to connect to <ip> port 443: Connection refused`** — Confirm the PowerStore management IP is correct and reachable; verify network connectivity and that the REST API service is running.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but verify if using different curl version). |
+    | `{"error":"Invalid credentials","error_code":401}` | Verify username and password are correct and the admin account is not locked; check PowerStore web UI login. |
+    | `curl: (7) Failed to connect to <ip> port 443: Connection refused` | Confirm the PowerStore management IP is correct and reachable; verify network connectivity and that the REST API service is running. |
 ---
 
 ## Common Patterns
@@ -368,9 +382,11 @@ rep-sess-003-archive-sync          10.70.5.88           Paused    N/A
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused on <ip>:443`** — Verify the PowerStore IP address is correct and the management interface is reachable with `ping <ip>` and `telnet <ip> 443`.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the admin password is correct and the user account is not locked; reset credentials via the PowerStore web UI if needed.
-    **`Error: Command 'show /alert?state=active' not recognized`** — Check that pstcli version matches the PowerStore firmware version; update pstcli with `pstcli --version` and upgrade if necessary.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused on <ip>:443` | Verify the PowerStore IP address is correct and the management interface is reachable with `ping <ip>` and `telnet <ip> 443`. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin password is correct and the user account is not locked; reset credentials via the PowerStore web UI if needed. |
+    | `Error: Command 'show /alert?state=active' not recognized` | Check that pstcli version matches the PowerStore firmware version; update pstcli with `pstcli --version` and upgrade if necessary. |
 ---
 
 ## Verify

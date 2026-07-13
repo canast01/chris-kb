@@ -173,8 +173,10 @@ Memory: 262144 MB total, 187456 MB used, 74688 MB free
 ```
 
 !!! warning "Common errors"
-    **`ESXTOP: Cannot open /proc/uptime: Permission denied`** — Run esxtop as root or with sudo.
-    **`ESXTOP: No such file or directory`** — Ensure you are running this command directly on an ESXi host, not a vCenter server or external system.
+    | Error | Fix |
+    |---|---|
+    | `ESXTOP: Cannot open /proc/uptime: Permission denied` | Run esxtop as root or with sudo. |
+    | `ESXTOP: No such file or directory` | Ensure you are running this command directly on an ESXi host, not a vCenter server or external system. |
 Press `m` to switch to memory view. Key columns:
 
 | Column | Meaning | Threshold |

@@ -127,8 +127,10 @@ aws rds modify-db-instance \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (DBParameterGroupNotFound) when calling the DescribeDBParameterGroups operation: DB parameter group not found`** — Verify the parameter group name exists with `aws rds describe-db-parameter-groups` and check for typos.
-    **`An error occurred (InvalidParameterValue) when calling the ModifyDBParameterGroup operation: The parameter max_connections cannot be modified because it is not modifiable`** — Check if the parameter is modifiable by reviewing its properties in `describe-db-parameters` output;
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (DBParameterGroupNotFound) when calling the DescribeDBParameterGroups operation: DB parameter group not found` | Verify the parameter group name exists with `aws rds describe-db-parameter-groups` and check for typos. |
+    | `An error occurred (InvalidParameterValue) when calling the ModifyDBParameterGroup operation: The parameter max_connections cannot be modified because it is not modifiable` | Check if the parameter is modifiable by reviewing its properties in `describe-db-parameters` output; |
 ## Subnet Groups
 
 ```bash
@@ -198,8 +200,10 @@ aws rds create-db-subnet-group \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (DBSubnetGroupNotFoundFault) when calling the DescribeDBSubnetGroups operation: DB subnet group not found`** — Verify the subnet group name exists with `aws rds describe-db-subnet-groups` and use the correct name.
-    **`An error occurred (InvalidParameterValue) when calling the CreateDBSubnetGroup operation: DB subnet group already exists`** — Choose a unique subnet group name or delete the existing group before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (DBSubnetGroupNotFoundFault) when calling the DescribeDBSubnetGroups operation: DB subnet group not found` | Verify the subnet group name exists with `aws rds describe-db-subnet-groups` and use the correct name. |
+    | `An error occurred (InvalidParameterValue) when calling the CreateDBSubnetGroup operation: DB subnet group already exists` | Choose a unique subnet group name or delete the existing group before recreating it. |
 ## Events and Event Subscriptions
 
 ```bash
@@ -309,7 +313,9 @@ aws rds create-event-subscription \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the DescribeEvents operation: Invalid duration value`** — Ensure duration is specified in minutes (1–1440) and is a valid integer.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the DescribeEvents operation: Invalid duration value` | Ensure duration is specified in minutes (1–1440) and is a valid integer. |
     **`An error occurred (InvalidParameterCombination) when calling the CreateEventSubscription operation: SNS topic does not exist or you do not have permission to access it`** —
 ## Read Replicas
 
@@ -367,9 +373,11 @@ aws rds promote-read-replica \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (DBInstanceNotFound) when calling the CreateDBInstanceReadReplica operation: DBInstance not found`** — Verify the source database identifier exists and is in the correct region using `aws rds describe-db-instances --db-instance-identifier <source_id>`.
-    **`An error occurred (InvalidDBInstanceState) when calling the CreateDBInstanceReadReplica operation: Source database instance is not in available state`** — Wait for the source database to reach "available" status before creating a replica; check with `aws rds describe-db-instances --db-instance-identifier <source_id>`.
-    **`An error occurred (DBInstanceAlreadyExists) when calling the PromoteReadReplica operation: DB instance already exists`** — Choose a unique replica identifier that doesn't already exist in your account.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (DBInstanceNotFound) when calling the CreateDBInstanceReadReplica operation: DBInstance not found` | Verify the source database identifier exists and is in the correct region using `aws rds describe-db-instances --db-instance-identifier <source_id>`. |
+    | `An error occurred (InvalidDBInstanceState) when calling the CreateDBInstanceReadReplica operation: Source database instance is not in available state` | Wait for the source database to reach "available" status before creating a replica; check with `aws rds describe-db-instances --db-instance-identifier <source_id>`. |
+    | `An error occurred (DBInstanceAlreadyExists) when calling the PromoteReadReplica operation: DB instance already exists` | Choose a unique replica identifier that doesn't already exist in your account. |
 ## Aurora Clusters
 
 ```bash
@@ -455,9 +463,11 @@ aws rds create-db-cluster-snapshot \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (DBClusterNotFoundFault) when calling the DescribeDBClusters operation: DBCluster not found: <cluster_id>`** — Verify the cluster identifier is correct and exists in the current AWS region using `aws rds describe-db-clusters`.
-    **`An error occurred (InvalidDBInstanceState) when calling the FailoverDBCluster operation: Failover cannot be performed on <cluster_id> because it is not in available state`** — Wait for the cluster to reach "available" status before attempting failover; check status with `aws rds describe-db-clusters --db-cluster-identifier <cluster_id>`.
-    **`An error occurred (DBClusterSnapshotAlreadyExistsFault) when calling the CreateDBClusterSnapshot operation: <snap_name> already exists`** — Use a unique snapshot identifier or delete the existing snapshot with `aws rds delete-db-cluster-snapshot --db-
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (DBClusterNotFoundFault) when calling the DescribeDBClusters operation: DBCluster not found: <cluster_id>` | Verify the cluster identifier is correct and exists in the current AWS region using `aws rds describe-db-clusters`. |
+    | `An error occurred (InvalidDBInstanceState) when calling the FailoverDBCluster operation: Failover cannot be performed on <cluster_id> because it is not in available state` | Wait for the cluster to reach "available" status before attempting failover; check status with `aws rds describe-db-clusters --db-cluster-identifier <cluster_id>`. |
+    | `An error occurred (DBClusterSnapshotAlreadyExistsFault) when calling the CreateDBClusterSnapshot operation: <snap_name> already exists` | Use a unique snapshot identifier or delete the existing snapshot with `aws rds delete-db-cluster-snapshot --db- |
 ## Log Export and Monitoring
 
 ```bash
@@ -524,9 +534,11 @@ aws rds modify-db-instance \
 ```
 
 !!! warning "Common errors"
-    **`InvalidDBInstanceIdentifier: DBInstance not found`** — Verify the instance identifier matches exactly using `aws rds describe-db-instances --query 'DBInstances[].DBInstanceIdentifier'`.
-    **`AccessDenied: User is not authorized to perform: rds:DownloadDBLogFilePortion`** — Add the `rds:DownloadDBLogFilePortion` permission to your IAM user or role policy.
-    **`InvalidParameterValue: The IAM role arn:aws:iam::123456789012:role/rds-monitoring-role is not valid`** — Ensure the monitoring role exists and has the `AmazonRDSEnhancedMonitoringRole` trust relationship configured for RDS.
+    | Error | Fix |
+    |---|---|
+    | `InvalidDBInstanceIdentifier: DBInstance not found` | Verify the instance identifier matches exactly using `aws rds describe-db-instances --query 'DBInstances[].DBInstanceIdentifier'`. |
+    | `AccessDenied: User is not authorized to perform: rds:DownloadDBLogFilePortion` | Add the `rds:DownloadDBLogFilePortion` permission to your IAM user or role policy. |
+    | `InvalidParameterValue: The IAM role arn:aws:iam::123456789012:role/rds-monitoring-role is not valid` | Ensure the monitoring role exists and has the `AmazonRDSEnhancedMonitoringRole` trust relationship configured for RDS. |
 ## See also
 
 - [AWS CLI Reference](../index.md)

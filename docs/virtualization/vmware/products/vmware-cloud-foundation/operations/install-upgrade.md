@@ -72,9 +72,11 @@ tail -200 /var/log/vmware/vcf/sddc-manager/vcf-sddc-manager.log | grep -i "prech
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if you remove it).
-    **`jq: command not found`** — Install `jq` package or use `python3 -m json.tool` as shown in the example for JSON formatting.
-    **`grep: /var/log/vmware/vcf/sddc-manager/vcf-sddc-manager.log: No such file or directory`** — Verify SDDC Manager is running and check the correct log path with `find /var/log -name "*sddc-manager*" -type f`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if you remove it). |
+    | `jq: command not found` | Install `jq` package or use `python3 -m json.tool` as shown in the example for JSON formatting. |
+    | `grep: /var/log/vmware/vcf/sddc-manager/vcf-sddc-manager.log: No such file or directory` | Verify SDDC Manager is running and check the correct log path with `find /var/log -name "*sddc-manager*" -type f`. |
 ```bash
 ## Check current component versions in SDDC Manager
 curl -sk -u admin:<password> \
@@ -133,9 +135,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if error persists, verify SDDC Manager API endpoint is accessible).
-    **`curl: (7) Failed to connect to localhost port 443: Connection refused`** — Ensure SDDC Manager service is running with `systemctl status sddc-manager` and verify you're connecting from a host with network access to the management cluster.
-    **`jq: command not found`** — Install `python3-json-tool` or use `python3 -m json.tool` instead (already shown in example; if json.tool fails, verify Python 3.6+ is installed).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if error persists, verify SDDC Manager API endpoint is accessible). |
+    | `curl: (7) Failed to connect to localhost port 443: Connection refused` | Ensure SDDC Manager service is running with `systemctl status sddc-manager` and verify you're connecting from a host with network access to the management cluster. |
+    | `jq: command not found` | Install `python3-json-tool` or use `python3 -m json.tool` instead (already shown in example; if json.tool fails, verify Python 3.6+ is installed). |
 ```bash
 ## Verify SDDC Manager backup is current
 curl -sk -u admin:<password> \
@@ -190,9 +194,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the SDDC Manager CA certificate into your system trust store.
-    **`HTTP/1.1 401 Unauthorized`** — Verify the admin password is correct and hasn't expired; reset credentials in SDDC Manager if needed.
-    **`curl: (7) Failed to connect to localhost port 443: Connection refused`** — Ensure you are running this command on the SDDC Manager appliance itself or have network access to its management IP, and verify the API service is running with `systemctl status sddc-manager-api`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the SDDC Manager CA certificate into your system trust store. |
+    | `HTTP/1.1 401 Unauthorized` | Verify the admin password is correct and hasn't expired; reset credentials in SDDC Manager if needed. |
+    | `curl: (7) Failed to connect to localhost port 443: Connection refused` | Ensure you are running this command on the SDDC Manager appliance itself or have network access to its management IP, and verify the API service is running with `systemctl status sddc-manager-api`. |
 ```bash
 ## Test connectivity from SDDC Manager to VMware depot
 curl -sk -o /dev/null -w "%{http_code}" https://depot.vmware.com
@@ -211,9 +217,11 @@ curl -sk -o /dev/null -w "%{http_code}" https://<nsx-manager-fqdn>/api/v1/node
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to depot.vmware.com port 443: Connection timed out`** — Verify outbound HTTPS connectivity from SDDC Manager to the internet and check firewall rules allow access to depot.vmware.com.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should skip certificate validation, but if using an older curl version, update curl or ensure the certificate chain is trusted in the system CA store.
-    **`curl: (6) Could not resolve host name`** — Replace `<vcenter-fqdn>` and `<nsx-manager-fqdn>` with actual FQDNs and verify DNS resolution is working from SDDC Manager with `nslookup` or `dig`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to depot.vmware.com port 443: Connection timed out` | Verify outbound HTTPS connectivity from SDDC Manager to the internet and check firewall rules allow access to depot.vmware.com. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag should skip certificate validation, but if using an older curl version, update curl or ensure the certificate chain is trusted in the system CA store. |
+    | `curl: (6) Could not resolve host name` | Replace `<vcenter-fqdn>` and `<nsx-manager-fqdn>` with actual FQDNs and verify DNS resolution is working from SDDC Manager with `nslookup` or `dig`. |
 ```bash
 ## Add environment-specific commands here
 ```

@@ -89,9 +89,11 @@ Connection to 192.168.20.78 10443 [tcp/*] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`Connection to 192.168.10.45 31031 [tcp/*] failed: Connection refused`** — Verify the vSphere Replication service is running on the recovery ESXi host and firewall rules permit port 31031 inbound.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the VR Appliance's self-signed certificate into your trusted store.
-    **`Connection to 192.168.20.78 10443 [tcp/*] failed: Connection timed out`** — Confirm network connectivity between sites, check that the remote VR Appliance is powered on, and verify firewall rules allow port 10443 between appliances.
+    | Error | Fix |
+    |---|---|
+    | `Connection to 192.168.10.45 31031 [tcp/*] failed: Connection refused` | Verify the vSphere Replication service is running on the recovery ESXi host and firewall rules permit port 31031 inbound. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the VR Appliance's self-signed certificate into your trusted store. |
+    | `Connection to 192.168.20.78 10443 [tcp/*] failed: Connection timed out` | Confirm network connectivity between sites, check that the remote VR Appliance is powered on, and verify firewall rules allow port 10443 between appliances. |
 ## See also
 
 - [vSphere Replication — Architecture](../how-it-works/)

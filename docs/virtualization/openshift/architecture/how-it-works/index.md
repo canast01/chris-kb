@@ -87,8 +87,10 @@ I1215 14:33:05.456789 1 backend.go:123] "committed index" index=8945672
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "pods" in group ""`** — Verify you are connected to the correct cluster with `oc cluster-info` and have valid credentials via `oc login`.
-    **`error: pods "kube-apiserver-master-0" not found`** — The pod may have crashed; check pod status with `oc get pods -n openshift-kube-apiserver -o wide` and describe it with `oc describe pod <pod-name> -n openshift-kube-apiserver`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "pods" in group ""` | Verify you are connected to the correct cluster with `oc cluster-info` and have valid credentials via `oc login`. |
+    | `error: pods "kube-apiserver-master-0" not found` | The pod may have crashed; check pod status with `oc get pods -n openshift-kube-apiserver -o wide` and describe it with `oc describe pod <pod-name> -n openshift-kube-apiserver`. |
 ## etcd Quorum Rules
 
 etcd uses the Raft consensus algorithm. A cluster requires a strict majority (quorum) of members to be alive before it accepts writes. In OpenShift, master nodes are the etcd members.
@@ -159,9 +161,11 @@ Snapshot saved at /var/home/core/etcd-backup-2024-01-15.db
 ```
 
 !!! warning "Common errors"
-    **`Error: context deadline exceeded`** — Increase the command timeout with `--command-timeout=30s` or verify etcd member connectivity with `etcdctl endpoint health`.
-    **`Error: permission denied`** — Ensure certificate paths are correct and the user running etcdctl has read permissions on `/etc/kubernetes/static-pod-resources/etcd-certs/` with `ls -la /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/`.
-    **`Error: failed to dial default client URL`** — Verify the etcd endpoint is listening on port 2379 with `netstat -tlnp | grep 2379` and check firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `Error: context deadline exceeded` | Increase the command timeout with `--command-timeout=30s` or verify etcd member connectivity with `etcdctl endpoint health`. |
+    | `Error: permission denied` | Ensure certificate paths are correct and the user running etcdctl has read permissions on `/etc/kubernetes/static-pod-resources/etcd-certs/` with `ls -la /etc/kubernetes/static-pod-resources/etcd-certs/secrets/etcd-all-certs/`. |
+    | `Error: failed to dial default client URL` | Verify the etcd endpoint is listening on port 2379 with `netstat -tlnp | grep 2379` and check firewall rules. |
 **Compaction defaults (OCP 4.x):**
 
 | Parameter | Default | Notes |
@@ -243,9 +247,11 @@ ingress-operator-7c4b5f9d8          1/1     Running   2          20d
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "co"`** — Use the full resource name `oc get clusteroperators` or ensure you're connected to an OpenShift cluster (not vanilla Kubernetes).
-    **`Error from server (NotFound): namespaces "openshift-<name>" not found`** — Replace `<name>` with the actual operator name in lowercase (e.g., `openshift-authentication`), and verify the namespace exists with `oc get ns | grep openshift`.
-    **`error: you must specify the type of resource to get the log from`** — Specify the exact deployment name with `oc logs -n openshift-<name> deployment/<exact-deployment-name>` after confirming it with `oc get deployment -n openshift-<name>`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "co"` | Use the full resource name `oc get clusteroperators` or ensure you're connected to an OpenShift cluster (not vanilla Kubernetes). |
+    | `Error from server (NotFound): namespaces "openshift-<name>" not found` | Replace `<name>` with the actual operator name in lowercase (e.g., `openshift-authentication`), and verify the namespace exists with `oc get ns | grep openshift`. |
+    | `error: you must specify the type of resource to get the log from` | Specify the exact deployment name with `oc logs -n openshift-<name> deployment/<exact-deployment-name>` after confirming it with `oc get deployment -n openshift-<name>`. |
 ## MachineConfig and MCO
 
 The Machine Config Operator (MCO) manages OS-level configuration on RHCOS nodes. Configuration is expressed as `MachineConfig` objects that render into Ignition configs.
@@ -305,9 +311,11 @@ node/worker-node-02 drained
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "mcp"`** — Ensure you are connected to an OpenShift cluster with `oc login` and the machine-config-operator is installed.
-    **`Error from server (NotFound): nodes "<node>" not found`** — Verify the node name with `oc get nodes` before attempting to drain it.
-    **`error: unable to drain node, there are pending pods that don't tolerate disruption`** — Add `--force` flag or manually delete non-evictable pods before draining.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "mcp"` | Ensure you are connected to an OpenShift cluster with `oc login` and the machine-config-operator is installed. |
+    | `Error from server (NotFound): nodes "<node>" not found` | Verify the node name with `oc get nodes` before attempting to drain it. |
+    | `error: unable to drain node, there are pending pods that don't tolerate disruption` | Add `--force` flag or manually delete non-evictable pods before draining. |
 **MachineConfig spec fields:**
 
 | Field | Purpose | Example |
@@ -389,9 +397,11 @@ serviceNetwork:
 ```
 
 !!! warning "Common errors"
-    **`error: pod ovnkube-node-<id> not found`** — Replace `<id>` with an actual node pod name from the first command's output (e.g., `ovnkube-node-4jh2k`).
-    **`error: unable to connect to ovn-nbctl: No such file or directory`** — Ensure you're running the command inside the ovnkube-master pod via `oc rsh`; the OVN tools are only available within the pod container.
-    **`Error from server (NotFound): networks.operator.openshift.io "cluster" not found`** — Verify the cluster has OVN-Kubernetes installed; if using a different CNI, this resource may not exist.
+    | Error | Fix |
+    |---|---|
+    | `error: pod ovnkube-node-<id> not found` | Replace `<id>` with an actual node pod name from the first command's output (e.g., `ovnkube-node-4jh2k`). |
+    | `error: unable to connect to ovn-nbctl: No such file or directory` | Ensure you're running the command inside the ovnkube-master pod via `oc rsh`; the OVN tools are only available within the pod container. |
+    | `Error from server (NotFound): networks.operator.openshift.io "cluster" not found` | Verify the cluster has OVN-Kubernetes installed; if using a different CNI, this resource may not exist. |
 ## Node Types
 
 | Type | Role | Typical labels | Schedulable |
@@ -441,7 +451,9 @@ node/infra-01.ocp.local tainted
 ```
 
 !!! warning "Common errors"
-    **`error: node(s) "worker-99" not found`** — Verify the node name with `oc get nodes` and use the exact name from the NAME column.
+    | Error | Fix |
+    |---|---|
+    | `error: node(s) "worker-99" not found` | Verify the node name with `oc get nodes` and use the exact name from the NAME column. |
     **`Error from server (Forbidden): nodes is forbidden: User "system:serviceaccount:default
 ## See also
 

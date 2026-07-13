@@ -162,9 +162,11 @@ Snapshot Inventory:
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (10.20.1.10:443)`** — Verify the Unity array IP address is reachable and the management port is accessible; check firewall rules and array network configuration.
-    **`Error: Authentication failed - Invalid credentials`** — Ensure the uemcli user account has appropriate permissions and the password is correct; verify credentials in the uemcli login session.
-    **`Error: Command not found: uemcli`** — Install the EMC Unity CLI package or add the uemcli binary path to your system PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (10.20.1.10:443)` | Verify the Unity array IP address is reachable and the management port is accessible; check firewall rules and array network configuration. |
+    | `Error: Authentication failed - Invalid credentials` | Ensure the uemcli user account has appropriate permissions and the password is correct; verify credentials in the uemcli login session. |
+    | `Error: Command not found: uemcli` | Install the EMC Unity CLI package or add the uemcli binary path to your system PATH environment variable. |
 ---
 
 ## See also

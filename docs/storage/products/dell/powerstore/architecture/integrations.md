@@ -67,9 +67,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/host_volume_mapping" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it's included if removed).
-    **`{"error_code": 401, "message": "Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN via the PowerStore management UI or API authentication endpoint and update the header.
-    **`{"error_code": 400, "message": "Invalid volume_group_id"}`** — Verify the volume group exists and the UUID is correct by listing volume groups with `curl -k -H "DELL-EMC-TOKEN: <token>" https://<mgmt-ip>/api/rest/volume_groups`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it's included if removed). |
+    | `{"error_code": 401, "message": "Invalid or expired token"}` | Regenerate the DELL-EMC-TOKEN via the PowerStore management UI or API authentication endpoint and update the header. |
+    | `{"error_code": 400, "message": "Invalid volume_group_id"}` | Verify the volume group exists and the UUID is correct by listing volume groups with `curl -k -H "DELL-EMC-TOKEN: <token>" https://<mgmt-ip>/api/rest/volume_groups`. |
 After mapping, rescan storage in vSphere and present the volume as a new VMFS datastore via **vCenter → Storage → New Datastore**.
 
 ### NFS Datastores
@@ -118,9 +120,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/nas_server" \
 ```
 
 !!! warning "Common errors"
-    **`{"error_code":"INVALID_FIELD","message":"preferred_node 'node-a' does not exist"}`** — Verify the correct node name using `curl -k -H "DELL-EMC-TOKEN: <token>" https://<mgmt-ip>/api/rest/node` and update the preferred_node value.
-    **`{"error_code":"UNAUTHORIZED","message":"Invalid or expired token"}`** — Regenerate the authentication token and ensure it is passed correctly in the DELL-EMC-TOKEN header.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present) or import the management IP's certificate into your CA bundle.
+    | Error | Fix |
+    |---|---|
+    | `{"error_code":"INVALID_FIELD","message":"preferred_node 'node-a' does not exist"}` | Verify the correct node name using `curl -k -H "DELL-EMC-TOKEN: <token>" https://<mgmt-ip>/api/rest/node` and update the preferred_node value. |
+    | `{"error_code":"UNAUTHORIZED","message":"Invalid or expired token"}` | Regenerate the authentication token and ensure it is passed correctly in the DELL-EMC-TOKEN header. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present) or import the management IP's certificate into your CA bundle. |
 ### Virtual Volumes (vVols)
 
 vVols are the recommended storage model for VMware environments requiring per-VM storage policy management. Each virtual disk becomes an individual object on PowerStore rather than a file in a shared VMFS.
@@ -191,9 +195,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/storage_container" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to bypass certificate verification (already present in the example, but ensure it's included if removed).
-    **`{"error_code": 401, "message": "Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN via the PowerStore management API authentication endpoint and verify it hasn't exceeded its TTL.
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Verify the management IP is correct, the PowerStore array is online, and port 443 is accessible from your client network.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to bypass certificate verification (already present in the example, but ensure it's included if removed). |
+    | `{"error_code": 401, "message": "Invalid or expired token"}` | Regenerate the DELL-EMC-TOKEN via the PowerStore management API authentication endpoint and verify it hasn't exceeded its TTL. |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Verify the management IP is correct, the PowerStore array is online, and port 443 is accessible from your client network. |
 ### VMware Site Recovery Manager (SRM)
 
 PowerStore integrates with VMware SRM via the **Storage Replication Adapter (SRA)**. The SRA is a plugin installed on the SRM server that allows SRM to orchestrate PowerStore async replication failover.
@@ -337,9 +343,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/remote_syslog" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the PowerStore certificate into your CA bundle.
-    **`{"error": "Unauthorized", "code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating via the login endpoint.
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP is correct and the PowerStore REST API service is running with `systemctl status dell-rest-service`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the PowerStore certificate into your CA bundle. |
+    | `{"error": "Unauthorized", "code": 401}` | Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating via the login endpoint. |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Confirm the management IP is correct and the PowerStore REST API service is running with `systemctl status dell-rest-service`. |
 ## Active Directory / LDAP
 
 PowerStore integrates with Active Directory for:
@@ -383,9 +391,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/ldap" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip SSL verification (already present in the example, but ensure it's not removed in production without proper CA certificate configuration).
-    **`{"error": "Invalid token", "error_code": 401}`** — Regenerate the DELL-EMC-TOKEN by authenticating to the management API first using valid credentials.
-    **`{"error": "LDAP server unreachable", "error_code": 400}`** — Verify network connectivity to the LDAP servers (192.168.1.10 and 192.168.1.11) and confirm firewall rules allow port 389 from the PowerStore management network.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to the curl command to skip SSL verification (already present in the example, but ensure it's not removed in production without proper CA certificate configuration). |
+    | `{"error": "Invalid token", "error_code": 401}` | Regenerate the DELL-EMC-TOKEN by authenticating to the management API first using valid credentials. |
+    | `{"error": "LDAP server unreachable", "error_code": 400}` | Verify network connectivity to the LDAP servers (192.168.1.10 and 192.168.1.11) and confirm firewall rules allow port 389 from the PowerStore management network. |
 ## Ansible
 
 The Dell PowerStore Ansible collection (`dellemc.powerstore`) is available on Ansible Galaxy and provides modules for all major provisioning and management operations.
@@ -431,9 +441,11 @@ changed: [localhost] => {
 ```
 
 !!! warning "Common errors"
-    **`ERROR! the role 'dellemc.powerstore' was not found`** — Run `ansible-galaxy collection install dellemc.powerstore` before executing the playbook.
-    **`fatal: [localhost]: FAILED! => {"msg": "Unsupported parameters for module: dellemc.powerstore.volume: 'cap_unit'"}`** — Replace `cap_unit: "GB"` with `size_unit: "GB"` to match the correct parameter name for this module version.
-    **`fatal: [localhost]: FAILED! => {"msg": "authentication failed"}`** — Verify the array IP address is reachable and the admin credentials are correct; check `validate_certs: false` is set if using self-signed certificates.
+    | Error | Fix |
+    |---|---|
+    | `ERROR! the role 'dellemc.powerstore' was not found` | Run `ansible-galaxy collection install dellemc.powerstore` before executing the playbook. |
+    | `fatal: [localhost]: FAILED! => {"msg": "Unsupported parameters for module: dellemc.powerstore.volume: 'cap_unit'"}` | Replace `cap_unit: "GB"` with `size_unit: "GB"` to match the correct parameter name for this module version. |
+    | `fatal: [localhost]: FAILED! => {"msg": "authentication failed"}` | Verify the array IP address is reachable and the admin credentials are correct; check `validate_certs: false` is set if using self-signed certificates. |
 ## Terraform
 
 The Dell PowerStore Terraform provider (`registry.terraform.io/dell/powerstore`) supports infrastructure-as-code for PowerStore resources:

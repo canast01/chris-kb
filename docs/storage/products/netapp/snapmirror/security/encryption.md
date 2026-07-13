@@ -61,8 +61,10 @@ Operation succeeded: SnapMirror relationship modified.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Relationship does not exist.`** — Verify the destination path exists with `snapmirror show` and confirm the SVM and volume names are correct.
-    **`Error: command failed: Encryption cannot be enabled on unhealthy relationship.`** — Resynchronize the SnapMirror relationship with `snapmirror resync -destination-path svm_dst:vol_dst` before modifying encryption settings.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Relationship does not exist.` | Verify the destination path exists with `snapmirror show` and confirm the SVM and volume names are correct. |
+    | `Error: command failed: Encryption cannot be enabled on unhealthy relationship.` | Resynchronize the SnapMirror relationship with `snapmirror resync -destination-path svm_dst:vol_dst` before modifying encryption settings. |
 ### Enable Encryption at Relationship Creation
 
 ```bash
@@ -99,9 +101,11 @@ Identity Preserve:  false
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Relationship already exists.`** — Verify the destination volume doesn't already have an active SnapMirror relationship using `snapmirror show -destination-path svm_dr:vol_data`.
-    **`Error: command failed: Source volume svm_prod:vol_data does not exist.`** — Confirm the source SVM and volume names are correct and the source cluster is reachable with `volume show -vserver svm_prod`.
-    **`Error: command failed: Encryption is not supported with policy MirrorAllSnapshots.`** — Use a policy that supports encryption such as `MirrorAndVault` or create a custom policy with encryption enabled.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Relationship already exists.` | Verify the destination volume doesn't already have an active SnapMirror relationship using `snapmirror show -destination-path svm_dr:vol_data`. |
+    | `Error: command failed: Source volume svm_prod:vol_data does not exist.` | Confirm the source SVM and volume names are correct and the source cluster is reachable with `volume show -vserver svm_prod`. |
+    | `Error: command failed: Encryption is not supported with policy MirrorAllSnapshots.` | Use a policy that supports encryption such as `MirrorAndVault` or create a custom policy with encryption enabled. |
 ### Verify Encryption Across All Relationships
 
 ```bash
@@ -126,8 +130,10 @@ svm5:vol_config                svm6:vol_config_mirror         aes-256-gcm
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Ensure you are logged into a NetApp ONTAP cluster CLI session, not a Linux/Unix shell.
-    **`Error: invalid field name "encryption-algorithm"`** — Verify your ONTAP version supports the encryption-algorithm field (9.7+); use `snapmirror show` without fields to confirm available columns.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Ensure you are logged into a NetApp ONTAP cluster CLI session, not a Linux/Unix shell. |
+    | `Error: invalid field name "encryption-algorithm"` | Verify your ONTAP version supports the encryption-algorithm field (9.7+); use `snapmirror show` without fields to confirm available columns. |
 ---
 
 ## Encryption at Rest
@@ -170,9 +176,11 @@ svm_dr    vol_data_dr   encrypted
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: 2621440 reason "Aggregate "aggr_dr" does not exist"`** — Verify the aggregate name exists on the destination cluster using `storage aggregate show`.
-    **`Error: command failed: 13001 reason "Vserver "svm_dr" does not exist"`** — Create the destination SVM first using `vserver create -vserver svm_dr` or confirm the SVM name matches your DR environment.
-    **`encryption-state: unencrypted`** — Configure the onboard key manager or external key server using `security key-manager setup` before creating encrypted volumes.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: 2621440 reason "Aggregate "aggr_dr" does not exist"` | Verify the aggregate name exists on the destination cluster using `storage aggregate show`. |
+    | `Error: command failed: 13001 reason "Vserver "svm_dr" does not exist"` | Create the destination SVM first using `vserver create -vserver svm_dr` or confirm the SVM name matches your DR environment. |
+    | `encryption-state: unencrypted` | Configure the onboard key manager or external key server using `security key-manager setup` before creating encrypted volumes. |
 ### Enabling NVE on an Existing Destination Volume
 
 ```bash
@@ -210,9 +218,11 @@ Operation succeeded: SnapMirror destination resumed.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: volume encryption conversion start: Volume vol_data_dr is not quiesced`** — Run `snapmirror quiesce -destination-path svm_dr:vol_data_dr` before attempting encryption conversion.
-    **`Error: command failed: snapmirror quiesce: SnapMirror relationship does not exist for destination svm_dr:vol_data_dr`** — Verify the SnapMirror relationship exists and use the correct destination path format `vserver:volume`.
-    **`Error: command failed: volume encryption conversion start: Volume vol_data_dr is already encrypted`** — Check if NVE is already enabled on the volume using `volume encryption show -vserver svm_dr -volume vol_data_dr`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: volume encryption conversion start: Volume vol_data_dr is not quiesced` | Run `snapmirror quiesce -destination-path svm_dr:vol_data_dr` before attempting encryption conversion. |
+    | `Error: command failed: snapmirror quiesce: SnapMirror relationship does not exist for destination svm_dr:vol_data_dr` | Verify the SnapMirror relationship exists and use the correct destination path format `vserver:volume`. |
+    | `Error: command failed: volume encryption conversion start: Volume vol_data_dr is already encrypted` | Check if NVE is already enabled on the volume using `volume encryption show -vserver svm_dr -volume vol_data_dr`. |
 ---
 
 ## Key Management for Encrypted Destination Volumes
@@ -250,8 +260,10 @@ svm_dr      vol_data_dr   550e8400-e29b-41d4-a716-446655440000 enabled
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: security key-manager show`** — Verify you are connected to a NetApp ONTAP cluster with sufficient privileges (run `cluster show` first to confirm connection).
-    **`Error: No matching entries were found for the specified query`** — Ensure the destination SVM name and volume name are correct by running `volume show -vserver svm_dr` to list available volumes.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: security key-manager show` | Verify you are connected to a NetApp ONTAP cluster with sufficient privileges (run `cluster show` first to confirm connection). |
+    | `Error: No matching entries were found for the specified query` | Ensure the destination SVM name and volume name are correct by running `volume show -vserver svm_dr` to list available volumes. |
 The source and destination clusters can use different key managers independently — encryption at the destination is entirely managed by the destination cluster's key manager configuration.
 
 ---
@@ -287,8 +299,10 @@ svm_src svm_dr:vol_data_4          aes-256
 ```
 
 !!! warning "Common errors"
-    **`Error: This operation is not supported on relationships of type "sync"`** — Encryption cannot be modified on synchronous SnapMirror relationships; use asynchronous relationships instead.
-    **`Error: command not found: snapmirror`** — Ensure you are logged into the ONTAP cluster CLI and have appropriate admin privileges.
+    | Error | Fix |
+    |---|---|
+    | `Error: This operation is not supported on relationships of type "sync"` | Encryption cannot be modified on synchronous SnapMirror relationships; use asynchronous relationships instead. |
+    | `Error: command not found: snapmirror` | Ensure you are logged into the ONTAP cluster CLI and have appropriate admin privileges. |
 ---
 
 ## Compliance Mapping

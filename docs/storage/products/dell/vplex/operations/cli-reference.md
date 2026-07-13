@@ -150,9 +150,11 @@ vplexcli> ll /clusters/cluster-1/communication/inter-cluster-links/
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the VMS IP address is correct and the VPLEX management server is running with `systemctl status vplex-vms`.
-    **`Authentication failed for user 'service'`** — Confirm the service account password is current and the account has not been locked; reset via VPLEX admin console if needed.
-    **`No such object: /clusters/cluster-1`** — Check cluster name spelling and confirm the cluster exists by running `ls /clusters` first.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the VMS IP address is correct and the VPLEX management server is running with `systemctl status vplex-vms`. |
+    | `Authentication failed for user 'service'` | Confirm the service account password is current and the account has not been locked; reset via VPLEX admin console if needed. |
+    | `No such object: /clusters/cluster-1` | Check cluster name spelling and confirm the cluster exists by running `ls /clusters` first. |
 **Key health-indication values:**
 
 | Value | Meaning |
@@ -259,9 +261,11 @@ Storage Volume sv_001 unclaimed successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Storage volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001 is already claimed`** — Verify the storage volume is not in use by another virtual volume or extent using `vplexcli -q -e "ll /storage-elements/storage-arrays/array-A/storage-volumes/sv_001"` before claiming.
-    **`Error: Virtual volume my_app_vol_1 is in use by storage view prod-sv-001, cannot destroy`** — Remove the virtual volume from all storage views using the VPLEX management console or `storage-view remove-member` before attempting destruction.
-    **`Error: Extent ext_app_001 expansion failed: backend LUN size unchanged`** — Expand the LUN size on the storage array first, then run `storage-volume rediscover` before attempting extent expansion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Storage volume /storage-elements/storage-arrays/array-A/storage-volumes/sv_001 is already claimed` | Verify the storage volume is not in use by another virtual volume or extent using `vplexcli -q -e "ll /storage-elements/storage-arrays/array-A/storage-volumes/sv_001"` before claiming. |
+    | `Error: Virtual volume my_app_vol_1 is in use by storage view prod-sv-001, cannot destroy` | Remove the virtual volume from all storage views using the VPLEX management console or `storage-view remove-member` before attempting destruction. |
+    | `Error: Extent ext_app_001 expansion failed: backend LUN size unchanged` | Expand the LUN size on the storage array first, then run `storage-volume rediscover` before attempting extent expansion. |
 ---
 
 ## Distributed Device Operations (VPLEX Metro)
@@ -373,9 +377,11 @@ Status: SUCCESS
 ```
 
 !!! warning "Common errors"
-    **`Error: Device /clusters/cluster-1/devices/dev_app_001 not found`** — Verify the local device exists on cluster-1 by running `vplexcli -q -e "ls /clusters/cluster-1/devices"` before creating the distributed device.
-    **`Error: Consistency group /distributed-storage/consistency-groups/cg_app_tier already exists`** — Use a unique consistency group name or delete the existing group first with `vplexcli -q -e "consistency-group delete --consistency-group /distributed-storage/consistency-groups/cg_app_tier"`.
-    **`Error: Witness connectivity lost on cluster-2`** — Check network connectivity between the cluster and witness node, and verify witness service is running with `systemctl status witness-service` on the witness appliance.
+    | Error | Fix |
+    |---|---|
+    | `Error: Device /clusters/cluster-1/devices/dev_app_001 not found` | Verify the local device exists on cluster-1 by running `vplexcli -q -e "ls /clusters/cluster-1/devices"` before creating the distributed device. |
+    | `Error: Consistency group /distributed-storage/consistency-groups/cg_app_tier already exists` | Use a unique consistency group name or delete the existing group first with `vplexcli -q -e "consistency-group delete --consistency-group /distributed-storage/consistency-groups/cg_app_tier"`. |
+    | `Error: Witness connectivity lost on cluster-2` | Check network connectivity between the cluster and witness node, and verify witness service is running with `systemctl status witness-service` on the witness appliance. |
 **Distributed device health states:**
 
 | State | Meaning |
@@ -484,9 +490,11 @@ Storage view sv_esxi_host_01 destroyed successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Storage view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 not found`** — Verify the storage view name and cluster path are correct using `ls /clusters/cluster-1/exports/storage-views`.
-    **`Error: Initiator port 10:00:00:00:c9:ab:cd:ef already registered`** — Use a different WWN or query existing initiator ports with `ls /clusters/cluster-1/exports/initiator-ports` to avoid duplicates.
-    **`Error: Cannot destroy storage view with virtual volumes still assigned`** — Remove all virtual volumes from the storage view before deletion using the `remove-virtual-volumes` command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Storage view /clusters/cluster-1/exports/storage-views/sv_esxi_host_01 not found` | Verify the storage view name and cluster path are correct using `ls /clusters/cluster-1/exports/storage-views`. |
+    | `Error: Initiator port 10:00:00:00:c9:ab:cd:ef already registered` | Use a different WWN or query existing initiator ports with `ls /clusters/cluster-1/exports/initiator-ports` to avoid duplicates. |
+    | `Error: Cannot destroy storage view with virtual volumes still assigned` | Remove all virtual volumes from the storage view before deletion using the `remove-virtual-volumes` command. |
 ---
 
 ## Data Migration
@@ -560,9 +568,11 @@ Migration mig_app_vol_1 destroyed.
 ```
 
 !!! warning "Common errors"
-    **`Error: Storage volume /storage-elements/storage-arrays/array-B/storage-volumes/sv_target_001 is already claimed`** — Release the volume first with `vplexcli -q -e "storage-volume unclaim --storage-volume <path>"` or choose an unclaimed target volume.
-    **`Error: Virtual volume /virtual-volumes/my_app_vol_1 is already involved in an active migration`** — Wait for the existing migration to complete or destroy it with `data-migration destroy` before creating a new one.
-    **`Error: Cannot commit migration mig_app_vol_1: migration is not in IN_PROGRESS state`** — Verify the migration has started and reached sufficient progress with `ll /data-migrations/mig_app_vol_1/` before attempting commit.
+    | Error | Fix |
+    |---|---|
+    | `Error: Storage volume /storage-elements/storage-arrays/array-B/storage-volumes/sv_target_001 is already claimed` | Release the volume first with `vplexcli -q -e "storage-volume unclaim --storage-volume <path>"` or choose an unclaimed target volume. |
+    | `Error: Virtual volume /virtual-volumes/my_app_vol_1 is already involved in an active migration` | Wait for the existing migration to complete or destroy it with `data-migration destroy` before creating a new one. |
+    | `Error: Cannot commit migration mig_app_vol_1: migration is not in IN_PROGRESS state` | Verify the migration has started and reached sufficient progress with `ll /data-migrations/mig_app_vol_1/` before attempting commit. |
 ---
 
 ## Logs and Diagnostics
@@ -648,9 +658,11 @@ support_bundle.tar.gz                    100%  287MB   45.2MB/s   00:06
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the VMS IP address is correct and SSH service is running on port 22 with `ssh -v service@<VMS_IP>`.
-    **`Permission denied (publickey,password)`** — Ensure the service account password is correct or add your SSH public key to `/home/service/.ssh/authorized_keys` on the VMS.
-    **`vplexcli: command not found`** — Source the VPLEX CLI environment or add `/opt/VPlex/bin` to your PATH with `export PATH=$PATH:/opt/VPlex/bin`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the VMS IP address is correct and SSH service is running on port 22 with `ssh -v service@<VMS_IP>`. |
+    | `Permission denied (publickey,password)` | Ensure the service account password is correct or add your SSH public key to `/home/service/.ssh/authorized_keys` on the VMS. |
+    | `vplexcli: command not found` | Source the VPLEX CLI environment or add `/opt/VPlex/bin` to your PATH with `export PATH=$PATH:/opt/VPlex/bin`. |
 ---
 
 ## Verify

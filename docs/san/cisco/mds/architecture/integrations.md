@@ -92,8 +92,10 @@ Device-alias committed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Invalid PWWN format`** — Ensure the PWWN uses valid hexadecimal characters (0-9, a-f) and follows the 16-character colon-separated format (xx:xx:xx:xx:xx:xx:xx:xx).
-    **`Device-alias commit failed: Database locked`** — Wait for any ongoing configuration changes to complete or check for other admin sessions using `show device-alias status`.
+    | Error | Fix |
+    |---|---|
+    | `Invalid PWWN format` | Ensure the PWWN uses valid hexadecimal characters (0-9, a-f) and follows the 16-character colon-separated format (xx:xx:xx:xx:xx:xx:xx:xx). |
+    | `Device-alias commit failed: Database locked` | Wait for any ongoing configuration changes to complete or check for other admin sessions using `show device-alias status`. |
 For SRDF/A replication, the SRDF director ports on both arrays are zoned together in the replication VSAN (e.g., VSAN 20/21) — not in the production VSAN.
 
 ---
@@ -130,9 +132,11 @@ MDS9148S(config)# exit
 ```
 
 !!! warning "Common errors"
-    **`device-alias name pure-fa01_ct0.eth4 pwwn 52:4a:xx:xx:xx:xx:xx:xx`** — Ensure you are in `device-alias database` mode; if not, enter `config term` then `device-alias database` first.
-    **`zone name esxi-host01_hba0-pure-fa01_ct0 vsan 10: member device-alias esxi-host01_hba0 not found`** — Verify the device-alias `esxi-host01_hba0` exists by running `show device-alias database` before adding it to the zone.
-    **`device-alias commit: no changes to commit`** — Remove the standalone `device-alias commit` line outside config mode; it must run inside `device-alias database` configuration context.
+    | Error | Fix |
+    |---|---|
+    | `device-alias name pure-fa01_ct0.eth4 pwwn 52:4a:xx:xx:xx:xx:xx:xx` | Ensure you are in `device-alias database` mode; if not, enter `config term` then `device-alias database` first. |
+    | `zone name esxi-host01_hba0-pure-fa01_ct0 vsan 10: member device-alias esxi-host01_hba0 not found` | Verify the device-alias `esxi-host01_hba0` exists by running `show device-alias database` before adding it to the zone. |
+    | `device-alias commit: no changes to commit` | Remove the standalone `device-alias commit` line outside config mode; it must run inside `device-alias database` configuration context. |
 Pure recommends at least 2 target ports per host path for redundancy. Zone each host HBA to 2 Pure target ports (one zone per pair).
 
 ---
@@ -157,8 +161,10 @@ logging server <siem-ip> 5 facility local7
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Replace `<username>`, `<auth-password>`, `<priv-password>`, `<monitoring-server-ip>`, and `<siem-ip>` with actual values before running.
-    **`% Incomplete command`** — Ensure all parameters including auth method (sha), encryption (aes-128), and facility (local7) are specified without angle brackets.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Replace `<username>`, `<auth-password>`, `<priv-password>`, `<monitoring-server-ip>`, and `<siem-ip>` with actual values before running. |
+    | `% Incomplete command` | Ensure all parameters including auth method (sha), encryption (aes-128), and facility (local7) are specified without angle brackets. |
 Verify SNMP is reachable from the monitoring server:
 
 ```bash
@@ -185,9 +191,11 @@ SNMPv3-MDS9710-01::sysORLastChange.0 = Timeticks: (0) 0:00:00.00
 ```
 
 !!! warning "Common errors"
-    **`snmpwalk: Unknown user name`** — Verify the SNMPv3 username exists on the switch with `show snmp user` and confirm the `-u` parameter matches exactly.
-    **`snmpwalk: Authentication failure (incorrect password)`** — Confirm the authentication password (`-A` parameter) is correct by testing with `snmpget` on a single OID first.
-    **`snmpwalk: Timeout: No Response from <switch-ip>`** — Verify the switch IP is reachable with `ping`, SNMPv3 is enabled on the switch, and the management interface is configured with `show snmp host`.
+    | Error | Fix |
+    |---|---|
+    | `snmpwalk: Unknown user name` | Verify the SNMPv3 username exists on the switch with `show snmp user` and confirm the `-u` parameter matches exactly. |
+    | `snmpwalk: Authentication failure (incorrect password)` | Confirm the authentication password (`-A` parameter) is correct by testing with `snmpget` on a single OID first. |
+    | `snmpwalk: Timeout: No Response from <switch-ip>` | Verify the switch IP is reachable with `ping`, SNMPv3 is enabled on the switch, and the management interface is configured with `show snmp host`. |
 ---
 
 ## See also

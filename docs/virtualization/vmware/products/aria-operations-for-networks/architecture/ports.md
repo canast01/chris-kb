@@ -160,9 +160,11 @@ Connection to 10.45.120.15 22 port [tcp/ssh] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the CA certificate into your system trust store.
-    **`snmpget: Unknown host (<switch-ip>)`** — Verify the switch IP is reachable and correct; test with `ping <switch-ip>` first.
-    **`nc: getaddrinfo failed`** — Confirm the switch hostname/IP is resolvable and the collector has network connectivity to that switch on port 22.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the CA certificate into your system trust store. |
+    | `snmpget: Unknown host (<switch-ip>)` | Verify the switch IP is reachable and correct; test with `ping <switch-ip>` first. |
+    | `nc: getaddrinfo failed` | Confirm the switch hostname/IP is resolvable and the collector has network connectivity to that switch on port 22. |
 ---
 
 ## See also

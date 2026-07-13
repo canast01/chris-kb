@@ -155,9 +155,11 @@ Connection to 192.168.10.45 3331 port [tcp/*] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self-signed certificate`** — Add the `-k` flag to skip certificate verification, or import the Aria Operations CA certificate into your system trust store.
-    **`snmpget: Unknown host "<device-ip>"`** — Verify the device IP is correct and reachable from the Aria Operations appliance using `ping <device-ip>`.
-    **`nc: getaddrinfo failed for <aria-ops-vip>: Name or service not known`** — Confirm the Aria Operations VIP hostname resolves correctly with `nslookup <aria-ops-vip>` and verify network connectivity from the Remote Collector.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self-signed certificate` | Add the `-k` flag to skip certificate verification, or import the Aria Operations CA certificate into your system trust store. |
+    | `snmpget: Unknown host "<device-ip>"` | Verify the device IP is correct and reachable from the Aria Operations appliance using `ping <device-ip>`. |
+    | `nc: getaddrinfo failed for <aria-ops-vip>: Name or service not known` | Confirm the Aria Operations VIP hostname resolves correctly with `nslookup <aria-ops-vip>` and verify network connectivity from the Remote Collector. |
 ---
 
 ## See also

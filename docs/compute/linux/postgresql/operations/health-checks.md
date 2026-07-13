@@ -90,9 +90,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: role "postgres" does not exist`** — Create the postgres role with `sudo -u postgres createuser postgres` or verify the role exists with `psql -U postgres -l`.
-    **`psql: error: FATAL: Ident authentication failed for user "postgres"`** — Update `/etc/postgresql/15/main/pg_hba.conf` to allow local connections (change `ident` to `trust` or `md5` for the local line) and reload with `systemctl reload postgresql`.
-    **`could not translate host name "localhost" to address: Name or service not known`** — Ensure PostgreSQL is listening on localhost by checking `listen_addresses = 'localhost'` in `postgresql.conf` and restart with `systemctl restart postgresql`.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: role "postgres" does not exist` | Create the postgres role with `sudo -u postgres createuser postgres` or verify the role exists with `psql -U postgres -l`. |
+    | `psql: error: FATAL: Ident authentication failed for user "postgres"` | Update `/etc/postgresql/15/main/pg_hba.conf` to allow local connections (change `ident` to `trust` or `md5` for the local line) and reload with `systemctl reload postgresql`. |
+    | `could not translate host name "localhost" to address: Name or service not known` | Ensure PostgreSQL is listening on localhost by checking `listen_addresses = 'localhost'` in `postgresql.conf` and restart with `systemctl restart postgresql`. |
 **Pass criteria:** service active, connectivity returns `1`, no sessions blocked >5 min, replication lag <30s, disk <80%, no inactive replication slots with large lag.
 
 ---
@@ -178,9 +180,11 @@ Connection to db-prod-03.internal 1433 port [tcp/mssql] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "<host>" to address: Name or service not known`** — Replace `<host>` with the actual database hostname or IP address.
-    **`Access denied for user '<user>'@'<host>' (using password: YES)`** — Verify the username and password are correct, or check that the user has connection privileges from that host.
-    **`nc: connect to <db-host> port 1433 (tcp) failed: Connection refused`** — Confirm the database service is running and listening on that port, or check firewall rules blocking the connection.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "<host>" to address: Name or service not known` | Replace `<host>` with the actual database hostname or IP address. |
+    | `Access denied for user '<user>'@'<host>' (using password: YES)` | Verify the username and password are correct, or check that the user has connection privileges from that host. |
+    | `nc: connect to <db-host> port 1433 (tcp) failed: Connection refused` | Confirm the database service is running and listening on that port, or check firewall rules blocking the connection. |
 ## Database — Capacity Monitoring
 
 ![Database — Capacity Monitoring](../../../../assets/compute-linux-postgresql-hc-database-capacity-monitoring.svg)
@@ -256,8 +260,10 @@ du: cannot access '/var/lib/mysql/mysql-bin.*': No such file or directory
 ```
 
 !!! warning "Common errors"
-    **`du: cannot access '/var/lib/mysql/mysql-bin.*': No such file or directory`** — Verify MySQL binary logging is enabled with `SHOW VARIABLES LIKE 'log_bin';` and confirm the log_bin_basename path.
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost'`** — Add `-p` flag to prompt for password or use a user with SUPER privilege: `mysql -u root -p -e "SHOW BINARY LOGS;"`.
+    | Error | Fix |
+    |---|---|
+    | `du: cannot access '/var/lib/mysql/mysql-bin.*': No such file or directory` | Verify MySQL binary logging is enabled with `SHOW VARIABLES LIKE 'log_bin';` and confirm the log_bin_basename path. |
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost'` | Add `-p` flag to prompt for password or use a user with SUPER privilege: `mysql -u root -p -e "SHOW BINARY LOGS;"`. |
 ```bash
 # Weekly snapshots — capture to track growth
 psql -U postgres -Atc "SELECT pg_database_size('mydb');" >> /var/log/db-size-mydb.log
@@ -372,9 +378,11 @@ NOTICE:  pg_basebackup: base backup completed
 ```
 
 !!! warning "Common errors"
-    **`pg_basebackup: could not connect to server: FATAL:  no pg_hba.conf entry for replication connection from "10.45.12.8" user "replication"`** — Add a replication entry to pg_hba.conf on the primary (e.g., `host replication replication 10.45.12.0/24 md5`) and reload PostgreSQL.
-    **`pg_basebackup: error: directory "/var/lib/postgresql/data-new" exists but is not empty`** — Remove or rename the target directory before running pg_basebackup, or use a different path.
-    **`pg_basebackup: error: could not get exclusive lock on file "/var/lib/postgresql/data-new/backup_label"`** — Ensure the target directory is owned by the postgres user with correct permissions (755) and no other PostgreSQL process is accessing it.
+    | Error | Fix |
+    |---|---|
+    | `pg_basebackup: could not connect to server: FATAL:  no pg_hba.conf entry for replication connection from "10.45.12.8" user "replication"` | Add a replication entry to pg_hba.conf on the primary (e.g., `host replication replication 10.45.12.0/24 md5`) and reload PostgreSQL. |
+    | `pg_basebackup: error: directory "/var/lib/postgresql/data-new" exists but is not empty` | Remove or rename the target directory before running pg_basebackup, or use a different path. |
+    | `pg_basebackup: error: could not get exclusive lock on file "/var/lib/postgresql/data-new/backup_label"` | Ensure the target directory is owned by the postgres user with correct permissions (755) and no other PostgreSQL process is accessing it. |
 ---
 
 ## Verify

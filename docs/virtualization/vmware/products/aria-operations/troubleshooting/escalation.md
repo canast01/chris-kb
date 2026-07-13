@@ -126,8 +126,10 @@ root@aria-ops-master.corp.local:~# ls -lh /tmp/support-bundle-*.zip
 ```
 
 !!! warning "Common errors"
-    **`casa-support-bundle.sh: command not found`** — Verify the CaSA package is installed with `rpm -qa | grep casa` and check the correct installation path.
-    **`Permission denied`** — Ensure you are logged in as root or have sudo privileges; the script requires elevated permissions to access system and application logs.
+    | Error | Fix |
+    |---|---|
+    | `casa-support-bundle.sh: command not found` | Verify the CaSA package is installed with `rpm -qa | grep casa` and check the correct installation path. |
+    | `Permission denied` | Ensure you are logged in as root or have sudo privileges; the script requires elevated permissions to access system and application logs. |
 ### 3. Check cluster node and service status
 
 ```bash
@@ -190,9 +192,11 @@ Swap:          16Gi       2.5Gi       13.5Gi
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Ensure you are running the command on the master node and that /usr/lib/vmware-vcopssuite is in your PATH, or use the full path `/usr/lib/vmware-vcopssuite/python/bin/vcops-admin` instead.
-    **`Cluster Status: UNHEALTHY - Replica node aria-ops-replica-2 is DOWN`** — SSH to the affected replica node and run `service-control --start` to restart services, then verify connectivity and disk space on that node.
-    **`/var filesystem is 95% full - Collection may fail`** — Increase the /var partition size or delete old collection data using `/usr/lib/vmware-vcopssuite/python/bin/vcops-admin --cleanup-old-data --days 30`.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Ensure you are running the command on the master node and that /usr/lib/vmware-vcopssuite is in your PATH, or use the full path `/usr/lib/vmware-vcopssuite/python/bin/vcops-admin` instead. |
+    | `Cluster Status: UNHEALTHY - Replica node aria-ops-replica-2 is DOWN` | SSH to the affected replica node and run `service-control --start` to restart services, then verify connectivity and disk space on that node. |
+    | `/var filesystem is 95% full - Collection may fail` | Increase the /var partition size or delete old collection data using `/usr/lib/vmware-vcopssuite/python/bin/vcops-admin --cleanup-old-data --days 30`. |
 ### 4. Collect adapter error details
 
 In Aria Ops UI: navigate to **Administration → Integrations → Adapter Instances**.
@@ -349,9 +353,11 @@ vRealize-Automation/
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Use the full path `/usr/lib/vmware-vcopssuite/python/bin/vcops-admin` or verify the service-control utility is installed in the current PATH.
-    **`tail: cannot open '/data/vcops/log/solutions/<adapter-name>/<adapter>.log' for reading: No such file or directory`** — Replace `<adapter-name>` and `<adapter>` with the actual adapter name (e.g., `vSphere` or `NSX`) by first listing the directory with `ls /data/vcops/log/solutions/`.
-    **`Filesystem ... Use% ... 100% /data`** — Free up disk space immediately as the /data partition is full and will cause collection failures; consider archiving old logs or expanding the volume.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Use the full path `/usr/lib/vmware-vcopssuite/python/bin/vcops-admin` or verify the service-control utility is installed in the current PATH. |
+    | `tail: cannot open '/data/vcops/log/solutions/<adapter-name>/<adapter>.log' for reading: No such file or directory` | Replace `<adapter-name>` and `<adapter>` with the actual adapter name (e.g., `vSphere` or `NSX`) by first listing the directory with `ls /data/vcops/log/solutions/`. |
+    | `Filesystem ... Use% ... 100% /data` | Free up disk space immediately as the /data partition is full and will cause collection failures; consider archiving old logs or expanding the volume. |
 ---
 
 ## Support SLA Reference

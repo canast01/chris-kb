@@ -78,9 +78,11 @@ User storageadmin01 deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: User admin does not exist or access denied`** — Verify the management IP address with `-d` flag and ensure the admin account credentials are correct.
-    **`Error: Cannot delete user admin - last Administrator account cannot be removed`** — Create an additional Administrator account before deleting the current one, or delete a non-Administrator user instead.
-    **`Error: Password does not meet complexity requirements`** — Use a password with at least 8 characters including uppercase, lowercase, numbers, and special characters.
+    | Error | Fix |
+    |---|---|
+    | `Error: User admin does not exist or access denied` | Verify the management IP address with `-d` flag and ensure the admin account credentials are correct. |
+    | `Error: Cannot delete user admin - last Administrator account cannot be removed` | Create an additional Administrator account before deleting the current one, or delete a non-Administrator user instead. |
+    | `Error: Password does not meet complexity requirements` | Use a password with at least 8 characters including uppercase, lowercase, numbers, and special characters. |
 ### Local Account Best Practices
 
 - Keep the number of local Administrator accounts to a minimum — ideally one break-glass account.
@@ -143,9 +145,11 @@ LDAP connectivity test passed.
 ```
 
 !!! warning "Common errors"
-    **`Error: Authentication failed for user admin`** — Verify the admin credentials and ensure the user has sufficient privileges to manage LDAP configurations.
-    **`Error: Unable to connect to LDAP server at <ldap_server_ip>:389`** — Confirm the LDAP server IP address is correct, the server is online, and network connectivity exists from the Unity array to the LDAP server.
-    **`Error: Invalid bindDN or bindPasswd`** — Verify the service account credentials are correct and the account has permission to bind to the LDAP directory.
+    | Error | Fix |
+    |---|---|
+    | `Error: Authentication failed for user admin` | Verify the admin credentials and ensure the user has sufficient privileges to manage LDAP configurations. |
+    | `Error: Unable to connect to LDAP server at <ldap_server_ip>:389` | Confirm the LDAP server IP address is correct, the server is online, and network connectivity exists from the Unity array to the LDAP server. |
+    | `Error: Invalid bindDN or bindPasswd` | Verify the service account credentials are correct and the account has permission to bind to the LDAP directory. |
 ### Mapping LDAP Groups to Unity Roles
 
 Once directory services are configured, map LDAP/AD security groups to Unity roles:
@@ -193,9 +197,11 @@ Role mapping with ID 4 deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: The specified user/role does not exist`** — Verify the AD group DN is correct and the group exists in Active Directory with `ldapsearch` or Active Directory Users and Computers.
-    **`Error: Connection failed to <ip>. Check IP address and network connectivity`** — Confirm the Unity array IP is reachable with `ping <ip>` and that admin credentials are correct.
-    **`Error: Insufficient privileges to perform this operation`** — Ensure the admin account used has Storage Administrator role assigned on the Unity array.
+    | Error | Fix |
+    |---|---|
+    | `Error: The specified user/role does not exist` | Verify the AD group DN is correct and the group exists in Active Directory with `ldapsearch` or Active Directory Users and Computers. |
+    | `Error: Connection failed to <ip>. Check IP address and network connectivity` | Confirm the Unity array IP is reachable with `ping <ip>` and that admin credentials are correct. |
+    | `Error: Insufficient privileges to perform this operation` | Ensure the admin account used has Storage Administrator role assigned on the Unity array. |
 ## iSCSI CHAP Authentication
 
 For iSCSI host access, Unity supports CHAP (Challenge Handshake Authentication Protocol) to authenticate initiators. This prevents unauthorised hosts from connecting to Unity iSCSI targets.
@@ -245,9 +251,11 @@ The operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: The host object with id '<host_id>' was not found.`** — Verify the host ID exists on the array using `uemcli -d <ip> -u admin /remote/host list` and use the correct ID from the output.
-    **`Error: Authentication failed for user 'admin'.`** — Confirm the admin credentials are correct and the user has sufficient privileges; try `uemcli -d <ip> -u admin /remote/system get` to test connectivity first.
-    **`Error: CHAP password does not meet minimum complexity requirements (minimum 12 characters).`** — Use a CHAP secret that is at least 12 characters long and includes uppercase, lowercase, numbers, and special characters.
+    | Error | Fix |
+    |---|---|
+    | `Error: The host object with id '<host_id>' was not found.` | Verify the host ID exists on the array using `uemcli -d <ip> -u admin /remote/host list` and use the correct ID from the output. |
+    | `Error: Authentication failed for user 'admin'.` | Confirm the admin credentials are correct and the user has sufficient privileges; try `uemcli -d <ip> -u admin /remote/system get` to test connectivity first. |
+    | `Error: CHAP password does not meet minimum complexity requirements (minimum 12 characters).` | Use a CHAP secret that is at least 12 characters long and includes uppercase, lowercase, numbers, and special characters. |
 On the Linux host side, configure `/etc/iscsi/iscsid.conf`:
 
 ```ini
@@ -308,9 +316,11 @@ RO Hosts: 10.10.20.0/24
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid filesystem ID '<fs_id>'`** — Verify the filesystem exists with `uemcli -d <ip> -u admin /stor/fs show` and use the correct ID.
-    **`Error: Access denied — insufficient privileges`** — Ensure the admin user has NFS management permissions or use an account with higher privileges.
-    **`Error: Subnet mask format invalid for '-rwHosts 10.10.10.0'`** — Specify hosts in CIDR notation (e.g., `10.10.10.0/24`) or as individual IPs separated by commas.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid filesystem ID '<fs_id>'` | Verify the filesystem exists with `uemcli -d <ip> -u admin /stor/fs show` and use the correct ID. |
+    | `Error: Access denied — insufficient privileges` | Ensure the admin user has NFS management permissions or use an account with higher privileges. |
+    | `Error: Subnet mask format invalid for '-rwHosts 10.10.10.0'` | Specify hosts in CIDR notation (e.g., `10.10.10.0/24`) or as individual IPs separated by commas. |
 **Root squash:** By default, Unity maps the root user from NFS clients to a non-privileged `nobody` account (root squash enabled). To allow root access from specific trusted hosts (such as backup servers), add those hosts to `-rootHosts`.
 
 ## SMB Share Permissions
@@ -358,9 +368,11 @@ Created SMB share 'OracleBackups' successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid server ID '<nas_id>'`** — Verify the NAS server ID exists by running `uemcli -d <ip> -u admin /prot/smb/server show` and use the correct ID from the output.
-    **`Error: File system '<fs_id>' not found`** — Confirm the filesystem ID with `uemcli -d <ip> -u admin /stor/fs show` and substitute the correct filesystem identifier.
-    **`Error: Access denied: insufficient privileges`** — Ensure the admin user account has SMB management permissions or use a service account with appropriate UEMCLI roles assigned.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid server ID '<nas_id>'` | Verify the NAS server ID exists by running `uemcli -d <ip> -u admin /prot/smb/server show` and use the correct ID from the output. |
+    | `Error: File system '<fs_id>' not found` | Confirm the filesystem ID with `uemcli -d <ip> -u admin /stor/fs show` and substitute the correct filesystem identifier. |
+    | `Error: Access denied: insufficient privileges` | Ensure the admin user account has SMB management permissions or use a service account with appropriate UEMCLI roles assigned. |
 For production environments, restrict share-level permissions to the AD groups that require access, then use NTFS permissions for fine-grained control within the share. Do not leave the default "Everyone: Full Control" share permission in place.
 
 ## Management Interface Restrictions
@@ -417,9 +429,11 @@ Timestamp                    Severity  Component        Message
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed: Invalid credentials`** — Verify the admin user password and ensure the management IP address is correct and reachable.
-    **`Connection timeout: Unable to reach <ip>`** — Confirm the storage array IP is accessible from your management station and that firewall rules permit UEMCLI traffic on port 443.
-    **`Permission denied: User 'admin' does not have audit view privileges`** — Ensure the admin account has the required audit log read permissions assigned in the Unity security role configuration.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed: Invalid credentials` | Verify the admin user password and ensure the management IP address is correct and reachable. |
+    | `Connection timeout: Unable to reach <ip>` | Confirm the storage array IP is accessible from your management station and that firewall rules permit UEMCLI traffic on port 443. |
+    | `Permission denied: User 'admin' does not have audit view privileges` | Ensure the admin account has the required audit log read permissions assigned in the Unity security role configuration. |
 Review the audit log regularly for:
 - Logins from unexpected IP addresses or user accounts.
 - Configuration changes made outside of approved change windows.

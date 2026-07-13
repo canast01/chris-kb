@@ -103,8 +103,10 @@ switch#
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH is enabled on the switch with `feature ssh`.
-    **`Connection timed out`** — Check network connectivity to the switch IP, confirm the IP address is correct, and verify firewall rules allow SSH port 22 to the switch.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the admin account credentials and ensure SSH is enabled on the switch with `feature ssh`. |
+    | `Connection timed out` | Check network connectivity to the switch IP, confirm the IP address is correct, and verify firewall rules allow SSH port 22 to the switch. |
 ---
 
 ## Configure VRF and L3 Gateway
@@ -147,8 +149,10 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer InQ OutQ Up/Down State
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact command syntax matches your Cisco DCNM/NX-OS version; use `?` to view available options.
-    **`% VRF PROD-VRF not found`** — Confirm the VRF exists with `show vrf` and verify the name spelling and case sensitivity.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact command syntax matches your Cisco DCNM/NX-OS version; use `?` to view available options. |
+    | `% VRF PROD-VRF not found` | Confirm the VRF exists with `show vrf` and verify the name spelling and case sensitivity. |
 ---
 
 ## Run Fabric Compliance Check
@@ -192,9 +196,11 @@ Transfer complete. 1234567 bytes copied in 45.32 secs (27234 bytes/sec)
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the switch IP is reachable and admin credentials are correct; check if SSH is enabled on the switch.
-    **`Error opening bootflash:<switch-name>-techsupport.log (No such file or directory)`** — Ensure the tech-support command completed successfully and the filename matches exactly; check bootflash space with `dir bootflash:`.
-    **`SCP transfer failed: Authentication failed for scp://<admin>@<server-ip>`** — Verify the SCP server credentials and IP address are correct, and that the target directory path exists and is writable.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the switch IP is reachable and admin credentials are correct; check if SSH is enabled on the switch. |
+    | `Error opening bootflash:<switch-name>-techsupport.log (No such file or directory)` | Ensure the tech-support command completed successfully and the filename matches exactly; check bootflash space with `dir bootflash:`. |
+    | `SCP transfer failed: Authentication failed for scp://<admin>@<server-ip>` | Verify the SCP server credentials and IP address are correct, and that the target directory path exists and is writable. |
 4. Collect the relevant logs from DCNM server (Linux):
 
 ```bash
@@ -210,9 +216,11 @@ tar czf /tmp/dcnm-logs-<date>.tar.gz /usr/local/cisco/dcm/fm/logs/
 ```
 
 !!! warning "Common errors"
-    **`tar: /usr/local/cisco/dcm/fm/logs/: Cannot open: No such file or directory`** — Verify the DCNM installation path with `ls -la /usr/local/cisco/dcm/fm/logs/` and adjust the path if DCNM is installed elsewhere.
-    **`tar: Error is not recoverable: exiting now`** — Ensure you have read permissions on the logs directory by running `sudo tar czf` or checking permissions with `ls -ld /usr/local/cisco/dcm/fm/logs/`.
-    **`/tmp/dcnm-logs-<date>.tar.gz: Permission denied`** — Verify write permissions to `/tmp` or specify an alternate writable directory like `/home/admin/` in the tar output path.
+    | Error | Fix |
+    |---|---|
+    | `tar: /usr/local/cisco/dcm/fm/logs/: Cannot open: No such file or directory` | Verify the DCNM installation path with `ls -la /usr/local/cisco/dcm/fm/logs/` and adjust the path if DCNM is installed elsewhere. |
+    | `tar: Error is not recoverable: exiting now` | Ensure you have read permissions on the logs directory by running `sudo tar czf` or checking permissions with `ls -ld /usr/local/cisco/dcm/fm/logs/`. |
+    | `/tmp/dcnm-logs-<date>.tar.gz: Permission denied` | Verify write permissions to `/tmp` or specify an alternate writable directory like `/home/admin/` in the tar output path. |
 5. Open the TAC case at `https://mycase.cloudapps.cisco.com/` with product **Data Center Network Manager** and upload the collected bundles.
 6. Include the following in the case notes: DCNM version, NX-OS versions of affected switches, issue description, and first occurrence timestamp.
 
@@ -257,9 +265,11 @@ Current UTC Offset:       37
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH is enabled on the switch with `show feature | grep ssh`.
-    **`Connection timed out`** — Check network connectivity to the switch IP address and confirm the management interface is reachable with `ping <switch-ip>`.
-    **`% Invalid command`** — Confirm PTP is licensed and enabled on the switch; use `show license` and `show feature | grep ptp` to verify.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the admin account credentials and ensure SSH is enabled on the switch with `show feature | grep ssh`. |
+    | `Connection timed out` | Check network connectivity to the switch IP address and confirm the management interface is reachable with `ping <switch-ip>`. |
+    | `% Invalid command` | Confirm PTP is licensed and enabled on the switch; use `show license` and `show feature | grep ptp` to verify. |
 Confirm the **Clock Identity** field matches the grandmaster and the **Offset from master** is within the acceptable range (typically < 1 µs for media networks). Investigate any switch showing **Free-run** state or high offset values.
 
 ---
@@ -321,9 +331,11 @@ Managed Switches: 847
 ```
 
 !!! warning "Common errors"
-    **`dcnm_mgmt_server: command not found`** — Ensure DCNM is installed in the system PATH or source the DCNM environment setup script before running the command.
-    **`Error: Unable to connect to management server on localhost:8443`** — Verify DCNM services have fully started by checking `systemctl status dcnm-*` and wait 30-60 seconds for all components to initialize.
-    **`Permission denied`** — Run the command with appropriate privileges using `sudo dcnm_mgmt_server status` or ensure your user is in the dcnm admin group.
+    | Error | Fix |
+    |---|---|
+    | `dcnm_mgmt_server: command not found` | Ensure DCNM is installed in the system PATH or source the DCNM environment setup script before running the command. |
+    | `Error: Unable to connect to management server on localhost:8443` | Verify DCNM services have fully started by checking `systemctl status dcnm-*` and wait 30-60 seconds for all components to initialize. |
+    | `Permission denied` | Run the command with appropriate privileges using `sudo dcnm_mgmt_server status` or ensure your user is in the dcnm admin group. |
 8. Log back in to the DCNM web UI and confirm the version under **Administration > About DCNM**; verify all fabrics show **Connected** and fabric discovery is functional.
 
 ---
@@ -374,9 +386,11 @@ curl -sk -b dcnm-cookie.txt -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the DCNM CA certificate into your system trust store.
-    **`error: 401 Unauthorized`** — Ensure the dcnm-cookie.txt file is valid and not expired; re-authenticate with `curl -sk -c dcnm-cookie.txt -u admin:password https://${DCNM}/rest/login`.
-    **`error: 400 Bad Request - Invalid PWWN format`** — Verify PWWN values use colon-separated format (50:00:10:00:00:ab:cd:ef) and are exactly 16 hex characters.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag (already present) or import the DCNM CA certificate into your system trust store. |
+    | `error: 401 Unauthorized` | Ensure the dcnm-cookie.txt file is valid and not expired; re-authenticate with `curl -sk -c dcnm-cookie.txt -u admin:password https://${DCNM}/rest/login`. |
+    | `error: 400 Bad Request - Invalid PWWN format` | Verify PWWN values use colon-separated format (50:00:10:00:00:ab:cd:ef) and are exactly 16 hex characters. |
 ---
 
 ## Verify

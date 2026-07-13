@@ -209,9 +209,11 @@ Enter LDAP Password:
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked or expired in Active Directory.
-    **`Can't contact LDAP server (-1)`** — Confirm the DC hostname resolves correctly with `nslookup dc01.corp.example.com` and that port 389 (or 636 for LDAPS) is accessible via firewall rules.
-    **`TLS: peer certificate cannot be authenticated with known CA certificates`** — Import the DC's SSL certificate into the system CA store with `update-ca-certificates` or disable certificate validation with `LDAPTLS_REQCERT=never`.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account is not locked or expired in Active Directory. |
+    | `Can't contact LDAP server (-1)` | Confirm the DC hostname resolves correctly with `nslookup dc01.corp.example.com` and that port 389 (or 636 for LDAPS) is accessible via firewall rules. |
+    | `TLS: peer certificate cannot be authenticated with known CA certificates` | Import the DC's SSL certificate into the system CA store with `update-ca-certificates` or disable certificate validation with `LDAPTLS_REQCERT=never`. |
 ### LDAP Result Codes
 
 | Code | Meaning | Fix |

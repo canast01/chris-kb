@@ -59,9 +59,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`multipath: command not found`** — Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt install multipath-tools`.
-    **`Unit <service> not found.`** — Verify the service name exists with `systemctl list-unit-files | grep <service>` and use the correct unit file name.
-    **`mount: /mnt/dr-data: No such file or directory`** — Create the mount point directory with `mkdir -p /mnt/dr-data` before mounting volumes.
+    | Error | Fix |
+    |---|---|
+    | `multipath: command not found` | Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt install multipath-tools`. |
+    | `Unit <service> not found.` | Verify the service name exists with `systemctl list-unit-files | grep <service>` and use the correct unit file name. |
+    | `mount: /mnt/dr-data: No such file or directory` | Create the mount point directory with `mkdir -p /mnt/dr-data` before mounting volumes. |
 ```bash
 # HTTP health check
 curl -vk https://<dr-app-url>/health

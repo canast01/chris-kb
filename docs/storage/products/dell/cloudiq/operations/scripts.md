@@ -297,9 +297,11 @@ Health Summary: All systems operational ✓
 ```
 
 !!! warning "Common errors"
-    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to enable script execution.
-    **`The term '.\cloudiq_system_health.ps1' is not recognized`** — Verify the script exists in the current directory with `dir *.ps1` and check the filename spelling.
-    **`Access Denied`** — Run PowerShell as Administrator or ensure your user account has read permissions on the script file.
+    | Error | Fix |
+    |---|---|
+    | `cannot be loaded because running scripts is disabled on this system` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to enable script execution. |
+    | `The term '.\cloudiq_system_health.ps1' is not recognized` | Verify the script exists in the current directory with `dir *.ps1` and check the filename spelling. |
+    | `Access Denied` | Run PowerShell as Administrator or ensure your user account has read permissions on the script file. |
 ```bash
 #!/bin/bash
 # cloudiq_daily_check.sh — Daily operations check for Dell CloudIQ
@@ -407,9 +409,11 @@ echo "  PASS: $PASS   FAIL: $FAIL"
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Authentication failed.`** — Verify CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET environment variables are set correctly and not expired.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands or import the Dell CloudIQ certificate into your system's CA bundle.
-    **`jq: error (at <stdin>:0): Cannot index null with string "results"`** — Ensure the API endpoint is accessible and returning valid JSON; check network connectivity and API base URL.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Authentication failed.` | Verify CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET environment variables are set correctly and not expired. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands or import the Dell CloudIQ certificate into your system's CA bundle. |
+    | `jq: error (at <stdin>:0): Cannot index null with string "results"` | Ensure the API endpoint is accessible and returning valid JSON; check network connectivity and API base URL. |
 ```bash
 #!/bin/bash
 # cloudiq_triage.sh — Incident triage data capture for Dell CloudIQ
@@ -525,9 +529,11 @@ Triage data written to: cloudiq_triage_20240115_143247.txt
 ```
 
 !!! warning "Common errors"
-    **`ERROR: CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET must be set.`** — Export both variables before running: `export CLOUDIQ_CLIENT_ID=xxx CLOUDIQ_CLIENT_SECRET=yyy`
-    **`ERROR: Authentication failed.`** — Verify credentials are correct and the CloudIQ tenant is accessible; check that the API endpoint `https://cloudiq.dell.com/auth/v1/token` is reachable.
-    **`curl: (60) SSL certificate problem`** — Add `-k` flag to curl commands or ensure your system's CA certificates are up-to-date with `update-ca-certificates`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET must be set.` | Export both variables before running: `export CLOUDIQ_CLIENT_ID=xxx CLOUDIQ_CLIENT_SECRET=yyy` |
+    | `ERROR: Authentication failed.` | Verify credentials are correct and the CloudIQ tenant is accessible; check that the API endpoint `https://cloudiq.dell.com/auth/v1/token` is reachable. |
+    | `curl: (60) SSL certificate problem` | Add `-k` flag to curl commands or ensure your system's CA certificates are up-to-date with `update-ca-certificates`. |
 ```bash
 #!/bin/bash
 # cloudiq_precheck.sh — Pre-change validation for Dell CloudIQ
@@ -633,9 +639,11 @@ exit 0
 ```
 
 !!! warning "Common errors"
-    **`ERROR: CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET must be set.`** — Export both variables before running the script: `export CLOUDIQ_CLIENT_ID=xxx CLOUDIQ_CLIENT_SECRET=yyy`.
-    **`ERROR: Authentication failed.`** — Verify credentials are correct and not expired; regenerate API credentials in Dell CloudIQ console if needed.
-    **`FAIL: system 'my-powerstore-01' not found in CloudIQ`** — Confirm the exact system name matches CloudIQ inventory using `curl -H "Authorization: Bearer $TOKEN" https://cloudiq.dell.com/cloudiq/rest/v1/storage-systems | jq '.results[].system_name'`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET must be set.` | Export both variables before running the script: `export CLOUDIQ_CLIENT_ID=xxx CLOUDIQ_CLIENT_SECRET=yyy`. |
+    | `ERROR: Authentication failed.` | Verify credentials are correct and not expired; regenerate API credentials in Dell CloudIQ console if needed. |
+    | `FAIL: system 'my-powerstore-01' not found in CloudIQ` | Confirm the exact system name matches CloudIQ inventory using `curl -H "Authorization: Bearer $TOKEN" https://cloudiq.dell.com/cloudiq/rest/v1/storage-systems | jq '.results[].system_name'`. |
 ```bash
 #!/bin/bash
 # cloudiq_postcheck.sh — Post-change validation for Dell CloudIQ
@@ -752,9 +760,11 @@ exit 0
 ```
 
 !!! warning "Common errors"
-    **`ERROR: CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET must be set.`** — Export both variables before running the script: `export CLOUDIQ_CLIENT_ID=xxx CLOUDIQ_CLIENT_SECRET=yyy`.
-    **`ERROR: Authentication failed.`** — Verify credentials are correct and not expired; regenerate API tokens in CloudIQ console if necessary.
-    **`FAIL: system 'my-powerstore-01' not found`** — Confirm the exact system name in CloudIQ matches TARGET_SYSTEM_NAME, or omit it to validate all systems.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET must be set.` | Export both variables before running the script: `export CLOUDIQ_CLIENT_ID=xxx CLOUDIQ_CLIENT_SECRET=yyy`. |
+    | `ERROR: Authentication failed.` | Verify credentials are correct and not expired; regenerate API tokens in CloudIQ console if necessary. |
+    | `FAIL: system 'my-powerstore-01' not found` | Confirm the exact system name in CloudIQ matches TARGET_SYSTEM_NAME, or omit it to validate all systems. |
 ```bash
 #!/bin/bash
 # cloudiq_health.sh — Cron-safe health check for Dell CloudIQ
@@ -842,9 +852,11 @@ OVERALL: CRIT
 ```
 
 !!! warning "Common errors"
-    **`CRIT: CloudIQ authentication failed`** — Verify CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET environment variables are set correctly and have not expired.
-    **`curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection timed out`** — Check network connectivity and firewall rules allow outbound HTTPS to cloudiq.dell.com, or verify the API endpoint is accessible from your environment.
-    **`jq: parse error: Cannot index number with string "results"`** — Ensure the CloudIQ API response is valid JSON; the token may be invalid or the API endpoint may have changed—re-authenticate and verify the API_BASE URL.
+    | Error | Fix |
+    |---|---|
+    | `CRIT: CloudIQ authentication failed` | Verify CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET environment variables are set correctly and have not expired. |
+    | `curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection timed out` | Check network connectivity and firewall rules allow outbound HTTPS to cloudiq.dell.com, or verify the API endpoint is accessible from your environment. |
+    | `jq: parse error: Cannot index number with string "results"` | Ensure the CloudIQ API response is valid JSON; the token may be invalid or the API endpoint may have changed—re-authenticate and verify the API_BASE URL. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

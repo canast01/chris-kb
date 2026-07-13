@@ -124,7 +124,9 @@ Storage Blob Data Reader       /subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The subscription '<sub-id>' could not be found.`** — Verify the subscription
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The subscription '<sub-id>' could not be found.` | Verify the subscription |
 ### Create a Role Assignment
 
 ```bash
@@ -188,8 +190,10 @@ az role assignment delete \
 ```
 
 !!! warning "Common errors"
-    **`The provided information does not match any role assignments.`** — Verify the exact role name with `az role definition list --query "[].name"`, assignee identity with `az ad user show --id <upn>`, and resource group name with `az group list`.
-    **`The user does not have permission to perform action 'Microsoft.Authorization/roleAssignments/delete' over scope '/subscriptions/<sub-id>/resourceGroups/<rg-name>'.`** — Ensure your account has Owner or User Access Administrator role on the resource group or subscription.
+    | Error | Fix |
+    |---|---|
+    | `The provided information does not match any role assignments.` | Verify the exact role name with `az role definition list --query "[].name"`, assignee identity with `az ad user show --id <upn>`, and resource group name with `az group list`. |
+    | `The user does not have permission to perform action 'Microsoft.Authorization/roleAssignments/delete' over scope '/subscriptions/<sub-id>/resourceGroups/<rg-name>'.` | Ensure your account has Owner or User Access Administrator role on the resource group or subscription. |
 ---
 
 ## Custom Roles
@@ -234,8 +238,10 @@ Kubernetes Cluster Auditor               CustomRole Audit AKS cluster operations
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (InvalidInput) The role definition file '@custom-role.json' does not exist.`** — Verify the JSON file path is correct and exists in the current working directory using `ls -la custom-role.json`.
-    **`ERROR: (Forbidden) The user does not have permission to create role definitions at scope '/subscriptions/...'.`** — Ensure your account has Owner or User Access Administrator role on the subscription using `az role assignment list --assignee <your-email>`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (InvalidInput) The role definition file '@custom-role.json' does not exist.` | Verify the JSON file path is correct and exists in the current working directory using `ls -la custom-role.json`. |
+    | `ERROR: (Forbidden) The user does not have permission to create role definitions at scope '/subscriptions/...'.` | Ensure your account has Owner or User Access Administrator role on the subscription using `az role assignment list --assignee <your-email>`. |
 Example `custom-role.json`:
 
 ```json
@@ -271,8 +277,10 @@ az role definition delete --name "VM Start Stop Only"
 ```
 
 !!! warning "Common errors"
-    **`The role definition file '@custom-role-updated.json' does not exist.`** — Verify the JSON file path is correct and exists in the current working directory with `ls -la custom-role-updated.json`.
-    **`Cannot delete role definition 'VM Start Stop Only'. There are still 3 role assignments using this role.`** — Remove all role assignments for this custom role using `az role assignment delete --role "VM Start Stop Only"` before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `The role definition file '@custom-role-updated.json' does not exist.` | Verify the JSON file path is correct and exists in the current working directory with `ls -la custom-role-updated.json`. |
+    | `Cannot delete role definition 'VM Start Stop Only'. There are still 3 role assignments using this role.` | Remove all role assignments for this custom role using `az role assignment delete --role "VM Start Stop Only"` before attempting deletion. |
 ---
 
 ## Managed Identities
@@ -395,9 +403,11 @@ sp-pipeline-staging         b8e4d3f2-0c5e-5f9g-c3d7-2e6b0f4g8d3c 2024-01-10T14:1
 ```
 
 !!! warning "Common errors"
-    **`No subscriptions found. Please run 'az login' to set up account.`** — Run `az login` and ensure you have access to the target subscription before creating the service principal.
-    **`The service principal with object id '<id>' does not have authorization to perform action 'Microsoft.Authorization/roleAssignments/write'.`** — Ensure your user account has Owner or User Access Administrator role on the subscription or resource group before assigning roles to the service principal.
-    **`Service principal '<sp-app-id>' not found.`** — Verify the service principal exists by running `az ad sp list --display-name "<name>"` and use the correct appId from the output.
+    | Error | Fix |
+    |---|---|
+    | `No subscriptions found. Please run 'az login' to set up account.` | Run `az login` and ensure you have access to the target subscription before creating the service principal. |
+    | `The service principal with object id '<id>' does not have authorization to perform action 'Microsoft.Authorization/roleAssignments/write'.` | Ensure your user account has Owner or User Access Administrator role on the subscription or resource group before assigning roles to the service principal. |
+    | `Service principal '<sp-app-id>' not found.` | Verify the service principal exists by running `az ad sp list --display-name "<name>"` and use the correct appId from the output. |
 Use certificate-based authentication for service principals in production — avoid client secrets where possible. Rotate secrets on a schedule (90 days maximum).
 
 ---
@@ -500,9 +510,11 @@ mg-staging                           Microsoft.Management/managementGroups
 ```
 
 !!! warning "Common errors"
-    **`The provided information does not map to a management group.`** — Verify the management group name exists by running `az account management-group list` and use the exact DisplayName value.
-    **`Principal with object id <group-object-id> does not exist in the directory.`** — Confirm the group object ID is correct by running `az ad group show --group <group-name> --query objectId` in the target Azure AD tenant.
-    **`Authorization failed for template deployment.`** — Ensure your user account has Owner or User Access Administrator role on the management group scope before assigning roles to others.
+    | Error | Fix |
+    |---|---|
+    | `The provided information does not map to a management group.` | Verify the management group name exists by running `az account management-group list` and use the exact DisplayName value. |
+    | `Principal with object id <group-object-id> does not exist in the directory.` | Confirm the group object ID is correct by running `az ad group show --group <group-name> --query objectId` in the target Azure AD tenant. |
+    | `Authorization failed for template deployment.` | Ensure your user account has Owner or User Access Administrator role on the management group scope before assigning roles to others. |
 Use management group scope for:
 - Security team Reader access across all subscriptions
 - Network Contributor for the network team across all network resource groups
@@ -554,8 +566,10 @@ Time                 OperationName                                      Status  
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --resource-group/-g`** — Add `--resource-group <name>` or use `--all` flag to query across all subscriptions.
-    **`KeyError: 'principalName'`** — Some role assignments may lack a principalName field; add error handling with `a.get("principalName", "N/A")` in the Python script.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --resource-group/-g` | Add `--resource-group <name>` or use `--all` flag to query across all subscriptions. |
+    | `KeyError: 'principalName'` | Some role assignments may lack a principalName field; add error handling with `a.get("principalName", "N/A")` in the Python script. |
 Conduct quarterly access reviews:
 - Remove assignments for departed users
 - Validate service principal secrets are rotated

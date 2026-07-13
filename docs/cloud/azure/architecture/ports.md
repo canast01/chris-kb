@@ -154,9 +154,11 @@ DenyAllInbound           *           Inbound      65500       *                *
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The command failed with an unexpected status code: 401 Unauthorized`** — Ensure you are authenticated with `az login` and have permissions to the subscription.
-    **`ResourceNotFound: The Resource 'Microsoft.Network/networkSecurityGroups/<nsg-name>' under resource group '<rg-name>' was not found`** — Verify the NSG name and resource group name are correct and exist in your subscription.
-    **`The NIC '<nic-name>' does not exist in the resource group '<rg-name>'`** — Confirm the NIC name matches exactly and the VM is in the specified resource group.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The command failed with an unexpected status code: 401 Unauthorized` | Ensure you are authenticated with `az login` and have permissions to the subscription. |
+    | `ResourceNotFound: The Resource 'Microsoft.Network/networkSecurityGroups/<nsg-name>' under resource group '<rg-name>' was not found` | Verify the NSG name and resource group name are correct and exist in your subscription. |
+    | `The NIC '<nic-name>' does not exist in the resource group '<rg-name>'` | Confirm the NIC name matches exactly and the VM is in the specified resource group. |
 ## See also
 
 - [Azure — Architecture](../how-it-works/)

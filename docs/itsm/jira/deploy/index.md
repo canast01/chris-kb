@@ -143,9 +143,11 @@ postgres=# \q
 ```
 
 !!! warning "Common errors"
-    **`ERROR: role "jira" already exists`** — Drop the existing role with `DROP ROLE jira;` before recreating it, or use `CREATE USER IF NOT EXISTS jira` (PostgreSQL 10+).
-    **`FATAL: Ident authentication failed for user "postgres"`** — Ensure you're running the command as the postgres system user with `sudo -u postgres` or configure pg_hba.conf to allow password authentication.
-    **`ERROR: database "jira" already exists`** — Drop the existing database with `DROP DATABASE jira;` first, or use `CREATE DATABASE IF NOT EXISTS jira`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: role "jira" already exists` | Drop the existing role with `DROP ROLE jira;` before recreating it, or use `CREATE USER IF NOT EXISTS jira` (PostgreSQL 10+). |
+    | `FATAL: Ident authentication failed for user "postgres"` | Ensure you're running the command as the postgres system user with `sudo -u postgres` or configure pg_hba.conf to allow password authentication. |
+    | `ERROR: database "jira" already exists` | Drop the existing database with `DROP DATABASE jira;` first, or use `CREATE DATABASE IF NOT EXISTS jira`. |
 **Run the Jira setup wizard:**
 
 1. Open a browser to `http://<jira-server>:8080`.
@@ -196,8 +198,10 @@ JVM_MAXIMUM_MEMORY="8192m"
 ```
 
 !!! warning "Common errors"
-    **`bash: JVM_MINIMUM_MEMORY: command not found`** — Ensure you are running these commands in a bash shell context, not pasting them into a non-shell environment.
-    **`export: command not found`** — If these variables need to be persistent across sessions, prefix each line with `export` (e.g., `export JVM_MINIMUM_MEMORY="2048m"`).
+    | Error | Fix |
+    |---|---|
+    | `bash: JVM_MINIMUM_MEMORY: command not found` | Ensure you are running these commands in a bash shell context, not pasting them into a non-shell environment. |
+    | `export: command not found` | If these variables need to be persistent across sessions, prefix each line with `export` (e.g., `export JVM_MINIMUM_MEMORY="2048m"`). |
 Restart Jira: `sudo systemctl restart jira`
 
 ---
@@ -302,9 +306,11 @@ Date: Mon, 15 Jan 2024 11:38:12 GMT
 ```
 
 !!! warning "Common errors"
-    **`Unit jira.service could not be found.`** — Verify the Jira systemd service file exists at `/etc/systemd/system/jira.service` and run `sudo systemctl daemon-reload`.
-    **`curl: (7) Failed to connect to localhost port 8080: Connection refused`** — Check that Jira is actually running with `sudo systemctl start jira` and wait 30–60 seconds for the application to fully initialize.
-    **`HTTP/1.1 503 Service Unavailable`** — Jira is starting up; wait 2–3 minutes and retry, or check `/opt/jira/logs/catalina.out` for startup errors.
+    | Error | Fix |
+    |---|---|
+    | `Unit jira.service could not be found.` | Verify the Jira systemd service file exists at `/etc/systemd/system/jira.service` and run `sudo systemctl daemon-reload`. |
+    | `curl: (7) Failed to connect to localhost port 8080: Connection refused` | Check that Jira is actually running with `sudo systemctl start jira` and wait 30–60 seconds for the application to fully initialize. |
+    | `HTTP/1.1 503 Service Unavailable` | Jira is starting up; wait 2–3 minutes and retry, or check `/opt/jira/logs/catalina.out` for startup errors. |
 **Web UI:**
 
 - Log in as admin and as an LDAP user — both must succeed
@@ -327,9 +333,11 @@ count
 ```
 
 !!! warning "Common errors"
-    **`psql: error: FATAL: role "postgres" does not exist`** — Verify the PostgreSQL superuser name with `sudo -u postgres psql -l` or use the correct role name in the `-u` flag.
-    **`psql: error: FATAL: database "jira" does not exist`** — Confirm the JIRA database exists by running `sudo -u postgres psql -l` and create it if missing with `createdb -U postgres jira`.
-    **`psql: error: ERROR: relation "app_user" does not exist`** — Ensure the JIRA schema has been initialized by running the JIRA database setup script or checking that the application has completed its first-run configuration.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: FATAL: role "postgres" does not exist` | Verify the PostgreSQL superuser name with `sudo -u postgres psql -l` or use the correct role name in the `-u` flag. |
+    | `psql: error: FATAL: database "jira" does not exist` | Confirm the JIRA database exists by running `sudo -u postgres psql -l` and create it if missing with `createdb -U postgres jira`. |
+    | `psql: error: ERROR: relation "app_user" does not exist` | Ensure the JIRA schema has been initialized by running the JIRA database setup script or checking that the application has completed its first-run configuration. |
 **Email (if SMTP configured):**
 
 - Navigate to **Administration → System → Mail → Send test email**

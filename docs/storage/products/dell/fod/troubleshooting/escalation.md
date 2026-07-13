@@ -122,9 +122,11 @@ Storage System Information
 ```
 
 !!! warning "Common errors"
-    **`symcfg: command not found`** — Install Solutions Enabler or verify the symcli package is in your PATH.
-    **`Error: Connection refused (port 443)`** — Verify the management IP is reachable and Unisphere/REST API service is running on the array.
-    **`uemcli: Authentication failed`** — Confirm credentials and that the management IP is correct for the Unity/PowerStore system.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: command not found` | Install Solutions Enabler or verify the symcli package is in your PATH. |
+    | `Error: Connection refused (port 443)` | Verify the management IP is reachable and Unisphere/REST API service is running on the array. |
+    | `uemcli: Authentication failed` | Confirm credentials and that the management IP is correct for the Unity/PowerStore system. |
 ### 2. Collect the error from the failed key import
 
 ```bash
@@ -161,9 +163,11 @@ ID    | Timestamp           | Severity | Source    | Message
 ```
 
 !!! warning "Common errors"
-    **`symlicense: command not found`** — Ensure Solutions Enabler is installed and the `$PATH` includes the Solutions Enabler bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`License Key validation failed: Invalid signature`** — Verify the FOD license file is not corrupted by comparing its checksum against the vendor-provided value and re-download if necessary.
-    **`uemcli: Unable to connect to management IP 192.168.1.50`** — Confirm the management IP is reachable with `ping` and that the Unity/PowerStore system is online and accessible from your network.
+    | Error | Fix |
+    |---|---|
+    | `symlicense: command not found` | Ensure Solutions Enabler is installed and the `$PATH` includes the Solutions Enabler bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `License Key validation failed: Invalid signature` | Verify the FOD license file is not corrupted by comparing its checksum against the vendor-provided value and re-download if necessary. |
+    | `uemcli: Unable to connect to management IP 192.168.1.50` | Confirm the management IP is reachable with `ping` and that the Unity/PowerStore system is online and accessible from your network. |
 ### 3. Collect currently active licenses
 
 ```bash
@@ -197,9 +201,11 @@ License file exported to: /tmp/fod-active-licenses.txt
 ```
 
 !!! warning "Common errors"
-    **`symlicense: Command not found`** — Install the EMC Solutions Enabler package or ensure the Symmetrix CLI tools are in your PATH (verify with `which symlicense`).
-    **`Error: Invalid SID <SID>`** — Replace `<SID>` with the actual Symmetrix ID (e.g., `000297900001`) and verify connectivity to the array with `symcfg list`.
-    **`Permission denied`** — Run the command with appropriate privileges (use `sudo` or ensure your user is in the `symadmin` group).
+    | Error | Fix |
+    |---|---|
+    | `symlicense: Command not found` | Install the EMC Solutions Enabler package or ensure the Symmetrix CLI tools are in your PATH (verify with `which symlicense`). |
+    | `Error: Invalid SID <SID>` | Replace `<SID>` with the actual Symmetrix ID (e.g., `000297900001`) and verify connectivity to the array with `symcfg list`. |
+    | `Permission denied` | Run the command with appropriate privileges (use `sudo` or ensure your user is in the `symadmin` group). |
 ### 4. Collect the FoD license file details
 
 ```bash
@@ -224,8 +230,10 @@ SERIAL=ABC-123-DEF-456
 ```
 
 !!! warning "Common errors"
-    **`grep: /path/to/fod-key.lic: No such file or directory`** — Replace `/path/to/fod-key.lic` with the actual path to your license file (e.g., `/opt/dell/fod/licenses/array.lic`).
-    **`grep: /path/to/fod-key.lic: Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the license file.
+    | Error | Fix |
+    |---|---|
+    | `grep: /path/to/fod-key.lic: No such file or directory` | Replace `/path/to/fod-key.lic` with the actual path to your license file (e.g., `/opt/dell/fod/licenses/array.lic`). |
+    | `grep: /path/to/fod-key.lic: Permission denied` | Run the command with `sudo` or ensure your user has read permissions on the license file. |
 ### 5. Write the timeline and case info
 
 ```text
@@ -356,9 +364,11 @@ Alert Summary
 ```
 
 !!! warning "Common errors"
-    **`symlicense: Command not found`** — Verify the Symmetrix CLI package is installed and /opt/emc/SYMCLI/bin is in your PATH.
-    **`Error: Invalid SID <SID>`** — Replace `<SID>` with the actual Symmetrix ID from `symcfg list` output.
-    **`uemcli: Connection refused on <mgmt-ip>:443`** — Confirm the management IP is reachable and the Unisphere service is running with `systemctl status unisphere`.
+    | Error | Fix |
+    |---|---|
+    | `symlicense: Command not found` | Verify the Symmetrix CLI package is installed and /opt/emc/SYMCLI/bin is in your PATH. |
+    | `Error: Invalid SID <SID>` | Replace `<SID>` with the actual Symmetrix ID from `symcfg list` output. |
+    | `uemcli: Connection refused on <mgmt-ip>:443` | Confirm the management IP is reachable and the Unisphere service is running with `systemctl status unisphere`. |
 ---
 
 ## Verify resolution

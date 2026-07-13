@@ -46,9 +46,11 @@ curl -s -H "Authorization: Bearer $CF_TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the Confluence hostname/URL is correct and the service is running with `systemctl status confluence`.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure `$CF_TOKEN` is valid and the API endpoint is accessible; test with `curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/settings/systemInfo"` to see the actual response.
-    **`curl: (401) Unauthorized`** — Regenerate the API token in Confluence user settings and confirm it has admin permissions for REST API access.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443: Connection refused` | Verify the Confluence hostname/URL is correct and the service is running with `systemctl status confluence`. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure `$CF_TOKEN` is valid and the API endpoint is accessible; test with `curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/settings/systemInfo"` to see the actual response. |
+    | `curl: (401) Unauthorized` | Regenerate the API token in Confluence user settings and confirm it has admin permissions for REST API access. |
 ```bash
 # Back up the install directory
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
@@ -66,9 +68,11 @@ Backup created: confluence_backup_20240315_143827
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot open '/opt/atlassian/confluence' for reading: No such file or directory`** — Verify Confluence is installed at `/opt/atlassian/confluence` or adjust the path to match your installation directory.
-    **`cp: cannot create directory '/opt/atlassian/confluence_backup_20240315_143827': Permission denied`** — Run the script with `sudo` or ensure the user has write permissions to `/opt/atlassian/`.
-    **`cp: cannot open '/var/atlassian/application-data/confluence' for reading: No such file or directory`** — Check that the Confluence home directory exists at the specified path, or update it to match your `confluence.home` configuration.
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot open '/opt/atlassian/confluence' for reading: No such file or directory` | Verify Confluence is installed at `/opt/atlassian/confluence` or adjust the path to match your installation directory. |
+    | `cp: cannot create directory '/opt/atlassian/confluence_backup_20240315_143827': Permission denied` | Run the script with `sudo` or ensure the user has write permissions to `/opt/atlassian/`. |
+    | `cp: cannot open '/var/atlassian/application-data/confluence' for reading: No such file or directory` | Check that the Confluence home directory exists at the specified path, or update it to match your `confluence.home` configuration. |
 ```bash
 # Make the installer executable
 chmod +x atlassian-confluence-9.x.x-x64.bin
@@ -131,8 +135,10 @@ diff "${BACKUP_DIR}/conf/server.xml" "${INSTALL_DIR}/conf/server.xml"
 ```
 
 !!! warning "Common errors"
-    **`diff: /opt/atlassian/confluence_backup_20240115_143022/bin/setenv.sh: No such file or directory`** — Verify the TIMESTAMP variable is set correctly and the backup directory exists with `ls -la "${BACKUP_DIR}"`.
-    **`Permission denied`** — Run the diff commands with `sudo` or ensure the confluence system user has read access to both backup and installation directories.
+    | Error | Fix |
+    |---|---|
+    | `diff: /opt/atlassian/confluence_backup_20240115_143022/bin/setenv.sh: No such file or directory` | Verify the TIMESTAMP variable is set correctly and the backup directory exists with `ls -la "${BACKUP_DIR}"`. |
+    | `Permission denied` | Run the diff commands with `sudo` or ensure the confluence system user has read access to both backup and installation directories. |
 ```bash
 # Start the application
 /opt/atlassian/confluence/bin/start-confluence.sh
@@ -176,9 +182,11 @@ curl -s -H "Authorization: Bearer $CF_TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the Confluence service is running on the target node with `systemctl status confluence` and check network connectivity to the cluster endpoint.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the API token in `$CF_TOKEN` is valid and has cluster API permissions; test with `curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/cluster/nodes"` without piping to jq first.
-    **`"state": "JOINING"`** — The node is still synchronizing with the cluster; wait 2-3 minutes and retry the curl command, as initial state synchronization can take time.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443: Connection refused` | Verify the Confluence service is running on the target node with `systemctl status confluence` and check network connectivity to the cluster endpoint. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the API token in `$CF_TOKEN` is valid and has cluster API permissions; test with `curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/cluster/nodes"` without piping to jq first. |
+    | `"state": "JOINING"` | The node is still synchronizing with the cluster; wait 2-3 minutes and retry the curl command, as initial state synchronization can take time. |
 ```bash
 # View upgrade task history in the database
 psql -h db.internal.example.com -U confluence -d confluencedb \
@@ -205,8 +213,10 @@ classname                          | ranon
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "db.internal.example.com" (10.45.67.89), port 5432 failed: Connection refused`** — Verify the PostgreSQL service is running on the database host and the hostname/port are correct.
-    **`grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory`** — Confirm Confluence is installed and the log directory path matches your installation; check the CONFLUENCE_HOME environment variable.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "db.internal.example.com" (10.45.67.89), port 5432 failed: Connection refused` | Verify the PostgreSQL service is running on the database host and the hostname/port are correct. |
+    | `grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory` | Confirm Confluence is installed and the log directory path matches your installation; check the CONFLUENCE_HOME environment variable. |
 ```bash
 # Export current plugin list with versions
 curl -s -H "Authorization: Bearer $CF_TOKEN" \
@@ -228,9 +238,11 @@ com.atlassian.confluence.plugins.confluence-content-formatting-macros	1.5.3	true
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the Confluence server hostname is correct and the instance is running and accessible from your network.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the API token in `$CF_TOKEN` is valid and has the `read:plugins` permission scope.
-    **`curl: (401) Unauthorized`** — Regenerate the API token in Confluence and verify it's exported correctly with `echo $CF_TOKEN`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443: Connection refused` | Verify the Confluence server hostname is correct and the instance is running and accessible from your network. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the API token in `$CF_TOKEN` is valid and has the `read:plugins` permission scope. |
+    | `curl: (401) Unauthorized` | Regenerate the API token in Confluence and verify it's exported correctly with `echo $CF_TOKEN`. |
 ```bash
 # Check for plugins that failed to start post-upgrade
 grep -E "(Plugin.*FAILED|PluginException|osgi.*error)" \
@@ -250,8 +262,10 @@ grep -E "(Plugin.*FAILED|PluginException|osgi.*error)" \
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory`** — Verify the Confluence installation path and log directory location with `find / -name atlassian-confluence.log 2>/dev/null`.
-    **`No matches found`** — This indicates no plugin failures were detected in the logs; if plugins appear broken in the UI, check the full log with `tail -100 /var/atlassian/application-data/confluence/logs/atlassian-confluence.log` to see startup warnings.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory` | Verify the Confluence installation path and log directory location with `find / -name atlassian-confluence.log 2>/dev/null`. |
+    | `No matches found` | This indicates no plugin failures were detected in the logs; if plugins appear broken in the UI, check the full log with `tail -100 /var/atlassian/application-data/confluence/logs/atlassian-confluence.log` to see startup warnings. |
 ```bash
 # Disable a plugin
 curl -s -X PUT -H "Authorization: Bearer $CF_TOKEN" \
@@ -272,9 +286,11 @@ curl -s -X PUT -H "Authorization: Bearer $CF_TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the Confluence server is running and accessible at the correct hostname/port.
-    **`{"statusCode":401,"message":"Unauthorized"}`** — Ensure `$CF_TOKEN` is set to a valid API token with plugin administration permissions.
-    **`{"statusCode":404,"message":"Plugin not found"}`** — Confirm the plugin key `com.example.plugin` exists and is installed by checking the Plugins menu in Confluence.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443: Connection refused` | Verify the Confluence server is running and accessible at the correct hostname/port. |
+    | `{"statusCode":401,"message":"Unauthorized"}` | Ensure `$CF_TOKEN` is set to a valid API token with plugin administration permissions. |
+    | `{"statusCode":404,"message":"Plugin not found"}` | Confirm the plugin key `com.example.plugin` exists and is installed by checking the Plugins menu in Confluence. |
 ```bash
 # 1. Stop Confluence on all nodes
 /opt/atlassian/confluence/bin/stop-confluence.sh

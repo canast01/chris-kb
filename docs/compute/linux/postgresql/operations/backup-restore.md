@@ -68,9 +68,11 @@ stanza: prod-db-primary
 ```
 
 !!! warning "Common errors"
-    **`ERROR: unable to load info file '/var/lib/pgbackrest/backup/<stanza-name>/backup.info' — permission denied`** — Verify pgBackRest repository directory is owned by the postgres system user and readable by the pgbackrest process.
-    **`FATAL: Ident authentication failed for user "postgres"`** — Ensure the psql connection is run as the postgres OS user or configure pg_hba.conf to allow local connections without ident authentication.
-    **`ERROR: archive_command returned non-zero exit status 1`** — Check that the pgBackRest archive_command in postgresql.conf is correctly configured and the repository path is writable by the postgres user.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: unable to load info file '/var/lib/pgbackrest/backup/<stanza-name>/backup.info' — permission denied` | Verify pgBackRest repository directory is owned by the postgres system user and readable by the pgbackrest process. |
+    | `FATAL: Ident authentication failed for user "postgres"` | Ensure the psql connection is run as the postgres OS user or configure pg_hba.conf to allow local connections without ident authentication. |
+    | `ERROR: archive_command returned non-zero exit status 1` | Check that the pgBackRest archive_command in postgresql.conf is correctly configured and the repository path is writable by the postgres user. |
 ```bash
 # PostgreSQL — verify backup with pgBackRest
 pgbackrest --stanza=<stanza-name> check
@@ -105,9 +107,11 @@ RESTORE VERIFYONLY statement processed successfully.
 ```
 
 !!! warning "Common errors"
-    **`pgbackrest: [STANZA_NOT_FOUND] stanza 'prod_db' does not exist`** — Verify the stanza name matches your pgBackRest configuration in `/etc/pgbackrest/pgbackrest.conf`.
-    **`xtrabackup: error: InnoDB: Tablespace size stored in header is 5242880 pages, but the sum of new sizes is 5242879 pages`** — Run `xtrabackup --prepare --target-dir=/backup/mysql/latest/ --use-memory=2G` to rebuild the tablespace or restore from a newer backup.
-    **`Msg 3013, Level 16, State 1, Server 'MSSQL_SERVER', Line 1 RESTORE detected an error on page (1:2847) in database 'mydb'`** — Restore from a known-good backup file or run `DBCC CHECKDB (mydb)` after restore to identify corruption.
+    | Error | Fix |
+    |---|---|
+    | `pgbackrest: [STANZA_NOT_FOUND] stanza 'prod_db' does not exist` | Verify the stanza name matches your pgBackRest configuration in `/etc/pgbackrest/pgbackrest.conf`. |
+    | `xtrabackup: error: InnoDB: Tablespace size stored in header is 5242880 pages, but the sum of new sizes is 5242879 pages` | Run `xtrabackup --prepare --target-dir=/backup/mysql/latest/ --use-memory=2G` to rebuild the tablespace or restore from a newer backup. |
+    | `Msg 3013, Level 16, State 1, Server 'MSSQL_SERVER', Line 1 RESTORE detected an error on page (1:2847) in database 'mydb'` | Restore from a known-good backup file or run `DBCC CHECKDB (mydb)` after restore to identify corruption. |
 ```bash
 # Restore to test instance
 pgbackrest --stanza=<stanza-name> --pg1-path=/var/lib/pgsql/test-restore restore
@@ -132,9 +136,11 @@ server started
 ```
 
 !!! warning "Common errors"
-    **`FATAL: could not create lock file "/var/lib/pgsql/test-restore/postmaster.pid": Permission denied`** — Ensure the postgres system user owns the test-restore directory with `chown -R postgres:postgres /var/lib/pgsql/test-restore`.
-    **`ERROR: could not connect to server: could not translate host name "localhost" to address: Name or service not known`** — Verify PostgreSQL is listening on port 5433 by checking postgresql.conf or using `ss -tlnp | grep 5433`.
-    **`FATAL: data directory "/var/lib/pgsql/test-restore" does not exist`** — Confirm the restore completed successfully and the directory path matches your pgbackrest configuration in pgbackrest.conf.
+    | Error | Fix |
+    |---|---|
+    | `FATAL: could not create lock file "/var/lib/pgsql/test-restore/postmaster.pid": Permission denied` | Ensure the postgres system user owns the test-restore directory with `chown -R postgres:postgres /var/lib/pgsql/test-restore`. |
+    | `ERROR: could not connect to server: could not translate host name "localhost" to address: Name or service not known` | Verify PostgreSQL is listening on port 5433 by checking postgresql.conf or using `ss -tlnp | grep 5433`. |
+    | `FATAL: data directory "/var/lib/pgsql/test-restore" does not exist` | Confirm the restore completed successfully and the directory path matches your pgbackrest configuration in pgbackrest.conf. |
 ```bash
 # Copy backup to test directory
 xtrabackup --prepare --target-dir=/restore/mysql-test/

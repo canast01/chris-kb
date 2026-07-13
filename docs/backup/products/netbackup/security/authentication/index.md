@@ -43,9 +43,11 @@ Host: nbclient-backup-05
 ```
 
 !!! warning "Common errors"
-    **`nbcertcmd: command not found`** — Ensure NetBackup is installed and /usr/openv/bin is in your PATH, or use the full path /usr/openv/bin/nbcertcmd.
-    **`Error: Unable to connect to master server <master_server>`** — Verify the master server hostname/IP is correct, the NetBackup daemons are running, and network connectivity exists on port 13782.
-    **`Error: Certificate request failed - Host already has valid certificate`** — Remove the -force flag if you only want to renew expired certificates, or use -force only when intentionally replacing an active certificate.
+    | Error | Fix |
+    |---|---|
+    | `nbcertcmd: command not found` | Ensure NetBackup is installed and /usr/openv/bin is in your PATH, or use the full path /usr/openv/bin/nbcertcmd. |
+    | `Error: Unable to connect to master server <master_server>` | Verify the master server hostname/IP is correct, the NetBackup daemons are running, and network connectivity exists on port 13782. |
+    | `Error: Certificate request failed - Host already has valid certificate` | Remove the -force flag if you only want to renew expired certificates, or use -force only when intentionally replacing an active certificate. |
 ```bash
 # On each NetBackup host — generate a CSR
 nbcertcmd -createCSR -cn <hostname> -out /tmp/<hostname>.csr

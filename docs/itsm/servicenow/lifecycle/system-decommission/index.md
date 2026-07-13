@@ -86,8 +86,10 @@ curl -s -X POST http://zabbix.example.com/api_jsonrpc.php \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to prometheus:9090: Connection refused`** — Verify Prometheus is running with `docker ps` or `systemctl status prometheus` and check the correct hostname/port in your environment.
-    **`"error":{"code":-32602,"message":"Invalid params.","data":"No permissions to referred object or it does not exist."}`** — Confirm the `<id>` (hostid) is correct by querying `host.get` method first, and verify the auth token has admin privileges.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to prometheus:9090: Connection refused` | Verify Prometheus is running with `docker ps` or `systemctl status prometheus` and check the correct hostname/port in your environment. |
+    | `"error":{"code":-32602,"message":"Invalid params.","data":"No permissions to referred object or it does not exist."}` | Confirm the `<id>` (hostid) is correct by querying `host.get` method first, and verify the auth token has admin privileges. |
 ## 5. Remove from Backup
 
 ```bash
@@ -122,8 +124,10 @@ Remove-VBRJobObject -Job $job -Objects $vm
 ```
 
 !!! warning "Common errors"
-    **`Get-VBRJob : The term 'Get-VBRJob' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Load the Veeam PowerShell snapin with `Add-PSSnapin VeeamPSSnapin` before running these commands.
-    **`Remove-VBRJobObject : Cannot remove object. Job must contain at least one object.`** — Verify the VM object exists in the job using `Get-VBRJobObject -Job $job | Format-Table Name` before attempting removal.
+    | Error | Fix |
+    |---|---|
+    | `Get-VBRJob : The term 'Get-VBRJob' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Load the Veeam PowerShell snapin with `Add-PSSnapin VeeamPSSnapin` before running these commands. |
+    | `Remove-VBRJobObject : Cannot remove object. Job must contain at least one object.` | Verify the VM object exists in the job using `Get-VBRJobObject -Job $job | Format-Table Name` before attempting removal. |
 ## 6. Revoke Access and Credentials
 
 ```bash
@@ -170,9 +174,11 @@ Address:	192.168.1.53#53
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the root account has SSH key access to the target hostname and the key is loaded in your SSH agent.
-    **`Update failed: NOTAUTH`** — Ensure your nsupdate command includes proper TSIG authentication (key-file parameter) or that the DNS server allows unsigned updates from your source IP.
-    **`Disable-ADComputer : Cannot find an object with identity "<HOSTNAME>" under: "DC=example,DC=com".`** — Verify the exact hostname spelling matches the AD computer object name and confirm you are connected to the correct Active Directory domain.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the root account has SSH key access to the target hostname and the key is loaded in your SSH agent. |
+    | `Update failed: NOTAUTH` | Ensure your nsupdate command includes proper TSIG authentication (key-file parameter) or that the DNS server allows unsigned updates from your source IP. |
+    | `Disable-ADComputer : Cannot find an object with identity "<HOSTNAME>" under: "DC=example,DC=com".` | Verify the exact hostname spelling matches the AD computer object name and confirm you are connected to the correct Active Directory domain. |
 ## 7. Shutdown and Delete
 
 ### Virtual Machine
@@ -236,9 +242,11 @@ ERROR: (gcloud.compute.instances.delete) Could not fetch resource:
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidInstanceID.NotFound) when calling the TerminateInstances operation: The instance ID 'i-1234567890abcdef0' does not exist`** — Verify the instance ID is correct and still running with `aws ec2 describe-instances --filters "Name=instance-state-name,Values=running"`.
-    **`ERROR: (gcloud.compute.instances.delete) Could not fetch resource: The resource 'projects/my-project/zones/europe-west1-b/instances/<hostname>' was not found`** — Confirm the hostname and zone match the actual instance with `gcloud compute instances list --zones=europe-west1-b`.
-    **`ResourceNotFoundError: The Resource 'Microsoft.Compute/disks/<hostname>-osDisk' under resource group 'prod-rg' was not found`** — Ensure the disk name and resource group are correct by listing disks with `az disk list --resource-group prod-rg`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidInstanceID.NotFound) when calling the TerminateInstances operation: The instance ID 'i-1234567890abcdef0' does not exist` | Verify the instance ID is correct and still running with `aws ec2 describe-instances --filters "Name=instance-state-name,Values=running"`. |
+    | `ERROR: (gcloud.compute.instances.delete) Could not fetch resource: The resource 'projects/my-project/zones/europe-west1-b/instances/<hostname>' was not found` | Confirm the hostname and zone match the actual instance with `gcloud compute instances list --zones=europe-west1-b`. |
+    | `ResourceNotFoundError: The Resource 'Microsoft.Compute/disks/<hostname>-osDisk' under resource group 'prod-rg' was not found` | Ensure the disk name and resource group are correct by listing disks with `az disk list --resource-group prod-rg`. |
 ## 8. CMDB and Ansible Cleanup
 
 ```bash
@@ -269,9 +277,11 @@ To git.company.internal:infrastructure/ansible-inventory.git
 ```
 
 !!! warning "Common errors"
-    **`fatal: pathspec 'inventory/production/host_vars/<hostname>.example.com/' did not match any files`** — Replace `<hostname>` with the actual hostname (e.g., `db-prod-03`) before running the command.
-    **`error: pathspec 'inventory/production/host_vars/db-prod-03.example.com/' did not match any files`** — Verify the directory exists and the path is correct; check for typos or confirm the host_vars structure matches your inventory layout.
-    **`[main (root-commit) ...] fatal: your current branch 'main' does not have any commits yet`** — Ensure you are in the correct git repository directory and that the branch has been initialized with at least one commit.
+    | Error | Fix |
+    |---|---|
+    | `fatal: pathspec 'inventory/production/host_vars/<hostname>.example.com/' did not match any files` | Replace `<hostname>` with the actual hostname (e.g., `db-prod-03`) before running the command. |
+    | `error: pathspec 'inventory/production/host_vars/db-prod-03.example.com/' did not match any files` | Verify the directory exists and the path is correct; check for typos or confirm the host_vars structure matches your inventory layout. |
+    | `[main (root-commit) ...] fatal: your current branch 'main' does not have any commits yet` | Ensure you are in the correct git repository directory and that the branch has been initialized with at least one commit. |
 ## Decommission Checklist
 
 | Step | Done |

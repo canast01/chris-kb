@@ -86,8 +86,10 @@ Object Health Status: All objects healthy
 ```
 
 !!! warning "Common errors"
-    **`VSAN Health: UNKNOWN`** — Ensure vSAN is enabled on the cluster and the host is connected to vCenter with proper licensing.
-    **`Error: Unknown command or namespace`** — Verify the host is running ESXi 6.5 or later with vSAN enabled; older versions lack the `vsan debug` command set.
+    | Error | Fix |
+    |---|---|
+    | `VSAN Health: UNKNOWN` | Ensure vSAN is enabled on the cluster and the host is connected to vCenter with proper licensing. |
+    | `Error: Unknown command or namespace` | Verify the host is running ESXi 6.5 or later with vSAN enabled; older versions lack the `vsan debug` command set. |
 ## NSX Validation (if NSX was upgraded or touched)
 
 ```bash
@@ -127,9 +129,11 @@ bgp neighbor summary:
 ```
 
 !!! warning "Common errors"
-    **`command not found: get`** — Ensure you are logged into NSX Manager CLI (ssh admin@<nsx-ip>) and not a standard Linux shell.
-    **`cluster status: UNSTABLE`** — Investigate failed nodes with `get cluster nodes detail` and resolve node connectivity or service issues before upgrading.
-    **`bgp neighbor summary: State DOWN or Idle`** — Verify BGP peer IP addresses and routing configuration with `get bgp neighbor <peer-ip> detail` before proceeding with upgrade.
+    | Error | Fix |
+    |---|---|
+    | `command not found: get` | Ensure you are logged into NSX Manager CLI (ssh admin@<nsx-ip>) and not a standard Linux shell. |
+    | `cluster status: UNSTABLE` | Investigate failed nodes with `get cluster nodes detail` and resolve node connectivity or service issues before upgrading. |
+    | `bgp neighbor summary: State DOWN or Idle` | Verify BGP peer IP addresses and routing configuration with `get bgp neighbor <peer-ip> detail` before proceeding with upgrade. |
 ## VxRail Validation (if applicable)
 
 ```bash

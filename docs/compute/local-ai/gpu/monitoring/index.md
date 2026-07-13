@@ -166,9 +166,11 @@ gpu   pid  type  fb
 ```
 
 !!! warning "Common errors"
-    **`NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.`** — Verify the NVIDIA driver is installed with `nvidia-smi` standalone, or reinstall with `sudo apt install nvidia-driver-535` (adjust version as needed).
-    **`No such file or directory: /var/log/gpu_stats.csv`** — Create the log file and ensure write permissions with `sudo touch /var/log/gpu_stats.csv && sudo chmod 666 /var/log/gpu_stats.csv`.
-    **`Invalid GPU device id: 0`** — Confirm available GPUs with `nvidia-smi --list-gpus` and adjust the `-i` parameter to a valid device ID.
+    | Error | Fix |
+    |---|---|
+    | `NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.` | Verify the NVIDIA driver is installed with `nvidia-smi` standalone, or reinstall with `sudo apt install nvidia-driver-535` (adjust version as needed). |
+    | `No such file or directory: /var/log/gpu_stats.csv` | Create the log file and ensure write permissions with `sudo touch /var/log/gpu_stats.csv && sudo chmod 666 /var/log/gpu_stats.csv`. |
+    | `Invalid GPU device id: 0` | Confirm available GPUs with `nvidia-smi --list-gpus` and adjust the `-i` parameter to a valid device ID. |
 ## Key Metrics to Track
 
 | Metric | `nvidia-smi` Query | Healthy Range | Alert Threshold |
@@ -240,9 +242,11 @@ Status: Downloaded newer image for nvcr.io/nvidia/k8s/dcgm-exporter:3.3.0-3.2.0-
 ```
 
 !!! warning "Common errors"
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the command with `sudo` or as root user.
-    **`nvidia-dcgm.service is not active, it is inactive.`** — Verify NVIDIA drivers are installed with `nvidia-smi` and check systemd logs with `journalctl -u nvidia-dcgm -n 20`.
-    **`docker: Error response from daemon: could not select device driver "" with capabilities: [[gpu]].`** — Install NVIDIA Container Toolkit with `distribution=$(. /etc/os-release;echo $ID$VERSION_ID)` and `apt-get install -y nvidia-container-toolkit`, then restart Docker.
+    | Error | Fix |
+    |---|---|
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the command with `sudo` or as root user. |
+    | `nvidia-dcgm.service is not active, it is inactive.` | Verify NVIDIA drivers are installed with `nvidia-smi` and check systemd logs with `journalctl -u nvidia-dcgm -n 20`. |
+    | `docker: Error response from daemon: could not select device driver "" with capabilities: [[gpu]].` | Install NVIDIA Container Toolkit with `distribution=$(. /etc/os-release;echo $ID$VERSION_ID)` and `apt-get install -y nvidia-container-toolkit`, then restart Docker. |
 ## Prometheus + Grafana Stack
 
 ```yaml
@@ -294,5 +298,7 @@ groups:
 ```
 
 !!! warning "Common errors"
-    **`error: field DCGM_FI_DEV_GPU_TEMP not found`** — Verify DCGM exporter is running and exposing metrics with `curl localhost:9400/metrics | grep DCGM_FI_DEV_GPU_TEMP`.
-    **`yaml: line 5: mapping values are not allowed in this context`** — Check indentation is consistent (2 spaces per level) and there are no tabs in the YAML file.
+    | Error | Fix |
+    |---|---|
+    | `error: field DCGM_FI_DEV_GPU_TEMP not found` | Verify DCGM exporter is running and exposing metrics with `curl localhost:9400/metrics | grep DCGM_FI_DEV_GPU_TEMP`. |
+    | `yaml: line 5: mapping values are not allowed in this context` | Check indentation is consistent (2 spaces per level) and there are no tabs in the YAML file. |

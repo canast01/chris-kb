@@ -140,9 +140,11 @@ admin@sannav-prod-01:~$ uptime
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify SANnav appliance is reachable with `ping <sannav-ip>` and SSH service is running with `systemctl status ssh`.
-    **`sannav-admin: command not found`** — Ensure you are logged in as the admin user and `/opt/brocade/sannav/bin` is in your PATH, or use the full path `/opt/brocade/sannav/bin/sannav-admin`.
-    **`Database Status: UNHEALTHY`** — Check database logs with `sannav-admin db-logs` and restart the database service using `sannav-admin restart db`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify SANnav appliance is reachable with `ping <sannav-ip>` and SSH service is running with `systemctl status ssh`. |
+    | `sannav-admin: command not found` | Ensure you are logged in as the admin user and `/opt/brocade/sannav/bin` is in your PATH, or use the full path `/opt/brocade/sannav/bin/sannav-admin`. |
+    | `Database Status: UNHEALTHY` | Check database logs with `sannav-admin db-logs` and restart the database service using `sannav-admin restart db`. |
 ### 2. Generate the SANnav support bundle
 
 ```bash
@@ -175,9 +177,11 @@ sannav-diag-20250115.tar.gz                           100%  487MB   8.2MB/s   00
 ```
 
 !!! warning "Common errors"
-    **`sannav: command not found`** — Verify you are logged into the SANnav appliance itself (not a switch) and that the sannav CLI is in your PATH; check with `which sannav`.
-    **`Permission denied (publickey,password)`** — Ensure the admin account credentials are correct and SSH key-based authentication is configured, or use `ssh -v` to debug the connection.
-    **`No such file or directory`** — The support-bundle command may have failed silently; re-run the command and check `/tmp/` for any partial `.tar.gz` files or error logs in `/var/log/sannav/`.
+    | Error | Fix |
+    |---|---|
+    | `sannav: command not found` | Verify you are logged into the SANnav appliance itself (not a switch) and that the sannav CLI is in your PATH; check with `which sannav`. |
+    | `Permission denied (publickey,password)` | Ensure the admin account credentials are correct and SSH key-based authentication is configured, or use `ssh -v` to debug the connection. |
+    | `No such file or directory` | The support-bundle command may have failed silently; re-run the command and check `/tmp/` for any partial `.tar.gz` files or error logs in `/var/log/sannav/`. |
 ### 3. Collect the SANnav service log (journalctl)
 
 ```bash
@@ -229,9 +233,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`sudo: journalctl: command not found`** — Verify the SANnav appliance is running a systemd-based OS; if using an older version, use `tail -f /var/log/sannav.log` instead.
-    **`Permission denied (publickey,password)`** — Confirm the admin account credentials and that SSH key-based or password authentication is enabled on the SANnav appliance.
-    **`No such file or directory: /opt/brocade/sannav`** — Verify the SANnav installation path matches your deployment; check with `df -h` to locate the actual mount point.
+    | Error | Fix |
+    |---|---|
+    | `sudo: journalctl: command not found` | Verify the SANnav appliance is running a systemd-based OS; if using an older version, use `tail -f /var/log/sannav.log` instead. |
+    | `Permission denied (publickey,password)` | Confirm the admin account credentials and that SSH key-based or password authentication is enabled on the SANnav appliance. |
+    | `No such file or directory: /opt/brocade/sannav` | Verify the SANnav installation path matches your deployment; check with `df -h` to locate the actual mount point. |
 ### 4. Run supportsave on affected switches
 
 ```bash
@@ -290,9 +296,11 @@ Switch ID   Worldwide Name      Fabric Name         FC Address
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and that the admin account is not locked; check `/etc/passwd` on the switch or contact your Brocade support team.
-    **`supportsave: command not found`** — Ensure you are logged in as admin user and not in restricted shell mode; use `role show` to verify admin privileges.
-    **`Fabric is offline or not responding`** — Check physical cable connections, port status with `portshow`, and verify switch is not in maintenance mode with `switchstatusshow`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and that the admin account is not locked; check `/etc/passwd` on the switch or contact your Brocade support team. |
+    | `supportsave: command not found` | Ensure you are logged in as admin user and not in restricted shell mode; use `role show` to verify admin privileges. |
+    | `Fabric is offline or not responding` | Check physical cable connections, port status with `portshow`, and verify switch is not in maintenance mode with `switchstatusshow`. |
 Repeat `supportsave` on every switch in the affected fabric. TAC needs the switch-level data alongside the SANnav data.
 
 ### 5. Export the SANnav audit log
@@ -442,8 +450,10 @@ Swap:           16Gi      2.1Gi       14Gi
 ```
 
 !!! warning "Common errors"
-    **`sudo: journalctl: command not found`** — Use `journalctl` without `sudo` prefix or verify the user has passwordless sudo configured in `/etc/sudoers`.
-    **`df: /opt/brocade/sannav: No such file or directory`** — Verify SANnav is installed in the correct path with `ls -d /opt/brocade/sannav` or check mount points with `mount | grep brocade`.
+    | Error | Fix |
+    |---|---|
+    | `sudo: journalctl: command not found` | Use `journalctl` without `sudo` prefix or verify the user has passwordless sudo configured in `/etc/sudoers`. |
+    | `df: /opt/brocade/sannav: No such file or directory` | Verify SANnav is installed in the correct path with `ls -d /opt/brocade/sannav` or check mount points with `mount | grep brocade`. |
 ---
 
 ## Support SLA Reference

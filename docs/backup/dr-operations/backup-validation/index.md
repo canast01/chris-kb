@@ -239,9 +239,11 @@ Exit code: 0
 ```
 
 !!! warning "Common errors"
-    **`bpverify: client sql-prod-01.example.local not found in client list`** — Verify the client hostname is correct and registered in the NetBackup master server with `bpplclients`.
-    **`bpverify: backup image 1716800000 not found or expired`** — Check that the backup ID exists and has not been pruned; use `bplist -client sql-prod-01.example.local` to list available backups.
-    **`bpverify: insufficient permissions to access backup catalog`** — Ensure your user account has NetBackup administrator privileges or is in the appropriate security group.
+    | Error | Fix |
+    |---|---|
+    | `bpverify: client sql-prod-01.example.local not found in client list` | Verify the client hostname is correct and registered in the NetBackup master server with `bpplclients`. |
+    | `bpverify: backup image 1716800000 not found or expired` | Check that the backup ID exists and has not been pruned; use `bplist -client sql-prod-01.example.local` to list available backups. |
+    | `bpverify: insufficient permissions to access backup catalog` | Ensure your user account has NetBackup administrator privileges or is in the appropriate security group. |
 ### `bpverify` Exit Code Reference
 
 | Code | Meaning | Action |
@@ -365,9 +367,11 @@ Message sent
 ```
 
 !!! warning "Common errors"
-    **`bpverify: command not found`** — Ensure NetBackup client binaries are in PATH or source the NetBackup environment setup script (typically `. /usr/openv/netbackup/bin/bp.env`).
-    **`mail: command not found`** — Install mailutils package (`apt-get install mailutils` on Debian/Ubuntu or `yum install mailx` on RHEL/CentOS) or configure an alternative mail transport.
-    **`Permission denied: /var/log/netbackup/verify_*.log`** — Create the log directory with write permissions (`mkdir -p /var/log/netbackup && chmod 755 /var/log/netbackup`) or run the script with appropriate privileges.
+    | Error | Fix |
+    |---|---|
+    | `bpverify: command not found` | Ensure NetBackup client binaries are in PATH or source the NetBackup environment setup script (typically `. /usr/openv/netbackup/bin/bp.env`). |
+    | `mail: command not found` | Install mailutils package (`apt-get install mailutils` on Debian/Ubuntu or `yum install mailx` on RHEL/CentOS) or configure an alternative mail transport. |
+    | `Permission denied: /var/log/netbackup/verify_*.log` | Create the log directory with write permissions (`mkdir -p /var/log/netbackup && chmod 755 /var/log/netbackup`) or run the script with appropriate privileges. |
 ---
 
 ## Validation Report Template

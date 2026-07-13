@@ -744,9 +744,11 @@ sdc                 8:32   0 500G  0 disk
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: No records found`** — Verify the NetApp iSCSI service is running on 10.10.20.10 and the portal IP is correct.
-    **`iscsiadm: Cannot login to portal`** — Check network connectivity to the target portal and ensure iSCSI initiator name is registered on the NetApp array.
-    **`dd: failed to open '/dev/sdb': No such file or device`** — Confirm the iSCSI login succeeded and the block device appeared with `lsblk` before attempting the write test.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: No records found` | Verify the NetApp iSCSI service is running on 10.10.20.10 and the portal IP is correct. |
+    | `iscsiadm: Cannot login to portal` | Check network connectivity to the target portal and ensure iSCSI initiator name is registered on the NetApp array. |
+    | `dd: failed to open '/dev/sdb': No such file or device` | Confirm the iSCSI login succeeded and the block device appeared with `lsblk` before attempting the write test. |
 ### NFS Mount Test
 
 From a Linux host:
@@ -777,9 +779,11 @@ Export list for 10.10.20.10:
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: access denied by server while mounting 10.10.20.10:/data01`** — Verify the client IP is in the NFS export policy on the NetApp filer and check firewall rules between client and storage.
-    **`showmount: RPC: Unable to receive; errno = No route to host`** — Confirm network connectivity to 10.10.20.10 and that the NFS service is running on the NetApp controller.
-    **`dd: failed to open '/mnt/test/testfile' for writing: Read-only file system`** — Remount the NFS export without the `ro` option or check NetApp volume permissions and export policy write settings.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: access denied by server while mounting 10.10.20.10:/data01` | Verify the client IP is in the NFS export policy on the NetApp filer and check firewall rules between client and storage. |
+    | `showmount: RPC: Unable to receive; errno = No route to host` | Confirm network connectivity to 10.10.20.10 and that the NFS service is running on the NetApp controller. |
+    | `dd: failed to open '/mnt/test/testfile' for writing: Read-only file system` | Remount the NFS export without the `ro` option or check NetApp volume permissions and export policy write settings. |
 ### SnapMirror Lag Check
 
 ```text

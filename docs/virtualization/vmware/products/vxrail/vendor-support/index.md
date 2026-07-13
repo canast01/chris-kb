@@ -92,8 +92,10 @@ esx-vxrail-node01-2024-01-15-14-32-45.tgz          100%  2.3GB   45.2MB/s   00:5
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Ensure SSH key is loaded in ssh-agent or use `-i` flag to specify the private key file.
-    **`No such file or directory`** — Wait for the vm-support command to complete fully before attempting SCP; check `/tmp` on the ESXi host to confirm the .tgz file exists.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Ensure SSH key is loaded in ssh-agent or use `-i` flag to specify the private key file. |
+    | `No such file or directory` | Wait for the vm-support command to complete fully before attempting SCP; check `/tmp` on the ESXi host to confirm the .tgz file exists. |
 ---
 
 ## SRS / SupportAssist
@@ -178,6 +180,8 @@ System Event Log (SEL) Records:
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host <vxrail-manager-ip> port 22: Connection timed out`** — Verify the VxRail Manager IP address is correct and reachable on the network, and confirm SSH is enabled on the appliance.
-    **`racadm: command not found`** — Install or load the Dell iDRAC tools package (typically `yum install dell-idrac-tools` or access iDRAC via HTTPS web interface instead).
-    **`vxrail-system-info: command not found`** — Ensure you are running this command from the VxRail Manager appliance itself, not from a remote ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host <vxrail-manager-ip> port 22: Connection timed out` | Verify the VxRail Manager IP address is correct and reachable on the network, and confirm SSH is enabled on the appliance. |
+    | `racadm: command not found` | Install or load the Dell iDRAC tools package (typically `yum install dell-idrac-tools` or access iDRAC via HTTPS web interface instead). |
+    | `vxrail-system-info: command not found` | Ensure you are running this command from the VxRail Manager appliance itself, not from a remote ESXi host. |

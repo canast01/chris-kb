@@ -94,9 +94,11 @@ flasharray1  6.4.10      8b3e4c2a-91f7-4d2e-b8a1-7c5d9e2f1a3b FA-X70R4  ready
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure you are SSH'd directly to the array management IP (not a controller host) and the Pure CLI tools are installed.
-    **`Connection refused`** — Verify the management IP is reachable with `ping` and that SSH is enabled on the array (check array network settings in the GUI).
-    **`Authentication failed`** — Confirm you are using the correct credentials and that your SSH key or password is valid for the pureuser account.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure you are SSH'd directly to the array management IP (not a controller host) and the Pure CLI tools are installed. |
+    | `Connection refused` | Verify the management IP is reachable with `ping` and that SSH is enabled on the array (check array network settings in the GUI). |
+    | `Authentication failed` | Confirm you are using the correct credentials and that your SSH key or password is valid for the pureuser account. |
 Note the **Version** field (e.g. `6.4.10`) and the **Serial** field — both required for the support case.
 
 ### 2. Capture current array state
@@ -161,9 +163,11 @@ Capacity      Used       Data Reduction  Snapshots  Replication
 ```
 
 !!! warning "Common errors"
-    **`purealert: command not found`** — Verify the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/pureapp/bin`).
-    **`Error: Array unreachable at <ip_address>`** — Confirm network connectivity to the array management IP and verify credentials are set via `pureconfig` or environment variables.
-    **`Error: Invalid credentials`** — Re-authenticate using `pureconfig --username <user> --password` or check that the API token in your session has not expired.
+    | Error | Fix |
+    |---|---|
+    | `purealert: command not found` | Verify the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/pureapp/bin`). |
+    | `Error: Array unreachable at <ip_address>` | Confirm network connectivity to the array management IP and verify credentials are set via `pureconfig` or environment variables. |
+    | `Error: Invalid credentials` | Re-authenticate using `pureconfig --username <user> --password` or check that the API token in your session has not expired. |
 Save all CLI output to a text file for pasting into the case.
 
 ### 3. Check ActiveCluster pod state (if ActiveCluster is configured)
@@ -199,8 +203,10 @@ pod-dr-backup                 flasharray-4          612
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid option '--mediator'`** — Use `purepod list --mediator-status` or check your Pure OS version supports this flag.
-    **`Error: Pod 'pod-name' status is Offline`** — Verify network connectivity between array members and check mediator connectivity with `purepod list --mediator`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid option '--mediator'` | Use `purepod list --mediator-status` or check your Pure OS version supports this flag. |
+    | `Error: Pod 'pod-name' status is Offline` | Verify network connectivity between array members and check mediator connectivity with `purepod list --mediator`. |
 ### 4. Generate and send the diagnostic bundle
 
 ```bash
@@ -233,9 +239,11 @@ diag_flasharray-prod-01_20240215_1423.tgz          100% 2342MB   18.5MB/s   02:0
 ```
 
 !!! warning "Common errors"
-    **`purediag: command not found`** — Ensure you are running this command on the FlashArray management interface or install the Pure CLI tools on your management host.
-    **`Permission denied (publickey,password)`** — Verify the pureuser account credentials and that SSH key-based authentication is configured, or use `ssh-keyscan` to add the array to your known_hosts file first.
-    **`No such file or directory`** — The diagnostic bundle may still be generating; wait 2-3 minutes and retry the scp command, or check available disk space on the array with `ssh pureuser@<array-mgmt-ip> df -h`.
+    | Error | Fix |
+    |---|---|
+    | `purediag: command not found` | Ensure you are running this command on the FlashArray management interface or install the Pure CLI tools on your management host. |
+    | `Permission denied (publickey,password)` | Verify the pureuser account credentials and that SSH key-based authentication is configured, or use `ssh-keyscan` to add the array to your known_hosts file first. |
+    | `No such file or directory` | The diagnostic bundle may still be generating; wait 2-3 minutes and retry the scp command, or check available disk space on the array with `ssh pureuser@<array-mgmt-ip> df -h`. |
 Note: `purediag --send` ties the bundle to the array's Pure1 account. When you open the case, Pure support can retrieve the bundle from Pure1 directly using the array serial number.
 
 ### 5. Write the timeline
@@ -402,9 +410,11 @@ Upload complete. Case reference: CS-2024-0847291
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`).
-    **`Error: Array unreachable at 192.168.1.100`** — Verify network connectivity to the array management IP and confirm firewall rules allow access to port 443.
-    **`purediag: Authentication failed`** — Confirm your Pure1 API token is valid and has not expired; regenerate credentials in Pure1 if necessary.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`). |
+    | `Error: Array unreachable at 192.168.1.100` | Verify network connectivity to the array management IP and confirm firewall rules allow access to port 443. |
+    | `purediag: Authentication failed` | Confirm your Pure1 API token is valid and has not expired; regenerate credentials in Pure1 if necessary. |
 ---
 
 ## Support SLA Reference

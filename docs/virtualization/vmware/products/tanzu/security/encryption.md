@@ -109,9 +109,11 @@ certificate.cert-manager.io/myapp-tls created
 ```
 
 !!! warning "Common errors"
-    **`error: resource mapping not found for name: "corp-ca-issuer" namespace: "" from "STDIN": no matches for kind "ClusterIssuer" in version "cert-manager.io/v1"`** — Wait 30 seconds for cert-manager CRDs to register after installation, then retry the ClusterIssuer creation.
-    **`Error from server (NotFound): secrets "corp-ca-secret" not found`** — Create the CA secret first with `kubectl create secret tls corp-ca-secret --cert=ca.crt --key=ca.key -n cert-manager` before applying the ClusterIssuer.
-    **`error: namespace "production" not found`** — Create the production namespace with `kubectl create namespace production` before applying the Certificate resource.
+    | Error | Fix |
+    |---|---|
+    | `error: resource mapping not found for name: "corp-ca-issuer" namespace: "" from "STDIN": no matches for kind "ClusterIssuer" in version "cert-manager.io/v1"` | Wait 30 seconds for cert-manager CRDs to register after installation, then retry the ClusterIssuer creation. |
+    | `Error from server (NotFound): secrets "corp-ca-secret" not found` | Create the CA secret first with `kubectl create secret tls corp-ca-secret --cert=ca.crt --key=ca.key -n cert-manager` before applying the ClusterIssuer. |
+    | `error: namespace "production" not found` | Create the production namespace with `kubectl create namespace production` before applying the Certificate resource. |
 ---
 
 ## vSAN Encryption for Persistent Volumes
@@ -249,8 +251,10 @@ rules:
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "deployments" in group ""`** — Add `--resource-names` or use correct API group; deployments are in `apps` group, not core API.
-    **`Error from server (Forbidden): clusterroles.rbac.authorization.k8s.io is forbidden: User "user@corp.local" cannot create resource "clusterroles"`** — Ensure the user running kubectl has cluster-admin or rbac.authorization.k8s.io create permissions.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "deployments" in group ""` | Add `--resource-names` or use correct API group; deployments are in `apps` group, not core API. |
+    | `Error from server (Forbidden): clusterroles.rbac.authorization.k8s.io is forbidden: User "user@corp.local" cannot create resource "clusterroles"` | Ensure the user running kubectl has cluster-admin or rbac.authorization.k8s.io create permissions. |
 ## See also
 
 - [Tanzu — Hardening](../hardening/)

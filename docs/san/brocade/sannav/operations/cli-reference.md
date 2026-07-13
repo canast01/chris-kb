@@ -68,9 +68,11 @@ License Summary:
 ```
 
 !!! warning "Common errors"
-    **`sannav: command not found`** — Ensure SANnav is installed and `/opt/sannav/bin` is in your PATH, or use the full path `/opt/sannav/bin/sannav`.
-    **`Error: Failed to start sannav-db [FAILED]`** — Check database disk space with `df -h /var/lib/sannav` and verify database service logs with `journalctl -u sannav-db -n 50`.
-    **`Error: License expired or invalid`** — Renew or update your SANnav license file in `/opt/sannav/etc/license.key` and restart services.
+    | Error | Fix |
+    |---|---|
+    | `sannav: command not found` | Ensure SANnav is installed and `/opt/sannav/bin` is in your PATH, or use the full path `/opt/sannav/bin/sannav`. |
+    | `Error: Failed to start sannav-db [FAILED]` | Check database disk space with `df -h /var/lib/sannav` and verify database service logs with `journalctl -u sannav-db -n 50`. |
+    | `Error: License expired or invalid` | Renew or update your SANnav license file in `/opt/sannav/etc/license.key` and restart services. |
 ```bash
 # Show current IP configuration
 ip addr show eth0
@@ -118,9 +120,11 @@ mail: testuser@corp.example.com
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <switch-ip> port 443: Connection refused`** — Verify the switch IP is correct and the management interface is reachable with `ping <switch-ip>` before retrying.
-    **`ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)`** — Confirm LDAP server hostname resolves and port 636 is accessible; check firewall rules and DNS with `nslookup ldaps://ldap.corp.example.com`.
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the DN path matches your Active Directory structure.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <switch-ip> port 443: Connection refused` | Verify the switch IP is correct and the management interface is reachable with `ping <switch-ip>` before retrying. |
+    | `ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)` | Confirm LDAP server hostname resolves and port 636 is accessible; check firewall rules and DNS with `nslookup ldaps://ldap.corp.example.com`. |
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the DN path matches your Active Directory structure. |
 ```bash
 # Main application log
 tail -f /opt/sannav/logs/server.log
@@ -218,8 +222,10 @@ Swap:           16Gi        6.2Gi        9.8Gi
 ```
 
 !!! warning "Common errors"
-    **`du: cannot access '/opt/sannav/data/': Permission denied`** — Run the command with `sudo` or ensure the user has read permissions on the SANnav data directory.
-    **`Filesystem /opt/sannav/data/ is 100% full`** — Archive or delete old metrics data from InfluxDB or PostgreSQL, or expand the underlying storage volume.
+    | Error | Fix |
+    |---|---|
+    | `du: cannot access '/opt/sannav/data/': Permission denied` | Run the command with `sudo` or ensure the user has read permissions on the SANnav data directory. |
+    | `Filesystem /opt/sannav/data/ is 100% full` | Archive or delete old metrics data from InfluxDB or PostgreSQL, or expand the underlying storage volume. |
 ```bash
 # Login — obtain token
 TOKEN=$(curl -sk -X POST https://sannav-dc1.corp.example.com/rest/login \
@@ -242,9 +248,11 @@ Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdmMtbW9uaXRvciIsImlhdCI6
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the CA certificate into your system trust store.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify credentials are correct and the SanNav REST API endpoint is responding; check firewall/network connectivity to sannav-dc1.corp.example.com.
-    **`curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443: Connection refused`** — Confirm the SanNav service is running and listening on port 443 using `systemctl status sannav` on the target host.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the CA certificate into your system trust store. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify credentials are correct and the SanNav REST API endpoint is responding; check firewall/network connectivity to sannav-dc1.corp.example.com. |
+    | `curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443: Connection refused` | Confirm the SanNav service is running and listening on port 443 using `systemctl status sannav` on the target host. |
 ```bash
 # List all resource groups (fabrics)
 curl -sk https://sannav-dc1.corp.example.com/rest/resourcegroups \
@@ -340,8 +348,10 @@ curl -sk https://sannav-dc1.corp.example.com/rest/resourcegroups/all/ports \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-    **`jq: command not found` or `json.tool: No module named json`** — Install Python 3 (`apt-get install python3`) or use `jq` instead of `python3 -
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed). |
+    | `jq: command not found` or `json.tool: No module named json` | Install Python 3 (`apt-get install python3`) or use `jq` instead of `python3 - |
 ```bash
 # Get active alerts (last 100)
 curl -sk "https://sannav-dc1.corp.example.com/rest/resourcegroups/all/events?limit=100&filter=acknowledged:false" \
@@ -386,9 +396,11 @@ curl -sk "https://sannav-dc1.corp.example.com/rest/resourcegroups/all/events?swi
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed).
-    **`{"error": "Unauthorized", "code": 401}`** — Verify `$TOKEN` environment variable is set with a valid bearer token via `echo $TOKEN`.
-    **`curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443: Name or service not known`** — Confirm DNS resolution and network connectivity to the SAN Nav appliance with `nslookup sannav-dc1.corp.example.com`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed). |
+    | `{"error": "Unauthorized", "code": 401}` | Verify `$TOKEN` environment variable is set with a valid bearer token via `echo $TOKEN`. |
+    | `curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443: Name or service not known` | Confirm DNS resolution and network connectivity to the SAN Nav appliance with `nslookup sannav-dc1.corp.example.com`. |
 ```bash
 # Get defined zone set for a fabric
 curl -sk "https://sannav-dc1.corp.example.com/rest/resourcegroups/<fabricId>/zonedb" \
@@ -442,9 +454,11 @@ curl -sk "https://sannav-dc1.corp.example.com/rest/resourcegroups/<fabricId>/zon
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed).
-    **`{"error": "Unauthorized", "code": 401}`** — Verify the `$TOKEN` variable is set and valid by running `echo $TOKEN` and refreshing credentials if expired.
-    **`curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443`** — Confirm the SANnav hostname is correct and the management interface is reachable with `ping sannav-dc1.corp.example.com`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed). |
+    | `{"error": "Unauthorized", "code": 401}` | Verify the `$TOKEN` variable is set and valid by running `echo $TOKEN` and refreshing credentials if expired. |
+    | `curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443` | Confirm the SANnav hostname is correct and the management interface is reachable with `ping sannav-dc1.corp.example.com`. |
 ```bash
 # Export all switches to CSV (use Accept header for CSV format)
 curl -sk https://sannav-dc1.corp.example.com/rest/resourcegroups/all/switches \
@@ -459,9 +473,11 @@ Exported to switches-20250114.csv
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in the example, so ensure your curl version supports it or use `--insecure` instead).
-    **`curl: (401) Unauthorized`** — Verify the `$TOKEN` variable is set and valid by running `echo $TOKEN` and confirming it matches an active API token from SANnav.
-    **`curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443`** — Check network connectivity and DNS resolution with `ping sannav-dc1.corp.example.com` and `nslookup sannav-dc1.corp.example.com`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in the example, so ensure your curl version supports it or use `--insecure` instead). |
+    | `curl: (401) Unauthorized` | Verify the `$TOKEN` variable is set and valid by running `echo $TOKEN` and confirming it matches an active API token from SANnav. |
+    | `curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443` | Check network connectivity and DNS resolution with `ping sannav-dc1.corp.example.com` and `nslookup sannav-dc1.corp.example.com`. |
 ```bash
 # List available firmware images
 curl -sk https://sannav-dc1.corp.example.com/rest/firmware/images \
@@ -520,9 +536,11 @@ curl -sk -X POST "https://sannav-dc1.corp.example.com/rest/firmware/upgrade" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure `curl` version supports it).
-    **`"error": "Invalid or expired token"`** — Regenerate the `$TOKEN` variable using the authentication endpoint and ensure it hasn't exceeded its TTL.
-    **`"error": "Switch ID not found or not managed by this SANnav instance"`** — Verify the switch ID exists in SANnav inventory with `curl -sk https://sannav-dc1.corp.example.com/rest/switches -H "Authorization: Bearer $TOKEN"`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure `curl` version supports it). |
+    | `"error": "Invalid or expired token"` | Regenerate the `$TOKEN` variable using the authentication endpoint and ensure it hasn't exceeded its TTL. |
+    | `"error": "Switch ID not found or not managed by this SANnav instance"` | Verify the switch ID exists in SANnav inventory with `curl -sk https://sannav-dc1.corp.example.com/rest/switches -H "Authorization: Bearer $TOKEN"`. |
 ```bash
 # Count managed switches by connectivity state
 curl -sk https://sannav-dc1.corp.example.com/rest/resourcegroups/all/switches \
@@ -556,9 +574,11 @@ switch-dc2-01 3 OFFLINE
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the certificate into your system's CA bundle.
-    **`curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443: Connection refused`** — Verify the SAN Nav appliance is running and accessible on the network; check firewall rules and DNS resolution with `nslookup sannav-dc1.corp.example.com`.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Confirm the `$TOKEN` variable is set and valid by running `echo $TOKEN` and regenerating it if expired.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the certificate into your system's CA bundle. |
+    | `curl: (7) Failed to connect to sannav-dc1.corp.example.com port 443: Connection refused` | Verify the SAN Nav appliance is running and accessible on the network; check firewall rules and DNS resolution with `nslookup sannav-dc1.corp.example.com`. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Confirm the `$TOKEN` variable is set and valid by running `echo $TOKEN` and regenerating it if expired. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

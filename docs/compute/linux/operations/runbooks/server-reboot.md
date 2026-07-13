@@ -83,8 +83,10 @@ The system will reboot in 1 minute.
 ```
 
 !!! warning "Common errors"
-    **`sudo: shutdown: command not found`** — Install the `util-linux` package with `sudo apt-get install util-linux` or `sudo yum install util-linux`.
-    **`Shutdown scheduled for Mon 2023-12-18 10:46:23 UTC, use 'shutdown -c' to cancel`** — Run `sudo shutdown -c` immediately if you need to abort the reboot before the timer expires.
+    | Error | Fix |
+    |---|---|
+    | `sudo: shutdown: command not found` | Install the `util-linux` package with `sudo apt-get install util-linux` or `sudo yum install util-linux`. |
+    | `Shutdown scheduled for Mon 2023-12-18 10:46:23 UTC, use 'shutdown -c' to cancel` | Run `sudo shutdown -c` immediately if you need to abort the reboot before the timer expires. |
 **Windows:**
 ```powershell
 Restart-Computer -Force
@@ -140,9 +142,11 @@ Oct 08 11:15:22 prod-node-04 kernel: audit: type=1131 audit(1728390922.567:189):
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <server_ip>`** — Replace `<server_ip>` with an actual IP address or resolvable hostname.
-    **`Unit <service1> could not be found.`** — Verify the exact service name with `systemctl list-units --type=service` and correct any typos.
-    **`Failed to get bus: No such file or directory`** — Run the command with `sudo` or as root to access systemd bus.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <server_ip>` | Replace `<server_ip>` with an actual IP address or resolvable hostname. |
+    | `Unit <service1> could not be found.` | Verify the exact service name with `systemctl list-units --type=service` and correct any typos. |
+    | `Failed to get bus: No such file or directory` | Run the command with `sudo` or as root to access systemd bus. |
 **Windows:**
 ```powershell
 # Services set to Automatic but not running
@@ -166,9 +170,11 @@ OK
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <app-host> port 443: Connection refused`** — Verify the application is running and listening on the correct port with `netstat -tlnp | grep <port>`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (`curl -sfk https://<app-host>/health`) or install the CA certificate in your system trust store.
-    **`curl: (28) Operation timeout. The timeout specified operation was not completed in time.`** — Increase the timeout with `curl -sf --max-time 10 https://<app-host>/health` or check network connectivity to the host.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <app-host> port 443: Connection refused` | Verify the application is running and listening on the correct port with `netstat -tlnp | grep <port>`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (`curl -sfk https://<app-host>/health`) or install the CA certificate in your system trust store. |
+    | `curl: (28) Operation timeout. The timeout specified operation was not completed in time.` | Increase the timeout with `curl -sf --max-time 10 https://<app-host>/health` or check network connectivity to the host. |
 ## Rollback
 
 A reboot is inherently non-reversible. If a service fails to start post-reboot:

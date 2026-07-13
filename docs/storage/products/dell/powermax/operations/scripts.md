@@ -225,9 +225,11 @@ Timestamp              Read MB/s  Write MB/s  Read IOs/s  Write IOs/s
 ```
 
 !!! warning "Common errors"
-    **`ERROR: SID is not set.`** — Export the SID environment variable before running the script: `export SID=000123456789`.
-    **`symcfg: Command not found`** — Verify SYMCLI is installed and set SYMCLI_PATH correctly: `export SYMCLI_PATH=/opt/emc/SYMCLI/bin` (or the actual installation path).
-    **`SYMCLI Error: Array 000123456789 not found or not responding`** — Confirm the SID is correct and the array is reachable; check network connectivity and SYMCLI daemon status with `symcfg list`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: SID is not set.` | Export the SID environment variable before running the script: `export SID=000123456789`. |
+    | `symcfg: Command not found` | Verify SYMCLI is installed and set SYMCLI_PATH correctly: `export SYMCLI_PATH=/opt/emc/SYMCLI/bin` (or the actual installation path). |
+    | `SYMCLI Error: Array 000123456789 not found or not responding` | Confirm the SID is correct and the array is reachable; check network connectivity and SYMCLI daemon status with `symcfg list`. |
 **Usage**: `SID=000123456789 SYMCLI_PATH=/usr/symcli/bin ./powermax_health_check.sh`
 
 ---
@@ -371,9 +373,11 @@ Last Update: 2024-01-15 14:32:47
 ```
 
 !!! warning "Common errors"
-    **`ERROR: SID, RDF_GROUP, and CG_NAME must all be set.`** — Export all three required environment variables before running the script: `export SID=000123456789 RDF_GROUP=1 CG_NAME=prod-cg`.
-    **`ERROR: Expected state 'Suspended' not confirmed. Aborting.`** — Verify the consistency group exists and is in the correct state with `symrdf -sid $SID -rdfg $RDF_GROUP -cg $CG_NAME query` before retrying.
-    **`symrdf: Command not found`** — Ensure the SYMCLI package is installed and set `SYMCLI_PATH` to the correct installation directory, or verify `/usr/symcli/bin` exists in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: SID, RDF_GROUP, and CG_NAME must all be set.` | Export all three required environment variables before running the script: `export SID=000123456789 RDF_GROUP=1 CG_NAME=prod-cg`. |
+    | `ERROR: Expected state 'Suspended' not confirmed. Aborting.` | Verify the consistency group exists and is in the correct state with `symrdf -sid $SID -rdfg $RDF_GROUP -cg $CG_NAME query` before retrying. |
+    | `symrdf: Command not found` | Ensure the SYMCLI package is installed and set `SYMCLI_PATH` to the correct installation directory, or verify `/usr/symcli/bin` exists in your PATH. |
 **Usage**: `SID=000123456789 RDF_GROUP=1 CG_NAME=prod-cg ./powermax_srdf_failover.sh`
 
 ---
@@ -613,9 +617,11 @@ Daily check complete: 5 passed, 0 warned, 0 failed
 ```
 
 !!! warning "Common errors"
-    **`ERROR: SID not set`** — Export the SID variable before running the script: `export SID=000123456789`
-    **`symcfg: command not found`** — Verify SYMCLI_PATH is correct and the Symmetrix CLI package is installed: `ls -la /usr/symcli/bin/symcfg`
-    **`[FAIL] SRDF pair states`** — Check SRDF licensing and array connectivity: `$SYMCLI_PATH/symrdf list -sid $SID -v` for detailed error output
+    | Error | Fix |
+    |---|---|
+    | `ERROR: SID not set` | Export the SID variable before running the script: `export SID=000123456789` |
+    | `symcfg: command not found` | Verify SYMCLI_PATH is correct and the Symmetrix CLI package is installed: `ls -la /usr/symcli/bin/symcfg` |
+    | `[FAIL] SRDF pair states` | Check SRDF licensing and array connectivity: `$SYMCLI_PATH/symrdf list -sid $SID -v` for detailed error output |
 ---
 
 ## Incident Triage Script (Bash)
@@ -687,9 +693,11 @@ Triage output saved to: powermax_triage_000123456789_20241218_143247.txt
 ```
 
 !!! warning "Common errors"
-    **`ERROR: SID not set`** — Export the SID environment variable before running the script: `export SID=000123456789`.
-    **`symcfg: command not found`** — Verify SYMCLI_PATH is correct and the EMC Solutions Enabler package is installed: `which symcfg` or adjust `SYMCLI_PATH=/opt/emc/SYMCLI/bin`.
-    **`Permission denied`** — Run the script with appropriate privileges (typically root or symcli group membership): `sudo ./powermax_triage.sh` or add your user to the symcli group.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: SID not set` | Export the SID environment variable before running the script: `export SID=000123456789`. |
+    | `symcfg: command not found` | Verify SYMCLI_PATH is correct and the EMC Solutions Enabler package is installed: `which symcfg` or adjust `SYMCLI_PATH=/opt/emc/SYMCLI/bin`. |
+    | `Permission denied` | Run the script with appropriate privileges (typically root or symcli group membership): `sudo ./powermax_triage.sh` or add your user to the symcli group. |
 ---
 
 ## Change Pre-Check Script (Bash)
@@ -731,9 +739,11 @@ PRE-CHECK PASSED — safe to proceed with maintenance.
 ```
 
 !!! warning "Common errors"
-    **`ERROR: SID not set`** — Export the SID variable before running the script: `export SID=000123456789 && ./powermax_precheck.sh`
-    **`symcfg: Command not found`** — Verify SYMCLI is installed and set the correct path: `export SYMCLI_PATH=/opt/emc/SYMCLI/bin && ./powermax_precheck.sh`
-    **`PRE-CHECK FAILED: 1 issue(s) found — do NOT proceed.`** — Run `$SYMCLI_PATH/sympd list -sid $SID -failed` to identify failed drives and resolve hardware issues before retrying.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: SID not set` | Export the SID variable before running the script: `export SID=000123456789 && ./powermax_precheck.sh` |
+    | `symcfg: Command not found` | Verify SYMCLI is installed and set the correct path: `export SYMCLI_PATH=/opt/emc/SYMCLI/bin && ./powermax_precheck.sh` |
+    | `PRE-CHECK FAILED: 1 issue(s) found — do NOT proceed.` | Run `$SYMCLI_PATH/sympd list -sid $SID -failed` to identify failed drives and resolve hardware issues before retrying. |
 ---
 
 ## Post-Change Validation Script (Bash)
@@ -779,9 +789,11 @@ POST-CHECK PASSED — change completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`ERROR: SID not set`** — Export the SID variable before running the script: `export SID=000123456789 && ./powermax_postcheck.sh`
-    **`symcfg: command not found`** — Verify SYMCLI is installed and set the correct path: `export SYMCLI_PATH=/opt/emc/SYMCLI/bin && ./powermax_postcheck.sh`
-    **`POST-CHECK FAILED: 1 issue(s)`** — Review the failed check output above and verify the array state with `symcfg -sid $SID show -v` before retrying.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: SID not set` | Export the SID variable before running the script: `export SID=000123456789 && ./powermax_postcheck.sh` |
+    | `symcfg: command not found` | Verify SYMCLI is installed and set the correct path: `export SYMCLI_PATH=/opt/emc/SYMCLI/bin && ./powermax_postcheck.sh` |
+    | `POST-CHECK FAILED: 1 issue(s)` | Review the failed check output above and verify the array state with `symcfg -sid $SID show -v` before retrying. |
 ---
 
 ## Verify

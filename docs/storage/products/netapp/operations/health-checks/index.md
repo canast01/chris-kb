@@ -123,9 +123,11 @@ cluster-03 cluster-01  false   Transferring
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: cluster show`** — Ensure you are connected to the NetApp cluster management interface (SSH to the cluster IP, not a node IP).
-    **`Error: No entry matched the criteria in "storage disk show -broken"`** — This is expected output when no broken disks exist; it indicates healthy disk status, not an error condition.
-    **`Error: "snapmirror show" command not found or SnapMirror not licensed`** — Verify SnapMirror license is installed with `system license show` and enable if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: cluster show` | Ensure you are connected to the NetApp cluster management interface (SSH to the cluster IP, not a node IP). |
+    | `Error: No entry matched the criteria in "storage disk show -broken"` | This is expected output when no broken disks exist; it indicates healthy disk status, not an error condition. |
+    | `Error: "snapmirror show" command not found or SnapMirror not licensed` | Verify SnapMirror license is installed with `system license show` and enable if needed. |
 ## AutoSupport Validation
 
 ```bash
@@ -143,8 +145,10 @@ cluster1-04                             enabled    mail
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found`** — Ensure you are connected to the NetApp cluster via SSH or console; this command runs in ONTAP CLI, not the local shell.
-    **`Error: Invalid field name "last-successful-destination"`** — Verify the ONTAP version supports this field; use `system node autosupport show` without field filters to confirm available columns.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found` | Ensure you are connected to the NetApp cluster via SSH or console; this command runs in ONTAP CLI, not the local shell. |
+    | `Error: Invalid field name "last-successful-destination"` | Verify the ONTAP version supports this field; use `system node autosupport show` without field filters to confirm available columns. |
 Confirm last successful delivery is recent (within 24 hours for daily AutoSupport).
 
 ## Pre-Change Checklist

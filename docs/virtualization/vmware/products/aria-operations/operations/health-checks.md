@@ -91,9 +91,11 @@ Collector: collector-prod-01
 ```
 
 !!! warning "Common errors"
-    **`vracli: command not found`** — Ensure you are running this command on the vRealize Operations collector/primary node, not a remote system.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the vRealize Operations certificate into your system's trusted store.
-    **`{"error":"Invalid token","status":401}`** — Regenerate the vRealizeOpsToken in the vRealize Operations UI under Administration → API Tokens and ensure it has not expired.
+    | Error | Fix |
+    |---|---|
+    | `vracli: command not found` | Ensure you are running this command on the vRealize Operations collector/primary node, not a remote system. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the vRealize Operations certificate into your system's trusted store. |
+    | `{"error":"Invalid token","status":401}` | Regenerate the vRealizeOpsToken in the vRealize Operations UI under Administration → API Tokens and ensure it has not expired. |
 ## Disk and Resource Commands
 
 ![Disk and Resource Commands](../../../../../assets/virtualization-vmware-aria-operations-hc-disk-and-resource-commands.svg)
@@ -134,8 +136,10 @@ Filesystem     Inodes IUsed IFree IUse% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH key is loaded with `ssh-add` or use password authentication; confirm admin user exists on vrops-prod-01.
-    **`du: cannot access '/storage/db/cassandra/data/*': No such file or directory`** — Confirm Cassandra data directory path is correct and the Cassandra service has created the data subdirectories by checking `ls -la /storage/db/cassandra/`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH key is loaded with `ssh-add` or use password authentication; confirm admin user exists on vrops-prod-01. |
+    | `du: cannot access '/storage/db/cassandra/data/*': No such file or directory` | Confirm Cassandra data directory path is correct and the Cassandra service has created the data subdirectories by checking `ls -la /storage/db/cassandra/`. |
 ## Service Health Commands
 
 ![Service Health Commands](../../../../../assets/virtualization-vmware-aria-operations-hc-service-health-commands.svg)
@@ -202,8 +206,10 @@ Jan 17 15:18:09 aria-ops-01.local vcops-analytics[8742]: WARN: High memory usage
 ```
 
 !!! warning "Common errors"
-    **`Unit vmware-vcops-analytics.service not found.`** — Verify the service is installed with `rpm -qa | grep vmware-vcops` and reinstall if missing.
-    **`Job for vmware-vcops-analytics.service failed because the control process exited with error code.`** — Check service logs with `journalctl -u vmware-vcops-analytics -n 50` and verify Java heap memory allocation in `/etc/vmware-vcops/analytics/analytics.properties`.
+    | Error | Fix |
+    |---|---|
+    | `Unit vmware-vcops-analytics.service not found.` | Verify the service is installed with `rpm -qa | grep vmware-vcops` and reinstall if missing. |
+    | `Job for vmware-vcops-analytics.service failed because the control process exited with error code.` | Check service logs with `journalctl -u vmware-vcops-analytics -n 50` and verify Java heap memory allocation in `/etc/vmware-vcops/analytics/analytics.properties`. |
 ## NTP Health
 
 ![NTP Health](../../../../../assets/virtualization-vmware-aria-operations-hc-ntp-health.svg)
@@ -246,9 +252,11 @@ MS Name/IP address         Stratum Poll Reach LastRx Last sample
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH key is configured for the admin user and the node hostname resolves correctly.
-    **`chronyc: Could not talk to daemon`** — Ensure the chronyd service is running on the target node with `systemctl status chronyd`.
-    **`System time : [UNSYNCED]`** — Check that NTP sources are reachable and the Reach column shows non-zero values; restart chronyd if necessary.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH key is configured for the admin user and the node hostname resolves correctly. |
+    | `chronyc: Could not talk to daemon` | Ensure the chronyd service is running on the target node with `systemctl status chronyd`. |
+    | `System time : [UNSYNCED]` | Check that NTP sources are reachable and the Reach column shows non-zero values; restart chronyd if necessary. |
 ## Alert API Queries
 
 ![Alert API Queries](../../../../../assets/virtualization-vmware-aria-operations-hc-alert-api-queries.svg)
@@ -305,9 +313,11 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify the hostname matches the certificate CN).
-    **`jq: error (at <stdin>:1): Cannot index array with string "alerts"`** — Ensure the API response is valid JSON and the endpoint returns an `alerts` array; check that `$TOKEN` is set and the vROps instance is accessible.
-    **`Authorization: vRealizeOpsToken: command not found`** — Verify `$TOKEN` environment variable is exported with a valid API token using `echo $TOKEN` before running the curl command.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify the hostname matches the certificate CN). |
+    | `jq: error (at <stdin>:1): Cannot index array with string "alerts"` | Ensure the API response is valid JSON and the endpoint returns an `alerts` array; check that `$TOKEN` is set and the vROps instance is accessible. |
+    | `Authorization: vRealizeOpsToken: command not found` | Verify `$TOKEN` environment variable is exported with a valid API token using `echo $TOKEN` before running the curl command. |
 ## Capacity Summary via API
 
 ![Capacity Summary via API](../../../../../assets/virtualization-vmware-aria-operations-hc-capacity-summary-via-api.svg)
@@ -336,9 +346,11 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed in production URLs).
-    **`jq: parse error: Invalid JSON at line 1`** — Verify the vRealizeOps API endpoint is accessible and the TOKEN variable is set correctly with `echo $TOKEN`.
-    **`"error": "Unauthorized"`** — Confirm the vRealizeOpsToken is valid and has not expired; regenerate the token in vRealizeOps UI if necessary.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed in production URLs). |
+    | `jq: parse error: Invalid JSON at line 1` | Verify the vRealizeOps API endpoint is accessible and the TOKEN variable is set correctly with `echo $TOKEN`. |
+    | `"error": "Unauthorized"` | Confirm the vRealizeOpsToken is valid and has not expired; regenerate the token in vRealizeOps UI if necessary. |
 Also verify alert definitions are active: **Administration → Alert Settings → Alert Definitions** — confirm no policies are disabled unexpectedly.
 
 ---
@@ -439,8 +451,10 @@ admin@vrops-prod-01:~$ grep -i "error\|exception" /storage/db/cassandra/logs/sys
 ```
 
 !!! warning "Common errors"
-    **`su: user vcops-svc does not exist`** — Verify the Cassandra service account exists with `id vcops-svc` and create it if missing using the vRealize Operations installer documentation.
-    **`Permission denied`** — Ensure the admin user has passwordless sudo access or use `sudo su -s /bin/bash vcops-svc -c` instead of plain `su`.
+    | Error | Fix |
+    |---|---|
+    | `su: user vcops-svc does not exist` | Verify the Cassandra service account exists with `id vcops-svc` and create it if missing using the vRealize Operations installer documentation. |
+    | `Permission denied` | Ensure the admin user has passwordless sudo access or use `sudo su -s /bin/bash vcops-svc -c` instead of plain `su`. |
     **`/storage/db/cassandra/logs/system.log:
 If a node shows `DN`: check VM power state → if powered on, check service: `systemctl status vmware-vcops-cassandra` → if service is stopped, start it and monitor rejoining (nodetool status transitions `DN → UJ → UN` over 10–30 minutes).
 

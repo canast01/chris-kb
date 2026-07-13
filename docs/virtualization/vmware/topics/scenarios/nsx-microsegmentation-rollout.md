@@ -167,8 +167,10 @@ cat /var/log/dfwpktlogs.log | grep "MONITOR DROP" | head -50
 ```
 
 !!! warning "Common errors"
-    **`cat: /var/log/dfwpktlogs.log: No such file or directory`** — Verify the DFW (Distributed Firewall) logging is enabled in vSphere and check the correct log path for your ESXi version.
-    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or as root to access protected log files on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `cat: /var/log/dfwpktlogs.log: No such file or directory` | Verify the DFW (Distributed Firewall) logging is enabled in vSphere and check the correct log path for your ESXi version. |
+    | `grep: (standard input): Permission denied` | Run the command with `sudo` or as root to access protected log files on the ESXi host. |
 Look for: MONITOR DROP entries with legitimate source/destination pairs. For each entry, either add an allow rule or confirm it is traffic that should be blocked. Common legitimate flows frequently missed:
 
 - Windows activation (TCP 1688)
@@ -215,8 +217,10 @@ cat /var/log/dfwpktlogs.log | grep "DROP" | grep -v "MONITOR" | head -50
 ```
 
 !!! warning "Common errors"
-    **`cat: /var/log/dfwpktlogs.log: No such file or directory`** — Verify the DFW logging path is correct for your vSphere version (check `/etc/vmware/vdfw/` for active config) or enable packet logging in the Distributed Firewall settings.
-    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or as root to access the DFW packet log file.
+    | Error | Fix |
+    |---|---|
+    | `cat: /var/log/dfwpktlogs.log: No such file or directory` | Verify the DFW logging path is correct for your vSphere version (check `/etc/vmware/vdfw/` for active config) or enable packet logging in the Distributed Firewall settings. |
+    | `grep: (standard input): Permission denied` | Run the command with `sudo` or as root to access the DFW packet log file. |
 Expected: no application-breaking DROP entries. Have an application owner verify functionality within 15 minutes. If an unexpected break occurs, revert to monitor mode immediately — this restores full connectivity in under 30 seconds.
 
 ---

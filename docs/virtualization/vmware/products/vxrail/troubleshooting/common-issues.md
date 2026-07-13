@@ -161,9 +161,11 @@ Jan 17 14:35:02 vxrail-manager-01 systemd[1]: Started VxRail Mystic Manager Serv
 ```
 
 !!! warning "Common errors"
-    **`sudo: command not found`** — Verify the user has sudo privileges or contact your VxRail administrator to add the account to the sudoers file.
-    **`Unit mystic.service not found.`** — Confirm the Mystic service is installed by running `systemctl list-unit-files | grep mystic` and reinstall if necessary.
-    **`Active: failed (Result: exit-code) since...`** — Check service logs with `sudo journalctl -u mystic -n 50` to identify the root cause of the failure.
+    | Error | Fix |
+    |---|---|
+    | `sudo: command not found` | Verify the user has sudo privileges or contact your VxRail administrator to add the account to the sudoers file. |
+    | `Unit mystic.service not found.` | Confirm the Mystic service is installed by running `systemctl list-unit-files | grep mystic` and reinstall if necessary. |
+    | `Active: failed (Result: exit-code) since...` | Check service logs with `sudo journalctl -u mystic -n 50` to identify the root cause of the failure. |
 Allow 2–3 minutes for the service to fully initialise before rechecking the plugin in vCenter.
 
 **Step 3 — Check plugin registration in vCenter**
@@ -189,9 +191,11 @@ curl -sk -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed).
-    **`curl: (7) Failed to connect to localhost port 443: Connection refused`** — Verify VxRail Manager service is running with `systemctl status vxrail-manager` and accessible on the management network.
-    **`{"error": "Unauthorized", "code": 401}`** — Ensure credentials are correct and base64-encoded properly; test with `echo -n 'mystic:password' | base64` to verify encoding.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed). |
+    | `curl: (7) Failed to connect to localhost port 443: Connection refused` | Verify VxRail Manager service is running with `systemctl status vxrail-manager` and accessible on the management network. |
+    | `{"error": "Unauthorized", "code": 401}` | Ensure credentials are correct and base64-encoded properly; test with `echo -n 'mystic:password' | base64` to verify encoding. |
 Then log out of vCenter and log back in — browser-cached plugin state is refreshed on session start.
 
 **Step 4 — Verify vCenter extension is registered**
@@ -276,9 +280,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if error persists, verify VxRail Manager hostname matches certificate CN).
-    **`curl: (7) Failed to connect to localhost port 443: Connection refused`** — Ensure VxRail Manager API service is running with `systemctl status vxrail-api` and verify you are connecting from the correct host or use the VxRail Manager IP address instead of localhost.
-    **`jq: parse error: Invalid JSON at line 1`** — Verify the API endpoint is correct and the VxRail Manager version supports `/rest/vxm/v1/lcm/upgrade/plan`; older versions may use a different endpoint path.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if error persists, verify VxRail Manager hostname matches certificate CN). |
+    | `curl: (7) Failed to connect to localhost port 443: Connection refused` | Ensure VxRail Manager API service is running with `systemctl status vxrail-api` and verify you are connecting from the correct host or use the VxRail Manager IP address instead of localhost. |
+    | `jq: parse error: Invalid JSON at line 1` | Verify the API endpoint is correct and the VxRail Manager version supports `/rest/vxm/v1/lcm/upgrade/plan`; older versions may use a different endpoint path. |
 ### Verifying vSAN Resync Completion
 
 ```bash
@@ -305,9 +311,10 @@ Estimated Time: 0 seconds
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace vsan debug resync`** — Verify VSAN is enabled on the cluster and you are running the command on an ESXi host with VSAN participation; run `esxcli vsan cluster get` to confirm VSAN status.
-    
-    **`Permission denied`** — Ensure you are logged in as root or a user with administrative privileges on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace vsan debug resync` | Verify VSAN is enabled on the cluster and you are running the command on an ESXi host with VSAN participation; run `esxcli vsan cluster get` to confirm VSAN status. |
+    | `Permission denied` | Ensure you are logged in as root or a user with administrative privileges on the ESXi host. |
 Wait until resync bytes reach zero before retrying the LCM pre-check.
 
 ---
@@ -360,9 +367,11 @@ mystic@vxrail-manager-01:~$
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-    **`sudo: no tty present and no -S option specified`** — Run `ssh -t mystic@<vxrail-manager-ip>` to allocate a pseudo-terminal for sudo commands.
-    **`jq: command not found`** — Replace `python3 -m json.tool` with `jq '.'` or ensure Python 3 is installed on the VxRail Manager.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed). |
+    | `sudo: no tty present and no -S option specified` | Run `ssh -t mystic@<vxrail-manager-ip>` to allocate a pseudo-terminal for sudo commands. |
+    | `jq: command not found` | Replace `python3 -m json.tool` with `jq '.'` or ensure Python 3 is installed on the VxRail Manager. |
 ### LCM Failure Points Table
 
 | Failure Stage | Likely Cause | Resolution |
@@ -457,8 +466,10 @@ PING 172.16.10.54 (172.16.10.54): 56 data bytes
 ```
 
 !!! warning "Common errors"
-    **`Message too long; Possible MTU mismatch`** — Verify the switch port connected to the vSAN vmkernel interface is configured with MTU 9000 and confirm the ESXi vmk2 interface MTU matches with `esxcli network ip interface get -i vmk2`.
-    **`Destination host unreachable`** — Check VLAN routing between the source and destination vSAN subnets, verify the VLAN ID is consistent on both ESXi nodes, and confirm the switch port is tagged for the vSAN VLAN.
+    | Error | Fix |
+    |---|---|
+    | `Message too long; Possible MTU mismatch` | Verify the switch port connected to the vSAN vmkernel interface is configured with MTU 9000 and confirm the ESXi vmk2 interface MTU matches with `esxcli network ip interface get -i vmk2`. |
+    | `Destination host unreachable` | Check VLAN routing between the source and destination vSAN subnets, verify the VLAN ID is consistent on both ESXi nodes, and confirm the switch port is tagged for the vSAN VLAN. |
 **Switch port verification:** On the physical ToR switch, confirm that the ports connected to the vSAN uplinks have `mtu 9000` (or equivalent for the switch vendor). Both the switch port and the ESXi vmkernel MTU must be set to 9000.
 
 ### vSAN Network Connectivity Test
@@ -495,8 +506,10 @@ Network Interfaces:
 ```
 
 !!! warning "Common errors"
-    **`vSAN network test failed: No active vSAN cluster detected`** — Verify the cluster is initialized with `esxcli vsan cluster get` and all nodes are joined.
-    **`vmk2 does not have vSAN traffic type enabled`** — Add vSAN traffic type to vmk2 using `esxcli vsan network ip add -i vmk2`.
+    | Error | Fix |
+    |---|---|
+    | `vSAN network test failed: No active vSAN cluster detected` | Verify the cluster is initialized with `esxcli vsan cluster get` and all nodes are joined. |
+    | `vmk2 does not have vSAN traffic type enabled` | Add vSAN traffic type to vmk2 using `esxcli vsan network ip add -i vmk2`. |
 ---
 
 ## vSAN Degraded and Absent Objects
@@ -540,9 +553,11 @@ UUID                                  Health      Reason
 ```
 
 !!! warning "Common errors"
-    **`vsan.VsanClusterGetConfig: A general system error occurred: Connection refused`** — Ensure vSAN is enabled on the cluster and the ESXi host has network connectivity to the vSAN network.
-    **`Unknown command or namespace`** — Verify you are running the command on an ESXi 6.5+ host; older versions do not support `esxcli vsan debug` subcommands.
-    **`Permission denied`** — Run the commands as root or a user with vSAN administrator privileges on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `vsan.VsanClusterGetConfig: A general system error occurred: Connection refused` | Ensure vSAN is enabled on the cluster and the ESXi host has network connectivity to the vSAN network. |
+    | `Unknown command or namespace` | Verify you are running the command on an ESXi 6.5+ host; older versions do not support `esxcli vsan debug` subcommands. |
+    | `Permission denied` | Run the commands as root or a user with vSAN administrator privileges on the ESXi host. |
 ### Degraded Object Recovery
 
 1. Identify which disk or node is causing the degradation
@@ -595,8 +610,10 @@ State: active
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Run the command directly on the ESXi host via SSH or use the vSphere CLI from a management station with proper vSphere SDK installation.
-    **`Permission denied`** — Execute the command as root or with appropriate sudo privileges on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Run the command directly on the ESXi host via SSH or use the vSphere CLI from a management station with proper vSphere SDK installation. |
+    | `Permission denied` | Execute the command as root or with appropriate sudo privileges on the ESXi host. |
 ---
 
 ## vSAN Capacity Issues
@@ -695,9 +712,11 @@ SN-5E4D2C1R  slot=4  state=DEGRADED  health=WARNING
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example; if error persists, verify localhost resolves to 127.0.0.1).
-    **`bash: python3: command not found`** — Install Python 3 on the VxRail Manager node with `apt-get install python3` or equivalent for your OS.
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API endpoint is correct and the VxRail Manager service is running; check logs with `journalctl -u vxrail-manager -n 50`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example; if error persists, verify localhost resolves to 127.0.0.1). |
+    | `bash: python3: command not found` | Install Python 3 on the VxRail Manager node with `apt-get install python3` or equivalent for your OS. |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the API endpoint is correct and the VxRail Manager service is running; check logs with `journalctl -u vxrail-manager -n 50`. |
 ### Node Status Interpretation
 
 | API `operational_status` | Meaning | Action |
@@ -789,8 +808,10 @@ Temperature Information:
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the iDRAC IP address is correct and iDRAC service is running; check firewall rules allow SSH on port 22 to the iDRAC.
-    **`racadm: command not found`** — SSH directly to the iDRAC management interface (not the hypervisor); racadm is only available on the iDRAC, not
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the iDRAC IP address is correct and iDRAC service is running; check firewall rules allow SSH on port 22 to the iDRAC. |
+    | `racadm: command not found` | SSH directly to the iDRAC management interface (not the hypervisor); racadm is only available on the iDRAC, not |
 ### Interpreting Common iDRAC Alarms
 
 | Alarm Type | Severity | Action |
@@ -842,9 +863,11 @@ System Information:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to <idrac-ip>. Connection refused.`** — Verify the iDRAC IP address is reachable and the iDRAC service is running with `ping <idrac-ip>`.
-    **`Error: DRAC_E_INVALID_PARAMETER: Invalid username or password`** — Confirm the root credentials are correct and the iDRAC account has not been locked after failed login attempts.
-    **`Error: racadm: command not found`** — Install the Dell DRAC tools package (e.g., `yum install srvadmin-drac5` on RHEL or equivalent for your OS).
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to <idrac-ip>. Connection refused.` | Verify the iDRAC IP address is reachable and the iDRAC service is running with `ping <idrac-ip>`. |
+    | `Error: DRAC_E_INVALID_PARAMETER: Invalid username or password` | Confirm the root credentials are correct and the iDRAC account has not been locked after failed login attempts. |
+    | `Error: racadm: command not found` | Install the Dell DRAC tools package (e.g., `yum install srvadmin-drac5` on RHEL or equivalent for your OS). |
 ---
 
 ## See also

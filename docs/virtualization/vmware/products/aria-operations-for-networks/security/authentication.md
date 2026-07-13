@@ -76,9 +76,11 @@ curl -sk -H "Authorization: NetworkInsight $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip certificate verification (already present in example, but ensure both curl commands include it).
-    **`{"error":"Invalid credentials","status":401}`** — Verify the username, password, and domain type match the configured authentication backend in Aria Operations for Networks.
-    **`{"error":"Token expired","status":401}`** — Regenerate the token as it has exceeded its TTL; for production use, implement token refresh logic or use API keys instead of session tokens.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl to skip certificate verification (already present in example, but ensure both curl commands include it). |
+    | `{"error":"Invalid credentials","status":401}` | Verify the username, password, and domain type match the configured authentication backend in Aria Operations for Networks. |
+    | `{"error":"Token expired","status":401}` | Regenerate the token as it has exceeded its TTL; for production use, implement token refresh logic or use API keys instead of session tokens. |
 ---
 
 ## Session Management
@@ -129,9 +131,11 @@ ubuntu@vrni:~$
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot stat '/tmp/corp-root-ca.crt': No such file or directory`** — Verify the CA certificate file exists on the Platform VM or upload it first using `scp ubuntu@vrni.example.local:/path/to/cert`.
-    **`update-ca-certificates: command not found`** — Install the ca-certificates package with `sudo apt-get install ca-certificates`.
-    **`Failed to restart hms: Unit hms.service not found.`** — Verify the correct service name with `sudo systemctl list-units --type=service | grep -i hms` and use the actual service name.
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot stat '/tmp/corp-root-ca.crt': No such file or directory` | Verify the CA certificate file exists on the Platform VM or upload it first using `scp ubuntu@vrni.example.local:/path/to/cert`. |
+    | `update-ca-certificates: command not found` | Install the ca-certificates package with `sudo apt-get install ca-certificates`. |
+    | `Failed to restart hms: Unit hms.service not found.` | Verify the correct service name with `sudo systemctl list-units --type=service | grep -i hms` and use the actual service name. |
 ---
 
 ## Token Rotation Policy

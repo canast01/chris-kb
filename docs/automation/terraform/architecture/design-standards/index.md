@@ -179,9 +179,11 @@ Apply duration: 45s
 ```
 
 !!! warning "Common errors"
-    **`Error: Unsupported argument on module "rds" line 42, in module "rds": on_failure is not a valid argument`** — Verify prod.tfvars variable names match the variable declarations in your Terraform configuration files.
-    **`Error: error reading secret/rds/prod: permission denied`** — Ensure your Vault authentication token has read permissions for the secret/rds/prod path.
-    **`Error: Invalid value for variable "db_password": value must be a string`** — Confirm the Vault field extraction syntax is correct and returns a non-empty string value.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unsupported argument on module "rds" line 42, in module "rds": on_failure is not a valid argument` | Verify prod.tfvars variable names match the variable declarations in your Terraform configuration files. |
+    | `Error: error reading secret/rds/prod: permission denied` | Ensure your Vault authentication token has read permissions for the secret/rds/prod path. |
+    | `Error: Invalid value for variable "db_password": value must be a string` | Confirm the Vault field extraction syntax is correct and returns a non-empty string value. |
 ### `.tfvars` file rules
 
 | File | Contains | Committed to Git? |
@@ -282,8 +284,10 @@ Info: Forced unlock by admin@example.com
 ```
 
 !!! warning "Common errors"
-    **`Error acquiring the state lock: ConditionalCheckFailedException: The conditional request failed`** — Verify the lock ID matches exactly from the error message and the DynamoDB table name matches your backend configuration.
-    **`Error: error reading dynamodb table: ResourceNotFoundException: Requested resource not found`** — Confirm the DynamoDB table exists in the specified region (eu-west-1) and matches the table name in your Terraform backend configuration.
+    | Error | Fix |
+    |---|---|
+    | `Error acquiring the state lock: ConditionalCheckFailedException: The conditional request failed` | Verify the lock ID matches exactly from the error message and the DynamoDB table name matches your backend configuration. |
+    | `Error: error reading dynamodb table: ResourceNotFoundException: Requested resource not found` | Confirm the DynamoDB table exists in the specified region (eu-west-1) and matches the table name in your Terraform backend configuration. |
 Best practices:
 
 - Never run `terraform apply` from multiple terminals/CI jobs simultaneously against the same workspace
@@ -386,9 +390,11 @@ Module documentation updated successfully in README.md
 ```
 
 !!! warning "Common errors"
-    **`Error: No valid credentials found`** — Configure AWS credentials via `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables before running security scanners.
-    **`Error: Failed to read file: permission denied`** — Ensure the Terraform working directory and all subdirectories have read permissions with `chmod -R u+r .`.
-    **`Error: No such file or directory: README.md template not found`** — Add a `<!-- BEGIN_TF_DOCS -->` comment block to your README.md or create the file with `touch README.md` before running terraform-docs.
+    | Error | Fix |
+    |---|---|
+    | `Error: No valid credentials found` | Configure AWS credentials via `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables before running security scanners. |
+    | `Error: Failed to read file: permission denied` | Ensure the Terraform working directory and all subdirectories have read permissions with `chmod -R u+r .`. |
+    | `Error: No such file or directory: README.md template not found` | Add a `<!-- BEGIN_TF_DOCS -->` comment block to your README.md or create the file with `touch README.md` before running terraform-docs. |
 ---
 
 ## See also

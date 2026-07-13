@@ -125,9 +125,11 @@ Replication Queue
 ```
 
 !!! warning "Common errors"
-    **`DsReplicaGetInfo() failed with status 8606 (DSA is unavailable).`** — Verify the DC is online and reachable on the network; check firewall rules for RPC ports 135, 445, and 49152-65535.
-    **`The naming context is invalid`** — Ensure the DC name is spelled correctly and exists in Active Directory; use `Get-ADDomainController` to list valid DC names.
-    **`Replication access was denied`** — Verify the account running repadmin has Domain Admin or Enterprise Admin credentials; run the command as Administrator.
+    | Error | Fix |
+    |---|---|
+    | `DsReplicaGetInfo() failed with status 8606 (DSA is unavailable).` | Verify the DC is online and reachable on the network; check firewall rules for RPC ports 135, 445, and 49152-65535. |
+    | `The naming context is invalid` | Ensure the DC name is spelled correctly and exists in Active Directory; use `Get-ADDomainController` to list valid DC names. |
+    | `Replication access was denied` | Verify the account running repadmin has Domain Admin or Enterprise Admin credentials; run the command as Administrator. |
 ---
 
 ## DC Diagnostics
@@ -210,9 +212,11 @@ Performing initial setup:
 ```
 
 !!! warning "Common errors"
-    **`'dcdiag' is not recognized as an internal or external command`** — Run dcdiag from a Windows command prompt or PowerShell on a domain-joined Windows Server with AD DS tools installed, not from a Linux/Unix bash shell.
-    **`The specified domain does not exist or could not be contacted`** — Verify the domain name is correct and the DC has network connectivity to DNS and domain controllers using `nslookup <domain_name>`.
-    **`Access Denied`** — Run the command with elevated privileges (Run as Administrator) or ensure the user account has sufficient AD permissions.
+    | Error | Fix |
+    |---|---|
+    | `'dcdiag' is not recognized as an internal or external command` | Run dcdiag from a Windows command prompt or PowerShell on a domain-joined Windows Server with AD DS tools installed, not from a Linux/Unix bash shell. |
+    | `The specified domain does not exist or could not be contacted` | Verify the domain name is correct and the DC has network connectivity to DNS and domain controllers using `nslookup <domain_name>`. |
+    | `Access Denied` | Run the command with elevated privileges (Run as Administrator) or ensure the user account has sufficient AD permissions. |
 ---
 
 ## FSMO Roles
@@ -244,9 +248,11 @@ The operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Move-ADDirectoryServerOperationMasterRole : Cannot find a domain controller for domain "corp.local".`** — Verify network connectivity to the target DC and ensure the domain name is correct.
-    **`Access Denied. The user does not have permission to perform this operation.`** — Run PowerShell as Domain Admin or Enterprise Admin and ensure the account has sufficient AD permissions.
-    **`The operation cannot be performed because the object referenced could not be found.`** — Confirm the target DC name exists in Active Directory using `Get-ADDomainController -Filter *`.
+    | Error | Fix |
+    |---|---|
+    | `Move-ADDirectoryServerOperationMasterRole : Cannot find a domain controller for domain "corp.local".` | Verify network connectivity to the target DC and ensure the domain name is correct. |
+    | `Access Denied. The user does not have permission to perform this operation.` | Run PowerShell as Domain Admin or Enterprise Admin and ensure the account has sufficient AD permissions. |
+    | `The operation cannot be performed because the object referenced could not be found.` | Confirm the target DC name exists in Active Directory using `Get-ADDomainController -Filter *`. |
 ---
 
 ## Users & Groups
@@ -340,8 +346,10 @@ vendor-realm.com              REALM     OUTBOUND  NONTRANSITIVE
 ```
 
 !!! warning "Common errors"
-    **`The specified domain could not be found.`** — Verify the domain name spelling and ensure the domain controller is reachable via DNS.
-    **`Access Denied`** — Run PowerShell as Administrator or ensure your user account has Domain Admin privileges.
+    | Error | Fix |
+    |---|---|
+    | `The specified domain could not be found.` | Verify the domain name spelling and ensure the domain controller is reachable via DNS. |
+    | `Access Denied` | Run PowerShell as Administrator or ensure your user account has Domain Admin privileges. |
 ---
 
 ## Verify

@@ -78,9 +78,11 @@ sync-003             /ifs/data/archive    /ifs/dr/archive         Paused
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy '<policy_name>' not found`** — Verify the policy name with `egcli drpolicy list` and use the exact name from the output.
-    **`Error: Connection refused to cluster-dr-02`** — Ensure the target cluster is reachable and the network path is not blocked by firewall rules.
-    **`Error: Insufficient permissions to view policy details`** — Confirm your user account has the required DR policy read permissions in Eyeglass RBAC settings.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy '<policy_name>' not found` | Verify the policy name with `egcli drpolicy list` and use the exact name from the output. |
+    | `Error: Connection refused to cluster-dr-02` | Ensure the target cluster is reachable and the network path is not blocked by firewall rules. |
+    | `Error: Insufficient permissions to view policy details` | Confirm your user account has the required DR policy read permissions in Eyeglass RBAC settings. |
 ### Creating a DR Policy
 
 DR policies are typically created via the Eyeglass web UI. CLI equivalent:
@@ -129,9 +131,11 @@ Policy POL-NAS-PROD enabled successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy POL-NAS-PROD already exists`** — Use a unique policy name or delete the existing policy with `egcli drpolicy delete --policy POL-NAS-PROD` first.
-    **`Error: Access zone <zone2_name> not found on target cluster`** — Verify the access zone exists on the DR cluster with `egcli zone list --cluster <dr-cluster>`.
-    **`Error: SyncIQ policy <synciq_policy2> does not exist`** — Confirm the SyncIQ policy name is correct and exists with `egcli synciq list --cluster <production-cluster>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy POL-NAS-PROD already exists` | Use a unique policy name or delete the existing policy with `egcli drpolicy delete --policy POL-NAS-PROD` first. |
+    | `Error: Access zone <zone2_name> not found on target cluster` | Verify the access zone exists on the DR cluster with `egcli zone list --cluster <dr-cluster>`. |
+    | `Error: SyncIQ policy <synciq_policy2> does not exist` | Confirm the SyncIQ policy name is correct and exists with `egcli synciq list --cluster <production-cluster>`. |
 ### SyncIQ Integration
 
 Eyeglass monitors and manages SyncIQ policies as part of DR orchestration. SyncIQ policies must be pre-configured on the production PowerScale cluster.
@@ -184,9 +188,11 @@ ID                                    Policy Name         Status      Progress
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy 'prod-to-dr-sync' not found`** — Verify the policy name matches exactly with `isi sync policies list` and check for typos or case sensitivity.
-    **`Error: Connection refused to target cluster dr-cluster-01.example.com`** — Confirm network connectivity and HTTPS/port 8080 access between clusters, and verify the target cluster hostname is resolvable.
-    **`Error: Job already running for policy 'prod-to-dr-sync'`** — Wait for the current sync job to complete before manually triggering another, or use `isi sync jobs cancel <job_id>` if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy 'prod-to-dr-sync' not found` | Verify the policy name matches exactly with `isi sync policies list` and check for typos or case sensitivity. |
+    | `Error: Connection refused to target cluster dr-cluster-01.example.com` | Confirm network connectivity and HTTPS/port 8080 access between clusters, and verify the target cluster hostname is resolvable. |
+    | `Error: Job already running for policy 'prod-to-dr-sync'` | Wait for the current sync job to complete before manually triggering another, or use `isi sync jobs cancel <job_id>` if needed. |
 | SyncIQ Setting | Recommended Value |
 |---|---|
 | Schedule | Every 5–15 minutes (match RPO target) |
@@ -236,8 +242,10 @@ archive-weekly                2024-01-14 22:00:08    Finished
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to Eyeglass API on 192.168.1.50:8443`** — Verify Eyeglass appliance is running and network connectivity exists with `ping` and `nc -zv`.
-    **`isi: command not found`** — Run the `isi` command directly on the OneFS cluster console or configure SSH key-based authentication to the cluster in your shell environment.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to Eyeglass API on 192.168.1.50:8443` | Verify Eyeglass appliance is running and network connectivity exists with `ping` and `nc -zv`. |
+    | `isi: command not found` | Run the `isi` command directly on the OneFS cluster console or configure SSH key-based authentication to the cluster in your shell environment. |
 ### Modifying and Disabling Policies
 
 ```bash
@@ -271,9 +279,11 @@ Sync policies on cluster 'pscale-prod-01':
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy 'prod-dr-policy' not found`** — Verify the policy name with `egcli drpolicy list` and use the exact name.
-    **`Error: Cannot remove access zone 'finance_zone': zone is actively replicating`** — Disable the policy first with `egcli drpolicy disable` or wait for the current sync cycle to complete.
-    **`Error: SyncIQ policy 'prod-dr-policy-sync' still exists on PowerScale cluster`** — Manually delete orphaned SyncIQ policies from PowerScale using `isi sync policies delete` after confirming they are no longer needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy 'prod-dr-policy' not found` | Verify the policy name with `egcli drpolicy list` and use the exact name. |
+    | `Error: Cannot remove access zone 'finance_zone': zone is actively replicating` | Disable the policy first with `egcli drpolicy disable` or wait for the current sync cycle to complete. |
+    | `Error: SyncIQ policy 'prod-dr-policy-sync' still exists on PowerScale cluster` | Manually delete orphaned SyncIQ policies from PowerScale using `isi sync policies delete` after confirming they are no longer needed. |
 ---
 
 ## See also

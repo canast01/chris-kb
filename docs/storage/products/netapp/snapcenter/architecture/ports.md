@@ -88,9 +88,11 @@ Export list for 192.168.42.50:
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed).
-    **`Connection refused`** — Verify SnapCenter Server is running with `systemctl status snapcenter` and firewall rules allow port 8145 from plugin host.
-    **`showmount: clnt_create: RPC: Program not registered`** — Confirm NFS service is enabled on ONTAP LIF and the LIF is reachable; check `network interface show -vserver <svm>` for correct NFS LIF IP.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed). |
+    | `Connection refused` | Verify SnapCenter Server is running with `systemctl status snapcenter` and firewall rules allow port 8145 from plugin host. |
+    | `showmount: clnt_create: RPC: Program not registered` | Confirm NFS service is enabled on ONTAP LIF and the LIF is reachable; check `network interface show -vserver <svm>` for correct NFS LIF IP. |
 ## See also
 
 - [NetApp SnapCenter — Architecture](../how-it-works/)

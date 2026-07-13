@@ -111,9 +111,11 @@ Restore job initiated. Job ID: 987f6543-a21c-45d6-b789-123456789abc
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/<vault>' under resource group '<rg>' was not found.`** — Verify the vault name and resource group name are correct and the vault exists in the specified region.
-    **`InvalidParameterValue : The item name '<vm-name>' is not found in the vault.`** — Ensure the VM is registered and protected in the vault; check the exact item name using `az backup item list`.
-    **`InvalidParameterValue : The recovery point '<recovery-point-name>' does not exist for the item.`** — List available recovery points with `az backup recoverypoint list --vault-name <vault> -g <rg> --container-name <container> --item-name <vm-name>` and use a valid recovery point name.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/<vault>' under resource group '<rg>' was not found.` | Verify the vault name and resource group name are correct and the vault exists in the specified region. |
+    | `InvalidParameterValue : The item name '<vm-name>' is not found in the vault.` | Ensure the VM is registered and protected in the vault; check the exact item name using `az backup item list`. |
+    | `InvalidParameterValue : The recovery point '<recovery-point-name>' does not exist for the item.` | List available recovery points with `az backup recoverypoint list --vault-name <vault> -g <rg> --container-name <container> --item-name <vm-name>` and use a valid recovery point name. |
 ---
 
 ## Verify

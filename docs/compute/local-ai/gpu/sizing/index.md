@@ -133,5 +133,7 @@ Legend:
 ```
 
 !!! warning "Common errors"
-    **`command not found: nvidia-smi`** — Install NVIDIA GPU drivers with `apt install nvidia-utils` (Ubuntu) or equivalent for your OS.
-    **`Failed to initialize NVML: Driver/library version mismatch`** — Reboot the system or reload the nvidia driver with `sudo modprobe -r nvidia && sudo modprobe nvidia`.
+    | Error | Fix |
+    |---|---|
+    | `command not found: nvidia-smi` | Install NVIDIA GPU drivers with `apt install nvidia-utils` (Ubuntu) or equivalent for your OS. |
+    | `Failed to initialize NVML: Driver/library version mismatch` | Reboot the system or reload the nvidia driver with `sudo modprobe -r nvidia && sudo modprobe nvidia`. |

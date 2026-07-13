@@ -113,9 +113,11 @@ Policies: 12
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present; if error persists, verify NSX manager hostname resolves correctly).
-    **`jq: command not found`** — Install `python3-json.tool` or use `python3 -m json.tool` instead (the script already uses the latter, so verify Python 3 is installed).
-    **`401 Unauthorized`** — Verify credentials in `AUTH` variable match NSX admin account; reset password if needed via NSX UI or `set user admin password` CLI command.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present; if error persists, verify NSX manager hostname resolves correctly). |
+    | `jq: command not found` | Install `python3-json.tool` or use `python3 -m json.tool` instead (the script already uses the latter, so verify Python 3 is installed). |
+    | `401 Unauthorized` | Verify credentials in `AUTH` variable match NSX admin account; reset password if needed via NSX UI or `set user admin password` CLI command. |
 ## Edge Node
 
 | Command | Description | Example |

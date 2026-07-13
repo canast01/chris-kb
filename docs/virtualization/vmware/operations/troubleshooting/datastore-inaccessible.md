@@ -89,8 +89,10 @@ Datastore-DR-Sync    Inaccessible
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Run this command directly on the ESXi host via SSH or vSphere Client console, not from a Windows management station.
-    **`Get-Datastore : The term 'Get-Datastore' is not recognized`** — Install VMware PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force` and connect to vCenter using `Connect-VIServer` before running the cmdlet.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Run this command directly on the ESXi host via SSH or vSphere Client console, not from a Windows management station. |
+    | `Get-Datastore : The term 'Get-Datastore' is not recognized` | Install VMware PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force` and connect to vCenter using `Connect-VIServer` before running the cmdlet. |
 **APD resolution:**
 
 1. Identify which hosts report the datastore as inaccessible — if only some hosts, isolate to a specific fabric path or HBA.
@@ -119,9 +121,11 @@ All adapters rescanned successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or malformed command`** — Verify the ESXi host shell is enabled and you are using the correct esxcli syntax with proper spacing around `-A all`.
-    **`Error: Permission denied`** — Run the command as root or with appropriate ESXi administrative privileges; non-root users cannot execute storage rescans.
-    **`Error: Unable to rescan adapter vmhbaX: Device or resource busy`** — Wait for any ongoing storage operations to complete, then retry the rescan after 30–60 seconds.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or malformed command` | Verify the ESXi host shell is enabled and you are using the correct esxcli syntax with proper spacing around `-A all`. |
+    | `Error: Permission denied` | Run the command as root or with appropriate ESXi administrative privileges; non-root users cannot execute storage rescans. |
+    | `Error: Unable to rescan adapter vmhbaX: Device or resource busy` | Wait for any ongoing storage operations to complete, then retry the rescan after 30–60 seconds. |
 5. If paths recover, verify VMs resume I/O and check for filesystem consistency warnings.
 
 **PDL action:**
@@ -182,8 +186,10 @@ find /vmfs/volumes/<datastore-uuid>/<vmname>/ -name "*-delta.vmdk" -o -name "*-0
 ```
 
 !!! warning "Common errors"
-    **`find: '/vmfs/volumes/<datastore-uuid>': No such file or directory`** — Replace `<datastore-uuid>` with the actual datastore UUID from `ls /vmfs/volumes/` and `<vmname>` with the actual VM folder name.
-    **`find: Filesystem loop detected; '-fstype' not used; skipping directory`** — Add `-fstype local` to the find command to avoid symlink loops in VMFS.
+    | Error | Fix |
+    |---|---|
+    | `find: '/vmfs/volumes/<datastore-uuid>': No such file or directory` | Replace `<datastore-uuid>` with the actual datastore UUID from `ls /vmfs/volumes/` and `<vmname>` with the actual VM folder name. |
+    | `find: Filesystem loop detected; '-fstype' not used; skipping directory` | Add `-fstype local` to the find command to avoid symlink loops in VMFS. |
 ---
 
 ## High Datastore Latency
@@ -210,8 +216,10 @@ naa.6001405a1b2c3d52     91.3      67.2     11.1      3.5       7.6     1.4   1.
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Ensure you are running this command directly on an ESXi host via SSH or console, not from a vCenter server or external system.
-    **`Error: Cannot open /proc/vmware/sched/pcpu/stats`** — Verify the ESXi host is fully booted and the monitoring service is running with `systemctl status vmware-stats`.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Ensure you are running this command directly on an ESXi host via SSH or console, not from a vCenter server or external system. |
+    | `Error: Cannot open /proc/vmware/sched/pcpu/stats` | Verify the ESXi host is fully booted and the monitoring service is running with `systemctl status vmware-stats`. |
 **Triage path:**
 
 1. Correlate the latency spike time — was a snapshot being committed, a backup running, or a replication cycle active?
@@ -231,8 +239,10 @@ Queue Depth Threshold: 28
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or esxcli command 'storage core device list'`** — Verify you are running this command on an ESXi host with proper esxcli access, not on a vCenter server.
-    **`Device <naa.xxxx> not found`** — Replace `<naa.xxxx>` with an actual NAA identifier from `esxcli storage core device list` output without the angle brackets.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or esxcli command 'storage core device list'` | Verify you are running this command on an ESXi host with proper esxcli access, not on a vCenter server. |
+    | `Device <naa.xxxx> not found` | Replace `<naa.xxxx>` with an actual NAA identifier from `esxcli storage core device list` output without the angle brackets. |
 4. Check for path imbalance — one path handling all I/O while others are idle.
 
 ---
@@ -264,8 +274,10 @@ vmnic1     0000:02:02.0 e1000         Down             1500 False
 ```
 
 !!! warning "Common errors"
-    **`Unable to open VMDK file: No such file or directory`** — Verify the datastore name, VM folder path, and VMDK filename are correct and the file exists on the datastore.
-    **`Could not find a matching NIC for MAC address`** — The MAC address from the lock output may be a vMotion or management NIC; cross-reference with `esxcli network ip interface list` or check the ESXi host's network configuration directly.
+    | Error | Fix |
+    |---|---|
+    | `Unable to open VMDK file: No such file or directory` | Verify the datastore name, VM folder path, and VMDK filename are correct and the file exists on the datastore. |
+    | `Could not find a matching NIC for MAC address` | The MAC address from the lock output may be a vMotion or management NIC; cross-reference with `esxcli network ip interface list` or check the ESXi host's network configuration directly. |
 Once you identify the locking host:
 - If that host is not running the VM, restart its management agents (`/etc/init.d/hostd restart`)
 - If the locking host crashed, the lock is stale — power off the VM completely in vCenter, then power it back on
@@ -304,9 +316,11 @@ Resync UUID                          Object Count    Bytes Remaining    ETA
 ```
 
 !!! warning "Common errors"
-    **`vSAN health cluster list: Unknown command or namespace`** — Ensure you are running this command on an ESXi host with vSAN enabled and the vSAN license is active.
-    **`grep: (standard input) is empty`** — Run `esxcli vsan debug object list` without grep first to verify the command executes; if empty, all objects are compliant.
-    **`Error: The vSAN service is not running`** — Restart the vSAN service with `services.sh restart vsanmgmt` or check cluster membership with `esxcli vsan cluster get`.
+    | Error | Fix |
+    |---|---|
+    | `vSAN health cluster list: Unknown command or namespace` | Ensure you are running this command on an ESXi host with vSAN enabled and the vSAN license is active. |
+    | `grep: (standard input) is empty` | Run `esxcli vsan debug object list` without grep first to verify the command executes; if empty, all objects are compliant. |
+    | `Error: The vSAN service is not running` | Restart the vSAN service with `services.sh restart vsanmgmt` or check cluster membership with `esxcli vsan cluster get`. |
 | State | Meaning | Action |
 |---|---|---|
 | Non-compliant | Does not meet storage policy | Check if a host or disk is offline; restore host to restore compliance |

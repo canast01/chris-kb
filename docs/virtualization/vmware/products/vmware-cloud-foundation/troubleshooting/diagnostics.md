@@ -150,9 +150,11 @@ sudo systemctl restart vmware-vcf-lcm
 ```
 
 !!! warning "Common errors"
-    **`Unit vmware-vcf-lcm.service not found.`** — Verify the VCF version is installed correctly and the service name matches your deployment with `systemctl list-units 'vmware-vcf-*'`.
-    **`Failed to restart vmware-vcf-lcm.service: Access denied`** — Ensure you are running the command with `sudo` or as root user.
-    **`Connection refused` (when SSH'ing to sddc-manager)** — Verify the SDDC Manager hostname resolves correctly and SSH is enabled; check network connectivity with `ping sddc-manager.corp.example.com`.
+    | Error | Fix |
+    |---|---|
+    | `Unit vmware-vcf-lcm.service not found.` | Verify the VCF version is installed correctly and the service name matches your deployment with `systemctl list-units 'vmware-vcf-*'`. |
+    | `Failed to restart vmware-vcf-lcm.service: Access denied` | Ensure you are running the command with `sudo` or as root user. |
+    | `Connection refused` (when SSH'ing to sddc-manager)` | Verify the SDDC Manager hostname resolves correctly and SSH is enabled; check network connectivity with `ping sddc-manager.corp.example.com`. |
 ---
 
 ## Step 2 — Analyze LCM lifecycle and upgrade logs
@@ -213,9 +215,11 @@ proxy.protocol=http
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vmware/vcf/lcm/lcm-debug.log: No such file or directory`** — Verify the LCM service is running with `systemctl status vmware-vcf-lcm` and check the correct log path with `find /var/log -name "*lcm*" -type f`.
-    **`curl: (7) Failed to connect to depot.vmware.com port 443: Connection timed out`** — Verify network connectivity and proxy settings with `curl -v --proxy [proxy:port] https://depot.vmware.com` or check firewall rules blocking outbound HTTPS.
-    **`taskId=<task-uuid>: No such file or directory`** — Replace the literal `<task-uuid>` placeholder with an actual UUID from a previous grep output, e.g., `grep "taskId=a7f2c
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vmware/vcf/lcm/lcm-debug.log: No such file or directory` | Verify the LCM service is running with `systemctl status vmware-vcf-lcm` and check the correct log path with `find /var/log -name "*lcm*" -type f`. |
+    | `curl: (7) Failed to connect to depot.vmware.com port 443: Connection timed out` | Verify network connectivity and proxy settings with `curl -v --proxy [proxy:port] https://depot.vmware.com` or check firewall rules blocking outbound HTTPS. |
+    | `taskId=<task-uuid>: No such file or directory` | Replace the literal `<task-uuid>` placeholder with an actual UUID from a previous grep output, e.g., `grep "taskId=a7f2c |
 ---
 
 ## Step 3 — Diagnose NSX Manager cluster and transport nodes
@@ -291,9 +295,11 @@ PING 192.168.100.45 (192.168.100.45): 1572 data bytes
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example; verify NSX certificate is valid if this persists).
-    **`node_deployment_state: FAILED`** — SSH to the affected transport node and check `/var/log/nsx-agent.log` for deployment errors, then re-run the NSX controller deployment task.
-    **`PING: sendto: No route to host`** — Verify the TEP (Tunnel Endpoint) IP is reachable and that vmk10 is bound to the correct VLAN/segment on the ESXi host using `esxcli network ip interface list`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example; verify NSX certificate is valid if this persists). |
+    | `node_deployment_state: FAILED` | SSH to the affected transport node and check `/var/log/nsx-agent.log` for deployment errors, then re-run the NSX controller deployment task. |
+    | `PING: sendto: No route to host` | Verify the TEP (Tunnel Endpoint) IP is reachable and that vmk10 is bound to the correct VLAN/segment on the ESXi host using `esxcli network ip interface list`. |
 ---
 
 ## Step 4 — Check vCenter appliance
@@ -352,9 +358,11 @@ root@vcenter [ ~ ]# curl -sk -H "vmware-api-session-id: $SESSION" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to vcenter.corp.example.com port 443: Connection refused`** — Verify vCenter API service is running with `service-control --status --all | grep -i api` and restart if needed with `service-control --start --all`.
-    **`Authentication failed for user 'administrator@vsphere.local'`** — Confirm the password is correct and the SSO service is operational; check `/var/log/vmware/sso/sso-event.log` for lockouts.
-    **`/storage filesystem is 95% full`** — Immediately increase `/storage` LVM volume or delete old logs/snapshots; full `/storage/db` will cause vCenter to become unresponsive.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to vcenter.corp.example.com port 443: Connection refused` | Verify vCenter API service is running with `service-control --status --all | grep -i api` and restart if needed with `service-control --start --all`. |
+    | `Authentication failed for user 'administrator@vsphere.local'` | Confirm the password is correct and the SSO service is operational; check `/var/log/vmware/sso/sso-event.log` for lockouts. |
+    | `/storage filesystem is 95% full` | Immediately increase `/storage` LVM volume or delete old logs/snapshots; full `/storage/db` will cause vCenter to become unresponsive. |
 ---
 
 ## Step 5 — Query SDDC Manager health API
@@ -437,9 +445,11 @@ NSX_MANAGER nsx-admin: ACTIVE
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command (already present; if still failing, verify SDDC Manager hostname resolves correctly).
-    **`jq: command not found` or `python3: command not found`** — Install python3 package on SDDC Manager or use `jq` instead of python3 for JSON parsing.
-    **`{"error":"Invalid token","status":401}`** — Verify admin credentials are correct and account is not locked; re-run token generation command.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command (already present; if still failing, verify SDDC Manager hostname resolves correctly). |
+    | `jq: command not found` or `python3: command not found` | Install python3 package on SDDC Manager or use `jq` instead of python3 for JSON parsing. |
+    | `{"error":"Invalid token","status":401}` | Verify admin credentials are correct and account is not locked; re-run token generation command. |
 ---
 
 ## Step 6 — Collect SOS diagnostic bundle
@@ -504,9 +514,11 @@ total 4.8G
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH key is loaded or use password authentication; confirm vcf user exists on SDDC Manager with `id vcf`.
-    **`/usr/lib/vmware-sddc-support/sos: command not found`** — Ensure you are running as root with `sudo su -` and that VMware Cloud Foundation support tools are installed with `rpm -qa | grep vmware-sddc-support`.
-    **`No space left on device`** — Free up disk space on SDDC Manager with `df -h` to identify full partitions, or move existing bundles to external storage before re-running collection.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH key is loaded or use password authentication; confirm vcf user exists on SDDC Manager with `id vcf`. |
+    | `/usr/lib/vmware-sddc-support/sos: command not found` | Ensure you are running as root with `sudo su -` and that VMware Cloud Foundation support tools are installed with `rpm -qa | grep vmware-sddc-support`. |
+    | `No space left on device` | Free up disk space on SDDC Manager with `df -h` to identify full partitions, or move existing bundles to external storage before re-running collection. |
 ---
 
 ## Step 7 — VCF error code reference

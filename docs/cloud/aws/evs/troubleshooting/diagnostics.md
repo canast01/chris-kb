@@ -151,7 +151,9 @@ eni-2h9c4d1e6f3g7c5h   in-use    attached            EVS-Host-eth2
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID`** — Verify the $ENV_ID variable is set correctly with `echo $ENV_ID` and matches an existing EVS environment.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID` | Verify the $ENV_ID variable is set correctly with `echo $ENV_ID` and matches an existing EVS environment. |
     **`An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: Invalid id: "vpc-"` — Ensure $EVS_VPC_ID is populated with a valid VPC ID using `aws ec2 describe-vpcs --query 'Vpcs[*].VpcId'`.
     **`An error occurred (InvalidParameterValue) when calling the DescribeNetworkInterfaces operation: Invalid id: "subnet-"` — Confirm $EVS_MGMT_SUBNET_ID is set to a valid subnet ID with `aws ec2 describe-subnets --query 'Subnets[*].SubnetId'`.
 ---
@@ -225,9 +227,11 @@ aws cloudwatch get-metric-statistics \
 ```
 
 !!! warning "Common errors"
-    **`date: illegal time format`** — Use `date -u -d "24 hours ago" +%Y-%m-%dT%H:%M:%SZ` on Linux instead of the BSD `-v` flag.
-    **`An error occurred (InvalidParameterValue) when calling the LookupEvents operation: Lookup attributes do not support EventSource`** — Use `EventName` or `ResourceName` attributes instead; CloudTrail EVS events may require filtering by specific operation names like `CreateEnvironment`.
-    **`jq: command not found` or Python JSON parsing errors** — Ensure `python3` is installed and the CloudTrail event JSON structure matches your AWS region's API version by testing with `aws cloudtrail lookup-events --max-results 1` first.
+    | Error | Fix |
+    |---|---|
+    | `date: illegal time format` | Use `date -u -d "24 hours ago" +%Y-%m-%dT%H:%M:%SZ` on Linux instead of the BSD `-v` flag. |
+    | `An error occurred (InvalidParameterValue) when calling the LookupEvents operation: Lookup attributes do not support EventSource` | Use `EventName` or `ResourceName` attributes instead; CloudTrail EVS events may require filtering by specific operation names like `CreateEnvironment`. |
+    | `jq: command not found` or Python JSON parsing errors` | Ensure `python3` is installed and the CloudTrail event JSON structure matches your AWS region's API version by testing with `aws cloudtrail lookup-events --max-results 1` first. |
 ---
 
 ## Step 3 — Inspect VPC Flow Logs for network drops
@@ -270,9 +274,11 @@ for row in results:
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFoundException: The specified log group does not exist.`** — Verify the log group name matches your VPC Flow Logs configuration with `aws logs describe-log-groups --log-group-name-prefix evs-flow-logs`.
-    **`InvalidParameterException: Query string is invalid`** — Ensure the CloudWatch Logs Insights query syntax is correct; test the query string in the CloudWatch console first before running via CLI.
-    **`An error occurred (AccessDenied) when calling the GetQueryResults operation`** — Add `logs:GetQueryResults` and `logs:StartQuery` permissions to your IAM user or role policy.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFoundException: The specified log group does not exist.` | Verify the log group name matches your VPC Flow Logs configuration with `aws logs describe-log-groups --log-group-name-prefix evs-flow-logs`. |
+    | `InvalidParameterException: Query string is invalid` | Ensure the CloudWatch Logs Insights query syntax is correct; test the query string in the CloudWatch console first before running via CLI. |
+    | `An error occurred (AccessDenied) when calling the GetQueryResults operation` | Add `logs:GetQueryResults` and `logs:StartQuery` permissions to your IAM user or role policy. |
 ---
 
 ## Step 4 — Check VMware platform health
@@ -327,9 +333,11 @@ esx-node-07.prod    Disconnected    On
 ```
 
 !!! warning "Common errors"
-    **`Exception caught in function 'QueryVsanClusterHealthSummary': Connection timeout to host esx-node-03.prod.local`** — Verify network connectivity to the ESXi host, check firewall rules blocking port 443, and restart the vpxd service if the host remains unreachable.
-    **`Failed to retrieve cluster inventory from esx-node-02.prod.local: RPC timeout`** — Increase the RPC timeout value in vpxd.cfg or restart the affected ESXi host's management agents using `services.sh restart`.
-    **`Get-VMHost returns hosts with ConnectionState -ne "Connected"`** — Reconnect the disconnected host in vCenter, verify vSAN network connectivity, and check for certificate or authentication issues in the vpxd.log.
+    | Error | Fix |
+    |---|---|
+    | `Exception caught in function 'QueryVsanClusterHealthSummary': Connection timeout to host esx-node-03.prod.local` | Verify network connectivity to the ESXi host, check firewall rules blocking port 443, and restart the vpxd service if the host remains unreachable. |
+    | `Failed to retrieve cluster inventory from esx-node-02.prod.local: RPC timeout` | Increase the RPC timeout value in vpxd.cfg or restart the affected ESXi host's management agents using `services.sh restart`. |
+    | `Get-VMHost returns hosts with ConnectionState -ne "Connected"` | Reconnect the disconnected host in vCenter, verify vSAN network connectivity, and check for certificate or authentication issues in the vpxd.log. |
 ---
 
 ## Step 5 — Check NSX-T health in EVS
@@ -373,9 +381,11 @@ PROBLEM: esxi-host-04.lab.local state=UNKNOWN
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command or set `export CURL_CA_BUNDLE=""` to skip certificate validation.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify `$NSX_URL` is set correctly (e.g. `https://nsx-manager.local`) and the NSX-T API endpoint is reachable with `curl -sk -u "admin:$NSX_PASSWORD" "$NSX_URL/api/v1/cluster/status"`.
-    **`KeyError: 'results'`** — Check that the API endpoint path is correct for your NSX-T version; some versions use `result` (singular) instead of `results` (plural) in the JSON response.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command or set `export CURL_CA_BUNDLE=""` to skip certificate validation. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify `$NSX_URL` is set correctly (e.g. `https://nsx-manager.local`) and the NSX-T API endpoint is reachable with `curl -sk -u "admin:$NSX_PASSWORD" "$NSX_URL/api/v1/cluster/status"`. |
+    | `KeyError: 'results'` | Check that the API endpoint path is correct for your NSX-T version; some versions use `result` (singular) instead of `results` (plural) in the JSON response. |
 ---
 
 ## Step 6 — Collect vSphere, NSX-T, and SDDC Manager bundles
@@ -436,9 +446,11 @@ Creating tar archive...
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification for self-signed NSX-T certificates.
-    **`bash: python3: command not found`** — Install python3 on the VCSA/NSX-T appliance or use `python` instead if Python 2 is available.
-    **`Permission denied (publickey,password)`** — Verify SSH credentials and ensure the target user (root for VCSA/ESXi, vcf for SDDC Manager) has SSH access enabled.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification for self-signed NSX-T certificates. |
+    | `bash: python3: command not found` | Install python3 on the VCSA/NSX-T appliance or use `python` instead if Python 2 is available. |
+    | `Permission denied (publickey,password)` | Verify SSH credentials and ensure the target user (root for VCSA/ESXi, vcf for SDDC Manager) has SSH access enabled. |
 ---
 
 ## Step 7 — Diagnose HCX and collect escalation data
@@ -497,8 +509,10 @@ admin@hcx-manager-01:~$ aws evs list-environments --query 'environmentSummaries[
 ```
 
 !!! warning "Common errors"
-    **`Unable to locate credentials`** — Configure AWS credentials via `aws configure` or set `AWS_PROFILE` environment variable.
-    **`An error occurred (InvalidParameterException) when calling the ListEnvironments operation: Invalid query parameter`** — Verify the `--query` syntax matches your AWS CLI version; use `aws evs list-environments --output table` without filtering if query fails.
+    | Error | Fix |
+    |---|---|
+    | `Unable to locate credentials` | Configure AWS credentials via `aws configure` or set `AWS_PROFILE` environment variable. |
+    | `An error occurred (InvalidParameterException) when calling the ListEnvironments operation: Invalid query parameter` | Verify the `--query` syntax matches your AWS CLI version; use `aws evs list-environments --output table` without filtering if query fails. |
 ---
 
 ## Log locations

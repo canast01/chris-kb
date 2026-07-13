@@ -103,9 +103,11 @@ Solutions Enabler Build: 123.456.789
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Verify Solutions Enabler is installed and /opt/emc/SYMCLI/bin is in your PATH, or source the installation profile.
-    **`SYMAPI_DB_CONNECT_ERROR: Cannot connect to the Symmetrix`** — Ensure the Symmetrix daemon (symapi) is running on the host with `sudo /opt/emc/SYMAPI/bin/symapi_control start` and network connectivity to the array is available.
-    **`Permission denied`** — Run the command with `sudo` or ensure your user is in the `symcli` or `root` group for Solutions Enabler access.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Verify Solutions Enabler is installed and /opt/emc/SYMCLI/bin is in your PATH, or source the installation profile. |
+    | `SYMAPI_DB_CONNECT_ERROR: Cannot connect to the Symmetrix` | Ensure the Symmetrix daemon (symapi) is running on the host with `sudo /opt/emc/SYMAPI/bin/symapi_control start` and network connectivity to the array is available. |
+    | `Permission denied` | Run the command with `sudo` or ensure your user is in the `symcli` or `root` group for Solutions Enabler access. |
 ### 2. Capture director and port status
 
 ```bash
@@ -154,9 +156,11 @@ DA-2D       1       Online    Yes     12Gb     1009      2891.4
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI Error: Cannot connect to the Symmetrix array <SID>`** — Verify the SID is correct and the Symmetrix Management Console (SMC) service is running on the management station.
-    **`Permission denied`** — Run the command with appropriate privileges (use `sudo` or ensure your user is in the `symuser` group).
-    **`symcfg: command not found`** — Install the EMC Solutions Enabler package or add its bin directory to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI Error: Cannot connect to the Symmetrix array <SID>` | Verify the SID is correct and the Symmetrix Management Console (SMC) service is running on the management station. |
+    | `Permission denied` | Run the command with appropriate privileges (use `sudo` or ensure your user is in the `symuser` group). |
+    | `symcfg: command not found` | Install the EMC Solutions Enabler package or add its bin directory to your PATH environment variable. |
 ### 3. Capture drive health
 
 ```bash
@@ -188,9 +192,11 @@ FAILED|DEAD|REPLACING state drives appended to /tmp/pmx-drives-20240115.txt
 ```
 
 !!! warning "Common errors"
-    **`sympd: Command not found`** — Ensure the Symmetrix CLI tools are installed and the PATH includes the bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`Permission denied: /tmp/pmx-drives-20240115.txt`** — Check that the user running the command has write permissions to `/tmp` or redirect output to a directory with appropriate permissions.
-    **`Symmetrix ID: <SID> -- Could not be found`** — Verify the SID value is correct and the array is reachable via the Symmetrix management network.
+    | Error | Fix |
+    |---|---|
+    | `sympd: Command not found` | Ensure the Symmetrix CLI tools are installed and the PATH includes the bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `Permission denied: /tmp/pmx-drives-20240115.txt` | Check that the user running the command has write permissions to `/tmp` or redirect output to a directory with appropriate permissions. |
+    | `Symmetrix ID: <SID> -- Could not be found` | Verify the SID value is correct and the array is reachable via the Symmetrix management network. |
 ### 4. Capture SRDF replication state (if SRDF is in use)
 
 ```bash
@@ -225,9 +231,11 @@ Report written to: /tmp/pmx-srdf-20240115.txt
 ```
 
 !!! warning "Common errors"
-    **`symdf: Command not found`** — Ensure Symmetrix CLI tools are installed and the `$PATH` includes the Symmetrix bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`Symmetrix ID <SID> does not exist in the configuration`** — Verify the SID value matches an array in your Symmetrix configuration file (`/var/symapi/config/netcnx.cfg`).
-    **`Permission denied: /tmp/pmx-srdf-20240115.txt`** — Run the commands with appropriate permissions or redirect output to a directory where the user has write access.
+    | Error | Fix |
+    |---|---|
+    | `symdf: Command not found` | Ensure Symmetrix CLI tools are installed and the `$PATH` includes the Symmetrix bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `Symmetrix ID <SID> does not exist in the configuration` | Verify the SID value matches an array in your Symmetrix configuration file (`/var/symapi/config/netcnx.cfg`). |
+    | `Permission denied: /tmp/pmx-srdf-20240115.txt` | Run the commands with appropriate permissions or redirect output to a directory where the user has write access. |
 ### 5. Collect the event log
 
 ```bash
@@ -251,9 +259,11 @@ Event ID,Timestamp,Severity,Message,Component
 ```
 
 !!! warning "Common errors"
-    **`symevent: command not found`** — Install Unisphere CLI tools or ensure the Symmetrix CLI package is in your PATH.
-    **`Error: Invalid SID <SID>`** — Replace `<SID>` with the actual 6-digit array serial number (e.g., `000123456789`).
-    **`Permission denied`** — Run the command with appropriate user privileges or use `sudo` if required by your environment.
+    | Error | Fix |
+    |---|---|
+    | `symevent: command not found` | Install Unisphere CLI tools or ensure the Symmetrix CLI package is in your PATH. |
+    | `Error: Invalid SID <SID>` | Replace `<SID>` with the actual 6-digit array serial number (e.g., `000123456789`). |
+    | `Permission denied` | Run the command with appropriate user privileges or use `sudo` if required by your environment. |
 ### 6. Write the timeline
 
 ```text
@@ -385,9 +395,11 @@ R1 (Remote): Synchronized
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Error: Invalid SID <SID>`** — Replace `<SID>` with the actual array serial ID (e.g., `000123456789`).
-    **`symcfg: command not found`** — Install or source Solutions Enabler (symcli) on the host, or verify the installation path is in $PATH.
-    **`symcfg: Error: Cannot connect to array`** — Verify network connectivity to the array management interface and confirm the host has proper SNMP/management credentials configured.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Error: Invalid SID <SID>` | Replace `<SID>` with the actual array serial ID (e.g., `000123456789`). |
+    | `symcfg: command not found` | Install or source Solutions Enabler (symcli) on the host, or verify the installation path is in $PATH. |
+    | `symcfg: Error: Cannot connect to array` | Verify network connectivity to the array management interface and confirm the host has proper SNMP/management credentials configured. |
 ---
 
 ## Support SLA Reference

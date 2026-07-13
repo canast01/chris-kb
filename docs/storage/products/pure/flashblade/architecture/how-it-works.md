@@ -157,9 +157,11 @@ nfs-export              true
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid filesystem name '<fs_name>'`** — Replace `<fs_name>` with an actual filesystem name (e.g., `purefb fs create --name my-nfs-fs --size 10T --nfs-v3-enabled true`).
-    **`mount.nfs: access denied by server while mounting 192.168.1.50:/nfs-export`** — Verify NFS export rules are correctly set and the client IP is included in the rules (e.g., `purefb fs update nfs-export --nfs-rules "192.168.1.0/24(rw)"`).
-    **`Error: Filesystem nfs-export not found`** — Confirm the filesystem exists with `purefb fs list` before attempting to update or destroy it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid filesystem name '<fs_name>'` | Replace `<fs_name>` with an actual filesystem name (e.g., `purefb fs create --name my-nfs-fs --size 10T --nfs-v3-enabled true`). |
+    | `mount.nfs: access denied by server while mounting 192.168.1.50:/nfs-export` | Verify NFS export rules are correctly set and the client IP is included in the rules (e.g., `purefb fs update nfs-export --nfs-rules "192.168.1.0/24(rw)"`). |
+    | `Error: Filesystem nfs-export not found` | Confirm the filesystem exists with `purefb fs list` before attempting to update or destroy it. |
 ## Object Services (S3)
 
 FlashBlade provides S3-compatible object storage through accounts, buckets, and access keys.
@@ -195,9 +197,11 @@ upload: ./local_file.txt to s3://test-bucket-01/local_file.txt
 ```
 
 !!! warning "Common errors"
-    **`error: account '<account_name>' does not exist`** — Create the object-store-account before creating users with `purefb object-store-account create --name <account_name>`.
-    **`An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The Access Key Id you provided does not exist in our records.`** — Verify the AWS credentials are set correctly with `aws configure` and match the access key created via `purefb object-store-access-key create`.
-    **`error: unable to connect to https://<flashblade_s3_vip>/: certificate verify failed`** — Add `--no-verify-ssl` flag to the aws s3 command or configure your environment to trust the FlashBlade's self-signed certificate.
+    | Error | Fix |
+    |---|---|
+    | `error: account '<account_name>' does not exist` | Create the object-store-account before creating users with `purefb object-store-account create --name <account_name>`. |
+    | `An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The Access Key Id you provided does not exist in our records.` | Verify the AWS credentials are set correctly with `aws configure` and match the access key created via `purefb object-store-access-key create`. |
+    | `error: unable to connect to https://<flashblade_s3_vip>/: certificate verify failed` | Add `--no-verify-ssl` flag to the aws s3 command or configure your environment to trust the FlashBlade's self-signed certificate. |
 ## Purity//FB Data Services
 
 | Component | Description |
@@ -268,9 +272,11 @@ eth2      10.22.50.10      Up        Replication
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (10.21.100.45:443)`** — Verify the FlashBlade management IP is reachable and the REST API service is running with `purefb network interface list`.
-    **`Error: Invalid credentials`** — Confirm your API token is valid and not expired by re-authenticating with `purefb login`.
-    **`Error: Array not found`** — Ensure the array name or IP is correctly configured in your purefb connection settings.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (10.21.100.45:443)` | Verify the FlashBlade management IP is reachable and the REST API service is running with `purefb network interface list`. |
+    | `Error: Invalid credentials` | Confirm your API token is valid and not expired by re-authenticating with `purefb login`. |
+    | `Error: Array not found` | Ensure the array name or IP is correctly configured in your purefb connection settings. |
 ---
 
 ## See also

@@ -71,9 +71,11 @@ openssl req -new -newkey rsa:4096 -nodes \
 ```
 
 !!! warning "Common errors"
-    **`Can't open config file: /etc/ssl/openssl.cnf`** — Verify the openssl config path with `openssl version -d` and adjust the path accordingly for your OS (e.g., `/usr/lib/ssl/openssl.cnf` on some Linux distributions).
-    **`unable to write 'random state'`** — Ensure the user running the command has write permissions to `$HOME/.rnd` or set `RANDFILE=/tmp/.rnd` before executing.
-    **`req: Unrecognized flag reqexts`** — Use `-addext` instead of `-reqexts` for newer OpenSSL versions (3.0+), or verify your OpenSSL version supports the `-reqexts` flag with `openssl version`.
+    | Error | Fix |
+    |---|---|
+    | `Can't open config file: /etc/ssl/openssl.cnf` | Verify the openssl config path with `openssl version -d` and adjust the path accordingly for your OS (e.g., `/usr/lib/ssl/openssl.cnf` on some Linux distributions). |
+    | `unable to write 'random state'` | Ensure the user running the command has write permissions to `$HOME/.rnd` or set `RANDFILE=/tmp/.rnd` before executing. |
+    | `req: Unrecognized flag reqexts` | Use `-addext` instead of `-reqexts` for newer OpenSSL versions (3.0+), or verify your OpenSSL version supports the `-reqexts` flag with `openssl version`. |
 ## Step 3 — Submit to CA
 
 **Internal (ADCS):**
@@ -114,8 +116,10 @@ IMPORTANT NOTES:
 ```
 
 !!! warning "Common errors"
-    **`Error: The following errors were reported by the server: Domain authorization failed`** — Verify the DNS TXT record was created correctly and is propagating (use `dig _acme-challenge.<hostname> TXT`), then retry.
-    **`Error: Timeout during authorization`** — Increase the wait time before pressing ENTER by checking DNS propagation with `nslookup` or `dig`, or use `--manual-auth-hook` to automate DNS updates.
+    | Error | Fix |
+    |---|---|
+    | `Error: The following errors were reported by the server: Domain authorization failed` | Verify the DNS TXT record was created correctly and is propagating (use `dig _acme-challenge.<hostname> TXT`), then retry. |
+    | `Error: Timeout during authorization` | Increase the wait time before pressing ENTER by checking DNS propagation with `nslookup` or `dig`, or use `--manual-auth-hook` to automate DNS updates. |
 ## Step 4 — Install Certificate
 
 **Linux (nginx / apache):**
@@ -137,9 +141,11 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot create regular file '/etc/ssl/certs/<hostname>.crt': Permission denied`** — Run the commands with `sudo` or as root user.
-    **`nginx: [error] open() "/etc/ssl/private/<hostname>.key" failed (2: No such file or directory)`** — Verify the certificate and key filenames match exactly and exist in the source directory before copying.
-    **`Job for nginx.service failed because the control process exited with error code.`** — Check `nginx -t` output for syntax errors in the certificate paths within nginx.conf, or ensure file permissions are readable by the nginx user (644 for certs, 600 for keys).
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot create regular file '/etc/ssl/certs/<hostname>.crt': Permission denied` | Run the commands with `sudo` or as root user. |
+    | `nginx: [error] open() "/etc/ssl/private/<hostname>.key" failed (2: No such file or directory)` | Verify the certificate and key filenames match exactly and exist in the source directory before copying. |
+    | `Job for nginx.service failed because the control process exited with error code.` | Check `nginx -t` output for syntax errors in the certificate paths within nginx.conf, or ensure file permissions are readable by the nginx user (644 for certs, 600 for keys). |
 **VMware vCenter:**
 - vSphere Client → Administration → Certificate Management → Replace Certificate
 
@@ -165,9 +171,11 @@ Certificate details:
 ```
 
 !!! warning "Common errors"
-    **`Error: Vserver <svm> does not exist`** — Verify the SVM name with `security certificate show` and ensure you are connected to the correct cluster.
-    **`Error: Certificate installation failed - CSR signing timeout`** — Check network connectivity to your certificate authority and verify firewall rules allow outbound HTTPS traffic on port 443.
-    **`Error: A certificate of type 'server' already exists on this vserver`** — Delete the existing certificate with `security certificate delete -vserver <svm> -type server` before installing a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: Vserver <svm> does not exist` | Verify the SVM name with `security certificate show` and ensure you are connected to the correct cluster. |
+    | `Error: Certificate installation failed - CSR signing timeout` | Check network connectivity to your certificate authority and verify firewall rules allow outbound HTTPS traffic on port 443. |
+    | `Error: A certificate of type 'server' already exists on this vserver` | Delete the existing certificate with `security certificate delete -vserver <svm> -type server` before installing a new one. |
 **Windows IIS:**
 ```powershell
 Import-PfxCertificate -FilePath <cert.pfx> -CertStoreLocation Cert:\LocalMachine\My
@@ -203,9 +211,11 @@ notAfter=Jan 15 10:23:45 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`error 20 at 0 depth lookup: unable to get local issuer certificate`** — Add the intermediate CA certificate to your CA chain file or ensure the full chain is included in `<ca-chain.pem>`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Either add the self-signed cert to your system's trusted store or use `curl -k` for testing only, then verify the cert manually with `openssl x509`.
-    **`error in x509_check_cert_time(): certificate has expired`** — The certificate notAfter date has passed; renew the certificate immediately and redeploy it to the server.
+    | Error | Fix |
+    |---|---|
+    | `error 20 at 0 depth lookup: unable to get local issuer certificate` | Add the intermediate CA certificate to your CA chain file or ensure the full chain is included in `<ca-chain.pem>`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Either add the self-signed cert to your system's trusted store or use `curl -k` for testing only, then verify the cert manually with `openssl x509`. |
+    | `error in x509_check_cert_time(): certificate has expired` | The certificate notAfter date has passed; renew the certificate immediately and redeploy it to the server. |
 Expected: `notAfter` should show the new expiry date (typically 1–2 years out).
 
 ## Rollback
@@ -225,8 +235,10 @@ systemctl reload nginx
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot stat '<hostname>.crt.bak': No such file or directory`** — Replace `<hostname>` with the actual certificate filename (e.g., `cp server.crt.bak /etc/ssl/certs/server.crt`) or verify backup files exist in the current directory.
-    **`cp: permission denied`** — Run the commands with `sudo` since `/etc/ssl/certs/` and `/etc/ssl/private/` require root privileges.
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot stat '<hostname>.crt.bak': No such file or directory` | Replace `<hostname>` with the actual certificate filename (e.g., `cp server.crt.bak /etc/ssl/certs/server.crt`) or verify backup files exist in the current directory. |
+    | `cp: permission denied` | Run the commands with `sudo` since `/etc/ssl/certs/` and `/etc/ssl/private/` require root privileges. |
 ## Common Issues
 
 | Issue | Check | Action |

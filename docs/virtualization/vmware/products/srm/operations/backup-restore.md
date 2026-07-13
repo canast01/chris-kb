@@ -75,9 +75,11 @@ curl -sk -X GET \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify certificate trust if needed).
-    **`jq: command not found` or `python3: command not found`** — Install python3 or use `jq` instead of python3 json parsing; verify `python3 -m json.tool` is available on the SRM appliance.
-    **`{"error":"Invalid token","code":401}`** — Verify SRM credentials are correct and the session endpoint is accessible; check that the token extraction succeeded by testing `echo $SRM_TOKEN` before using it in subsequent calls.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but verify certificate trust if needed). |
+    | `jq: command not found` or `python3: command not found` | Install python3 or use `jq` instead of python3 json parsing; verify `python3 -m json.tool` is available on the SRM appliance. |
+    | `{"error":"Invalid token","code":401}` | Verify SRM credentials are correct and the session endpoint is accessible; check that the token extraction succeeded by testing `echo $SRM_TOKEN` before using it in subsequent calls. |
 ---
 
 ## Before you begin
@@ -120,8 +122,10 @@ Snapshot VR-Backup-20260401 removed successfully
 ```
 
 !!! warning "Common errors"
-    **`govc: object 'vr-appliance-01' not found`** — Verify the VM name matches exactly in vCenter inventory and set GOVC_URL, GOVC_USERNAME, GOVC_PASSWORD environment variables.
-    **`Error: snapshot 'VR-Backup-20260401' not found`** — List snapshots with `govc snapshot.tree -vm "vr-appliance-01"` to confirm the snapshot name exists before removal.
+    | Error | Fix |
+    |---|---|
+    | `govc: object 'vr-appliance-01' not found` | Verify the VM name matches exactly in vCenter inventory and set GOVC_URL, GOVC_USERNAME, GOVC_PASSWORD environment variables. |
+    | `Error: snapshot 'VR-Backup-20260401' not found` | List snapshots with `govc snapshot.tree -vm "vr-appliance-01"` to confirm the snapshot name exists before removal. |
 **Note:** Do not leave snapshots on the VR Appliance indefinitely. The VR Appliance receives replication data continuously — snapshot growth can fill the datastore.
 
 ### OVF Export (for cold backups or migration)
@@ -151,9 +155,11 @@ VM powered on successfully.
 ```
 
 !!! warning "Common errors"
-    **`govc: error: vm "vr-appliance-01" not found`** — Verify the VM name matches exactly in vCenter and confirm vSphere credentials are set via `govc login`.
-    **`mkdir: cannot create directory '/backup/vrm': Permission denied`** — Ensure the backup directory exists and the user running govc has write permissions, or create it with `sudo mkdir -p /backup/vrm && sudo chmod 755 /backup/vrm`.
-    **`Error exporting VM: insufficient disk space`** — Verify the target filesystem has at least 5 GB free space using `df -h /backup/vrm` before exporting.
+    | Error | Fix |
+    |---|---|
+    | `govc: error: vm "vr-appliance-01" not found` | Verify the VM name matches exactly in vCenter and confirm vSphere credentials are set via `govc login`. |
+    | `mkdir: cannot create directory '/backup/vrm': Permission denied` | Ensure the backup directory exists and the user running govc has write permissions, or create it with `sudo mkdir -p /backup/vrm && sudo chmod 755 /backup/vrm`. |
+    | `Error exporting VM: insufficient disk space` | Verify the target filesystem has at least 5 GB free space using `df -h /backup/vrm` before exporting. |
 ### VR VAMI Config Backup
 
 The VAMI provides a configuration export that captures network settings, registration info, and certificates:

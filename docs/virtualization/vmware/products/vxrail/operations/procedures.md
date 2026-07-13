@@ -54,8 +54,10 @@ Estimated Time Remaining: 0s
 ```
 
 !!! warning "Common errors"
-    **`vsan health cluster get: Unknown command or namespace`** — Ensure you are running the command on an ESXi host with vSAN enabled, not a vCenter Server.
-    **`Error: Unable to retrieve vSAN cluster information`** — Verify the vSAN cluster is fully initialized and all nodes have completed their bootstrap process.
+    | Error | Fix |
+    |---|---|
+    | `vsan health cluster get: Unknown command or namespace` | Ensure you are running the command on an ESXi host with vSAN enabled, not a vCenter Server. |
+    | `Error: Unable to retrieve vSAN cluster information` | Verify the vSAN cluster is fully initialized and all nodes have completed their bootstrap process. |
 - [ ] vSAN health is all green — `esxcli vsan health cluster get`
 - [ ] vSAN resync bytes = 0 — `esxcli vsan debug resync list`
 - [ ] All VxRail nodes Online in VxRail Plugin
@@ -108,9 +110,11 @@ Last Updated: 2024-01-15T14:32:18Z
 ```
 
 !!! warning "Common errors"
-    **`Cluster UUID: N/A`** — Verify vSAN is enabled on the cluster and the host is connected to vCenter with `esxcli vsan cluster get`.
-    **`Remaining Bytes: 1247856640`** — Wait for vSAN resync to complete before entering maintenance mode; monitor progress with `esxcli vsan debug resync list` every 5 minutes.
-    **`Error: Unable to connect to vSAN cluster`** — Ensure the ESXi host is part of an active vSAN cluster and network connectivity to other cluster nodes is functional.
+    | Error | Fix |
+    |---|---|
+    | `Cluster UUID: N/A` | Verify vSAN is enabled on the cluster and the host is connected to vCenter with `esxcli vsan cluster get`. |
+    | `Remaining Bytes: 1247856640` | Wait for vSAN resync to complete before entering maintenance mode; monitor progress with `esxcli vsan debug resync list` every 5 minutes. |
+    | `Error: Unable to connect to vSAN cluster` | Ensure the ESXi host is part of an active vSAN cluster and network connectivity to other cluster nodes is functional. |
 - All VMs must be able to vMotion off the node (DRS Fully Automated)
 - Sufficient capacity on remaining nodes to hold evacuated vSAN objects
 
@@ -168,8 +172,10 @@ Resync Operations:
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Run the command from an ESXi host with vSAN enabled, or use SSH to connect to the vSAN cluster host directly.
-    **`Error: The VSAN cluster is not healthy`** — Wait for cluster quorum to stabilize or check `esxcli vsan cluster get` to verify cluster membership before monitoring resync operations.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Run the command from an ESXi host with vSAN enabled, or use SSH to connect to the vSAN cluster host directly. |
+    | `Error: The VSAN cluster is not healthy` | Wait for cluster quorum to stabilize or check `esxcli vsan cluster get` to verify cluster membership before monitoring resync operations. |
 ### Step 4 — Perform Work
 
 ![Step 4 — Perform Work](../../../../../assets/vxrail-proc-step-4-perform-work.svg)
@@ -224,8 +230,10 @@ Resync Status: In Progress
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace path: vsan debug resync list`** — Verify the ESXi host has vSAN enabled and the vSAN license is active; run `esxcli vsan cluster get` to confirm vSAN is operational.
-    **`Error: Unable to connect to the ESXi host`** — Ensure SSH is enabled on the ESXi host and you have network connectivity; verify credentials with `esxcli system hostname get`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace path: vsan debug resync list` | Verify the ESXi host has vSAN enabled and the vSAN license is active; run `esxcli vsan cluster get` to confirm vSAN is operational. |
+    | `Error: Unable to connect to the ESXi host` | Ensure SSH is enabled on the ESXi host and you have network connectivity; verify credentials with `esxcli system hostname get`. |
 ---
 
 ## Node Expansion Procedure
@@ -277,9 +285,11 @@ System Information
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <new-node-idrac-ip>`** — Replace the placeholder with the actual iDRAC IP address (e.g., `ping 10.20.30.45`).
-    **`ssh: connect to host <new-node-idrac-ip> port 22: Connection refused`** — Verify the iDRAC is powered on and SSH is enabled; check iDRAC network connectivity and firewall rules.
-    **`RACADM.1.0.0 : IPMI command failed with error: Unable to establish IPMI v1.5 / IPMI v2.0 session`** — Ensure the root credentials are correct and the iDRAC user account has proper permissions configured.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <new-node-idrac-ip>` | Replace the placeholder with the actual iDRAC IP address (e.g., `ping 10.20.30.45`). |
+    | `ssh: connect to host <new-node-idrac-ip> port 22: Connection refused` | Verify the iDRAC is powered on and SSH is enabled; check iDRAC network connectivity and firewall rules. |
+    | `RACADM.1.0.0 : IPMI command failed with error: Unable to establish IPMI v1.5 / IPMI v2.0 session` | Ensure the root credentials are correct and the iDRAC user account has proper permissions configured. |
 ### Step 2 — Initiate Expansion via VxRail Plugin
 
 ![Step 2 — Initiate Expansion via VxRail Plugin](../../../../../assets/vxrail-proc-step-2-initiate-expansion-via-vxrail-plugin.svg)
@@ -326,9 +336,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the VXM certificate into your trusted store.
-    **`{"error": "401 Unauthorized", "message": "Invalid credentials"}`** — Verify the base64-encoded username:password is correct by decoding it with `echo 'bXlzdGljOnBhc3N3b3Jk' | base64 -d`.
-    **`{"error": "400 Bad Request", "message": "Invalid iDRAC IP address"}`** — Confirm the iDRAC IP `10.0.100.25` is reachable from the VXM appliance with `ping 10.0.100.25` and that the iDRAC credentials are correct.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the VXM certificate into your trusted store. |
+    | `{"error": "401 Unauthorized", "message": "Invalid credentials"}` | Verify the base64-encoded username:password is correct by decoding it with `echo 'bXlzdGljOnBhc3N3b3Jk' | base64 -d`. |
+    | `{"error": "400 Bad Request", "message": "Invalid iDRAC IP address"}` | Confirm the iDRAC IP `10.0.100.25` is reachable from the VXM appliance with `ping 10.0.100.25` and that the iDRAC credentials are correct. |
 ### Step 3 — Monitor Expansion
 
 ![Step 3 — Monitor Expansion](../../../../../assets/vxrail-proc-step-3-monitor-expansion.svg)
@@ -365,8 +377,10 @@ Remaining Bytes: 0
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Ensure you are connected to an ESXi host via SSH or execute the command within the ESXi shell, not from a remote Linux system.
-    **`Unknown command or namespace vsan debug resync`** — Verify VSAN is licensed and enabled on the cluster; this command is unavailable on hosts without VSAN or on older vSphere versions that do not support the debug resync namespace.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Ensure you are connected to an ESXi host via SSH or execute the command within the ESXi shell, not from a remote Linux system. |
+    | `Unknown command or namespace vsan debug resync` | Verify VSAN is licensed and enabled on the cluster; this command is unavailable on hosts without VSAN or on older vSphere versions that do not support the debug resync namespace. |
 ### Step 5 — Post-Expansion Validation
 
 ![Step 5 — Post-Expansion Validation](../../../../../assets/vxrail-proc-step-5-post-expansion-validation.svg)
@@ -441,9 +455,11 @@ Disk.Bay.4
 ```
 
 !!! warning "Common errors"
-    **`DRAC001: Unable to establish IPMI v1.5 / IPMI v2.0 session`** — Verify iDRAC IP connectivity and credentials with `ping <idrac-ip>` and check firewall rules allowing port 623.
-    **`DRAC002: RACADM command failed: Access Denied`** — Ensure your user account has iDRAC administrator privileges; use `racadm getconfig -g cfgUserAdmin` to verify role assignments.
-    **`DRAC003: No physical disks detected`** — Confirm the PERC RAID controller is detected with `racadm storage get controllers` and reseat the controller if necessary.
+    | Error | Fix |
+    |---|---|
+    | `DRAC001: Unable to establish IPMI v1.5 / IPMI v2.0 session` | Verify iDRAC IP connectivity and credentials with `ping <idrac-ip>` and check firewall rules allowing port 623. |
+    | `DRAC002: RACADM command failed: Access Denied` | Ensure your user account has iDRAC administrator privileges; use `racadm getconfig -g cfgUserAdmin` to verify role assignments. |
+    | `DRAC003: No physical disks detected` | Confirm the PERC RAID controller is detected with `racadm storage get controllers` and reseat the controller if necessary. |
 ```bash
 # ESXi — identify failed disk in vSAN
 esxcli vsan storage list | grep -E "Disk Group UUID|Display Name|In Caching Tier|Is SSD"
@@ -470,8 +486,10 @@ Is SSD: true
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace vsan`** — Verify vSAN is licensed and enabled on the ESXi host with `esxcli vsan cluster get`.
-    **`grep: (standard input) is empty`** — Confirm the ESXi host is part of a vSAN cluster and has disk groups configured with `esxcli vsan storage list` without filters.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace vsan` | Verify vSAN is licensed and enabled on the ESXi host with `esxcli vsan cluster get`. |
+    | `grep: (standard input) is empty` | Confirm the ESXi host is part of a vSAN cluster and has disk groups configured with `esxcli vsan storage list` without filters. |
 ### Step 2 — Assess vSAN Impact
 
 ![Step 2 — Assess vSAN Impact](../../../../../assets/vxrail-proc-step-2-assess-vsan-impact.svg)
@@ -504,8 +522,10 @@ Total Bytes Remaining: 2147483648
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace esxcli vsan debug resync`** — Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm VSAN status.
-    **`Permission denied`** — Execute the command with root privileges or ensure your user account has VSAN administrator permissions on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace esxcli vsan debug resync` | Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm VSAN status. |
+    | `Permission denied` | Execute the command with root privileges or ensure your user account has VSAN administrator permissions on the ESXi host. |
 !!! danger "FTT exceeded — data is at risk of permanent loss"
     If `esxcli vsan debug resync list` shows components with zero remaining replicas, vSAN cannot tolerate any further disk or node failure. Do not proceed with the replacement until you have escalated to Dell support and confirmed a recovery path. Replacing the disk at this point without guidance may not recover the objects.
 
@@ -569,8 +589,10 @@ Predicted Media Life Left: 99%
 ```
 
 !!! warning "Common errors"
-    **`DRAC1001: iDRAC is not initialized or not responding`** — Verify iDRAC network connectivity and ensure the management interface is properly configured with `racadm config -g cfgLanIpRacInterface -o cfgIpRacAddress`.
-    **`DRAC0332: Insufficient privileges to perform the requested operation`** — Run the command with root privileges or ensure your user account has iDRAC administrator rights.
+    | Error | Fix |
+    |---|---|
+    | `DRAC1001: iDRAC is not initialized or not responding` | Verify iDRAC network connectivity and ensure the management interface is properly configured with `racadm config -g cfgLanIpRacInterface -o cfgIpRacAddress`. |
+    | `DRAC0332: Insufficient privileges to perform the requested operation` | Run the command with root privileges or ensure your user account has iDRAC administrator rights. |
 ### Step 5 — Exit Maintenance Mode and Claim Disk in vSAN
 
 ![Step 5 — Exit Maintenance Mode and Claim Disk in vSAN](../../../../../assets/vxrail-proc-step-5-exit-maintenance-mode-and-claim-disk-in-vsan.svg)
@@ -610,8 +632,10 @@ Object UUID: 7g8h9i0j-1k2l-3m4n-5o6p-7q8r-9s0t1u2v
 ```
 
 !!! warning "Common errors"
-    **`vSAN cluster is not healthy. Cannot retrieve resync status.`** — Verify vSAN cluster health with `esxcli vsan cluster get` and resolve any failed disks or hosts before checking resync status.
-    **`Unknown command or namespace`** — Ensure you are running this command on an ESXi host with vSAN enabled; use `esxcli vsan cluster get` first to confirm vSAN is active.
+    | Error | Fix |
+    |---|---|
+    | `vSAN cluster is not healthy. Cannot retrieve resync status.` | Verify vSAN cluster health with `esxcli vsan cluster get` and resolve any failed disks or hosts before checking resync status. |
+    | `Unknown command or namespace` | Ensure you are running this command on an ESXi host with vSAN enabled; use `esxcli vsan cluster get` first to confirm vSAN is active. |
 Validate in vCenter: **Cluster → Monitor → vSAN → Health** — all checks should return to green.
 
 ---
@@ -758,8 +782,10 @@ Compliant: true
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan.debug.resync`** — Verify vSAN is licensed and enabled on the cluster with `esxcli vsan cluster get`.
-    **`grep: (standard input) is empty`** — Confirm vSAN storage is present by running `esxcli vsan storage list` without grep to check for actual output.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan.debug.resync` | Verify vSAN is licensed and enabled on the cluster with `esxcli vsan cluster get`. |
+    | `grep: (standard input) is empty` | Confirm vSAN storage is present by running `esxcli vsan storage list` without grep to check for actual output. |
 Check that the cluster has sufficient free capacity on remaining nodes to absorb all vSAN objects from the node being removed. Used cluster capacity must be below approximately 60% before starting.
 
 ### Step 2 — Migrate All VMs Off the Node
@@ -808,8 +834,10 @@ Resync Summary: 3 objects, 2 GB remaining
 ```
 
 !!! warning "Common errors"
-    **`error: The VSAN cluster is not healthy`** — Run `esxcli vsan cluster get` to verify cluster membership and quorum before attempting resync operations.
-    **`error: Permission denied`** — Execute the command with root privileges or ensure your user account has VSAN administrator role assigned in vCenter.
+    | Error | Fix |
+    |---|---|
+    | `error: The VSAN cluster is not healthy` | Run `esxcli vsan cluster get` to verify cluster membership and quorum before attempting resync operations. |
+    | `error: Permission denied` | Execute the command with root privileges or ensure your user account has VSAN administrator role assigned in vCenter. |
 ### Step 4 — Remove the Node via VxRail Plugin
 
 ![Step 4 — Remove the Node via VxRail Plugin](../../../../../assets/vxrail-proc-step-4-remove-the-node-via-vxrail-plugin.svg)
@@ -853,8 +881,10 @@ Last Resync Update: 2024-01-15T14:31:45Z
 ```
 
 !!! warning "Common errors"
-    **`vSAN cluster health is degraded`** — Wait 5-10 minutes for object rebalancing to complete after node removal, then re-run the health check.
-    **`Unable to connect to a vSAN enabled host`** — Verify the ESXi host is powered on and accessible via network, and that vSAN is enabled on the cluster.
+    | Error | Fix |
+    |---|---|
+    | `vSAN cluster health is degraded` | Wait 5-10 minutes for object rebalancing to complete after node removal, then re-run the health check. |
+    | `Unable to connect to a vSAN enabled host` | Verify the ESXi host is powered on and accessible via network, and that vSAN is enabled on the cluster. |
 - [ ] Removed node no longer appears in vCenter host list
 - [ ] vSAN health all green
 - [ ] Resync = 0 bytes
@@ -947,8 +977,10 @@ Component Resync Count: 0
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the host. The host may not be running, or the SSL certificate may not be trusted.`** — Verify the ESXi host is reachable and SSH/management access is enabled, then retry the command.
-    **`vSAN is not enabled on this host`** — Confirm vSAN is licensed and enabled on the cluster by checking vCenter > Cluster Settings > vSAN.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the host. The host may not be running, or the SSL certificate may not be trusted.` | Verify the ESXi host is reachable and SSH/management access is enabled, then retry the command. |
+    | `vSAN is not enabled on this host` | Confirm vSAN is licensed and enabled on the cluster by checking vCenter > Cluster Settings > vSAN. |
 Verify all replacement IPs are reserved in IPAM and DNS is updated to the new management IP (forward and reverse).
 
 ### Step 2 — Enter Maintenance Mode
@@ -993,8 +1025,10 @@ RACADM.1.1.0=Command completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`RACADM.1.1.0=Error: IPMI command failed`** — Ensure the iDRAC is accessible and not in a locked state; try `racadm racreset soft` to restart iDRAC services.
-    **`RACADM.1.1.0=Error: Invalid IP address format`** — Verify the IP address format is valid (e.g., 192.168.1.100) and the netmask uses standard notation (e.g., 255.255.255.0).
+    | Error | Fix |
+    |---|---|
+    | `RACADM.1.1.0=Error: IPMI command failed` | Ensure the iDRAC is accessible and not in a locked state; try `racadm racreset soft` to restart iDRAC services. |
+    | `RACADM.1.1.0=Error: Invalid IP address format` | Verify the IP address format is valid (e.g., 192.168.1.100) and the netmask uses standard notation (e.g., 255.255.255.0). |
 Update DNS: add A and PTR records for the new management IP; remove or update the old records. Verify from another host:
 
 ```bash
@@ -1011,8 +1045,10 @@ Address: 192.168.1.42
 ```
 
 !!! warning "Common errors"
-    **`** server can't find vxrail-node-02.example.local: NXDOMAIN`** — Verify the hostname is correct and the DNS server has an A record for this VxRail node; check `/etc/hosts` as a temporary workaround.
-    **`** ;; connection timed out; trying next origin`** — Confirm the DNS server (10.0.0.1) is reachable and responsive; check network connectivity and firewall rules blocking port 53.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find vxrail-node-02.example.local: NXDOMAIN` | Verify the hostname is correct and the DNS server has an A record for this VxRail node; check `/etc/hosts` as a temporary workaround. |
+    | `** ;; connection timed out; trying next origin` | Confirm the DNS server (10.0.0.1) is reachable and responsive; check network connectivity and firewall rules blocking port 53. |
 ### Step 5 — Exit Maintenance Mode
 
 ![Step 5 — Exit Maintenance Mode](../../../../../assets/vxrail-proc-step-5-exit-maintenance-mode.svg)
@@ -1061,9 +1097,11 @@ Cluster Health Status: HEALTHY
 ```
 
 !!! warning "Common errors"
-    **`PING: sendto: No route to host`** — Verify the new management IP is on the correct subnet and the network gateway/routing is configured on the ESXi host.
-    **`esxcli: command not found`** — SSH directly to the ESXi host instead of running commands from a remote shell; esxcli is only available on the ESXi console.
-    **`Cluster Health Status: DEGRADED`** — Wait 5-10 minutes for vSAN to complete resynchronization after the IP change, then recheck cluster health.
+    | Error | Fix |
+    |---|---|
+    | `PING: sendto: No route to host` | Verify the new management IP is on the correct subnet and the network gateway/routing is configured on the ESXi host. |
+    | `esxcli: command not found` | SSH directly to the ESXi host instead of running commands from a remote shell; esxcli is only available on the ESXi console. |
+    | `Cluster Health Status: DEGRADED` | Wait 5-10 minutes for vSAN to complete resynchronization after the IP change, then recheck cluster health. |
 - [ ] Node Online in VxRail Plugin with new IP
 - [ ] vCenter shows host at new management IP
 - [ ] vSAN health green, resync = 0

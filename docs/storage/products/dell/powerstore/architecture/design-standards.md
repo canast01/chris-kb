@@ -153,9 +153,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/host_group" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the PowerStore management certificate into your system trust store.
-    **`{"error_code":"INVALID_HOST_ID","message":"Host ID not found"}`** — Replace `<host-id>` placeholder with the actual host ID returned from the first curl command (e.g., `host_5f8c2a1b9e4d7c3a`).
-    **`{"error_code":"INVALID_TOKEN","message":"Token expired or invalid"}`** — Regenerate the authentication token using PowerStore REST API login endpoint and update the `DELL-EMC-TOKEN` header value.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the PowerStore management certificate into your system trust store. |
+    | `{"error_code":"INVALID_HOST_ID","message":"Host ID not found"}` | Replace `<host-id>` placeholder with the actual host ID returned from the first curl command (e.g., `host_5f8c2a1b9e4d7c3a`). |
+    | `{"error_code":"INVALID_TOKEN","message":"Token expired or invalid"}` | Regenerate the authentication token using PowerStore REST API login endpoint and update the `DELL-EMC-TOKEN` header value. |
 ### ESXi Host Connectivity Standards
 
 | Parameter | Recommended Value | Rationale |
@@ -204,8 +206,10 @@ devices {
 ```
 
 !!! warning "Common errors"
-    **`iscsid: cannot open /etc/iscsi/iscsid.conf: Permission denied`** — Run the configuration edit with `sudo` or as root user.
-    **`multipathd: error parsing /etc/multipath.conf line 8: unknown keyword 'prio'`** — Verify the multipath daemon version supports ALUA with `multipathd -v3` and update syntax if using older versions.
+    | Error | Fix |
+    |---|---|
+    | `iscsid: cannot open /etc/iscsi/iscsid.conf: Permission denied` | Run the configuration edit with `sudo` or as root user. |
+    | `multipathd: error parsing /etc/multipath.conf line 8: unknown keyword 'prio'` | Verify the multipath daemon version supports ALUA with `multipathd -v3` and update syntax if using older versions. |
 ## Software Version Matrix
 
 ### PowerStoreOS Release Cadence

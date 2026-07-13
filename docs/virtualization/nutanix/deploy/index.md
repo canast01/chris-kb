@@ -74,9 +74,11 @@ Chassis Power is on
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to establish IPMI v1 / IPMI v2 / IPMI v1.5 session`** — Verify the IPMI IP address is correct, the IPMI interface is powered on, and the network path is reachable with `ping <ipmi-ip>`.
-    **`Error: Authentication failed`** — Confirm the ADMIN username and password are correct; reset IPMI credentials via the node's physical interface or BMC if locked out.
-    **`Error: Unable to establish LAN session`** — Ensure the IPMI network interface is configured with a valid IP address and that your deployment workstation has network connectivity to the IPMI subnet.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to establish IPMI v1 / IPMI v2 / IPMI v1.5 session` | Verify the IPMI IP address is correct, the IPMI interface is powered on, and the network path is reachable with `ping <ipmi-ip>`. |
+    | `Error: Authentication failed` | Confirm the ADMIN username and password are correct; reset IPMI credentials via the node's physical interface or BMC if locked out. |
+    | `Error: Unable to establish LAN session` | Ensure the IPMI network interface is configured with a valid IP address and that your deployment workstation has network connectivity to the IPMI subnet. |
 Each node must have a unique IPMI IP on a dedicated OOB network.
 
 ### Network Pre-flight
@@ -103,9 +105,11 @@ rtt min/avg/max/stddev = 0.756/0.815/0.891/0.052 ms
 ```
 
 !!! warning "Common errors"
-    **`ping: sendmsg: Message too long`** — Verify MTU is set to 9000 on the storage VLAN interface with `ip link show` and adjust with `ip link set dev <interface> mtu 9000` if needed.
-    **`100% packet loss`** — Confirm the storage VLAN is correctly tagged on the switch port and the CVM IP is reachable by checking switch trunk configuration and VLAN membership.
-    **`connect: Network is unreachable`** — Ensure the storage VLAN routing is configured and the target CVM IP is on the same subnet as the source node's storage interface.
+    | Error | Fix |
+    |---|---|
+    | `ping: sendmsg: Message too long` | Verify MTU is set to 9000 on the storage VLAN interface with `ip link show` and adjust with `ip link set dev <interface> mtu 9000` if needed. |
+    | `100% packet loss` | Confirm the storage VLAN is correctly tagged on the switch port and the CVM IP is reachable by checking switch trunk configuration and VLAN membership. |
+    | `connect: Network is unreachable` | Ensure the storage VLAN routing is configured and the target CVM IP is on the same subnet as the source node's storage interface. |
 ---
 
 ## Phase 2 — Foundation Imaging
@@ -167,8 +171,10 @@ Not part of a cluster yet. Please run cluster create to initialize.
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password)`** — Verify the CVM IP is correct and the default nutanix/4u credentials are still active; if changed, use the correct password or SSH key.
-    **`Command 'genesis' not found`** — Ensure you are logged in as the nutanix user (not root) and the PATH includes /home/nutanix/bin; run `source ~/.bashrc` if needed.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password)` | Verify the CVM IP is correct and the default nutanix/4u credentials are still active; if changed, use the correct password or SSH key. |
+    | `Command 'genesis' not found` | Ensure you are logged in as the nutanix user (not root) and the PATH includes /home/nutanix/bin; run `source ~/.bashrc` if needed. |
 ---
 
 ## Phase 3 — Cluster Creation
@@ -201,9 +207,11 @@ nutanix@cvm1:~$ cluster -s 10.0.1.11,10.0.1.12,10.0.1.13 create
 ```
 
 !!! warning "Common errors"
-    **`cluster: command not found`** — Ensure you are logged in as the nutanix user on a CVM and the cluster binary is in your PATH; try `/home/nutanix/cluster -s ...` if needed.
-    **`Error: Node 10.0.1.13 is unreachable`** — Verify network connectivity between CVMs and that all three nodes are powered on and have completed their boot sequence.
-    **`Error: Cluster already exists on this node`** — Run `cluster destroy` on all nodes first, or use a different set of CVMs that have not been previously clustered.
+    | Error | Fix |
+    |---|---|
+    | `cluster: command not found` | Ensure you are logged in as the nutanix user on a CVM and the cluster binary is in your PATH; try `/home/nutanix/cluster -s ...` if needed. |
+    | `Error: Node 10.0.1.13 is unreachable` | Verify network connectivity between CVMs and that all three nodes are powered on and have completed their boot sequence. |
+    | `Error: Cluster already exists on this node` | Run `cluster destroy` on all nodes first, or use a different set of CVMs that have not been previously clustered. |
 **Expected output:** Cluster creation takes 5–10 minutes. Watch for `Cluster successfully created`.
 
 ```bash
@@ -240,9 +248,11 @@ Physical Memory: 512 GB
 ```
 
 !!! warning "Common errors"
-    **`ncli: command not found`** — Ensure you are running this command on a Nutanix cluster node or install the Nutanix CLI tools on your management workstation.
-    **`Error: Cluster is not in a valid state for this operation`** — Wait for any ongoing cluster operations to complete before attempting to modify cluster parameters.
-    **`Error: Invalid IP address format for external-ip-address`** — Verify the IP address is valid and reachable on your management network before applying the configuration.
+    | Error | Fix |
+    |---|---|
+    | `ncli: command not found` | Ensure you are running this command on a Nutanix cluster node or install the Nutanix CLI tools on your management workstation. |
+    | `Error: Cluster is not in a valid state for this operation` | Wait for any ongoing cluster operations to complete before attempting to modify cluster parameters. |
+    | `Error: Invalid IP address format for external-ip-address` | Verify the IP address is valid and reachable on your management network before applying the configuration. |
 ---
 
 ## Phase 4 — Initial Configuration
@@ -283,9 +293,11 @@ cluster.edit_params: Cluster edit succeeded.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid IP address format`** — Ensure DNS and NTP server IPs are comma-separated without spaces (e.g., `10.0.0.1,10.0.0.2`).
-    **`Error: Unable to reach NTP server <ntp1>`** — Verify NTP server IPs are reachable from the cluster and firewall allows UDP port 123 outbound.
-    **`Error: allssh: command not found`** — Run the ntpq command directly on a CVM using `ssh nutanix@<cvm-ip>` or ensure you are executing from a Nutanix cluster node.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid IP address format` | Ensure DNS and NTP server IPs are comma-separated without spaces (e.g., `10.0.0.1,10.0.0.2`). |
+    | `Error: Unable to reach NTP server <ntp1>` | Verify NTP server IPs are reachable from the cluster and firewall allows UDP port 123 outbound. |
+    | `Error: allssh: command not found` | Run the ntpq command directly on a CVM using `ssh nutanix@<cvm-ip>` or ensure you are executing from a Nutanix cluster node. |
 ### Admin Password
 
 ```bash
@@ -300,8 +312,10 @@ ncli user change-password username=admin \
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials for user admin`** — Verify the current password matches the default "Nutanix/4u" and that the admin user exists on the cluster.
-    **`Error: Password does not meet complexity requirements`** — Ensure the new password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials for user admin` | Verify the current password matches the default "Nutanix/4u" and that the admin user exists on the cluster. |
+    | `Error: Password does not meet complexity requirements` | Ensure the new password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters. |
 ### SMTP Alerts
 
 ```text
@@ -368,9 +382,11 @@ Backups       b2c3d4e5-f6g7-8h9i-0j1k-l2m3n4o5p6q7 default-storage-pool  Enabled
 ```
 
 !!! warning "Common errors"
-    **`Error: Storage pool 'default-storage-pool' not found`** — Verify the pool name with `ncli sp list` and use the exact name from the output.
-    **`Error: Container name 'VMs' already exists`** — Use a unique container name or delete the existing container with `ncli ctr delete name=VMs` first.
-    **`Error: Erasure coding not supported on this cluster`** — Verify cluster supports EC-X by checking `ncli cluster info` and ensure you have sufficient nodes (minimum 4 for EC-X).
+    | Error | Fix |
+    |---|---|
+    | `Error: Storage pool 'default-storage-pool' not found` | Verify the pool name with `ncli sp list` and use the exact name from the output. |
+    | `Error: Container name 'VMs' already exists` | Use a unique container name or delete the existing container with `ncli ctr delete name=VMs` first. |
+    | `Error: Erasure coding not supported on this cluster` | Verify cluster supports EC-X by checking `ncli cluster info` and ensure you have sufficient nodes (minimum 4 for EC-X). |
 ---
 
 ## Phase 5 — Post-Deploy Validation
@@ -412,9 +428,11 @@ nutanix@cvm-10-20-1-45:~$ ncc --health_checks run_all 2>&1 | grep -E "PASS|FAIL|
 ```
 
 !!! warning "Common errors"
-    **`ncc: command not found`** — Verify you are logged into a Nutanix CVM (not a hypervisor host) and that ncc is in the PATH by running `which ncc`.
-    **`Connection refused` or `timeout connecting to cluster`** — Ensure the CVM is fully booted, the cluster is online, and all three nodes are reachable via `ping <cvm-ip>`.
-    **`Permission denied` or `Authentication failed`** — Confirm you are using the correct nutanix user credentials and that SSH key-based auth is configured, or use `ssh -u nutanix@<cvm-ip>` with a password prompt.
+    | Error | Fix |
+    |---|---|
+    | `ncc: command not found` | Verify you are logged into a Nutanix CVM (not a hypervisor host) and that ncc is in the PATH by running `which ncc`. |
+    | `Connection refused` or `timeout connecting to cluster` | Ensure the CVM is fully booted, the cluster is online, and all three nodes are reachable via `ping <cvm-ip>`. |
+    | `Permission denied` or `Authentication failed` | Confirm you are using the correct nutanix user credentials and that SSH key-based auth is configured, or use `ssh -u nutanix@<cvm-ip>` with a password prompt. |
 **Expected result:** All checks PASS. Any FAIL must be resolved before going production.
 
 ### Cluster Resilience Check
@@ -440,8 +458,10 @@ Cluster
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (127.0.0.1:9440)`** — Verify the Nutanix cluster is reachable and ncli service is running with `ncli cluster info`.
-    **`Error: Invalid credentials for user admin`** — Authenticate with valid Nutanix cluster credentials using `ncli -username <user> -password <pass>` or configure default credentials in ~/.ncli/config.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (127.0.0.1:9440)` | Verify the Nutanix cluster is reachable and ncli service is running with `ncli cluster info`. |
+    | `Error: Invalid credentials for user admin` | Authenticate with valid Nutanix cluster credentials using `ncli -username <user> -password <pass>` or configure default credentials in ~/.ncli/config. |
 ### VM Creation Test
 
 ```bash
@@ -475,9 +495,11 @@ TestVM: VM deleted successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Image <AHV-tools-ISO> not found`** — Replace `<AHV-tools-ISO>` with the actual image name from `acli image.list`.
-    **`Error: Network <vm-network-name> not found`** — Replace `<vm-network-name>` with a valid network name from `acli net.list`.
-    **`Error: VM TestVM is powered on and cannot be deleted`** — Ensure `acli vm.off TestVM` completes before running `acli vm.delete TestVM`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Image <AHV-tools-ISO> not found` | Replace `<AHV-tools-ISO>` with the actual image name from `acli image.list`. |
+    | `Error: Network <vm-network-name> not found` | Replace `<vm-network-name>` with a valid network name from `acli net.list`. |
+    | `Error: VM TestVM is powered on and cannot be deleted` | Ensure `acli vm.off TestVM` completes before running `acli vm.delete TestVM`. |
 ### Network Reachability
 
 ```bash
@@ -515,9 +537,11 @@ CVM 10.20.30.41: PING 10.20.30.42 (10.20.30.42) 56(84) bytes of data.
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <cluster-vip>`** — Replace `<cluster-vip>` with the actual cluster virtual IP address (e.g., 10.20.30.40).
-    **`curl: (7) Failed to connect to <cluster-vip> port 9440: Connection refused`** — Verify Prism Element is running with `allssh "systemctl status prism-gw"` and check network connectivity to port 9440.
-    **`ping: invalid argument -- 's': option requires an argument`** — Ensure the MTU test packet size (8972) is less than your network MTU; use `ip link show` to verify interface MTU supports jumbo frames.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <cluster-vip>` | Replace `<cluster-vip>` with the actual cluster virtual IP address (e.g., 10.20.30.40). |
+    | `curl: (7) Failed to connect to <cluster-vip> port 9440: Connection refused` | Verify Prism Element is running with `allssh "systemctl status prism-gw"` and check network connectivity to port 9440. |
+    | `ping: invalid argument -- 's': option requires an argument` | Ensure the MTU test packet size (8972) is less than your network MTU; use `ip link show` to verify interface MTU supports jumbo frames. |
 ---
 
 ## Prism Central Registration (Optional)

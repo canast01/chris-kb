@@ -132,9 +132,11 @@ module.networking
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid or unsupported block type on main.tf line 42, in resource "aws_instance" "web"`** — Review the resource block syntax and ensure the resource type matches the provider schema.
-    **`Error: Unsupported argument on variables.tf line 15, in variable "instance_count"`** — Remove or correct the argument name; check the Terraform documentation for valid variable block arguments.
-    **`Error: Failed to query available provider versions on registry.terraform.io`** — Verify internet connectivity and that the provider registry is accessible, or configure a custom registry mirror.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid or unsupported block type on main.tf line 42, in resource "aws_instance" "web"` | Review the resource block syntax and ensure the resource type matches the provider schema. |
+    | `Error: Unsupported argument on variables.tf line 15, in variable "instance_count"` | Remove or correct the argument name; check the Terraform documentation for valid variable block arguments. |
+    | `Error: Failed to query available provider versions on registry.terraform.io` | Verify internet connectivity and that the provider registry is accessible, or configure a custom registry mirror. |
 ---
 
 ## Step 2 — Enable debug logging
@@ -190,9 +192,11 @@ terraform-debug-2025-01-15-1423.log:2025-01-15T14:23:49.667Z [DEBUG] provider.te
 ```
 
 !!! warning "Common errors"
-    **`AccessDenied: User: arn:aws:iam::123456789012:user/terraform is not authorized to perform: ec2:ModifyInstanceAttribute`** — Add the required IAM policy action `ec2:ModifyInstanceAttribute` to the Terraform user's IAM role or policy.
-    **`HTTP 403 Forbidden`** — Verify AWS credentials are correct and the IAM user/role has permissions for the resource being modified; check credential expiration with `aws sts get-caller-identity`.
-    **`HTTP 401 Unauthorized - Invalid AWS credentials`** — Ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are set correctly or update your AWS credentials file at `~/.aws/credentials`.
+    | Error | Fix |
+    |---|---|
+    | `AccessDenied: User: arn:aws:iam::123456789012:user/terraform is not authorized to perform: ec2:ModifyInstanceAttribute` | Add the required IAM policy action `ec2:ModifyInstanceAttribute` to the Terraform user's IAM role or policy. |
+    | `HTTP 403 Forbidden` | Verify AWS credentials are correct and the IAM user/role has permissions for the resource being modified; check credential expiration with `aws sts get-caller-identity`. |
+    | `HTTP 401 Unauthorized - Invalid AWS credentials` | Ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are set correctly or update your AWS credentials file at `~/.aws/credentials`. |
 ---
 
 ## Step 3 — Debug provider authentication
@@ -279,9 +283,11 @@ Success! Terraform has obtained and saved an API token.
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to query available provider packages could not query provider registry for registry.terraform.io/hashicorp/aws: no credentials found`** — Ensure at least one credential environment variable (AWS_ACCESS_KEY_ID, ARM_CLIENT_ID, GOOGLE_CREDENTIALS, or VSPHERE_USER) is properly set before running Terraform.
-    **`error: VSPHERE_PASSWORD: command not found`** — Wrap the govc command in quotes or escape special characters, or use a credentials file instead of environment variables for vSphere authentication.
-    **`Error: Failed to retrieve caller identity: InvalidClientId.NotFound`** — Verify the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are correct and the IAM user has not been deleted or disabled.
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to query available provider packages could not query provider registry for registry.terraform.io/hashicorp/aws: no credentials found` | Ensure at least one credential environment variable (AWS_ACCESS_KEY_ID, ARM_CLIENT_ID, GOOGLE_CREDENTIALS, or VSPHERE_USER) is properly set before running Terraform. |
+    | `error: VSPHERE_PASSWORD: command not found` | Wrap the govc command in quotes or escape special characters, or use a credentials file instead of environment variables for vSphere authentication. |
+    | `Error: Failed to retrieve caller identity: InvalidClientId.NotFound` | Verify the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are correct and the IAM user has not been deleted or disabled. |
 ---
 
 ## Step 4 — Inspect and audit state
@@ -363,8 +369,10 @@ Item: {LockID: {S: "prod/terraform.tfstate"}, Digest: {S: "a1b2c3d4e5f6g7h8i9j0k
 ```
 
 !!! warning "Common errors"
-    **`Error: error reading state: state file not found`** — Ensure you are in the correct Terraform working directory and have initialized the backend with `terraform init`.
-    **`Error: error reading the S3 bucket in the current account: AccessDenied`** — Verify your AWS credentials have `s3:GetObject` and `dynamodb:Scan` permissions for the state bucket and lock table.
+    | Error | Fix |
+    |---|---|
+    | `Error: error reading state: state file not found` | Ensure you are in the correct Terraform working directory and have initialized the backend with `terraform init`. |
+    | `Error: error reading the S3 bucket in the current account: AccessDenied` | Verify your AWS credentials have `s3:GetObject` and `dynamodb:Scan` permissions for the state bucket and lock table. |
 ---
 
 ## Step 5 — Diagnose backend connectivity
@@ -443,9 +451,11 @@ Terraform has been successfully initialized!
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDenied) when calling the ListBucket operation: Access Denied`** — Verify the IAM role/user has `s3:ListBucket` and `s3:GetObject` permissions on the state bucket.
-    **`Error: error reading the backend configuration: unsupported attribute "region"`** — Remove or correct the region attribute in the backend block; use `aws_region` environment variable instead.
-    **`error: Item not found`** — No lock exists; if Terraform is hanging, check for network connectivity to DynamoDB or verify the lock table name matches your backend configuration.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDenied) when calling the ListBucket operation: Access Denied` | Verify the IAM role/user has `s3:ListBucket` and `s3:GetObject` permissions on the state bucket. |
+    | `Error: error reading the backend configuration: unsupported attribute "region"` | Remove or correct the region attribute in the backend block; use `aws_region` environment variable instead. |
+    | `error: Item not found` | No lock exists; if Terraform is hanging, check for network connectivity to DynamoDB or verify the lock table name matches your backend configuration. |
 ---
 
 ## Step 6 — State lock recovery (caution)
@@ -492,8 +502,10 @@ Plan: 0 to add, 1 to change, 0 to destroy.
 ```
 
 !!! warning "Common errors"
-    **`Error: Error locking state: Error acquiring the state lock: ConditionalCheckFailedException: The conditional request failed`** — Run `terraform force-unlock <lock-id>` only after confirming no active terraform process holds the lock by checking CI/CD pipeline status or other terminal sessions.
-    **`Error: error reading state: failed to read state from backend: AccessDenied: User is not authorized to perform: dynamodb:GetItem`** — Verify your AWS credentials have DynamoDB read/write permissions for the state lock table (typically `terraform-locks`).
+    | Error | Fix |
+    |---|---|
+    | `Error: Error locking state: Error acquiring the state lock: ConditionalCheckFailedException: The conditional request failed` | Run `terraform force-unlock <lock-id>` only after confirming no active terraform process holds the lock by checking CI/CD pipeline status or other terminal sessions. |
+    | `Error: error reading state: failed to read state from backend: AccessDenied: User is not authorized to perform: dynamodb:GetItem` | Verify your AWS credentials have DynamoDB read/write permissions for the state lock table (typically `terraform-locks`). |
 ---
 
 ## Plan inspection
@@ -573,9 +585,11 @@ digraph {
 ```
 
 !!! warning "Common errors"
-    **`Error: No configuration files found in working directory.`** — Run `terraform init` first to initialize the working directory and download required providers.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the plan file exists and is valid by running `terraform plan -out=tfplan` before attempting to parse it with `jq`.
-    **`Error: Graphviz not found in PATH`** — Install Graphviz with `apt-get install graphviz` (Ubuntu/Debian) or `brew install graphviz` (macOS) to convert the graph to SVG format.
+    | Error | Fix |
+    |---|---|
+    | `Error: No configuration files found in working directory.` | Run `terraform init` first to initialize the working directory and download required providers. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the plan file exists and is valid by running `terraform plan -out=tfplan` before attempting to parse it with `jq`. |
+    | `Error: Graphviz not found in PATH` | Install Graphviz with `apt-get install graphviz` (Ubuntu/Debian) or `brew install graphviz` (macOS) to convert the graph to SVG format. |
 ---
 
 ## See also

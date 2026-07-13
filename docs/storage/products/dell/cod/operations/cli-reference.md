@@ -76,9 +76,11 @@ Disk Group 3       Type: EFD    Capacity: 50 TB     Status: Locked
 ```
 
 !!! warning "Common errors"
-    **`Symmetrix ID <sid> does not exist`** — Verify the SID with `symcfg discover` and ensure the array is reachable on the network.
-    **`SYMAPI Server connection failed`** — Restart the Symmetrix management daemon with `sudo /opt/emc/SYMAPI/bin/symapi_control restart` and verify network connectivity to the array.
-    **`Insufficient privileges to execute command`** — Run the command with `sudo` or ensure your user is in the `symapi` group with `sudo usermod -a -G symapi $USER`.
+    | Error | Fix |
+    |---|---|
+    | `Symmetrix ID <sid> does not exist` | Verify the SID with `symcfg discover` and ensure the array is reachable on the network. |
+    | `SYMAPI Server connection failed` | Restart the Symmetrix management daemon with `sudo /opt/emc/SYMAPI/bin/symapi_control restart` and verify network connectivity to the array. |
+    | `Insufficient privileges to execute command` | Run the command with `sudo` or ensure your user is in the `symapi` group with `sudo usermod -a -G symapi $USER`. |
 ```bash
 UNISPHERE="https://<unisphere_host>:8443"
 SID="<sid>"
@@ -216,7 +218,9 @@ curl -s -k -u "${USER}:${PASS}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present in the example, but
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification (already present in the example, but |
 ```bash
 # List all licenses with status
 symcfg -sid <sid> list -license
@@ -268,9 +272,11 @@ Capacity: 50 TB
 ```
 
 !!! warning "Common errors"
-    **`symcfg: error: Invalid SID format`** — Verify the SID is 12 digits and set correctly with `-sid` parameter or `SYMCFG_CONNECT` environment variable.
-    **`symlmf: error: License file not found: /tmp/license_file.dat`** — Confirm the license file path exists and is readable with `ls -la /tmp/license_file.dat`.
-    **`symcfg: error: Cannot connect to array`** — Ensure the Symmetrix array is reachable and Solutions Enabler daemon is running with `sudo /opt/emc/SYMCLI/bin/stordaemon start`.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: error: Invalid SID format` | Verify the SID is 12 digits and set correctly with `-sid` parameter or `SYMCFG_CONNECT` environment variable. |
+    | `symlmf: error: License file not found: /tmp/license_file.dat` | Confirm the license file path exists and is readable with `ls -la /tmp/license_file.dat`. |
+    | `symcfg: error: Cannot connect to array` | Ensure the Symmetrix array is reachable and Solutions Enabler daemon is running with `sudo /opt/emc/SYMCLI/bin/stordaemon start`. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

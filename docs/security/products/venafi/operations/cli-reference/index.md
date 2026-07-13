@@ -78,9 +78,11 @@ Token expiration: 2025-02-15T14:32:00Z
 ```
 
 !!! warning "Common errors"
-    **`Error: invalid API key format`** — Verify the API key is correctly copied from the Venafi console and contains no extra whitespace.
-    **`Error: unable to connect to https://<tpp_fqdn>/vedsdk: connection refused`** — Confirm the TPP FQDN is correct, the server is running, and network connectivity exists from your client to the TPP instance.
-    **`Error: authentication failed: invalid credentials`** — Verify the username and password are correct and the user account has not been locked or disabled in TPP.
+    | Error | Fix |
+    |---|---|
+    | `Error: invalid API key format` | Verify the API key is correctly copied from the Venafi console and contains no extra whitespace. |
+    | `Error: unable to connect to https://<tpp_fqdn>/vedsdk: connection refused` | Confirm the TPP FQDN is correct, the server is running, and network connectivity exists from your client to the TPP instance. |
+    | `Error: authentication failed: invalid credentials` | Verify the username and password are correct and the user account has not been locked or disabled in TPP. |
 ---
 
 ## Certificate Requests
@@ -109,9 +111,11 @@ Thumbprint: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
 ```
 
 !!! warning "Common errors"
-    **`Error: failed to authenticate to TPP server: invalid token`** — Verify the token is valid and has not expired by checking TPP token management settings.
-    **`Error: certificate request failed: policy path not found`** — Confirm the zone path exists in TPP and matches the exact folder structure with correct escaping (e.g., `\\VED\\Policy\\Certificates\\<policy_folder>`).
-    **`Error: failed to write certificate file: permission denied`** — Ensure the user running vcert has write permissions to the target directory where cert.pem, key.pem, and chain.pem will be created.
+    | Error | Fix |
+    |---|---|
+    | `Error: failed to authenticate to TPP server: invalid token` | Verify the token is valid and has not expired by checking TPP token management settings. |
+    | `Error: certificate request failed: policy path not found` | Confirm the zone path exists in TPP and matches the exact folder structure with correct escaping (e.g., `\\VED\\Policy\\Certificates\\<policy_folder>`). |
+    | `Error: failed to write certificate file: permission denied` | Ensure the user running vcert has write permissions to the target directory where cert.pem, key.pem, and chain.pem will be created. |
 ---
 
 ## Certificate Renewal
@@ -139,9 +143,11 @@ Certificate details:
 ```
 
 !!! warning "Common errors"
-    **`Error: invalid thumbprint format`** — Ensure the thumbprint is a valid SHA-1 hash (40 hexadecimal characters) without spaces or special characters.
-    **`Error: authentication failed: invalid token`** — Verify the token is current and has not expired by checking TPP token validity or regenerating a new authentication token.
-    **`Error: certificate not found at specified DN path`** — Confirm the DN path exists in TPP by navigating to the policy folder in the Venafi console and verifying the exact certificate path.
+    | Error | Fix |
+    |---|---|
+    | `Error: invalid thumbprint format` | Ensure the thumbprint is a valid SHA-1 hash (40 hexadecimal characters) without spaces or special characters. |
+    | `Error: authentication failed: invalid token` | Verify the token is current and has not expired by checking TPP token validity or regenerating a new authentication token. |
+    | `Error: certificate not found at specified DN path` | Confirm the DN path exists in TPP by navigating to the policy folder in the Venafi console and verifying the exact certificate path. |
 ---
 
 ## Certificate Retrieval
@@ -165,9 +171,11 @@ Certificate: cert.p12
 ```
 
 !!! warning "Common errors"
-    **`Error: invalid credentials`** — Verify the token is valid and has not expired by checking TPP token management or regenerating a new token.
-    **`Error: certificate not found at path \VED\Policy\Certificates\<folder>\<cn>`** — Confirm the certificate path exists in TPP by navigating to the policy folder and checking the exact certificate object name.
-    **`Error: permission denied writing to cert.pem`** — Ensure the output directory is writable and the user running vcert has write permissions to the target location.
+    | Error | Fix |
+    |---|---|
+    | `Error: invalid credentials` | Verify the token is valid and has not expired by checking TPP token management or regenerating a new token. |
+    | `Error: certificate not found at path \VED\Policy\Certificates\<folder>\<cn>` | Confirm the certificate path exists in TPP by navigating to the policy folder and checking the exact certificate object name. |
+    | `Error: permission denied writing to cert.pem` | Ensure the output directory is writable and the user running vcert has write permissions to the target location. |
 ---
 
 ## TPP REST API
@@ -197,9 +205,11 @@ curl -X POST https://<tpp_fqdn>/vedsdk/certificates/request   -H "X-Venafi-Api-K
 ```
 
 !!! warning "Common errors"
-    **`{"Error":"Unauthorized","Code":401}`** — Verify credentials are correct and the user account has API access permissions in Venafi TPP.
-    **`{"Error":"Invalid policy path","Code":400}`** — Ensure the PolicyDN path uses correct escaping (double backslashes) and the folder exists in the certificate policy tree.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or configure proper CA certificates if using self-signed TPP certificates in non-production environments.
+    | Error | Fix |
+    |---|---|
+    | `{"Error":"Unauthorized","Code":401}` | Verify credentials are correct and the user account has API access permissions in Venafi TPP. |
+    | `{"Error":"Invalid policy path","Code":400}` | Ensure the PolicyDN path uses correct escaping (double backslashes) and the folder exists in the certificate policy tree. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl or configure proper CA certificates if using self-signed TPP certificates in non-production environments. |
 ---
 
 ## Certificate Inspection (openssl)
@@ -243,9 +253,11 @@ issuer=CN = DigiCert Global CA G2, O = DigiCert Inc, C = US
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the certificate file path is correct and the file contains valid PEM-formatted data.
-    **`unable to load Private Key`** — Ensure the private key file exists, is readable, and matches the certificate's key pair.
-    **`error 20 at 0 depth lookup: unable to get local issuer certificate`** — Add the complete certificate chain (intermediate and root CA) to the chain.pem file in the correct order.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the certificate file path is correct and the file contains valid PEM-formatted data. |
+    | `unable to load Private Key` | Ensure the private key file exists, is readable, and matches the certificate's key pair. |
+    | `error 20 at 0 depth lookup: unable to get local issuer certificate` | Add the complete certificate chain (intermediate and root CA) to the chain.pem file in the correct order. |
 ---
 
 ## Verify

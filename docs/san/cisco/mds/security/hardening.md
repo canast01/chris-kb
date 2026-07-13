@@ -43,8 +43,10 @@ snmp                                  1       Yes
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the MDS switch is in config mode with `config t` before running feature commands.
-    **`% Feature cannot be disabled: feature in use by running processes`** — Wait for active connections to close or use `no feature telnet` with a forced timeout, then retry the command.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the MDS switch is in config mode with `config t` before running feature commands. |
+    | `% Feature cannot be disabled: feature in use by running processes` | Wait for active connections to close or use `no feature telnet` with a forced timeout, then retry the command. |
 ```bash
 # TACACS+ server definitions (encrypted key)
 tacacs-server host 10.10.1.10 key 0 <key>
@@ -97,9 +99,11 @@ Test AAA Group TACACS-SERVERS:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the MDS switch firmware supports AAA commands; some older versions use different syntax like `aaa group server tacacs+` instead of `aaa group server tacacs+`.
-    **`TACACS+ server 10.10.1.10 not responding`** — Confirm the TACACS+ server is reachable on port 49 from the MDS switch and that the shared key matches exactly on both the switch and server.
-    **`Authentication failed for user testuser`** — Verify the test user exists on the TACACS+ server and that the password is correct; also check that the TACACS+ server group is properly configured with both servers listed.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the MDS switch firmware supports AAA commands; some older versions use different syntax like `aaa group server tacacs+` instead of `aaa group server tacacs+`. |
+    | `TACACS+ server 10.10.1.10 not responding` | Confirm the TACACS+ server is reachable on port 49 from the MDS switch and that the shared key matches exactly on both the switch and server. |
+    | `Authentication failed for user testuser` | Verify the test user exists on the TACACS+ server and that the password is correct; also check that the TACACS+ server group is properly configured with both servers listed. |
 ```bash
 # Confirm built-in roles are appropriate
 show role
@@ -128,8 +132,10 @@ ntp-sync              local         no       network-operator
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid role name 'network-operator' for user 'monitoring'`** — Verify the role exists on the device with `show role` and confirm TACACS+ server is configured with matching AV-pair attributes.
-    **`% Invalid command`** — Ensure you are in the correct mode (device# prompt); some MDS switches require `config terminal` before user configuration commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid role name 'network-operator' for user 'monitoring'` | Verify the role exists on the device with `show role` and confirm TACACS+ server is configured with matching AV-pair attributes. |
+    | `% Invalid command` | Ensure you are in the correct mode (device# prompt); some MDS switches require `config terminal` before user configuration commands. |
 ```bash
 # Remove default insecure community strings
 no snmp-server community public
@@ -178,8 +184,10 @@ mds9148-switch# show snmp community
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch supports SNMPv3 with `show feature | grep snmp` and enable SNMP feature if needed.
-    **`% Incomplete command`** — Ensure both `<auth-pass>` and `<priv-pass>` placeholders are replaced with actual passwords before running the snmp-server user command.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch supports SNMPv3 with `show feature | grep snmp` and enable SNMP feature if needed. |
+    | `% Incomplete command` | Ensure both `<auth-pass>` and `<priv-pass>` placeholders are replaced with actual passwords before running the snmp-server user command. |
 ```bash
 # Configure NTP servers
 ntp server 10.10.0.10 prefer
@@ -210,8 +218,10 @@ Peer IP Address      Stratum Hostpoll Reach  Delay    Offset   Dispersion
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (use `configure terminal` first if not already in config mode).
-    **`% Incomplete command`** — Ensure the NTP server IP address is specified completely; use format `ntp server <ip-address> [prefer]`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (use `configure terminal` first if not already in config mode). |
+    | `% Incomplete command` | Ensure the NTP server IP address is specified completely; use format `ntp server <ip-address> [prefer]`. |
 ```bash
 # Forward notifications and above to SIEM
 logging server 10.10.3.50 5 facility local7
@@ -243,8 +253,10 @@ Logging configured:
 ```
 
 !!! warning "Common errors"
-    **`Invalid logging server IP address`** — Verify the SIEM server IP is reachable and correctly formatted (e.g., `ping 10.10.3.50` from the MDS switch).
-    **`Facility local7 not supported on this platform`** — Use a supported facility like `local0` through `local6` instead, or check the MDS firmware version compatibility.
+    | Error | Fix |
+    |---|---|
+    | `Invalid logging server IP address` | Verify the SIEM server IP is reachable and correctly formatted (e.g., `ping 10.10.3.50` from the MDS switch). |
+    | `Facility local7 not supported on this platform` | Use a supported facility like `local0` through `local6` instead, or check the MDS firmware version compatibility. |
 ```bash
 # Confirm no production ports in VSAN 1 (insecure default)
 show vsan 1 membership
@@ -291,9 +303,11 @@ fc2/1# no switchport trunk allowed vsan 1
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the MDS switch supports enhanced zoning mode (requires Fabric Services license on some models).
-    **`% Cannot remove VSAN 1 from ISL trunk — VSAN 1 is mandatory`** — VSAN 1 cannot be removed from trunk ports; instead isolate it by removing all F_Ports and using zone deny rules on production VSANs.
-    **`% Inconsistent zone configuration detected`** — Run `zone commit vsan 10` and `zone commit vsan 20` to activate zoning changes after modifying trunk membership.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the MDS switch supports enhanced zoning mode (requires Fabric Services license on some models). |
+    | `% Cannot remove VSAN 1 from ISL trunk — VSAN 1 is mandatory` | VSAN 1 cannot be removed from trunk ports; instead isolate it by removing all F_Ports and using zone deny rules on production VSANs. |
+    | `% Inconsistent zone configuration detected` | Run `zone commit vsan 10` and `zone commit vsan 20` to activate zoning changes after modifying trunk membership. |
 ```bash
 banner motd #
 WARNING: This system is for authorized use only.
@@ -307,8 +321,10 @@ Unauthorized access or use is prohibited and may result in legal action.
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode by entering `config t` first.
-    **`% Incomplete command`** — Ensure the closing delimiter `#` is on its own line with no trailing characters.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode by entering `config t` first. |
+    | `% Incomplete command` | Ensure the closing delimiter `#` is on its own line with no trailing characters. |
 ```bash
 # Restrict CFS to specific IP addresses (MDS management IPs)
 cfs ipv4 distribute
@@ -348,8 +364,10 @@ Peer Information:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the MDS switch supports CFS with `show feature cfs` and enable it with `feature cfs` if disabled.
-    **`% CFS peers not reachable`** — Confirm network connectivity between switches and that the multicast address 239.255.70.83 is not blocked by ACLs on the management VLAN.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the MDS switch supports CFS with `show feature cfs` and enable it with `feature cfs` if disabled. |
+    | `% CFS peers not reachable` | Confirm network connectivity between switches and that the multicast address 239.255.70.83 is not blocked by ACLs on the management VLAN. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

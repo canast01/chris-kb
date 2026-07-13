@@ -160,9 +160,11 @@ VM 4 is now running.
 ```
 
 !!! warning "Common errors"
-    **`vim-cmd: command not found`** — SSH directly to the ESXi host (not vCenter) where the VCSA VM is running, as vim-cmd is only available on ESXi.
-    **`Error: The object has already been deleted or has not been completely created`** — Wait 30-60 seconds after reverting the snapshot before attempting to power on, as the VM state may not have fully synchronized.
-    **`Snapshot not found: <snapshot-id>`** — Verify the snapshot ID exists by running `vim-cmd vmsvc/snapshot.get <vmid>` and use the exact Snapshot ID from the output.
+    | Error | Fix |
+    |---|---|
+    | `vim-cmd: command not found` | SSH directly to the ESXi host (not vCenter) where the VCSA VM is running, as vim-cmd is only available on ESXi. |
+    | `Error: The object has already been deleted or has not been completely created` | Wait 30-60 seconds after reverting the snapshot before attempting to power on, as the VM state may not have fully synchronized. |
+    | `Snapshot not found: <snapshot-id>` | Verify the snapshot ID exists by running `vim-cmd vmsvc/snapshot.get <vmid>` and use the exact Snapshot ID from the output. |
 After rollback, SSH to the source VCSA and confirm all services are running:
 
 ```bash
@@ -177,8 +179,10 @@ vmware-eam                                     stopped
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Ensure you are running this command on a vCenter Server or ESXi host where VMware service control tools are installed, or use the full path `/usr/lib/vmware-vise/bin/service-control`.
-    **`grep: (standard input) is empty`** — This occurs when all services are running; the grep filter returns no matches, which is normal and not an error condition.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Ensure you are running this command on a vCenter Server or ESXi host where VMware service control tools are installed, or use the full path `/usr/lib/vmware-vise/bin/service-control`. |
+    | `grep: (standard input) is empty` | This occurs when all services are running; the grep filter returns no matches, which is normal and not an error condition. |
 ---
 
 ## 5. Stage 2 Failure — Read the Upgrade Logs
@@ -220,9 +224,11 @@ certmigration.log
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/vmware/upgrade/vcsa-upgrade.log' for reading: No such file or directory`** — SSH to the VCSA management interface instead of the appliance shell, or verify the upgrade process actually started by checking `/var/log/firstboot/` for pre-upgrade logs.
-    **`Permission denied`** — Ensure you are logged in as root or a user with sudo privileges; use `sudo -i` to escalate if needed.
-    **`/var/log/vmware/upgrade/: No such file or directory`** — The upgrade may not have been initiated yet or the VCSA is still in pre-upgrade state; check `/var/log/firstboot/firstboot.log` to confirm upgrade stage.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/vmware/upgrade/vcsa-upgrade.log' for reading: No such file or directory` | SSH to the VCSA management interface instead of the appliance shell, or verify the upgrade process actually started by checking `/var/log/firstboot/` for pre-upgrade logs. |
+    | `Permission denied` | Ensure you are logged in as root or a user with sudo privileges; use `sudo -i` to escalate if needed. |
+    | `/var/log/vmware/upgrade/: No such file or directory` | The upgrade may not have been initiated yet or the VCSA is still in pre-upgrade state; check `/var/log/firstboot/firstboot.log` to confirm upgrade stage. |
 Common Stage 2 failure patterns:
 
 ```text
@@ -300,9 +306,11 @@ Not After: 2025-06-14T08:22:33Z
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to service-control`** — Ensure you are running this command as root or with sudo on the VCSA appliance.
-    **`command not found: /usr/lib/vmware-vmafd/bin/vmafd-cli`** — Verify the VCSA installation is complete and the vmafd service is running with `service-control --status --all | grep vmafd`.
-    **`Error: Connection refused`** — Wait 2–3 minutes after VCSA boot for all services to fully initialize, then retry the vmafd-cli commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to service-control` | Ensure you are running this command as root or with sudo on the VCSA appliance. |
+    | `command not found: /usr/lib/vmware-vmafd/bin/vmafd-cli` | Verify the VCSA installation is complete and the vmafd service is running with `service-control --status --all | grep vmafd`. |
+    | `Error: Connection refused` | Wait 2–3 minutes after VCSA boot for all services to fully initialize, then retry the vmafd-cli commands. |
 If the new VCSA boots but hosts are not reconnecting within 15 minutes:
 
 ```bash
@@ -322,8 +330,10 @@ esx-dev-01.lab.com   Connected             PoweredOn
 ```
 
 !!! warning "Common errors"
-    **`Connect-VIServer : The specified item could not be found on the server.`** — Ensure you are connected to the correct vCenter instance with `Connect-VIServer` before running the command.
-    **`Set-VMHost : The object 'VMHost' cannot be modified because it is being accessed by a different user or the connection to the server has been lost.`** — Verify network connectivity between vCenter and ESXi hosts, and check that no other administrators are performing concurrent operations on those hosts.
+    | Error | Fix |
+    |---|---|
+    | `Connect-VIServer : The specified item could not be found on the server.` | Ensure you are connected to the correct vCenter instance with `Connect-VIServer` before running the command. |
+    | `Set-VMHost : The object 'VMHost' cannot be modified because it is being accessed by a different user or the connection to the server has been lost.` | Verify network connectivity between vCenter and ESXi hosts, and check that no other administrators are performing concurrent operations on those hosts. |
 ---
 
 ## 7. Aria SuiteLC Upgrade Path

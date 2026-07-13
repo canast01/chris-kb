@@ -92,9 +92,11 @@ Shutting down the system. Reason: hw fix
 ```
 
 !!! warning "Common errors"
-    **`Error: The object or item referenced could not be found.`** — Verify the vmid exists by running `vim-cmd vmsvc/getallvms` and use the correct numeric ID.
-    **`Error: Unable to change maintenance mode. Host has running virtual machines.`** — Migrate or power off all VMs before entering maintenance mode with `esxcli system maintenanceMode set --enable true`.
-    **`Error: The ESXCLI command is not recognized.`** — Ensure you are connected to an ESXi host directly (not vCenter) and that the command syntax matches your ESXi version with `esxcli --version`.
+    | Error | Fix |
+    |---|---|
+    | `Error: The object or item referenced could not be found.` | Verify the vmid exists by running `vim-cmd vmsvc/getallvms` and use the correct numeric ID. |
+    | `Error: Unable to change maintenance mode. Host has running virtual machines.` | Migrate or power off all VMs before entering maintenance mode with `esxcli system maintenanceMode set --enable true`. |
+    | `Error: The ESXCLI command is not recognized.` | Ensure you are connected to an ESXi host directly (not vCenter) and that the command syntax matches your ESXi version with `esxcli --version`. |
 ## Quick diagnostics
 
 ```bash
@@ -134,9 +136,11 @@ MEMORY STATS (MB): 262144 TOTAL, 198456 VMKERNL, 45678 OTHER, 18010 FREE
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to syslog server syslog.corp.local`** — Verify the syslog server hostname/IP is reachable and the firewall allows UDP 514 from the ESXi host.
-    **`Connect timed out`** — Check network connectivity to 8.8.8.8 and ensure the VMkernel management network route is configured correctly.
-    **`/tmp/esxtop.csv: Permission denied`** — Run the command with elevated privileges or redirect output to a writable directory like /var/tmp instead.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to syslog server syslog.corp.local` | Verify the syslog server hostname/IP is reachable and the firewall allows UDP 514 from the ESXi host. |
+    | `Connect timed out` | Check network connectivity to 8.8.8.8 and ensure the VMkernel management network route is configured correctly. |
+    | `/tmp/esxtop.csv: Permission denied` | Run the command with elevated privileges or redirect output to a writable directory like /var/tmp instead. |
 ## See also
 
 - [ESXi Operations](../../../virtualization/vmware/products/esxi/operations/procedures/)

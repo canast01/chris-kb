@@ -68,9 +68,11 @@ total size is 4,156,234,891  speedup is 1.00
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the migration_key file has correct permissions (chmod 600) and the destination SSH user is configured in authorized_keys.
-    **`rsync: change_dir "/data/destination/" failed: No such file or directory (2)`** — Create the destination directory on the remote host with `ssh <destination> "mkdir -p /data/destination/"` before running rsync.
-    **`Timeout waiting for SSH connection`** — Check network connectivity and firewall rules between source and destination hosts, and confirm the SSH port is open.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the migration_key file has correct permissions (chmod 600) and the destination SSH user is configured in authorized_keys. |
+    | `rsync: change_dir "/data/destination/" failed: No such file or directory (2)` | Create the destination directory on the remote host with `ssh <destination> "mkdir -p /data/destination/"` before running rsync. |
+    | `Timeout waiting for SSH connection` | Check network connectivity and firewall rules between source and destination hosts, and confirm the SSH port is open. |
 ```bash
 # Quiesce and break SnapMirror relationship for cutover
 snapmirror quiesce -destination-path <svm>:<vol-dest>
@@ -136,9 +138,11 @@ Update failed: NOTAUTH
 ```
 
 !!! warning "Common errors"
-    **`Update failed: NOTAUTH`** — Verify nsupdate credentials and TSIG key configuration with `cat /etc/bind/rndc.key` and ensure the DNS server allows dynamic updates from this host.
-    **`rsync: [Receiver] mkdir failed on "/data/": Permission denied (13)`** — Ensure the destination user has write permissions on the target directory with `ssh destination 'chmod 755 /data && ls -ld /data'`.
-    **`curl: (7) Failed to connect to localhost port 443: Connection refused`** — Wait for the application to fully initialize before health checks; add a 5-10 second delay after `systemctl start myapp` or check logs with `ssh destination 'journalctl -u myapp -n 20'`.
+    | Error | Fix |
+    |---|---|
+    | `Update failed: NOTAUTH` | Verify nsupdate credentials and TSIG key configuration with `cat /etc/bind/rndc.key` and ensure the DNS server allows dynamic updates from this host. |
+    | `rsync: [Receiver] mkdir failed on "/data/": Permission denied (13)` | Ensure the destination user has write permissions on the target directory with `ssh destination 'chmod 755 /data && ls -ld /data'`. |
+    | `curl: (7) Failed to connect to localhost port 443: Connection refused` | Wait for the application to fully initialize before health checks; add a 5-10 second delay after `systemctl start myapp` or check logs with `ssh destination 'journalctl -u myapp -n 20'`. |
 ```bash
 # Platform health on destination
 uptime; systemctl --failed
@@ -171,9 +175,11 @@ Job ID: 00000000-0000-0000-0000-000000000001
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the destination's CA certificate into your trust store.
-    **`curl: (7) Failed to connect to prometheus:9090: Name or service not known`** — Verify Prometheus is running and accessible at the correct hostname/IP; check DNS resolution with `nslookup prometheus` or use the IP address directly.
-    **`Start-VBRJob : The term 'Start-VBRJob' is not recognized`** — Ensure you are running this command in a PowerShell session on the Veeam backup server with the Veeam PowerShell module loaded (`Add-PSSnapin VeeamPSSnapin`).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the destination's CA certificate into your trust store. |
+    | `curl: (7) Failed to connect to prometheus:9090: Name or service not known` | Verify Prometheus is running and accessible at the correct hostname/IP; check DNS resolution with `nslookup prometheus` or use the IP address directly. |
+    | `Start-VBRJob : The term 'Start-VBRJob' is not recognized` | Ensure you are running this command in a PowerShell session on the Veeam backup server with the Veeam PowerShell module loaded (`Add-PSSnapin VeeamPSSnapin`). |
 ```bash
 # Remove pre-migration snapshot (after 48h stability)
 Get-VM -Name "HOSTNAME" | Get-Snapshot -Name "pre-migration-*" | Remove-Snapshot -Confirm:$false
@@ -198,6 +204,8 @@ Update failed: NOTAUTH
 ```
 
 !!! warning "Common errors"
-    **`Update failed: NOTAUTH`** — Verify your nsupdate credentials and that the DNS server allows dynamic updates from your source IP; check firewall rules and TSIG key configuration if required.
-    **`Get-VM : The term 'Get-VM' is not recognized`** — Ensure you're running this PowerShell command on a vSphere-connected host with the VMware PowerCLI module imported (`Import-Module VMware.PowerCLI`).
-    **`error: SERVFAIL`** — Confirm the DNS server hostname is reachable and responding; test connectivity with `nslookup dns.example.com` first.
+    | Error | Fix |
+    |---|---|
+    | `Update failed: NOTAUTH` | Verify your nsupdate credentials and that the DNS server allows dynamic updates from your source IP; check firewall rules and TSIG key configuration if required. |
+    | `Get-VM : The term 'Get-VM' is not recognized` | Ensure you're running this PowerShell command on a vSphere-connected host with the VMware PowerCLI module imported (`Import-Module VMware.PowerCLI`). |
+    | `error: SERVFAIL` | Confirm the DNS server hostname is reachable and responding; test connectivity with `nslookup dns.example.com` first. |

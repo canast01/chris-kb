@@ -167,9 +167,11 @@ Review for secrets before uploading to vendor support portal.
 ```
 
 !!! warning "Common errors"
-    **`sudo: gitlab-ctl: command not found`** — Verify GitLab is installed with `which gitlab-ctl` and ensure the script runs on the GitLab server, not a client machine.
-    **`Permission denied: /var/opt/gitlab/git-data`** — Add the current user to the `gitlab-www` group with `sudo usermod -aG gitlab-www $USER` and log out/in, or run the entire script with `sudo`.
-    **`grpc_health_probe: command not found`** — Install the health probe tool with `sudo /opt/gitlab/embedded/bin/grpc_health_probe` or verify the embedded
+    | Error | Fix |
+    |---|---|
+    | `sudo: gitlab-ctl: command not found` | Verify GitLab is installed with `which gitlab-ctl` and ensure the script runs on the GitLab server, not a client machine. |
+    | `Permission denied: /var/opt/gitlab/git-data` | Add the current user to the `gitlab-www` group with `sudo usermod -aG gitlab-www $USER` and log out/in, or run the entire script with `sudo`. |
+    | `grpc_health_probe: command not found` | Install the health probe tool with `sudo /opt/gitlab/embedded/bin/grpc_health_probe` or verify the embedded |
 ### Data Collection Checklist
 
 - [ ] `gitlab-ctl status` output
@@ -204,8 +206,10 @@ sudo gitlab-rails runner "Gitlab::CurrentSettings.update!(maintenance_mode: true
 ```
 
 !!! warning "Common errors"
-    **`sudo: gitlab-rails: command not found`** — Ensure GitLab is installed via the official package manager and the `gitlab-rails` executable is in PATH, or use the full path `/opt/gitlab/bin/gitlab-rails`.
-    **`ActiveRecord::ConnectionNotEstablished: could not connect to server`** — Verify PostgreSQL is running with `sudo systemctl status postgresql` and that GitLab's database configuration in `/etc/gitlab/gitlab.rb` is correct.
+    | Error | Fix |
+    |---|---|
+    | `sudo: gitlab-rails: command not found` | Ensure GitLab is installed via the official package manager and the `gitlab-rails` executable is in PATH, or use the full path `/opt/gitlab/bin/gitlab-rails`. |
+    | `ActiveRecord::ConnectionNotEstablished: could not connect to server` | Verify PostgreSQL is running with `sudo systemctl status postgresql` and that GitLab's database configuration in `/etc/gitlab/gitlab.rb` is correct. |
 ### Step 2 — Assess Damage
 
 ```bash
@@ -247,8 +251,10 @@ e2f6g5h Update dependencies to latest stable versions
 ```
 
 !!! warning "Common errors"
-    **`fatal: Not a valid object name`** — Verify the REPO_PATH points to a valid bare Git repository and check file permissions with `ls -la "$REPO_PATH"`.
-    **`fatal: your current branch 'master' does not have any commits yet`** — The repository is corrupted beyond recovery of the current branch; restore from backup or use `git reflog` to recover lost commits if available.
+    | Error | Fix |
+    |---|---|
+    | `fatal: Not a valid object name` | Verify the REPO_PATH points to a valid bare Git repository and check file permissions with `ls -la "$REPO_PATH"`. |
+    | `fatal: your current branch 'master' does not have any commits yet` | The repository is corrupted beyond recovery of the current branch; restore from backup or use `git reflog` to recover lost commits if available. |
 ### Step 3 — Recover from Mirror/Backup
 
 ```bash
@@ -311,9 +317,11 @@ ok: run: sidekiq: (pid 2851) 1s
 ```
 
 !!! warning "Common errors"
-    **`fatal: destination path '/var/opt/gitlab/git-data/repositories/group/project-recovered.git' already exists and is not an empty directory`** — Remove or rename the existing directory before cloning, or use a different destination path.
-    **`rsync: change_dir "/backup/git/project.git/objects" failed: No such file or directory (2)`** — Verify the mirror backup path exists and is accessible by running `ls -la "$MIRROR"`.
-    **`error: could not lock config file /var/opt/gitlab/git-data/repositories/group/project.git/config: Permission denied`** — Ensure the git user owns the repository directory by running `sudo chown -R git:git "$DEST"` before fsck.
+    | Error | Fix |
+    |---|---|
+    | `fatal: destination path '/var/opt/gitlab/git-data/repositories/group/project-recovered.git' already exists and is not an empty directory` | Remove or rename the existing directory before cloning, or use a different destination path. |
+    | `rsync: change_dir "/backup/git/project.git/objects" failed: No such file or directory (2)` | Verify the mirror backup path exists and is accessible by running `ls -la "$MIRROR"`. |
+    | `error: could not lock config file /var/opt/gitlab/git-data/repositories/group/project.git/config: Permission denied` | Ensure the git user owns the repository directory by running `sudo chown -R git:git "$DEST"` before fsck. |
 ### Step 4 — Recover a Deleted Branch (No Corruption)
 
 ```bash
@@ -349,9 +357,11 @@ Branch created
 ```
 
 !!! warning "Common errors"
-    **`fatal: your current branch 'main' does not have any commits yet`** — Ensure the repository is initialized with at least one commit before attempting reflog operations.
-    **`401 Unauthorized`** — Verify the `PRIVATE-TOKEN` is valid and has admin/maintainer access to the project by testing with `curl -H "PRIVATE-TOKEN: $ADMIN_TOKEN" https://gitlab.example.com/api/v4/user`.
-    **`Couldn't find Project with full_path=group/project`** — Confirm the project path is correct and the git user has read access by running `sudo -u git gitlab-rails runner "puts Project.find_by_full_path('group/project').inspect"`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: your current branch 'main' does not have any commits yet` | Ensure the repository is initialized with at least one commit before attempting reflog operations. |
+    | `401 Unauthorized` | Verify the `PRIVATE-TOKEN` is valid and has admin/maintainer access to the project by testing with `curl -H "PRIVATE-TOKEN: $ADMIN_TOKEN" https://gitlab.example.com/api/v4/user`. |
+    | `Couldn't find Project with full_path=group/project` | Confirm the project path is correct and the git user has read access by running `sudo -u git gitlab-rails runner "puts Project.find_by_full_path('group/project').inspect"`. |
 ### Step 5 — Restore from GitLab Backup
 
 ```bash
@@ -394,9 +404,11 @@ Checking GitLab Shell and Gitaly TCP/Unix sockets ... ok
 ```
 
 !!! warning "Common errors"
-    **`BACKUP=<timestamp>_gitlab_backup not found`** — Verify the backup file exists in `/var/opt/gitlab/backups/` and use the correct timestamp from `sudo gitlab-backup list`.
-    **`cp: cannot stat '/secure/gitlab-secrets.json': No such file or directory`** — Omit the secrets restore step if the file doesn't exist, or restore it from your secure backup location before running this script.
-    **`FATAL: database is locked`** — Wait 2-3 minutes for any running jobs to complete, then retry the restore; if persistent, run `sudo gitlab-ctl restart postgresql` first.
+    | Error | Fix |
+    |---|---|
+    | `BACKUP=<timestamp>_gitlab_backup not found` | Verify the backup file exists in `/var/opt/gitlab/backups/` and use the correct timestamp from `sudo gitlab-backup list`. |
+    | `cp: cannot stat '/secure/gitlab-secrets.json': No such file or directory` | Omit the secrets restore step if the file doesn't exist, or restore it from your secure backup location before running this script. |
+    | `FATAL: database is locked` | Wait 2-3 minutes for any running jobs to complete, then retry the restore; if persistent, run `sudo gitlab-ctl restart postgresql` first. |
 ### Step 6 — Post-Recovery Validation
 
 ```bash
@@ -457,9 +469,11 @@ Updating application settings...
 ```
 
 !!! warning "Common errors"
-    **`fatal: could not read Username for 'https://gitlab.example.com': No such file or directory`** — Ensure SSH key is configured or use `git clone https://...` with embedded credentials instead of SSH.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `--insecure` flag to curl or configure GitLab's certificate in your CA bundle.
-    **`ActiveRecord::RecordNotFound: Couldn't find Gitlab::Setting`** — Verify GitLab is fully initialized by running `sudo gitlab-rake gitlab:check` before attempting to disable maintenance mode.
+    | Error | Fix |
+    |---|---|
+    | `fatal: could not read Username for 'https://gitlab.example.com': No such file or directory` | Ensure SSH key is configured or use `git clone https://...` with embedded credentials instead of SSH. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `--insecure` flag to curl or configure GitLab's certificate in your CA bundle. |
+    | `ActiveRecord::RecordNotFound: Couldn't find Gitlab::Setting` | Verify GitLab is fully initialized by running `sudo gitlab-rake gitlab:check` before attempting to disable maintenance mode. |
 ### Recovery Decision Tree
 
 ```d2

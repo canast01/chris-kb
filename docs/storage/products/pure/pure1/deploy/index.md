@@ -128,8 +128,10 @@ purity>
 ```
 
 !!! warning "Common errors"
-    **`Phone Home: disabled`** — Run `puresupport phonehome --enable` before testing to activate the feature.
-    **`Connection failed: Unable to reach proxy`** — Verify the proxy URL and port are correct with your network team, then re-run `puresupport phonehome --proxy <url>`.
+    | Error | Fix |
+    |---|---|
+    | `Phone Home: disabled` | Run `puresupport phonehome --enable` before testing to activate the feature. |
+    | `Connection failed: Unable to reach proxy` | Verify the proxy URL and port are correct with your network team, then re-run `puresupport phonehome --proxy <url>`. |
 Expected output from `puresupport phonehome` after enabling:
 
 ```text
@@ -192,9 +194,11 @@ Phone Home Status:
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the FlashBlade IP address is correct and the pureuser credentials are valid in your environment.
-    **`purefb: command not found`** — SSH directly to the FlashBlade management interface (not a jump host) where the purefb CLI is available.
-    **`Phone Home test failed: No network connectivity`** — Ensure the FlashBlade has outbound HTTPS access to Pure Storage's support servers (typically port 443).
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the FlashBlade IP address is correct and the pureuser credentials are valid in your environment. |
+    | `purefb: command not found` | SSH directly to the FlashBlade management interface (not a jump host) where the purefb CLI is available. |
+    | `Phone Home test failed: No network connectivity` | Ensure the FlashBlade has outbound HTTPS access to Pure Storage's support servers (typically port 443). |
 **Proxy configuration for FlashBlade:**
 
 ```bash
@@ -207,8 +211,10 @@ purefb support set --proxy https://proxy.company.local:3128
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid proxy URL format`** — Ensure the proxy URL follows the format `scheme://host:port` and use a valid port number between 1-65535.
-    **`Error: Unable to reach proxy server at https://proxy.company.local:3128`** — Verify the proxy server is reachable from the FlashBlade management network and that firewall rules allow outbound connections on port 3128.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid proxy URL format` | Ensure the proxy URL follows the format `scheme://host:port` and use a valid port number between 1-65535. |
+    | `Error: Unable to reach proxy server at https://proxy.company.local:3128` | Verify the proxy server is reachable from the FlashBlade management network and that firewall rules allow outbound connections on port 3128. |
 ---
 
 ## Verify Array Appears in Pure1

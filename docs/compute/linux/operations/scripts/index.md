@@ -78,8 +78,10 @@ systemd-239-82.el8.x86_64 Thu Mar 14 08:14:42 2024
 ```
 
 !!! warning "Common errors"
-    **`dnf check-update: command not found`** — Verify dnf is installed with `dnf --version` or check if the system uses yum instead on older RHEL versions.
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the script with sudo or ensure the user has read permissions on apt cache directories.
+    | Error | Fix |
+    |---|---|
+    | `dnf check-update: command not found` | Verify dnf is installed with `dnf --version` or check if the system uses yum instead on older RHEL versions. |
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the script with sudo or ensure the user has read permissions on apt cache directories. |
 ## user-audit.sh
 
 Lists local users, sudo group members, and last login dates:
@@ -123,9 +125,11 @@ jenkins  pts/1        2025-01-16 13:48 (10.0.2.15)
 ```
 
 !!! warning "Common errors"
-    **`awk: can't open file /etc/passwd`** — Verify the file exists and the script has read permissions on /etc/passwd.
-    **`last: command not found`** — Install the `util-linux` package (apt install util-linux on Debian/Ubuntu or yum install util-linux on RHEL).
-    **`getent: command not found`** — Ensure glibc-common or libc-bin is installed; this is a core system utility that should be present on all Linux distributions.
+    | Error | Fix |
+    |---|---|
+    | `awk: can't open file /etc/passwd` | Verify the file exists and the script has read permissions on /etc/passwd. |
+    | `last: command not found` | Install the `util-linux` package (apt install util-linux on Debian/Ubuntu or yum install util-linux on RHEL). |
+    | `getent: command not found` | Ensure glibc-common or libc-bin is installed; this is a core system utility that should be present on all Linux distributions. |
 ## disk-alert.sh
 
 Sends alert if any filesystem exceeds threshold — designed for cron:
@@ -150,9 +154,11 @@ DISK ALERT on prod-web-01: /home is 92%
 ```
 
 !!! warning "Common errors"
-    **`mail: command not found`** — Install mailutils with `apt-get install mailutils` or `yum install mailx` depending on your distribution.
-    **`logger: command not found`** — Install bsd-mailx or util-linux with `apt-get install bsdmainutils` to enable syslog logging.
-    **`ENVIRON["HOSTNAME"] is not set`** — Replace `ENVIRON["HOSTNAME"]` with `$(hostname)` or ensure the HOSTNAME environment variable is exported in your shell profile.
+    | Error | Fix |
+    |---|---|
+    | `mail: command not found` | Install mailutils with `apt-get install mailutils` or `yum install mailx` depending on your distribution. |
+    | `logger: command not found` | Install bsd-mailx or util-linux with `apt-get install bsdmainutils` to enable syslog logging. |
+    | `ENVIRON["HOSTNAME"] is not set` | Replace `ENVIRON["HOSTNAME"]` with `$(hostname)` or ensure the HOSTNAME environment variable is exported in your shell profile. |
 ## Deployment
 
 Scripts are deployed and scheduled via Ansible:

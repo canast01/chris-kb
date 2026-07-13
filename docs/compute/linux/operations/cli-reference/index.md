@@ -60,9 +60,11 @@ nohup: ignoring input and appending output to 'nohup.out'
 ```
 
 !!! warning "Common errors"
-    **`bash: kill: (12345): No such process`** — Verify the PID exists with `ps aux | grep <PID>` before attempting to kill it.
-    **`pkill: invalid option -- 'f'`** — Use `pkill -f` on Linux systems; on some BSD variants use `pgrep -f` to find processes first.
-    **`nohup: failed to run command '<command>': No such file or directory`** — Ensure the command path is correct and the executable exists in your PATH or provide the full absolute path.
+    | Error | Fix |
+    |---|---|
+    | `bash: kill: (12345): No such process` | Verify the PID exists with `ps aux | grep <PID>` before attempting to kill it. |
+    | `pkill: invalid option -- 'f'` | Use `pkill -f` on Linux systems; on some BSD variants use `pgrep -f` to find processes first. |
+    | `nohup: failed to run command '<command>': No such file or directory` | Ensure the command path is correct and the executable exists in your PATH or provide the full absolute path. |
 ## Disk and Filesystem
 
 ```bash
@@ -129,9 +131,11 @@ Number  Start   End     Size    Type     File system  Flags
 ```
 
 !!! warning "Common errors"
-    **`mount: /mnt/point: mount point does not exist.`** — Create the mount point directory with `mkdir -p /mnt/point` before mounting.
-    **`umount: /mnt/point: target is busy.`** — Close all open files or processes accessing the mount point with `lsof /mnt/point` and kill them, then retry umount.
-    **`fdisk: cannot open /dev/sdb: Permission denied`** — Run the command with `sudo` or as the root user.
+    | Error | Fix |
+    |---|---|
+    | `mount: /mnt/point: mount point does not exist.` | Create the mount point directory with `mkdir -p /mnt/point` before mounting. |
+    | `umount: /mnt/point: target is busy.` | Close all open files or processes accessing the mount point with `lsof /mnt/point` and kill them, then retry umount. |
+    | `fdisk: cannot open /dev/sdb: Permission denied` | Run the command with `sudo` or as the root user. |
 ## LVM
 
 ```bash
@@ -170,9 +174,11 @@ data blocks changed from 13107200 to 18350080
 ```
 
 !!! warning "Common errors"
-    **`Device /dev/sdb not found`** — Verify the device exists with `lsblk` and use the correct device path.
-    **`Physical volume "/dev/sdb" already in use`** — Run `pvremove /dev/sdb` first or use a different device.
-    **`No space left on device`** — Ensure the volume group has sufficient free extents with `vgdisplay vg_name`.
+    | Error | Fix |
+    |---|---|
+    | `Device /dev/sdb not found` | Verify the device exists with `lsblk` and use the correct device path. |
+    | `Physical volume "/dev/sdb" already in use` | Run `pvremove /dev/sdb` first or use a different device. |
+    | `No space left on device` | Ensure the volume group has sufficient free extents with `vgdisplay vg_name`. |
 ## Networking
 
 ```bash
@@ -226,9 +232,11 @@ lo      loopback  unmanaged  --
 ```
 
 !!! warning "Common errors"
-    **`Cannot open network namespace "": No such file or directory`** — Ensure you are running the command with appropriate privileges; use `sudo ip -br addr` if needed.
-    **`Device "eth99" does not exist.`** — Verify the interface name with `ip link show` before attempting to configure it.
-    **`Error: unknown or ambiguous command 'eth0 up'.`** — Use the correct syntax `ip link set eth0 up` (not `ip link eth0 up`).
+    | Error | Fix |
+    |---|---|
+    | `Cannot open network namespace "": No such file or directory` | Ensure you are running the command with appropriate privileges; use `sudo ip -br addr` if needed. |
+    | `Device "eth99" does not exist.` | Verify the interface name with `ip link show` before attempting to configure it. |
+    | `Error: unknown or ambiguous command 'eth0 up'.` | Use the correct syntax `ip link set eth0 up` (not `ip link eth0 up`). |
 ## Logging (journalctl)
 
 ```bash
@@ -329,9 +337,11 @@ passwd: password expiry information changed.
 ```
 
 !!! warning "Common errors"
-    **`useradd: user 'newuser' already exists`** — Check if the user exists with `id newuser` or `getent passwd newuser` before creating.
-    **`usermod: user 'nonexistent' does not exist`** — Verify the username is spelled correctly and exists with `getent passwd <user>`.
-    **`Permission denied`** — Run these commands with `sudo` or as root; standard users cannot modify user accounts.
+    | Error | Fix |
+    |---|---|
+    | `useradd: user 'newuser' already exists` | Check if the user exists with `id newuser` or `getent passwd newuser` before creating. |
+    | `usermod: user 'nonexistent' does not exist` | Verify the username is spelled correctly and exists with `getent passwd <user>`. |
+    | `Permission denied` | Run these commands with `sudo` or as root; standard users cannot modify user accounts. |
 ## Firewall
 
 ```bash
@@ -379,9 +389,11 @@ Firewall is active and enabled on system startup
 ```
 
 !!! warning "Common errors"
-    **`Error: INVALID_PORT: 8080/tcp`** — Verify the port number is between 1-65535 and use lowercase protocol names.
-    **`ERROR: Could not find a matching rule`** — Ensure the rule exists before querying; use `firewall-cmd --list-ports` to verify active rules first.
-    **`Command 'ufw' not found`** — Install ufw with `sudo apt-get install ufw` on Ubuntu systems.
+    | Error | Fix |
+    |---|---|
+    | `Error: INVALID_PORT: 8080/tcp` | Verify the port number is between 1-65535 and use lowercase protocol names. |
+    | `ERROR: Could not find a matching rule` | Ensure the rule exists before querying; use `firewall-cmd --list-ports` to verify active rules first. |
+    | `Command 'ufw' not found` | Install ufw with `sudo apt-get install ufw` on Ubuntu systems. |
 ## Performance / Diagnostics
 
 ```bash
@@ -464,9 +476,11 @@ sent 2,847,392 bytes  received 12,584 bytes  transferred in 3.24s
 ```
 
 !!! warning "Common errors"
-    **`find: '/path': No such file or directory`** — Replace `/path` with an actual directory path like `/var/log` or `/home`.
-    **`rsync: command not found`** — Install rsync with `apt install rsync` (Debian/Ubuntu) or `yum install rsync` (RHEL/CentOS).
-    **`chown: changing ownership of '/path': Operation not permitted`** — Run the command with `sudo` or ensure you have write permissions on the target path.
+    | Error | Fix |
+    |---|---|
+    | `find: '/path': No such file or directory` | Replace `/path` with an actual directory path like `/var/log` or `/home`. |
+    | `rsync: command not found` | Install rsync with `apt install rsync` (Debian/Ubuntu) or `yum install rsync` (RHEL/CentOS). |
+    | `chown: changing ownership of '/path': Operation not permitted` | Run the command with `sudo` or ensure you have write permissions on the target path. |
 ## NTP / Time
 
 ```bash
@@ -505,9 +519,11 @@ MS Name/IP address         Stratum Poll Reach LastRx Last sample
 ```
 
 !!! warning "Common errors"
-    **`timedatectl: command not found`** — Install systemd-container or systemd package with `apt install systemd` or `yum install systemd`.
-    **`chronyc: command not found`** — Install chrony daemon with `apt install chrony` or `yum install chrony`, then start it with `systemctl start chronyd`.
-    **`Error: NTP service is not active`** — Enable and start the NTP service with `systemctl enable --now chronyd` (or `ntpd` if using ntpd instead of chrony).
+    | Error | Fix |
+    |---|---|
+    | `timedatectl: command not found` | Install systemd-container or systemd package with `apt install systemd` or `yum install systemd`. |
+    | `chronyc: command not found` | Install chrony daemon with `apt install chrony` or `yum install chrony`, then start it with `systemctl start chronyd`. |
+    | `Error: NTP service is not active` | Enable and start the NTP service with `systemctl enable --now chronyd` (or `ntpd` if using ntpd instead of chrony). |
 ---
 
 ## Verify

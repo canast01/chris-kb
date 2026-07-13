@@ -114,9 +114,11 @@ mpathb: 2 path groups with 1 active, 1 enabled paths
 ```
 
 !!! warning "Common errors"
-    **`multipathd.service is not running`** — Run `systemctl start multipathd` to start the service immediately.
-    **`multipath: command not found`** — Verify the device-mapper-multipath package installed successfully with `rpm -q device-mapper-multipath`.
-    **`No multipath output (empty result)`** — Ensure iSCSI targets are discovered and connected with `iscsiadm -m session` before multipath can detect devices.
+    | Error | Fix |
+    |---|---|
+    | `multipathd.service is not running` | Run `systemctl start multipathd` to start the service immediately. |
+    | `multipath: command not found` | Verify the device-mapper-multipath package installed successfully with `rpm -q device-mapper-multipath`. |
+    | `No multipath output (empty result)` | Ensure iSCSI targets are discovered and connected with `iscsiadm -m session` before multipath can detect devices. |
 ### /etc/multipath.conf — Key Settings
 
 ```conf
@@ -206,8 +208,10 @@ Name: vmhba1:C0:T0:L0
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown device naa.6001405abc123def4567890123456789`** — Verify the NAA ID is correct by running `esxcli storage nmp device list` and copy the exact device identifier.
-    **`Error: Unknown PSP VMW_PSP_RR`** — Use the correct PSP name `VMW_PSP_RR` (Round Robin) or verify available policies with `esxcli storage nmp psp list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown device naa.6001405abc123def4567890123456789` | Verify the NAA ID is correct by running `esxcli storage nmp device list` and copy the exact device identifier. |
+    | `Error: Unknown PSP VMW_PSP_RR` | Use the correct PSP name `VMW_PSP_RR` (Round Robin) or verify available policies with `esxcli storage nmp psp list`. |
 ## Load Balance Policies
 
 | Policy | Linux | Windows | ESXi | Best for |

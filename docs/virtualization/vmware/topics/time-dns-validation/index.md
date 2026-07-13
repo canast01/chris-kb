@@ -87,9 +87,11 @@ NTP Enabled: true
 ```
 
 !!! warning "Common errors"
-    **`ntpq: command not found`** — Install ntpq with `esxcli software vib install -n esx-ntp` or verify it's available in the ESXi shell environment.
-    **`Error: Unable to set NTP server. Connection refused`** — Ensure the NTP daemon is running with `/etc/init.d/ntpd restart` before applying configuration changes.
-    **`Error: The specified NTP server is not reachable`** — Verify network connectivity to ntp.example.local and confirm the hostname resolves correctly with `nslookup ntp.example.local`.
+    | Error | Fix |
+    |---|---|
+    | `ntpq: command not found` | Install ntpq with `esxcli software vib install -n esx-ntp` or verify it's available in the ESXi shell environment. |
+    | `Error: Unable to set NTP server. Connection refused` | Ensure the NTP daemon is running with `/etc/init.d/ntpd restart` before applying configuration changes. |
+    | `Error: The specified NTP server is not reachable` | Verify network connectivity to ntp.example.local and confirm the hostname resolves correctly with `nslookup ntp.example.local`. |
 ## NTP Validation — vCenter Appliance
 
 ```bash
@@ -136,9 +138,11 @@ System clock synchronized: yes
 ```
 
 !!! warning "Common errors"
-    **`chronyc: command not found`** — Verify VCSA version is 6.7 or later; older versions use ntpd instead (check with `timedatectl` or `systemctl status ntpd`).
-    **`System clock synchronized: no`** — Ensure NTP/Chrony service is running (`systemctl start chrony`) and firewall allows UDP 123 outbound to NTP servers.
-    **`offset : 234.567ms`** — Manually sync time with `ntpdate <ntp-server>` or `chronyc makestep`, then verify network connectivity to NTP sources.
+    | Error | Fix |
+    |---|---|
+    | `chronyc: command not found` | Verify VCSA version is 6.7 or later; older versions use ntpd instead (check with `timedatectl` or `systemctl status ntpd`). |
+    | `System clock synchronized: no` | Ensure NTP/Chrony service is running (`systemctl start chrony`) and firewall allows UDP 123 outbound to NTP servers. |
+    | `offset : 234.567ms` | Manually sync time with `ntpdate <ntp-server>` or `chronyc makestep`, then verify network connectivity to NTP sources. |
 ## DNS Validation — ESXi Host
 
 ```bash
@@ -189,9 +193,11 @@ getent hosts <hostname>
 ```
 
 !!! warning "Common errors"
-    **`** server can't find vcenter.example.local: NXDOMAIN`** — Verify the hostname is spelled correctly and exists in DNS, or check that DNS servers are reachable with `esxcli network ip dns server list`.
-    **`nslookup: can't resolve '(null)': Name or service not known`** — Replace the placeholder `<hostname>` or `<ip_address>` with an actual hostname or IP address before running the command.
-    **`getent hosts: command not found`** — Use `cat /etc/hosts` or `nslookup` instead, as `getent` may not be available in ESXi environments.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find vcenter.example.local: NXDOMAIN` | Verify the hostname is spelled correctly and exists in DNS, or check that DNS servers are reachable with `esxcli network ip dns server list`. |
+    | `nslookup: can't resolve '(null)': Name or service not known` | Replace the placeholder `<hostname>` or `<ip_address>` with an actual hostname or IP address before running the command. |
+    | `getent hosts: command not found` | Use `cat /etc/hosts` or `nslookup` instead, as `getent` may not be available in ESXi environments. |
 ## DNS Validation — PowerCLI
 
 ```powershell
@@ -277,9 +283,11 @@ Address: 192.168.1.50
 ```
 
 !!! warning "Common errors"
-    **`** server can't find vcenter.example.local: NXDOMAIN`** — Verify vcenter.example.local hostname in DNS or update the nslookup command with the correct FQDN.
-    **`ntpq: read: Connection refused`** — Ensure NTP daemon is running with `systemctl start ntpd` or verify ESXi NTP service is enabled via `esxcli system ntp set --enabled=true`.
-    **`nslookup: command not found`** — Use `dig` or `host` command instead, or verify DNS tools are available in the ESXi shell environment.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find vcenter.example.local: NXDOMAIN` | Verify vcenter.example.local hostname in DNS or update the nslookup command with the correct FQDN. |
+    | `ntpq: read: Connection refused` | Ensure NTP daemon is running with `systemctl start ntpd` or verify ESXi NTP service is enabled via `esxcli system ntp set --enabled=true`. |
+    | `nslookup: command not found` | Use `dig` or `host` command instead, or verify DNS tools are available in the ESXi shell environment. |
 ## Common Issues and Fixes
 
 | Issue | Symptom | Fix |

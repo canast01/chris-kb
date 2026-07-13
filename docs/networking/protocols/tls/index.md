@@ -100,9 +100,11 @@ issuer=CN = DigiCert Global CA G2, O = DigiCert Inc, C = US
 ```
 
 !!! warning "Common errors"
-    **`unable to get local issuer certificate`** — Add the `-CAfile /etc/ssl/certs/ca-certificates.crt` flag or ensure your system's CA bundle is up-to-date with `update-ca-certificates`.
-    **`error:1404B410:SSL routines:CT_PARSE_SCI_LIST:unexpected eof while parsing`** — The target host is not responding on port 443 or the hostname is incorrect; verify connectivity with `nc -zv <host> 443` first.
-    **`Protocol : TLSv1.2` when testing with `-tls1_3`** — The server does not support TLS 1.3; check server configuration or use `-tls1_2` to verify the highest supported version.
+    | Error | Fix |
+    |---|---|
+    | `unable to get local issuer certificate` | Add the `-CAfile /etc/ssl/certs/ca-certificates.crt` flag or ensure your system's CA bundle is up-to-date with `update-ca-certificates`. |
+    | `error:1404B410:SSL routines:CT_PARSE_SCI_LIST:unexpected eof while parsing` | The target host is not responding on port 443 or the hostname is incorrect; verify connectivity with `nc -zv <host> 443` first. |
+    | `Protocol : TLSv1.2` when testing with `-tls1_3` | The server does not support TLS 1.3; check server configuration or use `-tls1_2` to verify the highest supported version. |
 ```bash
 ## Install testssl.sh for comprehensive audit
 curl -O https://testssl.sh/testssl.sh
@@ -158,8 +160,10 @@ OCSP Response Data:
 ```
 
 !!! warning "Common errors"
-    **`OCSP response: none`** — The server is not configured to staple OCSP responses; enable OCSP stapling in your web server configuration (e.g., `ssl_stapling on;` in nginx or `SSLUseStapling on` in Apache).
-    **`error in s_client`** — Verify the hostname and port are correct, the server is reachable, and TLS is enabled on that port using `nc -zv <host> 443` first.
+    | Error | Fix |
+    |---|---|
+    | `OCSP response: none` | The server is not configured to staple OCSP responses; enable OCSP stapling in your web server configuration (e.g., `ssl_stapling on;` in nginx or `SSLUseStapling on` in Apache). |
+    | `error in s_client` | Verify the hostname and port are correct, the server is reachable, and TLS is enabled on that port using `nc -zv <host> 443` first. |
 ```bash
 ## Verify a certificate chain (cert.pem + intermediate.pem + root.pem)
 openssl verify -CAfile root.pem -untrusted intermediate.pem cert.pem
@@ -179,5 +183,7 @@ Cert Status: good
 ```
 
 !!! warning "Common errors"
-    **`error 20 at 0 depth lookup: unable to get local issuer certificate`** — Ensure the root.pem file contains the correct root CA certificate and is readable; verify the certificate chain is complete.
-    **`Error querying OCSP responder`** — The OCSP responder may be unavailable or the URL may be incorrect; verify network connectivity and that the certificate's OCSP URI is valid with `openssl x509 -in cert.pem -noout -text | grep -A1 "OCSP"`.
+    | Error | Fix |
+    |---|---|
+    | `error 20 at 0 depth lookup: unable to get local issuer certificate` | Ensure the root.pem file contains the correct root CA certificate and is readable; verify the certificate chain is complete. |
+    | `Error querying OCSP responder` | The OCSP responder may be unavailable or the URL may be incorrect; verify network connectivity and that the certificate's OCSP URI is valid with `openssl x509 -in cert.pem -noout -text | grep -A1 "OCSP"`. |

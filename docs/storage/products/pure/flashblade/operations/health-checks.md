@@ -137,7 +137,9 @@ mgmt0         Up          1500   1Gb/s      10.0.0.50
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (10.0.0.50:443)`** — Verify the FlashB
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (10.0.0.50:443)` | Verify the FlashB |
 ## Array Health
 
 ![Array Health](../../../../../assets/storage-pure-flashblade-hc-array-health.svg)
@@ -165,8 +167,10 @@ temperature-slot-2   Warning   TEMP003 Slot 2 temperature elevated         2024-
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or API token expired`** — Regenerate the API token in the Pure1 management console and update your local authentication configuration.
-    **`Error: Connection refused — unable to reach management IP`** — Verify the FlashBlade management IP is reachable and that the array is online using `ping` or `ssh`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or API token expired` | Regenerate the API token in the Pure1 management console and update your local authentication configuration. |
+    | `Error: Connection refused — unable to reach management IP` | Verify the FlashBlade management IP is reachable and that the array is online using `ping` or `ssh`. |
 Or via the FlashBlade GUI:
 - **Overview → Array** — overall health summary
 - **Storage → File Systems** / **Object Store** — capacity and status
@@ -191,8 +195,10 @@ blade-05.prod.local           Online    Pure FlashBlade//E  PFB2110A0005        
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to management interface on blade-01.prod.local`** — Verify network connectivity to the blade's management IP and confirm the FlashBlade is powered on.
-    **`Error: Authentication failed for user 'admin'`** — Check that your API token or credentials are valid and have not expired; re-authenticate with `purefb login`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to management interface on blade-01.prod.local` | Verify network connectivity to the blade's management IP and confirm the FlashBlade is powered on. |
+    | `Error: Authentication failed for user 'admin'` | Check that your API token or credentials are valid and have not expired; re-authenticate with `purefb login`. |
 All blades should show `status: healthy`. Any blade showing `unhealthy` or `failed` requires investigation.
 
 ## Drive / Media Health
@@ -216,9 +222,11 @@ fb-archive-01                 offline   FlashBlade//S  PURE-FB-S-99887766   4.8.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to management IP 10.20.30.40`** — Verify network connectivity to the FlashBlade management interface and confirm the IP is reachable.
-    **`Error: Invalid credentials for user 'admin'`** — Ensure the Pure Storage API token or username/password is correctly configured in your authentication credentials.
-    **`Error: Command 'purefb' not found`** — Install the Pure Storage Python SDK using `pip install purity-fb` or add the Pure CLI tools to your system PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to management IP 10.20.30.40` | Verify network connectivity to the FlashBlade management interface and confirm the IP is reachable. |
+    | `Error: Invalid credentials for user 'admin'` | Ensure the Pure Storage API token or username/password is correctly configured in your authentication credentials. |
+    | `Error: Command 'purefb' not found` | Install the Pure Storage Python SDK using `pip install purity-fb` or add the Pure CLI tools to your system PATH. |
 ## Network Interface Health
 
 ![Network Interface Health](../../../../../assets/storage-pure-flashblade-hc-network-interface-health.svg)
@@ -238,8 +246,10 @@ eth3     down    1500 52:54:00:a1:2b:40 —                —                �
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused — unable to reach management IP`** — Verify the FlashBlade management IP is reachable and the REST API service is running with `purefb list`.
-    **`Error: Invalid credentials — authentication failed`** — Ensure your Pure Storage API token is valid and set in the environment or configuration file.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused — unable to reach management IP` | Verify the FlashBlade management IP is reachable and the REST API service is running with `purefb list`. |
+    | `Error: Invalid credentials — authentication failed` | Ensure your Pure Storage API token is valid and set in the environment or configuration file. |
 All data VIPs should show `enabled: true` and `type: vip`.
 
 ## Replication Health
@@ -265,8 +275,10 @@ bucket-logs-archive           Synced    pureflashblade-dr-02  bucket-logs-archiv
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or unable to connect to array`** — Verify the FlashBlade management IP is reachable and authentication credentials in `~/.purerc` are current.
-    **`Error: No filesystem/bucket replica links found`** — Confirm replica links have been created using `purefb fs-replica-link create` or `purefb bucket-replica-link create` before listing.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or unable to connect to array` | Verify the FlashBlade management IP is reachable and authentication credentials in `~/.purerc` are current. |
+    | `Error: No filesystem/bucket replica links found` | Confirm replica links have been created using `purefb fs-replica-link create` or `purefb bucket-replica-link create` before listing. |
 Verify replica links show `lag-time` within expected RPO.
 
 ## Pre-Change Checklist

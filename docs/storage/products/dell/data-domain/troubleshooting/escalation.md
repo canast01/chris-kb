@@ -117,9 +117,11 @@ Serial Number: DD-SN-A4F7K2M9X1
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host <dd-ip> port 22: Connection timed out`** — Verify the DD appliance IP is correct and reachable by pinging it first, then check firewall rules allow SSH on port 22.
-    **`Permission denied (publickey,password)`** — Confirm the sysadmin account credentials are correct and that SSH key-based auth is not enforced; try using password authentication explicitly.
-    **`dd-mgmt01> system show: command not found`** — Ensure you are in the DD CLI context (not a standard bash shell); type `exit` and reconnect, or verify the DD appliance is fully booted and responsive.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host <dd-ip> port 22: Connection timed out` | Verify the DD appliance IP is correct and reachable by pinging it first, then check firewall rules allow SSH on port 22. |
+    | `Permission denied (publickey,password)` | Confirm the sysadmin account credentials are correct and that SSH key-based auth is not enforced; try using password authentication explicitly. |
+    | `dd-mgmt01> system show: command not found` | Ensure you are in the DD CLI context (not a standard bash shell); type `exit` and reconnect, or verify the DD appliance is fully booted and responsive. |
 ### 2. Capture filesystem and capacity status
 
 ```bash
@@ -163,9 +165,11 @@ replication-staging     10.0 TB     7.6 TB      2.4 TB      10.0 TB
 ```
 
 !!! warning "Common errors"
-    **`filesys: command not found`** — Verify you are logged into the Data Domain CLI (use `ssh admin@<dd-hostname>`) rather than the host shell.
-    **`Error: Filesystem is DISABLED`** — Enable the filesystem with `filesys enable` and verify licensing is active.
-    **`Error: Cannot access MTree list - insufficient permissions`** — Confirm your user account has admin or operator role using `user show`.
+    | Error | Fix |
+    |---|---|
+    | `filesys: command not found` | Verify you are logged into the Data Domain CLI (use `ssh admin@<dd-hostname>`) rather than the host shell. |
+    | `Error: Filesystem is DISABLED` | Enable the filesystem with `filesys enable` and verify licensing is active. |
+    | `Error: Cannot access MTree list - insufficient permissions` | Confirm your user account has admin or operator role using `user show`. |
 ### 3. Capture alert and event state
 
 ```bash
@@ -212,8 +216,10 @@ Jan 15 07:41:33 dd-system-01 syslog-ng: log rotation completed for /var/log/mess
 ```
 
 !!! warning "Common errors"
-    **`command not found: alerts`** — Verify you are logged into the Data Domain CLI (SSH to the management IP) and not a standard Linux shell.
-    **`Permission denied`** — Ensure your user account has sufficient privileges; use `sysadmin` account or request elevated role access.
+    | Error | Fix |
+    |---|---|
+    | `command not found: alerts` | Verify you are logged into the Data Domain CLI (SSH to the management IP) and not a standard Linux shell. |
+    | `Permission denied` | Ensure your user account has sufficient privileges; use `sysadmin` account or request elevated role access. |
 ### 4. Capture disk and hardware health
 
 ```bash
@@ -260,9 +266,11 @@ Pool: pool-01
 ```
 
 !!! warning "Common errors"
-    **`disk show: command not found`** — Verify you are logged into the Data Domain CLI (via SSH or console) and not a standard Linux shell; use `ssh admin@<dd-ip>` to connect.
-    **`Error: No disks detected`** — Check that the storage enclosures are powered on and connected; run `system show hardware` to verify enclosure connectivity.
-    **`RAID reconstruction stalled at 45%`** — Check system logs with `log show -filter 'RAID'` to identify I/O errors, and verify no additional disk failures occurred during rebuild.
+    | Error | Fix |
+    |---|---|
+    | `disk show: command not found` | Verify you are logged into the Data Domain CLI (via SSH or console) and not a standard Linux shell; use `ssh admin@<dd-ip>` to connect. |
+    | `Error: No disks detected` | Check that the storage enclosures are powered on and connected; run `system show hardware` to verify enclosure connectivity. |
+    | `RAID reconstruction stalled at 45%` | Check system logs with `log show -filter 'RAID'` to identify I/O errors, and verify no additional disk failures occurred during rebuild. |
 ### 5. Capture replication status (if replication is involved)
 
 ```bash
@@ -303,9 +311,11 @@ Context: prod-backup-01
 ```
 
 !!! warning "Common errors"
-    **`replication: command not found`** — Ensure you are logged into the Data Domain CLI (via SSH or console) and have appropriate admin privileges.
-    **`Error: context '<context-name>' does not exist`** — Verify the exact context name using `replication show` and check for typos or spaces in the context name.
-    **`Error: replication service is not running`** — Restart the replication service with `replication restart` or contact Dell support if the service fails to start.
+    | Error | Fix |
+    |---|---|
+    | `replication: command not found` | Ensure you are logged into the Data Domain CLI (via SSH or console) and have appropriate admin privileges. |
+    | `Error: context '<context-name>' does not exist` | Verify the exact context name using `replication show` and check for typos or spaces in the context name. |
+    | `Error: replication service is not running` | Restart the replication service with `replication restart` or contact Dell support if the service fails to start. |
 ### 6. Generate the support bundle
 
 ```bash
@@ -339,9 +349,11 @@ Proceeding with manual bundle transfer.
 ```
 
 !!! warning "Common errors"
-    **`support bundle generate: command not found`** — Verify you are logged into the Data Domain CLI (not the Linux shell); use `ssh sysadmin@<dd-ip>` to access the DD OS prompt.
-    **`autosupport send: case number invalid or AutoSupport not configured`** — Confirm the case number format and that AutoSupport is enabled via `autosupport show`; if unconfigured, skip to manual SCP transfer.
-    **`scp: Permission denied (publickey,password)`** — Ensure SSH key is installed on the Data Domain or add `-u sysadmin` flag and provide the password when prompted.
+    | Error | Fix |
+    |---|---|
+    | `support bundle generate: command not found` | Verify you are logged into the Data Domain CLI (not the Linux shell); use `ssh sysadmin@<dd-ip>` to access the DD OS prompt. |
+    | `autosupport send: case number invalid or AutoSupport not configured` | Confirm the case number format and that AutoSupport is enabled via `autosupport show`; if unconfigured, skip to manual SCP transfer. |
+    | `scp: Permission denied (publickey,password)` | Ensure SSH key is installed on the Data Domain or add `-u sysadmin` flag and provide the password when prompted. |
 ### 7. Write the timeline
 
 ```text
@@ -476,9 +488,11 @@ Replication Status
 ```
 
 !!! warning "Common errors"
-    **`Error: Authentication failed`** — Verify sysadmin credentials and that SSH key-based auth is configured, or use `ssh -l admin` with password prompt.
-    **`Error: Command not found`** — Ensure you are in the Data Domain CLI (not bash shell); exit bash with `exit` and reconnect via SSH.
-    **`Error: Insufficient privileges for this command`** — Confirm you are logged in as sysadmin user; use `whoami` to verify and reconnect if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: Authentication failed` | Verify sysadmin credentials and that SSH key-based auth is configured, or use `ssh -l admin` with password prompt. |
+    | `Error: Command not found` | Ensure you are in the Data Domain CLI (not bash shell); exit bash with `exit` and reconnect via SSH. |
+    | `Error: Insufficient privileges for this command` | Confirm you are logged in as sysadmin user; use `whoami` to verify and reconnect if needed. |
 ---
 
 ## Support SLA Reference

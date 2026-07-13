@@ -123,9 +123,11 @@ success
 ```
 
 !!! warning "Common errors"
-    **`Error: model 'llama3.2' not found`** — Run `ollama pull llama3.2` first to download the model before attempting to use it.
-    **`Error: push failed: unauthorized`** — Authenticate with `ollama login` and ensure your namespace matches your Ollama Hub username.
-    **`Error: insufficient disk space: need 8.0 GB, have 2.5 GB available`** — Free up disk space or pull a smaller model variant (e.g., `ollama pull llama3.2:3b` instead of the full 8B version).
+    | Error | Fix |
+    |---|---|
+    | `Error: model 'llama3.2' not found` | Run `ollama pull llama3.2` first to download the model before attempting to use it. |
+    | `Error: push failed: unauthorized` | Authenticate with `ollama login` and ensure your namespace matches your Ollama Hub username. |
+    | `Error: insufficient disk space: need 8.0 GB, have 2.5 GB available` | Free up disk space or pull a smaller model variant (e.g., `ollama pull llama3.2:3b` instead of the full 8B version). |
 ---
 
 ## Running Models
@@ -182,9 +184,11 @@ mistral         f6e5d4c3b2a1    13GB      GPU             2 minutes from now
 ```
 
 !!! warning "Common errors"
-    **`Error: model 'llama3.2' not found, try pulling it first`** — Run `ollama pull llama3.2` to download the model before attempting to run it.
-    **`Error: CUDA out of memory. Tried to allocate 2.50 GiB`** — Reduce the model size (e.g., use `llama3.2:7b` instead of `70b`), or stop other running models with `ollama stop <model_name>`.
-    **`Error: image file not found: /path/to/image.png`** — Verify the image path exists and use an absolute path or relative path from your current working directory.
+    | Error | Fix |
+    |---|---|
+    | `Error: model 'llama3.2' not found, try pulling it first` | Run `ollama pull llama3.2` to download the model before attempting to run it. |
+    | `Error: CUDA out of memory. Tried to allocate 2.50 GiB` | Reduce the model size (e.g., use `llama3.2:7b` instead of `70b`), or stop other running models with `ollama stop <model_name>`. |
+    | `Error: image file not found: /path/to/image.png` | Verify the image path exists and use an absolute path or relative path from your current working directory. |
 ---
 
 ## Server
@@ -245,9 +249,11 @@ time=2025-01-15T09:42:33.920Z level=INFO msg="Ollama is running"
 ```
 
 !!! warning "Common errors"
-    **`Error: listen tcp 127.0.0.1:11434: bind: address already in use`** — Kill the existing Ollama process with `pkill ollama` or use a different port with `OLLAMA_HOST=127.0.0.1:11435 ollama serve`.
-    **`curl: (7) Failed to connect to localhost port 11434: Connection refused`** — Start the Ollama server first with `ollama serve` in another terminal or background process.
-    **`{"error":"model 'llama3.2' not found"}`** — Pull the model first with `ollama pull llama3.2` before sending requests.
+    | Error | Fix |
+    |---|---|
+    | `Error: listen tcp 127.0.0.1:11434: bind: address already in use` | Kill the existing Ollama process with `pkill ollama` or use a different port with `OLLAMA_HOST=127.0.0.1:11435 ollama serve`. |
+    | `curl: (7) Failed to connect to localhost port 11434: Connection refused` | Start the Ollama server first with `ollama serve` in another terminal or background process. |
+    | `{"error":"model 'llama3.2' not found"}` | Pull the model first with `ollama pull llama3.2` before sending requests. |
 ---
 
 ## Custom Models (Modelfiles)
@@ -305,9 +311,11 @@ successfully created model 'infra-assistant'
 ```
 
 !!! warning "Common errors"
-    **`error: model not found`** — Run `ollama pull llama3.2` first to download the base model from the registry.
-    **`error: open Modelfile: no such file or directory`** — Verify the Modelfile path is correct and you're in the directory where you created it with `cat >`.
-    **`error: failed to create model: context length exceeds maximum`** — Reduce `num_ctx` value (e.g., to 4096) if your system lacks sufficient VRAM to support the requested context window.
+    | Error | Fix |
+    |---|---|
+    | `error: model not found` | Run `ollama pull llama3.2` first to download the base model from the registry. |
+    | `error: open Modelfile: no such file or directory` | Verify the Modelfile path is correct and you're in the directory where you created it with `cat >`. |
+    | `error: failed to create model: context length exceeds maximum` | Reduce `num_ctx` value (e.g., to 4096) if your system lacks sufficient VRAM to support the requested context window. |
 ---
 
 ## Environment & Configuration
@@ -366,9 +374,11 @@ Jan 10 15:47:12 ai-server ollama[2847]: time=2024-01-10T15:47:12.891Z level=INFO
 ```
 
 !!! warning "Common errors"
-    **`Error: mkdir /data/ollama: permission denied`** — Run the command with `sudo` or ensure the user running ollama has write permissions to the parent directory.
-    **`journalctl: No such file or directory`** — Use `sudo journalctl -u ollama -f` or check that systemd is installed; on non-systemd systems use `tail -f /var/log/ollama.log` instead.
-    **`[Service] section not found in /etc/systemd/system/ollama.service.d/override.conf`** — Ensure `sudo systemctl edit ollama` opens the editor correctly and the syntax includes `[Service]` header before environment variables.
+    | Error | Fix |
+    |---|---|
+    | `Error: mkdir /data/ollama: permission denied` | Run the command with `sudo` or ensure the user running ollama has write permissions to the parent directory. |
+    | `journalctl: No such file or directory` | Use `sudo journalctl -u ollama -f` or check that systemd is installed; on non-systemd systems use `tail -f /var/log/ollama.log` instead. |
+    | `[Service] section not found in /etc/systemd/system/ollama.service.d/override.conf` | Ensure `sudo systemctl edit ollama` opens the editor correctly and the syntax includes `[Service]` header before environment variables. |
 ---
 
 ## Common Patterns
@@ -440,9 +450,11 @@ success
 Running model my-local-model...
 What would you like to know?
 !!! warning "Common errors"
-    **`Error: model "llama3.2" not found, try pulling it first`** — Run `ollama pull llama3.2` before attempting to run the model.
-    **`Error: connection refused — connect to localhost:11434`** — Ensure the Ollama service is running with `ollama serve` or verify it's listening on port 11434.
-    **`Error: failed to create model: file not found "/path/to/model.gguf"`** — Verify the GGUF file path exists and use the absolute path in the Modelfile `FROM` directive.
+    | Error | Fix |
+    |---|---|
+    | `Error: model "llama3.2" not found, try pulling it first` | Run `ollama pull llama3.2` before attempting to run the model. |
+    | `Error: connection refused — connect to localhost:11434` | Ensure the Ollama service is running with `ollama serve` or verify it's listening on port 11434. |
+    | `Error: failed to create model: file not found "/path/to/model.gguf"` | Verify the GGUF file path exists and use the absolute path in the Modelfile `FROM` directive. |
 ## See also
 
 - [Ollama — Overview](../../)

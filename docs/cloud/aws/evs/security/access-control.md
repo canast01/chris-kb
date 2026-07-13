@@ -112,9 +112,11 @@ aws iam attach-role-policy --role-name EVS-ReadOnly \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDenied) when calling the ListEnvironments operation: User: arn:aws:iam::123456789012:user/evs-admin is not authorized to perform: evs:ListEnvironments`** — Attach the `AmazonEVSFullAccess` or `AmazonEVSReadOnlyAccess` policy to the IAM user or role.
-    **`An error occurred (EntityAlreadyExists) when calling the CreateRole operation: Role with name EVS-ReadOnly already exists`** — Use `aws iam delete-role --role-name EVS-ReadOnly` first, or choose a different role name.
-    **`An error occurred (MalformedPolicyDocument) when calling the CreateRole operation: Invalid principal in AssumeRolePolicyDocument`** — Replace the hardcoded account ID `123456789012` with your actual AWS account ID from `aws sts get-caller-identity`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDenied) when calling the ListEnvironments operation: User: arn:aws:iam::123456789012:user/evs-admin is not authorized to perform: evs:ListEnvironments` | Attach the `AmazonEVSFullAccess` or `AmazonEVSReadOnlyAccess` policy to the IAM user or role. |
+    | `An error occurred (EntityAlreadyExists) when calling the CreateRole operation: Role with name EVS-ReadOnly already exists` | Use `aws iam delete-role --role-name EVS-ReadOnly` first, or choose a different role name. |
+    | `An error occurred (MalformedPolicyDocument) when calling the CreateRole operation: Invalid principal in AssumeRolePolicyDocument` | Replace the hardcoded account ID `123456789012` with your actual AWS account ID from `aws sts get-caller-identity`. |
 ## IAM Policy Design
 
 ### Minimal Cluster Management Policy
@@ -309,9 +311,11 @@ backup-svc@domain.com: BACKUP_ADMIN
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify SDDC_USER and SDDC_PASS are set correctly).
-    **`jq: command not found`** — Use the provided Python one-liner instead, or install jq with `apt-get install jq` and pipe to `jq '.elements[] | "\(.name): \(.role.name)"'`.
-    **`{"error":"Invalid role name OPERATOR"}`** — Verify the role name matches your VCF version (try ADMIN, OPERATOR, or BACKUP_ADMIN) by listing available roles with `curl -sk -u "$SDDC_USER:$SDDC_PASS" "https://sddc-manager.vcf.internal/v1/roles"`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify SDDC_USER and SDDC_PASS are set correctly). |
+    | `jq: command not found` | Use the provided Python one-liner instead, or install jq with `apt-get install jq` and pipe to `jq '.elements[] | "\(.name): \(.role.name)"'`. |
+    | `{"error":"Invalid role name OPERATOR"}` | Verify the role name matches your VCF version (try ADMIN, OPERATOR, or BACKUP_ADMIN) by listing available roles with `curl -sk -u "$SDDC_USER:$SDDC_PASS" "https://sddc-manager.vcf.internal/v1/roles"`. |
 ## Principle of Least Privilege
 
 Separate IAM identities by function. Do not use a single IAM role for both EVS cluster management and vSphere VM management — these are independent planes of control.

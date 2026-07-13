@@ -97,9 +97,11 @@ notAfter=Jan 14 23:59:59 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the certificate file path is correct and the file contains valid PEM-formatted data (check for `-----BEGIN CERTIFICATE-----` header).
-    **`error:14094410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure`** — Ensure the hostname matches the certificate's CN or SAN, and the server is reachable on port 443 with TLS enabled.
-    **`No certificate returned by server`** — Add `-showcerts` flag to `s_client` to debug the connection, or verify the server is responding to TLS handshakes on the specified port.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the certificate file path is correct and the file contains valid PEM-formatted data (check for `-----BEGIN CERTIFICATE-----` header). |
+    | `error:14094410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure` | Ensure the hostname matches the certificate's CN or SAN, and the server is reachable on port 443 with TLS enabled. |
+    | `No certificate returned by server` | Add `-showcerts` flag to `s_client` to debug the connection, or verify the server is responding to TLS handshakes on the specified port. |
 ## Generating a CSR
 
 ```bash
@@ -137,9 +139,11 @@ writing new private key to 'server.key'
 ```
 
 !!! warning "Common errors"
-    **`Can't open config file: san.cnf`** — Ensure the config file is created in the current working directory before running the second openssl command.
-    **`unable to write 'random state'`** — Run the commands with appropriate write permissions to the working directory, or use a temporary directory with `cd /tmp` first.
-    **`req: Unrecognized flag -config`** — Verify your OpenSSL version supports the `-config` flag (available in OpenSSL 1.0.0+); use `openssl version` to check.
+    | Error | Fix |
+    |---|---|
+    | `Can't open config file: san.cnf` | Ensure the config file is created in the current working directory before running the second openssl command. |
+    | `unable to write 'random state'` | Run the commands with appropriate write permissions to the working directory, or use a temporary directory with `cd /tmp` first. |
+    | `req: Unrecognized flag -config` | Verify your OpenSSL version supports the `-config` flag (available in OpenSSL 1.0.0+); use `openssl version` to check. |
 ## Certificate Formats
 
 | Format | Extension | Description | Convert |
@@ -170,8 +174,10 @@ MAC verified OK
 ```
 
 !!! warning "Common errors"
-    **`Error outputting keys from pkcs12 file for writing`** — Ensure the PKCS#12 file is not corrupted and you entered the correct import password when prompted.
-    **`Mac verify error`** — The PKCS#12 file password is incorrect; re-run the command and enter the matching export password used during creation.
+    | Error | Fix |
+    |---|---|
+    | `Error outputting keys from pkcs12 file for writing` | Ensure the PKCS#12 file is not corrupted and you entered the correct import password when prompted. |
+    | `Mac verify error` | The PKCS#12 file password is incorrect; re-run the command and enter the matching export password used during creation. |
 ## Key Sizes and Algorithms
 
 | Algorithm | Minimum | Recommended | Notes |

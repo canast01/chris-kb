@@ -174,9 +174,11 @@ Data collection complete. Logs available in: must-gather.local.8742391847362/
 ```
 
 !!! warning "Common errors"
-    **`error: image pull backoff`** — Verify the image registry is accessible and credentials are configured with `oc login` to registry.redhat.io.
-    **`error: unable to connect to the server: dial tcp: lookup api.cluster.local on [IP]: no such host`** — Ensure you are logged into the correct OpenShift cluster with `oc login` and your kubeconfig is valid.
-    **`error: You must be logged in to the server (Unauthorized)`** — Authenticate with cluster admin credentials using `oc login -u kubeadmin` or your service account token.
+    | Error | Fix |
+    |---|---|
+    | `error: image pull backoff` | Verify the image registry is accessible and credentials are configured with `oc login` to registry.redhat.io. |
+    | `error: unable to connect to the server: dial tcp: lookup api.cluster.local on [IP]: no such host` | Ensure you are logged into the correct OpenShift cluster with `oc login` and your kubeconfig is valid. |
+    | `error: You must be logged in to the server (Unauthorized)` | Authenticate with cluster admin credentials using `oc login -u kubeadmin` or your service account token. |
 ## Escalation Path (Step-by-Step)
 
 ```text
@@ -261,9 +263,11 @@ Creating SOS report...
 ```
 
 !!! warning "Common errors"
-    **`sed: can't read /tmp/ceph-status.txt: No such file or directory`** — Ensure the ceph status output file exists at the specified path before running sed, or generate it first with `ceph status > /tmp/ceph-status.txt`.
-    **`sos: command not found`** — Install the sos package with `apt install sosreport` (Debian/Ubuntu) or `yum install sos` (RHEL/CentOS).
-    **`Permission denied`** — Run the grep and sed commands with sudo or as root since keyring files are typically readable only by root.
+    | Error | Fix |
+    |---|---|
+    | `sed: can't read /tmp/ceph-status.txt: No such file or directory` | Ensure the ceph status output file exists at the specified path before running sed, or generate it first with `ceph status > /tmp/ceph-status.txt`. |
+    | `sos: command not found` | Install the sos package with `apt install sosreport` (Debian/Ubuntu) or `yum install sos` (RHEL/CentOS). |
+    | `Permission denied` | Run the grep and sed commands with sudo or as root since keyring files are typically readable only by root. |
 ## Emergency Recovery Commands
 
 ```bash
@@ -317,8 +321,10 @@ $ ceph osd unset pause
 ```
 
 !!! warning "Common errors"
-    **`Error: error connecting to the cluster`** — Verify MON quorum with `ceph mon stat`; if quorum is lost, restart failed MON services with `systemctl restart ceph-mon@<hostname>` on down nodes.
-    **`Error: ENOENT: error reading /var/lib/ceph/mon/ceph-<hostname>/store.db`** — The MON data directory is corrupted; restore
+    | Error | Fix |
+    |---|---|
+    | `Error: error connecting to the cluster` | Verify MON quorum with `ceph mon stat`; if quorum is lost, restart failed MON services with `systemctl restart ceph-mon@<hostname>` on down nodes. |
+    | `Error: ENOENT: error reading /var/lib/ceph/mon/ceph-<hostname>/store.db` | The MON data directory is corrupted; restore |
 ## Pre-Case Self-Service Checklist
 
 Before opening a support case, check the Red Hat Knowledge Base for known solutions:
@@ -374,8 +380,10 @@ ceph version 16.2.14 (3fa80b905f538541846fb43e8db18cf3e9e1d054) pacific
 ```
 
 !!! warning "Common errors"
-    **`Error connecting to cluster: [Errno 2] No such file or directory`** — Ensure the Ceph cluster is running and `/etc/ceph/ceph.conf` is properly configured with valid monitor addresses.
-    **`permission denied: insufficient capabilities for user`** — Run the command with appropriate privileges (e.g., as root or with `sudo`) or ensure your user has read access to `/etc/ceph/ceph.client.admin.keyring`.
+    | Error | Fix |
+    |---|---|
+    | `Error connecting to cluster: [Errno 2] No such file or directory` | Ensure the Ceph cluster is running and `/etc/ceph/ceph.conf` is properly configured with valid monitor addresses. |
+    | `permission denied: insufficient capabilities for user` | Run the command with appropriate privileges (e.g., as root or with `sudo`) or ensure your user has read access to `/etc/ceph/ceph.client.admin.keyring`. |
 ## Information to Include in Every Case
 
 When filing any Ceph support case, always include the following regardless of severity. Missing information adds round-trip delay.

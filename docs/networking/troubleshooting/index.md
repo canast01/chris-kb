@@ -65,9 +65,11 @@ api.example.com.		3600	IN	A	192.0.2.45
 ```
 
 !!! warning "Common errors"
-    **`nslookup: can't resolve '<hostname>': Non-existent domain`** — Verify the hostname spelling and that DNS resolution is working by testing with a known domain like google.com.
-    **`dig: couldn't get address for '<dns_server_ip>': not known`** — Ensure the DNS server IP address is correct and reachable; verify connectivity with `ping <dns_server_ip>`.
-    **`connection timed out; no servers could be reached`** — Check that your network connectivity is active and the DNS server is accessible; try querying a public DNS server like 8.8.8.8 to isolate the issue.
+    | Error | Fix |
+    |---|---|
+    | `nslookup: can't resolve '<hostname>': Non-existent domain` | Verify the hostname spelling and that DNS resolution is working by testing with a known domain like google.com. |
+    | `dig: couldn't get address for '<dns_server_ip>': not known` | Ensure the DNS server IP address is correct and reachable; verify connectivity with `ping <dns_server_ip>`. |
+    | `connection timed out; no servers could be reached` | Check that your network connectivity is active and the DNS server is accessible; try querying a public DNS server like 8.8.8.8 to isolate the issue. |
 ```bash
 ping <dns_server_ip>
 nslookup <hostname> <dns_server_ip>
@@ -92,9 +94,11 @@ Address: 192.168.1.45
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <dns_server_ip>`** — Replace `<dns_server_ip>` with an actual IP address like `8.8.8.8` or verify the DNS server is reachable.
-    **`** server can't find <hostname>: NXDOMAIN`** — Verify the hostname is correct and exists in the DNS server's zone; check with `nslookup <hostname>` against a known working DNS server.
-    **`connection timed out; no servers could be reached`** — Confirm the DNS server IP is correct and accessible on port 53, and check firewall rules allow DNS traffic.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <dns_server_ip>` | Replace `<dns_server_ip>` with an actual IP address like `8.8.8.8` or verify the DNS server is reachable. |
+    | `** server can't find <hostname>: NXDOMAIN` | Verify the hostname is correct and exists in the DNS server's zone; check with `nslookup <hostname>` against a known working DNS server. |
+    | `connection timed out; no servers could be reached` | Confirm the DNS server IP is correct and accessible on port 53, and check firewall rules allow DNS traffic. |
 ```bash
 # Forward: name → IP
 dig <hostname>
@@ -117,8 +121,10 @@ systemctl restart systemd-resolved
 ```
 
 !!! warning "Common errors"
-    **`Failed to flush caches: Access denied`** — Run the command with `sudo` since cache flushing requires root privileges.
-    **`Unit systemd-resolved.service not found.`** — Ensure systemd-resolved is installed and enabled with `systemctl enable systemd-resolved` on your distribution.
+    | Error | Fix |
+    |---|---|
+    | `Failed to flush caches: Access denied` | Run the command with `sudo` since cache flushing requires root privileges. |
+    | `Unit systemd-resolved.service not found.` | Ensure systemd-resolved is installed and enabled with `systemctl enable systemd-resolved` on your distribution. |
 ```bash
 # Linux — check interface link state
 ip link show
@@ -142,8 +148,10 @@ Settings for eth0:
 ```
 
 !!! warning "Common errors"
-    **`ethtool: command not found`** — Install ethtool with `sudo apt install ethtool` (Debian/Ubuntu) or `sudo yum install ethtool` (RHEL/CentOS).
-    **`Cannot get device settings: No such device`** — Verify the interface name is correct by running `ip link show` first; common typos include `eth0` vs `en0` or `ens0`.
+    | Error | Fix |
+    |---|---|
+    | `ethtool: command not found` | Install ethtool with `sudo apt install ethtool` (Debian/Ubuntu) or `sudo yum install ethtool` (RHEL/CentOS). |
+    | `Cannot get device settings: No such device` | Verify the interface name is correct by running `ip link show` first; common typos include `eth0` vs `en0` or `ens0`. |
 ```bash
 # Check ARP table (confirm MAC resolved)
 arp -a
@@ -166,8 +174,10 @@ STALE (10.0.0.200) lladdr 7f:9a:0b:1c:2d:3e dev eth1
 ```
 
 !!! warning "Common errors"
-    **`INCOMPLETE ENTRY`** — Run `ping <IP>` to trigger ARP resolution, then check `arp -a` again.
-    **`No ARP entries found`** — Verify the interface is up with `ip link show` and the network is reachable with `ping`.
+    | Error | Fix |
+    |---|---|
+    | `INCOMPLETE ENTRY` | Run `ping <IP>` to trigger ARP resolution, then check `arp -a` again. |
+    | `No ARP entries found` | Verify the interface is up with `ip link show` and the network is reachable with `ping`. |
 ```bash
 # Confirm IP configuration
 ip addr show
@@ -208,9 +218,11 @@ PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
 ```
 
 !!! warning "Common errors"
-    **`RTNETLINK answers: No such file or directory`** — Ensure the network interface exists with `ip link show` and verify the interface name is correct.
-    **`ping: unknown host <gateway_ip>`** — Replace `<gateway_ip>` with an actual IP address (e.g., `192.168.1.1`) instead of the placeholder variable.
-    **`Network is unreachable`** — Verify the default gateway is configured with `ip route show default` and that the interface is UP with `ip link show`.
+    | Error | Fix |
+    |---|---|
+    | `RTNETLINK answers: No such file or directory` | Ensure the network interface exists with `ip link show` and verify the interface name is correct. |
+    | `ping: unknown host <gateway_ip>` | Replace `<gateway_ip>` with an actual IP address (e.g., `192.168.1.1`) instead of the placeholder variable. |
+    | `Network is unreachable` | Verify the default gateway is configured with `ip route show default` and that the interface is UP with `ip link show`. |
 ```bash
 # Test specific TCP port
 nc -zv <host> <port>
@@ -260,9 +272,11 @@ public (active)
 ```
 
 !!! warning "Common errors"
-    **`nc: getaddrinfo: Name or service not known`** — Verify the hostname is correct and resolvable with `nslookup <host>` or `dig <host>`.
-    **`Connection refused`** — Confirm the service is running on the target host with `netstat -tlnp | grep <port>` or `ss -tlnp | grep <port>`.
-    **`firewall-cmd: command not found`** — Use `iptables -L -n` instead if firewalld is not installed, or install firewalld with `dnf install firewalld` on RHEL/Fedora systems.
+    | Error | Fix |
+    |---|---|
+    | `nc: getaddrinfo: Name or service not known` | Verify the hostname is correct and resolvable with `nslookup <host>` or `dig <host>`. |
+    | `Connection refused` | Confirm the service is running on the target host with `netstat -tlnp | grep <port>` or `ss -tlnp | grep <port>`. |
+    | `firewall-cmd: command not found` | Use `iptables -L -n` instead if firewalld is not installed, or install firewalld with `dnf install firewalld` on RHEL/Fedora systems. |
 ```bash
 traceroute <destination>    # Linux/Mac
 tracert <destination>       # Windows
@@ -279,9 +293,11 @@ traceroute to example.com (93.184.216.34), 30 hops max, 60 byte packets
 ```
 
 !!! warning "Common errors"
-    **`traceroute: command not found`** — Install traceroute with `apt-get install traceroute` (Linux) or `brew install traceroute` (macOS).
-    **`traceroute: sendto: Operation not permitted`** — Run the command with `sudo` to obtain the necessary raw socket permissions.
-    **`traceroute: getaddrinfo: Name or service not known`** — Verify the destination hostname or IP address is correct and reachable from your network.
+    | Error | Fix |
+    |---|---|
+    | `traceroute: command not found` | Install traceroute with `apt-get install traceroute` (Linux) or `brew install traceroute` (macOS). |
+    | `traceroute: sendto: Operation not permitted` | Run the command with `sudo` to obtain the necessary raw socket permissions. |
+    | `traceroute: getaddrinfo: Name or service not known` | Verify the destination hostname or IP address is correct and reachable from your network. |
 ```bash
 # ICMP ping
 ping -c 4 <host>
@@ -329,9 +345,11 @@ Host                                           Loss%   Snt   Last   Avg  Best  W
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <destination>`** — Replace `<destination>` with an actual hostname or IP address (e.g., `8.8.8.8` or `google.com`).
-    **`mtr: command not found`** — Install mtr using your package manager (`apt install mtr` on Debian/Ubuntu or `brew install mtr` on macOS).
-    **`ICMP administratively prohibited`** — Verify the destination allows ICMP traffic; some firewalls block ping requests, so check network policies or use `mtr --tcp` as an alternative.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <destination>` | Replace `<destination>` with an actual hostname or IP address (e.g., `8.8.8.8` or `google.com`). |
+    | `mtr: command not found` | Install mtr using your package manager (`apt install mtr` on Debian/Ubuntu or `brew install mtr` on macOS). |
+    | `ICMP administratively prohibited` | Verify the destination allows ICMP traffic; some firewalls block ping requests, so check network policies or use `mtr --tcp` as an alternative. |
 ```bash
 # Linux
 ethtool -S <interface> | grep -i error
@@ -373,8 +391,10 @@ Inter-|   Receive                                                |  Transmit
 ```
 
 !!! warning "Common errors"
-    **`ethtool: operation not permitted`** — Run the command with `sudo` or as root user.
-    **`Device "eth0" does not exist`** — Replace `eth0` with the correct interface name from `ip link show` or `ifconfig`.
+    | Error | Fix |
+    |---|---|
+    | `ethtool: operation not permitted` | Run the command with `sudo` or as root user. |
+    | `Device "eth0" does not exist` | Replace `eth0` with the correct interface name from `ip link show` or `ifconfig`. |
 ```bash
 ethtool <interface>
 # Look for: Speed: 1000Mb/s, Duplex: Full
@@ -402,9 +422,11 @@ Settings for eth0:
 ```
 
 !!! warning "Common errors"
-    **`No such device`** — Verify the interface name with `ip link show` and use the correct interface (e.g., eth0, ens3, wlan0).
-    **`Operation not permitted`** — Run the command with `sudo` or as root: `sudo ethtool <interface>`.
-    **`Speed: Unknown!`** — Check physical cable connection and NIC driver; restart the interface with `sudo ip link set <interface> down && sudo ip link set <interface> up`.
+    | Error | Fix |
+    |---|---|
+    | `No such device` | Verify the interface name with `ip link show` and use the correct interface (e.g., eth0, ens3, wlan0). |
+    | `Operation not permitted` | Run the command with `sudo` or as root: `sudo ethtool <interface>`. |
+    | `Speed: Unknown!` | Check physical cable connection and NIC driver; restart the interface with `sudo ip link set <interface> down && sudo ip link set <interface> up`. |
 ```bash
 show interface <int>
 # Look for: duplex full, 1000 Mbps
@@ -430,9 +452,11 @@ Interface GigabitEthernet0/0/1
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the interface name format matches your device type (e.g., `GigabitEthernet0/0/1`, `eth0`, or `Ethernet1/1`).
-    **`% Incomplete command.`** — Provide the full interface identifier after the command (e.g., `show interface GigabitEthernet0/0/1`).
-    **`Interface <int> does not exist.`** — Confirm the interface exists on the device using `show ip interface brief` to list all available interfaces.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the interface name format matches your device type (e.g., `GigabitEthernet0/0/1`, `eth0`, or `Ethernet1/1`). |
+    | `% Incomplete command.` | Provide the full interface identifier after the command (e.g., `show interface GigabitEthernet0/0/1`). |
+    | `Interface <int> does not exist.` | Confirm the interface exists on the device using `show ip interface brief` to list all available interfaces. |
 ```bash
 # Linux — show interface TX/RX drops
 ip -s link show <interface>
@@ -448,8 +472,10 @@ ip -s link show <interface>
 ```
 
 !!! warning "Common errors"
-    **`Device "eth0" does not exist.`** — Verify the interface name with `ip link show` and substitute the correct interface name.
-    **`RTNETLINK answers: Operation not permitted`** — Run the command with `sudo` or as root user.
+    | Error | Fix |
+    |---|---|
+    | `Device "eth0" does not exist.` | Verify the interface name with `ip link show` and substitute the correct interface name. |
+    | `RTNETLINK answers: Operation not permitted` | Run the command with `sudo` or as root user. |
 ```bash
 show interface <int> counters    # Cisco
 show interface <int>             # look for output drops
@@ -471,8 +497,10 @@ Interface GigabitEthernet0/0/1
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the interface name matches your platform syntax (e.g., `GigabitEthernet0/0/1` vs `Ethernet0/0`).
-    **`% Incomplete command.`** — Add the full interface identifier after the command; `show interface` alone may not work on all Cisco IOS versions.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the interface name matches your platform syntax (e.g., `GigabitEthernet0/0/1` vs `Ethernet0/0`). |
+    | `% Incomplete command.` | Add the full interface identifier after the command; `show interface` alone may not work on all Cisco IOS versions. |
 ```bash
 # Check SFP/cable on the switch port
 show interface <int> transceiver    # Cisco
@@ -499,9 +527,11 @@ Voltage: 3.28V
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the interface name syntax matches your platform (e.g., `GigabitEthernet0/0/1` vs `Ethernet1/1`) and check device documentation.
-    **`% Transceiver information not available.`** — Reseat the SFP module or replace it; the transceiver may not be fully inserted or is faulty.
-    **`RX Power: -15.2 dBm (below spec: -6.5 to -0.5 dBm)`** — Check cable connections for dirt/damage, verify the remote end is transmitting, and test with a known-good cable.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the interface name syntax matches your platform (e.g., `GigabitEthernet0/0/1` vs `Ethernet1/1`) and check device documentation. |
+    | `% Transceiver information not available.` | Reseat the SFP module or replace it; the transceiver may not be fully inserted or is faulty. |
+    | `RX Power: -15.2 dBm (below spec: -6.5 to -0.5 dBm)` | Check cable connections for dirt/damage, verify the remote end is transmitting, and test with a known-good cable. |
 ```bash
 ping -M do -s 8972 <destination>    # iSCSI/NFS MTU test (9000 bytes)
 ping -M do -s 1472 <destination>    # standard MTU test
@@ -529,8 +559,10 @@ rtt min/avg/max/stddev = 2.35/2.37/2.39/0.02 ms
 ```
 
 !!! warning "Common errors"
-    **`ping: sendto: Message too long`** — Reduce packet size or verify the interface MTU supports jumbo frames with `ip link show` and increase with `ip link set dev <interface> mtu 9000`.
-    **`ping: unknown host <destination>`** — Verify the hostname or IP address is correct and reachable on the network.
+    | Error | Fix |
+    |---|---|
+    | `ping: sendto: Message too long` | Reduce packet size or verify the interface MTU supports jumbo frames with `ip link show` and increase with `ip link set dev <interface> mtu 9000`. |
+    | `ping: unknown host <destination>` | Verify the hostname or IP address is correct and reachable on the network. |
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="network-connectivity/"><strong>Network Connectivity</strong><span>End-to-end connectivity troubleshooting — L1 through L7 diagnostic procedures and tools.</span></a>
 <a class="kb-card" href="dns-resolution/"><strong>DNS Resolution Failures</strong><span>DNS resolution failure diagnosis — resolver, zone, and client-side troubleshooting steps.</span></a>

@@ -84,8 +84,10 @@ user.admin@company.onmicrosoft.com
 ```
 
 !!! warning "Common errors"
-    **`ERROR: AADSTS65001: User or admin has not consented to use the application with ID...`** — Run `az login` to re-authenticate and grant consent to the Azure CLI application.
-    **`ERROR: The subscription of type 'User' is not supported...`** — Switch to a supported subscription using `az account set --subscription <subscription-id>`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: AADSTS65001: User or admin has not consented to use the application with ID...` | Run `az login` to re-authenticate and grant consent to the Azure CLI application. |
+    | `ERROR: The subscription of type 'User' is not supported...` | Switch to a supported subscription using `az account set --subscription <subscription-id>`. |
 ---
 
 ### Pre-Checks
@@ -131,8 +133,10 @@ snapshot-prod-vm-disk-20240115  prod-rg          /subscriptions/a1b2c3d4-e5f6-78
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name matches exactly and exists in the current subscription with `az group list`.
-    **`The resource 'Microsoft.Compute/disks/<disk-name>' under resource group '<rg-name>' was not found`** — Confirm the disk name is correct and exists in the specified resource group using `az disk list --resource-group <rg-name>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name matches exactly and exists in the current subscription with `az group list`. |
+    | `The resource 'Microsoft.Compute/disks/<disk-name>' under resource group '<rg-name>' was not found` | Confirm the disk name is correct and exists in the specified resource group using `az disk list --resource-group <rg-name>`. |
 Pre-check checklist:
 
 | Check | Expected Result | Actual Result | Pass/Fail |
@@ -185,9 +189,11 @@ az vm wait \
 ```
 
 !!! warning "Common errors"
-    **`The resource group '<rg-name>' could not be found.`** — Verify the resource group name with `az group list` and ensure you are authenticated to the correct subscription.
-    **`The virtual machine '<vm-name>' does not exist in the specified resource group.`** — Confirm the VM name matches exactly with `az vm list --resource-group <rg-name>` and check for typos.
-    **`Operation timed out waiting for condition.`** — Increase the wait timeout or check VM status with `az vm get-instance-view --resource-group <rg-name> --name <vm-name>` to diagnose stuck deallocations.
+    | Error | Fix |
+    |---|---|
+    | `The resource group '<rg-name>' could not be found.` | Verify the resource group name with `az group list` and ensure you are authenticated to the correct subscription. |
+    | `The virtual machine '<vm-name>' does not exist in the specified resource group.` | Confirm the VM name matches exactly with `az vm list --resource-group <rg-name>` and check for typos. |
+    | `Operation timed out waiting for condition.` | Increase the wait timeout or check VM status with `az vm get-instance-view --resource-group <rg-name> --name <vm-name>` to diagnose stuck deallocations. |
 #### Step 2 — Apply the change
 
 ```bash
@@ -237,9 +243,11 @@ az vm disk attach \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg-name>' was not found.`** — Verify the VM name and resource group name are correct using `az vm list --resource-group <rg-name>`.
-    **`InvalidParameter: The VM '<vm-name>' is in a failed provisioning state and cannot be resized.`** — Deallocate the VM first with `az vm deallocate --resource-group <rg-name> --name <vm-name>`, then retry the resize.
-    **`ManagedDiskAlreadyAttached: Managed disk '<disk-name>' is already attached to another VM.`** — Detach the disk from its current VM using `az vm disk detach --resource-group <rg-name> --vm-name <current-vm> --name <disk-name>` before attaching it elsewhere.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg-name>' was not found.` | Verify the VM name and resource group name are correct using `az vm list --resource-group <rg-name>`. |
+    | `InvalidParameter: The VM '<vm-name>' is in a failed provisioning state and cannot be resized.` | Deallocate the VM first with `az vm deallocate --resource-group <rg-name> --name <vm-name>`, then retry the resize. |
+    | `ManagedDiskAlreadyAttached: Managed disk '<disk-name>' is already attached to another VM.` | Detach the disk from its current VM using `az vm disk detach --resource-group <rg-name> --vm-name <current-vm> --name <disk-name>` before attaching it elsewhere. |
 #### Step 3 — Restart and verify
 
 ```bash
@@ -269,8 +277,10 @@ VM running
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure you're using the correct subscription via `az account set --subscription <id>`.
-    **`ResourceNotFound`** — Confirm the VM exists in the specified resource group using `az vm list --resource-group <rg-name>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure you're using the correct subscription via `az account set --subscription <id>`. |
+    | `ResourceNotFound` | Confirm the VM exists in the specified resource group using `az vm list --resource-group <rg-name>`. |
 ---
 
 ### Rollback Procedure
@@ -317,9 +327,11 @@ az resource delete --ids <resource-id> --yes
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg-name>' was not found.`** — Verify the VM name and resource group name are correct with `az vm list --resource-group <rg-name>`.
-    **`InvalidParameter : The value of parameter 'source' is invalid. The source resource does not exist.`** — Confirm the snapshot ID exists and is in the same region as the target resource group using `az snapshot show --ids <snapshot-id>`.
-    **`AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Resources/resources/delete' over scope '/subscriptions/<sub-id>/resourceGroups/<rg-name>/providers/...'.`** — Ensure your Azure account has Contributor or Owner role on the resource group with `az role assignment list --resource-group <rg-name>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg-name>' was not found.` | Verify the VM name and resource group name are correct with `az vm list --resource-group <rg-name>`. |
+    | `InvalidParameter : The value of parameter 'source' is invalid. The source resource does not exist.` | Confirm the snapshot ID exists and is in the same region as the target resource group using `az snapshot show --ids <snapshot-id>`. |
+    | `AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Resources/resources/delete' over scope '/subscriptions/<sub-id>/resourceGroups/<rg-name>/providers/...'.` | Ensure your Azure account has Contributor or Owner role on the resource group with `az role assignment list --resource-group <rg-name>`. |
 Rollback decision criteria:
 
 | Condition | Action |
@@ -367,11 +379,11 @@ Time                             Op                                          Sta
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg-name>' was not found.`** — Verify the resource group name and VM name are correct with `az vm list --resource-group <rg-name>`.
-    
-    **`InvalidDateTimeFormat: The value of parameter startTime is invalid.`** — Ensure the `date` command produces UTC format; on macOS use `date -u -v-1H +%Y-%m-%dT%H:%M:%SZ` instead of the GNU `date -d` syntax.
-    
-    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Insights/eventtypes/values/read' over scope '/subscriptions/<sub-id>/resourcegroups/<rg-name>'.`** — Grant the user or service principal the "Monitoring Reader" role on the resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg-name>' was not found.` | Verify the resource group name and VM name are correct with `az vm list --resource-group <rg-name>`. |
+    | `InvalidDateTimeFormat: The value of parameter startTime is invalid.` | Ensure the `date` command produces UTC format; on macOS use `date -u -v-1H +%Y-%m-%dT%H:%M:%SZ` instead of the GNU `date -d` syntax. |
+    | `AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Insights/eventtypes/values/read' over scope '/subscriptions/<sub-id>/resourcegroups/<rg-name>'.` | Grant the user or service principal the "Monitoring Reader" role on the resource group. |
 ---
 
 ### Sign-Off Checklist
@@ -467,8 +479,10 @@ Monthly-Health-Check          False      Month     2024-02-01T10:00:00.000000Z
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource 'Microsoft.Automation/automationAccounts/<aa-name>' was not found.`** — Verify the automation account name and resource group name are correct and exist in your subscription.
-    **`BadRequest: Invalid runbook name '<runbook-name>'. The runbook does not exist.`** — Confirm the runbook name matches exactly (case-sensitive) and is published in the automation account.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource 'Microsoft.Automation/automationAccounts/<aa-name>' was not found.` | Verify the automation account name and resource group name are correct and exist in your subscription. |
+    | `BadRequest: Invalid runbook name '<runbook-name>'. The runbook does not exist.` | Confirm the runbook name matches exactly (case-sensitive) and is published in the automation account. |
     **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform
 ### Update Management
 
@@ -499,8 +513,10 @@ VM                                                                              
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure it exists in the correct subscription.
-    **`AutomationAccountNotFound`** — Confirm the automation account name is correct and exists in the specified resource group using `az automation account list -g <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure it exists in the correct subscription. |
+    | `AutomationAccountNotFound` | Confirm the automation account name is correct and exists in the specified resource group using `az automation account list -g <rg>`. |
 ### Runbook Example — Restart Azure VM
 
 ```powershell
@@ -543,11 +559,11 @@ dev-test-workers              User
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound : The resource group '<rg>' could not be found.`** — Verify the resource group name with `az group list` and ensure you are logged into the correct Azure subscription.
-    
-    **`AutomationAccountNotFound : The automation account '<aa-name>' was not found in resource group '<rg>'.`** — Confirm the automation account name exists in the specified resource group using `az automation account list -g <rg>`.
-    
-    **`AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Automation/automationAccounts/hybridRunbookWorkerGroups/read'.`** — Assign the Automation Contributor or Reader role to your user account on the automation account resource.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound : The resource group '<rg>' could not be found.` | Verify the resource group name with `az group list` and ensure you are logged into the correct Azure subscription. |
+    | `AutomationAccountNotFound : The automation account '<aa-name>' was not found in resource group '<rg>'.` | Confirm the automation account name exists in the specified resource group using `az automation account list -g <rg>`. |
+    | `AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Automation/automationAccounts/hybridRunbookWorkerGroups/read'.` | Assign the Automation Contributor or Reader role to your user account on the automation account resource. |
 ### Troubleshooting
 
 | Symptom | Check | Action |
@@ -622,8 +638,10 @@ my-vm-01   VM running 20.108.45.67   10.0.1.42
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name is correct and exists in your subscription with `az group list`.
-    **`InvalidImageName`** — Use `az vm image list --publisher Canonical --offer 0001-com-ubuntu-server-jammy --all` to find the correct image URN format (e.g., `UbuntuLTS` or `Canonical:0001-com-ubuntu-server-jammy:22_04-lts-gen2:latest`).
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name is correct and exists in your subscription with `az group list`. |
+    | `InvalidImageName` | Use `az vm image list --publisher Canonical --offer 0001-com-ubuntu-server-jammy --all` to find the correct image URN format (e.g., `UbuntuLTS` or `Canonical:0001-com-ubuntu-server-jammy:22_04-lts-gen2:latest`). |
 Common `--size` options:
 
 | Series | Use case |
@@ -693,11 +711,11 @@ Standard_D4s_v3
 ```
 
 !!! warning "Common errors"
-    **`The VM 'my-vm-01' with id '/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/my-resource-group/providers/Microsoft.Compute/virtualMachines/my-vm-01' cannot be resized because it is still in a transitional state.`** — Wait for the deallocate operation to fully complete before attempting resize, or remove the custom wait condition if the VM is already deallocated.
-    
-    **`Operation failed with status: 'Bad Request'. Details: Code=InvalidParameter; Message=The requested VM size 'Standard_D4s_v3' is not available in zone 'Z1' for this subscription.`** — Choose a size from the list-vm-resize-options output that is available in your region/zone, or deallocate and move the VM to a different zone.
-    
-    **`The resource group 'my-resource-group' could not be found.`** — Verify the resource group name with `az group list` and update the RG variable to match an existing resource group.
+    | Error | Fix |
+    |---|---|
+    | `The VM 'my-vm-01' with id '/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/my-resource-group/providers/Microsoft.Compute/virtualMachines/my-vm-01' cannot be resized because it is still in a transitional state.` | Wait for the deallocate operation to fully complete before attempting resize, or remove the custom wait condition if the VM is already deallocated. |
+    | `Operation failed with status: 'Bad Request'. Details: Code=InvalidParameter; Message=The requested VM size 'Standard_D4s_v3' is not available in zone 'Z1' for this subscription.` | Choose a size from the list-vm-resize-options output that is available in your region/zone, or deallocate and move the VM to a different zone. |
+    | `The resource group 'my-resource-group' could not be found.` | Verify the resource group name with `az group list` and update the RG variable to match an existing resource group. |
 > If the target size is unavailable in the current cluster, Azure may move the VM to a new host during resize. Confirm the application restarts cleanly after the resize.
 
 ---
@@ -770,9 +788,11 @@ data-disk-01  0     256     Premium_LRS
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (BadRequest) The zone of the managed disk 'data-disk-01' does not match the zone of the virtual machine 'my-vm-01'.`** — Ensure the disk zone matches the VM's availability zone by verifying `az vm show` returns the correct zone before disk creation.
-    **`Error: No such file or directory`** — Verify the correct device name (e.g., `/dev/sdc`) by running `lsblk` after attachment, as device naming varies by VM configuration.
-    **`mount: /data: unknown filesystem type 'xfs'.`** — Install XFS tools on the VM with `sudo apt-get install xfsprogs` (Ubuntu/Debian) or `sudo yum install xfsprogs` (RHEL/CentOS) before formatting.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (BadRequest) The zone of the managed disk 'data-disk-01' does not match the zone of the virtual machine 'my-vm-01'.` | Ensure the disk zone matches the VM's availability zone by verifying `az vm show` returns the correct zone before disk creation. |
+    | `Error: No such file or directory` | Verify the correct device name (e.g., `/dev/sdc`) by running `lsblk` after attachment, as device naming varies by VM configuration. |
+    | `mount: /data: unknown filesystem type 'xfs'.` | Install XFS tools on the VM with `sudo apt-get install xfsprogs` (Ubuntu/Debian) or `sudo yum install xfsprogs` (RHEL/CentOS) before formatting. |
 ---
 
 ## Create a Network Security Group Rule
@@ -962,9 +982,11 @@ StartTime: 2025-01-15T09:45:22.123456+00:00
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/my-recovery-vault' under resource group 'my-resource-group' was not found.`** — Verify the vault name and resource group name are correct, or create the vault first with `az backup vault create`.
-    **`InvalidParameterValue : Policy 'DefaultPolicy' not found in vault 'my-recovery-vault'.`** — List available policies with `az backup policy list` and use an existing policy name, or create a custom policy.
-    **`ResourceNotFound : The container 'iaasvmcontainerv2;my-resource-group;my-vm-01' was not found.`** — Ensure the VM is registered with the vault by running `az backup protection enable-for-vm` first, or verify the VM exists in the resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/my-recovery-vault' under resource group 'my-resource-group' was not found.` | Verify the vault name and resource group name are correct, or create the vault first with `az backup vault create`. |
+    | `InvalidParameterValue : Policy 'DefaultPolicy' not found in vault 'my-recovery-vault'.` | List available policies with `az backup policy list` and use an existing policy name, or create a custom policy. |
+    | `ResourceNotFound : The container 'iaasvmcontainerv2;my-resource-group;my-vm-01' was not found.` | Ensure the VM is registered with the vault by running `az backup protection enable-for-vm` first, or verify the VM exists in the resource group. |
 ---
 
 ## Set Up Azure Monitor Alert
@@ -1040,9 +1062,11 @@ Low-Memory-my-vm-01         2  True       Available Memory Bytes
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The resource 'Microsoft.Compute/virtualMachines/my-vm-01' under resource group 'my-resource-group' was not found.`** — Verify the resource group name and VM name are correct using `az vm list -g $RG`.
-    **`InvalidTemplate : The action group resource ID is invalid or the action group does not exist in the specified resource group.`** — Ensure the action group was created successfully by running `az monitor action-group list -g $RG`.
-    **`BadRequest : The condition syntax is invalid. Metric name 'Percentage CPU' not found for resource type 'Microsoft.Compute/virtualMachines'.`** — Use the correct metric name by running `az monitor metrics list-definitions --resource $VM_ID` to list available metrics.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The resource 'Microsoft.Compute/virtualMachines/my-vm-01' under resource group 'my-resource-group' was not found.` | Verify the resource group name and VM name are correct using `az vm list -g $RG`. |
+    | `InvalidTemplate : The action group resource ID is invalid or the action group does not exist in the specified resource group.` | Ensure the action group was created successfully by running `az monitor action-group list -g $RG`. |
+    | `BadRequest : The condition syntax is invalid. Metric name 'Percentage CPU' not found for resource type 'Microsoft.Compute/virtualMachines'.` | Use the correct metric name by running `az monitor metrics list-definitions --resource $VM_ID` to list available metrics. |
 Severity levels: 0 (Critical) → 1 (Error) → 2 (Warning) → 3 (Informational) → 4 (Verbose).
 
 ---
@@ -1122,9 +1146,11 @@ app-data    Available     None
 ```
 
 !!! warning "Common errors"
-    **`Storage account name 'mystorageacct28471' is already taken.`** — Increase the $RANDOM value range or use a longer unique prefix to ensure global uniqueness across Azure.
-    **`The provided account key is invalid or has expired.`** — Verify the storage account exists and re-run `az storage account keys list` to fetch a fresh key before using it in subsequent commands.
-    **`ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/mystorageacct28471' under resource group 'my-resource-group' was not found.`** — Confirm the resource group name matches exactly and the storage account creation completed successfully before running verification commands.
+    | Error | Fix |
+    |---|---|
+    | `Storage account name 'mystorageacct28471' is already taken.` | Increase the $RANDOM value range or use a longer unique prefix to ensure global uniqueness across Azure. |
+    | `The provided account key is invalid or has expired.` | Verify the storage account exists and re-run `az storage account keys list` to fetch a fresh key before using it in subsequent commands. |
+    | `ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/mystorageacct28471' under resource group 'my-resource-group' was not found.` | Confirm the resource group name matches exactly and the storage account creation completed successfully before running verification commands. |
 | SKU | Replication | Use case |
 |---|---|---|
 | Standard_LRS | 3x within one datacenter | Dev/test, low cost |
@@ -1188,9 +1214,11 @@ Virtual Machine Contributor       /subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3
 ```
 
 !!! warning "Common errors"
-    **`Operation failed with status: 'Bad Request'. Details: Code: Authorization_RequestDenied`** — Ensure your user account has sufficient permissions (Owner or User Access Administrator role) on the subscription to create role assignments.
-    **`No object was found that matches the filter 'Platform-Ops-Team'.`** — Verify the group display name matches exactly and wait a few seconds after group creation before querying it, as there may be replication delay.
-    **`The user 'user@example.com' does not exist in the directory.`** — Replace `user@example.com` with a valid user principal name (UPN) that exists in your Entra ID tenant.
+    | Error | Fix |
+    |---|---|
+    | `Operation failed with status: 'Bad Request'. Details: Code: Authorization_RequestDenied` | Ensure your user account has sufficient permissions (Owner or User Access Administrator role) on the subscription to create role assignments. |
+    | `No object was found that matches the filter 'Platform-Ops-Team'.` | Verify the group display name matches exactly and wait a few seconds after group creation before querying it, as there may be replication delay. |
+    | `The user 'user@example.com' does not exist in the directory.` | Replace `user@example.com` with a valid user principal name (UPN) that exists in your Entra ID tenant. |
 Common built-in roles:
 
 | Role | Scope of access |

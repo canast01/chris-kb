@@ -91,9 +91,11 @@ Admin p.smith password updated successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Admin user pureuser does not exist`** — Verify the default admin account name matches your FlashBlade system configuration; some systems use `admin` instead of `pureuser`.
-    **`Error: Invalid role 'storage_admin'. Valid roles are: array_admin, storage_admin, readonly, ops_admin`** — Use only valid role names from the enumerated list; `storage_admin` may not exist on your FlashBlade version—use `ops_admin` instead.
-    **`Error: Password must be at least 20 characters`** — Ensure the password entered at the prompt meets the minimum 20-character requirement with mixed case, numbers, and special characters.
+    | Error | Fix |
+    |---|---|
+    | `Error: Admin user pureuser does not exist` | Verify the default admin account name matches your FlashBlade system configuration; some systems use `admin` instead of `pureuser`. |
+    | `Error: Invalid role 'storage_admin'. Valid roles are: array_admin, storage_admin, readonly, ops_admin` | Use only valid role names from the enumerated list; `storage_admin` may not exist on your FlashBlade version—use `ops_admin` instead. |
+    | `Error: Password must be at least 20 characters` | Ensure the password entered at the prompt meets the minimum 20-character requirement with mixed case, numbers, and special characters. |
 Store the break-glass and pureuser credentials in the organisation's PAM vault (CyberArk, HashiCorp Vault) with access restricted to the on-call escalation procedure. Document the vault path in the array's CMDB record.
 
 ---
@@ -146,9 +148,11 @@ Group CN=pure-readonly,OU=Groups,DC=example,DC=com added to role readonly
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection test failed. Unable to reach ldaps://dc01.example.com:636`** — Verify the LDAP server hostname/IP is reachable and port 636 is open in firewall rules.
-    **`Error: LDAP bind failed: Invalid credentials for CN=svc-pure-bind`** — Confirm the bind user account exists in AD and the password is correct and not expired.
-    **`Error: Group CN=pure-fb-admins,OU=Groups,DC=example,DC=com not found in directory`** — Verify the AD group DN is correct and the bind user has permissions to query that OU.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection test failed. Unable to reach ldaps://dc01.example.com:636` | Verify the LDAP server hostname/IP is reachable and port 636 is open in firewall rules. |
+    | `Error: LDAP bind failed: Invalid credentials for CN=svc-pure-bind` | Confirm the bind user account exists in AD and the password is correct and not expired. |
+    | `Error: Group CN=pure-fb-admins,OU=Groups,DC=example,DC=com not found in directory` | Verify the AD group DN is correct and the bind user has permissions to query that OU. |
 Validate: log out and log back in with a domain account in each role group to confirm access works before removing individual local accounts.
 
 ---
@@ -174,8 +178,10 @@ fb-qa-01.example.com          enabled       okta
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to array management interface on fb-prod-01.example.com:443`** — Verify network connectivity to the FlashBlade management IP and confirm the management port is accessible.
-    **`Error: Authentication failed - invalid credentials or insufficient permissions`** — Ensure your Pure Storage credentials are valid and your user account has array admin privileges.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to array management interface on fb-prod-01.example.com:443` | Verify network connectivity to the FlashBlade management IP and confirm the management port is accessible. |
+    | `Error: Authentication failed - invalid credentials or insufficient permissions` | Ensure your Pure Storage credentials are valid and your user account has array admin privileges. |
 If SAML is not feasible in the short term, compensate with:
 - Named account controls and PAM vault for credential management
 - Network-level restriction (step 4) to limit the attack surface
@@ -228,9 +234,11 @@ Issuer               CN=Example Corp Root CA,O=Example Corp,C=US
 ```
 
 !!! warning "Common errors"
-    **`Error: certificate file not found at /path/to/combined.pem`** — Verify the file path is correct and the certificate file exists with `ls -la /path/to/combined.pem`.
-    **`Error: certificate validation failed - invalid PEM format`** — Ensure the PEM file contains the certificate, intermediate chain, and private key in the correct order with proper BEGIN/END markers.
-    **`Error: certificate update failed - key does not match certificate`** — Confirm the private key in the PEM file corresponds to the certificate's public key using `openssl x509 -noout -modulus` and `openssl rsa -noout -modulus`.
+    | Error | Fix |
+    |---|---|
+    | `Error: certificate file not found at /path/to/combined.pem` | Verify the file path is correct and the certificate file exists with `ls -la /path/to/combined.pem`. |
+    | `Error: certificate validation failed - invalid PEM format` | Ensure the PEM file contains the certificate, intermediate chain, and private key in the correct order with proper BEGIN/END markers. |
+    | `Error: certificate update failed - key does not match certificate` | Confirm the private key in the PEM file corresponds to the certificate's public key using `openssl x509 -noout -modulus` and `openssl rsa -noout -modulus`. |
 Requirements:
 - RSA 4096 or ECDSA P-256 key
 - SAN must include the array management IP and/or FQDN
@@ -275,8 +283,10 @@ Filesystem prod-nfs-only updated
 ```
 
 !!! warning "Common errors"
-    **`Error: filesystem 'prod-ml-training-data' not found`** — Verify the filesystem name with `purefb filesystem list` and use the exact name from the Name column.
-    **`Error: Invalid value for '--nfs-v3-enabled': expected boolean`** — Use lowercase `true` or `false` without quotes in the command.
+    | Error | Fix |
+    |---|---|
+    | `Error: filesystem 'prod-ml-training-data' not found` | Verify the filesystem name with `purefb filesystem list` and use the exact name from the Name column. |
+    | `Error: Invalid value for '--nfs-v3-enabled': expected boolean` | Use lowercase `true` or `false` without quotes in the command. |
 ---
 
 ### 7. Configure SNMPv3 and Disable Legacy SNMP
@@ -328,9 +338,11 @@ nms-trap-v3             192.168.10.45     v3       svc-snmp-monitor
 ```
 
 !!! warning "Common errors"
-    **`Error: SNMP user 'svc-snmp-monitor' already exists`** — Delete the existing user with `purefb snmp delete svc-snmp-monitor` before recreating it.
-    **`Error: Invalid passphrase length (minimum 20 characters required)`** — Ensure both auth-passphrase and privacy-passphrase are at least 20 characters long.
-    **`Error: Cannot reach host <nms_ip>: connection timeout`** — Verify network connectivity to the NMS host and confirm the IP address is correct and reachable from the FlashBlade management network.
+    | Error | Fix |
+    |---|---|
+    | `Error: SNMP user 'svc-snmp-monitor' already exists` | Delete the existing user with `purefb snmp delete svc-snmp-monitor` before recreating it. |
+    | `Error: Invalid passphrase length (minimum 20 characters required)` | Ensure both auth-passphrase and privacy-passphrase are at least 20 characters long. |
+    | `Error: Cannot reach host <nms_ip>: connection timeout` | Verify network connectivity to the NMS host and confirm the IP address is correct and reachable from the FlashBlade management network. |
 ---
 
 ### 8. Enable SafeMode Snapshots
@@ -358,8 +370,10 @@ flashblade-test-03            Disabled  —
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or API token expired`** — Regenerate your Pure Storage API token and update your authentication configuration.
-    **`Error: Command not found: purefb`** — Install the Pure Storage Python SDK using `pip install purity-fb` and ensure it is in your system PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or API token expired` | Regenerate your Pure Storage API token and update your authentication configuration. |
+    | `Error: Command not found: purefb` | Install the Pure Storage Python SDK using `pip install purity-fb` and ensure it is in your system PATH. |
 ---
 
 ### 9. Verify Encryption at Rest
@@ -392,8 +406,10 @@ fb-prod-02/1     online   1.92TB    true                NVMe-3.2TB
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or authentication failed`** — Verify your Pure Storage API token is valid and has not expired by checking `purefb login --help`.
-    **`Error: Array 'fb-prod-01' not found or unreachable`** — Confirm the array hostname/IP is correct and network connectivity exists by running `ping <array-ip>` and checking firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or authentication failed` | Verify your Pure Storage API token is valid and has not expired by checking `purefb login --help`. |
+    | `Error: Array 'fb-prod-01' not found or unreachable` | Confirm the array hostname/IP is correct and network connectivity exists by running `ping <array-ip>` and checking firewall rules. |
 No configuration is required — encryption is hardware-enforced by the NVMe drives. If FIPS 140-2 compliance is required for the encryption implementation, confirm with the Pure account team that the installed hardware meets FIPS requirements.
 
 ---
@@ -433,8 +449,10 @@ prod-general-share            Ready      1.0T         0.6T        10.0.0.0/16(rw
 ```
 
 !!! warning "Common errors"
-    **`Error: Filesystem 'prod-ml-training-data' not found`** — Verify the filesystem name matches exactly using `purefb filesystem list` and check for typos.
-    **`Error: Invalid NFS rule syntax`** — Ensure the rule follows the format `<subnet>(option1,option2)` with no spaces inside parentheses.
+    | Error | Fix |
+    |---|---|
+    | `Error: Filesystem 'prod-ml-training-data' not found` | Verify the filesystem name matches exactly using `purefb filesystem list` and check for typos. |
+    | `Error: Invalid NFS rule syntax` | Ensure the rule follows the format `<subnet>(option1,option2)` with no spaces inside parentheses. |
 **Use `root_squash` by default.** Only set `no_root_squash` for filesystems where the backup tool or application explicitly requires root access (Veeam NFS repositories, Kubernetes persistent volumes requiring root ownership).
 
 ---
@@ -479,8 +497,10 @@ Permissions granted: s3:GetObject, s3:PutObject, s3:ListBucket
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid JSON in policy document: Unexpected token at line 2 column 5`** — Validate the JSON policy syntax using a JSON linter before applying, or ensure no line breaks exist within the policy string.
-    **`Error: Principal ARN 'arn:aws:iam:::user/svc-analytics/ml-platform' not found in this account`** — Verify the IAM user exists in your account and use the correct ARN format (typically `arn:aws:iam::ACCOUNT-ID:user/username`).
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid JSON in policy document: Unexpected token at line 2 column 5` | Validate the JSON policy syntax using a JSON linter before applying, or ensure no line breaks exist within the policy string. |
+    | `Error: Principal ARN 'arn:aws:iam:::user/svc-analytics/ml-platform' not found in this account` | Verify the IAM user exists in your account and use the correct ARN format (typically `arn:aws:iam::ACCOUNT-ID:user/username`). |
 Verify no buckets have public access policies (`"Principal": "*"`). Any such policy on a production bucket should be treated as a security incident.
 
 ---
@@ -513,8 +533,10 @@ siem-udp      udp://siem.example.com:514       UDP       Connected
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused on siem.example.com:6514`** — Verify the SIEM server is listening on the specified port and firewall rules allow outbound traffic from the FlashBlade management network.
-    **`Error: Certificate verification failed for tls://siem.example.com:6514`** — Import the SIEM server's CA certificate into the FlashBlade trust store using `purefb certificate import` or disable certificate verification if the SIEM is in a trusted internal network.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused on siem.example.com:6514` | Verify the SIEM server is listening on the specified port and firewall rules allow outbound traffic from the FlashBlade management network. |
+    | `Error: Certificate verification failed for tls://siem.example.com:6514` | Import the SIEM server's CA certificate into the FlashBlade trust store using `purefb certificate import` or disable certificate verification if the SIEM is in a trusted internal network. |
 Verify delivery by checking the SIEM for log events from the FlashBlade management IP. Configure SIEM alerts for:
 - Multiple failed login attempts from the same source IP
 - API token creation or deletion outside business hours
@@ -544,8 +566,10 @@ flashblade-prod-02            15
 ```
 
 !!! warning "Common errors"
-    **`Error: array update failed: Invalid idle-timeout value '15'. Must be between 1 and 1440.`** — Verify the timeout value is within the supported range (1–1440 minutes); adjust if necessary.
-    **`Error: Connection refused to management IP 10.20.30.40:443`** — Ensure the FlashBlade management interface is reachable and the purefb CLI is configured with correct credentials via `purefb login`.
+    | Error | Fix |
+    |---|---|
+    | `Error: array update failed: Invalid idle-timeout value '15'. Must be between 1 and 1440.` | Verify the timeout value is within the supported range (1–1440 minutes); adjust if necessary. |
+    | `Error: Connection refused to management IP 10.20.30.40:443` | Ensure the FlashBlade management interface is reachable and the purefb CLI is configured with correct credentials via `purefb login`. |
 This applies to both SSH (CLI) and HTTPS (GUI) sessions.
 
 ---
@@ -581,8 +605,10 @@ Account deleted successfully: svc-decommissioned
 ```
 
 !!! warning "Common errors"
-    **`Error: Account 'svc-old-integration' not found or token already revoked`** — Verify the account name with `purefb admin apitoken list` before attempting deletion.
-    **`Error: Cannot delete account 'svc-decommissioned': account is still referenced by active policies`** — Remove the account from all associated policies or replication rules before deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Account 'svc-old-integration' not found or token already revoked` | Verify the account name with `purefb admin apitoken list` before attempting deletion. |
+    | `Error: Cannot delete account 'svc-decommissioned': account is still referenced by active policies` | Remove the account from all associated policies or replication rules before deletion. |
 ---
 
 ### 15. Configure SMTP with TLS for Alert Emails
@@ -630,9 +656,11 @@ Message ID: msg-7f3a9c2e-b14d-4a8f-91e2-5d6c8b1a4f9e
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to smtp.example.com:587`** — Verify the relay host is reachable and the port is open; test with `telnet smtp.example.com 587` from the FlashBlade management network.
-    **`Error: Alert watcher 'storage-team' already exists`** — Remove the existing watcher with `purefb alert-watcher delete storage-team` before recreating it.
-    **`Error: Invalid email format for oncall@example.com`** — Ensure the email address is properly formatted and the domain is valid; check DNS MX records with `nslookup -type=MX example.com`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to smtp.example.com:587` | Verify the relay host is reachable and the port is open; test with `telnet smtp.example.com 587` from the FlashBlade management network. |
+    | `Error: Alert watcher 'storage-team' already exists` | Remove the existing watcher with `purefb alert-watcher delete storage-team` before recreating it. |
+    | `Error: Invalid email format for oncall@example.com` | Ensure the email address is properly formatted and the domain is valid; check DNS MX records with `nslookup -type=MX example.com`. |
 ---
 
 ## Post-Hardening Verification
@@ -728,9 +756,11 @@ Timestamp                  Action                    User              Object
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused — unable to reach management interface`** — Verify the FlashBlade management IP is reachable and the purefb CLI is configured with the correct target array hostname or IP.
-    **`Error: Authentication failed — invalid credentials`** — Confirm your Pure Storage API token or credentials are valid and have not expired by checking `purefb admin apitoken list`.
-    **`Error: LDAP test failed — unable to contact directory server`** — Verify the LDAP server address and port are correct, the network path is unblocked, and the bind credentials have not changed.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused — unable to reach management interface` | Verify the FlashBlade management IP is reachable and the purefb CLI is configured with the correct target array hostname or IP. |
+    | `Error: Authentication failed — invalid credentials` | Confirm your Pure Storage API token or credentials are valid and have not expired by checking `purefb admin apitoken list`. |
+    | `Error: LDAP test failed — unable to contact directory server` | Verify the LDAP server address and port are correct, the network path is unblocked, and the bind credentials have not changed. |
 Document the completion date, the engineer who performed the hardening, and the Purity//FB version at time of hardening in the array's CMDB record. Schedule a re-review at the next major Purity upgrade or 12 months, whichever comes first.
 
 ---

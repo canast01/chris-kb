@@ -211,8 +211,10 @@ security config modify -interface HTTPS -min-protocol-version TLSv1.2
 ```
 
 !!! warning "Common errors"
-    **`Error: "HTTPS" is not a valid interface. Valid interfaces are: SSL`** — Use `SSL` instead of `HTTPS` in the security config command.
-    **`Error: "TLSv1.2" is not a valid protocol version for this ONTAP version`** — Verify ONTAP version supports TLSv1.2 with `system node image show` and upgrade if necessary.
+    | Error | Fix |
+    |---|---|
+    | `Error: "HTTPS" is not a valid interface. Valid interfaces are: SSL` | Use `SSL` instead of `HTTPS` in the security config command. |
+    | `Error: "TLSv1.2" is not a valid protocol version for this ONTAP version` | Verify ONTAP version supports TLSv1.2 with `system node image show` and upgrade if necessary. |
 ---
 
 ## Encryption of SnapCenter Agent Communication

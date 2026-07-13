@@ -104,9 +104,11 @@ All OSDs successfully deployed with encryption
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: invalid spec: service_type 'osd' requires 'placement' or 'unmanaged: true'`** — Add a `placement` section to the spec or set `unmanaged: true` if managing OSDs manually.
-    **`Error: No available devices found on hosts [node1, node2, node3]`** — Verify devices exist and are not already in use with `ceph orch device ls`, and ensure hosts are in the cluster with `ceph orch host ls`.
-    **`Error: --encrypted flag requires Ceph version Octopus or later`** — Upgrade Ceph to Octopus (v15.2.0+) or later, as encryption support was added in that release.
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: invalid spec: service_type 'osd' requires 'placement' or 'unmanaged: true'` | Add a `placement` section to the spec or set `unmanaged: true` if managing OSDs manually. |
+    | `Error: No available devices found on hosts [node1, node2, node3]` | Verify devices exist and are not already in use with `ceph orch device ls`, and ensure hosts are in the cluster with `ceph orch host ls`. |
+    | `Error: --encrypted flag requires Ceph version Octopus or later` | Upgrade Ceph to Octopus (v15.2.0+) or later, as encryption support was added in that release. |
 ## dm-crypt Key Management
 
 cephadm generates a unique random LUKS key per OSD. Keys are stored in the MON KV store — no external KMS is required, but the MON quorum must remain intact or encrypted OSDs cannot be unlocked.
@@ -142,8 +144,10 @@ dm-crypt/osd/3/luks: AQDvK2Zl7x9mFRAAp8q3Z+Kw9L2m4vQ8xY5nJj==
 ```
 
 !!! warning "Common errors"
-    **`error: permission denied`** — Ensure your Ceph client has admin capabilities by checking your keyring and using `ceph auth list` to verify permissions.
-    **`error: No such file or directory`** — Verify the OSD ID exists and the device mapper path is correct by running `ls /dev/mapper/ceph-*` to list active encrypted volumes.
+    | Error | Fix |
+    |---|---|
+    | `error: permission denied` | Ensure your Ceph client has admin capabilities by checking your keyring and using `ceph auth list` to verify permissions. |
+    | `error: No such file or directory` | Verify the OSD ID exists and the device mapper path is correct by running `ls /dev/mapper/ceph-*` to list active encrypted volumes. |
 > **Critical**: if all MONs are lost, encrypted OSD data is unrecoverable. Always maintain MON quorum and back up MON keyrings separately from the cluster.
 
 ## See also
@@ -183,9 +187,11 @@ crypt-osd-sdc-b3d4f82e	(253, 1)
 ```
 
 !!! warning "Common errors"
-    **`Command 'cryptsetup' not found`** — Install cryptsetup with `apt-get install cryptsetup` (Debian/Ubuntu) or `yum install cryptsetup` (RHEL/CentOS).
-    **`Device /dev/sdb does not contain a LUKS header`** — Verify the correct device path with `lsblk` and ensure the OSD was deployed with encryption enabled in the spec.
-    **`No such device or address`** — Confirm the device exists and is accessible on the OSD host with `lsblk` before running cryptsetup.
+    | Error | Fix |
+    |---|---|
+    | `Command 'cryptsetup' not found` | Install cryptsetup with `apt-get install cryptsetup` (Debian/Ubuntu) or `yum install cryptsetup` (RHEL/CentOS). |
+    | `Device /dev/sdb does not contain a LUKS header` | Verify the correct device path with `lsblk` and ensure the OSD was deployed with encryption enabled in the spec. |
+    | `No such device or address` | Confirm the device exists and is accessible on the OSD host with `lsblk` before running cryptsetup. |
 ## RBD Image Encryption
 
 ```bash
@@ -214,9 +220,11 @@ rbd: open 2024-01-15 10:23:47.654321 7f8a9c2d1e4b INFO: image opened successfull
 ```
 
 !!! warning "Common errors"
-    **`rbd: error: image rbd/encrypted-vol already exists`** — Delete the existing image with `rbd rm rbd/encrypted-vol` or use a different image name.
-    **`rbd: error: unable to read passphrase file /root/secret.key: No such file or directory`** — Create the passphrase file first with `echo 'your-passphrase' > /root/secret.key && chmod 600 /root/secret.key`.
-    **`rbd: error: image rbd/encrypted-vol is not encrypted or encryption format not recognized`** — Ensure the image was formatted with `rbd encryption format` before attempting to open it.
+    | Error | Fix |
+    |---|---|
+    | `rbd: error: image rbd/encrypted-vol already exists` | Delete the existing image with `rbd rm rbd/encrypted-vol` or use a different image name. |
+    | `rbd: error: unable to read passphrase file /root/secret.key: No such file or directory` | Create the passphrase file first with `echo 'your-passphrase' > /root/secret.key && chmod 600 /root/secret.key`. |
+    | `rbd: error: image rbd/encrypted-vol is not encrypted or encryption format not recognized` | Ensure the image was formatted with `rbd encryption format` before attempting to open it. |
 ## RGW Server-Side Encryption (SSE)
 
 ### SSE-S3: Ceph-Managed Keys
@@ -240,8 +248,10 @@ upload: ./myfile.dat to s3://mybucket/myfile.dat
 ```
 
 !!! warning "Common errors"
-    **`error putting object: InvalidArgument: The Ceph RGW server does not support the requested encryption method.`** — Verify that `rgw_crypt_s3_kms_backend` is set to a supported backend (e.g., `vault`, `barbican`, or `secrettable`) and that the RGW daemon has been restarted after the config change.
-    **`error: Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables with valid RGW user credentials.
+    | Error | Fix |
+    |---|---|
+    | `error putting object: InvalidArgument: The Ceph RGW server does not support the requested encryption method.` | Verify that `rgw_crypt_s3_kms_backend` is set to a supported backend (e.g., `vault`, `barbican`, or `secrettable`) and that the RGW daemon has been restarted after the config change. |
+    | `error: Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables with valid RGW user credentials. |
 ### SSE-KMS: HashiCorp Vault-Backed Keys
 
 ```bash
@@ -268,9 +278,11 @@ upload: ./myfile.dat to s3://mybucket/myfile.dat
 ```
 
 !!! warning "Common errors"
-    **`Error: error setting config option 'rgw_crypt_vault_addr': (22) Invalid argument`** — Verify the Vault URL is reachable and uses the correct protocol (https://) with valid hostname and port.
-    **`fatal error: An error occurred (InvalidArgument) when calling the PutObject operation: The KMS key ID is invalid or not found`** — Ensure the vault-key-id exists in Vault and the RGW service account has read permissions on that key path.
-    **`Error: error setting config option 'rgw_crypt_vault_token_file': (2) No such file or directory`** — Create the Vault token file at /etc/ceph/vault-token with appropriate permissions (readable by ceph user) before applying the configuration.
+    | Error | Fix |
+    |---|---|
+    | `Error: error setting config option 'rgw_crypt_vault_addr': (22) Invalid argument` | Verify the Vault URL is reachable and uses the correct protocol (https://) with valid hostname and port. |
+    | `fatal error: An error occurred (InvalidArgument) when calling the PutObject operation: The KMS key ID is invalid or not found` | Ensure the vault-key-id exists in Vault and the RGW service account has read permissions on that key path. |
+    | `Error: error setting config option 'rgw_crypt_vault_token_file': (2) No such file or directory` | Create the Vault token file at /etc/ceph/vault-token with appropriate permissions (readable by ceph user) before applying the configuration. |
 ### SSE-C: Client-Provided Keys
 
 ```bash
@@ -290,8 +302,10 @@ upload: ./myfile.dat to s3://mybucket/myfile.dat
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidArgument) when calling the PutObject operation: The object was stored using a form of Server Side Encryption. The correct parameters must be provided to retrieve the object.`** — Supply the same `--sse-c` and `--sse-c-key` parameters on all subsequent GET/HEAD operations for this object.
-    **`An error occurred (InvalidRequest) when calling the PutObject operation: Bad Request`** — Verify the key file exists at the specified path and contains exactly 32 bytes (use `wc -c /path/to/32-byte-key.bin` to confirm).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidArgument) when calling the PutObject operation: The object was stored using a form of Server Side Encryption. The correct parameters must be provided to retrieve the object.` | Supply the same `--sse-c` and `--sse-c-key` parameters on all subsequent GET/HEAD operations for this object. |
+    | `An error occurred (InvalidRequest) when calling the PutObject operation: Bad Request` | Verify the key file exists at the specified path and contains exactly 32 bytes (use `wc -c /path/to/32-byte-key.bin` to confirm). |
 ## Encryption Options Summary
 
 | Option | Scope | Key management | Perf impact | Use case |
@@ -331,8 +345,10 @@ secure
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: ms_cluster_mode is not a valid setting`** — Use `ceph config help global` to verify the correct parameter name; the setting may be `ms_cluster_mode` only on specific Ceph versions (14.2.0+).
-    **`Error: unable to get config value: (2) No such file or directory`** — Ensure the monitor daemon is running with `ceph -s` and that you have proper authentication credentials in `/etc/ceph/ceph.conf`.
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: ms_cluster_mode is not a valid setting` | Use `ceph config help global` to verify the correct parameter name; the setting may be `ms_cluster_mode` only on specific Ceph versions (14.2.0+). |
+    | `Error: unable to get config value: (2) No such file or directory` | Ensure the monitor daemon is running with `ceph -s` and that you have proper authentication credentials in `/etc/ceph/ceph.conf`. |
 ## Encryption Deployment Checklist
 
 | Step | Check | Command |
@@ -372,8 +388,10 @@ rgw_crypt_s3_kms_backend = vault
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `--cacert /path/to/vault-ca.crt` to the curl command or use `-k` if testing in non-production.
-    **`Error ENOENT: error reading /etc/ceph/vault-token`** — Ensure the Vault token file exists and is readable by the user running the command; regenerate with `ceph config-key put client.rgw/vault-token <token>` if missing.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `--cacert /path/to/vault-ca.crt` to the curl command or use `-k` if testing in non-production. |
+    | `Error ENOENT: error reading /etc/ceph/vault-token` | Ensure the Vault token file exists and is readable by the user running the command; regenerate with `ceph config-key put client.rgw/vault-token <token>` if missing. |
 ## Performance Impact Reference
 
 | Encryption type | CPU overhead | Throughput impact | Notes |

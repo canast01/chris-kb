@@ -63,8 +63,10 @@ Port-channel1 is up
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact command syntax; on some MDS firmware versions use `show port-channel summary` without additional parameters.
-    **`Port-channel1 does not exist`** — Ensure the port-channel has been created with `interface port-channel 1` and members have been assigned before querying its status.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact command syntax; on some MDS firmware versions use `show port-channel summary` without additional parameters. |
+    | `Port-channel1 does not exist` | Ensure the port-channel has been created with `interface port-channel 1` and members have been assigned before querying its status. |
 ## AAA / Authentication Standards
 
 | Control | Standard |

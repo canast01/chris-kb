@@ -77,8 +77,10 @@ Connection to 192.168.100.45 port 443 [tcp/https] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the VPLEX management certificate into your system CA bundle.
-    **`nc: getaddrinfo: Name or service not known`** — Verify the Site B VPLEX management IP address is correct and reachable from Site A; check DNS resolution or use the IP address directly instead of a hostname.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the VPLEX management certificate into your system CA bundle. |
+    | `nc: getaddrinfo: Name or service not known` | Verify the Site B VPLEX management IP address is correct and reachable from Site A; check DNS resolution or use the IP address directly instead of a hostname. |
 ## See also
 
 - [Dell VPLEX — Architecture](../how-it-works/)

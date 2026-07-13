@@ -1525,6 +1525,53 @@ for _path in all_md():
         warn(issues, f'{os.path.relpath(_path, DOCS)}: description: contains a raw HTML tag')
 
 
+# ── Check 64: "Common errors" admonition rendered as prose, not a table ──────
+# Found 2026-07-13: the "!!! warning \"Common errors\"" admonition pattern
+# (error/fix pairs written as consecutive "**`code`** — explanation" lines)
+# renders as one unbroken paragraph in MkDocs Material -- admonition body
+# lines aren't auto-separated the way top-level paragraphs are. Converted
+# 6,835+ blocks across 1,272 files to proper "| Error | Fix |" tables. This
+# check catches the same prose pattern recurring from any future generator.
+issues = check(64, '"Common errors" admonition rendered as prose, not a table')
+_COMMON_ERR_RE = re.compile(
+    r'!!! warning "Common errors"\n((?:[ \t]*\n)*[ \t]+\*\*[^\n]+ — [^\n]+\n)'
+)
+for _path in all_md():
+    _text64 = open(_path, errors='replace').read()
+    if _COMMON_ERR_RE.search(_text64):
+        warn(issues, f'{os.path.relpath(_path, DOCS)}: "Common errors" block still uses prose lines, not a table')
+
+
+# ── Check 65: SVG vertical box overflow / z-order text occlusion ─────────────
+# Found 2026-07-13 by manual visual inspection (user-reported): a box's last
+# text line sitting at/past its rect's bottom edge (Bug A), and a
+# later-painted opaque rect's y-range overlapping an earlier text element's
+# glyph area (Bug B) -- neither caught by Check 59 (which only measures
+# horizontal width). Fixed 366 Bug-A + 1,314 Bug-B instances across 160
+# files via scripts/svg_vertical_bugs_fix.py's "grow/shift, never shrink"
+# cascade. ~16 files (mermaid-flowchart-generated diagrams + a handful of
+# one-off hand-authored layouts) deferred -- their sibling/container
+# geometry doesn't match the table/standalone patterns the fixer validates
+# against, so this check reports them too rather than silently skipping.
+issues = check(65, 'SVG vertical box overflow / z-order text occlusion')
+try:
+    from svg_vertical_bugs_fix import parse_elements as _parse65, find_bug_a as _find_a65, find_bug_b_events as _find_b65
+    if os.path.isdir(ASSETS):
+        for fname in sorted(os.listdir(ASSETS)):
+            if not fname.endswith('.svg'):
+                continue
+            path65 = Path(os.path.join(ASSETS, fname))
+            elems65 = _parse65(path65)
+            if elems65 is None:
+                continue
+            a65 = _find_a65(elems65)
+            b65 = _find_b65(elems65)
+            if a65 or b65:
+                warn(issues, f'assets/{fname}: {len(a65)} vertical-overflow, {len(b65)} occlusion instance(s) -- run scripts/svg_vertical_bugs_fix.py')
+except ImportError:
+    pass
+
+
 # ── Report ────────────────────────────────────────────────────────────────────
 print('\n' + '='*70)
 print('KB SITE AUDIT REPORT')

@@ -97,9 +97,11 @@ Credentials updated successfully for netapp-prod-01
 ```
 
 !!! warning "Common errors"
-    **`scp: command not found`** — Install OpenSSH client tools or use `apt-get install openssh-client` on the source system.
-    **`igls backup restore: backup ID not found`** — Verify the backup ID from the import output matches exactly, or re-run `igls backup import` to get the correct ID.
-    **`Connection refused: Unable to reach cluster netapp-prod-01`** — Confirm network connectivity and cluster IP addresses are correct by running `igls clusters show-config --cluster netapp-prod-01`.
+    | Error | Fix |
+    |---|---|
+    | `scp: command not found` | Install OpenSSH client tools or use `apt-get install openssh-client` on the source system. |
+    | `igls backup restore: backup ID not found` | Verify the backup ID from the import output matches exactly, or re-run `igls backup import` to get the correct ID. |
+    | `Connection refused: Unable to reach cluster netapp-prod-01` | Confirm network connectivity and cluster IP addresses are correct by running `igls clusters show-config --cluster netapp-prod-01`. |
 **Note:** Cluster passwords and API tokens are not included in backups for security. After restore, re-enter credentials for each managed PowerScale cluster.
 
 ---
@@ -159,9 +161,11 @@ Completion time: ~2 minutes remaining
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to cluster <cluster-name>: Connection refused`** — Verify the cluster hostname/IP is correct and the Eyeglass management network can reach the cluster's management interface.
-    **`Error: Sync failed - Policy validation error on cluster <cluster-name>`** — Check cluster logs for policy conflicts and ensure all replication policies are compatible with the target cluster's NetApp version.
-    **`Error: igls: command not found`** — Verify Eyeglass is installed and the igls binary is in your PATH, or source the Eyeglass environment setup script.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to cluster <cluster-name>: Connection refused` | Verify the cluster hostname/IP is correct and the Eyeglass management network can reach the cluster's management interface. |
+    | `Error: Sync failed - Policy validation error on cluster <cluster-name>` | Check cluster logs for policy conflicts and ensure all replication policies are compatible with the target cluster's NetApp version. |
+    | `Error: igls: command not found` | Verify Eyeglass is installed and the igls binary is in your PATH, or source the Eyeglass environment setup script. |
 **GUI validation:**
 
 - [ ] All clusters show as Connected (green)
@@ -198,9 +202,11 @@ eyeglass-dfs-export-20240115.json                       100%  456KB   892KB/s   
 ```
 
 !!! warning "Common errors"
-    **`igls: command not found`** — Ensure you are logged into the Eyeglass appliance CLI or source the appropriate environment initialization script.
-    **`Permission denied (publickey,password)`** — Verify SSH credentials and that the NAS backup user has write permissions to `/backups/eyeglass/` directory.
-    **`No such file or directory`** — Confirm the export commands completed successfully and files exist in the current working directory before attempting the SCP transfer.
+    | Error | Fix |
+    |---|---|
+    | `igls: command not found` | Ensure you are logged into the Eyeglass appliance CLI or source the appropriate environment initialization script. |
+    | `Permission denied (publickey,password)` | Verify SSH credentials and that the NAS backup user has write permissions to `/backups/eyeglass/` directory. |
+    | `No such file or directory` | Confirm the export commands completed successfully and files exist in the current working directory before attempting the SCP transfer. |
 ---
 
 ## Backup Verification Testing

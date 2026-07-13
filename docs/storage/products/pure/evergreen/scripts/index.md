@@ -213,9 +213,11 @@ fi
 ```
 
 !!! warning "Common errors"
-    **`FA_HOST: unbound variable`** — Export FA_HOST and FA_API_TOKEN environment variables before running the script: `export FA_HOST=flasharray01 FA_API_TOKEN=<token>`.
-    **`purearray: command not found`** — Install the Pure Storage Python SDK and CLI tools: `pip install purestorage && purearray login -a $FA_HOST -u pureuser`.
-    **`curl: (7) Failed to connect to 10.20.1.45 port 443: Connection refused`** — Verify the mediator IP is correct and reachable on port 443, or override with `export FA_MEDIATOR_HOST=<correct_ip>`.
+    | Error | Fix |
+    |---|---|
+    | `FA_HOST: unbound variable` | Export FA_HOST and FA_API_TOKEN environment variables before running the script: `export FA_HOST=flasharray01 FA_API_TOKEN=<token>`. |
+    | `purearray: command not found` | Install the Pure Storage Python SDK and CLI tools: `pip install purestorage && purearray login -a $FA_HOST -u pureuser`. |
+    | `curl: (7) Failed to connect to 10.20.1.45 port 443: Connection refused` | Verify the mediator IP is correct and reachable on port 443, or override with `export FA_MEDIATOR_HOST=<correct_ip>`. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -273,9 +275,11 @@ Pre-upgrade validation completed successfully
 ```
 
 !!! warning "Common errors"
-    **`ModuleNotFoundError: No module named 'requests'`** — Install missing dependencies with `pip install py-pure-client --upgrade` or check your Python environment.
-    **`Connection refused: 192.168.1.10:443`** — Verify the FA_HOST IP is correct and the array management interface is reachable with `ping 192.168.1.10`.
-    **`Authentication failed: Invalid API token`** — Confirm FA_API_TOKEN is set correctly and has not expired by generating a new token in the Pure management console.
+    | Error | Fix |
+    |---|---|
+    | `ModuleNotFoundError: No module named 'requests'` | Install missing dependencies with `pip install py-pure-client --upgrade` or check your Python environment. |
+    | `Connection refused: 192.168.1.10:443` | Verify the FA_HOST IP is correct and the array management interface is reachable with `ping 192.168.1.10`. |
+    | `Authentication failed: Invalid API token` | Confirm FA_API_TOKEN is set correctly and has not expired by generating a new token in the Pure management console. |
 **What you should see**
 
 Six numbered checks, each showing `[GO]` in green, `[WARN]` in yellow, or `[NO-GO]` in red. The summary at the bottom gives a final verdict: READY FOR UPGRADE (all green), PROCEED WITH CAUTION (some warnings), or NOT READY FOR UPGRADE (blockers found). Do not start an upgrade if you see any `[NO-GO]` items.
@@ -483,9 +487,11 @@ Successfully installed py-pure-client-1.28.0 tabulate-0.9.0 requests-2.31.0
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Could not find a version that satisfies the requirement py-pure-client`** — Verify the package name is correct and check PyPI availability or use `pip install --upgrade pip` to update your package manager.
-    **`error: externally-managed-environment × This environment is externally managed`** — Use `pip install --break-system-packages` or create a virtual environment with `python -m venv venv && source venv/bin/activate` before installing.
-    **`ERROR: Permission denied: '/usr/lib/python3.x/site-packages'`** — Run the command with `pip install --user` or use a virtual environment instead of installing system-wide.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Could not find a version that satisfies the requirement py-pure-client` | Verify the package name is correct and check PyPI availability or use `pip install --upgrade pip` to update your package manager. |
+    | `error: externally-managed-environment × This environment is externally managed` | Use `pip install --break-system-packages` or create a virtual environment with `python -m venv venv && source venv/bin/activate` before installing. |
+    | `ERROR: Permission denied: '/usr/lib/python3.x/site-packages'` | Run the command with `pip install --user` or use a virtual environment instead of installing system-wide. |
 **Step 4 — Set variables and run**
 
 ```bash
@@ -516,9 +522,11 @@ Report saved to: C:\Users\Admin\Desktop\fa_readiness_report_20240115.json
 ```
 
 !!! warning "Common errors"
-    **`ModuleNotFoundError: No module named 'purestorage'`** — Install the Pure Storage Python SDK with `pip install purestorage`.
-    **`ConnectionRefusedError: [Errno 111] Connection refused`** — Verify the FA_HOST IP address is correct and the array management interface is reachable via `ping 192.168.1.10`.
-    **`InvalidCredentialsError: Authentication failed for token`** — Confirm the FA_API_TOKEN is valid and has not expired by regenerating it in the FlashArray web UI.
+    | Error | Fix |
+    |---|---|
+    | `ModuleNotFoundError: No module named 'purestorage'` | Install the Pure Storage Python SDK with `pip install purestorage`. |
+    | `ConnectionRefusedError: [Errno 111] Connection refused` | Verify the FA_HOST IP address is correct and the array management interface is reachable via `ping 192.168.1.10`. |
+    | `InvalidCredentialsError: Authentication failed for token` | Confirm the FA_API_TOKEN is valid and has not expired by regenerating it in the FlashArray web UI. |
 **What you should see**
 
 A formatted table with four rows: Purity version (INFO), active alerts (OK/WARN/BLOCKER), drive status (OK/WARN/BLOCKER), and ActiveCluster pod status (OK/WARN/BLOCKER). Blockers are shown in red. If there are no blockers, the script prints "No blockers found — array is ready for upgrade." in green and exits with code 0. Blockers cause it to exit with code 2.
@@ -764,9 +772,11 @@ flasharray-03.prod.local       : ok=3    changed=0    unreachable=0    failed=0
 ```
 
 !!! warning "Common errors"
-    **`[Errno 2] No such file or directory: '/mnt/c/Users/YourName/Desktop/evergreen_pre_upgrade.yml'`** — Replace `/mnt/c/Users/YourName/Desktop/` with the actual path where your YAML files are located.
-    **`fatal: [flasharray-01.prod.local]: UNREACHABLE! => {"msg": "Failed to establish a new connection: [Errno -2] Name or service not known"}`** — Verify DNS resolution and network connectivity to the FlashArray hostnames listed in `flasharrays.yml`, or use IP addresses instead.
-    **`ERROR! Syntax Error while loading YAML from "flasharrays.yml"`** — Check the YAML syntax in `flasharrays.yml` for proper indentation and quote matching using a YAML validator.
+    | Error | Fix |
+    |---|---|
+    | `[Errno 2] No such file or directory: '/mnt/c/Users/YourName/Desktop/evergreen_pre_upgrade.yml'` | Replace `/mnt/c/Users/YourName/Desktop/` with the actual path where your YAML files are located. |
+    | `fatal: [flasharray-01.prod.local]: UNREACHABLE! => {"msg": "Failed to establish a new connection: [Errno -2] Name or service not known"}` | Verify DNS resolution and network connectivity to the FlashArray hostnames listed in `flasharrays.yml`, or use IP addresses instead. |
+    | `ERROR! Syntax Error while loading YAML from "flasharrays.yml"` | Check the YAML syntax in `flasharrays.yml` for proper indentation and quote matching using a YAML validator. |
 **What you should see**
 
 Ansible runs all four checks on every FlashArray in your inventory simultaneously. For each array it prints the Purity version, then asserts that there are no critical alerts, no failed drives, and no offline pods. If any array has a blocker, that host fails with a clear message. Arrays that pass all checks print a readiness summary at the end.
@@ -968,9 +978,11 @@ Report generated: C:\Users\YourName\Desktop\pure_usage_report_20240115.csv
 ```
 
 !!! warning "Common errors"
-    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
-    **`The term 'evergreen_usage_pure1.ps1' is not recognized`** — Verify the script file exists in the current directory with `ls *.ps1` and check the exact filename spelling.
-    **`Connect-PureArray : Unable to connect to array at 192.168.1.50`** — Confirm the Pure Storage array IP address is reachable and correct in the script's connection parameters.
+    | Error | Fix |
+    |---|---|
+    | `cannot be loaded because running scripts is disabled on this system` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script. |
+    | `The term 'evergreen_usage_pure1.ps1' is not recognized` | Verify the script file exists in the current directory with `ls *.ps1` and check the exact filename spelling. |
+    | `Connect-PureArray : Unable to connect to array at 192.168.1.50` | Confirm the Pure Storage array IP address is reachable and correct in the script's connection parameters. |
 **What you should see**
 
 A table listing every array in your Pure1 account with its total capacity in TiB, used capacity in TiB, percentage used, and data reduction ratio. Arrays below 80% used appear in green, 80-89% in yellow, and 90%+ in red. This gives you an at-a-glance capacity view across your entire Evergreen//One fleet from your Windows desktop.
@@ -1285,9 +1297,11 @@ VERDICT: GO
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the `purearray` binary is in your PATH.
-    **`PURE1_PRIVATE_KEY_FILE: No such file or directory`** — Verify the path to the private key file exists and is readable, or unset PURE1_APP_ID/PURE1_PRIVATE_KEY_FILE to skip the Pure1 check.
-    **`purealert: command not found`** — Ensure the Pure Storage CLI is installed and authenticated with FA_HOST and FA_API_TOKEN environment variables set correctly.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or ensure the `purearray` binary is in your PATH. |
+    | `PURE1_PRIVATE_KEY_FILE: No such file or directory` | Verify the path to the private key file exists and is readable, or unset PURE1_APP_ID/PURE1_PRIVATE_KEY_FILE to skip the Pure1 check. |
+    | `purealert: command not found` | Ensure the Pure Storage CLI is installed and authenticated with FA_HOST and FA_API_TOKEN environment variables set correctly. |
 ---
 
 ## Post-Change Validation Script (Bash + Python)
@@ -1380,9 +1394,11 @@ RESULT: PASS
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage Python SDK or ensure the `purearray` CLI tool is in PATH by running `pip install purestorage` or sourcing the Pure1 environment setup script.
-    **`FA_HOST: Set FA_HOST`** — Export the FA_HOST environment variable before running the script: `export FA_HOST=fa01`.
-    **`Pure1 health score dropped to 78`** — Check the array's Pure1 dashboard for recent alerts or performance degradation; if the score is expected to be lower post-upgrade, adjust the threshold in the script or investigate the underlying issue before proceeding.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage Python SDK or ensure the `purearray` CLI tool is in PATH by running `pip install purestorage` or sourcing the Pure1 environment setup script. |
+    | `FA_HOST: Set FA_HOST` | Export the FA_HOST environment variable before running the script: `export FA_HOST=fa01`. |
+    | `Pure1 health score dropped to 78` | Check the array's Pure1 dashboard for recent alerts or performance degradation; if the score is expected to be lower post-upgrade, adjust the threshold in the script or investigate the underlying issue before proceeding. |
 ---
 
 ## Health Check Script (Python, cron-safe)

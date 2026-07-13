@@ -67,9 +67,11 @@ curl -X POST https://<pvwa>/PasswordVault/api/auth/Logoff   -H "Authorization: <
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or install the PVWA's CA certificate in your system trust store.
-    **`{"Errors":["Logon failed"]}`** — Verify the username and password are correct and the user account is not locked or disabled in CyberArk.
-    **`curl: (7) Failed to connect to <pvwa>: Name or service not known`** — Confirm the PVWA hostname or IP address is correct and reachable from your network.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or install the PVWA's CA certificate in your system trust store. |
+    | `{"Errors":["Logon failed"]}` | Verify the username and password are correct and the user account is not locked or disabled in CyberArk. |
+    | `curl: (7) Failed to connect to <pvwa>: Name or service not known` | Confirm the PVWA hostname or IP address is correct and reachable from your network. |
 ---
 
 ## REST API — Accounts
@@ -152,9 +154,11 @@ curl -X POST "https://<pvwa>/PasswordVault/api/accounts/<id>/verify"   -H "Autho
 ```
 
 !!! warning "Common errors"
-    **`"ErrorCode":"PASWS002E","ErrorMessage":"Invalid token or token expired"`** — Regenerate the authentication token using the login endpoint and update the Authorization header.
-    **`"ErrorCode":"PASWS040E","ErrorMessage":"User does not have permission to retrieve password"`** — Verify the user has the "Retrieve Password" permission in the Safe policy for the target account.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to bypass SSL verification in non-production environments, or import the PVWA certificate into your CA bundle.
+    | Error | Fix |
+    |---|---|
+    | `"ErrorCode":"PASWS002E","ErrorMessage":"Invalid token or token expired"` | Regenerate the authentication token using the login endpoint and update the Authorization header. |
+    | `"ErrorCode":"PASWS040E","ErrorMessage":"User does not have permission to retrieve password"` | Verify the user has the "Retrieve Password" permission in the Safe policy for the target account. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to bypass SSL verification in non-production environments, or import the PVWA certificate into your CA bundle. |
 ---
 
 ## REST API — Safes
@@ -225,9 +229,11 @@ curl -X GET "https://<pvwa>/PasswordVault/api/safes/<safe_name>/members"   -H "A
 ```
 
 !!! warning "Common errors"
-    **`{"ErrorCode":"ITATS542E","ErrorMessage":"Invalid token or token expired"}`** — Regenerate the authentication token using the login endpoint and update the Authorization header.
-    **`{"ErrorCode":"ITATS300E","ErrorMessage":"The Safe does not exist"}`** — Verify the safe name matches exactly (case-sensitive) using the list safes endpoint and correct the `<safe_name>` parameter.
-    **`curl: (7) Failed to connect to <pvwa>: Name or service not known`** — Confirm the PVWA hostname or IP address is correct and reachable from your network.
+    | Error | Fix |
+    |---|---|
+    | `{"ErrorCode":"ITATS542E","ErrorMessage":"Invalid token or token expired"}` | Regenerate the authentication token using the login endpoint and update the Authorization header. |
+    | `{"ErrorCode":"ITATS300E","ErrorMessage":"The Safe does not exist"}` | Verify the safe name matches exactly (case-sensitive) using the list safes endpoint and correct the `<safe_name>` parameter. |
+    | `curl: (7) Failed to connect to <pvwa>: Name or service not known` | Confirm the PVWA hostname or IP address is correct and reachable from your network. |
 ---
 
 ## psPAS PowerShell Module
@@ -306,9 +312,11 @@ Logoff successful for user 'admin' from vault 'prod-vault'
 ```
 
 !!! warning "Common errors"
-    **`PACLI: Vault connection failed - Address unreachable (192.168.1.50:1858)`** — Verify the vault IP address is correct and the CyberArk Vault server is running and accessible on port 1858.
-    **`PACLI: Logon failed - Invalid credentials for user 'admin'`** — Confirm the admin password is correct and the user account is not locked or disabled in the Vault.
-    **`PACLI: File not found - 'account_name' does not exist in safe 'Finance-Creds'`** — Check the exact file name in the safe using FILESLIST and ensure the folder path is correct (typically 'Root' for top-level files).
+    | Error | Fix |
+    |---|---|
+    | `PACLI: Vault connection failed - Address unreachable (192.168.1.50:1858)` | Verify the vault IP address is correct and the CyberArk Vault server is running and accessible on port 1858. |
+    | `PACLI: Logon failed - Invalid credentials for user 'admin'` | Confirm the admin password is correct and the user account is not locked or disabled in the Vault. |
+    | `PACLI: File not found - 'account_name' does not exist in safe 'Finance-Creds'` | Check the exact file name in the safe using FILESLIST and ensure the folder path is correct (typically 'Root' for top-level files). |
 ---
 
 ## Verify

@@ -31,9 +31,11 @@ Last Sync Time: 2024-01-15 14:32:18
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_SID not set or invalid`** — Export the correct Symmetrix SID with `export SYMCLI_SID=000123456789` before running symrdf commands.
-    **`RDF group <rdf_group> not found`** — Verify the RDF group number exists on the array by running `symrdf -sid 000123456789 list` to display all configured groups.
-    **`Cannot connect to Symmetrix 000123456789`** — Ensure the Solutions Enabler daemon is running with `sudo /opt/emc/SYMCLI/bin/stordaemon start` and the array is reachable.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_SID not set or invalid` | Export the correct Symmetrix SID with `export SYMCLI_SID=000123456789` before running symrdf commands. |
+    | `RDF group <rdf_group> not found` | Verify the RDF group number exists on the array by running `symrdf -sid 000123456789 list` to display all configured groups. |
+    | `Cannot connect to Symmetrix 000123456789` | Ensure the Solutions Enabler daemon is running with `sudo /opt/emc/SYMCLI/bin/stordaemon start` and the array is reachable. |
 ```bash
 # Re-establish SRDF from R2 (current production) back to R1 (recovered site)
 # This syncs changes made on R2 back to R1
@@ -64,8 +66,10 @@ Estimated Time Remaining: 2m 14s
 ```
 
 !!! warning "Common errors"
-    **`SRDF group PROD_RDF_GROUP is not in a valid state for establish operation`** — Verify the group is in Suspended or Failed state using `symrdf query -g PROD_RDF_GROUP` before attempting establish.
-    **`Cannot establish: R2 is currently in Write Disabled (WD) mode`** — Add the `-force` flag to the establish command to override write protection, or manually enable writes on R2 first with `symrdf set -g PROD_RDF_GROUP -writeenabled`.
+    | Error | Fix |
+    |---|---|
+    | `SRDF group PROD_RDF_GROUP is not in a valid state for establish operation` | Verify the group is in Suspended or Failed state using `symrdf query -g PROD_RDF_GROUP` before attempting establish. |
+    | `Cannot establish: R2 is currently in Write Disabled (WD) mode` | Add the `-force` flag to the establish command to override write protection, or manually enable writes on R2 first with `symrdf set -g PROD_RDF_GROUP -writeenabled`. |
 ```bash
 # Restore re-syncs R1 from R2 in full
 symrdf -g PROD_RDF_GROUP restore -force
@@ -92,9 +96,11 @@ Last Update                             2024-01-15 14:32:18
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Cannot perform restore while RDF pair is in Synchronized state`** — Issue a `symrdf -g PROD_RDF_GROUP query` first to verify the pair is in a restorable state (Consistent or Failed); if synchronized, break the link with `symrdf -g PROD_RDF_GROUP break -force` before restoring.
-    **`symrdf: RDF group PROD_RDF_GROUP not found`** — Verify the group name matches your Symmetrix configuration by running `symrdf list` to display all available RDF groups.
-    **`symrdf: Insufficient privileges to execute restore operation`** — Run the command with root privileges or ensure your user account has RDF administrative rights in the Symmetrix access control list.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Cannot perform restore while RDF pair is in Synchronized state` | Issue a `symrdf -g PROD_RDF_GROUP query` first to verify the pair is in a restorable state (Consistent or Failed); if synchronized, break the link with `symrdf -g PROD_RDF_GROUP break -force` before restoring. |
+    | `symrdf: RDF group PROD_RDF_GROUP not found` | Verify the group name matches your Symmetrix configuration by running `symrdf list` to display all available RDF groups. |
+    | `symrdf: Insufficient privileges to execute restore operation` | Run the command with root privileges or ensure your user account has RDF administrative rights in the Symmetrix access control list. |
 ```bash
 # 1. Ensure R1 site volumes are accessible and array is healthy
 # 2. Perform a 'failover' back in the original direction (now R2→R1)
@@ -200,9 +206,11 @@ Mode: Asynchronous
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Command not found`** — Ensure the EMC Solutions Enabler package is installed and the PATH includes the Symmetrix CLI bin directory.
-    **`PROD_RDF_GROUP: Invalid RDF group name`** — Verify the RDF group name exists by running `symrdf list` and use the correct group identifier.
-    **`Error: Array not responding`** — Check network connectivity to the Symmetrix array and confirm the SYMCLI_CONNECT environment variable is set correctly.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Command not found` | Ensure the EMC Solutions Enabler package is installed and the PATH includes the Symmetrix CLI bin directory. |
+    | `PROD_RDF_GROUP: Invalid RDF group name` | Verify the RDF group name exists by running `symrdf list` and use the correct group identifier. |
+    | `Error: Array not responding` | Check network connectivity to the Symmetrix array and confirm the SYMCLI_CONNECT environment variable is set correctly. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

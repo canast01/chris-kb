@@ -38,8 +38,10 @@ Exiting maintenance mode. This may take a few moments...
 ```
 
 !!! warning "Common errors"
-    **`Error: The operation is not allowed in the current state.`** — Ensure all virtual machines are powered off or migrated to another host before entering maintenance mode.
-    **`vim-cmd: Unknown command "hostsvc/maintenance_mode_enter"`** — Verify you are running vim-cmd on the ESXi host directly (not from vCenter); use the full path `/usr/lib/vmware/bin/vim-cmd` if the command is not in PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: The operation is not allowed in the current state.` | Ensure all virtual machines are powered off or migrated to another host before entering maintenance mode. |
+    | `vim-cmd: Unknown command "hostsvc/maintenance_mode_enter"` | Verify you are running vim-cmd on the ESXi host directly (not from vCenter); use the full path `/usr/lib/vmware/bin/vim-cmd` if the command is not in PATH. |
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps
@@ -157,8 +159,10 @@ IPv4 Address      Netmask         Gateway
 ```
 
 !!! warning "Common errors"
-    **`Error: The object or property on the specified object does not exist.`** — Verify the interface name (vmk0, vmk1) or vSwitch name exists with `esxcli network vswitch standard list` before attempting modifications.
-    **`Error: The specified parameter is not a valid IP address.`** — Ensure the IP address, netmask, and gateway parameters are in valid dotted-decimal notation (e.g., 192.168.1.10, not 192.168.1).
+    | Error | Fix |
+    |---|---|
+    | `Error: The object or property on the specified object does not exist.` | Verify the interface name (vmk0, vmk1) or vSwitch name exists with `esxcli network vswitch standard list` before attempting modifications. |
+    | `Error: The specified parameter is not a valid IP address.` | Ensure the IP address, netmask, and gateway parameters are in valid dotted-decimal notation (e.g., 192.168.1.10, not 192.168.1). |
     **`Error: The specified virtual switch
 ## Storage — Devices & Paths
 
@@ -329,7 +333,9 @@ $ du -sh /vmfs/volumes/datastore1/vm-prod-web01/
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/vmfs/volumes/<datastore>/': No such file or directory`** — Replace `<datastore>` with an actual datastore name from the `ls /vmfs/
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/vmfs/volumes/<datastore>/': No such file or directory` | Replace `<datastore>` with an actual datastore name from the `ls /vmfs/ |
 ```bash
 # vmkfstools — VMDK operations
 vmkfstools -l /vmfs/volumes/<ds>/<vm>/<vm>.vmdk
@@ -389,9 +395,11 @@ No snapshots found.
 ```
 
 !!! warning "Common errors"
-    **`Could not find the file /vmfs/volumes/<ds>/<vm>/<vm>.vmdk`** — Replace `<ds>` and `<vm>` placeholders with actual datastore and VM folder names, or verify the VM exists with `vim-cmd vmsvc/getallvms`.
-    **`The specified datastore is not mounted or does not exist`** — Verify the datastore label with `esxcli storage vmfs extent list` before running unmount or resignature operations.
-    **`Cannot open the disk '/vmfs/volumes/<ds>/<vm>/<vm>.vmdk' : The file is in use`** — Power off the VM or ensure no snapshots are being created before attempting vmkfstools operations on the VMDK.
+    | Error | Fix |
+    |---|---|
+    | `Could not find the file /vmfs/volumes/<ds>/<vm>/<vm>.vmdk` | Replace `<ds>` and `<vm>` placeholders with actual datastore and VM folder names, or verify the VM exists with `vim-cmd vmsvc/getallvms`. |
+    | `The specified datastore is not mounted or does not exist` | Verify the datastore label with `esxcli storage vmfs extent list` before running unmount or resignature operations. |
+    | `Cannot open the disk '/vmfs/volumes/<ds>/<vm>/<vm>.vmdk' : The file is in use` | Power off the VM or ensure no snapshots are being created before attempting vmkfstools operations on the VMDK. |
 ## SAN Connectivity (iSCSI / FC)
 
 ```bash
@@ -500,7 +508,9 @@ State: dead
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option --address`** — Use `--server` instead of `--address` for iS
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option --address` | Use `--server` instead of `--address` for iS |
 ## VM Management (vim-cmd)
 
 ```bash
@@ -691,9 +701,11 @@ Free Space: 3.72 TB
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the host. The VSAN service may not be running.`** — Restart the VSAN service with `esxcli system service restart vsanvpd` or verify VSAN is licensed and enabled on the cluster.
-    **`Unknown command or namespace vsan`** — Ensure you are running the command on an ESXi host with VSAN enabled; non-VSAN hosts do not have the vsan namespace available.
-    **`Permission denied`** — Run the command with root privileges or ensure your user account has the required VSAN administration role assigned in vCenter.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the host. The VSAN service may not be running.` | Restart the VSAN service with `esxcli system service restart vsanvpd` or verify VSAN is licensed and enabled on the cluster. |
+    | `Unknown command or namespace vsan` | Ensure you are running the command on an ESXi host with VSAN enabled; non-VSAN hosts do not have the vsan namespace available. |
+    | `Permission denied` | Run the command with root privileges or ensure your user account has the required VSAN administration role assigned in vCenter. |
 | vSAN Indicator | Meaning |
 |---|---|
 | Health: GREEN | Check passing |
@@ -753,9 +765,11 @@ Group Name                                   CPU Affinity
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to the host. Connection refused.`** — Ensure the ESXi host is reachable and SSH/management services are running; verify network connectivity and firewall rules.
-    **`Error: The object or item could not be found.`** — Confirm the world-id exists by running `esxcli vm process list` first and use the correct numeric ID from the output.
-    **`Error: Permission denied`** — Run commands with root privileges or ensure your user account has the required ESXi administrative role assigned.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to the host. Connection refused.` | Ensure the ESXi host is reachable and SSH/management services are running; verify network connectivity and firewall rules. |
+    | `Error: The object or item could not be found.` | Confirm the world-id exists by running `esxcli vm process list` first and use the correct numeric ID from the output. |
+    | `Error: Permission denied` | Run commands with root privileges or ensure your user account has the required ESXi administrative role assigned. |
 ## Logs
 
 ```bash
@@ -833,9 +847,11 @@ vobd.log.1
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/vmkernel.log' for reading: No such file or directory`** — Verify the ESXi host is fully booted and the filesystem is mounted; check with `ls -la /var/log/` to confirm log directory exists.
-    **`Error: The object has already been deleted or has not been completely created.`** — Wait 30 seconds for the syslog service to stabilize after reload, then retry the configuration command.
-    **`vm-support: command not found`** — Ensure you are logged in as root via SSH or direct console; `vm-support` is not available in restricted shells or non-root sessions.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/vmkernel.log' for reading: No such file or directory` | Verify the ESXi host is fully booted and the filesystem is mounted; check with `ls -la /var/log/` to confirm log directory exists. |
+    | `Error: The object has already been deleted or has not been completely created.` | Wait 30 seconds for the syslog service to stabilize after reload, then retry the configuration command. |
+    | `vm-support: command not found` | Ensure you are logged in as root via SSH or direct console; `vm-support` is not available in restricted shells or non-root sessions. |
 ## Hardware & Health
 
 ```bash
@@ -930,9 +946,11 @@ Power Sensors:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace hardware.`** — Verify you are running these commands on ESXi 6.0+; older versions may not support the hardware namespace.
-    **`Error: Unable to retrieve sensor data: Connection refused`** — Ensure IPMI/BMC is enabled in BIOS and the management network is properly configured.
-    **`Error: Permission denied`** — Run commands with root privileges or ensure your user account has the required ESXi host permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace hardware.` | Verify you are running these commands on ESXi 6.0+; older versions may not support the hardware namespace. |
+    | `Error: Unable to retrieve sensor data: Connection refused` | Ensure IPMI/BMC is enabled in BIOS and the management network is properly configured. |
+    | `Error: Permission denied` | Run commands with root privileges or ensure your user account has the required ESXi host permissions. |
 ## Firewall & NTP
 
 ```bash
@@ -998,9 +1016,11 @@ driftfile /var/lib/ntp/drift
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to set ruleset sshServer: Ruleset not found`** — Verify the ruleset ID exists by running `esxcli network firewall ruleset list` first.
-    **`Error: Invalid IP address format '<ip>'`** — Replace `<ip>` with a valid CIDR notation (e.g., `192.168.1.0/24`) or single IP address.
-    **`Error: NTP daemon failed to start: Address already in use`** — Stop any existing NTP process with `killall ntpd` before restarting the service.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to set ruleset sshServer: Ruleset not found` | Verify the ruleset ID exists by running `esxcli network firewall ruleset list` first. |
+    | `Error: Invalid IP address format '<ip>'` | Replace `<ip>` with a valid CIDR notation (e.g., `192.168.1.0/24`) or single IP address. |
+    | `Error: NTP daemon failed to start: Address already in use` | Stop any existing NTP process with `killall ntpd` before restarting the service. |
 ## Certificates & SSH
 
 ```bash
@@ -1050,9 +1070,11 @@ SSH is disabled
 ```
 
 !!! warning "Common errors"
-    **`openssl: No such file or directory`** — Install openssl package or use the full path `/usr/bin/openssl` on your ESXi version.
-    **`vim-cmd: command not found`** — Ensure you are running commands directly on the ESXi host console, not via SSH session with restricted shell.
-    **`Error: The object or property does not exist on the object`** — Verify the SSH service is installed and available; some minimal ESXi builds may not include it.
+    | Error | Fix |
+    |---|---|
+    | `openssl: No such file or directory` | Install openssl package or use the full path `/usr/bin/openssl` on your ESXi version. |
+    | `vim-cmd: command not found` | Ensure you are running commands directly on the ESXi host console, not via SSH session with restricted shell. |
+    | `Error: The object or property does not exist on the object` | Verify the SSH service is installed and available; some minimal ESXi builds may not include it. |
 ---
 
 ## See also

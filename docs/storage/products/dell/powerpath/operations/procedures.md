@@ -116,9 +116,11 @@ c0t5000097000002235d0s2 SP B          0002   RW      on     1         alive
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install EMC PowerPath software or verify the installation path is in your system's $PATH environment variable.
-    **`powermt: insufficient privileges`** — Run the command with sudo or as root user, as PowerPath requires elevated permissions.
-    **`No Symmetrix devices found`** — Verify that PowerPath is initialized and storage arrays are properly zoned and discovered by running `powermt config`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install EMC PowerPath software or verify the installation path is in your system's $PATH environment variable. |
+    | `powermt: insufficient privileges` | Run the command with sudo or as root user, as PowerPath requires elevated permissions. |
+    | `No Symmetrix devices found` | Verify that PowerPath is initialized and storage arrays are properly zoned and discovered by running `powermt config`. |
 Check that every path for every device shows `alive`. The path count per device should match the site baseline (typically 4 or 8 paths for dual-fabric FC environments). Any path showing `dead` or `unlic` requires investigation before proceeding with changes.
 
 ## Restore Dead Paths
@@ -148,9 +150,11 @@ emc3                    6     0
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install EMC PowerPath software or verify the installation path is in your $PATH environment variable.
-    **`powermt: Permission denied`** — Run the command with sudo or as root user, as PowerPath operations require elevated privileges.
-    **`powermt restore: Device emc1 failed - path recovery timeout`** — Check physical SAN connectivity and verify the storage array is online and accessible before retrying the restore.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install EMC PowerPath software or verify the installation path is in your $PATH environment variable. |
+    | `powermt: Permission denied` | Run the command with sudo or as root user, as PowerPath operations require elevated privileges. |
+    | `powermt restore: Device emc1 failed - path recovery timeout` | Check physical SAN connectivity and verify the storage array is online and accessible before retrying the restore. |
 If paths remain `dead` after `powermt restore`, investigate the underlying cause: check SAN switch port state, array-side masking, and HBA port state on the host. Dead paths that do not recover after restore indicate a connectivity or zoning issue that must be resolved before the host is considered fully healthy.
 
 ## Change Load Balancing Policy
@@ -191,9 +195,11 @@ Configuration saved successfully to /etc/powerpath/powerpath.conf
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and ensure `/opt/emc/powerpath/bin` is in your PATH.
-    **`powermt: You must be root to run this command`** — Execute the command with `sudo` or switch to root user with `sudo su -`.
-    **`powermt set policy=ServiceTime dev=all: No devices found`** — Ensure storage arrays are properly discovered and multipathed by running `powermt display` to verify device visibility.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and ensure `/opt/emc/powerpath/bin` is in your PATH. |
+    | `powermt: You must be root to run this command` | Execute the command with `sudo` or switch to root user with `sudo su -`. |
+    | `powermt set policy=ServiceTime dev=all: No devices found` | Ensure storage arrays are properly discovered and multipathed by running `powermt display` to verify device visibility. |
 After changing the policy, monitor `powermt display dev=all` for a few minutes to confirm I/O is distributing across paths as expected. A brief rebalance lag is normal.
 
 ## Save Current PowerPath Configuration
@@ -216,9 +222,11 @@ Save completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Install PowerPath software or ensure the powermt binary is in your PATH; verify with `which powermt`.
-    **`Permission denied`** — Run the command with sudo or as root since PowerPath configuration files require elevated privileges.
-    **`Cannot write to /etc/powerpath/: Read-only file system`** — Remount the filesystem as read-write using `mount -o remount,rw /` or check disk space with `df -h`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Install PowerPath software or ensure the powermt binary is in your PATH; verify with `which powermt`. |
+    | `Permission denied` | Run the command with sudo or as root since PowerPath configuration files require elevated privileges. |
+    | `Cannot write to /etc/powerpath/: Read-only file system` | Remount the filesystem as read-write using `mount -o remount,rw /` or check disk space with `df -h`. |
 Run `powermt save` after any path change, policy change, or new LUN discovery to ensure the configuration persists across reboots. The saved configuration is written to `/etc/powermt.custom` (Linux) and is automatically loaded at boot by `powermt restore`.
 
 ## Remove a Dead Device Entry
@@ -243,8 +251,10 @@ dev-006                000123456789DEF  OK       Yes    Yes  No
 ```
 
 !!! warning "Common errors"
-    **`Device dev-003 is in use by an active I/O path`** — Ensure all applications and mount points using the device are stopped before removal.
-    **`powermt: Command not found`** — Install EMC PowerPath or add its bin directory to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Device dev-003 is in use by an active I/O path` | Ensure all applications and mount points using the device are stopped before removal. |
+    | `powermt: Command not found` | Install EMC PowerPath or add its bin directory to your PATH environment variable. |
 Only run `powermt remove` after the LUN has been unmapped from the host at the array side. Removing an active device will cause I/O failures. After removal, run `powermt save` to persist the updated device list.
 
 ## Update PowerPath After Adding New LUNs
@@ -286,8 +296,10 @@ state: alive; policy: SymmOpt; priority: 0
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install EMC PowerPath package (e.g., `rpm -ivh PowerPath*.rpm`) and ensure the daemon is running with `systemctl start powerpath`.
-    **`powermt: error: Cannot open /etc/powermt.custom`** — Verify PowerPath daemon is running with `systemctl status powerpath` and check file permissions on `/etc/powermt.custom`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install EMC PowerPath package (e.g., `rpm -ivh PowerPath*.rpm`) and ensure the daemon is running with `systemctl start powerpath`. |
+    | `powermt: error: Cannot open /etc/powermt.custom` | Verify PowerPath daemon is running with `systemctl status powerpath` and check file permissions on `/etc/powermt.custom`. |
 Run `powermt config` after new LUNs have been zoned and masked to the host at the array. New devices will appear in `powermt display dev=all` output with the configured load-balancing policy applied automatically. Run `powermt save` after discovery to persist the updated configuration.
 
 ---

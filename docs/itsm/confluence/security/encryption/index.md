@@ -91,8 +91,10 @@ jdbc:mysql://dbserver.example.local:3306/confluence?useSSL=true&requireSSL=true
 ```
 
 !!! warning "Common errors"
-    **`psql: error: FATAL: SSL connection error: certificate verify failed`** — Add `sslmode=require` to the JDBC URL and ensure the database server's SSL certificate is trusted by the JVM keystore.
-    **`Communications link failure: The last packet sent successfully to the server was 0 milliseconds ago`** — Verify the database server is listening on the specified port (5432 for PostgreSQL, 3306 for MySQL) and that firewall rules permit encrypted connections from the Confluence host.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: FATAL: SSL connection error: certificate verify failed` | Add `sslmode=require` to the JDBC URL and ensure the database server's SSL certificate is trusted by the JVM keystore. |
+    | `Communications link failure: The last packet sent successfully to the server was 0 milliseconds ago` | Verify the database server is listening on the specified port (5432 for PostgreSQL, 3306 for MySQL) and that firewall rules permit encrypted connections from the Confluence host. |
 ```bash
 ## Store the database password encrypted in confluence.cfg.xml
 ## Use Confluence's built-in password encoding tool
@@ -219,9 +221,11 @@ NAME                                          TYPE MOUNTPOINT
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.local port 80: Connection refused`** — Verify the Confluence server is running and HTTP port 80 is accessible, or check firewall rules if this is expected to be blocked.
-    **`unable to load certificate`** — Ensure the certificate file exists at the configured path in Confluence's server.xml and has proper read permissions for the Confluence process user.
-    **`grep: /var/atlassian/application-data/confluence/confluence.cfg.xml: No such file or directory`** — Verify the Confluence installation path is correct; use `find / -name confluence.cfg.xml 2>/dev/null` to locate the actual config file.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.local port 80: Connection refused` | Verify the Confluence server is running and HTTP port 80 is accessible, or check firewall rules if this is expected to be blocked. |
+    | `unable to load certificate` | Ensure the certificate file exists at the configured path in Confluence's server.xml and has proper read permissions for the Confluence process user. |
+    | `grep: /var/atlassian/application-data/confluence/confluence.cfg.xml: No such file or directory` | Verify the Confluence installation path is correct; use `find / -name confluence.cfg.xml 2>/dev/null` to locate the actual config file. |
 ---
 
 ## See also

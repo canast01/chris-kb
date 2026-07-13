@@ -118,9 +118,11 @@ http://ocsp.digicert.com
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <ocsp-url>: Connection refused`** — Verify the OCSP responder hostname is correct and the service is listening on the expected port (typically 80 or 443).
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification for testing, or import the CA certificate into your system trust store.
-    **`grep: (standard input) is empty`** — Ensure the certificate chain is being retrieved correctly by testing the host connectivity first with `openssl s_client -connect <host>:443 -showcerts`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <ocsp-url>: Connection refused` | Verify the OCSP responder hostname is correct and the service is listening on the expected port (typically 80 or 443). |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification for testing, or import the CA certificate into your system trust store. |
+    | `grep: (standard input) is empty` | Ensure the certificate chain is being retrieved correctly by testing the host connectivity first with `openssl s_client -connect <host>:443 -showcerts`. |
 ## See also
 
 - [Certificates — Architecture](../how-it-works/)

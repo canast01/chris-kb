@@ -40,9 +40,11 @@ total 5.6G
 ```
 
 !!! warning "Common errors"
-    **`pg_dumpall: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory`** — Verify PostgreSQL is running with `systemctl status postgresql` and start it if needed.
-    **`scp: /var/backup/dcnm/dcnm-db-20240115-1430.sql.gz: No such file or directory`** — Ensure the gzip command completed successfully and the backup directory exists with `mkdir -p /var/backup/dcnm/`.
-    **`Permission denied (publickey,password).`** — Verify SSH key is configured for the `bkp` user on backup-server or add password authentication to the scp command.
+    | Error | Fix |
+    |---|---|
+    | `pg_dumpall: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory` | Verify PostgreSQL is running with `systemctl status postgresql` and start it if needed. |
+    | `scp: /var/backup/dcnm/dcnm-db-20240115-1430.sql.gz: No such file or directory` | Ensure the gzip command completed successfully and the backup directory exists with `mkdir -p /var/backup/dcnm/`. |
+    | `Permission denied (publickey,password).` | Verify SSH key is configured for the `bkp` user on backup-server or add password authentication to the scp command. |
 ```bash
 # Key configuration directories
 tar -czf /var/backup/dcnm/dcnm-config-$(date +%Y%m%d).tar.gz \
@@ -66,9 +68,11 @@ dcnm-config-20240115.tar.gz                    100%  245MB   18.2MB/s   00:13
 ```
 
 !!! warning "Common errors"
-    **`tar: /usr/local/cisco/dcm/dcnm/conf/: Cannot open: No such file or directory`** — Verify the DCNM installation path matches your environment with `ls -d /usr/local/cisco/dcm/dcnm/conf/` before running the backup.
-    **`scp: /backups/dcnm/config/: No such file or directory`** — Create the destination directory on the backup server with `ssh bkp@backup-server.corp.example.com mkdir -p /backups/dcnm/config/` first.
-    **`Permission denied (publickey,password).`** — Ensure SSH key-based authentication is configured for the `bkp` user or provide the correct password when prompted.
+    | Error | Fix |
+    |---|---|
+    | `tar: /usr/local/cisco/dcm/dcnm/conf/: Cannot open: No such file or directory` | Verify the DCNM installation path matches your environment with `ls -d /usr/local/cisco/dcm/dcnm/conf/` before running the backup. |
+    | `scp: /backups/dcnm/config/: No such file or directory` | Create the destination directory on the backup server with `ssh bkp@backup-server.corp.example.com mkdir -p /backups/dcnm/config/` first. |
+    | `Permission denied (publickey,password).` | Ensure SSH key-based authentication is configured for the `bkp` user or provide the correct password when prompted. |
 ```bash
 # Get auth cookie
 curl -sk -c dcnm-cookie.txt -X POST \
@@ -95,9 +99,11 @@ curl -sk -b dcnm-cookie.txt -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if error persists, verify DCNM hostname resolves correctly).
-    **`{"StatusCode":401,"StatusMessage":"Authentication failed"}`** — Verify the svc-automation service account credentials and that the account has SAN zoning API permissions in DCNM.
-    **`curl: (7) Failed to connect to dcnm-dc1.corp.example.com port 443: Connection refused`** — Confirm DCNM appliance is running and accessible on the network; check firewall rules and DNS resolution of the hostname.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if error persists, verify DCNM hostname resolves correctly). |
+    | `{"StatusCode":401,"StatusMessage":"Authentication failed"}` | Verify the svc-automation service account credentials and that the account has SAN zoning API permissions in DCNM. |
+    | `curl: (7) Failed to connect to dcnm-dc1.corp.example.com port 443: Connection refused` | Confirm DCNM appliance is running and accessible on the network; check firewall rules and DNS resolution of the hostname. |
 ```bash
 ssh root@dcnm-dc1.corp.example.com
 
@@ -149,9 +155,11 @@ DCNM Server started successfully. PID: 8742
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "postgres"`** — Run psql commands as the postgres system user or configure pg_hba.conf to allow password authentication.
-    **`gunzip: /var/backup/dcnm/dcnm-db-20260506-0200.sql.gz: No such file or directory`** — Verify the backup file path and date match an existing dump in /var/backup/dcnm/ using `ls -lh /var/backup/dcnm/`.
-    **`ERROR: database "sane" is being accessed by other users`** — Ensure all DCNM services and client connections are fully stopped before dropping databases, or use `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='sane';` first.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "postgres"` | Run psql commands as the postgres system user or configure pg_hba.conf to allow password authentication. |
+    | `gunzip: /var/backup/dcnm/dcnm-db-20260506-0200.sql.gz: No such file or directory` | Verify the backup file path and date match an existing dump in /var/backup/dcnm/ using `ls -lh /var/backup/dcnm/`. |
+    | `ERROR: database "sane" is being accessed by other users` | Ensure all DCNM services and client connections are fully stopped before dropping databases, or use `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='sane';` first. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -59,9 +59,11 @@ sannav-backup-20260506.tar.gz          100%  1.1GB   45.2MB/s   00:24
 ```
 
 !!! warning "Common errors"
-    **`sannav backup --type full --destination /opt/sannav/backups/: command not found`** — Verify the SANnav CLI is in your PATH by running `which sannav` or source the SANnav environment setup script.
-    **`Permission denied (publickey,password).`** — Ensure the SSH key or credentials for `bkp-user@backup-server.corp.example.com` are configured correctly and the user has write permissions to `/backups/sannav/dc1/`.
-    **`sannav backup --status: Job not found or expired`** — Run `sannav backup --list` to retrieve the correct active job ID and ensure the backup hasn't already completed or timed out.
+    | Error | Fix |
+    |---|---|
+    | `sannav backup --type full --destination /opt/sannav/backups/: command not found` | Verify the SANnav CLI is in your PATH by running `which sannav` or source the SANnav environment setup script. |
+    | `Permission denied (publickey,password).` | Ensure the SSH key or credentials for `bkp-user@backup-server.corp.example.com` are configured correctly and the user has write permissions to `/backups/sannav/dc1/`. |
+    | `sannav backup --status: Job not found or expired` | Run `sannav backup --list` to retrieve the correct active job ID and ensure the backup hasn't already completed or timed out. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

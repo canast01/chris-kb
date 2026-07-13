@@ -79,9 +79,11 @@ rtt min/avg/max/stddev = 11.8/12.05/12.4/0.24 ms
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to api.example.com port 443: Connection refused`** — Verify the API endpoint is reachable and listening; check firewall rules and DNS resolution with `ndig api.example.com`.
-    **`ping: sendmsg: Operation not permitted`** — The `-M do` flag requires root or CAP_NET_RAW capability; run with `sudo` or adjust system capabilities.
-    **`notAfter=Jan 14 10:22:33 2024 GMT` (certificate expired)`** — Renew the TLS certificate immediately using your certificate provider or `certbot renew` for Let's Encrypt certificates.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to api.example.com port 443: Connection refused` | Verify the API endpoint is reachable and listening; check firewall rules and DNS resolution with `ndig api.example.com`. |
+    | `ping: sendmsg: Operation not permitted` | The `-M do` flag requires root or CAP_NET_RAW capability; run with `sudo` or adjust system capabilities. |
+    | `notAfter=Jan 14 10:22:33 2024 GMT` (certificate expired)` | Renew the TLS certificate immediately using your certificate provider or `certbot renew` for Let's Encrypt certificates. |
 ### Route and latency
 
 ```bash
@@ -124,9 +126,11 @@ Connection to api.example.com 443 port [tcp/https] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`traceroute: command not found`** — Install traceroute using `apt-get install traceroute` on Debian/Ubuntu or `yum install traceroute` on RHEL/CentOS.
-    **`nc: command not found`** — Install netcat using `apt-get install netcat-openbsd` or verify the correct package name for your distribution.
-    **`Test-NetConnection : The term 'Test-NetConnection' is not recognized`** — Ensure you are running PowerShell 4.0 or later on Windows; use `$PSVersionTable.PSVersion` to verify.
+    | Error | Fix |
+    |---|---|
+    | `traceroute: command not found` | Install traceroute using `apt-get install traceroute` on Debian/Ubuntu or `yum install traceroute` on RHEL/CentOS. |
+    | `nc: command not found` | Install netcat using `apt-get install netcat-openbsd` or verify the correct package name for your distribution. |
+    | `Test-NetConnection : The term 'Test-NetConnection' is not recognized` | Ensure you are running PowerShell 4.0 or later on Windows; use `$PSVersionTable.PSVersion` to verify. |
 ### DNS resolution
 
 ```bash
@@ -154,8 +158,10 @@ api.example.com                                A      300   Answer     93.184.21
 ```
 
 !!! warning "Common errors"
-    **`dig: couldn't get address for '10.0.0.53': not known`** — Verify the resolver IP is reachable and correct with `ping 10.0.0.53` before running dig.
-    **`SERVFAIL`** — Check that the DNS resolver at 10.0.0.53 has zone authority or conditional forwarding rules configured for api.example.com.
+    | Error | Fix |
+    |---|---|
+    | `dig: couldn't get address for '10.0.0.53': not known` | Verify the resolver IP is reachable and correct with `ping 10.0.0.53` before running dig. |
+    | `SERVFAIL` | Check that the DNS resolver at 10.0.0.53 has zone authority or conditional forwarding rules configured for api.example.com. |
 ### Cloud Direct Connect / ExpressRoute
 
 ```bash
@@ -193,8 +199,10 @@ az network express-route show --name <circuit-name> --resource-group <rg> --quer
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the DescribeVirtualInterfaces operation: Invalid virtual interface ID`** — Verify the virtual interface exists in your AWS account and region using `aws directconnect describe-virtual-interfaces` without filters.
-    **`The following arguments are required: --name, --resource-group`** — Replace `<circuit-name>` and `<rg>` with actual ExpressRoute circuit name and resource group name, or use `az network express-route list` to find valid values.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the DescribeVirtualInterfaces operation: Invalid virtual interface ID` | Verify the virtual interface exists in your AWS account and region using `aws directconnect describe-virtual-interfaces` without filters. |
+    | `The following arguments are required: --name, --resource-group` | Replace `<circuit-name>` and `<rg>` with actual ExpressRoute circuit name and resource group name, or use `az network express-route list` to find valid values. |
 ---
 
 ## Firewall Rule Verification

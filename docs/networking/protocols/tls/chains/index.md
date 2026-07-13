@@ -76,8 +76,10 @@ issuer=/CN=Example Root CA
 ```
 
 !!! warning "Common errors"
-    **`verify error:num=20:unable to get local issuer certificate`** — Add the missing intermediate CA to your chain.pem file or use `-CApath` to point to a directory containing root CAs.
-    **`error:0906D06C:PEM routines:PEM_read_bio:no start line`** — Ensure bundle.pem contains valid PEM-formatted certificates with proper `-----BEGIN CERTIFICATE-----` headers.
+    | Error | Fix |
+    |---|---|
+    | `verify error:num=20:unable to get local issuer certificate` | Add the missing intermediate CA to your chain.pem file or use `-CApath` to point to a directory containing root CAs. |
+    | `error:0906D06C:PEM routines:PEM_read_bio:no start line` | Ensure bundle.pem contains valid PEM-formatted certificates with proper `-----BEGIN CERTIFICATE-----` headers. |
 ## Building a Chain Bundle
 
 The bundle should be ordered: server cert → intermediate(s) → (optionally root).
@@ -99,8 +101,10 @@ OK
 ```
 
 !!! warning "Common errors"
-    **`error 20 at 0 depth lookup: unable to get local issuer certificate`** — Ensure the root certificate file path is correct and the certificate chain is complete; verify with `openssl x509 -in root.crt -text -noout`.
-    **`No such file or directory`** — Confirm all three certificate files (server.crt, intermediate.crt, root.crt) exist in the current working directory using `ls -la *.crt`.
+    | Error | Fix |
+    |---|---|
+    | `error 20 at 0 depth lookup: unable to get local issuer certificate` | Ensure the root certificate file path is correct and the certificate chain is complete; verify with `openssl x509 -in root.crt -text -noout`. |
+    | `No such file or directory` | Confirm all three certificate files (server.crt, intermediate.crt, root.crt) exist in the current working directory using `ls -la *.crt`. |
 ## Configuring Chain in Common Web Servers
 
 ### nginx
@@ -135,8 +139,10 @@ cat server.crt intermediate.crt server.key > /etc/ssl/haproxy.pem
 ```
 
 !!! warning "Common errors"
-    **`cat: server.crt: No such file or directory`** — Verify the certificate files exist in the current directory or provide absolute paths to their locations.
-    **`Permission denied`** — Run the command with `sudo` or ensure your user has write permissions to `/etc/ssl/`.
+    | Error | Fix |
+    |---|---|
+    | `cat: server.crt: No such file or directory` | Verify the certificate files exist in the current directory or provide absolute paths to their locations. |
+    | `Permission denied` | Run the command with `sudo` or ensure your user has write permissions to `/etc/ssl/`. |
 ## Installing Internal CA Certificates
 
 To make an internal CA trusted by Linux hosts:
@@ -166,9 +172,11 @@ verify OK
 ```
 
 !!! warning "Common errors"
-    **`verify OK`** — Ignore this; it indicates successful verification, not an error.
-    **`error 20 at 0 depth lookup: unable to get local issuer certificate`** — The CA certificate was not properly installed; re-run `update-ca-certificates` after confirming the `.crt` file is in `/usr/local/share/ca-certificates/` with proper permissions.
-    **`cp: cannot stat 'internal-ca.crt': No such file or directory`** — Verify the CA certificate file exists in the current working directory or provide the full path to the source file.
+    | Error | Fix |
+    |---|---|
+    | `verify OK` | Ignore this; it indicates successful verification, not an error. |
+    | `error 20 at 0 depth lookup: unable to get local issuer certificate` | The CA certificate was not properly installed; re-run `update-ca-certificates` after confirming the `.crt` file is in `/usr/local/share/ca-certificates/` with proper permissions. |
+    | `cp: cannot stat 'internal-ca.crt': No such file or directory` | Verify the CA certificate file exists in the current working directory or provide the full path to the source file. |
 ## Online Chain Verification Tools
 
 ```bash
@@ -201,8 +209,10 @@ DONE
 ```
 
 !!! warning "Common errors"
-    **`verify error:num=20:unable to get local issuer certificate`** — Add the missing intermediate CA certificate to your bundle or use the system CA bundle with `curl -k` (if testing) or obtain the complete chain from your certificate provider.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Either add the self-signed cert to your CA bundle with `cat /path/to/cert.pem >> /path/to/ca-bundle.pem`, or use `curl -k` for testing only.
+    | Error | Fix |
+    |---|---|
+    | `verify error:num=20:unable to get local issuer certificate` | Add the missing intermediate CA certificate to your bundle or use the system CA bundle with `curl -k` (if testing) or obtain the complete chain from your certificate provider. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Either add the self-signed cert to your CA bundle with `cat /path/to/cert.pem >> /path/to/ca-bundle.pem`, or use `curl -k` for testing only. |
 ## Common Issues
 
 | Symptom | Cause | Fix |

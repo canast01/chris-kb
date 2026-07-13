@@ -80,9 +80,11 @@ vxrail-esx-04.lab.local - green
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if still failing, verify VXM IP is correct and reachable on port 443).
-    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Confirm VXM appliance is running and the IP address is correct; check network connectivity with `ping <vxm-ip>`.
-    **`error: 401 Unauthorized`** — Verify the VXM credentials (username:password) are correct and base64-encoded properly by testing `echo -n 'mystic:password' | base64` independently.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if still failing, verify VXM IP is correct and reachable on port 443). |
+    | `curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused` | Confirm VXM appliance is running and the IP address is correct; check network connectivity with `ping <vxm-ip>`. |
+    | `error: 401 Unauthorized` | Verify the VXM credentials (username:password) are correct and base64-encoded properly by testing `echo -n 'mystic:password' | base64` independently. |
 ### 2. vSAN Health
 
 ![2. vSAN Health](../../../../../assets/virtualization-vmware-vxrail-hc-2-vsan-health.svg)
@@ -140,9 +142,11 @@ esx-vxrail-03.lab.local  esx-vxrail-04.lab.local  PASS      0.756
 ```
 
 !!! warning "Common errors"
-    **`vSAN Cluster: UNHEALTHY — Check vSAN Object Repair Timer and Physical Disk status using esxcli vsan health cluster get, then resolve failed components before proceeding.`** — Investigate component-specific failures and remediate disk/network issues.
-    **`Network test FAILED: Host esx-vxrail-02 cannot reach esx-vxrail-04 — Verify vSAN VMkernel port connectivity, check firewall rules for UDP 12345, and confirm all hosts have matching vSAN network configuration.`** — Verify vSAN VMkernel adapters are on the same subnet and multicast is enabled.
-    **`Resync Objects: 2.5 TB Remaining Bytes — vSAN is actively resyncing data after a host failure or disk replacement.`** — Wait for resync to complete (monitor with watch 'esxcli vsan debug resync list') or check host/disk status if resync stalls.
+    | Error | Fix |
+    |---|---|
+    | `vSAN Cluster: UNHEALTHY — Check vSAN Object Repair Timer and Physical Disk status using esxcli vsan health cluster get, then resolve failed components before proceeding.` | Investigate component-specific failures and remediate disk/network issues. |
+    | `Network test FAILED: Host esx-vxrail-02 cannot reach esx-vxrail-04 — Verify vSAN VMkernel port connectivity, check firewall rules for UDP 12345, and confirm all hosts have matching vSAN network configuration.` | Verify vSAN VMkernel adapters are on the same subnet and multicast is enabled. |
+    | `Resync Objects: 2.5 TB Remaining Bytes — vSAN is actively resyncing data after a host failure or disk replacement.` | Wait for resync to complete (monitor with watch 'esxcli vsan debug resync list') or check host/disk status if resync stalls. |
 In PowerCLI:
 
 ```powershell
@@ -190,9 +194,11 @@ System Event Log (Last 20 entries):
 ```
 
 !!! warning "Common errors"
-    **`RACADM: ERROR: iDRAC IP <IP> is not responding`** — Verify iDRAC network connectivity and ensure the management interface is configured with `racadm config -g cfgLanSecurity -o cfgIpStaticIpAddr <IP>`.
-    **`RACADM: ERROR: Access Denied. Insufficient privileges`** — Confirm you are running the command as root or with sudo, or authenticate with `-u <username> -p <password>` flags.
-    **`RACADM: ERROR: Unable to parse response from iDRAC`** — Restart the iDRAC service with `racadm racreset` and wait 2 minutes for it to fully initialize before retrying.
+    | Error | Fix |
+    |---|---|
+    | `RACADM: ERROR: iDRAC IP <IP> is not responding` | Verify iDRAC network connectivity and ensure the management interface is configured with `racadm config -g cfgLanSecurity -o cfgIpStaticIpAddr <IP>`. |
+    | `RACADM: ERROR: Access Denied. Insufficient privileges` | Confirm you are running the command as root or with sudo, or authenticate with `-u <username> -p <password>` flags. |
+    | `RACADM: ERROR: Unable to parse response from iDRAC` | Restart the iDRAC service with `racadm racreset` and wait 2 minutes for it to fully initialize before retrying. |
 In OMIVV (vCenter plugin): **Menu → OpenManage Integration → Hardware → Alarms** — verify no red or orange alerts.
 
 ### 4. vSAN Capacity
@@ -261,9 +267,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the VXM certificate into your system's CA bundle; if still failing, verify the VXM hostname matches the certificate CN.
-    **`jq: parse error: Invalid JSON`** — Ensure python3 is installed and the API response is valid JSON; check that the VXM service is running with `curl -sk https://<vxm-ip>/rest/vxm/v1/system/status`.
-    **`curl: (401) Unauthorized`** — Verify the VXM credentials are correct and base64-encoded properly with `echo -n 'mystic:password' | base64`, then confirm the user has LCM API permissions in VXM.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the VXM certificate into your system's CA bundle; if still failing, verify the VXM hostname matches the certificate CN. |
+    | `jq: parse error: Invalid JSON` | Ensure python3 is installed and the API response is valid JSON; check that the VXM service is running with `curl -sk https://<vxm-ip>/rest/vxm/v1/system/status`. |
+    | `curl: (401) Unauthorized` | Verify the VXM credentials are correct and base64-encoded properly with `echo -n 'mystic:password' | base64`, then confirm the user has LCM API permissions in VXM. |
 If a bundle is available, record it and plan an upgrade in the next maintenance window.
 
 ---
@@ -325,8 +333,10 @@ iDRAC Version=6.10.40.00
 ```
 
 !!! warning "Common errors"
-    **`racadm: command not found`** — Install Dell iDRAC tools or run this command directly on the iDRAC IP via SSH instead of the ESXi host.
-    **`Unable to parse objname _NIC.Embedded.1-1-1`** — Restart the iDRAC service with `racadm racreset soft` and retry after 2 minutes.
+    | Error | Fix |
+    |---|---|
+    | `racadm: command not found` | Install Dell iDRAC tools or run this command directly on the iDRAC IP via SSH instead of the ESXi host. |
+    | `Unable to parse objname _NIC.Embedded.1-1-1` | Restart the iDRAC service with `racadm racreset soft` and retry after 2 minutes. |
 ---
 
 ## Run This Routine
@@ -472,9 +482,11 @@ No critical sensors
 ```
 
 !!! warning "Common errors"
-    **`vsan health cluster get: Unknown command or namespace`** — Verify the ESXi host is vSAN-enabled by running `esxcli vsan cluster get` instead (older ESXi versions use different command syntax).
-    **`Permission denied`** — Ensure you are connected via SSH as root or a user with vSAN admin privileges; use `sudo` or authenticate with elevated credentials.
-    **`Network test: No such file or directory`** — The vSAN debug network test command may not exist on this ESXi version; use `esxcli vsan debug network list` to verify network participation instead.
+    | Error | Fix |
+    |---|---|
+    | `vsan health cluster get: Unknown command or namespace` | Verify the ESXi host is vSAN-enabled by running `esxcli vsan cluster get` instead (older ESXi versions use different command syntax). |
+    | `Permission denied` | Ensure you are connected via SSH as root or a user with vSAN admin privileges; use `sudo` or authenticate with elevated credentials. |
+    | `Network test: No such file or directory` | The vSAN debug network test command may not exist on this ESXi version; use `esxcli vsan debug network list` to verify network participation instead. |
 ---
 
 ## See also

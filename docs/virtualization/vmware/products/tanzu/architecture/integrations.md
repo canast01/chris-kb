@@ -152,8 +152,10 @@ data:
 ```
 
 !!! warning "Common errors"
-    **`error: pods "nsx-ncp-<hash>" not found`** — Replace `<hash>` with the actual pod hash from the first command output (e.g., `nsx-ncp-7d4f2k9m`).
-    **`Error from server (NotFound): configmaps "nsx-ncp-config" not found`** — Verify NCP is installed in the Supervisor cluster and check the correct namespace with `kubectl get configmap -A | grep ncp`.
+    | Error | Fix |
+    |---|---|
+    | `error: pods "nsx-ncp-<hash>" not found` | Replace `<hash>` with the actual pod hash from the first command output (e.g., `nsx-ncp-7d4f2k9m`). |
+    | `Error from server (NotFound): configmaps "nsx-ncp-config" not found` | Verify NCP is installed in the Supervisor cluster and check the correct namespace with `kubectl get configmap -A | grep ncp`. |
 NCP translates:
 - `NetworkPolicy` → NSX Distributed Firewall rules
 - `Service type: LoadBalancer` → NSX Virtual Server + Pool
@@ -222,8 +224,10 @@ data:
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "configmap" in API group ""`** — Verify the namespace exists with `kubectl get ns avi-system` and ensure AKO is installed via Helm.
-    **`Error from server (NotFound): pods "ako-0" not found`** — Check that the AKO pod is running with `kubectl get pods -n avi-system` and verify the deployment completed successfully.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "configmap" in API group ""` | Verify the namespace exists with `kubectl get ns avi-system` and ensure AKO is installed via Helm. |
+    | `Error from server (NotFound): pods "ako-0" not found` | Check that the AKO pod is running with `kubectl get pods -n avi-system` and verify the deployment completed successfully. |
 Key AKO settings:
 
 ```yaml
@@ -327,8 +331,10 @@ I1215 09:41:35.345678       1 attacher.go:312] Attach operation queued for node:
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): pods "vsphere-csi-node-<hash>" not found`** — Replace `<hash>` with the actual pod hash from the first command output (e.g., `vsphere-csi-node-4k8xj`).
-    **`error: the server doesn't have a resource type "csidriver"`** — Verify the Kubernetes API server supports CSIDriver resources (requires Kubernetes 1.12+) and check RBAC permissions for the current user.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): pods "vsphere-csi-node-<hash>" not found` | Replace `<hash>` with the actual pod hash from the first command output (e.g., `vsphere-csi-node-4k8xj`). |
+    | `error: the server doesn't have a resource type "csidriver"` | Verify the Kubernetes API server supports CSIDriver resources (requires Kubernetes 1.12+) and check RBAC permissions for the current user. |
 ---
 
 ## Active Directory / LDAP Integration
@@ -420,9 +426,11 @@ Current context is now "supervisor-vip.example.com".
 ```
 
 !!! warning "Common errors"
-    **`error: error validating the path to a credential file`** — Ensure `kubectl vsphere` plugin is installed via `kubectl krew install vsphere` and your kubeconfig directory exists.
-    **`error: x509: certificate signed by unknown authority`** — Remove the `--insecure-skip-tls-verify` flag and install the vSphere supervisor cluster's CA certificate in your system trust store, or keep the flag only for non-production testing.
-    **`error: invalid credentials`** — Verify the vSphere username and password are correct; use `--password` flag or enter interactively when prompted, and confirm the account has Kubernetes cluster admin permissions.
+    | Error | Fix |
+    |---|---|
+    | `error: error validating the path to a credential file` | Ensure `kubectl vsphere` plugin is installed via `kubectl krew install vsphere` and your kubeconfig directory exists. |
+    | `error: x509: certificate signed by unknown authority` | Remove the `--insecure-skip-tls-verify` flag and install the vSphere supervisor cluster's CA certificate in your system trust store, or keep the flag only for non-production testing. |
+    | `error: invalid credentials` | Verify the vSphere username and password are correct; use `--password` flag or enter interactively when prompted, and confirm the account has Kubernetes cluster admin permissions. |
 ---
 
 ## Harbor Registry Integration
@@ -493,9 +501,11 @@ curl -u admin:Harbor12345 \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or import the Harbor CA certificate into your system trust store.
-    **`{"errors":[{"code":"UNAUTHORIZED","message":"Unauthorized"}]}`** — Verify Harbor admin credentials are correct and the user has project access; check if the password contains special characters requiring URL encoding.
-    **`jq: error (at <stdin>:1): Cannot index object with string "application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0"`** — Ensure the artifact scan has completed successfully by checking `scan_status` is "Success" before querying vulnerabilities.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl or import the Harbor CA certificate into your system trust store. |
+    | `{"errors":[{"code":"UNAUTHORIZED","message":"Unauthorized"}]}` | Verify Harbor admin credentials are correct and the user has project access; check if the password contains special characters requiring URL encoding. |
+    | `jq: error (at <stdin>:1): Cannot index object with string "application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0"` | Ensure the artifact scan has completed successfully by checking `scan_status` is "Success" before querying vulnerabilities. |
 ### Block Images with Critical CVEs (Replication and Deploy Gate)
 
 ```text
@@ -537,8 +547,10 @@ eyJhbGciOiJIUzI1NiIsImtpZCI6IjEyMzQ1Njc4OTBhYmNkZWYifQ.eyJpc3MiOiJrdWJlcm5ldGVzL
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "token"`** — Upgrade to Kubernetes 1.24+ or use `kubectl get secret -n kube-system $(kubectl get secret -n kube-system | grep aria-ops-reader-token | awk '{print $1}') -o jsonpath='{.data.token}' | base64 -d` for older versions.
-    **`Error from server (AlreadyExists): serviceaccounts "aria-ops-reader" already exists`** — Delete the existing service account with `kubectl delete serviceaccount aria-ops-reader -n kube-system` before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "token"` | Upgrade to Kubernetes 1.24+ or use `kubectl get secret -n kube-system $(kubectl get secret -n kube-system | grep aria-ops-reader-token | awk '{print $1}') -o jsonpath='{.data.token}' | base64 -d` for older versions. |
+    | `Error from server (AlreadyExists): serviceaccounts "aria-ops-reader" already exists` | Delete the existing service account with `kubectl delete serviceaccount aria-ops-reader -n kube-system` before recreating it. |
 Aria Operations collects: node CPU/memory/disk, pod status, PVC usage, K8s events, namespace resource consumption.
 
 ---

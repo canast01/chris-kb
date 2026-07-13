@@ -42,9 +42,11 @@ Base backup complete: /backup/postgresql/2024-01-15
 ```
 
 !!! warning "Common errors"
-    **`pg_basebackup: could not connect to server: FATAL:  role "replication" does not exist`** — Create the replication role with `createuser -U postgres --replication replication` or verify the role exists with `psql -U postgres -c "\du"`.
-    **`mkdir: cannot create directory '/backup/postgresql/2024-01-15': Permission denied`** — Ensure the PostgreSQL system user (usually `postgres`) owns the `/backup/postgresql` directory with `sudo chown postgres:postgres /backup/postgresql && sudo chmod 700 /backup/postgresql`.
-    **`pg_basebackup: could not create directory "/backup/postgresql/2024-01-15": No space left on device`** — Check available disk space with `df -h /backup` and free up space or expand the partition before retrying the backup.
+    | Error | Fix |
+    |---|---|
+    | `pg_basebackup: could not connect to server: FATAL:  role "replication" does not exist` | Create the replication role with `createuser -U postgres --replication replication` or verify the role exists with `psql -U postgres -c "\du"`. |
+    | `mkdir: cannot create directory '/backup/postgresql/2024-01-15': Permission denied` | Ensure the PostgreSQL system user (usually `postgres`) owns the `/backup/postgresql` directory with `sudo chown postgres:postgres /backup/postgresql && sudo chmod 700 /backup/postgresql`. |
+    | `pg_basebackup: could not create directory "/backup/postgresql/2024-01-15": No space left on device` | Check available disk space with `df -h /backup` and free up space or expand the partition before retrying the backup. |
 ## Replication Lag Monitor
 
 ```bash
@@ -63,9 +65,11 @@ fi
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed`** — Ensure the PostgreSQL server is running and the monitor user has connection permissions; check `pg_hba.conf` for the monitor user's host-based authentication rules.
-    **`mail: command not found`** — Install a mail utility (e.g., `apt-get install mailutils` on Debian/Ubuntu or `yum install mailx` on RHEL) or configure an alternative alerting mechanism.
-    **`psql: error: FATAL: role "monitor" does not exist`** — Create the monitor role with `createuser -U postgres monitor` and grant it CONNECT privileges on the replication database.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed` | Ensure the PostgreSQL server is running and the monitor user has connection permissions; check `pg_hba.conf` for the monitor user's host-based authentication rules. |
+    | `mail: command not found` | Install a mail utility (e.g., `apt-get install mailutils` on Debian/Ubuntu or `yum install mailx` on RHEL) or configure an alternative alerting mechanism. |
+    | `psql: error: FATAL: role "monitor" does not exist` | Create the monitor role with `createuser -U postgres monitor` and grant it CONNECT privileges on the replication database. |
 ## Bloat Report
 
 ```sql
@@ -115,9 +119,11 @@ psql -U monitor -Atc "SELECT now(), count(*) FROM pg_stat_activity;" \
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed`** — Verify PostgreSQL is running with `systemctl status postgresql` and check that the monitor user has connection permissions in `pg_hba.conf`.
-    **`psql: error: FATAL: role "monitor" does not exist`** — Create the monitoring role with `createuser -U postgres monitor` or verify the role name matches your actual PostgreSQL user.
-    **`Permission denied`** — Ensure the `/var/log/` directory is writable by the user running the command, or redirect to a writable location like `/tmp/pg-connections.csv`.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed` | Verify PostgreSQL is running with `systemctl status postgresql` and check that the monitor user has connection permissions in `pg_hba.conf`. |
+    | `psql: error: FATAL: role "monitor" does not exist` | Create the monitoring role with `createuser -U postgres monitor` or verify the role name matches your actual PostgreSQL user. |
+    | `Permission denied` | Ensure the `/var/log/` directory is writable by the user running the command, or redirect to a writable location like `/tmp/pg-connections.csv`. |
 ---
 
 ## Verify

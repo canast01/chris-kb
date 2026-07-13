@@ -47,9 +47,11 @@ Privacy Protocol: AES
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password)`** — Verify dcnm_mgmt user exists on switch and SSH key/password is correct in DCNM credentials.
-    **`Timeout: No Response from 192.168.1.x`** — Confirm network connectivity to switch IP, firewall rules allow SNMP/SSH ports, and switch management interface is reachable.
-    **`No such file or directory: /var/log/dcnm/discovery.log`** — Verify DCNM service is running with `systemctl status dcnm` and check correct log path for your DCNM installation.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password)` | Verify dcnm_mgmt user exists on switch and SSH key/password is correct in DCNM credentials. |
+    | `Timeout: No Response from 192.168.1.x` | Confirm network connectivity to switch IP, firewall rules allow SNMP/SSH ports, and switch management interface is reachable. |
+    | `No such file or directory: /var/log/dcnm/discovery.log` | Verify DCNM service is running with `systemctl status dcnm` and check correct log path for your DCNM installation. |
 ```bash
 # Check PM service status
 systemctl status dcnm-pm
@@ -98,9 +100,11 @@ IF-MIB::ifInOctets.4 = Counter64: 892374619
 ```
 
 !!! warning "Common errors"
-    **`snmpwalk: Unknown user name dcnm_poll`** — Verify the SNMPv3 user exists on the switch with `show snmp user` and matches the credentials in DCNM PM configuration.
-    **`Timeout: No Response from <switch-ip>`** — Check network connectivity to the switch IP, verify SNMP port 161 is open in firewall rules, and confirm the switch is reachable with `ping <switch-ip>`.
-    **`Authentication failed for user dcnm_poll`** — Ensure the authentication password and privacy password match exactly what is configured on the switch, and verify the switch supports SHA/AES algorithms with `show snmp engineID`.
+    | Error | Fix |
+    |---|---|
+    | `snmpwalk: Unknown user name dcnm_poll` | Verify the SNMPv3 user exists on the switch with `show snmp user` and matches the credentials in DCNM PM configuration. |
+    | `Timeout: No Response from <switch-ip>` | Check network connectivity to the switch IP, verify SNMP port 161 is open in firewall rules, and confirm the switch is reachable with `ping <switch-ip>`. |
+    | `Authentication failed for user dcnm_poll` | Ensure the authentication password and privacy password match exactly what is configured on the switch, and verify the switch supports SHA/AES algorithms with `show snmp engineID`. |
 ```bash
 # Test LDAP from DCNM appliance
 ldapsearch -H ldaps://ldap.corp.example.com \
@@ -142,9 +146,11 @@ result: 0 Success
 ```
 
 !!! warning "Common errors"
-    **`ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)`** — Verify LDAP server hostname/IP is reachable and port 636 is open; check firewall rules from DCNM appliance to LDAP server.
-    **`ldap_bind: Invalid credentials (49)`** — Confirm the service account password is correct and the DN format matches your Active Directory structure exactly.
-    **`ldap_search: No such object (32)`** — Verify the base DN `DC=corp,DC=example,DC=com` exists in your directory and matches your domain structure.
+    | Error | Fix |
+    |---|---|
+    | `ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)` | Verify LDAP server hostname/IP is reachable and port 636 is open; check firewall rules from DCNM appliance to LDAP server. |
+    | `ldap_bind: Invalid credentials (49)` | Confirm the service account password is correct and the DN format matches your Active Directory structure exactly. |
+    | `ldap_search: No such object (32)` | Verify the base DN `DC=corp,DC=example,DC=com` exists in your directory and matches your domain structure. |
 ```bash
 # Check resource usage
 top -b -n 1 | head -20
@@ -247,9 +253,11 @@ Trap port: 162
 ```
 
 !!! warning "Common errors"
-    **`tcpdump: eth0: No such device`** — Verify the correct interface name with `ip link show` and replace eth0 with the actual interface (e.g., ens0, bond0).
-    **`tail: cannot open '/var/log/dcnm/events.log' for reading: No such file or directory`** — Confirm DCNM is installed and running with `systemctl status dcnm-events`, or check the correct log path with `find /var/log -name '*dcnm*'`.
-    **`Failed to restart dcnm-events.service: Unit dcnm-events.service not found.`** — Verify the correct service name with `systemctl list-units --type=service | grep dcnm` and use the actual service name.
+    | Error | Fix |
+    |---|---|
+    | `tcpdump: eth0: No such device` | Verify the correct interface name with `ip link show` and replace eth0 with the actual interface (e.g., ens0, bond0). |
+    | `tail: cannot open '/var/log/dcnm/events.log' for reading: No such file or directory` | Confirm DCNM is installed and running with `systemctl status dcnm-events`, or check the correct log path with `find /var/log -name '*dcnm*'`. |
+    | `Failed to restart dcnm-events.service: Unit dcnm-events.service not found.` | Verify the correct service name with `systemctl list-units --type=service | grep dcnm` and use the actual service name. |
 ```bash
 # Check upgrade log
 tail -100 /var/log/dcnm/install.log

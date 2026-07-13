@@ -107,9 +107,11 @@ The command completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`System error 5 has occurred. Access is denied.`** — Run the command prompt as Administrator.
-    **`System error 123 has occurred. The filename, directory name, or volume label syntax is incorrect.`** — Verify the share path exists and is formatted correctly (e.g., `C:\Shares\Finance` not `C:/Shares/Finance`).
-    **`System error 2250 has occurred. The network path was not found.`** — Ensure the directory exists before creating the share; create it with `mkdir C:\Shares\Finance` first.
+    | Error | Fix |
+    |---|---|
+    | `System error 5 has occurred. Access is denied.` | Run the command prompt as Administrator. |
+    | `System error 123 has occurred. The filename, directory name, or volume label syntax is incorrect.` | Verify the share path exists and is formatted correctly (e.g., `C:\Shares\Finance` not `C:/Shares/Finance`). |
+    | `System error 2250 has occurred. The network path was not found.` | Ensure the directory exists before creating the share; create it with `mkdir C:\Shares\Finance` first. |
 ## DFS Namespace Configuration
 
 DFS namespaces allow clients to access shares via a unified path regardless of which server hosts the data.

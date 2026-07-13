@@ -75,9 +75,11 @@ az storage blob set-tier \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The specified resource group 'rg-storage-prod' could not be found.`** — Verify the resource group name with `az group list` and correct the `--resource-group` parameter.
-    **`ResourceNotFound: The specified container 'backups' does not exist.`** — Confirm the container exists with `az storage container list --account-name stprodblobs01` and create it if needed.
-    **`InvalidBlobTier: The blob 'db-backup-2026-01-01.bak' does not support the tier 'Archive'.`** — Ensure the storage account kind supports Archive tier (use `--kind BlobStorage` or `--kind StorageV2`) and the blob is not already in an incompatible state.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The specified resource group 'rg-storage-prod' could not be found.` | Verify the resource group name with `az group list` and correct the `--resource-group` parameter. |
+    | `ResourceNotFound: The specified container 'backups' does not exist.` | Confirm the container exists with `az storage container list --account-name stprodblobs01` and create it if needed. |
+    | `InvalidBlobTier: The blob 'db-backup-2026-01-01.bak' does not support the tier 'Archive'.` | Ensure the storage account kind supports Archive tier (use `--kind BlobStorage` or `--kind StorageV2`) and the blob is not already in an incompatible state. |
 ## Lifecycle Rules
 
 Lifecycle management policies automate tier transitions and deletion based on blob age:
@@ -141,9 +143,11 @@ az storage account management-policy create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.`** — Verify the storage account name and resource group name are correct with `az storage account list --resource-group rg-storage-prod`.
-    **`InvalidJsonInput: Invalid JSON in file 'lifecycle-policy.json': Unexpected token at line 5 column 12.`** — Validate the JSON syntax in your policy file using `jq . < lifecycle-policy.json` or an online JSON validator.
-    **`AuthorizationFailed: The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/managementPolicies/write' over scope '/subscriptions/...'.`** — Ensure your Azure account has Storage Account Contributor or Owner role on the storage account or resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.` | Verify the storage account name and resource group name are correct with `az storage account list --resource-group rg-storage-prod`. |
+    | `InvalidJsonInput: Invalid JSON in file 'lifecycle-policy.json': Unexpected token at line 5 column 12.` | Validate the JSON syntax in your policy file using `jq . < lifecycle-policy.json` or an online JSON validator. |
+    | `AuthorizationFailed: The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/managementPolicies/write' over scope '/subscriptions/...'.` | Ensure your Azure account has Storage Account Contributor or Owner role on the storage account or resource group. |
 Example `lifecycle-policy.json`:
 
 ```json
@@ -213,9 +217,11 @@ sv=2021-06-08&ss=b&srt=co&sp=rwdlacupx&se=2026-05-08T00:00Z&st=2026-04-14T00:00Z
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (AuthorizationPermissionMismatch) This request is not authorized to perform this operation using this permission.`** — Ensure your Azure CLI session has Storage Blob Data Contributor or higher role on the storage account.
-    **`ERROR: (InvalidResourceName) The specified resource name contains invalid characters.`** — Remove special characters from the blob name or URL-encode it properly; use only alphanumeric characters, hyphens, and underscores.
-    **`ERROR: (InvalidInput) Argument --expiry: invalid datetime value`** — Use UTC datetime format `YYYY-MM-DDTHH:MMZ` and ensure the date is in the future.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (AuthorizationPermissionMismatch) This request is not authorized to perform this operation using this permission.` | Ensure your Azure CLI session has Storage Blob Data Contributor or higher role on the storage account. |
+    | `ERROR: (InvalidResourceName) The specified resource name contains invalid characters.` | Remove special characters from the blob name or URL-encode it properly; use only alphanumeric characters, hyphens, and underscores. |
+    | `ERROR: (InvalidInput) Argument --expiry: invalid datetime value` | Use UTC datetime format `YYYY-MM-DDTHH:MMZ` and ensure the date is in the future. |
 ## Blob Versioning
 
 ```bash
@@ -256,9 +262,11 @@ Status: Pending
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The specified blob does not exist.`** — Verify the blob name matches exactly and the container exists using `az storage container list --account-name stprodblobs01`.
-    **`AuthorizationPermissionMismatch: This request is not authorized to perform this operation.`** — Ensure your Azure CLI account has Storage Blob Data Contributor role on the storage account using `az role assignment list --assignee <your-principal-id>`.
-    **`InvalidUri: The URI is invalid.`** — Replace `<version-id>` with an actual version ID from the list output and ensure the URI is properly URL-encoded.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The specified blob does not exist.` | Verify the blob name matches exactly and the container exists using `az storage container list --account-name stprodblobs01`. |
+    | `AuthorizationPermissionMismatch: This request is not authorized to perform this operation.` | Ensure your Azure CLI account has Storage Blob Data Contributor role on the storage account using `az role assignment list --assignee <your-principal-id>`. |
+    | `InvalidUri: The URI is invalid.` | Replace `<version-id>` with an actual version ID from the list output and ensure the URI is properly URL-encoded. |
 ## Soft Delete and Recovery
 
 ```bash
@@ -298,6 +306,8 @@ Blob 'deleted-file.txt' has been successfully undeleted.
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The specified blob does not exist.`** — Verify the blob name matches exactly and check that soft delete is enabled on the storage account.
-    **`AuthorizationPermissionMismatch: This request is not authorized to perform this operation.`** — Ensure your Azure CLI credentials have the Storage Blob Data Contributor role on the storage account.
-    **`InvalidQueryFilter: The query filter is invalid.`** — Remove backticks around `true` in the query and use proper JSON syntax: `--query "[?deleted==true]"`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The specified blob does not exist.` | Verify the blob name matches exactly and check that soft delete is enabled on the storage account. |
+    | `AuthorizationPermissionMismatch: This request is not authorized to perform this operation.` | Ensure your Azure CLI credentials have the Storage Blob Data Contributor role on the storage account. |
+    | `InvalidQueryFilter: The query filter is invalid.` | Remove backticks around `true` in the query and use proper JSON syntax: `--query "[?deleted==true]"`. |

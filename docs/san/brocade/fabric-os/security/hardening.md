@@ -108,9 +108,11 @@ Current SNMP Configuration:
 ```
 
 !!! warning "Common errors"
-    **`snmpconfig: command not found`** — Verify you are logged into the Brocade switch's management interface (SSH/Telnet) and have administrative privileges.
-    **`Error: Community string 'public' not found`** — Check the exact community string name using `snmpconfig --show snmpv1` before attempting deletion.
-    **`Error: SNMPv3 user 'admin' already exists`** — Use a different username or delete the existing user with `snmpconfig --delete snmpv3 -user admin` first.
+    | Error | Fix |
+    |---|---|
+    | `snmpconfig: command not found` | Verify you are logged into the Brocade switch's management interface (SSH/Telnet) and have administrative privileges. |
+    | `Error: Community string 'public' not found` | Check the exact community string name using `snmpconfig --show snmpv1` before attempting deletion. |
+    | `Error: SNMPv3 user 'admin' already exists` | Use a different username or delete the existing user with `snmpconfig --delete snmpv3 -user admin` first. |
 ---
 
 ## Audit Logging
@@ -172,9 +174,11 @@ Last 100 Audit Entries (showing first 8):
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid audit class specified`** — Verify class numbers are 1–4 and separated by commas with no spaces (e.g., `--class 1,2,3,4`).
-    **`Error: Audit log is full. Cannot write new entries`** — Increase log retention or manually clear old entries with `auditlog --clear` to free space.
-    **`Error: Permission denied`** — Ensure your user account has admin or security-admin role; use `userconfig --show` to verify permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid audit class specified` | Verify class numbers are 1–4 and separated by commas with no spaces (e.g., `--class 1,2,3,4`). |
+    | `Error: Audit log is full. Cannot write new entries` | Increase log retention or manually clear old entries with `auditlog --clear` to free space. |
+    | `Error: Permission denied` | Ensure your user account has admin or security-admin role; use `userconfig --show` to verify permissions. |
 ### Configure Syslog Forwarding
 
 ```bash
@@ -209,9 +213,11 @@ cfgsave: Configuration saved successfully to flash memory.
 ```
 
 !!! warning "Common errors"
-    **`Syslog server add failed: Invalid IP address format`** — Verify the SIEM IP address is in valid dotted-decimal notation (e.g., 192.168.45.120) and rerun the command.
-    **`Syslog server add failed: Connection timeout to <siem-ip>:514`** — Confirm the SIEM host is reachable on port 514 and that firewall rules permit syslog traffic from the switch.
-    **`cfgsave: Permission denied`** — Ensure your user account has admin or zone-config privileges by checking role assignments with `userconfig --show`.
+    | Error | Fix |
+    |---|---|
+    | `Syslog server add failed: Invalid IP address format` | Verify the SIEM IP address is in valid dotted-decimal notation (e.g., 192.168.45.120) and rerun the command. |
+    | `Syslog server add failed: Connection timeout to <siem-ip>:514` | Confirm the SIEM host is reachable on port 514 and that firewall rules permit syslog traffic from the switch. |
+    | `cfgsave: Permission denied` | Ensure your user account has admin or zone-config privileges by checking role assignments with `userconfig --show`. |
 ### Syslog Facility and Severity
 
 Brocade FabricOS sends syslog at facility `LOCAL1` (by default). Configure the SIEM to accept and parse this facility. Log format includes:
@@ -253,9 +259,11 @@ Default Zone: OFF (no access)
 ```
 
 !!! warning "Common errors"
-    **`defzone: command not found`** — Ensure you are logged into the Brocade switch via SSH or telnet and have administrative privileges; defzone is a switch-native command, not a Linux utility.
-    **`Error: Active zone configuration not found`** — Run `cfgshow` to list available zone configurations and replace `<active-zoneset>` with a valid configuration name (e.g., `cfgenable production-zones`).
-    **`Permission denied: cannot modify zone configuration`** — Verify your user account has admin or zone-admin role by running `userconfig --show` and request elevated privileges if needed.
+    | Error | Fix |
+    |---|---|
+    | `defzone: command not found` | Ensure you are logged into the Brocade switch via SSH or telnet and have administrative privileges; defzone is a switch-native command, not a Linux utility. |
+    | `Error: Active zone configuration not found` | Run `cfgshow` to list available zone configurations and replace `<active-zoneset>` with a valid configuration name (e.g., `cfgenable production-zones`). |
+    | `Permission denied: cannot modify zone configuration` | Verify your user account has admin or zone-admin role by running `userconfig --show` and request elevated privileges if needed. |
 ---
 
 ## Security Baselines Summary
@@ -343,9 +351,11 @@ Domain ID: 117 (Static)
 ```
 
 !!! warning "Common errors"
-    **`RADIUS server unreachable: timeout after 30s`** — Verify RADIUS server 192.168.100.50 is online and accessible on port 1812, then test with `aaaconfig --test`.
-    **`Syslog connection failed: Connection refused on 10.50.200.15:514`** — Confirm the SIEM syslog listener is running and firewall rules permit traffic from the switch to that destination.
-    **`NTP: unsynchronized, stratum 16`** — Check NTP server reachability with `ping 10.0.0.1` and verify the switch can reach port 123 UDP; resync with `tsclockserver --sync`.
+    | Error | Fix |
+    |---|---|
+    | `RADIUS server unreachable: timeout after 30s` | Verify RADIUS server 192.168.100.50 is online and accessible on port 1812, then test with `aaaconfig --test`. |
+    | `Syslog connection failed: Connection refused on 10.50.200.15:514` | Confirm the SIEM syslog listener is running and firewall rules permit traffic from the switch to that destination. |
+    | `NTP: unsynchronized, stratum 16` | Check NTP server reachability with `ping 10.0.0.1` and verify the switch can reach port 123 UDP; resync with `tsclockserver --sync`. |
 Take a configuration backup after completing verification:
 
 ```bash
@@ -365,9 +375,11 @@ Configuration uploaded successfully to /backups/brocade/switch-core-01_post-hard
 ```
 
 !!! warning "Common errors"
-    **`scp: command not found`** — Verify the backup server has SSH/SCP enabled and the switch has network connectivity to it; check firewall rules allowing port 22.
-    **`Authentication failed for user <user>`** — Confirm the username and password are correct, and that the backup user account exists on the SCP server with appropriate permissions.
-    **`Permission denied: /backups/brocade/`** — Ensure the destination directory exists on the backup server and the SCP user has write permissions to it.
+    | Error | Fix |
+    |---|---|
+    | `scp: command not found` | Verify the backup server has SSH/SCP enabled and the switch has network connectivity to it; check firewall rules allowing port 22. |
+    | `Authentication failed for user <user>` | Confirm the username and password are correct, and that the backup user account exists on the SCP server with appropriate permissions. |
+    | `Permission denied: /backups/brocade/` | Ensure the destination directory exists on the backup server and the SCP user has write permissions to it. |
 ---
 
 ## Periodic Review

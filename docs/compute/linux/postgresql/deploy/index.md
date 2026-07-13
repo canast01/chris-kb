@@ -93,8 +93,10 @@ Created symlink /etc/systemd/system/multi-user.target.wants/postgresql-16.servic
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to download repository metadata`** — Verify internet connectivity and ensure the PostgreSQL repository URL is accessible from your network.
-    **`Error: Package postgresql16-server not found`** — Confirm the module disable command completed successfully and that the pgdg repository was installed without errors.
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to download repository metadata` | Verify internet connectivity and ensure the PostgreSQL repository URL is accessible from your network. |
+    | `Error: Package postgresql16-server not found` | Confirm the module disable command completed successfully and that the pgdg repository was installed without errors. |
 ## Install on Ubuntu
 
 ```bash
@@ -119,8 +121,10 @@ postgresql.service started successfully.
 ```
 
 !!! warning "Common errors"
-    **`E: Unable to locate package postgresql`** — Run `sudo apt update` before installing to refresh the package index.
-    **`Job for postgresql.service failed because the start code exited with error code 1.`** — Check `/var/log/postgresql/postgresql-15-main.log` for initialization errors, often caused by insufficient disk space or permission issues on `/var/lib/postgresql`.
+    | Error | Fix |
+    |---|---|
+    | `E: Unable to locate package postgresql` | Run `sudo apt update` before installing to refresh the package index. |
+    | `Job for postgresql.service failed because the start code exited with error code 1.` | Check `/var/log/postgresql/postgresql-15-main.log` for initialization errors, often caused by insufficient disk space or permission issues on `/var/lib/postgresql`. |
 ## Initial Configuration (`postgresql.conf`)
 
 ```ini
@@ -161,8 +165,10 @@ success
 ```
 
 !!! warning "Common errors"
-    **`Error: INVALID_RULE: rule family=ipv4 source address=10.0.1.0/24 port port=5432 protocol=tcp accept: bad attribute port`** — Remove the duplicate "port" keyword; the correct syntax is `port protocol=tcp port=5432`.
-    **`Error: COMMAND_FAILED: '/usr/bin/firewall-cmd --reload' failed: org.fedoraproject.FirewallD1.Exception: INVALID_RULE`** — Verify the rich rule syntax is valid before running `--reload`, as malformed rules will prevent the daemon from reloading.
+    | Error | Fix |
+    |---|---|
+    | `Error: INVALID_RULE: rule family=ipv4 source address=10.0.1.0/24 port port=5432 protocol=tcp accept: bad attribute port` | Remove the duplicate "port" keyword; the correct syntax is `port protocol=tcp port=5432`. |
+    | `Error: COMMAND_FAILED: '/usr/bin/firewall-cmd --reload' failed: org.fedoraproject.FirewallD1.Exception: INVALID_RULE` | Verify the rich rule syntax is valid before running `--reload`, as malformed rules will prevent the daemon from reloading. |
 ## Create Application User and Database
 
 ```sql
@@ -197,8 +203,10 @@ version
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: Ident authentication failed for user "postgres"`** — Ensure the postgres system user exists and pg_hba.conf allows local socket connections with trust or peer authentication.
-    **`psql: error: FATAL: password authentication failed for user "appuser"`** — Verify appuser exists in PostgreSQL and the password is correct, or configure .pgpass file with credentials for non-interactive connections.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: Ident authentication failed for user "postgres"` | Ensure the postgres system user exists and pg_hba.conf allows local socket connections with trust or peer authentication. |
+    | `psql: error: FATAL: password authentication failed for user "appuser"` | Verify appuser exists in PostgreSQL and the password is correct, or configure .pgpass file with credentials for non-interactive connections. |
 ---
 
 ## Verify

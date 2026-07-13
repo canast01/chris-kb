@@ -134,7 +134,9 @@ MiB Swap:   4096.0 total,   2867.2 free,   1228.8 used.   5017.6 avail Mem
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the SSH key
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the SSH key |
 ### 2. Generate the support bundle
 
 **Method 1 — Via SSH (recommended for any severity):**
@@ -174,9 +176,11 @@ vrni-support-bundle-20240315-102847.tar.gz          100% 2.4GB  18.5MB/s   02:09
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the ubuntu user account is enabled on the Platform VM and SSH key/password credentials are correct.
-    **`/etc/init.d/support-bundle.sh: command not found`** — Confirm the Aria Operations for Networks version is installed and the support bundle script exists; check `/opt/vrni/bin/` if the path differs.
-    **`scp: /data/support-bundles/<bundle-filename>.tar.gz: No such file or directory`** — Replace `<bundle-filename>` with the actual bundle filename shown in the `ls` output, or verify the bundle generation completed without errors.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the ubuntu user account is enabled on the Platform VM and SSH key/password credentials are correct. |
+    | `/etc/init.d/support-bundle.sh: command not found` | Confirm the Aria Operations for Networks version is installed and the support bundle script exists; check `/opt/vrni/bin/` if the path differs. |
+    | `scp: /data/support-bundles/<bundle-filename>.tar.gz: No such file or directory` | Replace `<bundle-filename>` with the actual bundle filename shown in the `ls` output, or verify the bundle generation completed without errors. |
 **Method 2 — Via VAMI UI:**
 
 1. Browse to `https://<vrni-fqdn>:5480` and log in.
@@ -213,9 +217,11 @@ Connection to 192.168.1.45 443 port [tcp/https] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <vcenter-ip>`** — Replace the literal `<vcenter-ip>` placeholder with the actual IP address or FQDN of your vCenter or data source.
-    **`nc: connect to 192.168.1.45 port 443 (tcp) failed: Connection refused`** — Verify the vCenter service is running and listening on port 443, or check firewall rules between the Platform VM and data source.
-    **`ping: sendto: No route to host`** — Confirm network routing and VLAN configuration between the Platform VM and data source network segment.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <vcenter-ip>` | Replace the literal `<vcenter-ip>` placeholder with the actual IP address or FQDN of your vCenter or data source. |
+    | `nc: connect to 192.168.1.45 port 443 (tcp) failed: Connection refused` | Verify the vCenter service is running and listening on port 443, or check firewall rules between the Platform VM and data source. |
+    | `ping: sendto: No route to host` | Confirm network routing and VLAN configuration between the Platform VM and data source network segment. |
 ### 4. Write the timeline
 
 ```text

@@ -96,9 +96,11 @@ Lockout cleared for testuser
 ```
 
 !!! warning "Common errors"
-    **`Error: User 'testuser' already exists`** — Use `pureadmin delete testuser` before recreating the user.
-    **`Error: API token not found for user 'testuser'`** — Ensure the user was created with the `--api-token` flag; regenerate with `pureadmin create testuser --api-token`.
-    **`Error: Invalid role 'storage_admin' — valid roles are: array_admin, storage_admin, readonly`** — Verify the role name matches one of the valid options listed in the error message.
+    | Error | Fix |
+    |---|---|
+    | `Error: User 'testuser' already exists` | Use `pureadmin delete testuser` before recreating the user. |
+    | `Error: API token not found for user 'testuser'` | Ensure the user was created with the `--api-token` flag; regenerate with `pureadmin create testuser --api-token`. |
+    | `Error: Invalid role 'storage_admin' — valid roles are: array_admin, storage_admin, readonly` | Verify the role name matches one of the valid options listed in the error message. |
 ---
 
 ## Alerts & Audit
@@ -154,9 +156,11 @@ Alert <ID> acknowledged.
 ```
 
 !!! warning "Common errors"
-    **`purealert: command not found`** — Ensure the Pure Storage Python SDK is installed with `pip install purestorage` and the `purealert` CLI tool is in your PATH.
-    **`Error: Invalid filter syntax`** — Use proper filter format with quotes around values, e.g., `--filter "state='open'"` instead of `--filter state=open`.
-    **`Error: Alert ID <ID> not found`** — Verify the alert ID exists by running `purealert list` first and use the correct numeric or alphanumeric identifier.
+    | Error | Fix |
+    |---|---|
+    | `purealert: command not found` | Ensure the Pure Storage Python SDK is installed with `pip install purestorage` and the `purealert` CLI tool is in your PATH. |
+    | `Error: Invalid filter syntax` | Use proper filter format with quotes around values, e.g., `--filter "state='open'"` instead of `--filter state=open`. |
+    | `Error: Alert ID <ID> not found` | Verify the alert ID exists by running `purealert list` first and use the correct numeric or alphanumeric identifier. |
 ### pureaudit — Audit Logs
 
 ```bash
@@ -278,9 +282,11 @@ Remote Assist Status: Closed
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or add the installation directory to your PATH environment variable.
-    **`Error: Array connection failed - Invalid credentials`** — Verify your Pure array hostname/IP and authentication credentials are correct in your configuration file.
-    **`Error: Operation not permitted - insufficient privileges`** — Ensure your user account has administrative rights on the Pure array to execute configuration changes.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or add the installation directory to your PATH environment variable. |
+    | `Error: Array connection failed - Invalid credentials` | Verify your Pure array hostname/IP and authentication credentials are correct in your configuration file. |
+    | `Error: Operation not permitted - insufficient privileges` | Ensure your user account has administrative rights on the Pure array to execute configuration changes. |
 ---
 
 ## Configuration & Directory Services
@@ -348,9 +354,11 @@ Nameservers cleared
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid nameserver IP address format`** — Verify nameserver IPs are comma-separated without spaces and use valid IPv4 or IPv6 format.
-    **`Error: Directory service not configured`** — Configure Active Directory or LDAP via pureds before querying with pureds check.
-    **`Error: Permission denied — administrative credentials required`** — Run pureconfig and pureds commands with appropriate array admin privileges or sudo.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid nameserver IP address format` | Verify nameserver IPs are comma-separated without spaces and use valid IPv4 or IPv6 format. |
+    | `Error: Directory service not configured` | Configure Active Directory or LDAP via pureds before querying with pureds check. |
+    | `Error: Permission denied — administrative credentials required` | Run pureconfig and pureds commands with appropriate array admin privileges or sudo. |
 ---
 
 ## CSV Exports
@@ -373,9 +381,11 @@ test-snapshot-temp,10995116277,1704067200,f9a0b1c2-5678-9012-34ef-123456789012,1
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host <array_ip> port 22: Connection refused`** — Verify the array IP is correct and SSH service is running on the Pure array; check network connectivity with `ping <array_ip>`.
-    **`Permission denied (publickey,password)`** — Ensure the pureuser account exists on the array and your SSH key is authorized, or use password authentication with `-o PubkeyAuthentication=no`.
-    **`purevol: command not found`** — Confirm you are connecting to a Pure FlashArray (not a FlashBlade) and that the pureuser has the correct shell configured.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host <array_ip> port 22: Connection refused` | Verify the array IP is correct and SSH service is running on the Pure array; check network connectivity with `ping <array_ip>`. |
+    | `Permission denied (publickey,password)` | Ensure the pureuser account exists on the array and your SSH key is authorized, or use password authentication with `-o PubkeyAuthentication=no`. |
+    | `purevol: command not found` | Confirm you are connecting to a Pure FlashArray (not a FlashBlade) and that the pureuser has the correct shell configured. |
 ### Array & System
 
 ```bash
@@ -404,9 +414,11 @@ purearray remoteassist --status --csv >> support_history.csv
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the purearray binary is in your PATH environment variable.
-    **`Error: Unable to connect to array at <hostname>. Connection refused.`** — Verify the Pure FlashArray is reachable and set the correct array hostname/IP using `purearray set --address <ip>` or the PURE_ARRAY environment variable.
-    **`Error: Authentication failed. Invalid credentials.`** — Authenticate to the array first using `purearray login` or ensure your API token is valid and set via `PURE_API_TOKEN` environment variable.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or ensure the purearray binary is in your PATH environment variable. |
+    | `Error: Unable to connect to array at <hostname>. Connection refused.` | Verify the Pure FlashArray is reachable and set the correct array hostname/IP using `purearray set --address <ip>` or the PURE_ARRAY environment variable. |
+    | `Error: Authentication failed. Invalid credentials.` | Authenticate to the array first using `purearray login` or ensure your API token is valid and set via `PURE_API_TOKEN` environment variable. |
 ### Volumes & Data
 
 ```bash
@@ -450,9 +462,11 @@ Time,Volume,Read_IOPS,Write_IOPS,Read_Latency_ms,Write_Latency_ms
 ```
 
 !!! warning "Common errors"
-    **`purevol: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory, or use the full path to the purevol binary.
-    **`Error: Authentication failed`** — Verify that your Pure Storage array credentials are configured (check `purevol list` without filters first), or re-authenticate using the array management interface.
-    **`Error: Invalid filter syntax "size > 100G"`** — Use the correct filter format for your Pure OS version (e.g., `--filter 'size>=107374182400'` for bytes or consult `purevol list --help` for supported operators).
+    | Error | Fix |
+    |---|---|
+    | `purevol: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory, or use the full path to the purevol binary. |
+    | `Error: Authentication failed` | Verify that your Pure Storage array credentials are configured (check `purevol list` without filters first), or re-authenticate using the array management interface. |
+    | `Error: Invalid filter syntax "size > 100G"` | Use the correct filter format for your Pure OS version (e.g., `--filter 'size>=107374182400'` for bytes or consult `purevol list --help` for supported operators). |
 ### Hosts & Connectivity
 
 ```bash
@@ -516,8 +530,10 @@ backup-hosts,1000.0,756.2,243.8
 ```
 
 !!! warning "Common errors"
-    **`purehost: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/pureapp/bin`).
-    **`Error: Unable to connect to array at <ip>`** — Verify network connectivity to the FlashArray management IP and confirm authentication credentials are configured in
+    | Error | Fix |
+    |---|---|
+    | `purehost: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/pureapp/bin`). |
+    | `Error: Unable to connect to array at <ip>` | Verify network connectivity to the FlashArray management IP and confirm authentication credentials are configured in |
 ### Hardware & Health
 
 ```bash
@@ -554,9 +570,11 @@ $ ls -lh hardware_health.csv drive_inventory.csv port_config.csv
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid type 'eth'. Valid types are: bay, fan, psu, nvram, sas, shelf`** — Remove the `--type eth` command as ethernet hardware is included in the base `purehw list` output.
-    **`Error: Connection refused. Unable to reach array management interface at 10.20.1.50:443`** — Verify array connectivity and ensure the management IP is reachable with `ping` or check array credentials with `purearray list`.
-    **`Error: Permission denied. User 'monitor' lacks 'list' capability on resource 'hardware'`** — Authenticate with an admin account or request elevated privileges for the current user role.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid type 'eth'. Valid types are: bay, fan, psu, nvram, sas, shelf` | Remove the `--type eth` command as ethernet hardware is included in the base `purehw list` output. |
+    | `Error: Connection refused. Unable to reach array management interface at 10.20.1.50:443` | Verify array connectivity and ensure the management IP is reachable with `ping` or check array credentials with `purearray list`. |
+    | `Error: Permission denied. User 'monitor' lacks 'list' capability on resource 'hardware'` | Authenticate with an admin account or request elevated privileges for the current user role. |
 ### Admin & Security
 
 ```bash
@@ -607,9 +625,11 @@ dns-secondary.local,192.168.1.11,active
 ```
 
 !!! warning "Common errors"
-    **`pureadmin: command not found`** — Verify the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/purearray/bin`).
-    **`Permission denied`** — Ensure the user running these commands has appropriate Pure Storage administrative credentials configured in `~/.purerc` or via environment variables.
-    **`Connection refused on array IP`** — Confirm the FlashArray management IP is reachable and the array is online by running `ping` or `ssh` to the management interface first.
+    | Error | Fix |
+    |---|---|
+    | `pureadmin: command not found` | Verify the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/purearray/bin`). |
+    | `Permission denied` | Ensure the user running these commands has appropriate Pure Storage administrative credentials configured in `~/.purerc` or via environment variables. |
+    | `Connection refused on array IP` | Confirm the FlashArray management IP is reachable and the array is online by running `ping` or `ssh` to the management interface first. |
 ---
 
 ## Drives & Hardware
@@ -673,9 +693,11 @@ CT0.NVRAM0 healthy NVRAM Module
 ```
 
 !!! warning "Common errors"
-    **`puredrive: command not found`** — Ensure you are logged into the Pure Storage array CLI or have the Pure1 management tools installed and in your PATH.
-    **`Error: Invalid bay identifier 'CH0.BAY10'`** — Verify the bay number exists on your array (use `puredrive list` to see valid bays) and check that the chassis number is correct.
-    **`Error: Hardware component 'CT0' is not available`** — Confirm the controller exists and is online; use `purehw list --type ct` to verify available controllers.
+    | Error | Fix |
+    |---|---|
+    | `puredrive: command not found` | Ensure you are logged into the Pure Storage array CLI or have the Pure1 management tools installed and in your PATH. |
+    | `Error: Invalid bay identifier 'CH0.BAY10'` | Verify the bay number exists on your array (use `puredrive list` to see valid bays) and check that the chassis number is correct. |
+    | `Error: Hardware component 'CT0' is not available` | Confirm the controller exists and is online; use `purehw list --type ct` to verify available controllers. |
 ---
 
 ## Hosts & Host Groups
@@ -748,9 +770,11 @@ Removed host h1 from host group hg
 ```
 
 !!! warning "Common errors"
-    **`Error: Host group MY-HOSTS already exists`** — Use `purehgroup rename` to change the name or delete the existing group first with `purehgroup delete MY-HOSTS`.
-    **`Error: Host MY-HOST-001 not found`** — Verify the host exists on the array using `purehgroup list --host` and check the exact hostname spelling.
-    **`Error: Volume MY_VOL_001 is already connected to host group MY-HOSTS at LUN 100`** — Use a different LUN number or disconnect the volume first with `purehgroup disconnect MY-HOSTS --vol MY_VOL_001`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host group MY-HOSTS already exists` | Use `purehgroup rename` to change the name or delete the existing group first with `purehgroup delete MY-HOSTS`. |
+    | `Error: Host MY-HOST-001 not found` | Verify the host exists on the array using `purehgroup list --host` and check the exact hostname spelling. |
+    | `Error: Volume MY_VOL_001 is already connected to host group MY-HOSTS at LUN 100` | Use a different LUN number or disconnect the volume first with `purehgroup disconnect MY-HOSTS --vol MY_VOL_001`. |
 ### purehost — Hosts
 
 ```bash
@@ -977,8 +1001,10 @@ fc.3    False     50:06:0b:0000:a123:4567:89ab:cdf2  16Gb    pg1
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid type 'fc'. Valid types are: eth, fc, sas`** — Verify the Pure Storage array model supports FC ports; some models only support Ethernet.
-    **`Error: Connection refused. Unable to reach management IP`** — Ensure the Pure Storage array management IP is reachable and the pureport CLI tool is authenticated with valid credentials.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid type 'fc'. Valid types are: eth, fc, sas` | Verify the Pure Storage array model supports FC ports; some models only support Ethernet. |
+    | `Error: Connection refused. Unable to reach management IP` | Ensure the Pure Storage array management IP is reachable and the pureport CLI tool is authenticated with valid credentials. |
 ### Common Port Issues
 
 | Issue | Check | Action |
@@ -1104,9 +1130,11 @@ Time           Replication-Rate   Bytes-Replicated
 ```
 
 !!! warning "Common errors"
-    **`Error: Pod MYPOD001 is not in a recoverable state`** — Verify the pod exists and was properly destroyed (not eradicated) using `purepod list --pending`.
-    **`Error: Cannot add array PFAX70-REMOTE: array not reachable or not configured`** — Confirm the remote array hostname is correct and network connectivity exists between arrays using `purepod list --on ARRAY02`.
-    **`Error: Replica link PRDPOD001 already exists to remote pod DRPOD001`** — Delete the existing replica link first with `purepod replica-link delete PRDPOD001 --remote-pod DRPOD001` before creating a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: Pod MYPOD001 is not in a recoverable state` | Verify the pod exists and was properly destroyed (not eradicated) using `purepod list --pending`. |
+    | `Error: Cannot add array PFAX70-REMOTE: array not reachable or not configured` | Confirm the remote array hostname is correct and network connectivity exists between arrays using `purepod list --on ARRAY02`. |
+    | `Error: Replica link PRDPOD001 already exists to remote pod DRPOD001` | Delete the existing replica link first with `purepod replica-link delete PRDPOD001 --remote-pod DRPOD001` before creating a new one. |
 ---
 
 ## Volumes & Snapshots

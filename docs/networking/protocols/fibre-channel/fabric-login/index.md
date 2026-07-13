@@ -74,9 +74,11 @@ Port  0/0:
 ```
 
 !!! warning "Common errors"
-    **`portlogshow: Invalid slot/port format`** — Use correct syntax like `portlogshow 0/0` with slot and port numbers separated by a forward slash.
-    **`nsshow: Command not found`** — Verify you are logged into a Brocade/Fibre Channel switch; this command does not exist on standard Linux hosts.
-    **`portlogshow: Port offline or not present`** — Confirm the port is in Online state using `switchshow` before querying FLOGI details.
+    | Error | Fix |
+    |---|---|
+    | `portlogshow: Invalid slot/port format` | Use correct syntax like `portlogshow 0/0` with slot and port numbers separated by a forward slash. |
+    | `nsshow: Command not found` | Verify you are logged into a Brocade/Fibre Channel switch; this command does not exist on standard Linux hosts. |
+    | `portlogshow: Port offline or not present` | Confirm the port is in Online state using `switchshow` before querying FLOGI details. |
 ```bash
 ## FLOGI database — who is logged in to the fabric
 show flogi database vsan 10
@@ -121,9 +123,11 @@ fc1/1 is up
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch model supports these commands (some older switches use different syntax like `show flogi` without `database`).
-    **`VSAN 10 is suspended`** — Enable the VSAN with `vsan 10` followed by `no suspend` in config mode.
-    **`Port fc1/1 is down`** — Check physical cable connections and run `no shutdown` on the port interface.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch model supports these commands (some older switches use different syntax like `show flogi` without `database`). |
+    | `VSAN 10 is suspended` | Enable the VSAN with `vsan 10` followed by `no suspend` in config mode. |
+    | `Port fc1/1 is down` | Check physical cable connections and run `no shutdown` on the port interface. |
 ```bash
 ## Brocade — port error counters (CRC, loss-of-sync)
 porterrshow
@@ -169,6 +173,8 @@ nsshow | grep 5678
 ```
 
 !!! warning "Common errors"
-    **`porterrshow: command not found`** — Verify you are logged into a Brocade switch (not a Cisco MDS) and have admin privileges.
-    **`show interface fc1/1 counters: % Invalid command`** — Confirm the interface name is correct (e.g., `fc1/1` not `Fc1/1`) and the port exists on your MDS switch.
-    **`nsshow: command not found`** — Run this command only on Brocade switches; use `show fcns database` on Cisco MDS instead.
+    | Error | Fix |
+    |---|---|
+    | `porterrshow: command not found` | Verify you are logged into a Brocade switch (not a Cisco MDS) and have admin privileges. |
+    | `show interface fc1/1 counters: % Invalid command` | Confirm the interface name is correct (e.g., `fc1/1` not `Fc1/1`) and the port exists on your MDS switch. |
+    | `nsshow: command not found` | Run this command only on Brocade switches; use `show fcns database` on Cisco MDS instead. |

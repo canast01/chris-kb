@@ -139,8 +139,10 @@ rack2     7.28  1.00    8.0T  2.4T   5.6T  30.0  256 up
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: crush rule 'rack_replicated' does not exist`** — Ensure the rule was created successfully before assigning it to a pool; check with `ceph osd crush rule ls`.
-    **`Error EINVAL: invalid crush rule name 'ssd_rule'`** — Verify the ssd_rule was created with the correct root bucket name using `ceph osd crush rule dump ssd_rule`.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: crush rule 'rack_replicated' does not exist` | Ensure the rule was created successfully before assigning it to a pool; check with `ceph osd crush rule ls`. |
+    | `Error EINVAL: invalid crush rule name 'ssd_rule'` | Verify the ssd_rule was created with the correct root bucket name using `ceph osd crush rule dump ssd_rule`. |
 ## PG Count Formula
 
 ```text
@@ -185,8 +187,10 @@ metadata             2.1G        8.0G  0.263        0.263        4.0     32     
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: pool 'rbd-pool' does not exist`** — Verify the pool name with `ceph osd pool ls` and use the correct pool identifier.
-    **`Error EINVAL: invalid pg_autoscale_mode 'on'`** — Use valid values `off`, `warn`, or `on` (ensure no typos in the mode string).
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: pool 'rbd-pool' does not exist` | Verify the pool name with `ceph osd pool ls` and use the correct pool identifier. |
+    | `Error EINVAL: invalid pg_autoscale_mode 'on'` | Use valid values `off`, `warn`, or `on` (ensure no typos in the mode string). |
 ## Network Design
 
 ```text
@@ -229,8 +233,10 @@ ceph config set global cluster_network 10.0.2.0/24
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: invalid value '10.0.1.0/24' for option 'public_network'`** — Ensure the CIDR notation is valid and the network actually exists in your infrastructure.
-    **`Error: failed to set config option 'cluster_network': Permission denied`** — Run the command with appropriate ceph admin privileges or use `sudo ceph config set`.
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: invalid value '10.0.1.0/24' for option 'public_network'` | Ensure the CIDR notation is valid and the network actually exists in your infrastructure. |
+    | `Error: failed to set config option 'cluster_network': Permission denied` | Run the command with appropriate ceph admin privileges or use `sudo ceph config set`. |
 ## Capacity Planning
 
 ```text
@@ -292,8 +298,10 @@ OSD     CLASS  WEIGHT   REWEIGHT   SIZE        RAW USE     %USE     VAR      PGS
 ```
 
 !!! warning "Common errors"
-    **`Error EACCES: access denied`** — Ensure the user running the command has appropriate Ceph admin capabilities or is part of the ceph group.
-    **`Error: unknown command`** — Verify the Ceph version supports the `ceph config set` syntax; older versions may require `ceph tell mon.\* config set` instead.
+    | Error | Fix |
+    |---|---|
+    | `Error EACCES: access denied` | Ensure the user running the command has appropriate Ceph admin capabilities or is part of the ceph group. |
+    | `Error: unknown command` | Verify the Ceph version supports the `ceph config set` syntax; older versions may require `ceph tell mon.\* config set` instead. |
 ## CRUSH Hierarchy Design
 
 ```bash
@@ -340,8 +348,10 @@ ID CLASS WEIGHT  REWEIGHT SIZE    RAW USE %USE  VAR  PGS STATUS
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: invalid crush rule name 'rack_rule'`** — Verify the rule was created successfully with `ceph osd crush rule ls` and check for typos in the pool set command.
-    **`Error ENOENT: pool 'rbd-pool' does not exist`** — Create the pool first with `ceph osd pool create rbd-pool <pg_num> <pgp_num>` before assigning a crush rule.
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: invalid crush rule name 'rack_rule'` | Verify the rule was created successfully with `ceph osd crush rule ls` and check for typos in the pool set command. |
+    | `Error ENOENT: pool 'rbd-pool' does not exist` | Create the pool first with `ceph osd pool create rbd-pool <pg_num> <pgp_num>` before assigning a crush rule. |
 ## Upgrade and Maintenance Standards
 
 ```bash
@@ -390,8 +400,10 @@ nobackfill is unset
 ```
 
 !!! warning "Common errors"
-    **`Error EACCES: access denied`** — Ensure you have admin-level Ceph credentials or run with appropriate `ceph` keyring permissions.
-    **`Error EINVAL: invalid value`** — Verify the release name matches a supported Ceph version (e.g., quincy, reef) and check cluster status with `ceph status` first.
+    | Error | Fix |
+    |---|---|
+    | `Error EACCES: access denied` | Ensure you have admin-level Ceph credentials or run with appropriate `ceph` keyring permissions. |
+    | `Error EINVAL: invalid value` | Verify the release name matches a supported Ceph version (e.g., quincy, reef) and check cluster status with `ceph status` first. |
 | Flag | Effect | When to use |
 |---|---|---|
 | `noout` | Prevents OSDs from being marked out | Node maintenance, short outages |
@@ -457,9 +469,11 @@ prometheus      9095    1        2m ago     8d   count:1
 ```
 
 !!! warning "Common errors"
-    **`Error: osd.12 is still rebalancing, cannot remove yet`** — Wait for the cluster to reach a healthy state (ceph health) before attempting removal.
-    **`Error: host1 is not in the orchestrator inventory`** — Verify the host is added to the cluster with `ceph orch host ls` and ensure it has a valid IP and SSH connectivity.
-    **`Error: /dev/sdb does not exist or is already in use on host1`** — Confirm the device path with `lsblk` on the target host and ensure it is not already part of another OSD.
+    | Error | Fix |
+    |---|---|
+    | `Error: osd.12 is still rebalancing, cannot remove yet` | Wait for the cluster to reach a healthy state (ceph health) before attempting removal. |
+    | `Error: host1 is not in the orchestrator inventory` | Verify the host is added to the cluster with `ceph orch host ls` and ensure it has a valid IP and SSH connectivity. |
+    | `Error: /dev/sdb does not exist or is already in use on host1` | Confirm the device path with `lsblk` on the target host and ensure it is not already part of another OSD. |
 ## See also
 
 - [Ceph — How It Works](../how-it-works/)

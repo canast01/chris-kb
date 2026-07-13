@@ -183,9 +183,11 @@ Timestamp                Severity  Component      Message
 ```
 
 !!! warning "Common errors"
-    **`puredrive: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory, or use the full path `/opt/purearray/bin/puredrive`.
-    **`Error: Array unreachable or authentication failed`** — Verify network connectivity to the array management IP and confirm your credentials are valid with `pureadmin list --credentials`.
-    **`purealert: invalid filter syntax`** — Use proper filter syntax with quotes: `purealert list --filter "severity=error"` (remove single quotes around the value).
+    | Error | Fix |
+    |---|---|
+    | `puredrive: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory, or use the full path `/opt/purearray/bin/puredrive`. |
+    | `Error: Array unreachable or authentication failed` | Verify network connectivity to the array management IP and confirm your credentials are valid with `pureadmin list --credentials`. |
+    | `purealert: invalid filter syntax` | Use proper filter syntax with quotes: `purealert list --filter "severity=error"` (remove single quotes around the value). |
 ### Resolution
 
 | Scenario | Action |
@@ -219,8 +221,10 @@ SSD.DAE.2.1             healthy     1.6TB     1234567890ABCDEK
 ```
 
 !!! warning "Common errors"
-    **`puredrive: command not found`** — Ensure you are logged into the FlashArray management interface or have the Pure Storage CLI tools installed and in your PATH.
-    **`Error: Invalid credentials or insufficient permissions`** — Verify your user account has administrative privileges on the FlashArray and re-authenticate if necessary.
+    | Error | Fix |
+    |---|---|
+    | `puredrive: command not found` | Ensure you are logged into the FlashArray management interface or have the Pure Storage CLI tools installed and in your PATH. |
+    | `Error: Invalid credentials or insufficient permissions` | Verify your user account has administrative privileges on the FlashArray and re-authenticate if necessary. |
 ---
 
 ## Host Loses All Paths to Volumes
@@ -284,9 +288,11 @@ CT1         healthy  FA-m70         8.2.4.1234
 ```
 
 !!! warning "Common errors"
-    **`Error: connection failed to array at 192.168.1.100`** — Verify the array management IP is reachable and the Pure1 REST API service is running with `ssh <array-mgmt-ip> purealert list`.
-    **`Error: invalid option '--connection'`** — Use `purehost list` without the `--connection` flag; connection status is shown in the output by default.
-    **`Error: unauthorized: insufficient privileges`** — Ensure your Pure1 API token has read permissions for host and port objects; regenerate the token in Pure1 if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: connection failed to array at 192.168.1.100` | Verify the array management IP is reachable and the Pure1 REST API service is running with `ssh <array-mgmt-ip> purealert list`. |
+    | `Error: invalid option '--connection'` | Use `purehost list` without the `--connection` flag; connection status is shown in the output by default. |
+    | `Error: unauthorized: insufficient privileges` | Ensure your Pure1 API token has read permissions for host and port objects; regenerate the token in Pure1 if needed. |
 **Host-side diagnostics (Linux):**
 
 ```bash
@@ -332,9 +338,11 @@ tcp: [192.168.1.46]:3260,[2] 192.168.1.101:3260 iqn.1991-05.com.purestorage:flas
 ```
 
 !!! warning "Common errors"
-    **`multipath: command not found`** — Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt-get install multipath-tools`.
-    **`multipathd: unrecognized command 'show paths'`** — Use `multipathd show topology` or `multipathd show maps` instead; older versions may not support 'show paths'.
-    **`iscsiadm: No active sessions`** — Verify iSCSI target discovery with `iscsiadm -m discovery -t st -p <target_ip>` and log in with `iscsiadm -m node -T <iqn> -p <target_ip> -l`.
+    | Error | Fix |
+    |---|---|
+    | `multipath: command not found` | Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt-get install multipath-tools`. |
+    | `multipathd: unrecognized command 'show paths'` | Use `multipathd show topology` or `multipathd show maps` instead; older versions may not support 'show paths'. |
+    | `iscsiadm: No active sessions` | Verify iSCSI target discovery with `iscsiadm -m discovery -t st -p <target_ip>` and log in with `iscsiadm -m node -T <iqn> -p <target_ip> -l`. |
 **Host-side diagnostics (Windows):**
 
 ```powershell
@@ -394,9 +402,11 @@ host-prod-04:iqn.1991-05.com     pureport-fc.4b               standby
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused — verify the Pure Storage management IP is reachable and the CLI credentials are configured correctly.`** — Test connectivity with `ping` to the array management IP and confirm credentials in `~/.purerc`.
-    **`Error: No such host — ensure the hostname exists in the Pure Storage array inventory.`** — Run `purehost list` to confirm the host is registered on the array before querying its paths.
-    **`Error: Authentication failed — check that your Pure Storage API token or username/password has not expired.`** — Regenerate the API token in the Pure Storage GUI or re-authenticate using `pureadmin login`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused — verify the Pure Storage management IP is reachable and the CLI credentials are configured correctly.` | Test connectivity with `ping` to the array management IP and confirm credentials in `~/.purerc`. |
+    | `Error: No such host — ensure the hostname exists in the Pure Storage array inventory.` | Run `purehost list` to confirm the host is registered on the array before querying its paths. |
+    | `Error: Authentication failed — check that your Pure Storage API token or username/password has not expired.` | Regenerate the API token in the Pure Storage GUI or re-authenticate using `pureadmin login`. |
 ### Resolution
 
 1. Identify which HBA or port is missing paths — compare expected ports (CT0.FC0 and CT1.FC0 for a two-path design) against `pureport list --initiator`
@@ -446,8 +456,10 @@ oracle-pod                    UNAVAILABLE        203.0.113.42        5f8c9e2a-b4
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to mediator at 203.0.113.42:443`** — Verify network connectivity to the mediator IP and confirm firewall rules allow outbound HTTPS traffic on port 443.
-    **`Error: Pod 'oracle-pod' not found or offline`** — Ensure the pod name is correct and the pod management interface is reachable; check `purepod status oracle-pod` for detailed health information.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to mediator at 203.0.113.42:443` | Verify network connectivity to the mediator IP and confirm firewall rules allow outbound HTTPS traffic on port 443. |
+    | `Error: Pod 'oracle-pod' not found or offline` | Ensure the pod name is correct and the pod management interface is reachable; check `purepod status oracle-pod` for detailed health information. |
 ### Resolution
 
 **Important:** A mediator outage alone does not stop synchronous replication. The mediator is only required as a tiebreaker if the inter-array replication link also fails (split-brain). If the mediator is unreachable but the inter-array link is healthy, the pod continues replicating normally.
@@ -539,9 +551,11 @@ flasharray-dc2     9750              81         9950
 ```
 
 !!! warning "Common errors"
-    **`Error: Pod 'oracle-pod' not found`** — Verify the pod name with `purepod list` and ensure you have network connectivity to the mediator.
-    **`Error: Connection timeout on replica-link list`** — Check that the replication network interface (eth0/eth1) is online and the remote array is reachable via `ping 10.20.1.x`.
-    **`Error: Bandwidth threshold exceeded (>90%)`** — Reduce replication load by throttling snapshots, adding additional replication links, or scheduling replication during off-peak hours.
+    | Error | Fix |
+    |---|---|
+    | `Error: Pod 'oracle-pod' not found` | Verify the pod name with `purepod list` and ensure you have network connectivity to the mediator. |
+    | `Error: Connection timeout on replica-link list` | Check that the replication network interface (eth0/eth1) is online and the remote array is reachable via `ping 10.20.1.x`. |
+    | `Error: Bandwidth threshold exceeded (>90%)` | Reduce replication load by throttling snapshots, adding additional replication links, or scheduling replication during off-peak hours. |
 ### Resolution
 
 | Root Cause | Identification | Fix |
@@ -576,8 +590,10 @@ Last Update: 2024-01-15T09:47:18Z
 ```
 
 !!! warning "Common errors"
-    **`Error: Pod 'oracle-pod' not found or not in replicating state`** — Verify the pod name matches exactly and confirm replication was initiated with `purepod create-replica-link`.
-    **`Error: No active replica-link found for monitoring`** — Ensure the replica-link exists and is connected by running `purepod replica-link list` to check status.
+    | Error | Fix |
+    |---|---|
+    | `Error: Pod 'oracle-pod' not found or not in replicating state` | Verify the pod name matches exactly and confirm replication was initiated with `purepod create-replica-link`. |
+    | `Error: No active replica-link found for monitoring` | Ensure the replica-link exists and is connected by running `purepod replica-link list` to check status. |
 ---
 
 ## Unexpected Capacity Growth
@@ -645,9 +661,11 @@ pg-hourly-prod                hourly                7 days
 ```
 
 !!! warning "Common errors"
-    **`pure: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`).
-    **`Error: Invalid credentials or unable to connect to flasharray-prod-01`** — Verify the array hostname/IP is reachable and run `pureauthenticate` to establish a valid session token.
-    **`Error: Insufficient privileges to execute 'list' command`** — Confirm your Pure user account has read permissions for capacity and snapshot objects; contact your Pure administrator to grant the necessary role.
+    | Error | Fix |
+    |---|---|
+    | `pure: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`). |
+    | `Error: Invalid credentials or unable to connect to flasharray-prod-01` | Verify the array hostname/IP is reachable and run `pureauthenticate` to establish a valid session token. |
+    | `Error: Insufficient privileges to execute 'list' command` | Confirm your Pure user account has read permissions for capacity and snapshot objects; contact your Pure administrator to grant the necessary role. |
 ### Resolution
 
 | Root Cause | Fix |
@@ -687,9 +705,11 @@ Eradicated 3 snapshots. Total space reclaimed: 449.5 GB
 ```
 
 !!! warning "Common errors"
-    **`Snapshot not found: prod-oracle-pg.premigration-20250101`** — Verify the snapshot name with `puresnap list` and confirm it exists before eradication.
-    **`Permission denied: insufficient privileges to eradicate snapshots`** — Ensure your user account has array administrator or snapshot eradication role assigned.
-    **`Cannot eradicate snapshot: in use by replication or clone`** — Wait for any active replication jobs to complete or delete dependent clones before attempting eradication.
+    | Error | Fix |
+    |---|---|
+    | `Snapshot not found: prod-oracle-pg.premigration-20250101` | Verify the snapshot name with `puresnap list` and confirm it exists before eradication. |
+    | `Permission denied: insufficient privileges to eradicate snapshots` | Ensure your user account has array administrator or snapshot eradication role assigned. |
+    | `Cannot eradicate snapshot: in use by replication or clone` | Wait for any active replication jobs to complete or delete dependent clones before attempting eradication. |
 ---
 
 ## Purity Upgrade Hangs or Fails
@@ -744,9 +764,11 @@ Bay       Serial          Capacity  Status    Rebuild%
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/purearray/bin`).
-    **`Error: Unable to connect to array at <ip>. Connection refused`** — Verify the array management IP is reachable and the management interface is online with `ping` and `ssh`.
-    **`Error: Authentication failed. Invalid credentials`** — Confirm your Pure Storage credentials are correct and your user account has sufficient privileges to run upgrade commands.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/purearray/bin`). |
+    | `Error: Unable to connect to array at <ip>. Connection refused` | Verify the array management IP is reachable and the management interface is online with `ping` and `ssh`. |
+    | `Error: Authentication failed. Invalid credentials` | Confirm your Pure Storage credentials are correct and your user account has sufficient privileges to run upgrade commands. |
 ### Resolution
 
 - **Do not manually reboot controllers** during an upgrade — this can corrupt the Purity state
@@ -805,9 +827,11 @@ Host Group: prod-oracle-cluster
 ```
 
 !!! warning "Common errors"
-    **`Error: Volume 'prod-new-vol-01' not found`** — Verify the volume name spelling and that it exists with `purevol list | grep prod-new-vol-01`.
-    **`Error: Host 'prod-oracle-01' is not a member of host group 'prod-oracle-cluster'`** — Add the host to the host group using `purehgroup addhostmember prod-oracle-cluster --host prod-oracle-01`.
-    **`Error: Connection refused — unable to reach Pure array at <ip>`** — Verify network connectivity and array IP address, and confirm your Pure credentials are set in `PURE_APITOKEN` and `PURE_MANAGEMENT_IP` environment variables.
+    | Error | Fix |
+    |---|---|
+    | `Error: Volume 'prod-new-vol-01' not found` | Verify the volume name spelling and that it exists with `purevol list | grep prod-new-vol-01`. |
+    | `Error: Host 'prod-oracle-01' is not a member of host group 'prod-oracle-cluster'` | Add the host to the host group using `purehgroup addhostmember prod-oracle-cluster --host prod-oracle-01`. |
+    | `Error: Connection refused — unable to reach Pure array at <ip>` | Verify network connectivity and array IP address, and confirm your Pure credentials are set in `PURE_APITOKEN` and `PURE_MANAGEMENT_IP` environment variables. |
 ### Resolution Steps
 
 1. Confirm volume is connected: `purehost list <host> --connection` — if not listed, connect it:
@@ -891,9 +915,11 @@ prod-db-02   1.5TB     unlimited       unlimited   —
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`).
-    **`Error: Array unreachable at <ip_address>`** — Verify network connectivity to the array management IP and confirm credentials are set via `purearray login <array_ip>`.
-    **`Error: Permission denied - insufficient privileges`** — Confirm your user account has read permissions on the array; contact your Pure Storage administrator to grant monitoring access.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`). |
+    | `Error: Array unreachable at <ip_address>` | Verify network connectivity to the array management IP and confirm credentials are set via `purearray login <array_ip>`. |
+    | `Error: Permission denied - insufficient privileges` | Confirm your user account has read permissions on the array; contact your Pure Storage administrator to grant monitoring access. |
 ### Resolution
 
 | Root Cause | Fix |
@@ -945,8 +971,10 @@ host-dev-01   192.168.1.55     Disconnected 0      —           —
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to array management interface`** — Verify network connectivity to the array's management IP and confirm firewall rules allow port 443.
-    **`Error: Authentication failed - invalid credentials`** — Ensure your Pure Storage API token is current and has not expired; regenerate if necessary.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to array management interface` | Verify network connectivity to the array's management IP and confirm firewall rules allow port 443. |
+    | `Error: Authentication failed - invalid credentials` | Ensure your Pure Storage API token is current and has not expired; regenerate if necessary. |
 **Do not:**
 - Reboot the surviving controller
 - Manually power cycle the array

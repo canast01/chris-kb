@@ -88,9 +88,11 @@ Purity Version: 4.2.1
 ```
 
 !!! warning "Common errors"
-    **`purecli: command not found`** — Install the Pure CLI tools or add the installation directory to your PATH environment variable.
-    **`Error: Unable to connect to array management IP`** — Verify network connectivity to the array's management interface and confirm the array hostname/IP is configured in your purecli credentials.
-    **`Error: Authentication failed - invalid credentials`** — Re-authenticate using `purecli login` or verify your API token has not expired.
+    | Error | Fix |
+    |---|---|
+    | `purecli: command not found` | Install the Pure CLI tools or add the installation directory to your PATH environment variable. |
+    | `Error: Unable to connect to array management IP` | Verify network connectivity to the array's management interface and confirm the array hostname/IP is configured in your purecli credentials. |
+    | `Error: Authentication failed - invalid credentials` | Re-authenticate using `purecli login` or verify your API token has not expired. |
 Pure Support can also pull diagnostics directly via Pure1 phone-home.
 
 ## What to Include in a Case

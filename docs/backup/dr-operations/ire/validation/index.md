@@ -56,8 +56,10 @@ echo "$(date -u '+%Y-%m-%dT%H:%M:%SZ') Production cutover complete" >> /var/log/
 ```
 
 !!! warning "Common errors"
-    **`bash: /var/log/ire-timeline.log: Permission denied`** — Run the script with sudo or ensure the user has write permissions to /var/log.
-    **`bash: /var/log/ire-timeline.log: No such file or directory`** — Create the log file first with `touch /var/log/ire-timeline.log` or ensure /var/log exists and is writable.
+    | Error | Fix |
+    |---|---|
+    | `bash: /var/log/ire-timeline.log: Permission denied` | Run the script with sudo or ensure the user has write permissions to /var/log. |
+    | `bash: /var/log/ire-timeline.log: No such file or directory` | Create the log file first with `touch /var/log/ire-timeline.log` or ensure /var/log exists and is writable. |
 ## Common Issues
 
 | Symptom | Cause | Resolution |

@@ -94,9 +94,11 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify the hostname matches the certificate CN).
-    **`jq: parse error: Cannot index string with string "content"`** — Ensure the API response is valid JSON and the token has read permissions; test with `curl -sk ... | jq '.'` to inspect raw output.
-    **`curl: (401) Unauthorized`** — Regenerate the bearer token (`$TOKEN`) in vRealize Automation under Administration > API Tokens and ensure it has not expired.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify the hostname matches the certificate CN). |
+    | `jq: parse error: Cannot index string with string "content"` | Ensure the API response is valid JSON and the token has read permissions; test with `curl -sk ... | jq '.'` to inspect raw output. |
+    | `curl: (401) Unauthorized` | Regenerate the bearer token (`$TOKEN`) in vRealize Automation under Administration > API Tokens and ensure it has not expired. |
 ---
 
 ## Weekly Checks
@@ -166,9 +168,11 @@ notAfter=Jan 15 10:23:45 2024 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Ensure the hostname resolves correctly and the appliance is reachable on both ports 443 and 5480 using `ping` and `telnet vra-prod-01.example.local 443`.
-    **`error in x509 parsing`** — The SSL connection succeeded but the certificate format is invalid; regenerate the certificate on the Aria Automation appliance via VAMI or re-issue it through your certificate authority.
-    **`Connection refused`** — Verify the Aria Automation services are running with `systemctl status vra-service` on the appliance and check firewall rules allow inbound traffic to ports 443 and 5480.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Ensure the hostname resolves correctly and the appliance is reachable on both ports 443 and 5480 using `ping` and `telnet vra-prod-01.example.local 443`. |
+    | `error in x509 parsing` | The SSL connection succeeded but the certificate format is invalid; regenerate the certificate on the Aria Automation appliance via VAMI or re-issue it through your certificate authority. |
+    | `Connection refused` | Verify the Aria Automation services are running with `systemctl status vra-service` on the appliance and check firewall rules allow inbound traffic to ports 443 and 5480. |
 ---
 
 ## Pre-Maintenance Checks
@@ -245,9 +249,11 @@ prelude     2m11s       Normal    Started            pod/vra-api-7d8c9f2k1    St
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to the server: dial tcp: lookup vra-prod-01.example.local on 10.20.15.1:53: no such host`** — Verify DNS resolution or use the IP address directly (e.g., `ssh root@10.20.15.42`).
-    **`command not found: vracli`** — Ensure you are logged into the Aria Automation appliance root shell and the vracli utility is in the PATH; try `/opt/vmware/vra/bin/vracli` if needed.
-    **`error: the server doesn't have a resource type "deployment"`** — Confirm you are using the correct kubectl context for the Aria Automation cluster; run `kubectl config current-context` to verify.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to the server: dial tcp: lookup vra-prod-01.example.local on 10.20.15.1:53: no such host` | Verify DNS resolution or use the IP address directly (e.g., `ssh root@10.20.15.42`). |
+    | `command not found: vracli` | Ensure you are logged into the Aria Automation appliance root shell and the vracli utility is in the PATH; try `/opt/vmware/vra/bin/vracli` if needed. |
+    | `error: the server doesn't have a resource type "deployment"` | Confirm you are using the correct kubectl context for the Aria Automation cluster; run `kubectl config current-context` to verify. |
 ---
 
 ## See also

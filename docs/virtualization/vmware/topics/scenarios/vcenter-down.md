@@ -87,8 +87,10 @@ VMware vCenter Orchestrator
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Ensure you are running this command on a vCenter Server host and that the VMware tools are installed in the system PATH.
-    **`grep: (standard input): Permission denied`** — Run the command with elevated privileges using `sudo service-control --status --all | grep -i stopped`.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Ensure you are running this command on a vCenter Server host and that the VMware tools are installed in the system PATH. |
+    | `grep: (standard input): Permission denied` | Run the command with elevated privileges using `sudo service-control --status --all | grep -i stopped`. |
 Start an individual stopped service first before attempting a full restart:
 
 ```bash
@@ -106,8 +108,10 @@ Service vmware-sso started successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to the Service Control Agent`** — Ensure the Service Control Agent daemon is running with `service-control --status` and restart it if needed.
-    **`Error: Service vmware-vpxd is already running`** — Check if the service is already active with `service-control --status vmware-vpxd` before attempting to start it again.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to the Service Control Agent` | Ensure the Service Control Agent daemon is running with `service-control --status` and restart it if needed. |
+    | `Error: Service vmware-vpxd is already running` | Check if the service is already active with `service-control --status vmware-vpxd` before attempting to start it again. |
 Full restart (last resort — do not use until you have read logs, as it masks root cause):
 
 ```bash
@@ -134,8 +138,10 @@ All services started successfully.
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Ensure you are running this command on a vCenter Server appliance with root privileges, as `service-control` is only available on VCSA.
-    **`Error: Unable to stop service 'vpxd': Service dependency violation`** — Wait 30–60 seconds between the stop and start commands to allow dependent services to fully shut down, or run `service-control --stop --all` with the `--force` flag.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Ensure you are running this command on a vCenter Server appliance with root privileges, as `service-control` is only available on VCSA. |
+    | `Error: Unable to stop service 'vpxd': Service dependency violation` | Wait 30–60 seconds between the stop and start commands to allow dependent services to fully shut down, or run `service-control --stop --all` with the `--force` flag. |
 ---
 
 ## 3. Check Disk Space — the Most Common Cause
@@ -157,8 +163,10 @@ tmpfs           32G  128M   32G   1% /dev/shm
 ```
 
 !!! warning "Common errors"
-    **`df: cannot access '/mnt/nfs': Stale NFS file handle`** — Remount the NFS datastore with `mount -o remount /mnt/nfs` or check ESXi host connectivity to the NFS server.
-    **`df: /dev/mapper/vg0-lv_data: No such file or directory`** — Verify the logical volume exists with `lvdisplay` and activate it with `lvchange -ay /dev/vg0/lv_data` if needed.
+    | Error | Fix |
+    |---|---|
+    | `df: cannot access '/mnt/nfs': Stale NFS file handle` | Remount the NFS datastore with `mount -o remount /mnt/nfs` or check ESXi host connectivity to the NFS server. |
+    | `df: /dev/mapper/vg0-lv_data: No such file or directory` | Verify the logical volume exists with `lvdisplay` and activate it with `lvchange -ay /dev/vg0/lv_data` if needed. |
 Look for: any partition at 100% utilisation, especially `/storage/log`. Clean old logs using the VMware-provided script:
 
 ```bash
@@ -179,9 +187,11 @@ Cleanup completed successfully at 2024-01-15 03:45:22 UTC
 ```
 
 !!! warning "Common errors"
-    **`Permission denied`** — Run the script with sudo or as root user since it requires write access to system log directories.
-    **`No such file or directory: /usr/lib/vmware-vpx/scripts/cleanup_appliance_logs.py`** — Verify the vCenter Server is installed and the VMware VPX package is present; reinstall if necessary.
-    **`ERROR: Log directory /var/log/vmware/ is not accessible`** — Ensure the vCenter appliance is running and the log partition has sufficient inode availability.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied` | Run the script with sudo or as root user since it requires write access to system log directories. |
+    | `No such file or directory: /usr/lib/vmware-vpx/scripts/cleanup_appliance_logs.py` | Verify the vCenter Server is installed and the VMware VPX package is present; reinstall if necessary. |
+    | `ERROR: Log directory /var/log/vmware/ is not accessible` | Ensure the vCenter appliance is running and the log partition has sufficient inode availability. |
 After freeing space, start services and confirm:
 
 ```bash
@@ -199,8 +209,10 @@ Service vmware-vpxd is running.
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to VMware Authorization Service`** — Ensure the VMware Authorization Service (vmware-authd) is running first with `service-control --start vmware-authd`.
-    **`Service vmware-vpxd is not running.`** — Check system resources and review `/var/log/vmware/vpxd/vpxd.log` for startup errors, then retry the start command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to VMware Authorization Service` | Ensure the VMware Authorization Service (vmware-authd) is running first with `service-control --start vmware-authd`. |
+    | `Service vmware-vpxd is not running.` | Check system resources and review `/var/log/vmware/vpxd/vpxd.log` for startup errors, then retry the start command. |
 ---
 
 ## 4. Use VAMI for Health Overview
@@ -229,8 +241,10 @@ accepting connections
 ```
 
 !!! warning "Common errors"
-    **`pg_isready: could not translate host name "localhost" to address: Name or service not known`** — Verify the PostgreSQL service is running with `systemctl status vmware-vpostgres` and that localhost resolution is configured in `/etc/hosts`.
-    **`pg_isready: could not connect to server: Connection refused`** — Ensure the vPostgres service is listening on localhost by checking the postgresql.conf listen_addresses setting and restarting the service with `systemctl restart vmware-vpostgres`.
+    | Error | Fix |
+    |---|---|
+    | `pg_isready: could not translate host name "localhost" to address: Name or service not known` | Verify the PostgreSQL service is running with `systemctl status vmware-vpostgres` and that localhost resolution is configured in `/etc/hosts`. |
+    | `pg_isready: could not connect to server: Connection refused` | Ensure the vPostgres service is listening on localhost by checking the postgresql.conf listen_addresses setting and restarting the service with `systemctl restart vmware-vpostgres`. |
 Expected output when healthy:
 
 ```text
@@ -261,9 +275,11 @@ tail -50 /var/log/vmware/vpostgres/postgresql*.log
 ```
 
 !!! warning "Common errors"
-    **`ERROR:  could not extend relation base/16384/16385: No space left on device`** — Check available disk space on the vPostgres partition with `df -h /storage/db` and expand the volume or clean up old logs.
-    **`tail: cannot open '/var/log/vmware/vpostgres/postgresql*.log' for reading: No such file or directory`** — Verify the vPostgres service is running with `systemctl status vpostgres` and confirm the log directory exists.
-    **`Permission denied`** — Run the command with `sudo` or as the root user since vPostgres logs are typically readable only by root or the postgres service account.
+    | Error | Fix |
+    |---|---|
+    | `ERROR:  could not extend relation base/16384/16385: No space left on device` | Check available disk space on the vPostgres partition with `df -h /storage/db` and expand the volume or clean up old logs. |
+    | `tail: cannot open '/var/log/vmware/vpostgres/postgresql*.log' for reading: No such file or directory` | Verify the vPostgres service is running with `systemctl status vpostgres` and confirm the log directory exists. |
+    | `Permission denied` | Run the command with `sudo` or as the root user since vPostgres logs are typically readable only by root or the postgres service account. |
 Look for: disk full errors (cannot write WAL), corrupt data files after ungraceful shutdown, or connection limit exhausted messages.
 
 ---
@@ -287,9 +303,11 @@ tail -100 /var/log/vmware/vpxd/vpxd.log | grep -iE "error|fatal|failed|exception
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory`** — Verify vpxd service is running with `systemctl status vpxd` and check the correct log path with `find /var/log -name vpxd.log`.
-    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or ensure your user is in the `root` or `vpxd` group with `sudo usermod -aG vpxd $USER`.
-    **`No matches found`** — The log file exists but contains no errors; this is normal for a healthy vCenter instance, so verify the service is actually running with `systemctl status vpxd`.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory` | Verify vpxd service is running with `systemctl status vpxd` and check the correct log path with `find /var/log -name vpxd.log`. |
+    | `grep: (standard input): Permission denied` | Run the command with `sudo` or ensure your user is in the `root` or `vpxd` group with `sudo usermod -aG vpxd $USER`. |
+    | `No matches found` | The log file exists but contains no errors; this is normal for a healthy vCenter instance, so verify the service is actually running with `systemctl status vpxd`. |
 Common fatal startup errors:
 
 ```text
@@ -316,8 +334,10 @@ Operation finished successfully.
 ```
 
 !!! warning "Common errors"
-    **`kill: (12847): Operation not permitted`** — Run the command with sudo or as root user.
-    **`Service 'vmware-vpxd' is not registered with service-control.`** — Use `service-control --list` to verify the correct service name, or restart using `systemctl restart vmware-vpxd` instead.
+    | Error | Fix |
+    |---|---|
+    | `kill: (12847): Operation not permitted` | Run the command with sudo or as root user. |
+    | `Service 'vmware-vpxd' is not registered with service-control.` | Use `service-control --list` to verify the correct service name, or restart using `systemctl restart vmware-vpxd` instead. |
 ---
 
 ## 7. Certificate Failures — Aria SuiteLC or certificate-manager
@@ -352,9 +372,11 @@ Option [1-9]:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to VMCA service`** — Ensure the VMware Certificate Authority service is running with `systemctl status vmware-vmca` and restart if needed.
-    **`Error: Permission denied`** — Run the command with elevated privileges using `sudo /usr/lib/vmware-vmca/bin/certificate-manager`.
-    **`Error: Certificate file not found at /etc/vmware-vpx/ssl/rui.crt`** — Verify the certificate path exists and check file permissions with `ls -la /etc/vmware-vpx/ssl/`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to VMCA service` | Ensure the VMware Certificate Authority service is running with `systemctl status vmware-vmca` and restart if needed. |
+    | `Error: Permission denied` | Run the command with elevated privileges using `sudo /usr/lib/vmware-vmca/bin/certificate-manager`. |
+    | `Error: Certificate file not found at /etc/vmware-vpx/ssl/rui.crt` | Verify the certificate path exists and check file permissions with `ls -la /etc/vmware-vpx/ssl/`. |
 If Aria SuiteLC is deployed and managing certificates, initiate renewal from Aria SuiteLC →
 **Certificate Management → vCenter → Renew**. Do not run certificate-manager and Aria SuiteLC on the
 same VCSA simultaneously — they will conflict and leave the certificate chain broken.

@@ -47,8 +47,10 @@ curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/cluster/status" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if still failing, verify NSX Manager hostname matches certificate CN).
-    **`jq: command not found` or `json.tool: No module named json`** — Install Python 3 json module with `python3 -m pip install --upgrade python3` or use `jq` instead: `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/cluster/status" | jq '.overall_status'`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if still failing, verify NSX Manager hostname matches certificate CN). |
+    | `jq: command not found` or `json.tool: No module named json` | Install Python 3 json module with `python3 -m pip install --upgrade python3` or use `jq` instead: `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/cluster/status" | jq '.overall_status'`. |
 ```bash
 # 2. Edge cluster member health — check individual member status
 curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/edge-clusters" \
@@ -74,9 +76,11 @@ Edge cluster: dr-edge-cluster-02
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but verify NSX Manager certificate is trusted or use `-k`).
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify NSX Manager is reachable and responding; check credentials and URL format with `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/edge-clusters" -w "\n%{http_code}\n"`.
-    **`KeyError: 'members'`** — Edge cluster exists but has no members assigned; verify members are properly configured in the edge cluster topology before querying member status.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example, but verify NSX Manager certificate is trusted or use `-k`). |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify NSX Manager is reachable and responding; check credentials and URL format with `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/edge-clusters" -w "\n%{http_code}\n"`. |
+    | `KeyError: 'members'` | Edge cluster exists but has no members assigned; verify members are properly configured in the edge cluster topology before querying member status. |
 ```bash
 # 3. Transport node health — all nodes should show status: SUCCESS
 curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/transport-nodes/status" \
@@ -101,9 +105,11 @@ edge-node-01                                  state=SUCCESS
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store.
-    **`jq: parse error: Invalid JSON at line 1`** — Verify NSX Manager is responding with valid JSON by testing `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/transport-nodes/status"` directly without piping to Python.
-    **`curl: (401) Unauthorized`** — Confirm the admin credentials are correct and the user has API access permissions in NSX Manager.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store. |
+    | `jq: parse error: Invalid JSON at line 1` | Verify NSX Manager is responding with valid JSON by testing `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/transport-nodes/status"` directly without piping to Python. |
+    | `curl: (401) Unauthorized` | Confirm the admin credentials are correct and the user has API access permissions in NSX Manager. |
 ```bash
 # 4. BGP neighbor summary — run on each Edge VM via nsxcli
 # SSH to Edge VM, then:
@@ -127,8 +133,10 @@ Peer             VRF  Local AS  Remote AS  State         Uptime
 ```
 
 !!! warning "Common errors"
-    **`vrf <tier0-vrf-id>: unknown command`** — Verify the VRF ID is numeric (e.g., `vrf 0`) and that you are in nsxcli context, not a sub-shell.
-    **`get bgp neighbor summary: command not found`** — Ensure BGP is enabled on the Tier-0 router and the Edge VM has completed initialization; check `get bgp config` first.
+    | Error | Fix |
+    |---|---|
+    | `vrf <tier0-vrf-id>: unknown command` | Verify the VRF ID is numeric (e.g., `vrf 0`) and that you are in nsxcli context, not a sub-shell. |
+    | `get bgp neighbor summary: command not found` | Ensure BGP is enabled on the Tier-0 router and the Edge VM has completed initialization; check `get bgp config` first. |
 ```bash
 # 5. DFW security policy list — confirm policies are published and not in ERROR state
 curl -sk -u 'admin:password' \
@@ -152,9 +160,11 @@ Allow-Internal-Traffic                       sequence=0  category=Application
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the command, so verify NSX Manager hostname matches certificate CN).
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify NSX Manager is reachable and responding with valid JSON; check credentials and API endpoint URL for typos.
-    **`curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused`** — Confirm NSX Manager is running and accessible on the network; verify the hostname/IP and firewall rules allow port 443 from your client.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the command, so verify NSX Manager hostname matches certificate CN). |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify NSX Manager is reachable and responding with valid JSON; check credentials and API endpoint URL for typos. |
+    | `curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused` | Confirm NSX Manager is running and accessible on the network; verify the hostname/IP and firewall rules allow port 443 from your client. |
 ```bash
 # 6. Controller/cluster node connectivity — all nodes should be reachable
 curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/cluster/nodes" \
@@ -176,9 +186,11 @@ node=192.168.1.10  connectivity=UP
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed).
-    **`curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused`** — Verify the NSX Manager hostname/IP is correct and the management service is running with `systemctl status nsx-manager`.
-    **`KeyError: 'controller_role'`** — Confirm the NSX cluster is fully initialized and all nodes have completed bootstrap; check node status in the NSX UI or run `get cluster status` on the manager.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed). |
+    | `curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused` | Verify the NSX Manager hostname/IP is correct and the management service is running with `systemctl status nsx-manager`. |
+    | `KeyError: 'controller_role'` | Confirm the NSX cluster is fully initialized and all nodes have completed bootstrap; check node status in the NSX UI or run `get cluster status` on the manager. |
 ```bash
 # 7. Certificate expiry — flag anything expiring within 60 days
 curl -sk -u 'admin:password' \
@@ -209,9 +221,11 @@ NSX-Manager-Self-Signed  expires=2025-03-15  days_left=87  OK
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed in production variants).
-    **`jq: command not found` or `json.decoder.JSONDecodeError`** — Verify the API endpoint returns valid JSON by testing with `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/trust-management/certificates" | python3 -m json.tool` and confirm NSX Manager credentials are correct.
-    **`datetime.fromisoformat() is not available` (Python < 3.7)`** — Upgrade to Python 3.7+ or replace the fromisoformat call with `datetime.strptime(exp.replace('Z', ''), '%Y-%m-%dT%H:%M:%S')`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed in production variants). |
+    | `jq: command not found` or `json.decoder.JSONDecodeError` | Verify the API endpoint returns valid JSON by testing with `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/trust-management/certificates" | python3 -m json.tool` and confirm NSX Manager credentials are correct. |
+    | `datetime.fromisoformat() is not available` (Python < 3.7)` | Upgrade to Python 3.7+ or replace the fromisoformat call with `datetime.strptime(exp.replace('Z', ''), '%Y-%m-%dT%H:%M:%S')`. |
 ```bash
 # 8. Open alarms — critical severity only; any output here needs immediate attention
 curl -sk -u 'admin:password' \
@@ -235,9 +249,11 @@ CRITICAL alarms open: 3
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the NSX Manager hostname/IP is correct and reachable, and confirm the admin credentials are valid by testing with `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/status`.
-    **`KeyError: 'results'`** — Check that the API response contains the expected schema; this may occur if the NSX version differs from documentation—add error handling with `.get('results', [])` to gracefully handle missing keys.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify the NSX Manager hostname/IP is correct and reachable, and confirm the admin credentials are valid by testing with `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/status`. |
+    | `KeyError: 'results'` | Check that the API response contains the expected schema; this may occur if the NSX version differs from documentation—add error handling with `.get('results', [])` to gracefully handle missing keys. |
 ```bash
 # 9. Manager backup history — last backup must be within 24 hours
 curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/cluster/backups/history" \
@@ -266,9 +282,11 @@ Last backup: 2024-01-15 14:32 UTC  age=18.3h  success=True
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the NSX manager's CA certificate into your system trust store.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify the NSX manager hostname is correct and reachable, and that the admin credentials are valid (check for 401/403 response).
-    **`WARNING: no backup records found`** — Ensure at least one backup has been completed on the NSX manager; check the NSX UI under System > Backup & Restore to trigger a manual backup if needed.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the NSX manager's CA certificate into your system trust store. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify the NSX manager hostname is correct and reachable, and that the admin credentials are valid (check for 401/403 response). |
+    | `WARNING: no backup records found` | Ensure at least one backup has been completed on the NSX manager; check the NSX UI under System > Backup & Restore to trigger a manual backup if needed. |
 ```bash
 # SSH to each Edge node
 vrf <tier0-vrf-id>
@@ -309,8 +327,10 @@ BGP neighbor is 10.50.12.1, remote AS 65001, local AS 65000
 ```
 
 !!! warning "Common errors"
-    **`BGP state = Connect`** — Verify TCP port 179 is open between Edge and peer, and check peer BGP configuration for matching ASN and router ID.
-    **`BGP state = Idle`** — Confirm the peer IP is reachable (ping from Edge), check firewall rules, and verify the neighbor is configured in the correct VRF.
+    | Error | Fix |
+    |---|---|
+    | `BGP state = Connect` | Verify TCP port 179 is open between Edge and peer, and check peer BGP configuration for matching ASN and router ID. |
+    | `BGP state = Idle` | Confirm the peer IP is reachable (ping from Edge), check firewall rules, and verify the neighbor is configured in the correct VRF. |
 ## NSX Manager CLI Quick Reference
 
 ![NSX Manager CLI Quick Reference](../../../../../assets/virtualization-vmware-nsx-hc-nsx-manager-cli-quick-reference.svg)
@@ -357,9 +377,11 @@ nsx> get services | grep -v " running"
 ```
 
 !!! warning "Common errors"
-    **`Cluster Status: UNSTABLE`** — Check network connectivity between NSX Manager nodes and verify no node is isolated; restart the cluster if a node is permanently down.
-    **`Status: DISCONNECTED`** — SSH to the disconnected manager node and verify network connectivity to other cluster members; check firewall rules for ports 5672, 8472, and 9090.
-    **`Corfu Cluster Status: UNHEALTHY`** — Verify all three NSX Manager nodes are online and reachable; if a node is down, restore it from backup or remove it from the cluster and re-add it.
+    | Error | Fix |
+    |---|---|
+    | `Cluster Status: UNSTABLE` | Check network connectivity between NSX Manager nodes and verify no node is isolated; restart the cluster if a node is permanently down. |
+    | `Status: DISCONNECTED` | SSH to the disconnected manager node and verify network connectivity to other cluster members; check firewall rules for ports 5672, 8472, and 9090. |
+    | `Corfu Cluster Status: UNHEALTHY` | Verify all three NSX Manager nodes are online and reachable; if a node is down, restore it from backup or remove it from the cluster and re-add it. |
 ## Alarm Review
 
 ![Alarm Review](../../../../../assets/virtualization-vmware-nsx-hc-alarm-review.svg)
@@ -394,9 +416,11 @@ MEDIUM alarms open: 7
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store.
-    **`jq: command not found` or `python3: command not found`** — Install the missing tool with `apt-get install python3` or `yum install python3`, or use `jq` instead of the Python JSON parser.
-    **`HTTP 401 Unauthorized`** — Verify the NSX Manager credentials are correct and the user account has API access permissions in NSX Manager's role-based access control settings.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store. |
+    | `jq: command not found` or `python3: command not found` | Install the missing tool with `apt-get install python3` or `yum install python3`, or use `jq` instead of the Python JSON parser. |
+    | `HTTP 401 Unauthorized` | Verify the NSX Manager credentials are correct and the user account has API access permissions in NSX Manager's role-based access control settings. |
 ## Certificate Expiry Check
 
 ![Certificate Expiry Check](../../../../../assets/virtualization-vmware-nsx-hc-certificate-expiry-check.svg)
@@ -431,9 +455,11 @@ NSX-Manager-Cert                         expires=2026-03-15  days=387  OK
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present; if still failing, verify NSX Manager hostname/IP is correct).
-    **`curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused`** — Verify NSX Manager is running and accessible at the specified hostname/IP on port 443.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Confirm authentication credentials are correct and the API endpoint is accessible (test with `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/trust-management/certificates` alone first).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present; if still failing, verify NSX Manager hostname/IP is correct). |
+    | `curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused` | Verify NSX Manager is running and accessible at the specified hostname/IP on port 443. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Confirm authentication credentials are correct and the API endpoint is accessible (test with `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/trust-management/certificates` alone first). |
 ## IP Pool Utilisation
 
 ![IP Pool Utilisation](../../../../../assets/virtualization-vmware-nsx-hc-ip-pool-utilisation.svg)
@@ -471,9 +497,11 @@ Pool: Edge-Services-Pool  (id=pool-edge-99)
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify NSX Manager hostname matches certificate CN).
-    **`jq: parse error: Invalid JSON at line 1`** — Verify NSX Manager credentials are correct and the API endpoint is accessible; test with `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/pools/ip-pools" | head -c 200` to inspect raw response.
-    **`curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused`** — Confirm NSX Manager IP/hostname is correct and reachable on port 443 using `ping` or `nc -zv <nsx-manager> 443`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify NSX Manager hostname matches certificate CN). |
+    | `jq: parse error: Invalid JSON at line 1` | Verify NSX Manager credentials are correct and the API endpoint is accessible; test with `curl -sk -u 'admin:password' "https://<nsx-manager>/api/v1/pools/ip-pools" | head -c 200` to inspect raw response. |
+    | `curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused` | Confirm NSX Manager IP/hostname is correct and reachable on port 443 using `ping` or `nc -zv <nsx-manager> 443`. |
 ## Post-Change Verification
 
 ![Post-Change Verification](../../../../../assets/virtualization-vmware-nsx-hc-post-change-verification.svg)
@@ -551,9 +579,11 @@ curl -sk -u 'admin:password' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed).
-    **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify NSX Manager admin credentials and ensure the account has API access permissions enabled.
-    **`{"error_code":404,"error_message":"The requested resource could not be found"}`** — Confirm the NSX Manager hostname/IP is correct and reachable, and that the API endpoint path matches your NSX version (v1 vs. policy API).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed). |
+    | `{"error_code":401,"error_message":"Invalid credentials"}` | Verify NSX Manager admin credentials and ensure the account has API access permissions enabled. |
+    | `{"error_code":404,"error_message":"The requested resource could not be found"}` | Confirm the NSX Manager hostname/IP is correct and reachable, and that the API endpoint path matches your NSX version (v1 vs. policy API). |
 ---
 
 ## See also

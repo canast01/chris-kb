@@ -145,9 +145,11 @@ tcp   0      0      192.168.1.45:902        10.50.100.20:38765      ESTABLISHED
 ```
 
 !!! warning "Common errors"
-    **`vim-cmd: command not found`** — Verify the ESXi host is in maintenance mode or use the vSphere Client API instead; vim-cmd requires the host's management services to be fully operational.
-    **`Permission denied`** — Run commands with root privileges or ensure your SSH user account has administrative rights on the ESXi host.
-    **`IPMI sel list: Unknown command`** — Confirm IPMI is enabled in the host's BIOS and the management controller is accessible via `esxcli hardware ipmi sel info` first.
+    | Error | Fix |
+    |---|---|
+    | `vim-cmd: command not found` | Verify the ESXi host is in maintenance mode or use the vSphere Client API instead; vim-cmd requires the host's management services to be fully operational. |
+    | `Permission denied` | Run commands with root privileges or ensure your SSH user account has administrative rights on the ESXi host. |
+    | `IPMI sel list: Unknown command` | Confirm IPMI is enabled in the host's BIOS and the management controller is accessible via `esxcli hardware ipmi sel info` first. |
 **Expected output:** `storage core path list | grep -v Active` returns no output (all paths active). `hardware ipmi sel list` returns no critical hardware events. IPMI critical events require hardware replacement ticket.
 
 ## vSAN Health Check
@@ -185,9 +187,11 @@ naa.6001405a1a2b3c4d5e6f7g8h9i0j1k2l3  1.6TB  1.2TB  Healthy
 ```
 
 !!! warning "Common errors"
-    **`vsan health cluster list: Unknown command or namespace`** — Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` first to confirm VSAN is initialized.
-    **`Error: Unable to connect to host <hostname>: Connection refused`** — Ensure SSH is enabled on the ESXi host and you have network connectivity; check firewall rules with `esxcli network firewall get`.
-    **`RVC Error: Connection refused or timeout connecting to vCenter`** — Verify vCenter hostname/IP is correct, credentials are valid, and vCenter service is running with `systemctl status vpxd` on the vCenter appliance.
+    | Error | Fix |
+    |---|---|
+    | `vsan health cluster list: Unknown command or namespace` | Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` first to confirm VSAN is initialized. |
+    | `Error: Unable to connect to host <hostname>: Connection refused` | Ensure SSH is enabled on the ESXi host and you have network connectivity; check firewall rules with `esxcli network firewall get`. |
+    | `RVC Error: Connection refused or timeout connecting to vCenter` | Verify vCenter hostname/IP is correct, credentials are valid, and vCenter service is running with `systemctl status vpxd` on the vCenter appliance. |
 **Expected output:** `vsan health cluster list` shows all checks as `green`. `vsan cluster get` confirms node count matches expected cluster size. Any `yellow` or `red` check requires investigation before any scheduled maintenance.
 
 ## Horizon Connection Diagnosis
@@ -244,7 +248,9 @@ LAST SEEN              TYPE      REASON                    OBJECT               
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "pods"`** — Verify the cluster context with
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "pods"` | Verify the cluster context with |
 ## VxRail Troubleshooting
 
 ```bash
@@ -284,6 +290,8 @@ Bundle will be saved to: /var/log/vmware/support-bundles/
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Permission denied: /usr/lib/vmware-marvin/marvind.py`** — Run the command with `sudo` or as root user.
-    **`ERROR: vmware-marvin.service not found`** — Verify VMware VxRail Manager is installed with `rpm -qa | grep vmware-marvin` and reinstall if missing.
-    **`tail: cannot open '/var/log/vmware/vmware-vxrail-manager.log' for reading: No such file or directory`** — Check the correct log path with `find /var/log -name '*vxrail*' -o -name '*marvin*'` and adjust the path accordingly.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Permission denied: /usr/lib/vmware-marvin/marvind.py` | Run the command with `sudo` or as root user. |
+    | `ERROR: vmware-marvin.service not found` | Verify VMware VxRail Manager is installed with `rpm -qa | grep vmware-marvin` and reinstall if missing. |
+    | `tail: cannot open '/var/log/vmware/vmware-vxrail-manager.log' for reading: No such file or directory` | Check the correct log path with `find /var/log -name '*vxrail*' -o -name '*marvin*'` and adjust the path accordingly. |

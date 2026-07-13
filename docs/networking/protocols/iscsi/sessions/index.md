@@ -147,9 +147,11 @@ iSCSI Statistics for session [sid: 1, target: iqn.2020-04.com.example:storage.ta
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: No active sessions.`** — Verify iSCSI initiator service is running with `systemctl status iscsid` and sessions are logged in with `iscsiadm -m discovery -t st -p <target_ip>` followed by login.
-    **`iscsiadm: Cannot find record for sid 1`** — Ensure the session exists before querying; use `iscsiadm -m session` first to list valid session IDs.
-    **`iscsiadm: command requires root privileges`** — Run the command with `sudo` or as the root user.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: No active sessions.` | Verify iSCSI initiator service is running with `systemctl status iscsid` and sessions are logged in with `iscsiadm -m discovery -t st -p <target_ip>` followed by login. |
+    | `iscsiadm: Cannot find record for sid 1` | Ensure the session exists before querying; use `iscsiadm -m session` first to list valid session IDs. |
+    | `iscsiadm: command requires root privileges` | Run the command with `sudo` or as the root user. |
 ```bash
 ## Login to all discovered targets (persistent)
 iscsiadm -m node --login
@@ -187,9 +189,11 @@ Logging out of session [sid: 2, target: iqn.2019-05.com.example:storage.disk2, p
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: No records found`** — Run `iscsiadm -m discovery -t st -p <target_ip>:3260` to discover targets before attempting login.
-    **`iscsiadm: cannot login to target`** — Verify the target IP is reachable with `ping`, the iSCSI daemon is running with `systemctl status iscsid`, and credentials are correct if CHAP is enabled.
-    **`iscsiadm: No active session found`** — Confirm the target is currently logged in using `iscsiadm -m session` before attempting logout.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: No records found` | Run `iscsiadm -m discovery -t st -p <target_ip>:3260` to discover targets before attempting login. |
+    | `iscsiadm: cannot login to target` | Verify the target IP is reachable with `ping`, the iSCSI daemon is running with `systemctl status iscsid`, and credentials are correct if CHAP is enabled. |
+    | `iscsiadm: No active session found` | Confirm the target is currently logged in using `iscsiadm -m session` before attempting logout. |
 ```bash
 ## /etc/iscsi/iscsid.conf
 node.session.nr_sessions = 2
@@ -203,8 +207,10 @@ iscsiadm -m node -T <IQN> -p <ip> -o update -n node.session.nr_sessions -v 2
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: No records found`** — Ensure the target IQN and portal IP are already discovered; run `iscsiadm -m discovery -t st -p <ip>` first to populate the node database.
-    **`iscsiadm: cannot open /etc/iscsi/iscsid.conf: Permission denied`** — Run the command with `sudo` or as root, since iSCSI configuration requires elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: No records found` | Ensure the target IQN and portal IP are already discovered; run `iscsiadm -m discovery -t st -p <ip>` first to populate the node database. |
+    | `iscsiadm: cannot open /etc/iscsi/iscsid.conf: Permission denied` | Run the command with `sudo` or as root, since iSCSI configuration requires elevated privileges. |
 ```bash
 ## Check session state during recovery
 iscsiadm -m session -P 3 | grep -i state
@@ -226,6 +232,8 @@ Login to [iface: default, target: iqn.1991-05.com.example:storage.disk1, portal:
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: No records found`** — Verify the target IQN and portal IP are correct and exist in the node database with `iscsiadm -m node -o show`.
-    **`iscsiadm: cannot connect to iSCSI daemon`** — Ensure the iscsid service is running with `systemctl start iscsid` and `systemctl start iscsi`.
-    **`Login to [iface: default, target: iqn.1991-05.com.example:storage.disk1, portal: 192.168.1.50,3260] failed`** — Check network connectivity to the target portal and verify the target is accepting connections with `iscsiadm -m discovery -t st -p <ip>:3260`.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: No records found` | Verify the target IQN and portal IP are correct and exist in the node database with `iscsiadm -m node -o show`. |
+    | `iscsiadm: cannot connect to iSCSI daemon` | Ensure the iscsid service is running with `systemctl start iscsid` and `systemctl start iscsi`. |
+    | `Login to [iface: default, target: iqn.1991-05.com.example:storage.disk1, portal: 192.168.1.50,3260] failed` | Check network connectivity to the target portal and verify the target is accepting connections with `iscsiadm -m discovery -t st -p <ip>:3260`. |

@@ -42,9 +42,11 @@ rjones 1004 /bin/bash
 ```
 
 !!! warning "Common errors"
-    **`useradd: user 'svcaccount' already exists`** — Check if the account exists with `id svcaccount` and use `userdel` to remove it first if needed.
-    **`usermod: user 'username' does not exist`** — Verify the username exists with `getent passwd username` before attempting to modify it.
-    **`passwd: user 'username' is not a known user`** — Ensure the user exists in `/etc/passwd` by running `useradd` first or checking the correct spelling.
+    | Error | Fix |
+    |---|---|
+    | `useradd: user 'svcaccount' already exists` | Check if the account exists with `id svcaccount` and use `userdel` to remove it first if needed. |
+    | `usermod: user 'username' does not exist` | Verify the username exists with `getent passwd username` before attempting to modify it. |
+    | `passwd: user 'username' is not a known user` | Ensure the user exists in `/etc/passwd` by running `useradd` first or checking the correct spelling. |
 ```bash
 # /etc/security/pwquality.conf
 minlen = 14
@@ -63,8 +65,10 @@ dictcheck = 1
 ```
 
 !!! warning "Common errors"
-    **`pwquality: invalid option 'minlen'`** — Remove spaces around the `=` operator; use `minlen=14` instead of `minlen = 14`.
-    **`Permission denied`** — Run with `sudo` or as root; `/etc/security/pwquality.conf` requires elevated privileges to edit.
+    | Error | Fix |
+    |---|---|
+    | `pwquality: invalid option 'minlen'` | Remove spaces around the `=` operator; use `minlen=14` instead of `minlen = 14`. |
+    | `Permission denied` | Run with `sudo` or as root; `/etc/security/pwquality.conf` requires elevated privileges to edit. |
 ```bash
 # /etc/pam.d/system-auth — add pwquality to password section
 password    requisite     pam_pwquality.so try_first_pass local_users_only retry=3
@@ -75,8 +79,10 @@ password    requisite     pam_pwquality.so try_first_pass local_users_only retry
 ```
 
 !!! warning "Common errors"
-    **`/etc/pam.d/system-auth: Permission denied`** — Run the command with `sudo` or edit the file as root using `sudo nano /etc/pam.d/system-auth`.
-    **`pam_pwquality.so: cannot open shared object file: No such file or directory`** — Install the libpwquality package with `sudo apt-get install libpwquality0` (Debian/Ubuntu) or `sudo yum install libpwquality` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `/etc/pam.d/system-auth: Permission denied` | Run the command with `sudo` or edit the file as root using `sudo nano /etc/pam.d/system-auth`. |
+    | `pam_pwquality.so: cannot open shared object file: No such file or directory` | Install the libpwquality package with `sudo apt-get install libpwquality0` (Debian/Ubuntu) or `sudo yum install libpwquality` (RHEL/CentOS). |
 ```bash
 # /etc/pam.d/system-auth — auth section (RHEL 8+)
 auth        required      pam_faillock.so preauth silent deny=5 unlock_time=900
@@ -92,9 +98,11 @@ account     required      pam_faillock.so
 ```
 
 !!! warning "Common errors"
-    **`pam_faillock.so: Module not found`** — Install the `pam` package with `sudo yum install pam` and verify `/usr/lib64/security/pam_faillock.so` exists.
-    **`syntax error in /etc/pam.d/system-auth at line 1`** — Ensure each PAM rule uses tabs (not spaces) between columns and that there are no trailing whitespace characters.
-    **`User locked out after 5 failed login attempts`** — Reset the lockout manually with `sudo faillock --user <username> --reset` or wait 900 seconds (15 minutes) for automatic unlock.
+    | Error | Fix |
+    |---|---|
+    | `pam_faillock.so: Module not found` | Install the `pam` package with `sudo yum install pam` and verify `/usr/lib64/security/pam_faillock.so` exists. |
+    | `syntax error in /etc/pam.d/system-auth at line 1` | Ensure each PAM rule uses tabs (not spaces) between columns and that there are no trailing whitespace characters. |
+    | `User locked out after 5 failed login attempts` | Reset the lockout manually with `sudo faillock --user <username> --reset` or wait 900 seconds (15 minutes) for automatic unlock. |
 ```bash
 # View failed attempt count for a user
 faillock --user jsmith
@@ -124,11 +132,11 @@ Verify the reset:
 jsmith:
 	Failures: 0
 !!! warning "Common errors"
-    **`faillock: user jsmith does not exist`** — Verify the username is correct and the user exists in the system with `getent passwd jsmith`.
-    
-    **`faillock: Permission denied`** — Run the command with `sudo` since faillock requires root privileges to modify lockout records.
-    
-    **`faillock: Cannot open /var/run/faillock/jsmith: No such file or directory`** — This is expected if the user has never had a failed login attempt; the account is not locked.
+    | Error | Fix |
+    |---|---|
+    | `faillock: user jsmith does not exist` | Verify the username is correct and the user exists in the system with `getent passwd jsmith`. |
+    | `faillock: Permission denied` | Run the command with `sudo` since faillock requires root privileges to modify lockout records. |
+    | `faillock: Cannot open /var/run/faillock/jsmith: No such file or directory` | This is expected if the user has never had a failed login attempt; the account is not locked. |
 ```bash
 # /etc/ssh/sshd_config — recommended hardened settings
 Protocol 2
@@ -160,9 +168,11 @@ HostKeyAlgorithms ecdsa-sha2-nistp256,ssh-ed25519
 ```
 
 !!! warning "Common errors"
-    **`sshd_config: line 16: Bad configuration option: AllowGroups`** — Verify the sshd_config syntax with `sshd -T` and ensure group names don't contain spaces without proper escaping (use `AllowGroups sshusers` or quote the entire value).
-    **`Unable to negotiate with 192.168.1.50 port 22: no matching key exchange method found`** — Add legacy algorithms to KexAlgorithms if connecting from older clients, or update the client SSH version to support curve25519-sha256.
-    **`Permission denied (publickey)`** — Ensure the user's public key is in `~/.ssh/authorized_keys` with correct permissions (600 on the file, 700 on the .ssh directory) and verify the AuthorizedKeysFile path matches the actual key location.
+    | Error | Fix |
+    |---|---|
+    | `sshd_config: line 16: Bad configuration option: AllowGroups` | Verify the sshd_config syntax with `sshd -T` and ensure group names don't contain spaces without proper escaping (use `AllowGroups sshusers` or quote the entire value). |
+    | `Unable to negotiate with 192.168.1.50 port 22: no matching key exchange method found` | Add legacy algorithms to KexAlgorithms if connecting from older clients, or update the client SSH version to support curve25519-sha256. |
+    | `Permission denied (publickey)` | Ensure the user's public key is in `~/.ssh/authorized_keys` with correct permissions (600 on the file, 700 on the .ssh directory) and verify the AuthorizedKeysFile path matches the actual key location. |
 ```bash
 # Validate config and reload
 sshd -t && systemctl reload sshd
@@ -173,8 +183,10 @@ sshd -t && systemctl reload sshd
 ```
 
 !!! warning "Common errors"
-    **`sshd: no hostkeys available -- exiting.`** — Ensure SSH host keys exist in `/etc/ssh/` (typically `ssh_host_rsa_key`, `ssh_host_ed25519_key`) or regenerate them with `ssh-keygen -A`.
-    **`Job for ssh.service failed because the control process exited with error code.`** — Fix syntax errors in `/etc/ssh/sshd_config` by running `sshd -T` to display the parsed configuration and identify the problematic line.
+    | Error | Fix |
+    |---|---|
+    | `sshd: no hostkeys available -- exiting.` | Ensure SSH host keys exist in `/etc/ssh/` (typically `ssh_host_rsa_key`, `ssh_host_ed25519_key`) or regenerate them with `ssh-keygen -A`. |
+    | `Job for ssh.service failed because the control process exited with error code.` | Fix syntax errors in `/etc/ssh/sshd_config` by running `sshd -T` to display the parsed configuration and identify the problematic line. |
 ```bash
 # Generate an Ed25519 key (preferred) with passphrase
 ssh-keygen -t ed25519 -C "jsmith@corp.local" -f ~/.ssh/id_ed25519
@@ -216,8 +228,10 @@ Now try logging in with: "ssh jsmith@server01"
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify authorized_keys permissions are 600 and ~/.ssh is 700 on the remote server using `ssh jsmith@server01 "ls -la ~/.ssh"`
-    **`ssh-copy-id: command not found`** — Use the manual append method with `cat ~/.ssh/id_ed25519.pub | ssh jsmith@server01 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"` instead
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify authorized_keys permissions are 600 and ~/.ssh is 700 on the remote server using `ssh jsmith@server01 "ls -la ~/.ssh"` |
+    | `ssh-copy-id: command not found` | Use the manual append method with `cat ~/.ssh/id_ed25519.pub | ssh jsmith@server01 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"` instead |
 ```bash
 # Install required packages (RHEL)
 dnf install -y realmd sssd oddjob oddjob-mkhomedir adcli samba-common
@@ -271,8 +285,10 @@ jsmith:*:1042:1050:John Smith:/home/jsmith:/bin/bash
 ```
 
 !!! warning "Common errors"
-    **`System has not been booted with systemd as init system (PID 1). Can't operate.`** — Verify the system uses systemd with `ps -p 1` and check if running in a container that requires different service management.
-    **`id: 'jsmith': no such user`** — Confirm SSSD started successfully with `systemctl status sssd` and check `/var/log/sssd/sssd.log` for authentication backend connectivity issues.
+    | Error | Fix |
+    |---|---|
+    | `System has not been booted with systemd as init system (PID 1). Can't operate.` | Verify the system uses systemd with `ps -p 1` and check if running in a container that requires different service management. |
+    | `id: 'jsmith': no such user` | Confirm SSSD started successfully with `systemctl status sssd` and check `/var/log/sssd/sssd.log` for authentication backend connectivity issues. |
     **`getent: getent passwd jsmith: Success`** (returns nothing) — Wait 10-15 seconds for SSSD cache to populate after restart, or manually clear cache with `sss_cache -E`.
 ```bash
 # /etc/pam.d/system-auth — session section
@@ -289,9 +305,11 @@ update-rc.d: error: oddjobd Default-Start contains no runlevels, aborting.
 ```
 
 !!! warning "Common errors"
-    **`update-rc.d: error: oddjobd Default-Start contains no runlevels, aborting.`** — Install the `oddjob` package first with `apt-get install oddjob` or `yum install oddjob` depending on your distribution.
-    **`Failed to start oddjobd.service: Unit oddjobd.service not found.`** — Verify the oddjob package is installed and the service file exists at `/usr/lib/systemd/system/oddjobd.service` before enabling.
-    **`permission denied: /etc/pam.d/system-auth`** — Edit `/etc/pam.d/system-auth` with `sudo` or as root, not as a regular user.
+    | Error | Fix |
+    |---|---|
+    | `update-rc.d: error: oddjobd Default-Start contains no runlevels, aborting.` | Install the `oddjob` package first with `apt-get install oddjob` or `yum install oddjob` depending on your distribution. |
+    | `Failed to start oddjobd.service: Unit oddjobd.service not found.` | Verify the oddjob package is installed and the service file exists at `/usr/lib/systemd/system/oddjobd.service` before enabling. |
+    | `permission denied: /etc/pam.d/system-auth` | Edit `/etc/pam.d/system-auth` with `sudo` or as root, not as a regular user. |
 ```bash
 visudo
 ```
@@ -317,8 +335,10 @@ root    ALL=(ALL:ALL) ALL
 ```
 
 !!! warning "Common errors"
-    **`visudo: /etc/sudoers busy`** — Wait for other editors to close the sudoers file or kill stale editor processes with `pkill -f visudo`.
-    **`>>> /etc/sudoers: syntax error near line 42`** — Fix the syntax error (missing colon, incorrect spacing, or malformed rule) before exiting the editor; visudo will prevent you from saving invalid syntax.
+    | Error | Fix |
+    |---|---|
+    | `visudo: /etc/sudoers busy` | Wait for other editors to close the sudoers file or kill stale editor processes with `pkill -f visudo`. |
+    | `>>> /etc/sudoers: syntax error near line 42` | Fix the syntax error (missing colon, incorrect spacing, or malformed rule) before exiting the editor; visudo will prevent you from saving invalid syntax. |
 ```bash
 # /etc/sudoers — safe baseline
 Defaults    requiretty
@@ -343,9 +363,11 @@ svcansible  ALL=(ALL) NOPASSWD: /usr/bin/apt, /usr/bin/dnf
 ```
 
 !!! warning "Common errors"
-    **`sudoers:5: syntax error near line 5 of /etc/sudoers`** — Use `visudo` to edit `/etc/sudoers` instead of a text editor; it validates syntax before saving.
-    **`%linuxadmins@corp.local : command not allowed`** — Verify the AD group name matches exactly in `/etc/sssd.conf` and that SSSD is running with `systemctl status sssd`.
-    **`sudo: no password was provided`** — Add `NOPASSWD:` before the command list for the service account, or remove it if a password prompt is required.
+    | Error | Fix |
+    |---|---|
+    | `sudoers:5: syntax error near line 5 of /etc/sudoers` | Use `visudo` to edit `/etc/sudoers` instead of a text editor; it validates syntax before saving. |
+    | `%linuxadmins@corp.local : command not allowed` | Verify the AD group name matches exactly in `/etc/sssd.conf` and that SSSD is running with `systemctl status sssd`. |
+    | `sudo: no password was provided` | Add `NOPASSWD:` before the command list for the service account, or remove it if a password prompt is required. |
 ```bash
 # Add a user to the wheel group
 usermod -aG wheel jsmith
@@ -375,9 +397,11 @@ Nov 14 09:27:15 ip-172-31-45-12 sudo: jsmith : TTY=pts/0 ; PWD=/home/jsmith ; US
 ```
 
 !!! warning "Common errors"
-    **`usermod: user 'jsmith' does not exist`** — Create the user first with `useradd jsmith` before adding to the wheel group.
-    **`sudo: /var/log/sudo.log: No such file or directory`** — Enable sudo logging by adding `Defaults logfile="/var/log/sudo.log"` to `/etc/sudoers` via `visudo`.
-    **`sudo: sorry, you must have a tty to run sudo`** — Ensure the user is running the command from an interactive terminal, not a non-interactive shell or cron job.
+    | Error | Fix |
+    |---|---|
+    | `usermod: user 'jsmith' does not exist` | Create the user first with `useradd jsmith` before adding to the wheel group. |
+    | `sudo: /var/log/sudo.log: No such file or directory` | Enable sudo logging by adding `Defaults logfile="/var/log/sudo.log"` to `/etc/sudoers` via `visudo`. |
+    | `sudo: sorry, you must have a tty to run sudo` | Ensure the user is running the command from an interactive terminal, not a non-interactive shell or cron job. |
 ```bash
 # Place overrides in /etc/sudoers.d/ — avoids editing main sudoers
 cat > /etc/sudoers.d/99-linuxadmins << 'EOF'
@@ -394,9 +418,11 @@ visudo -c -f /etc/sudoers.d/99-linuxadmins
 ```
 
 !!! warning "Common errors"
-    **`/etc/sudoers.d/99-linuxadmins: syntax error near line 1`** — Review the file for typos (e.g., missing spaces around `ALL`) and re-run `visudo -c -f /etc/sudoers.d/99-linuxadmins` to validate.
-    **`chmod: changing permissions of '/etc/sudoers.d/99-linuxadmins': Operation not permitted`** — Ensure you are running as root (use `sudo` or `su -`) before executing this block.
-    **`/etc/sudoers.d/99-linuxadmins: wrong owner/permissions`** — Run `chmod 0440 /etc/sudoers.d/99-linuxadmins` and `chown root:root /etc/sudoers.d/99-linuxadmins` to fix ownership and permissions.
+    | Error | Fix |
+    |---|---|
+    | `/etc/sudoers.d/99-linuxadmins: syntax error near line 1` | Review the file for typos (e.g., missing spaces around `ALL`) and re-run `visudo -c -f /etc/sudoers.d/99-linuxadmins` to validate. |
+    | `chmod: changing permissions of '/etc/sudoers.d/99-linuxadmins': Operation not permitted` | Ensure you are running as root (use `sudo` or `su -`) before executing this block. |
+    | `/etc/sudoers.d/99-linuxadmins: wrong owner/permissions` | Run `chmod 0440 /etc/sudoers.d/99-linuxadmins` and `chown root:root /etc/sudoers.d/99-linuxadmins` to fix ownership and permissions. |
 ```bash
 # Install
 dnf install -y google-authenticator   # RHEL
@@ -424,9 +450,11 @@ Do you want to enable rate-limiting? (y/n) y
 ```
 
 !!! warning "Common errors"
-    **`google-authenticator: command not found`** — Install the package using `dnf install -y google-authenticator` on RHEL or `apt install -y libpam-google-authenticator` on Ubuntu.
-    **`Permission denied: /home/user/.google_authenticator`** — Run the command as the user who will authenticate (not root), or ensure the home directory is writable.
-    **`Failed to update /home/user/.google_authenticator`** — Verify the user has write permissions to their home directory with `chmod 700 ~/.google_authenticator`.
+    | Error | Fix |
+    |---|---|
+    | `google-authenticator: command not found` | Install the package using `dnf install -y google-authenticator` on RHEL or `apt install -y libpam-google-authenticator` on Ubuntu. |
+    | `Permission denied: /home/user/.google_authenticator` | Run the command as the user who will authenticate (not root), or ensure the home directory is writable. |
+    | `Failed to update /home/user/.google_authenticator` | Verify the user has write permissions to their home directory with `chmod 700 ~/.google_authenticator`. |
 ```bash
 # /etc/pam.d/sshd — add TOTP requirement
 auth    required    pam_google_authenticator.so nullok
@@ -437,8 +465,10 @@ auth    required    pam_google_authenticator.so nullok
 ```
 
 !!! warning "Common errors"
-    **`Module pam_google_authenticator.so not found`** — Install the libpam-google-authenticator package with `apt-get install libpam-google-authenticator` (Debian/Ubuntu) or `yum install google-authenticator` (RHEL/CentOS).
-    **`sshd[1234]: fatal: /etc/pam.d/sshd: line 5: unknown module type: pam_google_authenticator.so`** — Verify the module path is correct and the PAM library is installed in `/lib/x86_64-linux-gnu/security/` or `/lib64/security/`, then restart sshd with `systemctl restart sshd`.
+    | Error | Fix |
+    |---|---|
+    | `Module pam_google_authenticator.so not found` | Install the libpam-google-authenticator package with `apt-get install libpam-google-authenticator` (Debian/Ubuntu) or `yum install google-authenticator` (RHEL/CentOS). |
+    | `sshd[1234]: fatal: /etc/pam.d/sshd: line 5: unknown module type: pam_google_authenticator.so` | Verify the module path is correct and the PAM library is installed in `/lib/x86_64-linux-gnu/security/` or `/lib64/security/`, then restart sshd with `systemctl restart sshd`. |
 ```bash
 # /etc/ssh/sshd_config — require both key and TOTP
 AuthenticationMethods publickey,keyboard-interactive
@@ -450,8 +480,10 @@ ChallengeResponseAuthentication yes
 ```
 
 !!! warning "Common errors"
-    **`sshd[12847]: error: Unsupported AuthenticationMethods 'publickey,keyboard-interactive'`** — Ensure `ChallengeResponseAuthentication yes` is set before `AuthenticationMethods` and restart sshd with `systemctl restart sshd`.
-    **`sshd[12847]: fatal: /etc/ssh/sshd_config line 45: Unsupported authentication method "keyboard-interactive"`** — Install and configure a PAM module like `libpam-google-authenticator` or `libpam-oath` to support keyboard-interactive authentication.
+    | Error | Fix |
+    |---|---|
+    | `sshd[12847]: error: Unsupported AuthenticationMethods 'publickey,keyboard-interactive'` | Ensure `ChallengeResponseAuthentication yes` is set before `AuthenticationMethods` and restart sshd with `systemctl restart sshd`. |
+    | `sshd[12847]: fatal: /etc/ssh/sshd_config line 45: Unsupported authentication method "keyboard-interactive"` | Install and configure a PAM module like `libpam-google-authenticator` or `libpam-oath` to support keyboard-interactive authentication. |
 ```bash
 systemctl reload sshd
 ```
@@ -461,8 +493,10 @@ systemctl reload sshd
 ```
 
 !!! warning "Common errors"
-    **`Job for ssh.service/sshd.service failed because the control process exited with error code.`** — Run `sshd -t` to validate the SSH configuration file for syntax errors before reloading.
-    **`Failed to reload sshd.service: Unit sshd.service not loaded.`** — Verify the SSH service name with `systemctl list-unit-files | grep ssh` and use the correct service name (may be `ssh.service` on Debian/Ubuntu or `sshd.service` on RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `Job for ssh.service/sshd.service failed because the control process exited with error code.` | Run `sshd -t` to validate the SSH configuration file for syntax errors before reloading. |
+    | `Failed to reload sshd.service: Unit sshd.service not loaded.` | Verify the SSH service name with `systemctl list-unit-files | grep ssh` and use the correct service name (may be `ssh.service` on Debian/Ubuntu or `sshd.service` on RHEL/CentOS). |
 ```bash
 # /etc/pam.d/sshd — Duo PAM integration
 auth    sufficient    /lib64/security/pam_duo.so
@@ -480,9 +514,11 @@ failmode = safe    # 'safe' allows login if Duo is unreachable; 'secure' blocks
 ```
 
 !!! warning "Common errors"
-    **`error: [/lib64/security/pam_duo.so] cannot open shared object file: No such file or directory`** — Install the Duo Unix package with `apt-get install duo-unix` (Debian/Ubuntu) or `yum install duo_unix` (RHEL/CentOS).
-    **`error: Failed to connect to api-XXXXXXXX.duosecurity.com: Name or service not known`** — Verify the Duo host value matches your account's API hostname and that DNS resolution works with `nslookup api-XXXXXXXX.duosecurity.com`.
-    **`error: Invalid ikey or skey in /etc/duo/pam_duo.conf`** — Confirm the integration key and secret key are copied correctly from the Duo Admin Panel without extra whitespace or truncation.
+    | Error | Fix |
+    |---|---|
+    | `error: [/lib64/security/pam_duo.so] cannot open shared object file: No such file or directory` | Install the Duo Unix package with `apt-get install duo-unix` (Debian/Ubuntu) or `yum install duo_unix` (RHEL/CentOS). |
+    | `error: Failed to connect to api-XXXXXXXX.duosecurity.com: Name or service not known` | Verify the Duo host value matches your account's API hostname and that DNS resolution works with `nslookup api-XXXXXXXX.duosecurity.com`. |
+    | `error: Invalid ikey or skey in /etc/duo/pam_duo.conf` | Confirm the integration key and secret key are copied correctly from the Duo Admin Panel without extra whitespace or truncation. |
 ```bash
 # Configure SSH to accept certificate-signed keys
 # /etc/ssh/sshd_config
@@ -506,9 +542,11 @@ jsmith@server01:~$
 ```
 
 !!! warning "Common errors"
-    **`sign the key: invalid format`** — Ensure the CA private key path is correct and the key file is in OpenSSH format (not PEM); convert with `ssh-keygen -p -N "" -m pem -f ca_key` if needed.
-    **`Permission denied (publickey,gssapi-keyex,gssapi-with-mic)`** — Verify that `/etc/ssh/ca.pub` is readable on the server and contains the correct CA public key with no extra whitespace.
-    **`Could not open a connection to your authentication agent`** — Start the SSH agent with `eval $(ssh-agent -s)` and add the key with `ssh-add ~/.ssh/id_ed25519`.
+    | Error | Fix |
+    |---|---|
+    | `sign the key: invalid format` | Ensure the CA private key path is correct and the key file is in OpenSSH format (not PEM); convert with `ssh-keygen -p -N "" -m pem -f ca_key` if needed. |
+    | `Permission denied (publickey,gssapi-keyex,gssapi-with-mic)` | Verify that `/etc/ssh/ca.pub` is readable on the server and contains the correct CA public key with no extra whitespace. |
+    | `Could not open a connection to your authentication agent` | Start the SSH agent with `eval $(ssh-agent -s)` and add the key with `ssh-add ~/.ssh/id_ed25519`. |
 ```bash
 # Failed SSH logins
 journalctl _SYSTEMD_UNIT=sshd.service | grep "Failed password\|Invalid user" | tail -30

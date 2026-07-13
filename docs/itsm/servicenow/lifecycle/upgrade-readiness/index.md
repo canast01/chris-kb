@@ -92,9 +92,11 @@ Address: 192.168.1.45
 ```
 
 !!! warning "Common errors"
-    **`ping: <gateway>: Name or service not known`** — Replace `<gateway>` with the actual IP address or hostname of your gateway (e.g., `10.0.1.1`).
-    **`chronyc: command not found`** — Install chrony with `sudo apt install chrony` or `sudo yum install chrony` depending on your distribution.
-    **`** server can't find <hostname>.example.com: NXDOMAIN`** — Verify the hostname is correct and that DNS is properly configured; check `/etc/resolv.conf` for valid nameserver entries.
+    | Error | Fix |
+    |---|---|
+    | `ping: <gateway>: Name or service not known` | Replace `<gateway>` with the actual IP address or hostname of your gateway (e.g., `10.0.1.1`). |
+    | `chronyc: command not found` | Install chrony with `sudo apt install chrony` or `sudo yum install chrony` depending on your distribution. |
+    | `** server can't find <hostname>.example.com: NXDOMAIN` | Verify the hostname is correct and that DNS is properly configured; check `/etc/resolv.conf` for valid nameserver entries. |
 ## 5. Vendor Compatibility Matrix
 
 ```bash
@@ -117,8 +119,10 @@ Firmware Version: 2.11.2
 ```
 
 !!! warning "Common errors"
-    **`esxcli: Unknown option or subcommand 'software vib list' under 'software'`** — Verify ESXi version supports the command; use `esxcli software vib list --help` to confirm syntax.
-    **`Unable to retrieve firmware information: Connection refused`** — Ensure you are connected to the ESXi host via SSH or vSphere Client with proper credentials.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: Unknown option or subcommand 'software vib list' under 'software'` | Verify ESXi version supports the command; use `esxcli software vib list --help` to confirm syntax. |
+    | `Unable to retrieve firmware information: Connection refused` | Ensure you are connected to the ESXi host via SSH or vSphere Client with proper credentials. |
 | Dependency | Current Version | Compatible With Upgrade | Checked |
 |---|---|---|---|
 | Hypervisor version | | | ☐ |
@@ -151,8 +155,10 @@ base-golden-image-v8.2                  1/10/2025 4:47:22 PM 0
 ```
 
 !!! warning "Common errors"
-    **`New-Snapshot : The operation is not valid for the current state of the object.`** — Ensure the VM is powered on and not already in a snapshot operation; check vCenter for any pending tasks.
-    **`Get-VM : The object 'HOSTNAME' was not found.`** — Verify the exact VM name matches vCenter inventory and that you have sufficient vSphere permissions.
+    | Error | Fix |
+    |---|---|
+    | `New-Snapshot : The operation is not valid for the current state of the object.` | Ensure the VM is powered on and not already in a snapshot operation; check vCenter for any pending tasks. |
+    | `Get-VM : The object 'HOSTNAME' was not found.` | Verify the exact VM name matches vCenter inventory and that you have sufficient vSphere permissions. |
 !!! note "Snapshot retention"
     Remove pre-upgrade snapshots within 48 hours of successful completion. Stale snapshots degrade VM performance and consume datastore space.
 

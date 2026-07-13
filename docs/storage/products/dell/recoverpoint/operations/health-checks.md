@@ -111,9 +111,11 @@ JRN-CG-NAS-DR     CG-NETAPP-BACKUP  67%     33%     OK
 ```
 
 !!! warning "Common errors"
-    **`journals: command not found`** — Verify the RecoverPoint CLI is installed and the PATH includes the RecoverPoint bin directory, or source the environment setup script.
-    **`Error: Unable to connect to RecoverPoint cluster at 192.168.1.50`** — Confirm network connectivity to the RecoverPoint appliance and that credentials are configured via `rp_login` or environment variables.
-    **`Journal JRN-CG-ORA-DR status: CRITICAL (Used% exceeds 95%)`** — Increase journal volume capacity or reduce the consistency group replication window to prevent write failures.
+    | Error | Fix |
+    |---|---|
+    | `journals: command not found` | Verify the RecoverPoint CLI is installed and the PATH includes the RecoverPoint bin directory, or source the environment setup script. |
+    | `Error: Unable to connect to RecoverPoint cluster at 192.168.1.50` | Confirm network connectivity to the RecoverPoint appliance and that credentials are configured via `rp_login` or environment variables. |
+    | `Journal JRN-CG-ORA-DR status: CRITICAL (Used% exceeds 95%)` | Increase journal volume capacity or reduce the consistency group replication window to prevent write failures. |
 ```bash
 # Confirm splitter health (for RP4VM software splitters on ESXi)
 esxcli software vib list | grep -i rp
@@ -166,9 +168,11 @@ Group: prod-to-dr-03 | Status: CONSISTENT | RPO: 0s | Lag: 1ms
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname <dr-rpa-cluster-ip>: Name or service not known`** — Replace `<dr-rpa-cluster-ip>` with the actual DR RPA cluster IP address or hostname.
-    **`Permission denied (publickey,password)`** — Ensure the admin account credentials are correct and SSH key-based authentication is configured, or use `ssh -u admin@<dr-rpa-cluster-ip>` with password prompt.
-    **`boxmgmt: command not found`** — Source the RecoverPoint environment setup script (typically `. /opt/rp/bin/rp_env.sh`) or ensure the RPA management tools are in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname <dr-rpa-cluster-ip>: Name or service not known` | Replace `<dr-rpa-cluster-ip>` with the actual DR RPA cluster IP address or hostname. |
+    | `Permission denied (publickey,password)` | Ensure the admin account credentials are correct and SSH key-based authentication is configured, or use `ssh -u admin@<dr-rpa-cluster-ip>` with password prompt. |
+    | `boxmgmt: command not found` | Source the RecoverPoint environment setup script (typically `. /opt/rp/bin/rp_env.sh`) or ensure the RPA management tools are in your PATH. |
 ---
 
 ## Verify

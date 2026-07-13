@@ -125,8 +125,10 @@ Port-Channel Summary:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact interface name with `show interface brief` and use the correct format (e.g., `fc1/1` not `Fc1/1`).
-    **`% VSAN does not exist`** — Confirm the VSAN ID exists with `show vsan` before querying its membership or zones.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact interface name with `show interface brief` and use the correct format (e.g., `fc1/1` not `Fc1/1`). |
+    | `% VSAN does not exist` | Confirm the VSAN ID exists with `show vsan` before querying its membership or zones. |
 ```bash
 show version
 show module
@@ -208,7 +210,9 @@ CPU Usage: 12%
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct CLI mode
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct CLI mode |
 ```bash
 show version
 show running-config
@@ -266,8 +270,10 @@ Power Supply 2: OK
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch is in the correct mode (enable mode required); use `enable` if needed.
-    **`% Incomplete command`** — Add the required parameter (e.g., `show version` not `show ver`); use tab completion to verify syntax.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch is in the correct mode (enable mode required); use `enable` if needed. |
+    | `% Incomplete command` | Add the required parameter (e.g., `show version` not `show ver`); use tab completion to verify syntax. |
 ---
 
 ## Verify

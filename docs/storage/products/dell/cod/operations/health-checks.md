@@ -87,8 +87,10 @@ SRP_1
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI Server is not running`** — Start the daemon with `stordaemon start storapid` and retry.
-    **`<sid>: Not found`** — Verify the Symmetrix ID with `symcfg list` and use the 12-digit format without formatting characters.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI Server is not running` | Start the daemon with `stordaemon start storapid` and retry. |
+    | `<sid>: Not found` | Verify the Symmetrix ID with `symcfg list` and use the 12-digit format without formatting characters. |
 
 ---
 

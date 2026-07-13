@@ -26,8 +26,10 @@ issuer=CN = vrops-prod-01.example.local, O = VMware, C = US
 ```
 
 !!! warning "Common errors"
-    **`unable to connect to vrops-prod-01.example.local:443`** — Verify the hostname is correct, the vROps appliance is running, and port 443 is accessible from your current network location.
-    **`error:0900006e:PEM routines:PEM_read_bio:no start line`** — Ensure the openssl s_client connection succeeded; if the host is unreachable, the pipe receives no certificate data and x509 parsing fails.
+    | Error | Fix |
+    |---|---|
+    | `unable to connect to vrops-prod-01.example.local:443` | Verify the hostname is correct, the vROps appliance is running, and port 443 is accessible from your current network location. |
+    | `error:0900006e:PEM routines:PEM_read_bio:no start line` | Ensure the openssl s_client connection succeeded; if the host is unreachable, the pipe receives no certificate data and x509 parsing fails. |
 ```bash
 # Limit SSH access to the management network
 # Edit /etc/hosts.allow on the Aria Operations appliance
@@ -48,9 +50,11 @@ systemctl restart sshd
 ```
 
 !!! warning "Common errors"
-    **`sed: can't read /etc/ssh/sshd_config: No such file or directory`** — Use a text editor like `sed -i 's/^PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config` or edit the file directly with `vi /etc/ssh/sshd_config`.
-    **`Job for sshd.service failed because the control process exited with error code.`** — Validate the sshd_config syntax with `sshd -t` before restarting to catch configuration errors.
-    **`Permission denied (publickey,password).`** — Ensure you have SSH key-based authentication configured and copied to `~/.ssh/authorized_keys` before restricting root password login, or you will lock yourself out.
+    | Error | Fix |
+    |---|---|
+    | `sed: can't read /etc/ssh/sshd_config: No such file or directory` | Use a text editor like `sed -i 's/^PermitRootLogin.*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config` or edit the file directly with `vi /etc/ssh/sshd_config`. |
+    | `Job for sshd.service failed because the control process exited with error code.` | Validate the sshd_config syntax with `sshd -t` before restarting to catch configuration errors. |
+    | `Permission denied (publickey,password).` | Ensure you have SSH key-based authentication configured and copied to `~/.ssh/authorized_keys` before restricting root password login, or you will lock yourself out. |
 ```bash
 # Configure syslog forwarding from Aria Operations appliance
 cat >> /etc/rsyslog.d/vrops-remote.conf << 'EOF'
@@ -65,8 +69,10 @@ systemctl restart rsyslog
 ```
 
 !!! warning "Common errors"
-    **`Job for rsyslog.service failed because the control process exited with error code.`** — Verify the rsyslog configuration syntax with `rsyslog -N1` before restarting, and check `/var/log/messages` for parsing errors in the appended configuration.
-    **`Name or service not known`** — Ensure the syslog server hostname `vrli-prod-01.example.local` is resolvable by testing with `nslookup vrli-prod-01.example.local` or updating `/etc/hosts` if DNS is unavailable.
+    | Error | Fix |
+    |---|---|
+    | `Job for rsyslog.service failed because the control process exited with error code.` | Verify the rsyslog configuration syntax with `rsyslog -N1` before restarting, and check `/var/log/messages` for parsing errors in the appended configuration. |
+    | `Name or service not known` | Ensure the syslog server hostname `vrli-prod-01.example.local` is resolvable by testing with `nslookup vrli-prod-01.example.local` or updating `/etc/hosts` if DNS is unavailable. |
 ```bash
 # View authentication and admin action logs on the appliance
 tail -f /data/vcops/log/casa.log | grep -i "login\|logout\|admin\|role"
@@ -85,9 +91,11 @@ tail -f /data/vcops/log/casa.log | grep -i "login\|logout\|admin\|role"
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/data/vcops/log/casa.log' for reading: No such file or directory`** — Verify the Aria Operations appliance is fully deployed and the log directory exists; check mount points with `df -h /data`.
-    **`tail: inotify resources exhausted`** — Increase the system's inotify watch limit by running `echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p`.
-    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the casa.log file with `sudo chmod 644 /data/vcops/log/casa.log`.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/data/vcops/log/casa.log' for reading: No such file or directory` | Verify the Aria Operations appliance is fully deployed and the log directory exists; check mount points with `df -h /data`. |
+    | `tail: inotify resources exhausted` | Increase the system's inotify watch limit by running `echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p`. |
+    | `grep: (standard input): Permission denied` | Run the command with `sudo` or ensure your user has read permissions on the casa.log file with `sudo chmod 644 /data/vcops/log/casa.log`. |
 ## Before you begin
 
 - **Access:** vCenter Administrator role

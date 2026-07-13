@@ -214,9 +214,11 @@ curl -s -X POST https://tpp.corp.example.com/vedauth/revoke/token \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands or configure proper CA certificates in your environment.
-    **`jq: parse error: Invalid JSON at line 1`** — Verify the OAuth endpoint is accessible and the credentials are correct; check TPP service logs for authentication failures.
-    **`curl: (7) Failed to connect to tpp.corp.example.com port 443: Connection refused`** — Confirm the TPP hostname resolves and the HTTPS endpoint is listening; verify network connectivity and firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands or configure proper CA certificates in your environment. |
+    | `jq: parse error: Invalid JSON at line 1` | Verify the OAuth endpoint is accessible and the credentials are correct; check TPP service logs for authentication failures. |
+    | `curl: (7) Failed to connect to tpp.corp.example.com port 443: Connection refused` | Confirm the TPP hostname resolves and the HTTPS endpoint is listening; verify network connectivity and firewall rules. |
 ---
 
 ## Certificate and Key Backup
@@ -382,9 +384,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands or configure proper CA certificates in your environment.
-    **`jq: parse error: Cannot index number with string "access_token"`** — Verify the OAuth endpoint URL and credentials are correct; the API may be returning an error object instead of a token.
-    **`curl: (401) Unauthorized`** — Ensure the Bearer token is valid and not expired; re-authenticate and verify the token variable is populated with `echo $TOKEN`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands or configure proper CA certificates in your environment. |
+    | `jq: parse error: Cannot index number with string "access_token"` | Verify the OAuth endpoint URL and credentials are correct; the API may be returning an error object instead of a token. |
+    | `curl: (401) Unauthorized` | Ensure the Bearer token is valid and not expired; re-authenticate and verify the token variable is populated with `echo $TOKEN`. |
 ---
 
 ## Backup Schedule Reference

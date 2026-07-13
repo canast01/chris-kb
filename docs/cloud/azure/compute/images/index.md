@@ -127,9 +127,11 @@ It is recommended to use an image alias instead of a full URN for better maintai
 ```
 
 !!! warning "Common errors"
-    **`ERROR: unrecognized arguments: --all`** — Remove the `--all` flag; use `--query "[0]"` to get the latest version instead.
-    **`ERROR: The resource group '<rg>' could not be found.`** — Replace `<rg>` with an actual resource group name or create it first with `az group create --name <rg> --location eastus`.
-    **`ERROR: The image 'Ubuntu2204' could not be found.`** — Use the full URN format `Canonical:0001-com-ubuntu-server-jammy:22_04-lts-gen2:latest` or verify the image alias exists in your region.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: unrecognized arguments: --all` | Remove the `--all` flag; use `--query "[0]"` to get the latest version instead. |
+    | `ERROR: The resource group '<rg>' could not be found.` | Replace `<rg>` with an actual resource group name or create it first with `az group create --name <rg> --location eastus`. |
+    | `ERROR: The image 'Ubuntu2204' could not be found.` | Use the full URN format `Canonical:0001-com-ubuntu-server-jammy:22_04-lts-gen2:latest` or verify the image alias exists in your region. |
 Common image aliases:
 
 | Alias | Full URN |
@@ -218,9 +220,11 @@ prod-rg          debian-11-custom           eastus      Succeeded
 ```
 
 !!! warning "Common errors"
-    **`The source VM must be generalized before creating an image.`** — Run `az vm generalize` on the source VM before executing the image create command.
-    **`The image resource ID is invalid or the image does not exist in the specified resource group.`** — Verify the image resource ID with `az image list --resource-group <rg>` and ensure you are using the correct subscription and resource group.
-    **`Run command failed with exit code 1. Error: sudo: command not found`** — Ensure the VM has the Azure VM Agent installed and the waagent command is available; use a supported Linux distribution image as the base.
+    | Error | Fix |
+    |---|---|
+    | `The source VM must be generalized before creating an image.` | Run `az vm generalize` on the source VM before executing the image create command. |
+    | `The image resource ID is invalid or the image does not exist in the specified resource group.` | Verify the image resource ID with `az image list --resource-group <rg>` and ensure you are using the correct subscription and resource group. |
+    | `Run command failed with exit code 1. Error: sudo: command not found` | Ensure the VM has the Azure VM Agent installed and the waagent command is available; use a supported Linux distribution image as the base. |
 ---
 
 ## Azure Compute Gallery (ACG)
@@ -292,9 +296,11 @@ az sig image-version create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure it exists in your subscription.
-    **`InvalidManagedImageId`** — Confirm the managed image resource ID is correct by running `az image list --resource-group <rg> --query "[].id"`.
-    **`GalleryImageVersionAlreadyExists`** — Use a different version number (e.g., 1.0.1) or delete the existing version with `az sig image-version delete`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure it exists in your subscription. |
+    | `InvalidManagedImageId` | Confirm the managed image resource ID is correct by running `az image list --resource-group <rg> --query "[].id"`. |
+    | `GalleryImageVersionAlreadyExists` | Use a different version number (e.g., 1.0.1) or delete the existing version with `az sig image-version delete`. |
 ---
 
 ## Image Versioning and Replication
@@ -355,9 +361,11 @@ VM creation in progress... (Elapsed Time: 45s)
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The resource '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/galleries/<gallery>/images/<image-def>/versions/1.0.0' could not be found.`** — Verify the subscription ID, resource group, gallery name, image definition, and version number are correct and exist in your subscription.
-    **`InvalidParameter : The value of parameter 'image' is invalid.`** — Ensure the image URI follows the exact format `/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/galleries/<gallery>/images/<image-def>/versions/<version>` with no extra spaces or slashes.
-    **`AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/galleries/images/versions/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/galleries/<gallery>'.`** — Add the Contributor or Custom Role with `Microsoft.Compute/galleries/images/versions/*` permissions to your user or service principal.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The resource '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/galleries/<gallery>/images/<image-def>/versions/1.0.0' could not be found.` | Verify the subscription ID, resource group, gallery name, image definition, and version number are correct and exist in your subscription. |
+    | `InvalidParameter : The value of parameter 'image' is invalid.` | Ensure the image URI follows the exact format `/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/galleries/<gallery>/images/<image-def>/versions/<version>` with no extra spaces or slashes. |
+    | `AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/galleries/images/versions/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/galleries/<gallery>'.` | Add the Contributor or Custom Role with `Microsoft.Compute/galleries/images/versions/*` permissions to your user or service principal. |
 ---
 
 ## Sharing Gallery Images
@@ -387,5 +395,7 @@ marketplace-gallery-sync      rg-shared-resources   eastus
 ```
 
 !!! warning "Common errors"
-    **`Principal <principal-id> does not exist in the directory`** — Verify the principal ID is correct and exists in your Azure AD tenant using `az ad sp show --id <principal-id>`.
-    **`The scope provided is invalid`** — Ensure the subscription ID, resource group name, and gallery name are correct by running `az sig list --query "[].id"` to get valid scope paths.
+    | Error | Fix |
+    |---|---|
+    | `Principal <principal-id> does not exist in the directory` | Verify the principal ID is correct and exists in your Azure AD tenant using `az ad sp show --id <principal-id>`. |
+    | `The scope provided is invalid` | Ensure the subscription ID, resource group name, and gallery name are correct by running `az sig list --query "[].id"` to get valid scope paths. |

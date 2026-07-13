@@ -54,9 +54,11 @@ support-proxy 192.168.100.50    8080    true
 ```
 
 !!! warning "Common errors"
-    **`Error: NTP server unreachable`** — Verify NTP server IP is correct and firewall allows UDP port 123 outbound from the array.
-    **`Error: Phone home disabled or no contact in 30+ days`** — Enable phone home with `purearray set --phone-home=true` and verify outbound HTTPS (port 443) connectivity to Pure's cloud.
-    **`Error: proxy set: invalid host address`** — Ensure the proxy IP is valid and reachable; use `ping <proxy-ip>` to test connectivity first.
+    | Error | Fix |
+    |---|---|
+    | `Error: NTP server unreachable` | Verify NTP server IP is correct and firewall allows UDP port 123 outbound from the array. |
+    | `Error: Phone home disabled or no contact in 30+ days` | Enable phone home with `purearray set --phone-home=true` and verify outbound HTTPS (port 443) connectivity to Pure's cloud. |
+    | `Error: proxy set: invalid host address` | Ensure the proxy IP is valid and reachable; use `ping <proxy-ip>` to test connectivity first. |
 ## Health Monitoring Integration
 
 Pure1 can send health events to external systems:

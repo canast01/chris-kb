@@ -98,8 +98,10 @@ Connection to 192.168.1.50 5696 port [tcp/*] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 192.168.1.50 port 5696 (tcp) failed: Connection refused`** — Verify the KMS service is running on the target server with `systemctl status kmsd` or equivalent, and confirm the firewall allows inbound traffic on port 5696.
-    **`nc: getaddrinfo failed for <kms-server-ip>: Name or service not known`** — Replace `<kms-server-ip>` with a valid IP address or resolvable hostname; verify DNS resolution with `nslookup <kms-server-ip>` from the vCenter appliance.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 192.168.1.50 port 5696 (tcp) failed: Connection refused` | Verify the KMS service is running on the target server with `systemctl status kmsd` or equivalent, and confirm the firewall allows inbound traffic on port 5696. |
+    | `nc: getaddrinfo failed for <kms-server-ip>: Name or service not known` | Replace `<kms-server-ip>` with a valid IP address or resolvable hostname; verify DNS resolution with `nslookup <kms-server-ip>` from the vCenter appliance. |
 Expected: connection succeeds on TCP 5696 (KMIP standard port). Import the KMS TLS certificate into vCenter to establish trust. If the KMS is clustered, add both nodes — vCenter uses the first available.
 
 ---
@@ -132,8 +134,10 @@ Last resync activity: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace path: vsan debug resync`** — Verify VSAN is installed and enabled on the ESXi host with `esxcli vsan cluster get`.
-    **`Error: Permission denied`** — Run the command with root privileges or ensure your user account has VSAN administrator permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace path: vsan debug resync` | Verify VSAN is installed and enabled on the ESXi host with `esxcli vsan cluster get`. |
+    | `Error: Permission denied` | Run the command with root privileges or ensure your user account has VSAN administrator permissions. |
 | Check | Requirement |
 |---|---|
 | vSAN Skyline Health | All tests green — no warnings or errors |
@@ -176,9 +180,11 @@ Last Updated: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the host. Error message: Connection refused`** — Ensure the ESXi host is reachable and SSH/VSAN service is running; verify network connectivity and firewall rules.
-    **`Error: VSAN is not enabled on this host`** — Enable VSAN on the cluster through vCenter or use `esxcli vsan cluster get` to verify VSAN is active.
-    **`Error: Permission denied`** — Run the command with appropriate privileges or ensure your user account has VSAN administrator permissions on the host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the host. Error message: Connection refused` | Ensure the ESXi host is reachable and SSH/VSAN service is running; verify network connectivity and firewall rules. |
+    | `Error: VSAN is not enabled on this host` | Enable VSAN on the cluster through vCenter or use `esxcli vsan cluster get` to verify VSAN is active. |
+    | `Error: Permission denied` | Run the command with appropriate privileges or ensure your user account has VSAN administrator permissions on the host. |
 Also monitor: vCenter → **vSAN** → **Monitor** → **Resyncing Objects** (updates every few minutes).
 
 Reference rebuild times:

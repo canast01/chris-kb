@@ -104,9 +104,11 @@ Retention lock configuration applied successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: mtree /data/col1/mtree-veeam-prod does not exist`** — Verify the mtree path exists with `mtree show` and confirm the collection name and mtree name are correct.
-    **`Error: Retention lock is already enabled in compliance mode on this mtree`** — Compliance mode locks cannot be changed to governance mode; create a new mtree or contact support to reset the lock state.
-    **`Error: min-retention-period cannot exceed max-retention-period`** — Ensure the minimum retention period (30days) is less than the maximum retention period (7years).
+    | Error | Fix |
+    |---|---|
+    | `Error: mtree /data/col1/mtree-veeam-prod does not exist` | Verify the mtree path exists with `mtree show` and confirm the collection name and mtree name are correct. |
+    | `Error: Retention lock is already enabled in compliance mode on this mtree` | Compliance mode locks cannot be changed to governance mode; create a new mtree or contact support to reset the lock state. |
+    | `Error: min-retention-period cannot exceed max-retention-period` | Ensure the minimum retention period (30days) is less than the maximum retention period (7years). |
 ## DD Boost User Naming
 
 Pattern: `ddboost-<backup-tool>`

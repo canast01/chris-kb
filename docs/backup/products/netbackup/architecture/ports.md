@@ -167,8 +167,10 @@ backup-client-07            backup-client-07       ACTIVE
 ```
 
 !!! warning "Common errors"
-    **`Connection to <primary-server> 1556 port [tcp/*] failed: Connection refused`** — Verify VNETD daemon is running on the primary server with `bpps -a` and restart NetBackup services if needed.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if using a valid certificate, or ensure the certificate is trusted on the admin workstation.
+    | Error | Fix |
+    |---|---|
+    | `Connection to <primary-server> 1556 port [tcp/*] failed: Connection refused` | Verify VNETD daemon is running on the primary server with `bpps -a` and restart NetBackup services if needed. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag if using a valid certificate, or ensure the certificate is trusted on the admin workstation. |
     **`Client Name                 Host Name              Status`** (no client listed) — Confirm the client hostname matches exactly in NetBackup configuration and that the client has successfully registered with `bpclntcmd -hn`.
 ---
 

@@ -56,9 +56,11 @@ User: user@corp.local
 ```
 
 !!! warning "Common errors"
-    **`error: x509: certificate signed by unknown authority`** — Remove the `--insecure-skip-tls-verify` flag and ensure the supervisor cluster's CA certificate is trusted on your system, or add the CA to your system's certificate store.
-    **`error: the server has asked for the client to provide credentials, but none were provided`** — Verify your username format matches your vSphere SSO domain (typically `user@domain.local`) and that your password is correct.
-    **`error: unable to connect to the server: dial tcp: lookup supervisor.example.local: no such host`** — Confirm the supervisor cluster hostname is resolvable and correct, and verify network connectivity to the vSphere environment.
+    | Error | Fix |
+    |---|---|
+    | `error: x509: certificate signed by unknown authority` | Remove the `--insecure-skip-tls-verify` flag and ensure the supervisor cluster's CA certificate is trusted on your system, or add the CA to your system's certificate store. |
+    | `error: the server has asked for the client to provide credentials, but none were provided` | Verify your username format matches your vSphere SSO domain (typically `user@domain.local`) and that your password is correct. |
+    | `error: unable to connect to the server: dial tcp: lookup supervisor.example.local: no such host` | Confirm the supervisor cluster hostname is resolvable and correct, and verify network connectivity to the vSphere environment. |
 The token expires after a configured TTL — users must re-login. Use `--insecure-skip-tls-verify` only during initial setup; trust the CA cert properly in production.
 
 ---
@@ -90,9 +92,11 @@ You have access to the cluster. Try 'kubectl get nodes' to verify connectivity.
 ```
 
 !!! warning "Common errors"
-    **`error: the server has asked for the client to provide credentials`** — Ensure your vSphere SSO credentials are correct and your user account has permissions to access the Supervisor Cluster.
-    **`error: unable to reach the Supervisor Cluster at https://supervisor.example.local`** — Verify the Supervisor Cluster hostname/IP is reachable and correct, and that your network allows HTTPS traffic to port 443.
-    **`error: Tanzu Kubernetes cluster 'my-cluster' not found in namespace 'my-namespace'`** — Confirm the cluster name and namespace exist by running `kubectl get tanzukubernetesclusters -n my-namespace` on the Supervisor Cluster.
+    | Error | Fix |
+    |---|---|
+    | `error: the server has asked for the client to provide credentials` | Ensure your vSphere SSO credentials are correct and your user account has permissions to access the Supervisor Cluster. |
+    | `error: unable to reach the Supervisor Cluster at https://supervisor.example.local` | Verify the Supervisor Cluster hostname/IP is reachable and correct, and that your network allows HTTPS traffic to port 443. |
+    | `error: Tanzu Kubernetes cluster 'my-cluster' not found in namespace 'my-namespace'` | Confirm the cluster name and namespace exist by running `kubectl get tanzukubernetesclusters -n my-namespace` on the Supervisor Cluster. |
 Configure Pinniped's upstream identity provider (LDAP example):
 
 ```yaml
@@ -146,9 +150,11 @@ Login Succeeded
 ```
 
 !!! warning "Common errors"
-    **`Error response from daemon: Get "https://harbor.example.local/v2/": dial tcp: lookup harbor.example.local on 127.0.0.11:53: no such host`** — Verify Harbor hostname resolves in DNS or add an entry to `/etc/hosts` pointing to the Harbor registry IP.
-    **`Error response from daemon: Get "https://harbor.example.local/v2/": x509: certificate signed by unknown authority`** — Add Harbor's self-signed certificate to your Docker daemon's trusted CA store or configure insecure registries in `/etc/docker/daemon.json`.
-    **`LDAP Error: Connection refused`** — Confirm the LDAP server is reachable on port 389 from the Harbor pod and that the firewall allows outbound LDAP traffic.
+    | Error | Fix |
+    |---|---|
+    | `Error response from daemon: Get "https://harbor.example.local/v2/": dial tcp: lookup harbor.example.local on 127.0.0.11:53: no such host` | Verify Harbor hostname resolves in DNS or add an entry to `/etc/hosts` pointing to the Harbor registry IP. |
+    | `Error response from daemon: Get "https://harbor.example.local/v2/": x509: certificate signed by unknown authority` | Add Harbor's self-signed certificate to your Docker daemon's trusted CA store or configure insecure registries in `/etc/docker/daemon.json`. |
+    | `LDAP Error: Connection refused` | Confirm the LDAP server is reachable on port 389 from the Harbor pod and that the firewall allows outbound LDAP traffic. |
 ---
 
 ## Service Account Tokens (Kubernetes)
@@ -201,9 +207,11 @@ serviceaccount/default patched
 ```
 
 !!! warning "Common errors"
-    **`error: failed to create secret: secrets "harbor-pull-secret" already exists`** — Delete the existing secret with `kubectl delete secret harbor-pull-secret -n production` before recreating it.
-    **`error: the server doesn't have a resource type "serviceaccount"`** — Verify you are connected to the correct Kubernetes cluster with `kubectl cluster-info` and that the production namespace exists.
-    **`error: unable to parse '{"imagePullSecrets": [{"name": "harbor-pull-secret"}]}'`** — Ensure the JSON is properly escaped; use single quotes around the entire patch argument and double-check bracket/brace matching.
+    | Error | Fix |
+    |---|---|
+    | `error: failed to create secret: secrets "harbor-pull-secret" already exists` | Delete the existing secret with `kubectl delete secret harbor-pull-secret -n production` before recreating it. |
+    | `error: the server doesn't have a resource type "serviceaccount"` | Verify you are connected to the correct Kubernetes cluster with `kubectl cluster-info` and that the production namespace exists. |
+    | `error: unable to parse '{"imagePullSecrets": [{"name": "harbor-pull-secret"}]}'` | Ensure the JSON is properly escaped; use single quotes around the entire patch argument and double-check bracket/brace matching. |
 ---
 
 ## OIDC for Harbor

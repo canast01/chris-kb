@@ -98,9 +98,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`gh: repository not found`** — Replace `<owner>/<repo>` with actual repository path (e.g., `myorg/myrepo`).
-    **`Error: Not Authorized to access this endpoint`** — Ensure your GitHub token has `repo` and `admin:repo_hook` scopes via `gh auth refresh -s repo,admin:repo_hook`.
-    **`No space left on device`** — Runner disk is critically full at 92%; SSH to the runner and delete old workflow artifacts or increase disk allocation immediately.
+    | Error | Fix |
+    |---|---|
+    | `gh: repository not found` | Replace `<owner>/<repo>` with actual repository path (e.g., `myorg/myrepo`). |
+    | `Error: Not Authorized to access this endpoint` | Ensure your GitHub token has `repo` and `admin:repo_hook` scopes via `gh auth refresh -s repo,admin:repo_hook`. |
+    | `No space left on device` | Runner disk is critically full at 92%; SSH to the runner and delete old workflow artifacts or increase disk allocation immediately. |
 **List runners at the organisation level**
 
 ```bash
@@ -137,8 +139,10 @@ gh api /orgs/<org>/actions/runners --jq '.runners[] | {name,status,busy}'
 ```
 
 !!! warning "Common errors"
-    **`HTTP 404: Not Found (https://api.github.com/orgs/<org>/actions/runners)`** — Replace `<org>` with your actual organization name.
-    **`Must have admin or "manage runners" permissions to access this endpoint`** — Ensure your GitHub token has `admin:org_hook` and `admin:org` scopes, or request elevated permissions from an org owner.
+    | Error | Fix |
+    |---|---|
+    | `HTTP 404: Not Found (https://api.github.com/orgs/<org>/actions/runners)` | Replace `<org>` with your actual organization name. |
+    | `Must have admin or "manage runners" permissions to access this endpoint` | Ensure your GitHub token has `admin:org_hook` and `admin:org` scopes, or request elevated permissions from an org owner. |
 **Check runner version (outdated runners may stop receiving jobs)**
 
 ```bash
@@ -166,8 +170,10 @@ gh api /repos/<owner>/<repo>/actions/runners --jq '.runners[] | {name,runner_ver
 ```
 
 !!! warning "Common errors"
-    **`gh: Unauthorized`** — Verify your GitHub token has `admin:org_hook` and `repo` scopes by running `gh auth status`.
-    **`HTTP 404: Not Found`** — Confirm the owner and repo placeholders are replaced with actual values and the repository exists.
+    | Error | Fix |
+    |---|---|
+    | `gh: Unauthorized` | Verify your GitHub token has `admin:org_hook` and `repo` scopes by running `gh auth status`. |
+    | `HTTP 404: Not Found` | Confirm the owner and repo placeholders are replaced with actual values and the repository exists. |
 **Remove a stale offline runner**
 
 ```bash
@@ -180,8 +186,10 @@ gh api --method DELETE /repos/<owner>/<repo>/actions/runners/<runner-id>
 ```
 
 !!! warning "Common errors"
-    **`HTTP 404: Not Found`** — Verify the runner ID exists with `gh api /repos/<owner>/<repo>/actions/runners` and confirm the owner and repo names are correct.
-    **`HTTP 403: Forbidden`** — Ensure your GitHub token has `admin:org_hook` and `repo` permissions by checking `gh auth status`.
+    | Error | Fix |
+    |---|---|
+    | `HTTP 404: Not Found` | Verify the runner ID exists with `gh api /repos/<owner>/<repo>/actions/runners` and confirm the owner and repo names are correct. |
+    | `HTTP 403: Forbidden` | Ensure your GitHub token has `admin:org_hook` and `repo` permissions by checking `gh auth status`. |
 **Verify runner labels match workflow `runs-on` values**
 
 ```bash
@@ -212,11 +220,11 @@ custom-docker
 ```
 
 !!! warning "Common errors"
-    **`gh: command not found`** — Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`.
-    
-    **`fatal: not a git repository`** — Run the commands from the root directory of your cloned repository, or use `cd /path/to/repo` first.
-    
-    **`HTTP 401: Bad credentials`** — Re-authenticate with `gh auth logout && gh auth login` and ensure your token has `repo:read` and `admin:org_hook` scopes.
+    | Error | Fix |
+    |---|---|
+    | `gh: command not found` | Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`. |
+    | `fatal: not a git repository` | Run the commands from the root directory of your cloned repository, or use `cd /path/to/repo` first. |
+    | `HTTP 401: Bad credentials` | Re-authenticate with `gh auth logout && gh auth login` and ensure your token has `repo:read` and `admin:org_hook` scopes. |
 **Key health indicators**
 
 | Indicator | Healthy | Action Required |
@@ -252,9 +260,11 @@ failure failure     Lint and Format Check                  lint.yml             
 ```
 
 !!! warning "Common errors"
-    **`gh: command not found`** — Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`.
-    **`HTTP 401: Bad credentials`** — Re-authenticate with `gh auth login` and ensure your token has `actions:read` permissions.
-    **`HTTP 403: Resource not accessible by integration`** — Verify the repository is accessible and your GitHub token has sufficient permissions for the target repository.
+    | Error | Fix |
+    |---|---|
+    | `gh: command not found` | Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`. |
+    | `HTTP 401: Bad credentials` | Re-authenticate with `gh auth login` and ensure your token has `actions:read` permissions. |
+    | `HTTP 403: Resource not accessible by integration` | Verify the repository is accessible and your GitHub token has sufficient permissions for the target repository. |
 **View details of a specific failed run**
 
 ```bash
@@ -280,8 +290,10 @@ ID                    NAME                STATUS    CONCLUSION  STARTED         
 ```
 
 !!! warning "Common errors"
-    **`HTTP 404: Not Found`** — Verify the run ID is correct and exists in your repository with `gh run list`.
-    **`Error: no GitHub token found`** — Authenticate with `gh auth login` or ensure the `GITHUB_TOKEN` environment variable is set.
+    | Error | Fix |
+    |---|---|
+    | `HTTP 404: Not Found` | Verify the run ID is correct and exists in your repository with `gh run list`. |
+    | `Error: no GitHub token found` | Authenticate with `gh auth login` or ensure the `GITHUB_TOKEN` environment variable is set. |
 **View logs for a failed run**
 
 ```bash
@@ -312,8 +324,10 @@ Duration: 4m 23s
 ```
 
 !!! warning "Common errors"
-    **`gh: the specified run was not found`** — Verify the run ID is correct by listing recent runs with `gh run list`.
-    **`Error: authentication required`** — Authenticate with GitHub CLI using `gh auth login` and ensure you have access to the repository.
+    | Error | Fix |
+    |---|---|
+    | `gh: the specified run was not found` | Verify the run ID is correct by listing recent runs with `gh run list`. |
+    | `Error: authentication required` | Authenticate with GitHub CLI using `gh auth login` and ensure you have access to the repository. |
 **List failed runs for a specific workflow**
 
 ```bash
@@ -334,9 +348,11 @@ failure failure     Unit tests - flaky assertion            deploy.yml          
 ```
 
 !!! warning "Common errors"
-    **`gh: command not found`** — Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`.
-    **`HTTP 401: Bad credentials`** — Re-authenticate with `gh auth logout && gh auth login` and ensure your token has `actions:read` permissions.
-    **`no workflows found`** — Verify the workflow filename matches exactly (case-sensitive) and exists in `.github/workflows/` directory with `gh workflow list`.
+    | Error | Fix |
+    |---|---|
+    | `gh: command not found` | Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`. |
+    | `HTTP 401: Bad credentials` | Re-authenticate with `gh auth logout && gh auth login` and ensure your token has `actions:read` permissions. |
+    | `no workflows found` | Verify the workflow filename matches exactly (case-sensitive) and exists in `.github/workflows/` directory with `gh workflow list`. |
 **Check if a workflow is disabled**
 
 ```bash
@@ -354,8 +370,10 @@ Dependency Check                    disabled   2024-01-05 10:11    2024-01-18 15
 ```
 
 !!! warning "Common errors"
-    **`gh: command not found`** — Install GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`.
-    **`HTTP 401: Unauthorized`** — Re-authenticate with `gh auth login` or verify your token has `workflow` scope permissions.
+    | Error | Fix |
+    |---|---|
+    | `gh: command not found` | Install GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`. |
+    | `HTTP 401: Unauthorized` | Re-authenticate with `gh auth login` or verify your token has `workflow` scope permissions. |
 A workflow marked `disabled` will not trigger. Re-enable with `gh workflow enable <workflow-name>`.
 
 **Key health indicators**
@@ -393,8 +411,10 @@ NPM_REGISTRY_TOKEN                  about 1 month ago
 ```
 
 !!! warning "Common errors"
-    **`gh: command not found`** — Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`.
-    **`Error: SilentCommandError`** — Ensure you are authenticated by running `gh auth status` and re-authenticate with `gh auth login` if needed.
+    | Error | Fix |
+    |---|---|
+    | `gh: command not found` | Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`. |
+    | `Error: SilentCommandError` | Ensure you are authenticated by running `gh auth status` and re-authenticate with `gh auth login` if needed. |
 This shows secret names only — values are never returned by the API.
 
 **List organisation-level secrets**
@@ -416,8 +436,10 @@ DATADOG_API_KEY                     2024-01-11T13:42:07Z
 ```
 
 !!! warning "Common errors"
-    **`Error: HTTP 404: Not Found (https://api.github.com/orgs/<org>/actions/secrets)`** — Verify the organization name is correct and you have access to it with `gh auth status`.
-    **`Error: authentication required`** — Authenticate with GitHub CLI using `gh auth login` and ensure your token has `admin:org_hook` scope.
+    | Error | Fix |
+    |---|---|
+    | `Error: HTTP 404: Not Found (https://api.github.com/orgs/<org>/actions/secrets)` | Verify the organization name is correct and you have access to it with `gh auth status`. |
+    | `Error: authentication required` | Authenticate with GitHub CLI using `gh auth login` and ensure your token has `admin:org_hook` scope. |
 **Check environment secrets**
 
 ```bash
@@ -435,8 +457,10 @@ API_KEY_PRODUCTION                  2024-01-13T14:05:33Z
 ```
 
 !!! warning "Common errors"
-    **`Error: environment not found`** — Verify the environment name exists in the repository by running `gh repo view --json environments`.
-    **`Error: authentication required`** — Ensure you are authenticated with `gh auth login` and have appropriate permissions for the repository.
+    | Error | Fix |
+    |---|---|
+    | `Error: environment not found` | Verify the environment name exists in the repository by running `gh repo view --json environments`. |
+    | `Error: authentication required` | Ensure you are authenticated with `gh auth login` and have appropriate permissions for the repository. |
 **Identify expiring credentials (manual check)**
 
 Navigate to **Settings → Secrets and variables → Actions** and review each secret's purpose and expected expiry date against your credential rotation schedule.
@@ -453,9 +477,11 @@ gh secret set <SECRET_NAME> --body "<new-value>"
 ```
 
 !!! warning "Common errors"
-    **`gh: command not found`** — Install GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`.
-    **`HTTP 404: Not Found`** — Verify the repository exists and you have push access by running `gh repo view` to confirm your current repository context.
-    **`parsing failed: invalid value for '--body' flag`** — Ensure the secret value is properly quoted and doesn't contain unescaped special characters; use single quotes or escape double quotes with backslashes.
+    | Error | Fix |
+    |---|---|
+    | `gh: command not found` | Install GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`. |
+    | `HTTP 404: Not Found` | Verify the repository exists and you have push access by running `gh repo view` to confirm your current repository context. |
+    | `parsing failed: invalid value for '--body' flag` | Ensure the secret value is properly quoted and doesn't contain unescaped special characters; use single quotes or escape double quotes with backslashes. |
 **Key health indicators**
 
 | Indicator | Healthy | Action Required |
@@ -484,8 +510,10 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`df: '/': No such file or directory`** — Verify the mount point exists and the filesystem is mounted with `mount | grep " / "`.
-    **`Permission denied`** — Run the command with appropriate privileges using `sudo df -h /` if access is restricted.
+    | Error | Fix |
+    |---|---|
+    | `df: '/': No such file or directory` | Verify the mount point exists and the filesystem is mounted with `mount | grep " / "`. |
+    | `Permission denied` | Run the command with appropriate privileges using `sudo df -h /` if access is restricted. |
 Alert if usage exceeds 80%. Runner workspace directories at `_work/` accumulate artefacts from past runs.
 
 **Clean up stale runner workspaces**
@@ -509,8 +537,10 @@ find /home/runner/_work -maxdepth 2 -type d -mtime +7 -exec rm -rf {} +
 ```
 
 !!! warning "Common errors"
-    **`find: '/home/runner/_work/repo-service/repo-service': Permission denied`** — Run the command with `sudo` or ensure the runner user has read permissions on all workspace directories.
-    **`rm: cannot remove '/home/runner/_work/api-gateway/api-gateway': Directory not empty`** — Verify no active GitHub Actions jobs are using these directories before running the removal command.
+    | Error | Fix |
+    |---|---|
+    | `find: '/home/runner/_work/repo-service/repo-service': Permission denied` | Run the command with `sudo` or ensure the runner user has read permissions on all workspace directories. |
+    | `rm: cannot remove '/home/runner/_work/api-gateway/api-gateway': Directory not empty` | Verify no active GitHub Actions jobs are using these directories before running the removal command. |
 **Check runner service status**
 
 ```bash
@@ -537,8 +567,10 @@ Jan 15 14:35:43 runner-host-01 Runner.Listener[8473]: Runner registration comple
 ```
 
 !!! warning "Common errors"
-    **`Unit actions.runner.acme-corp.deployment-api.runner-01.service could not be found.`** — Verify the service name matches the runner configuration and check `/etc/systemd/system/` for the correct `.service` file.
-    **`Failed to get unit file state for actions.runner.acme-corp.deployment-api.runner-01.service: No such file or directory`** — Run `systemctl daemon-reload` after creating or modifying the service file, then retry the status command.
+    | Error | Fix |
+    |---|---|
+    | `Unit actions.runner.acme-corp.deployment-api.runner-01.service could not be found.` | Verify the service name matches the runner configuration and check `/etc/systemd/system/` for the correct `.service` file. |
+    | `Failed to get unit file state for actions.runner.acme-corp.deployment-api.runner-01.service: No such file or directory` | Run `systemctl daemon-reload` after creating or modifying the service file, then retry the status command. |
 **Check runner process is active**
 
 ```bash
@@ -553,8 +585,10 @@ root      13045  0.0  0.0  6408  2104 pts/0    S+   14:28   0:00 grep --color=au
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input): No such device or address`** — Ensure the pipe is correctly formed and the `ps` command completes successfully before piping to `grep`.
-    **`No such file or directory`** — Verify the GitHub Actions runner is installed at `/opt/actions-runner/` and the Runner.Listener binary exists at the expected version path.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input): No such device or address` | Ensure the pipe is correctly formed and the `ps` command completes successfully before piping to `grep`. |
+    | `No such file or directory` | Verify the GitHub Actions runner is installed at `/opt/actions-runner/` and the Runner.Listener binary exists at the expected version path. |
 **Key health indicators**
 
 | Indicator | Healthy | Action Required |
@@ -587,8 +621,10 @@ found 0 vulnerabilities
 ```
 
 !!! warning "Common errors"
-    **`ajv: command not found`** — Run `npm install -g ajv-cli` before attempting validation, or use `npx ajv` instead.
-    **`.github/workflows/ci.yml invalid`** — Review the workflow file for schema violations (missing required fields, incorrect indentation, or unsupported keys) and consult the GitHub Actions workflow syntax documentation.
+    | Error | Fix |
+    |---|---|
+    | `ajv: command not found` | Run `npm install -g ajv-cli` before attempting validation, or use `npx ajv` instead. |
+    | `.github/workflows/ci.yml invalid` | Review the workflow file for schema violations (missing required fields, incorrect indentation, or unsupported keys) and consult the GitHub Actions workflow syntax documentation. |
 ### Required Status Checks
 
 Configure branch protection to require workflow jobs to pass before merging.
@@ -634,9 +670,11 @@ EOF
 ```
 
 !!! warning "Common errors"
-    **`HTTP 404: Not Found`** — Verify the OWNER and REPO values match your repository path exactly, and that the branch exists.
-    **`HTTP 403: Forbidden`** — Ensure your GitHub token has `admin:repo_hook` and `repo` scopes, or use `gh auth login` to re-authenticate with proper permissions.
-    **`HTTP 422: Unprocessable Entity`** — Confirm that all status check contexts in the "contexts" array match the exact names of checks configured in your CI/CD workflows.
+    | Error | Fix |
+    |---|---|
+    | `HTTP 404: Not Found` | Verify the OWNER and REPO values match your repository path exactly, and that the branch exists. |
+    | `HTTP 403: Forbidden` | Ensure your GitHub token has `admin:repo_hook` and `repo` scopes, or use `gh auth login` to re-authenticate with proper permissions. |
+    | `HTTP 422: Unprocessable Entity` | Confirm that all status check contexts in the "contexts" array match the exact names of checks configured in your CI/CD workflows. |
 ### Validating Workflows in CI
 
 Run actionlint automatically as part of the CI pipeline.

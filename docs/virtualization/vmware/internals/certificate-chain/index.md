@@ -82,8 +82,10 @@ Entry [2]:
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to VMware Certificate Store. Error code: 1`** — Ensure the vmafd service is running with `systemctl status vmware-vmafd` and restart if needed.
-    **`Error: Permission denied`** — Run the vecs-cli commands with root privileges using `sudo` or from a root shell session.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to VMware Certificate Store. Error code: 1` | Ensure the vmafd service is running with `systemctl status vmware-vmafd` and restart if needed. |
+    | `Error: Permission denied` | Run the vecs-cli commands with root privileges using `sudo` or from a root shell session. |
 ## Trust Hierarchy
 
 | Mode | VMCA role | Enterprise CA role | Use case |
@@ -178,9 +180,11 @@ Service restarted successfully.
 ```
 
 !!! warning "Common errors"
-    **`python: command not found`** — Use `python3` instead, or check PATH with `which python3` and create a symlink if needed.
-    **`/usr/lib/vmware-sso/vmware-stsd/scripts/renew-sts-cert.sh: No such file or directory`** — Verify the vSphere version and correct path with `find /usr/lib/vmware-sso -name "*renew*"` before running.
-    **`ERROR: Failed to stop service vmware-vpxd`** — Ensure no active vCenter tasks are running and retry, or manually stop services with `service vmware-vpxd stop` before certificate renewal.
+    | Error | Fix |
+    |---|---|
+    | `python: command not found` | Use `python3` instead, or check PATH with `which python3` and create a symlink if needed. |
+    | `/usr/lib/vmware-sso/vmware-stsd/scripts/renew-sts-cert.sh: No such file or directory` | Verify the vSphere version and correct path with `find /usr/lib/vmware-sso -name "*renew*"` before running. |
+    | `ERROR: Failed to stop service vmware-vpxd` | Ensure no active vCenter tasks are running and retry, or manually stop services with `service vmware-vpxd stop` before certificate renewal. |
 ## Certificate Renewal Order (Critical)
 
 Renewal must follow this strict order to prevent breaking service-to-service authentication:
@@ -219,9 +223,11 @@ Select an option [1-8]:
 ```
 
 !!! warning "Common errors"
-    **`bash: /usr/lib/vmware-vmca/bin/certificate_manager: No such file or directory`** — Verify the vCenter version and ensure the certificate_manager utility exists at that path; on newer versions it may be located at `/usr/lib/vmware-vmafd/bin/certificate_manager`.
-    **`Error: Unable to connect to local service`** — Ensure the vCenter services (vmafd, vmca) are running with `systemctl status vmware-vmafd` and restart if needed.
-    **`Permission denied`** — Run the command with `sudo` or as root since certificate operations require elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `bash: /usr/lib/vmware-vmca/bin/certificate_manager: No such file or directory` | Verify the vCenter version and ensure the certificate_manager utility exists at that path; on newer versions it may be located at `/usr/lib/vmware-vmafd/bin/certificate_manager`. |
+    | `Error: Unable to connect to local service` | Ensure the vCenter services (vmafd, vmca) are running with `systemctl status vmware-vmafd` and restart if needed. |
+    | `Permission denied` | Run the command with `sudo` or as root since certificate operations require elevated privileges. |
 ## ESXi Certificate Management
 
 By default, VMCA issues a unique certificate per ESXi host when the host is added to vCenter inventory.
@@ -264,9 +270,11 @@ Certificate refresh operation completed for 3 hosts.
 ```
 
 !!! warning "Common errors"
-    **`Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.`** — Verify vCenter SSL certificate is valid and the FQDN matches the certificate CN; if using self-signed certs, add `-WarningAction SilentlyContinue` or update your certificate.
-    **`esxcli system security certificatestore refresh: Error: Certificate refresh failed - unable to contact vCenter`** — Ensure the ESXi host can reach vCenter on port 443 and that the host is registered with vCenter.
-    **`Set-VMHost : The operation is not supported on the object.`** — Confirm the ESXi host is in a connected state (not disconnected or in maintenance mode) and that you have Administrator privileges in vCenter.
+    | Error | Fix |
+    |---|---|
+    | `Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.` | Verify vCenter SSL certificate is valid and the FQDN matches the certificate CN; if using self-signed certs, add `-WarningAction SilentlyContinue` or update your certificate. |
+    | `esxcli system security certificatestore refresh: Error: Certificate refresh failed - unable to contact vCenter` | Ensure the ESXi host can reach vCenter on port 443 and that the host is registered with vCenter. |
+    | `Set-VMHost : The operation is not supported on the object.` | Confirm the ESXi host is in a connected state (not disconnected or in maintenance mode) and that you have Administrator privileges in vCenter. |
 ## Common Certificate Failure Scenarios
 
 | Failure | Root cause | Resolution |

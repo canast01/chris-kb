@@ -90,9 +90,11 @@ x-ratelimit-reset-tokens: 1m23s
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.openai.com`** — Verify network connectivity and DNS resolution with `nslookup api.openai.com` or check firewall/proxy settings.
-    **`HTTP/2 401 Unauthorized`** — Confirm `$OPENAI_API_KEY` is set correctly with `echo $OPENAI_API_KEY` and verify the key hasn't been revoked in your OpenAI account.
-    **`HTTP/2 429 Too Many Requests`** — Wait for the duration specified in `x-ratelimit-reset-requests` header before retrying, or upgrade your API plan.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.openai.com` | Verify network connectivity and DNS resolution with `nslookup api.openai.com` or check firewall/proxy settings. |
+    | `HTTP/2 401 Unauthorized` | Confirm `$OPENAI_API_KEY` is set correctly with `echo $OPENAI_API_KEY` and verify the key hasn't been revoked in your OpenAI account. |
+    | `HTTP/2 429 Too Many Requests` | Wait for the duration specified in `x-ratelimit-reset-requests` header before retrying, or upgrade your API plan. |
 ## Token Counting
 
 Estimate token counts before sending requests to avoid `context_length_exceeded` errors.

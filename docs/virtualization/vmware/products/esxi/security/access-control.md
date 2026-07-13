@@ -82,9 +82,11 @@ Id     Name                     Description
 ```
 
 !!! warning "Common errors"
-    **`Connect to localhost:443 failed: Connection refused`** — Ensure SSH is enabled on the ESXi host and the firewall rule for SSH is active in the ESXi security profile.
-    **`The term 'Get-VMHost' is not recognized`** — Install VMware PowerCLI module using `Install-Module -Name VMware.PowerCLI -Force` and import it with `Import-Module VMware.PowerCLI`.
-    **`Permission denied`** — Verify you are logged in as root or a user with administrative privileges; use `whoami` to confirm your current user.
+    | Error | Fix |
+    |---|---|
+    | `Connect to localhost:443 failed: Connection refused` | Ensure SSH is enabled on the ESXi host and the firewall rule for SSH is active in the ESXi security profile. |
+    | `The term 'Get-VMHost' is not recognized` | Install VMware PowerCLI module using `Install-Module -Name VMware.PowerCLI -Force` and import it with `Import-Module VMware.PowerCLI`. |
+    | `Permission denied` | Verify you are logged in as root or a user with administrative privileges; use `whoami` to confirm your current user. |
 ### Add a Local Account
 
 ```bash
@@ -104,9 +106,11 @@ esxcli system permission set -i "breakglass" -r Admin
 ```
 
 !!! warning "Common errors"
-    **`Error: The account already exists`** — Delete the existing account with `esxcli system account remove -i "breakglass"` before recreating it.
-    **`Error: Password does not meet complexity requirements`** — Use a password with at least 8 characters including uppercase, lowercase, numbers, and special characters.
-    **`Error: Unknown role name Admin`** — Replace `Admin` with the correct role identifier `admin` (lowercase).
+    | Error | Fix |
+    |---|---|
+    | `Error: The account already exists` | Delete the existing account with `esxcli system account remove -i "breakglass"` before recreating it. |
+    | `Error: Password does not meet complexity requirements` | Use a password with at least 8 characters including uppercase, lowercase, numbers, and special characters. |
+    | `Error: Unknown role name Admin` | Replace `Admin` with the correct role identifier `admin` (lowercase). |
 ### Delete an Unused Local Account
 
 ```bash
@@ -119,8 +123,10 @@ esxcli system account remove -i <username>
 ```
 
 !!! warning "Common errors"
-    **`Error: The object has invalid or missing key member 'key'.`** — Verify the username exists by running `esxcli system account list` before attempting removal.
-    **`Error: Permission denied.`** — Ensure you are logged in as root or a user with Administrator privileges on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Error: The object has invalid or missing key member 'key'.` | Verify the username exists by running `esxcli system account list` before attempting removal. |
+    | `Error: Permission denied.` | Ensure you are logged in as root or a user with Administrator privileges on the ESXi host. |
 ### Set Root Password
 
 ```bash
@@ -151,9 +157,11 @@ Root password updated: esx-prod-03.lab.local
 ```
 
 !!! warning "Common errors"
-    **`passwd: Authentication token manipulation error`** — Ensure the root account is unlocked with `pam_unix(passwd:chauthtok): authentication token lock busy` and retry after a few seconds.
-    **`You do not have permission to run this command`** — Verify your PowerCLI session has Administrator privileges on the vCenter Server with `Get-VIPrivilege -Role Admin`.
-    **`Unable to cast object of type 'System.String' to type 'VMware.Vim.HostAccountSpec'`** — Ensure you are connected to vCenter with `Connect-VIServer` before running the ForEach-Object loop.
+    | Error | Fix |
+    |---|---|
+    | `passwd: Authentication token manipulation error` | Ensure the root account is unlocked with `pam_unix(passwd:chauthtok): authentication token lock busy` and retry after a few seconds. |
+    | `You do not have permission to run this command` | Verify your PowerCLI session has Administrator privileges on the vCenter Server with `Get-VIPrivilege -Role Admin`. |
+    | `Unable to cast object of type 'System.String' to type 'VMware.Vim.HostAccountSpec'` | Ensure you are connected to vCenter with `Connect-VIServer` before running the ForEach-Object loop. |
 ---
 
 ## vCenter Role-Based Access Control
@@ -223,9 +231,11 @@ ESX Shell            Stopped  False     Off
 ```
 
 !!! warning "Common errors"
-    **`vim-cmd: Unknown command`** — Ensure you are running vim-cmd directly on the ESXi host console or via SSH, not from a vCenter server.
-    **`The term 'Get-VMHost' is not recognized`** — Install VMware PowerCLI module using `Install-Module -Name VMware.PowerCLI -Force` and import it with `Import-Module VMware.PowerCLI`.
-    **`Connect-VIServer : The server certificate could not be validated`** — Add `-SkipCertificateCheck` to your `Connect-VIServer` command or set `Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false` before connecting.
+    | Error | Fix |
+    |---|---|
+    | `vim-cmd: Unknown command` | Ensure you are running vim-cmd directly on the ESXi host console or via SSH, not from a vCenter server. |
+    | `The term 'Get-VMHost' is not recognized` | Install VMware PowerCLI module using `Install-Module -Name VMware.PowerCLI -Force` and import it with `Import-Module VMware.PowerCLI`. |
+    | `Connect-VIServer : The server certificate could not be validated` | Add `-SkipCertificateCheck` to your `Connect-VIServer` command or set `Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false` before connecting. |
 ### Set Shell Timeout
 
 If ESXi Shell or SSH must remain enabled temporarily:
@@ -245,8 +255,10 @@ esxcli system settings advanced set -o /UserVars/ESXiShellInteractiveTimeOut -i 
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or setting '/UserVars/ESXiShellTimeOut'`** — Verify the parameter name is correct; use `esxcli system settings advanced list | grep -i timeout` to confirm available timeout settings.
-    **`Error: Permission denied`** — Run the commands as root or with appropriate ESXi administrative privileges; non-root users cannot modify system settings.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or setting '/UserVars/ESXiShellTimeOut'` | Verify the parameter name is correct; use `esxcli system settings advanced list | grep -i timeout` to confirm available timeout settings. |
+    | `Error: Permission denied` | Run the commands as root or with appropriate ESXi administrative privileges; non-root users cannot modify system settings. |
 ### Restrict SSH Access by IP
 
 Use the ESXi built-in firewall to limit SSH access to specific source IPs:
@@ -268,8 +280,10 @@ Ruleset: sshServer
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or flag '--ruleset-id sshServer'`** — Use the correct flag syntax: `esxcli network firewall ruleset set --rulesetid sshServer` (no hyphen between ruleset and id).
-    **`Error: The IP address 10.0.1.0/24 is invalid`** — Verify the CIDR notation is correct and the network address matches the subnet (e.g., use `10.0.1.0/24` not `10.0.1.5/24`).
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or flag '--ruleset-id sshServer'` | Use the correct flag syntax: `esxcli network firewall ruleset set --rulesetid sshServer` (no hyphen between ruleset and id). |
+    | `Error: The IP address 10.0.1.0/24 is invalid` | Verify the CIDR notation is correct and the network address matches the subnet (e.g., use `10.0.1.0/24` not `10.0.1.5/24`). |
 ---
 
 ## Firewall Ruleset Management
@@ -321,8 +335,10 @@ Description: vSphere Client access
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or malformed command`** — Verify the exact ruleset name with `esxcli network firewall ruleset list` and use the correct spelling (case-sensitive).
-    **`Error: Unable to connect to the host`** — Ensure you are connected to the ESXi host via SSH or have proper credentials configured in your vSphere client.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or malformed command` | Verify the exact ruleset name with `esxcli network firewall ruleset list` and use the correct spelling (case-sensitive). |
+    | `Error: Unable to connect to the host` | Ensure you are connected to the ESXi host via SSH or have proper credentials configured in your vSphere client. |
 ### Minimum Required Rulesets (Production)
 
 | Ruleset | Port | Required For |
@@ -347,8 +363,10 @@ esxcli network firewall ruleset set --enabled false --ruleset-id ftpClient
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or flag '--ruleset-id'.`** — Use the correct flag name `--ruleset-id` or check your ESXi version; some versions use `--rulesetid` without the hyphen.
-    **`Error: Ruleset 'ftpClient' not found.`** — Verify the exact ruleset name with `esxcli network firewall ruleset list` before disabling, as ruleset IDs are case-sensitive.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or flag '--ruleset-id'.` | Use the correct flag name `--ruleset-id` or check your ESXi version; some versions use `--rulesetid` without the hyphen. |
+    | `Error: Ruleset 'ftpClient' not found.` | Verify the exact ruleset name with `esxcli network firewall ruleset list` before disabling, as ruleset IDs are case-sensitive. |
 ### Host Profile Enforcement
 
 Firewall ruleset configuration is captured in Host Profiles. Changes on individual hosts that drift from the profile are flagged as non-compliant. Use **Check Compliance** after any firewall change to confirm the host profile still matches.
@@ -415,9 +433,11 @@ loghost = tcp://syslog.example.local:514
 ```
 
 !!! warning "Common errors"
-    **`Connect to syslog.example.local failed`** — Verify the syslog server hostname/IP is reachable and listening on port 514 with `ping syslog.example.local` and `nc -zv syslog.example.local 514`.
-    **`Unknown option loghost`** — Ensure you're running this command on ESXi 6.0 or later; older versions use different syslog configuration syntax.
-    **`Permission denied`** — Run the command as root or with appropriate ESXi administrative privileges via SSH or vSphere Client.
+    | Error | Fix |
+    |---|---|
+    | `Connect to syslog.example.local failed` | Verify the syslog server hostname/IP is reachable and listening on port 514 with `ping syslog.example.local` and `nc -zv syslog.example.local 514`. |
+    | `Unknown option loghost` | Ensure you're running this command on ESXi 6.0 or later; older versions use different syslog configuration syntax. |
+    | `Permission denied` | Run the command as root or with appropriate ESXi administrative privileges via SSH or vSphere Client. |
 Configure via Host Profile to enforce consistently across all cluster hosts.
 
 ## See also

@@ -187,8 +187,10 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 ```
 
 !!! warning "Common errors"
-    **`subnet declaration not terminated with semicolon`** — Add a semicolon after the closing brace: `}`
-    **`unknown option domain-name-servers`** — Use the correct DHCP option syntax `domain-name-servers` without hyphens in the value list, or verify the dhcpd.conf man page for your ISC DHCP version.
+    | Error | Fix |
+    |---|---|
+    | `subnet declaration not terminated with semicolon` | Add a semicolon after the closing brace: `}` |
+    | `unknown option domain-name-servers` | Use the correct DHCP option syntax `domain-name-servers` without hyphens in the value list, or verify the dhcpd.conf man page for your ISC DHCP version. |
 ## Troubleshooting
 
 | Symptom | Check | Action |

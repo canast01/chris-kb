@@ -51,9 +51,11 @@ issuer=CN = NSX-Manager-CA, O = VMware, C = US
 ```
 
 !!! warning "Common errors"
-    **`connect:errno=111`** — Verify NSX Manager is running and listening on port 443 with `curl -k https://nsx-manager.example.local/api/v1/node`.
-    **`verify return:1 (self signed certificate)`** — This is expected for self-signed NSX certs; use `-CAfile` with your NSX CA bundle or ignore with `-showcerts` for validation purposes only.
-    **`error:1410D0B9:SSL routines:SSL_CTX_set_tlsext_host_name:tlsext alert fatal`** — Confirm the hostname resolves correctly and matches the certificate CN with `nslookup nsx-manager.example.local` and `openssl x509 -in cert.pem -noout -text`.
+    | Error | Fix |
+    |---|---|
+    | `connect:errno=111` | Verify NSX Manager is running and listening on port 443 with `curl -k https://nsx-manager.example.local/api/v1/node`. |
+    | `verify return:1 (self signed certificate)` | This is expected for self-signed NSX certs; use `-CAfile` with your NSX CA bundle or ignore with `-showcerts` for validation purposes only. |
+    | `error:1410D0B9:SSL routines:SSL_CTX_set_tlsext_host_name:tlsext alert fatal` | Confirm the hostname resolves correctly and matches the certificate CN with `nslookup nsx-manager.example.local` and `openssl x509 -in cert.pem -noout -text`. |
 ```bash
 # List all imported certificates
 curl -sk -u 'admin:password' \
@@ -86,9 +88,11 @@ nsx> exit
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store.
-    **`jq: command not found`** — Install `python3-json` or use the built-in `python3 -c` JSON parser as shown in the example instead of piping to `jq`.
-    **`error: unauthorized (401)`** — Verify the admin credentials are correct and the user has API access permissions in NSX Manager's role-based access control settings.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store. |
+    | `jq: command not found` | Install `python3-json` or use the built-in `python3 -c` JSON parser as shown in the example instead of piping to `jq`. |
+    | `error: unauthorized (401)` | Verify the admin credentials are correct and the user has API access permissions in NSX Manager's role-based access control settings. |
 ```bash
 # Step 1 — Generate a CSR on NSX Manager
 curl -sk -u 'admin:password' \
@@ -153,9 +157,11 @@ curl -sk -u 'admin:password' \
 ```
 
 !!! warning "Common errors"
-    **`{"error_code":400,"error_message":"Invalid PEM encoding in request body"}`** — Verify certificate and key files are not corrupted and contain proper BEGIN/END markers by running `head -1 nsx-api-signed.crt` and `head -1 nsx-api.key`.
-    **`{"error_code":401,"error_message":"Unauthorized"}`** — Confirm NSX Manager credentials are correct and the admin user has certificate management permissions.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command or import the NSX Manager's CA certificate into your system trust store.
+    | Error | Fix |
+    |---|---|
+    | `{"error_code":400,"error_message":"Invalid PEM encoding in request body"}` | Verify certificate and key files are not corrupted and contain proper BEGIN/END markers by running `head -1 nsx-api-signed.crt` and `head -1 nsx-api.key`. |
+    | `{"error_code":401,"error_message":"Unauthorized"}` | Confirm NSX Manager credentials are correct and the admin user has certificate management permissions. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command or import the NSX Manager's CA certificate into your system trust store. |
 ```bash
 # Step 3 — Apply the certificate to the API endpoint
 curl -sk -u 'admin:password' \
@@ -175,9 +181,11 @@ curl -sk -u 'admin:password' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store.
-    **`{"error_code":400,"error_message":"Certificate ID not found or invalid"}`** — Verify the certificate exists on the NSX Manager by running `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/certificates` and confirm the certificate_id value.
-    **`curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused`** — Confirm the NSX Manager hostname/IP is correct and the API service is running with `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/node/services/http`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the NSX Manager's CA certificate into your system trust store. |
+    | `{"error_code":400,"error_message":"Certificate ID not found or invalid"}` | Verify the certificate exists on the NSX Manager by running `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/certificates` and confirm the certificate_id value. |
+    | `curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused` | Confirm the NSX Manager hostname/IP is correct and the API service is running with `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/node/services/http`. |
 ```bash
 # Check expiry of all NSX-managed certificates
 curl -sk -u 'admin:password' \
@@ -208,9 +216,11 @@ nsx-manager.corp.local              expires=2025-08-14  days_remaining=187
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the NSX manager's CA certificate into your system trust store.
-    **`jq: command not found`** — Ensure Python 3 is installed and the JSON parsing script is correctly formatted; alternatively, pipe to `jq '.results[] | {display_name, not_after}'` if jq is available.
-    **`curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused`** — Verify the NSX Manager hostname/IP is correct, the API service is running (`systemctl status nsx-manager`), and the management network is reachable.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the NSX manager's CA certificate into your system trust store. |
+    | `jq: command not found` | Ensure Python 3 is installed and the JSON parsing script is correctly formatted; alternatively, pipe to `jq '.results[] | {display_name, not_after}'` if jq is available. |
+    | `curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused` | Verify the NSX Manager hostname/IP is correct, the API service is running (`systemctl status nsx-manager`), and the management network is reachable. |
 ```bash
 # On NSX Manager node
 nsxcli
@@ -232,9 +242,11 @@ syslog-default   UDP       127.0.0.1      514   warn   connected
 ```
 
 !!! warning "Common errors"
-    **`Error: Exporter name 'siem-tls' already exists`** — Use a unique exporter name or delete the existing exporter with `delete service syslog exporter siem-tls` first.
-    **`Error: Unable to connect to server 10.0.0.100:6514 - connection timeout`** — Verify the SIEM server is reachable and listening on port 6514 by running `nc -zv 10.0.0.100 6514` from the NSX Manager node.
-    **`Error: TLS certificate validation failed for server 10.0.0.100`** — Import the SIEM server's CA certificate into NSX Manager using `set service syslog exporter siem-tls ca-cert <cert-path>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Exporter name 'siem-tls' already exists` | Use a unique exporter name or delete the existing exporter with `delete service syslog exporter siem-tls` first. |
+    | `Error: Unable to connect to server 10.0.0.100:6514 - connection timeout` | Verify the SIEM server is reachable and listening on port 6514 by running `nc -zv 10.0.0.100 6514` from the NSX Manager node. |
+    | `Error: TLS certificate validation failed for server 10.0.0.100` | Import the SIEM server's CA certificate into NSX Manager using `set service syslog exporter siem-tls ca-cert <cert-path>`. |
 ```bash
 curl -sk -u 'admin:password' \
   -X POST \
@@ -254,9 +266,11 @@ curl -sk -u 'admin:password' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the NSX manager's own certificate first.
-    **`{"httpStatus":400,"error_code":107,"module_name":"common","error_message":"Invalid PEM format"}`** — Ensure the certificate file is valid PEM format and the awk command properly escapes newlines; test with `cat siem-ca.crt | head -2`.
-    **`curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused`** — Verify the NSX Manager hostname/IP is correct and the API service is running with `curl -sk https://<nsx-manager>/api/v1/cluster/status`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the NSX manager's own certificate first. |
+    | `{"httpStatus":400,"error_code":107,"module_name":"common","error_message":"Invalid PEM format"}` | Ensure the certificate file is valid PEM format and the awk command properly escapes newlines; test with `cat siem-ca.crt | head -2`. |
+    | `curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused` | Verify the NSX Manager hostname/IP is correct and the API service is running with `curl -sk https://<nsx-manager>/api/v1/cluster/status`. |
 ## Before you begin
 
 - **Access:** vCenter Administrator role

@@ -232,8 +232,10 @@ Successfully installed py-pure-client-1.28.0 requests-2.31.0 urllib3-1.26.18
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Could not find a version that satisfies the requirement py-pure-client`** — Verify the package name is correct and check PyPI availability with `pip search py-pure-client` or update pip with `pip install --upgrade pip`.
-    **`error: Microsoft Visual C++ 14.0 or greater is required`** — Install the Microsoft C++ Build Tools or use a pre-built wheel by upgrading pip and setuptools with `pip install --upgrade pip setuptools wheel`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Could not find a version that satisfies the requirement py-pure-client` | Verify the package name is correct and check PyPI availability with `pip search py-pure-client` or update pip with `pip install --upgrade pip`. |
+    | `error: Microsoft Visual C++ 14.0 or greater is required` | Install the Microsoft C++ Build Tools or use a pre-built wheel by upgrading pip and setuptools with `pip install --upgrade pip setuptools wheel`. |
 **Step 4 — Set variables and run**
 
 ```bash
@@ -268,9 +270,11 @@ Report saved to: C:\Users\Administrator\Desktop\fb_health_report_20240115.json
 ```
 
 !!! warning "Common errors"
-    **`'set' is not recognized as an internal or external command`** — Use `export FB_HOST=192.168.1.20` and `export FB_API_TOKEN=your-token-here` instead (this is bash, not Windows batch).
-    **`Connection timeout connecting to 192.168.1.20:443`** — Verify the FlashBlade management IP is reachable with `ping 192.168.1.20` and check firewall rules allow port 443.
-    **`Invalid API token or authentication failed`** — Confirm the token is current and has not expired by regenerating it in the FlashBlade management console.
+    | Error | Fix |
+    |---|---|
+    | `'set' is not recognized as an internal or external command` | Use `export FB_HOST=192.168.1.20` and `export FB_API_TOKEN=your-token-here` instead (this is bash, not Windows batch). |
+    | `Connection timeout connecting to 192.168.1.20:443` | Verify the FlashBlade management IP is reachable with `ping 192.168.1.20` and check firewall rules allow port 443. |
+    | `Invalid API token or authentication failed` | Confirm the token is current and has not expired by regenerating it in the FlashBlade management console. |
 ---
 
 ## Filesystem Capacity Report (Bash)
@@ -368,9 +372,11 @@ Review filesystems approaching their provisioned limit.
 ```
 
 !!! warning "Common errors"
-    **`FB_HOST: unbound variable`** — Set the FB_HOST environment variable before running the script: `export FB_HOST=flashblade01`.
-    **`FB_API_TOKEN: unbound variable`** — Set the FB_API_TOKEN environment variable before running the script: `export FB_API_TOKEN=<your-api-token>`.
-    **`purefb: command not found`** — Install the Pure Storage FlashBlade CLI tools or ensure the `purefb` binary is in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `FB_HOST: unbound variable` | Set the FB_HOST environment variable before running the script: `export FB_HOST=flashblade01`. |
+    | `FB_API_TOKEN: unbound variable` | Set the FB_API_TOKEN environment variable before running the script: `export FB_API_TOKEN=<your-api-token>`. |
+    | `purefb: command not found` | Install the Pure Storage FlashBlade CLI tools or ensure the `purefb` binary is in your PATH. |
 ---
 
 ## ActiveDR Replication Monitor (Python)
@@ -601,9 +607,11 @@ RESULT: PASS
 ```
 
 !!! warning "Common errors"
-    **`Set FB_HOST`** — Export the environment variable before running the script: `export FB_HOST=flashblade01`
-    **`ssh: connect to host flashblade01 port 22: Connection timed out`** — Verify network connectivity and hostname resolution with `ping flashblade01` and check SSH_USER credentials.
-    **`purity: command not found`** — Ensure the Pure Storage CLI is installed on the FlashBlade system and the SSH_USER account has PATH configured to include the purity binary location.
+    | Error | Fix |
+    |---|---|
+    | `Set FB_HOST` | Export the environment variable before running the script: `export FB_HOST=flashblade01` |
+    | `ssh: connect to host flashblade01 port 22: Connection timed out` | Verify network connectivity and hostname resolution with `ping flashblade01` and check SSH_USER credentials. |
+    | `purity: command not found` | Ensure the Pure Storage CLI is installed on the FlashBlade system and the SSH_USER account has PATH configured to include the purity binary location. |
 ---
 
 ## S3 Bucket Audit (Python)

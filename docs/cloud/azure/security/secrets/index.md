@@ -167,9 +167,11 @@ az webapp config appsettings set \
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/<vault-name>' under resource group '<rg>' was not found.`** — Verify the vault name and resource group are correct, and that your subscription has access to them.
-    **`ERROR: The user, group or application does not have the 'get' permission to perform action 'Microsoft.KeyVault/vaults/secrets/getSecret/action' on the requested resource.`** — Grant your user or service principal the "Key Vault Secrets User" role on the vault using `az role assignment create`.
-    **`ERROR: (BadRequest) The App Service '<app-name>' could not be found under resource group '<rg>'.`** — Confirm the app name and resource group exist and match your target App Service instance.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/<vault-name>' under resource group '<rg>' was not found.` | Verify the vault name and resource group are correct, and that your subscription has access to them. |
+    | `ERROR: The user, group or application does not have the 'get' permission to perform action 'Microsoft.KeyVault/vaults/secrets/getSecret/action' on the requested resource.` | Grant your user or service principal the "Key Vault Secrets User" role on the vault using `az role assignment create`. |
+    | `ERROR: (BadRequest) The App Service '<app-name>' could not be found under resource group '<rg>'.` | Confirm the app name and resource group exist and match your target App Service instance. |
 The App Service managed identity must have `Key Vault Secrets User` role on the vault.
 
 ### AKS — External Secrets Operator (ESO)
@@ -270,8 +272,10 @@ az keyvault secret set-attributes \
 ```
 
 !!! warning "Common errors"
-    **`The user, group or application 'appid=<id>;oid=<oid>;iss=...' does not have secrets set permission on key vault 'prod-vault-eastus'`** — Ensure your Azure service principal or user account has the "Key Vault Secrets Officer" role assigned on the vault.
-    **`The specified version of the secret does not exist`** — Verify the version ID is correct by running `az keyvault secret list-versions --vault-name <vault-name> --name "db-password"` to list all available versions.
+    | Error | Fix |
+    |---|---|
+    | `The user, group or application 'appid=<id>;oid=<oid>;iss=...' does not have secrets set permission on key vault 'prod-vault-eastus'` | Ensure your Azure service principal or user account has the "Key Vault Secrets Officer" role assigned on the vault. |
+    | `The specified version of the secret does not exist` | Verify the version ID is correct by running `az keyvault secret list-versions --vault-name <vault-name> --name "db-password"` to list all available versions. |
 ## Monitoring Secret Expiry
 
 ```bash
@@ -293,9 +297,11 @@ backup-encryption-key         2025-02-25T11:00:00+00:00
 ```
 
 !!! warning "Common errors"
-    **`The user does not have permissions to list secrets in this key vault.`** — Ensure your Azure account has the `Key Vault Secrets Officer` or `Key Vault Administrator` role assigned on the vault via RBAC.
-    **`ResourceNotFound: The specified vault does not exist.`** — Verify the vault name is correct and exists in your current subscription with `az keyvault list`.
-    **`date: invalid date '+30 days'`** — Use `date -u -d '+30 days' +%Y-%m-%dT%H:%M:%SZ` on Linux or `date -u -v+30d +%Y-%m-%dT%H:%M:%SZ` on macOS.
+    | Error | Fix |
+    |---|---|
+    | `The user does not have permissions to list secrets in this key vault.` | Ensure your Azure account has the `Key Vault Secrets Officer` or `Key Vault Administrator` role assigned on the vault via RBAC. |
+    | `ResourceNotFound: The specified vault does not exist.` | Verify the vault name is correct and exists in your current subscription with `az keyvault list`. |
+    | `date: invalid date '+30 days'` | Use `date -u -d '+30 days' +%Y-%m-%dT%H:%M:%SZ` on Linux or `date -u -v+30d +%Y-%m-%dT%H:%M:%SZ` on macOS. |
 Log Analytics alert for expiring secrets:
 
 ```kusto

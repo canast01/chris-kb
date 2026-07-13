@@ -100,9 +100,11 @@ Setup completed successfully. Collector ID: KS-COLL-7f4a9c2e
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname <collector-ip>: Name or service not known`** — Replace `<collector-ip>` with the actual collector VM IP address from your deployment documentation.
-    **`Authentication failed, permission denied (publickey,password).`** — Verify the default credentials match your deployment guide and that the admin user exists on the collector VM.
-    **`Error: Failed to connect to ONTAP cluster at 192.168.1.50: Connection timed out`** — Confirm the ONTAP cluster IP is correct, reachable from the collector VM, and that firewall rules allow port 443 traffic.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname <collector-ip>: Name or service not known` | Replace `<collector-ip>` with the actual collector VM IP address from your deployment documentation. |
+    | `Authentication failed, permission denied (publickey,password).` | Verify the default credentials match your deployment guide and that the admin user exists on the collector VM. |
+    | `Error: Failed to connect to ONTAP cluster at 192.168.1.50: Connection timed out` | Confirm the ONTAP cluster IP is correct, reachable from the collector VM, and that firewall rules allow port 443 traffic. |
 ## Upgrade Keystone Collector
 
 ```bash
@@ -147,9 +149,11 @@ License status: Valid (expires 2025-06-30)
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to update server (Connection timeout)`** — Verify network connectivity and firewall rules allow outbound HTTPS to the Keystone update repository.
-    **`Error: Insufficient disk space. Required: 500 MB, Available: 120 MB`** — Free up disk space on the collector host before attempting the upgrade.
-    **`Error: Service restart failed. Manual restart required`** — Run `systemctl restart keystone-collector` to manually restart the service after upgrade completion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to update server (Connection timeout)` | Verify network connectivity and firewall rules allow outbound HTTPS to the Keystone update repository. |
+    | `Error: Insufficient disk space. Required: 500 MB, Available: 120 MB` | Free up disk space on the collector host before attempting the upgrade. |
+    | `Error: Service restart failed. Manual restart required` | Run `systemctl restart keystone-collector` to manually restart the service after upgrade completion. |
 ## Add a New ONTAP Array to Keystone
 
 ```bash
@@ -191,9 +195,11 @@ Data transmitted: 2.3 MB | Next scheduled collection: 2024-01-15 15:32:18
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to 192.168.1.50:443`** — Verify the ONTAP management IP is correct and the cluster API is accessible from the Collector VM (check firewall rules and network connectivity).
-    **`Error: Authentication failed for user 'admin'`** — Confirm the password is correct and the admin user has API access permissions enabled on the ONTAP cluster.
-    **`Error: Failed to upload metrics — HTTP 401 Unauthorized`** — Verify the Collector VM's Keystone registration credentials are valid by running `keystone-config show-registration`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to 192.168.1.50:443` | Verify the ONTAP management IP is correct and the cluster API is accessible from the Collector VM (check firewall rules and network connectivity). |
+    | `Error: Authentication failed for user 'admin'` | Confirm the password is correct and the admin user has API access permissions enabled on the ONTAP cluster. |
+    | `Error: Failed to upload metrics — HTTP 401 Unauthorized` | Verify the Collector VM's Keystone registration credentials are valid by running `keystone-config show-registration`. |
 ## Remove an Array from Keystone
 
 ```bash
@@ -217,9 +223,11 @@ All checks completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to host 192.168.1.42 on port 443`** — Verify the ONTAP management IP is reachable and the Keystone service is running with `ping <ontap-mgmt-ip>` and `ssh admin@<ontap-mgmt-ip>`.
-    **`Error: Array 'netapp-prod-01' is still in use by active subscriptions`** — Remove or migrate all active subscriptions associated with the array before removing it using `keystone-config list-subscriptions --array netapp-prod-01`.
-    **`Validation failed: Missing required license file`** — Reinstall the Keystone license bundle on the ONTAP cluster using `keystone-config install-license --host <ontap-mgmt-ip> --license-file <path>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to host 192.168.1.42 on port 443` | Verify the ONTAP management IP is reachable and the Keystone service is running with `ping <ontap-mgmt-ip>` and `ssh admin@<ontap-mgmt-ip>`. |
+    | `Error: Array 'netapp-prod-01' is still in use by active subscriptions` | Remove or migrate all active subscriptions associated with the array before removing it using `keystone-config list-subscriptions --array netapp-prod-01`. |
+    | `Validation failed: Missing required license file` | Reinstall the Keystone license bundle on the ONTAP cluster using `keystone-config install-license --host <ontap-mgmt-ip> --license-file <path>`. |
 ## Post-Upgrade Validation
 
 ```bash
@@ -255,8 +263,10 @@ journalctl -u keystone-collector --since "30 min ago" | grep -i error
 ```
 
 !!! warning "Common errors"
-    **`Unit keystone-collector.service not found.`** — Verify the keystone-collector service is installed and enabled with `systemctl list-unit-files | grep keystone`.
-    **`Failed to connect to Keystone API: Connection refused`** — Check that the Keystone API endpoint is reachable and the collector configuration has the correct hostname/IP with `cat /etc/keystone-collector/config.yaml`.
+    | Error | Fix |
+    |---|---|
+    | `Unit keystone-collector.service not found.` | Verify the keystone-collector service is installed and enabled with `systemctl list-unit-files | grep keystone`. |
+    | `Failed to connect to Keystone API: Connection refused` | Check that the Keystone API endpoint is reachable and the collector configuration has the correct hostname/IP with `cat /etc/keystone-collector/config.yaml`. |
 ---
 
 ## Verify

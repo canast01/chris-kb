@@ -135,9 +135,11 @@ sv=2023-11-09&ss=rwdl&srt=c&sp=rwdl&se=2025-12-31T23:59:59Z&st=2025-01-15T00:00:
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFoundError: The specified resource group does not exist.`** — Verify the resource group name with `az group list` and ensure it exists in the correct subscription.
-    **`StorageAccountAlreadyTaken: The storage account named '<account>' is already taken.`** — Storage account names must be globally unique across Azure; append a timestamp or random suffix and retry.
-    **`AuthorizationFailed: The client '<client_id>' with object id '<object_id>' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/read'.`** — Ensure your Azure CLI account has Storage Account Contributor or Reader role assigned via `az role assignment create`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFoundError: The specified resource group does not exist.` | Verify the resource group name with `az group list` and ensure it exists in the correct subscription. |
+    | `StorageAccountAlreadyTaken: The storage account named '<account>' is already taken.` | Storage account names must be globally unique across Azure; append a timestamp or random suffix and retry. |
+    | `AuthorizationFailed: The client '<client_id>' with object id '<object_id>' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/read'.` | Ensure your Azure CLI account has Storage Account Contributor or Reader role assigned via `az role assignment create`. |
 ---
 
 ## Networking
@@ -198,9 +200,11 @@ prod-lb-eastus    prod-network-rg      eastus      Succeeded
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound: Resource group '<rg>' could not be found.`** — Verify the resource group name with `az group list` and ensure you are in the correct subscription with `az account show`.
-    **`InvalidArgumentsUsage: unrecognized arguments: --address-prefixes`** — Use `--address-prefix` (singular) instead of `--address-prefixes` for the `az network vnet create` command.
-    **`AuthorizationFailed: The client '<user>' with object id '<uuid>' does not have authorization to perform action 'Microsoft.Network/virtualNetworks/write' on resource '<vnet-id>'.`** — Request the Network Contributor role for your user account in the target resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound: Resource group '<rg>' could not be found.` | Verify the resource group name with `az group list` and ensure you are in the correct subscription with `az account show`. |
+    | `InvalidArgumentsUsage: unrecognized arguments: --address-prefixes` | Use `--address-prefix` (singular) instead of `--address-prefixes` for the `az network vnet create` command. |
+    | `AuthorizationFailed: The client '<user>' with object id '<uuid>' does not have authorization to perform action 'Microsoft.Network/virtualNetworks/write' on resource '<vnet-id>'.` | Request the Network Contributor role for your user account in the target resource group. |
 ---
 
 ## Identity & RBAC
@@ -510,9 +514,11 @@ gpu-pool          Standard_NC6  2             Succeeded
 ```
 
 !!! warning "Common errors"
-    **`Error: The resource group '<rg>' could not be found.`** — Verify the resource group name is correct and exists in your subscription with `az group list`.
-    **`Error: The cluster '<cluster>' could not be found in resource group '<rg>'.`** — Confirm the cluster name spelling and that it belongs to the specified resource group using `az aks list --resource-group <rg>`.
-    **`Error: Kubernetes version '<version>' is not available for upgrade.`** — Run `az aks get-upgrades --resource-group <rg> --name <cluster>` to list only supported target versions.
+    | Error | Fix |
+    |---|---|
+    | `Error: The resource group '<rg>' could not be found.` | Verify the resource group name is correct and exists in your subscription with `az group list`. |
+    | `Error: The cluster '<cluster>' could not be found in resource group '<rg>'.` | Confirm the cluster name spelling and that it belongs to the specified resource group using `az aks list --resource-group <rg>`. |
+    | `Error: Kubernetes version '<version>' is not available for upgrade.` | Run `az aks get-upgrades --resource-group <rg> --name <cluster>` to list only supported target versions. |
 ---
 
 ## Backup & Recovery
@@ -562,6 +568,8 @@ Job ID: dccf5d8a-5678-1234-90ab-ef has completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`The Resource 'Microsoft.RecoveryServices/vaults/<vault>' under resource group '<rg>' was not found.`** — Verify the vault name and resource group name are correct and exist in your subscription.
-    **`The item with name '<item>' was not found in the container '<container>'.`** — Confirm the container name and item name match exactly; list items with `az backup item list` to verify.
-    **`--retain-until must be a date in the future in format YYYY-MM-DD.`** — Provide a future date for the retention period using the correct date format.
+    | Error | Fix |
+    |---|---|
+    | `The Resource 'Microsoft.RecoveryServices/vaults/<vault>' under resource group '<rg>' was not found.` | Verify the vault name and resource group name are correct and exist in your subscription. |
+    | `The item with name '<item>' was not found in the container '<container>'.` | Confirm the container name and item name match exactly; list items with `az backup item list` to verify. |
+    | `--retain-until must be a date in the future in format YYYY-MM-DD.` | Provide a future date for the retention period using the correct date format. |

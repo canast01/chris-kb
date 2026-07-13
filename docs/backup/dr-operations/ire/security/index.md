@@ -64,8 +64,10 @@ az monitor diagnostic-settings create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/<ire-sub-id>/resourceGroups/ire-rg' could not be found.`** — Replace `<ire-sub-id>` with the actual subscription ID and verify the resource group exists with `az group show -n ire-rg`.
-    **`InvalidWorkspaceId: The workspace ID provided is invalid or the workspace does not exist in the specified resource group.`** — Confirm the Log Analytics workspace ID is correct and in the same subscription by running `az monitor log-analytics workspace show --resource-group ire-rg --workspace-name <workspace-name>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/<ire-sub-id>/resourceGroups/ire-rg' could not be found.` | Replace `<ire-sub-id>` with the actual subscription ID and verify the resource group exists with `az group show -n ire-rg`. |
+    | `InvalidWorkspaceId: The workspace ID provided is invalid or the workspace does not exist in the specified resource group.` | Confirm the Log Analytics workspace ID is correct and in the same subscription by running `az monitor log-analytics workspace show --resource-group ire-rg --workspace-name <workspace-name>`. |
 ```bash
 # Azure: deallocate and delete IRE VMs after sign-off
 az vm list --resource-group ire-rg --output table

@@ -66,9 +66,11 @@ c1f5a0e Initial infrastructure setup
 ```
 
 !!! warning "Common errors"
-    **`error: gpg failed to sign the data`** — Ensure GPG is installed (`apt-get install gnupg2`), the key ID is correct, and the GPG agent is running (`gpg-agent --daemon`).
-    **`error: gpg.program not found`** — Configure the GPG program path with `git config --global gpg.program /usr/bin/gpg2` if using GPG 2.x.
-    **`error: key <GPG_KEY_ID> does not contain a secret key`** — Verify the key exists in your local keyring with `gpg --list-secret-keys` and use the correct 16-character key ID.
+    | Error | Fix |
+    |---|---|
+    | `error: gpg failed to sign the data` | Ensure GPG is installed (`apt-get install gnupg2`), the key ID is correct, and the GPG agent is running (`gpg-agent --daemon`). |
+    | `error: gpg.program not found` | Configure the GPG program path with `git config --global gpg.program /usr/bin/gpg2` if using GPG 2.x. |
+    | `error: key <GPG_KEY_ID> does not contain a secret key` | Verify the key exists in your local keyring with `gpg --list-secret-keys` and use the correct 16-character key ID. |
 ```bash
 # Generate an Ed25519 GPG key
 gpg --expert --full-generate-key
@@ -170,9 +172,11 @@ Good "git" signature for user@corp.example.com with ED25519 key SHA256:aBcDeFgHi
 ```
 
 !!! warning "Common errors"
-    **`error: key does not contain a public key`** — Ensure the SSH public key file path is correct and the file contains a valid public key (not a private key).
-    **`error: unknown signature type 'ssh'`** — Update Git to version 2.34 or later, which added SSH signature support.
-    **`fatal: your current branch 'main' does not have any commits yet`** — Create an initial commit before attempting to verify; `git verify-commit HEAD` requires at least one signed commit in history.
+    | Error | Fix |
+    |---|---|
+    | `error: key does not contain a public key` | Ensure the SSH public key file path is correct and the file contains a valid public key (not a private key). |
+    | `error: unknown signature type 'ssh'` | Update Git to version 2.34 or later, which added SSH signature support. |
+    | `fatal: your current branch 'main' does not have any commits yet` | Create an initial commit before attempting to verify; `git verify-commit HEAD` requires at least one signed commit in history. |
 ```bash
 # macOS — store in Keychain
 git config --global credential.helper osxkeychain
@@ -195,9 +199,11 @@ git config --global credential.helper /usr/share/doc/git/contrib/credential/gnom
 ```
 
 !!! warning "Common errors"
-    **`fatal: not in a git repository`** — Run these commands outside a repo; they set global config in `~/.gitconfig`, not repo-specific settings.
-    **`error: unknown credential helper 'osxkeychain'`** — Install Git via Homebrew (`brew install git`) or Xcode Command Line Tools to include the osxkeychain helper.
-    **`error: unknown credential helper '/usr/lib/git-core/git-credential-libsecret'`** — Install the libsecret package (`sudo apt install libsecret-1-0 git`) and verify the helper path exists before configuring.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not in a git repository` | Run these commands outside a repo; they set global config in `~/.gitconfig`, not repo-specific settings. |
+    | `error: unknown credential helper 'osxkeychain'` | Install Git via Homebrew (`brew install git`) or Xcode Command Line Tools to include the osxkeychain helper. |
+    | `error: unknown credential helper '/usr/lib/git-core/git-credential-libsecret'` | Install the libsecret package (`sudo apt install libsecret-1-0 git`) and verify the helper path exists before configuring. |
 ```bash
 # List credentials currently stored by the helper
 git credential-osxkeychain get <<'EOF'
@@ -224,8 +230,10 @@ password=ghp_aBcD1234eFgH5678iJkL9012mNoPqRsT
 ```
 
 !!! warning "Common errors"
-    **`error: cannot run git-credential-osxkeychain: No such file or directory`** — Install the credential helper with `git credential-osxkeychain` or use `brew install git-credential-osxkeychain` on macOS.
-    **`grep: /Users/username/.gitconfig: No such file or directory`** — Create a basic `.gitconfig` file with `git config --global user.name "Your Name"` or verify the file path is correct for your user.
+    | Error | Fix |
+    |---|---|
+    | `error: cannot run git-credential-osxkeychain: No such file or directory` | Install the credential helper with `git credential-osxkeychain` or use `brew install git-credential-osxkeychain` on macOS. |
+    | `grep: /Users/username/.gitconfig: No such file or directory` | Create a basic `.gitconfig` file with `git config --global user.name "Your Name"` or verify the file path is correct for your user. |
 ```bash
 # Install
 brew install git-crypt   # macOS
@@ -268,9 +276,11 @@ Repository unlocked. Files decrypted.
 ```
 
 !!! warning "Common errors"
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Run `git init` before `git-crypt init`, or ensure you are inside a valid git repository directory.
-    **`gpg: error reading key: No public key`** — Verify the GPG_KEY_ID exists locally with `gpg --list-keys` and use the correct key ID format (16-character hex or email).
-    **`git-crypt: error: could not decrypt file`** — Ensure the correct decryption key file is provided with `git-crypt unlock` or that your GPG key is available in the local keyring.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not a git repository (or any of the parent directories): .git` | Run `git init` before `git-crypt init`, or ensure you are inside a valid git repository directory. |
+    | `gpg: error reading key: No public key` | Verify the GPG_KEY_ID exists locally with `gpg --list-keys` and use the correct key ID format (16-character hex or email). |
+    | `git-crypt: error: could not decrypt file` | Ensure the correct decryption key file is provided with `git-crypt unlock` or that your GPG key is available in the local keyring. |
 ```bash
 # Install
 brew install sops
@@ -334,9 +344,11 @@ database:
 ```
 
 !!! warning "Common errors"
-    **`error: failed to get the data key [error getting data key from pgp: gpg: no default secret key]`** — Ensure your GPG secret key is imported and set as the default key with `gpg --default-key FINGERPRINT`.
-    **`error: failed to encrypt the file [error encrypting with pgp: gpg: no public key]`** — Verify the PGP fingerprints in `.sops.yaml` match your imported public keys using `gpg --list-keys`.
-    **`error: failed to open file [permission denied]`** — Ensure the secrets directory exists and has write permissions with `mkdir -p secrets && chmod 700 secrets`.
+    | Error | Fix |
+    |---|---|
+    | `error: failed to get the data key [error getting data key from pgp: gpg: no default secret key]` | Ensure your GPG secret key is imported and set as the default key with `gpg --default-key FINGERPRINT`. |
+    | `error: failed to encrypt the file [error encrypting with pgp: gpg: no public key]` | Verify the PGP fingerprints in `.sops.yaml` match your imported public keys using `gpg --list-keys`. |
+    | `error: failed to open file [permission denied]` | Ensure the secrets directory exists and has write permissions with `mkdir -p secrets && chmod 700 secrets`. |
 ```bash
 # Verify LFS endpoint
 git lfs env | grep Endpoint
@@ -363,9 +375,11 @@ path/to/large/file.bin	admin@company.com	ID: 8f4c2e91-7a3b-4d9e-b2f1-5c8a9d3e7f2
 ```
 
 !!! warning "Common errors"
-    **`Error: Repository or object not found`** — Verify the LFS endpoint URL is accessible and the repository exists on the LFS server.
-    **`Error: path/to/large/file.bin is already locked by another user`** — Have the other user run `git lfs unlock` first, or contact them to release the lock.
-    **`fatal: Not a git repository`** — Run this command from within a Git repository that has LFS initialized with `git lfs install`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Repository or object not found` | Verify the LFS endpoint URL is accessible and the repository exists on the LFS server. |
+    | `Error: path/to/large/file.bin is already locked by another user` | Have the other user run `git lfs unlock` first, or contact them to release the lock. |
+    | `fatal: Not a git repository` | Run this command from within a Git repository that has LFS initialized with `git lfs install`. |
 ```bash
 # Scan entire history with truffleHog
 trufflehog git file://. --only-verified

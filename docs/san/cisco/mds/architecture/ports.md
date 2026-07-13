@@ -151,9 +151,11 @@ Topology Information for MDS9148S (Serial: FOX2412A1B2C)
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host <mds-mgmt-ip> port 22: Connection refused`** — Verify SSH is enabled on the MDS with `config t` → `ssh server enable` and confirm the management IP is reachable via ping.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if your environment has a trusted CA certificate installed, or ensure the management IP matches the certificate CN.
-    **`SNMP request timed out`** — Confirm the SNMP community string matches the MDS configuration with `show snmp community` and verify the monitoring server has network connectivity to the management IP.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host <mds-mgmt-ip> port 22: Connection refused` | Verify SSH is enabled on the MDS with `config t` → `ssh server enable` and confirm the management IP is reachable via ping. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag if your environment has a trusted CA certificate installed, or ensure the management IP matches the certificate CN. |
+    | `SNMP request timed out` | Confirm the SNMP community string matches the MDS configuration with `show snmp community` and verify the monitoring server has network connectivity to the management IP. |
 ---
 
 ## See also

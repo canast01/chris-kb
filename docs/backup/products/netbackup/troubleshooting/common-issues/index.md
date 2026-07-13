@@ -47,9 +47,11 @@ root@master# tail -200 /usr/openv/netbackup/logs/bpbrm/log.20240115
 ```
 
 !!! warning "Common errors"
-    **`bpcd: not found in process list`** — Restart bpcd on the client with `/usr/openv/netbackup/bin/bpcd -standalone` or verify the NetBackup installation is complete.
-    **`telnet: Unable to connect to remote host: Connection refused`** — Verify port 13782 is open in the firewall between master and client, and that bpcd is listening on the client.
-    **`tail: cannot open '/usr/openv/netbackup/logs/bpcd/log.20240115' for reading: No such file or directory`** — Correct the log filename date format (use `ls /usr/openv/netbackup/logs/bpcd/` to find the correct log file) or check that bpcd has actually run on that date.
+    | Error | Fix |
+    |---|---|
+    | `bpcd: not found in process list` | Restart bpcd on the client with `/usr/openv/netbackup/bin/bpcd -standalone` or verify the NetBackup installation is complete. |
+    | `telnet: Unable to connect to remote host: Connection refused` | Verify port 13782 is open in the firewall between master and client, and that bpcd is listening on the client. |
+    | `tail: cannot open '/usr/openv/netbackup/logs/bpcd/log.20240115' for reading: No such file or directory` | Correct the log filename date format (use `ls /usr/openv/netbackup/logs/bpcd/` to find the correct log file) or check that bpcd has actually run on that date. |
 ```bash
 # Check catalog backup job history
 bplist -S <master-server> -policy NBU_Catalog -Listdead -d 01/01/1970 00:00:00
@@ -94,9 +96,11 @@ Consistency verification completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`bplist: invalid date format`** — Use the correct date format `MM/DD/YYYY HH:MM:SS` or omit the `-d` flag to list all jobs.
-    **`bpbackup: policy NBU_Catalog_Backup not found`** — Verify the policy name exists with `bppllist` and use the exact policy name without extra characters.
-    **`bpdbm: database locked by another process`** — Wait for any running backup or maintenance jobs to complete, or restart the NetBackup database manager with `bpdbm -restart`.
+    | Error | Fix |
+    |---|---|
+    | `bplist: invalid date format` | Use the correct date format `MM/DD/YYYY HH:MM:SS` or omit the `-d` flag to list all jobs. |
+    | `bpbackup: policy NBU_Catalog_Backup not found` | Verify the policy name exists with `bppllist` and use the exact policy name without extra characters. |
+    | `bpdbm: database locked by another process` | Wait for any running backup or maintenance jobs to complete, or restart the NetBackup database manager with `bpdbm -restart`. |
 ```bash
 # Check all STU free space
 bpstulist -U
@@ -137,9 +141,11 @@ Cleanup completed successfully at 2024-01-15 14:35:42
 ```
 
 !!! warning "Common errors"
-    **`bpstulist: command not found`** — Ensure the NetBackup client or media server binaries are in your PATH, or source the NetBackup environment setup script (typically `. /usr/openv/netbackup/bin/bp.env`).
-    **`nbdevquery: invalid option -- 's'`** — Use the correct syntax `nbdevquery -listdp -stype PureDisk` without extra spaces, or check your NetBackup version for the correct flag format.
-    **`bpimage -cleanup: No images to process`** — Verify that expired images exist by running `bpimage -list` first; if none exist, ensure `bpexpdate` completed successfully and images were actually marked for expiration.
+    | Error | Fix |
+    |---|---|
+    | `bpstulist: command not found` | Ensure the NetBackup client or media server binaries are in your PATH, or source the NetBackup environment setup script (typically `. /usr/openv/netbackup/bin/bp.env`). |
+    | `nbdevquery: invalid option -- 's'` | Use the correct syntax `nbdevquery -listdp -stype PureDisk` without extra spaces, or check your NetBackup version for the correct flag format. |
+    | `bpimage -cleanup: No images to process` | Verify that expired images exist by running `bpimage -list` first; if none exist, ensure `bpexpdate` completed successfully and images were actually marked for expiration. |
 ```bash
 # Check MSDP pool status
 cacontrol --dsstat -d <msdp-path>

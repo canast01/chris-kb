@@ -91,8 +91,10 @@ Complete!
 ```
 
 !!! warning "Common errors"
-    **`Error: This command has to be run with superuser privileges (see sudo).`** — Ensure you have sudo access or run the command as root; verify with `sudo -l`.
-    **`Error: Failed to synchronize cache for repo 'fedora'`** — Check network connectivity and verify your DNF repository configuration with `sudo dnf repolist`.
+    | Error | Fix |
+    |---|---|
+    | `Error: This command has to be run with superuser privileges (see sudo).` | Ensure you have sudo access or run the command as root; verify with `sudo -l`. |
+    | `Error: Failed to synchronize cache for repo 'fedora'` | Check network connectivity and verify your DNF repository configuration with `sudo dnf repolist`. |
 **Linux (Debian/Ubuntu)**
 
 ```bash
@@ -110,8 +112,10 @@ python3-pip is already the newest version (20.0.2-5ubuntu1.9).
 ```
 
 !!! warning "Common errors"
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the command with `sudo` or ensure your user has appropriate sudo privileges.
-    **`E: Unable to locate package python3-pip`** — Update your package lists with `sudo apt update` before attempting installation.
+    | Error | Fix |
+    |---|---|
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the command with `sudo` or ensure your user has appropriate sudo privileges. |
+    | `E: Unable to locate package python3-pip` | Update your package lists with `sudo apt update` before attempting installation. |
 **macOS**
 
 ```bash
@@ -136,8 +140,10 @@ Unversioned symlinks `python`, `python-config`, `pip` etc. will be installed int
 ```
 
 !!! warning "Common errors"
-    **`Error: python: already installed`** — Run `brew upgrade python` to update to the latest version, or `brew uninstall python` first if you need a clean reinstall.
-    **`Error: The following directories are not writable by your user: /usr/local/Cellar`** — Run `sudo chown -R $(whoami) /usr/local/Cellar` to fix Homebrew permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: python: already installed` | Run `brew upgrade python` to update to the latest version, or `brew uninstall python` first if you need a clean reinstall. |
+    | `Error: The following directories are not writable by your user: /usr/local/Cellar` | Run `sudo chown -R $(whoami) /usr/local/Cellar` to fix Homebrew permissions. |
 **Windows**
 
 ```powershell
@@ -158,8 +164,10 @@ pip 23.2.1 from /usr/lib/python3.11/site-packages/pip (python 3.11)
 ```
 
 !!! warning "Common errors"
-    **`command not found: python3`** — Install Python 3 using your package manager (e.g., `apt install python3` on Ubuntu or `brew install python3` on macOS).
-    **`command not found: pip3`** — Install pip3 by running `apt install python3-pip` on Ubuntu or `brew install python3` on macOS, or upgrade Python to include pip.
+    | Error | Fix |
+    |---|---|
+    | `command not found: python3` | Install Python 3 using your package manager (e.g., `apt install python3` on Ubuntu or `brew install python3` on macOS). |
+    | `command not found: pip3` | Install pip3 by running `apt install python3-pip` on Ubuntu or `brew install python3` on macOS, or upgrade Python to include pip. |
 On Linux/macOS always use `python3`/`pip3` to avoid invoking a system Python 2
 interpreter.
 
@@ -180,8 +188,10 @@ python3 -m venv .venv
 ```
 
 !!! warning "Common errors"
-    **`Error: Command 'python3' not found`** — Install Python 3 using your package manager (e.g., `apt install python3` on Ubuntu or `brew install python3` on macOS).
-    **`Error: [Errno 13] Permission denied: '.venv'`** — Ensure the current directory is writable and you have sufficient permissions; try running from a different location or use `sudo` if necessary.
+    | Error | Fix |
+    |---|---|
+    | `Error: Command 'python3' not found` | Install Python 3 using your package manager (e.g., `apt install python3` on Ubuntu or `brew install python3` on macOS). |
+    | `Error: [Errno 13] Permission denied: '.venv'` | Ensure the current directory is writable and you have sufficient permissions; try running from a different location or use `sudo` if necessary. |
 **Activate** — Linux/macOS: `source .venv/bin/activate` —
 Windows PowerShell: `.venv\Scripts\Activate.ps1`
 
@@ -206,8 +216,10 @@ Successfully installed pip-24.2.1
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Could not install packages due to an OSError: [Errno 13] Permission denied`** — Run the command with `sudo` or use `pip install --user --upgrade pip` to install in user directory.
-    **`ERROR: pip's dependency resolver does not currently take into account all the packages that are installed`** — This is a warning; upgrade pip again or use `pip install --upgrade --force-reinstall pip` to resolve dependency conflicts.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Could not install packages due to an OSError: [Errno 13] Permission denied` | Run the command with `sudo` or use `pip install --user --upgrade pip` to install in user directory. |
+    | `ERROR: pip's dependency resolver does not currently take into account all the packages that are installed` | This is a warning; upgrade pip again or use `pip install --upgrade --force-reinstall pip` to resolve dependency conflicts. |
 Add `.venv/` to `.gitignore` so the directory is not committed to version control.
 
 ---
@@ -239,9 +251,11 @@ Successfully installed requests-2.31.0 boto3-1.28.85 azure-identity-1.14.0 param
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Could not find a version that satisfies the requirement requests`** — Verify your pip index is accessible and the package name is spelled correctly.
-    **`ERROR: Could not open requirements.txt`** — Ensure the requirements.txt file exists in the current directory and you have read permissions.
-    **`error: Microsoft Visual C++ 14.0 or greater is required`** — Install the Microsoft C++ Build Tools or use a pre-built wheel for your Python version.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Could not find a version that satisfies the requirement requests` | Verify your pip index is accessible and the package name is spelled correctly. |
+    | `ERROR: Could not open requirements.txt` | Ensure the requirements.txt file exists in the current directory and you have read permissions. |
+    | `error: Microsoft Visual C++ 14.0 or greater is required` | Install the Microsoft C++ Build Tools or use a pre-built wheel for your Python version. |
 | Package | Purpose |
 |---|---|
 | `requests` | HTTP client for REST API calls |
@@ -263,8 +277,10 @@ pip freeze > requirements.txt
 ```
 
 !!! warning "Common errors"
-    **`pip: command not found`** — Ensure Python and pip are installed, or use `python3 -m pip freeze > requirements.txt` if pip is not in PATH.
-    **`Permission denied`** — Run the command in a directory where you have write permissions, or use `sudo pip freeze > requirements.txt` if necessary.
+    | Error | Fix |
+    |---|---|
+    | `pip: command not found` | Ensure Python and pip are installed, or use `python3 -m pip freeze > requirements.txt` if pip is not in PATH. |
+    | `Permission denied` | Run the command in a directory where you have write permissions, or use `sudo pip freeze > requirements.txt` if necessary. |
 ---
 
 ## Configure Environment Variables
@@ -285,8 +301,10 @@ VCENTER_PASS=changeme
 ```
 
 !!! warning "Common errors"
-    **`bash: .env: command not found`** — Create the `.env` file first with `touch .env` or use a text editor like `nano .env`.
-    **`Permission denied`** — Ensure the `.env` file has read permissions by running `chmod 600 .env`.
+    | Error | Fix |
+    |---|---|
+    | `bash: .env: command not found` | Create the `.env` file first with `touch .env` or use a text editor like `nano .env`. |
+    | `Permission denied` | Ensure the `.env` file has read permissions by running `chmod 600 .env`. |
 Install and use `python-dotenv`:
 
 ```bash
@@ -314,8 +332,10 @@ echo ".env" >> .gitignore
 ```
 
 !!! warning "Common errors"
-    **`bash: .gitignore: Permission denied`** — Ensure the file has write permissions with `chmod 644 .gitignore` or run the command from a directory where you have write access.
-    **`bash: .gitignore: No such file or directory`** — Create the `.gitignore` file first with `touch .gitignore` before appending to it.
+    | Error | Fix |
+    |---|---|
+    | `bash: .gitignore: Permission denied` | Ensure the file has write permissions with `chmod 644 .gitignore` or run the command from a directory where you have write access. |
+    | `bash: .gitignore: No such file or directory` | Create the `.gitignore` file first with `touch .gitignore` before appending to it. |
 In production, inject secrets from a secrets manager (HashiCorp Vault, AWS Secrets
 Manager, GitHub Actions secrets) rather than shipping a `.env` file.
 
@@ -410,9 +430,11 @@ Initialized connection pool with 4 workers
 ```
 
 !!! warning "Common errors"
-    **`ModuleNotFoundError: No module named 'requests'`** — Run `pip install requests` to install the missing dependency.
-    **`FileNotFoundError: [Errno 2] No such file or directory: 'scripts/hello.py'`** — Verify the script path is correct and run the command from the project root directory.
-    **`KeyError: 'VCENTER_HOST'`** — Ensure the `.env` file exists in the current directory and contains the `VCENTER_HOST` variable.
+    | Error | Fix |
+    |---|---|
+    | `ModuleNotFoundError: No module named 'requests'` | Run `pip install requests` to install the missing dependency. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: 'scripts/hello.py'` | Verify the script path is correct and run the command from the project root directory. |
+    | `KeyError: 'VCENTER_HOST'` | Ensure the `.env` file exists in the current directory and contains the `VCENTER_HOST` variable. |
 | Check | Expected |
 |---|---|
 | `python3 --version` | Python 3.10 or later |

@@ -107,9 +107,11 @@ aws bedrock-agent create-data-source \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ValidationException) when calling the CreateKnowledgeBase operation: Invalid IAM role ARN format or role does not have required trust relationship with Bedrock`** — Verify the role ARN is correct and the role's trust policy includes `bedrock.amazonaws.com` as a principal.
-    **`An error occurred (ResourceNotFoundException) when calling the CreateDataSource operation: Knowledge base KB123456 not found`** — Wait for the knowledge base creation to complete (status changes from CREATING to ACTIVE) before creating data sources.
-    **`An error occurred (ValidationException) when calling the CreateKnowledgeBase operation: Collection arn:aws:aoss:us-east-1:123456789012:collection/abc123 does not exist or is not accessible`** — Ensure the OpenSearch Serverless collection exists in the same region and the Bedrock execution role has `aoss:APIAccessAll` permissions.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ValidationException) when calling the CreateKnowledgeBase operation: Invalid IAM role ARN format or role does not have required trust relationship with Bedrock` | Verify the role ARN is correct and the role's trust policy includes `bedrock.amazonaws.com` as a principal. |
+    | `An error occurred (ResourceNotFoundException) when calling the CreateDataSource operation: Knowledge base KB123456 not found` | Wait for the knowledge base creation to complete (status changes from CREATING to ACTIVE) before creating data sources. |
+    | `An error occurred (ValidationException) when calling the CreateKnowledgeBase operation: Collection arn:aws:aoss:us-east-1:123456789012:collection/abc123 does not exist or is not accessible` | Ensure the OpenSearch Serverless collection exists in the same region and the Bedrock execution role has `aoss:APIAccessAll` permissions. |
 ## Embeddings and Chunking
 
 Bedrock supports several embedding models. Chunking strategy affects retrieval quality significantly.
@@ -178,9 +180,11 @@ aws bedrock-agent get-ingestion-job \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the StartIngestionJob operation: Knowledge base KB123456 not found`** — Verify the knowledge base ID exists in your account and region using `aws bedrock-agent list-knowledge-bases --region us-east-1`.
-    **`An error occurred (ValidationException) when calling the GetIngestionJob operation: Invalid ingestion job ID format`** — Replace `JOB_ID` with the actual job ID returned from the start command (e.g., `job-a1b2c3d4e5f6g7h8`).
-    **`An error occurred (AccessDeniedException) when calling the StartIngestionJob operation: User is not authorized to perform: bedrock-agent:StartIngestionJob`** — Add the `bedrock:StartIngestionJob` and `bedrock:GetIngestionJob` permissions to your IAM user or role policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the StartIngestionJob operation: Knowledge base KB123456 not found` | Verify the knowledge base ID exists in your account and region using `aws bedrock-agent list-knowledge-bases --region us-east-1`. |
+    | `An error occurred (ValidationException) when calling the GetIngestionJob operation: Invalid ingestion job ID format` | Replace `JOB_ID` with the actual job ID returned from the start command (e.g., `job-a1b2c3d4e5f6g7h8`). |
+    | `An error occurred (AccessDeniedException) when calling the StartIngestionJob operation: User is not authorized to perform: bedrock-agent:StartIngestionJob` | Add the `bedrock:StartIngestionJob` and `bedrock:GetIngestionJob` permissions to your IAM user or role policy. |
 Ingestion jobs process documents in parallel. Large buckets (10k+ files) can take 30+ minutes. Check `statistics.numberOfDocumentsFailed` in the job response for partial failures.
 
 ## Associating with an Agent
@@ -209,9 +213,11 @@ aws bedrock-agent associate-agent-knowledge-base \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the AssociateAgentKnowledgeBase operation: Could not find agent with id AGENTID123`** — Verify the agent ID exists in your AWS account and region using `aws bedrock-agent list-agents`.
-    **`An error occurred (ValidationException) when calling the AssociateAgentKnowledgeBase operation: Knowledge base KB123456 does not exist`** — Confirm the knowledge base ID is correct and exists in the same region using `aws bedrock list-knowledge-bases`.
-    **`An error occurred (ConflictException) when calling the AssociateAgentKnowledgeBase operation: Knowledge base is already associated with this agent`** — Remove the existing association first using `aws bedrock-agent disassociate-agent-knowledge-base` before re-associating.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the AssociateAgentKnowledgeBase operation: Could not find agent with id AGENTID123` | Verify the agent ID exists in your AWS account and region using `aws bedrock-agent list-agents`. |
+    | `An error occurred (ValidationException) when calling the AssociateAgentKnowledgeBase operation: Knowledge base KB123456 does not exist` | Confirm the knowledge base ID is correct and exists in the same region using `aws bedrock list-knowledge-bases`. |
+    | `An error occurred (ConflictException) when calling the AssociateAgentKnowledgeBase operation: Knowledge base is already associated with this agent` | Remove the existing association first using `aws bedrock-agent disassociate-agent-knowledge-base` before re-associating. |
 ## Troubleshooting
 
 | Issue | Cause | Resolution |

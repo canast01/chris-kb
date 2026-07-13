@@ -236,9 +236,11 @@ web-prod-03.example.com : ok=6 changed=1 unreachable=0 failed=0
 ```
 
 !!! warning "Common errors"
-    **`fatal: [web-prod-02.example.com]: FAILED! => {"msg": "The conditional check 'lb_token is defined' failed because one of the variables is undefined: lb_token"}`** — Replace `YOUR_TOKEN` with an actual token value or pass it via `-e "lb_token=<actual_token>"`.
-    **`[WARNING]: Unable to parse inventory/hosts.yml as an inventory source`** — Verify the inventory file path is correct relative to the current directory and the YAML syntax is valid.
-    **`fatal: [web-prod-01.example.com]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure SSH keys are configured correctly and the ansible user has passwordless SSH access to all target hosts.
+    | Error | Fix |
+    |---|---|
+    | `fatal: [web-prod-02.example.com]: FAILED! => {"msg": "The conditional check 'lb_token is defined' failed because one of the variables is undefined: lb_token"}` | Replace `YOUR_TOKEN` with an actual token value or pass it via `-e "lb_token=<actual_token>"`. |
+    | `[WARNING]: Unable to parse inventory/hosts.yml as an inventory source` | Verify the inventory file path is correct relative to the current directory and the YAML syntax is valid. |
+    | `fatal: [web-prod-01.example.com]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Ensure SSH keys are configured correctly and the ansible user has passwordless SSH access to all target hosts. |
 **What you should see**
 
 Ansible processes one server at a time. For each server you see: drain request, wait for connections to drop, service stop, package update, service start, health check (retries until 200 OK), then re-add to LB. If any step fails the playbook stops completely — no other servers are touched.
@@ -435,9 +437,11 @@ db-replica.internal        : ok=3    changed=0    unreachable=0    failed=0
 ```
 
 !!! warning "Common errors"
-    **`[Errno 2] No such file or directory: 'inventory/hosts.yml'`** — Verify the inventory file path is correct relative to your current working directory or use an absolute path with `-i`.
-    **`ERROR! Syntax Error while loading YAML from 'inventory-validate.yml'`** — Check the playbook YAML syntax for indentation errors or invalid key-value pairs using `ansible-playbook --syntax-check inventory-validate.yml`.
-    **`fatal: [web-prod-01.internal]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh"}`** — Ensure SSH keys are configured correctly and the target hosts are reachable; verify with `ssh -v <hostname>` first.
+    | Error | Fix |
+    |---|---|
+    | `[Errno 2] No such file or directory: 'inventory/hosts.yml'` | Verify the inventory file path is correct relative to your current working directory or use an absolute path with `-i`. |
+    | `ERROR! Syntax Error while loading YAML from 'inventory-validate.yml'` | Check the playbook YAML syntax for indentation errors or invalid key-value pairs using `ansible-playbook --syntax-check inventory-validate.yml`. |
+    | `fatal: [web-prod-01.internal]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh"}` | Ensure SSH keys are configured correctly and the target hosts are reachable; verify with `ssh -v <hostname>` first. |
 **What you should see**
 
 For each host in your inventory, a table is printed showing PASS or FAIL for each check: SSH, Python, sudo, required packages, hostname, NTP, and DNS. At the end, a list of non-compliant hosts is shown. The playbook fails (exits non-zero) if any hosts fail the SSH check.
@@ -557,9 +561,11 @@ fi
 ```
 
 !!! warning "Common errors"
-    **`VAULT_PASSWORD_FILE is required`** — Set the environment variable before running: `export VAULT_PASSWORD_FILE=/path/to/vault/password`
-    **`No such file or directory: vars/db_secrets.yml`** — Verify the DB_VARS_FILE path exists or set it explicitly: `DB_VARS_FILE=path/to/file ./rotate-db-secret.sh`
-    **`ERROR! the playbook: playbooks/push-db-secret.yml could not be found`** — Confirm the PLAYBOOK path is correct and relative to your working directory, or set it explicitly: `PLAYBOOK=correct/path.yml ./rotate-db-secret.sh`
+    | Error | Fix |
+    |---|---|
+    | `VAULT_PASSWORD_FILE is required` | Set the environment variable before running: `export VAULT_PASSWORD_FILE=/path/to/vault/password` |
+    | `No such file or directory: vars/db_secrets.yml` | Verify the DB_VARS_FILE path exists or set it explicitly: `DB_VARS_FILE=path/to/file ./rotate-db-secret.sh` |
+    | `ERROR! the playbook: playbooks/push-db-secret.yml could not be found` | Confirm the PLAYBOOK path is correct and relative to your working directory, or set it explicitly: `PLAYBOOK=correct/path.yml ./rotate-db-secret.sh` |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -617,9 +623,11 @@ Secret rotation completed successfully at 2024-01-15T09:42:17Z
 ```
 
 !!! warning "Common errors"
-    **`No such file or directory`** — Verify the vault password file path exists and is readable with `ls -l /path/to/vault-password.txt`.
-    **`vars/db_secrets.yml: No such file or directory`** — Ensure you are running the script from the correct working directory (typically the Ansible project root) where the vars/ subdirectory exists.
-    **`ERROR! Decryption failed`** — Check that the vault password file contains the correct decryption key and matches the vault ID used to encrypt the secrets file.
+    | Error | Fix |
+    |---|---|
+    | `No such file or directory` | Verify the vault password file path exists and is readable with `ls -l /path/to/vault-password.txt`. |
+    | `vars/db_secrets.yml: No such file or directory` | Ensure you are running the script from the correct working directory (typically the Ansible project root) where the vars/ subdirectory exists. |
+    | `ERROR! Decryption failed` | Check that the vault password file contains the correct decryption key and matches the vault ID used to encrypt the secrets file. |
 **What you should see**
 
 Step-by-step log messages showing: backup created, new password generated, password encrypted with Ansible Vault, vars file updated, playbook running. If the playbook succeeds you see a success message. If the playbook fails, the old vars file is automatically restored from backup and the script exits with an error so you can investigate.
@@ -769,9 +777,11 @@ Daily check: 1 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`[FAIL] Inventory valid`** — Verify the inventory file path in `INVENTORY_FILE` environment variable or `/etc/ansible/hosts` exists and has correct syntax.
-    **`ansible: command not found`** — Install Ansible with `pip install ansible` or `apt-get install ansible` depending on your package manager.
-    **`Permission denied: '/var/log/ansible.log'`** — Ensure the script runs with sufficient privileges or adjust `ANSIBLE_LOG_PATH` to a readable log location.
+    | Error | Fix |
+    |---|---|
+    | `[FAIL] Inventory valid` | Verify the inventory file path in `INVENTORY_FILE` environment variable or `/etc/ansible/hosts` exists and has correct syntax. |
+    | `ansible: command not found` | Install Ansible with `pip install ansible` or `apt-get install ansible` depending on your package manager. |
+    | `Permission denied: '/var/log/ansible.log'` | Ensure the script runs with sufficient privileges or adjust `ANSIBLE_LOG_PATH` to a readable log location. |
 ---
 
 ## Incident Triage Script
@@ -991,9 +1001,11 @@ Pre-check complete: 0 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`ERROR! the playbook: /opt/ansible/playbooks/deploy-webservers.yml could not be found`** — Verify the PLAYBOOK variable is set to an absolute path and the file exists.
-    **`fatal: [web-prod-02.internal]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Connection refused"}`** — Ensure SSH is running on the target host, firewall rules allow port 22, and the ansible user has valid credentials configured.
-    **`[FAIL] Collection missing: community.general (run: ansible-galaxy collection install community.general)`** — Run `ansible-galaxy collection install community.general` on the control node before executing the playbook.
+    | Error | Fix |
+    |---|---|
+    | `ERROR! the playbook: /opt/ansible/playbooks/deploy-webservers.yml could not be found` | Verify the PLAYBOOK variable is set to an absolute path and the file exists. |
+    | `fatal: [web-prod-02.internal]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Connection refused"}` | Ensure SSH is running on the target host, firewall rules allow port 22, and the ansible user has valid credentials configured. |
+    | `[FAIL] Collection missing: community.general (run: ansible-galaxy collection install community.general)` | Run `ansible-galaxy collection install community.general` on the control node before executing the playbook. |
 ---
 
 ## Post-Change Validation Script
@@ -1087,9 +1099,11 @@ Post-change validation: 4 PASS  |  0 FAIL
 ```
 
 !!! warning "Common errors"
-    **`[Errno 2] No such file or directory: '/etc/ansible/hosts'`** — Set the INVENTORY_FILE environment variable or verify the inventory path exists with `ls -la /etc/ansible/hosts`.
-    **`fatal: [web-01.prod]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure SSH keys are properly configured and the ansible_user has passwordless SSH access to all inventory hosts.
-    **`ERROR! Unexpected Exception: No inventory was parsed`** — Verify the inventory file format is valid YAML/INI and contains at least one host or group definition.
+    | Error | Fix |
+    |---|---|
+    | `[Errno 2] No such file or directory: '/etc/ansible/hosts'` | Set the INVENTORY_FILE environment variable or verify the inventory path exists with `ls -la /etc/ansible/hosts`. |
+    | `fatal: [web-01.prod]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Ensure SSH keys are properly configured and the ansible_user has passwordless SSH access to all inventory hosts. |
+    | `ERROR! Unexpected Exception: No inventory was parsed` | Verify the inventory file format is valid YAML/INI and contains at least one host or group definition. |
 ---
 
 ## Health Check Script
@@ -1156,9 +1170,11 @@ Status: WARNING
 ```
 
 !!! warning "Common errors"
-    **`ansible: command not found`** — Install Ansible via `pip install ansible` or your system package manager.
-    **`[Errno 2] No such file or directory: '/etc/ansible/hosts'`** — Set the `INVENTORY_FILE` environment variable or create the default inventory file at `/etc/ansible/hosts`.
-    **`awk: fatal: cannot open file /var/log/ansible.log for reading (No such file or directory)`** — Create the log directory with `mkdir -p /var/log && touch /var/log/ansible.log` or set `ANSIBLE_LOG_PATH` to an existing file.
+    | Error | Fix |
+    |---|---|
+    | `ansible: command not found` | Install Ansible via `pip install ansible` or your system package manager. |
+    | `[Errno 2] No such file or directory: '/etc/ansible/hosts'` | Set the `INVENTORY_FILE` environment variable or create the default inventory file at `/etc/ansible/hosts`. |
+    | `awk: fatal: cannot open file /var/log/ansible.log for reading (No such file or directory)` | Create the log directory with `mkdir -p /var/log && touch /var/log/ansible.log` or set `ANSIBLE_LOG_PATH` to an existing file. |
 ---
 
 ## Verify

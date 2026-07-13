@@ -47,8 +47,10 @@ psql (15.2, server 15.2)
 ```
 
 !!! warning "Common errors"
-    **`Job for postgresql-15.service failed because the control process exited with error code.`** — Check `/var/log/postgresql/postgresql-15-main.log` for startup errors, likely due to incompatible configuration parameters in `postgresql.conf` after the upgrade.
-    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory`** — Verify PostgreSQL is running with `sudo systemctl status postgresql-15` and check that the socket directory exists and has correct permissions.
+    | Error | Fix |
+    |---|---|
+    | `Job for postgresql-15.service failed because the control process exited with error code.` | Check `/var/log/postgresql/postgresql-15-main.log` for startup errors, likely due to incompatible configuration parameters in `postgresql.conf` after the upgrade. |
+    | `psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory` | Verify PostgreSQL is running with `sudo systemctl status postgresql-15` and check that the socket directory exists and has correct permissions. |
 ## Major Version Upgrade with `pg_upgrade`
 
 ```bash
@@ -129,9 +131,11 @@ Unit postgresql-16.service started.
 ```
 
 !!! warning "Common errors"
-    **`pg_upgrade: error: could not connect to compatible PostgreSQL server (libpq version 16, server version 15.0)`** — Ensure the old PostgreSQL 15 instance is stopped before running pg_upgrade.
-    **`permission denied while trying to open version file "/var/lib/pgsql/16/data/PG_VERSION"`** — Run the initdb step with proper permissions or ensure /var/lib/pgsql/16/data is owned by the postgres user.
-    **`FATAL: could not create shared memory segment: No space left on device`** — Increase shared_buffers in postgresql.conf or reduce the value before starting the new cluster.
+    | Error | Fix |
+    |---|---|
+    | `pg_upgrade: error: could not connect to compatible PostgreSQL server (libpq version 16, server version 15.0)` | Ensure the old PostgreSQL 15 instance is stopped before running pg_upgrade. |
+    | `permission denied while trying to open version file "/var/lib/pgsql/16/data/PG_VERSION"` | Run the initdb step with proper permissions or ensure /var/lib/pgsql/16/data is owned by the postgres user. |
+    | `FATAL: could not create shared memory segment: No space left on device` | Increase shared_buffers in postgresql.conf or reduce the value before starting the new cluster. |
 ## Post-Upgrade Steps
 
 ```bash
@@ -169,9 +173,11 @@ ALTER EXTENSION
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory`** — Verify PostgreSQL is running with `sudo systemctl status postgresql-16` and check socket location in postgresql.conf.
-    **`ERROR: extension "pg_stat_statements" does not exist`** — Create the extension first with `psql -U postgres -d app_prod -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"` before attempting to update it.
-    **`ERROR: permission denied for schema public`** — Ensure the postgres user has proper ownership of databases with `ALTER DATABASE app_prod OWNER TO postgres;`.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory` | Verify PostgreSQL is running with `sudo systemctl status postgresql-16` and check socket location in postgresql.conf. |
+    | `ERROR: extension "pg_stat_statements" does not exist` | Create the extension first with `psql -U postgres -d app_prod -c "CREATE EXTENSION IF NOT EXISTS pg_stat_statements;"` before attempting to update it. |
+    | `ERROR: permission denied for schema public` | Ensure the postgres user has proper ownership of databases with `ALTER DATABASE app_prod OWNER TO postgres;`. |
 ---
 
 ## Verify

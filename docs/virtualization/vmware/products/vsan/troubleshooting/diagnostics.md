@@ -129,8 +129,10 @@ Health Check Results:
 ```
 
 !!! warning "Common errors"
-    **`vSAN health cluster list: Unknown command or namespace`** — Verify the ESXi host has vSAN enabled and run the command from the ESXi shell with proper vSAN module loaded.
-    **`Error: Unable to connect to vSAN cluster`** — Ensure all vSAN nodes are online and network connectivity between cluster members is functional.
+    | Error | Fix |
+    |---|---|
+    | `vSAN health cluster list: Unknown command or namespace` | Verify the ESXi host has vSAN enabled and run the command from the ESXi shell with proper vSAN module loaded. |
+    | `Error: Unable to connect to vSAN cluster` | Ensure all vSAN nodes are online and network connectivity between cluster members is functional. |
 | Health category | What it checks |
 |---|---|
 | Data | Object policy compliance, rebuild capacity, resync status |
@@ -182,9 +184,11 @@ Interface vmk1
 ```
 
 !!! warning "Common errors"
-    **`Cluster Partition State: NOT_ELECTED`** — Verify network connectivity between all vSAN hosts and check for split-brain conditions using `esxcli vsan cluster get` on each host.
-    **`Agent State: AGENT_UNREACHABLE`** — Restart the vSAN agent on the affected host with `esxcli vsan cluster new -u <cluster-uuid>` or reboot the ESXi host.
-    **`No VMkernel adapter with vSAN traffic type found`** — Configure a vSAN-enabled VMkernel adapter on the host using `esxcli vsan network ip add -i vmk1 -t vsan`.
+    | Error | Fix |
+    |---|---|
+    | `Cluster Partition State: NOT_ELECTED` | Verify network connectivity between all vSAN hosts and check for split-brain conditions using `esxcli vsan cluster get` on each host. |
+    | `Agent State: AGENT_UNREACHABLE` | Restart the vSAN agent on the affected host with `esxcli vsan cluster new -u <cluster-uuid>` or reboot the ESXi host. |
+    | `No VMkernel adapter with vSAN traffic type found` | Configure a vSAN-enabled VMkernel adapter on the host using `esxcli vsan network ip add -i vmk1 -t vsan`. |
 ---
 
 ## Step 2 — Performance diagnostics
@@ -233,9 +237,11 @@ Physical Disk I/O Breakdown:
 ```
 
 !!! warning "Common errors"
-    **`Error: vSAN is not enabled on this host`** — Verify vSAN is licensed and enabled on the ESXi host via vCenter or `esxcli vsan cluster get`.
-    **`Error: Permission denied`** — Ensure you are logged in as root; use `whoami` to verify and reconnect via SSH if needed.
-    **`Error: Unknown command or namespace`** — Confirm the ESXi version supports these esxcli vsan commands (vSAN 6.0+); check with `esxcli system version get`.
+    | Error | Fix |
+    |---|---|
+    | `Error: vSAN is not enabled on this host` | Verify vSAN is licensed and enabled on the ESXi host via vCenter or `esxcli vsan cluster get`. |
+    | `Error: Permission denied` | Ensure you are logged in as root; use `whoami` to verify and reconnect via SSH if needed. |
+    | `Error: Unknown command or namespace` | Confirm the ESXi version supports these esxcli vsan commands (vSAN 6.0+); check with `esxcli system version get`. |
 ### vSAN Performance from vCenter UI
 
 vSphere Client → Cluster → Monitor → vSAN → Performance
@@ -312,9 +318,11 @@ NIC vmnic2 Stats:
 ```
 
 !!! warning "Common errors"
-    **`vmkping: Unknown host 192.168.100.42`** — Verify the peer VMK IP address is reachable and correct the IP in the command.
-    **`esxcli vsan storage stats get: Unknown command or namespace`** — Ensure vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN status.
-    **`esxcli network nic stats get: NIC vmnic2 not found`** — Confirm the NIC name with `esxcli network nic list` and replace vmnic2 with the correct adapter name.
+    | Error | Fix |
+    |---|---|
+    | `vmkping: Unknown host 192.168.100.42` | Verify the peer VMK IP address is reachable and correct the IP in the command. |
+    | `esxcli vsan storage stats get: Unknown command or namespace` | Ensure vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN status. |
+    | `esxcli network nic stats get: NIC vmnic2 not found` | Confirm the NIC name with `esxcli network nic list` and replace vmnic2 with the correct adapter name. |
 ### Identify noisy VMs
 
 ```powershell
@@ -376,8 +384,10 @@ Object UUID                          Health State    Component Count    Owner No
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan debug object`** — Verify vSAN is licensed and enabled on the cluster, then run `esxcli vsan cluster get` to confirm vSAN status.
-    **`Error: Permission denied`** — Run the command with root privileges or ensure your user account has vSAN administration permissions in vCenter.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan debug object` | Verify vSAN is licensed and enabled on the cluster, then run `esxcli vsan cluster get` to confirm vSAN status. |
+    | `Error: Permission denied` | Run the command with root privileges or ensure your user account has vSAN administration permissions in vCenter. |
 ### Object detail
 
 ```bash
@@ -404,8 +414,10 @@ Recoverability: Recoverable
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not find object with UUID <object-uuid>`** — Verify the UUID is correct by running `esxcli vsan debug object list` and copy the exact UUID from the output.
-    **`Error: VSAN is not enabled on this cluster`** — Ensure the host is part of an active vSAN cluster and vSAN service is running with `esxcli vsan cluster get`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not find object with UUID <object-uuid>` | Verify the UUID is correct by running `esxcli vsan debug object list` and copy the exact UUID from the output. |
+    | `Error: VSAN is not enabled on this cluster` | Ensure the host is part of an active vSAN cluster and vSAN service is running with `esxcli vsan cluster get`. |
 This shows:
 - Object type (vmnamespace, vmswap, vdisk)
 - Component locations (which host/disk each component is on)
@@ -444,8 +456,10 @@ vsan-vsan-6.7.0-44332211                550e8400-e29b-41d4-a716-446655440002 Abs
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the local dcui or hostd process after 30 seconds.`** — Ensure the ESXi host management services are running with `systemctl status hostd` and restart if necessary.
-    **`Unknown command or namespace vsan debug component list.`** — Verify VSAN is properly installed and enabled on the host; check with `esxcli vsan cluster get`.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the local dcui or hostd process after 30 seconds.` | Ensure the ESXi host management services are running with `systemctl status hostd` and restart if necessary. |
+    | `Unknown command or namespace vsan debug component list.` | Verify VSAN is properly installed and enabled on the host; check with `esxcli vsan cluster get`. |
 ### Map object to VM
 
 ```powershell
@@ -515,9 +529,11 @@ Ping 192.168.100.13: 10 packets transmitted, 10 packets received, 0% packet loss
 ```
 
 !!! warning "Common errors"
-    **`vmkping: Unknown network interface vmk2`** — Verify the vSAN vmkernel interface name with `esxcli network ip interface list` and replace vmk2 with the correct interface.
-    **`PING 192.168.100.11 (192.168.100.11): sendto: No route to host`** — Confirm the vSAN vmkernel interface is bound to the correct vSAN network and check physical switch connectivity.
-    **`Message too long`** — Reduce the packet size below the MTU (try `-s 8960` for MTU 9000) or verify all hosts support jumbo frames with `esxcli network nic get -n vmnic0 | grep MTU`.
+    | Error | Fix |
+    |---|---|
+    | `vmkping: Unknown network interface vmk2` | Verify the vSAN vmkernel interface name with `esxcli network ip interface list` and replace vmk2 with the correct interface. |
+    | `PING 192.168.100.11 (192.168.100.11): sendto: No route to host` | Confirm the vSAN vmkernel interface is bound to the correct vSAN network and check physical switch connectivity. |
+    | `Message too long` | Reduce the packet size below the MTU (try `-s 8960` for MTU 9000) or verify all hosts support jumbo frames with `esxcli network nic get -n vmnic0 | grep MTU`. |
 ### Verify vSAN VMkernel configuration
 
 ```bash
@@ -556,8 +572,10 @@ Destination     Netmask         Gateway         Interface
 ```
 
 !!! warning "Common errors"
-    **`VSAN tag not present on vmk2`** — Assign the VSAN tag to vmk2 using `esxcli vsan network tag add -i vmk2`.
-    **`MTU mismatch: vmk2 has MTU 1500, expected 9000`** — Reconfigure the vSAN portgroup to use MTU 9000 via vSphere Client or `esxcli network vswitch standard portgroup set -p vSAN -m 9000`.
+    | Error | Fix |
+    |---|---|
+    | `VSAN tag not present on vmk2` | Assign the VSAN tag to vmk2 using `esxcli vsan network tag add -i vmk2`. |
+    | `MTU mismatch: vmk2 has MTU 1500, expected 9000` | Reconfigure the vSAN portgroup to use MTU 9000 via vSphere Client or `esxcli network vswitch standard portgroup set -p vSAN -m 9000`. |
 ### NIC and switch diagnostics
 
 ```bash
@@ -595,8 +613,10 @@ TxDropped: 0
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or set of options: -n vmnic2`** — Verify the NIC name with `esxcli network nic list` and ensure you're using the correct vmnic identifier.
-    **`Name: vmnic2 Link: Down`** — Check physical cable connection to the switch port and verify the switch port is enabled and not in error-disabled state.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or set of options: -n vmnic2` | Verify the NIC name with `esxcli network nic list` and ensure you're using the correct vmnic identifier. |
+    | `Name: vmnic2 Link: Down` | Check physical cable connection to the switch port and verify the switch port is enabled and not in error-disabled state. |
 Expected NIC state: 25 GbE or 10 GbE, full duplex, zero errors. Any errors/discards on the NIC indicate physical layer issues (cable, SFP, switch port).
 
 ---
@@ -645,9 +665,11 @@ Temperature_Celsius              38      60         45
 ```
 
 !!! warning "Common errors"
-    **`Device naa.<naa> not found`** — Verify the NAA identifier is correct by running `esxcli vsan storage list` and copy the exact Name field.
-    **`Unable to read SMART data from device`** — Ensure the device is online and not already failed by checking `esxcli storage core device list` for device status.
-    **`grep: /var/log/vmkernel.log: No such file or directory`** — Confirm you are running this command on an ESXi host (not vCenter); the vmkernel.log is local to each ESXi node.
+    | Error | Fix |
+    |---|---|
+    | `Device naa.<naa> not found` | Verify the NAA identifier is correct by running `esxcli vsan storage list` and copy the exact Name field. |
+    | `Unable to read SMART data from device` | Ensure the device is online and not already failed by checking `esxcli storage core device list` for device status. |
+    | `grep: /var/log/vmkernel.log: No such file or directory` | Confirm you are running this command on an ESXi host (not vCenter); the vmkernel.log is local to each ESXi node. |
 ### Disk group status
 
 ```bash
@@ -676,8 +698,10 @@ naa.5001405a1b2c3d51
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Ensure you are running this command on an ESXi host with vSAN enabled, not on a vCenter Server.
-    **`grep: /var/log/vmkernel.log: No such file or directory`** — Verify the ESXi host is running and accessible; this log path is specific to ESXi hosts and does not exist on vCenter appliances.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Ensure you are running this command on an ESXi host with vSAN enabled, not on a vCenter Server. |
+    | `grep: /var/log/vmkernel.log: No such file or directory` | Verify the ESXi host is running and accessible; this log path is specific to ESXi hosts and does not exist on vCenter appliances. |
 ### Force a disk check (LSOM)
 
 ```bash
@@ -720,9 +744,11 @@ Check End Time: 2024-01-15 14:36:41 UTC
 ```
 
 !!! warning "Common errors"
-    **`vSAN Storage Check is not supported on this host`** — Verify the host is vSAN-enabled and part of an active vSAN cluster using `esxcli vsan cluster get`.
-    **`Permission denied: User does not have vSAN.Cluster.Modify privilege`** — Run the command as root or a user with vSAN administrator role on the vCenter Server.
-    **`vSAN Storage Check timed out after 30 minutes`** — Increase the timeout or run the check during a maintenance window when cluster load is lower.
+    | Error | Fix |
+    |---|---|
+    | `vSAN Storage Check is not supported on this host` | Verify the host is vSAN-enabled and part of an active vSAN cluster using `esxcli vsan cluster get`. |
+    | `Permission denied: User does not have vSAN.Cluster.Modify privilege` | Run the command as root or a user with vSAN administrator role on the vCenter Server. |
+    | `vSAN Storage Check timed out after 30 minutes` | Increase the timeout or run the check during a maintenance window when cluster load is lower. |
 ---
 
 ## Step 6 — Advanced diagnostics (vsish and RVC)
@@ -777,8 +803,10 @@ Pending Updates:             0
 ```
 
 !!! warning "Common errors"
-    **`get /vmkModules/lsom/disks/: No such file or directory`** — Verify vsish is running in the correct context; this path is only available on vSAN-enabled ESXi hosts.
-    **`CMMDS State: NOT_INITIALIZED`** — Wait for cluster convergence to complete; check network connectivity between vSAN nodes with `esxcli vsan cluster get`.
+    | Error | Fix |
+    |---|---|
+    | `get /vmkModules/lsom/disks/: No such file or directory` | Verify vsish is running in the correct context; this path is only available on vSAN-enabled ESXi hosts. |
+    | `CMMDS State: NOT_INITIALIZED` | Wait for cluster convergence to complete; check network connectivity between vSAN nodes with `esxcli vsan cluster get`. |
 ### RVC diagnostic commands (legacy)
 
 RVC (Ruby vSphere Console) is available on the VCSA appliance for older cluster diagnostics.
@@ -862,9 +890,11 @@ Network Performance: OPTIMAL
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to vCenter. Connection refused`** — Verify vCenter hostname/IP is reachable and RVC service is running with `service-control --status vmware-rbd`.
-    **`Error: Authentication failed for user administrator@vsphere.local`** — Confirm credentials are correct and the user has Administrator role; reset password in vCenter if needed.
-    **`Error: vsan.health_check: command not found`** — Ensure you are in the correct cluster path (use `ls` to navigate) and RVC vSAN plugin is loaded with `load_vsan_plugin`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to vCenter. Connection refused` | Verify vCenter hostname/IP is reachable and RVC service is running with `service-control --status vmware-rbd`. |
+    | `Error: Authentication failed for user administrator@vsphere.local` | Confirm credentials are correct and the user has Administrator role; reset password in vCenter if needed. |
+    | `Error: vsan.health_check: command not found` | Ensure you are in the correct cluster path (use `ls` to navigate) and RVC vSAN plugin is loaded with `load_vsan_plugin`. |
 RVC is primarily useful for vSAN 6.x clusters. Modern clusters (7.x/8.x) should use `esxcli vsan` commands and the Skyline Health UI.
 
 ---
@@ -906,11 +936,11 @@ Bundle size: 487 MB
 ```
 
 !!! warning "Common errors"
-    **`vc-support.sh: command not found`** — Ensure you are logged in as root and the vCenter Server Appliance is fully booted; the script is located in /usr/lib/vmware-vpx/bin/.
-    
-    **`Permission denied`** — Verify the /tmp directory has write permissions (chmod 777 /tmp) or specify an alternate writable directory with sufficient free space.
-    
-    **`Disk space low: required 2GB, available 512MB`** — Free up disk space on the VCSA or redirect the bundle to a mounted NFS/SMB share with adequate capacity.
+    | Error | Fix |
+    |---|---|
+    | `vc-support.sh: command not found` | Ensure you are logged in as root and the vCenter Server Appliance is fully booted; the script is located in /usr/lib/vmware-vpx/bin/. |
+    | `Permission denied` | Verify the /tmp directory has write permissions (chmod 777 /tmp) or specify an alternate writable directory with sufficient free space. |
+    | `Disk space low: required 2GB, available 512MB` | Free up disk space on the VCSA or redirect the bundle to a mounted NFS/SMB share with adequate capacity. |
 ### From ESXi shell (individual host)
 
 ```bash
@@ -936,9 +966,11 @@ esx-host-prod-01.vmkernel.2024-01-15--14-32-45.tgz          100%  487MB   12.3MB
 ```
 
 !!! warning "Common errors"
-    **`vm-support: command not found`** — Verify you are running this command directly on an ESXi host (not a vCenter server) with SSH access enabled.
-    **`Permission denied (publickey,password)`** — Ensure your SSH key is loaded (`ssh-add ~/.ssh/id_rsa`) or provide explicit credentials with `scp -i /path/to/key`.
-    **`No such file or directory`** — Wait for the vm-support command to complete fully before attempting the scp transfer, as the bundle may still be writing.
+    | Error | Fix |
+    |---|---|
+    | `vm-support: command not found` | Verify you are running this command directly on an ESXi host (not a vCenter server) with SSH access enabled. |
+    | `Permission denied (publickey,password)` | Ensure your SSH key is loaded (`ssh-add ~/.ssh/id_rsa`) or provide explicit credentials with `scp -i /path/to/key`. |
+    | `No such file or directory` | Wait for the vm-support command to complete fully before attempting the scp transfer, as the bundle may still be writing. |
 ### vSAN-specific log collection
 
 ```bash
@@ -966,8 +998,10 @@ CMMDS dump completed in 8.3 seconds
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to connect to vSAN trace daemon on localhost:8081`** — Verify vSAN services are running with `systemctl status vsand` and restart if needed.
-    **`Error: CMMDS connection refused on localhost:8080`** — Check CMMDS service status with `systemctl status cmmds` and ensure the vSAN cluster is healthy.
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to connect to vSAN trace daemon on localhost:8081` | Verify vSAN services are running with `systemctl status vsand` and restart if needed. |
+    | `Error: CMMDS connection refused on localhost:8080` | Check CMMDS service status with `systemctl status cmmds` and ensure the vSAN cluster is healthy. |
 ---
 
 ## Log locations

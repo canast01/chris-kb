@@ -42,9 +42,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify it's not being removed).
-    **`jq: command not found`** — Install jq on the VRLI node with `yum install -y jq` or use `grep` and `sed` to parse JSON if jq is unavailable.
-    **`Permission denied (publickey,password)`** — Verify the admin account credentials and SSH key are correct, and confirm the admin user has SSH access enabled in VRLI settings.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but verify it's not being removed). |
+    | `jq: command not found` | Install jq on the VRLI node with `yum install -y jq` or use `grep` and `sed` to parse JSON if jq is unavailable. |
+    | `Permission denied (publickey,password)` | Verify the admin account credentials and SSH key are correct, and confirm the admin user has SSH access enabled in VRLI settings. |
 ```bash
 BASE="https://vrli-prod-01.example.local"
 AUTH="admin:<password>"
@@ -81,9 +83,11 @@ OK
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: access denied by server while mounting nas-01.example.local:/exports/vrli-archive`** — Verify the master node IP is in the NFS export's allowed subnet (10.20.0.0/24) and check `/etc/exports` on nas-01 for correct permissions.
-    **`mount.nfs: No such file or directory`** — Confirm the NFS export path `/exports/vrli-archive` exists on nas-01 by running `ls -la /exports/` on the NAS server.
-    **`umount: /mnt/test-archive: target is busy`** — Close any open file handles with `lsof /mnt/test-archive` and kill the associated processes before unmounting.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: access denied by server while mounting nas-01.example.local:/exports/vrli-archive` | Verify the master node IP is in the NFS export's allowed subnet (10.20.0.0/24) and check `/etc/exports` on nas-01 for correct permissions. |
+    | `mount.nfs: No such file or directory` | Confirm the NFS export path `/exports/vrli-archive` exists on nas-01 by running `ls -la /exports/` on the NAS server. |
+    | `umount: /mnt/test-archive: target is busy` | Close any open file handles with `lsof /mnt/test-archive` and kill the associated processes before unmounting. |
 ```bash
 ssh admin@vrli-prod-01.example.local
 curl -sk -u 'admin:<password>' \
@@ -104,9 +108,11 @@ curl -sk -u 'admin:<password>' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example, but ensure it's not removed).
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API endpoint is correct and the service is responding with valid JSON; check that authentication credentials are valid by testing with `curl -sk -u 'admin:<password>' "https://vrli-prod-01.example.local/api/v2/alerts" | head -20`.
-    **`curl: (401) Unauthorized`** — Confirm the admin password is correct and URL-encoded if it contains special characters; test credentials separately with a simpler endpoint like `/api/v2/health`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example, but ensure it's not removed). |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the API endpoint is correct and the service is responding with valid JSON; check that authentication credentials are valid by testing with `curl -sk -u 'admin:<password>' "https://vrli-prod-01.example.local/api/v2/alerts" | head -20`. |
+    | `curl: (401) Unauthorized` | Confirm the admin password is correct and URL-encoded if it contains special characters; test credentials separately with a simpler endpoint like `/api/v2/health`. |
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

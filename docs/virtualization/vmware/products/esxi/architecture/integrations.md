@@ -40,8 +40,10 @@ VMFS-6 extent [0] blockSize 1048576, unmapGranularity 2097152, unmapPriority low
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace storage core plugin`** — Verify esxcli is available and you are running ESXi 5.0 or later; if using vSphere CLI, ensure the vSphere SDK is installed.
-    **`Error: Could not find VMFS volume at /vmfs/volumes/<datastore>`** — Replace `<datastore>` with an actual datastore name (e.g., `datastore1`) and verify the datastore is mounted with `esxcli storage filesystem list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace storage core plugin` | Verify esxcli is available and you are running ESXi 5.0 or later; if using vSphere CLI, ensure the vSphere SDK is installed. |
+    | `Error: Could not find VMFS volume at /vmfs/volumes/<datastore>` | Replace `<datastore>` with an actual datastore name (e.g., `datastore1`) and verify the datastore is mounted with `esxcli storage filesystem list`. |
 VAAI primitives (XCOPY, WRITE_SAME, ATS) significantly reduce ESXi CPU overhead during cloning and provisioning.
 
 ## Network Integration
@@ -86,8 +88,10 @@ Wake on LAN Enabled                                         false
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or malformed command line.`** — Verify the NIC name is correct (use `esxcli network nic list` to confirm valid names like vmnic0, vmnic1, etc.).
-    **`Error: Could not get NIC information.`** — Ensure the ESXi host is in a healthy state and the NIC is physically present; check `esxcli hardware pci list` to confirm the adapter is detected.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or malformed command line.` | Verify the NIC name is correct (use `esxcli network nic list` to confirm valid names like vmnic0, vmnic1, etc.). |
+    | `Error: Could not get NIC information.` | Ensure the ESXi host is in a healthy state and the NIC is physically present; check `esxcli hardware pci list` to confirm the adapter is detected. |
 ## Backup Integration
 
 **Veeam Backup & Replication** uses the VMware VADP (vStorage APIs for Data Protection) framework. A Backup Proxy VM (Windows-based) connects to ESXi hosts and the vCenter API to read VM data.
@@ -106,8 +110,10 @@ ChangeTrackingEnabled
 ```
 
 !!! warning "Common errors"
-    **`Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Install VMware PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force`.
-    **`Cannot find a provider with the name 'VimAutomation.Core'.`** — Connect to vCenter first using `Connect-VIServer -Server <vcenter_fqdn> -Credential (Get-Credential)` before running Get-VM commands.
+    | Error | Fix |
+    |---|---|
+    | `Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Install VMware PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force`. |
+    | `Cannot find a provider with the name 'VimAutomation.Core'.` | Connect to vCenter first using `Connect-VIServer -Server <vcenter_fqdn> -Credential (Get-Credential)` before running Get-VM commands. |
 CBT is enabled per VM in the VM's advanced settings (`ctkEnabled = TRUE`). Veeam enables this automatically when the first backup job runs.
 
 **Transport modes:**
@@ -140,8 +146,10 @@ esxcli system syslog config get
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to resolve hostname loginsight.example.com`** — Verify the hostname is resolvable from the ESXi host using `ping loginsight.example.com` or check DNS/hosts configuration.
-    **`Error: Connection refused to loginsight.example.com:514`** — Ensure the syslog server is running and listening on port 514, and that firewall rules allow traffic from the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to resolve hostname loginsight.example.com` | Verify the hostname is resolvable from the ESXi host using `ping loginsight.example.com` or check DNS/hosts configuration. |
+    | `Error: Connection refused to loginsight.example.com:514` | Ensure the syslog server is running and listening on port 514, and that firewall rules allow traffic from the ESXi host. |
 The Aria Operations for Logs VMware vSphere content pack parses ESXi syslog fields automatically.
 
 **SNMP:** Configure SNMP traps for alerting to a monitoring platform:
@@ -166,9 +174,11 @@ esxcli system snmp get
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option --communities`** — Use `--communities` only with `esxcli system snmp set`; verify your ESXi version supports this parameter (6.5+).
-    **`Error: Invalid target format 'monitor.example.com@162/public'`** — Use the correct format `<hostname>@<port>/<community>` without quotes, or verify the hostname resolves on the ESXi host.
-    **`Error: SNMP agent is not running`** — Enable SNMP with `esxcli system snmp set --enable=true` before querying, or check firewall rules allow UDP 161 outbound.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option --communities` | Use `--communities` only with `esxcli system snmp set`; verify your ESXi version supports this parameter (6.5+). |
+    | `Error: Invalid target format 'monitor.example.com@162/public'` | Use the correct format `<hostname>@<port>/<community>` without quotes, or verify the hostname resolves on the ESXi host. |
+    | `Error: SNMP agent is not running` | Enable SNMP with `esxcli system snmp set --enable=true` before querying, or check firewall rules allow UDP 161 outbound. |
 **Aria Operations (vROps):** The ESXi adapter connects through vCenter. Add vCenter as an account in Aria Operations and the ESXi adapter automatically discovers all managed hosts. Metrics include CPU ready, memory balloon, storage latency, and network utilisation per host.
 
 ## See also

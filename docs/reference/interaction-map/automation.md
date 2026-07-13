@@ -71,9 +71,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwOTMxNjgwMCw
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example; if error persists, verify vra hostname resolves correctly).
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify credentials are correct and CSP gateway is accessible; check response with `curl -sk -X POST https://vra/csp/gateway/am/api/login -H 'Content-Type: application/json' -d '{"username":"admin","password":"VMware1!"}'` to see actual error message.
-    **`curl: (7) Failed to connect to vra port 443: Name or service not known`** — Ensure the vra hostname is resolvable and reachable from your network; add it to /etc/hosts or use the full FQDN if necessary.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example; if error persists, verify vra hostname resolves correctly). |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify credentials are correct and CSP gateway is accessible; check response with `curl -sk -X POST https://vra/csp/gateway/am/api/login -H 'Content-Type: application/json' -d '{"username":"admin","password":"VMware1!"}'` to see actual error message. |
+    | `curl: (7) Failed to connect to vra port 443: Name or service not known` | Ensure the vra hostname is resolvable and reachable from your network; add it to /etc/hosts or use the full FQDN if necessary. |
 ## Tanzu architecture layers
 
 ![Automation Domain — Interaction Map — Diagram](../../assets/reference-interaction-map-automation-diagram.svg)

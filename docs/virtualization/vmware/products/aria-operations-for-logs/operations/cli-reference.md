@@ -73,9 +73,11 @@ Storage Usage:
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH key-based authentication is configured, or use the correct password for the admin user.
-    **`li-admin: command not found`** — SSH directly to the appliance management interface or ensure you are logged into the correct Log Insight appliance node with proper shell access.
-    **`Cluster Status: UNHEALTHY - 1 node unreachable (li-node-03.corp.local)`** — Check network connectivity to the unreachable node and verify all cluster nodes are powered on and have valid IP configurations.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the admin account credentials and ensure SSH key-based authentication is configured, or use the correct password for the admin user. |
+    | `li-admin: command not found` | SSH directly to the appliance management interface or ensure you are logged into the correct Log Insight appliance node with proper shell access. |
+    | `Cluster Status: UNHEALTHY - 1 node unreachable (li-node-03.corp.local)` | Check network connectivity to the unreachable node and verify all cluster nodes are powered on and have valid IP configurations. |
 ```bash
 # Run a log query
 curl -k -X POST https://<li-fqdn>/api/v1/events/query \
@@ -149,9 +151,11 @@ curl -k -X GET https://<li-fqdn>/api/v1/notification/channels \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the CA certificate into your system trust store.
-    **`{"error":"Unauthorized","message":"Invalid or expired session token"}`** — Regenerate the session token by authenticating with valid credentials and update the `<sessionId>` value.
-    **`curl: (7) Failed to connect to <li-fqdn> port 443: Connection refused`** — Verify the Aria Operations for Logs appliance is running and the FQDN/IP is correct and reachable from your network.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the CA certificate into your system trust store. |
+    | `{"error":"Unauthorized","message":"Invalid or expired session token"}` | Regenerate the session token by authenticating with valid credentials and update the `<sessionId>` value. |
+    | `curl: (7) Failed to connect to <li-fqdn> port 443: Connection refused` | Verify the Aria Operations for Logs appliance is running and the FQDN/IP is correct and reachable from your network. |
 ```bash
 # Send logs via CFAPI (Log Insight Ingestion API)
 curl -k -X POST https://<li-fqdn>:9543/api/v1/events/ingest/<agentId> \
@@ -167,9 +171,11 @@ curl -k -X POST https://<li-fqdn>:9543/api/v1/events/ingest/<agentId> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the Log Insight CA certificate into your system trust store.
-    **`{"status":"error","message":"Invalid agentId"}`** — Verify the agentId matches a registered agent in Log Insight by checking Administration > Agents or using the agent list API endpoint.
-    **`curl: (7) Failed to connect to <li-fqdn>:9543: Connection refused`** — Confirm Log Insight is running and listening on port 9543 with `curl -k https://<li-fqdn>:9543/api/v1/version`, and verify network connectivity to the Log Insight instance.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the Log Insight CA certificate into your system trust store. |
+    | `{"status":"error","message":"Invalid agentId"}` | Verify the agentId matches a registered agent in Log Insight by checking Administration > Agents or using the agent list API endpoint. |
+    | `curl: (7) Failed to connect to <li-fqdn>:9543: Connection refused` | Confirm Log Insight is running and listening on port 9543 with `curl -k https://<li-fqdn>:9543/api/v1/version`, and verify network connectivity to the Log Insight instance. |
 ```bash
 # List data sources (agents)
 curl -k -X GET https://<li-fqdn>/api/v1/agents \
@@ -238,9 +244,11 @@ curl -k -X GET https://<li-fqdn>/api/v1/system/storage \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification or import the CA certificate into your system trust store.
-    **`{"error":"Unauthorized","message":"Invalid or expired session token"}`** — Regenerate the sessionId by authenticating to the API first using valid credentials.
-    **`curl: (7) Failed to connect to <li-fqdn> port 443: Connection refused`** — Verify the Aria Operations for Logs instance is running and accessible at the specified FQDN and port 443.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification or import the CA certificate into your system trust store. |
+    | `{"error":"Unauthorized","message":"Invalid or expired session token"}` | Regenerate the sessionId by authenticating to the API first using valid credentials. |
+    | `curl: (7) Failed to connect to <li-fqdn> port 443: Connection refused` | Verify the Aria Operations for Logs instance is running and accessible at the specified FQDN and port 443. |
 ```bash
 # Daily health check
 li-admin status
@@ -333,9 +341,11 @@ Retention Policy: 30 days
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands to skip certificate verification, or import the CA certificate into your system trust store.
-    **`401 Unauthorized`** — Verify the sessionId bearer token is valid and not expired by obtaining a fresh token via the authentication endpoint.
-    **`curl: (7) Failed to connect to <li-fqdn> port 443: Connection refused`** — Confirm the Aria Operations for Logs appliance is running and the FQDN/IP address and port 443 are accessible from your network.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands to skip certificate verification, or import the CA certificate into your system trust store. |
+    | `401 Unauthorized` | Verify the sessionId bearer token is valid and not expired by obtaining a fresh token via the authentication endpoint. |
+    | `curl: (7) Failed to connect to <li-fqdn> port 443: Connection refused` | Confirm the Aria Operations for Logs appliance is running and the FQDN/IP address and port 443 are accessible from your network. |
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

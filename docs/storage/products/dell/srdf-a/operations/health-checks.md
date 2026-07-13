@@ -40,9 +40,11 @@ Current lag: 48 seconds
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Command not found`** — Ensure the Symmetrix management tools are installed and the PATH includes the bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`SRDF group 20 not found`** — Verify the group number exists with `symrdf list` and confirm the local Symmetrix is the source array for that group.
-    **`Lag: N/A`** — The SRDF pair may be in a non-replicating state (Paused, Failed, or Idle); check full state with `symrdf -g 20 -type A query -detail` and resume replication if needed.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Command not found` | Ensure the Symmetrix management tools are installed and the PATH includes the bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `SRDF group 20 not found` | Verify the group number exists with `symrdf list` and confirm the local Symmetrix is the source array for that group. |
+    | `Lag: N/A` | The SRDF pair may be in a non-replicating state (Paused, Failed, or Idle); check full state with `symrdf -g 20 -type A query -detail` and resume replication if needed. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

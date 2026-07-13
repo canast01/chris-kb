@@ -154,9 +154,11 @@ Jan 15 14:24:12 ip-10-42-8-15 kernel: [12874.456123] EXT4-fs error (device dm-0)
 ```
 
 !!! warning "Common errors"
-    **`iotop: command not found`** — Install iotop with `apt-get install iotop` (Debian/Ubuntu) or `yum install iotop` (RHEL/CentOS).
-    **`find: '/tmp': Permission denied`** — Run the find command with `sudo` or check directory permissions with `ls -ld /tmp`.
-    **`awk: syntax error at source line 1`** — Use proper quoting: `df -h | awk '$5+0 > 85 {print}'` to ensure the pattern is correctly interpreted.
+    | Error | Fix |
+    |---|---|
+    | `iotop: command not found` | Install iotop with `apt-get install iotop` (Debian/Ubuntu) or `yum install iotop` (RHEL/CentOS). |
+    | `find: '/tmp': Permission denied` | Run the find command with `sudo` or check directory permissions with `ls -ld /tmp`. |
+    | `awk: syntax error at source line 1` | Use proper quoting: `df -h | awk '$5+0 > 85 {print}'` to ensure the pattern is correctly interpreted. |
 ## Network Connectivity Issues
 
 ```bash
@@ -216,8 +218,10 @@ tcpdump -i eth0 host <remote-ip> and port <port> -c 50
 ```
 
 !!! warning "Common errors"
-    **`ping: google.com: Name or service not known`** — DNS resolution failed; verify nameserver in `/etc/resolv.conf` and check connectivity to 8.8.8.8 with `ping 8.8.8.8`.
-    **`ss: No such file or directory`** — `ss` command not found; install with `apt install iproute2` (Ubuntu) or `yum install iproute`
+    | Error | Fix |
+    |---|---|
+    | `ping: google.com: Name or service not known` | DNS resolution failed; verify nameserver in `/etc/resolv.conf` and check connectivity to 8.8.8.8 with `ping 8.8.8.8`. |
+    | `ss: No such file or directory` | `ss` command not found; install with `apt install iproute2` (Ubuntu) or `yum install iproute` |
 ## Service Not Starting
 
 ```bash
@@ -264,9 +268,11 @@ nginx: [alert] master process terminated with code 1
 ```
 
 !!! warning "Common errors"
-    **`nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)`** — Stop the conflicting service (e.g., `systemctl stop apache2`) or change nginx's listen port in `/etc/nginx/nginx.conf`.
-    **`Job for nginx.service failed because the control process exited with error code.`** — Run `sudo nginx -t` to validate the configuration syntax and check `/var/log/nginx/error.log` for parsing errors.
-    **`Unit nginx.service not found.`** — Verify the service file exists at `/etc/systemd/system/nginx.service` and run `systemctl daemon-reload` after creating or modifying it.
+    | Error | Fix |
+    |---|---|
+    | `nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)` | Stop the conflicting service (e.g., `systemctl stop apache2`) or change nginx's listen port in `/etc/nginx/nginx.conf`. |
+    | `Job for nginx.service failed because the control process exited with error code.` | Run `sudo nginx -t` to validate the configuration syntax and check `/var/log/nginx/error.log` for parsing errors. |
+    | `Unit nginx.service not found.` | Verify the service file exists at `/etc/systemd/system/nginx.service` and run `systemctl daemon-reload` after creating or modifying it. |
 ## SSH Access Denied
 
 ```bash
@@ -405,9 +411,11 @@ Vacuumed journals from /var/log/journal/*, freed 487M.
 ```
 
 !!! warning "Common errors"
-    **`du: cannot read directory '/root': Permission denied`** — Run the command with `sudo` or adjust the wildcard to skip restricted directories like `du -sh /var/* /home/* /opt/* 2>/dev/null`.
-    **`lsof: command not found`** — Install lsof with `apt install lsof` (Debian/Ubuntu) or `yum install lsof` (RHEL/CentOS).
-    **`bash: /var/log/large-logfile.log: Permission denied`** — Use `sudo` to truncate the file: `sudo > /var/log/large-logfile.log`.
+    | Error | Fix |
+    |---|---|
+    | `du: cannot read directory '/root': Permission denied` | Run the command with `sudo` or adjust the wildcard to skip restricted directories like `du -sh /var/* /home/* /opt/* 2>/dev/null`. |
+    | `lsof: command not found` | Install lsof with `apt install lsof` (Debian/Ubuntu) or `yum install lsof` (RHEL/CentOS). |
+    | `bash: /var/log/large-logfile.log: Permission denied` | Use `sudo` to truncate the file: `sudo > /var/log/large-logfile.log`. |
 ## System Crash / Reboot Analysis
 
 ```bash
@@ -459,8 +467,10 @@ SEL has 128 entries (max 128 entries)
 ```
 
 !!! warning "Common errors"
-    **`ipmitool: Error: Unable to establish IPMI v1 / IPMI v2 session`** — Verify IPMI is enabled in BIOS and the BMC is accessible; if running in a VM, IPMI may not be available.
-    **`journalctl: command not found`** — Install systemd-journal or use `dmesg` and
+    | Error | Fix |
+    |---|---|
+    | `ipmitool: Error: Unable to establish IPMI v1 / IPMI v2 session` | Verify IPMI is enabled in BIOS and the BMC is accessible; if running in a VM, IPMI may not be available. |
+    | `journalctl: command not found` | Install systemd-journal or use `dmesg` and |
 ## Useful One-Liners
 
 ```bash
@@ -514,9 +524,11 @@ System time   : -0.000000234 seconds slow of NTP time
 ```
 
 !!! warning "Common errors"
-    **`journalctl: No such file or directory`** — Ensure systemd-journal is installed and the journal directory exists at `/var/log/journal` or `/run/log/journal`.
-    **`lsof: command not found`** — Install the lsof package with `apt install lsof` (Debian/Ubuntu) or `yum install lsof` (RHEL/CentOS).
-    **`strace: attach: ptrace(PTRACE_SEIZE, <PID>): Operation not permitted`** — Run strace with sudo or ensure the user has CAP_SYS_PTRACE capability.
+    | Error | Fix |
+    |---|---|
+    | `journalctl: No such file or directory` | Ensure systemd-journal is installed and the journal directory exists at `/var/log/journal` or `/run/log/journal`. |
+    | `lsof: command not found` | Install the lsof package with `apt install lsof` (Debian/Ubuntu) or `yum install lsof` (RHEL/CentOS). |
+    | `strace: attach: ptrace(PTRACE_SEIZE, <PID>): Operation not permitted` | Run strace with sudo or ensure the user has CAP_SYS_PTRACE capability. |
 ---
 
 ## Verify resolution

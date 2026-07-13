@@ -107,9 +107,11 @@ az tag delete \
 ```
 
 !!! warning "Common errors"
-    **`The resource with id <resource-id> does not exist.`** — Verify the subscription ID and resource path are correct by running `az resource list --query "[].id"` to find the exact resource ID.
-    **`The provided resource id '<resource-id>' is invalid.`** — Ensure the resource ID follows the format `/subscriptions/<sub-id>/resourceGroups/<rg-name>/providers/<provider>/<resource-type>/<resource-name>` with no extra slashes or typos.
-    **`AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Resources/tags/write' on resource '<resource-id>'.`** — Assign the "Tag Contributor" or "Owner" role to your user account on the target resource or subscription using `az role assignment create`.
+    | Error | Fix |
+    |---|---|
+    | `The resource with id <resource-id> does not exist.` | Verify the subscription ID and resource path are correct by running `az resource list --query "[].id"` to find the exact resource ID. |
+    | `The provided resource id '<resource-id>' is invalid.` | Ensure the resource ID follows the format `/subscriptions/<sub-id>/resourceGroups/<rg-name>/providers/<provider>/<resource-type>/<resource-name>` with no extra slashes or typos. |
+    | `AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Resources/tags/write' on resource '<resource-id>'.` | Assign the "Tag Contributor" or "Owner" role to your user account on the target resource or subscription using `az role assignment create`. |
 ## Tag Enforcement with Policy
 
 Use Azure Policy to enforce tag presence and prevent resource creation without required tags.
@@ -177,9 +179,11 @@ Resource                                                                        
 ```
 
 !!! warning "Common errors"
-    **`InvalidResourceId : The resource id '<subscription-id>' is invalid.`** — Replace `<subscription-id>` with your actual subscription ID (e.g., `a1b2c3d4-e5f6-4789-0abc-def123456789`).
-    **`PolicyDefinitionNotFound : Policy definition '96670d01-0a4d-4649-9c89-2d3abc0a5025' not found.`** — Verify the policy definition ID exists in your tenant; use `az policy definition list --query "[].id"` to confirm.
-    **`AuthorizationFailed : The client 'user@example.com' with object id 'xyz' does not have authorization to perform action 'Microsoft.Authorization/policyAssignments/write' over scope '/subscriptions/...'.`** — Ensure your account has Owner or
+    | Error | Fix |
+    |---|---|
+    | `InvalidResourceId : The resource id '<subscription-id>' is invalid.` | Replace `<subscription-id>` with your actual subscription ID (e.g., `a1b2c3d4-e5f6-4789-0abc-def123456789`). |
+    | `PolicyDefinitionNotFound : Policy definition '96670d01-0a4d-4649-9c89-2d3abc0a5025' not found.` | Verify the policy definition ID exists in your tenant; use `az policy definition list --query "[].id"` to confirm. |
+    | `AuthorizationFailed : The client 'user@example.com' with object id 'xyz' does not have authorization to perform action 'Microsoft.Authorization/policyAssignments/write' over scope '/subscriptions/...'.` | Ensure your account has Owner or |
 ## Tag Inheritance
 
 Tags on resource groups are not automatically inherited by child resources. Use the `Inherit a tag from the resource group if missing` built-in policy to propagate tags.
@@ -250,7 +254,9 @@ az policy assignment create \
 ```
 
 !!! warning "Common errors"
-    **`Policy definition 96670d01-0a4d-4649-9c89-2d3abc0a5025 not found.`** — Verify the policy definition ID exists in your subscription or use `az policy definition list` to find the correct built-in policy ID.
+    | Error | Fix |
+    |---|---|
+    | `Policy definition 96670d01-0a4d-4649-9c89-2d3abc0a5025 not found.` | Verify the policy definition ID exists in your subscription or use `az policy definition list` to find the correct built-in policy ID. |
 ## Reporting on Tag Coverage
 
 ```bash
@@ -303,9 +309,11 @@ infra             monitoring-workspace
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The subscription of the request is invalid.`** — Ensure you are logged in with `az login` and the correct subscription is set via `az account set --subscription <subscription-id>`.
-    **`ERROR: The following arguments are required: --resource-group/-g`** — Remove the `--resource-group` filter if querying all subscriptions, or add `-g <resource-group-name>` to scope to a specific group.
-    **`jq: parse error: Unexpected end of JSON input`** — If piping to `jq`, ensure the JSON file was written completely; re-run the export command or check disk space with `df -h`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The subscription of the request is invalid.` | Ensure you are logged in with `az login` and the correct subscription is set via `az account set --subscription <subscription-id>`. |
+    | `ERROR: The following arguments are required: --resource-group/-g` | Remove the `--resource-group` filter if querying all subscriptions, or add `-g <resource-group-name>` to scope to a specific group. |
+    | `jq: parse error: Unexpected end of JSON input` | If piping to `jq`, ensure the JSON file was written completely; re-run the export command or check disk space with `df -h`. |
 ## Tag Naming Conventions
 
 | Convention | Recommendation |

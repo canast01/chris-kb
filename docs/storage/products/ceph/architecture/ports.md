@@ -195,7 +195,9 @@ ceph_osd_up{ceph_daemon="osd.0"} 1
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 10.20.30.45 port 3300 (tcp) failed: Connection refused`** — Verify the MON daemon is running with `ceph orch ps` and check firewall rules allow port 3300 inbound.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 10.20.30.45 port 3300 (tcp) failed: Connection refused` | Verify the MON daemon is running with `ceph orch ps` and check firewall rules allow port 3300 inbound. |
     **`curl: (7) Failed to connect to 10.20.30.46 port 8443: Connection refused`**
 ---
 

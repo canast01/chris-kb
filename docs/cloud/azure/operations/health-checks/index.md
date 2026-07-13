@@ -142,8 +142,10 @@ Encrypt data in transit for Application Gateway          High        /subscripti
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --resource`** — Provide the full resource ID for the storage account using `--resource /subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.Storage/storageAccounts/<name>`.
-    **`ERROR: (ResourceNotFound) Resource 'Microsoft.Network/networkWatchers' not found`** — Ensure Network Watcher is deployed in the target region with `az network watcher configure --resource-group <rg>
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --resource` | Provide the full resource ID for the storage account using `--resource /subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.Storage/storageAccounts/<name>`. |
+    | `ERROR: (ResourceNotFound) Resource 'Microsoft.Network/networkWatchers' not found` | Ensure Network Watcher is deployed in the target region with `az network watcher configure --resource-group <rg> |
 ---
 
 ## VM Health
@@ -226,9 +228,11 @@ Time                              Operation                           Status    
 ```
 
 !!! warning "Common errors"
-    **`The resource group '<rg>' could not be found.`** — Verify the resource group name with `az group list` and ensure you are querying the correct subscription.
-    **`The virtual machine '<vm-name>' does not exist in the resource group '<rg>'.`** — Confirm the VM name is correct and exists in the specified resource group using `az vm list -d --resource-group <rg>`.
-    **`date: invalid date 'TZ=UTC0 24 hours ago'`** — Use the macOS-compatible date syntax: `date -u -v-24H +%Y-%m-%dT%H:%M:%SZ` or install GNU coreutils on macOS.
+    | Error | Fix |
+    |---|---|
+    | `The resource group '<rg>' could not be found.` | Verify the resource group name with `az group list` and ensure you are querying the correct subscription. |
+    | `The virtual machine '<vm-name>' does not exist in the resource group '<rg>'.` | Confirm the VM name is correct and exists in the specified resource group using `az vm list -d --resource-group <rg>`. |
+    | `date: invalid date 'TZ=UTC0 24 hours ago'` | Use the macOS-compatible date syntax: `date -u -v-24H +%Y-%m-%dT%H:%M:%SZ` or install GNU coreutils on macOS. |
 | Status | Meaning | Action |
 |---|---|---|
 | `VM running` | Normal operating state | No action |
@@ -317,9 +321,11 @@ allow-outbound-dns            200       Outbound   Allow   Udp       53
 ```
 
 !!! warning "Common errors"
-    **`The following arguments are required: --resource-group`** — Provide the resource group name by replacing `<rg>` with your actual resource group name.
-    **`No NSGs found in resource group '<rg>'`** — Verify the NSG exists in the specified resource group and that you have read permissions on it.
-    **`The following arguments are required: --vnet-name`** — Replace `<vnet-name>` with the actual virtual network name in your resource group.
+    | Error | Fix |
+    |---|---|
+    | `The following arguments are required: --resource-group` | Provide the resource group name by replacing `<rg>` with your actual resource group name. |
+    | `No NSGs found in resource group '<rg>'` | Verify the NSG exists in the specified resource group and that you have read permissions on it. |
+    | `The following arguments are required: --vnet-name` | Replace `<vnet-name>` with the actual virtual network name in your resource group. |
 ---
 
 ## Storage Health
@@ -404,9 +410,11 @@ config-share                    50         Hot
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --resource-group, --vault-name`** — Replace `<rg>` and `<vault-name>` with actual resource group and Recovery Services vault names.
-    **`ERROR: The following arguments are required: --account-name`** — Replace `<storage-account>` with the actual storage account name.
-    **`ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<rg>' was not found`** — Verify the vault exists in the specified resource group and region using `az backup vault list --resource-group <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --resource-group, --vault-name` | Replace `<rg>` and `<vault-name>` with actual resource group and Recovery Services vault names. |
+    | `ERROR: The following arguments are required: --account-name` | Replace `<storage-account>` with the actual storage account name. |
+    | `ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<rg>' was not found` | Verify the vault exists in the specified resource group and region using `az backup vault list --resource-group <rg>`. |
 ---
 
 ## Identity and Security
@@ -645,9 +653,11 @@ AzureIaaSVMJob    2024-01-13T20:15:00.000000Z   Agent communication error on tar
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --name, --resource-group`** — Replace `<lb-name>` and `<rg>` with actual load balancer name and resource group name.
-    **`ERROR: argument --vault-name: expected one argument`** — Ensure the `$VAULT` and `$RG` environment variables are set before running the command (e.g., `export VAULT=myVault RG=myRG`).
-    **`ERROR: Invalid subscription ID in URL`** — Replace `{subscriptionId}` with your actual subscription ID using `az account show --query id -o tsv`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --name, --resource-group` | Replace `<lb-name>` and `<rg>` with actual load balancer name and resource group name. |
+    | `ERROR: argument --vault-name: expected one argument` | Ensure the `$VAULT` and `$RG` environment variables are set before running the command (e.g., `export VAULT=myVault RG=myRG`). |
+    | `ERROR: Invalid subscription ID in URL` | Replace `{subscriptionId}` with your actual subscription ID using `az account show --query id -o tsv`. |
 ---
 
 ## Verify

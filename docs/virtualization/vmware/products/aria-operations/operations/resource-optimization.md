@@ -30,8 +30,10 @@ Available: 124G
 ```
 
 !!! warning "Common errors"
-    **`sar: Cannot open /var/log/sa/sa31: No such file or directory`** — Ensure sar data collection is enabled via `systemctl enable sysstat && systemctl start sysstat`, or use an existing sa file date.
-    **`awk: syntax error in pattern near line 1`** — Verify the awk field separators match your ps/sar output format; add `-F' '` if whitespace parsing fails.
+    | Error | Fix |
+    |---|---|
+    | `sar: Cannot open /var/log/sa/sa31: No such file or directory` | Ensure sar data collection is enabled via `systemctl enable sysstat && systemctl start sysstat`, or use an existing sa file date. |
+    | `awk: syntax error in pattern near line 1` | Verify the awk field separators match your ps/sar output format; add `-F' '` if whitespace parsing fails. |
 ```bash
 # Unattached managed disks
 az disk list \
@@ -59,8 +61,10 @@ High      /subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/...
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --subscription`** — Add `--subscription <subscription-id>` or set the default subscription with `az account set --subscription <id>`.
-    **`ERROR: No registered resource provider found for location 'eastus'`** — Ensure the subscription has the required resource providers registered using `az provider register --namespace Microsoft.Compute`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --subscription` | Add `--subscription <subscription-id>` or set the default subscription with `az account set --subscription <id>`. |
+    | `ERROR: No registered resource provider found for location 'eastus'` | Ensure the subscription has the required resource providers registered using `az provider register --namespace Microsoft.Compute`. |
 ```bash
 # ONTAP — volumes with > 50% free space
 volume show -percent-used <50 -fields volume,size,used,percent-used

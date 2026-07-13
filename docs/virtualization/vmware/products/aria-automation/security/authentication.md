@@ -43,9 +43,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdmMudnJhQGNvcnAubG9jYWwiLCJpc3M
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the CA certificate into your system trust store with `update-ca-certificates`.
-    **`jq: error (at <stdin>:1): Cannot index null with string "token"`** — Verify credentials are correct and the CSP gateway is responding; check the actual response with `curl -sk ... | jq '.'` to see the error message.
-    **`command not found: jq`** — Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the CA certificate into your system trust store with `update-ca-certificates`. |
+    | `jq: error (at <stdin>:1): Cannot index null with string "token"` | Verify credentials are correct and the CSP gateway is responding; check the actual response with `curl -sk ... | jq '.'` to see the error message. |
+    | `command not found: jq` | Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS). |
 **Token validity:** 8 hours by default. For long-running scripts, implement token refresh logic:
 
 ```bash
@@ -63,9 +65,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdmMtdnJhLWFwaSIsImlhdCI6MTcwOTM
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the vRA certificate into your system CA bundle with `curl-config --ca-bundle`.
-    **`jq: parse error: Cannot index string with string "token"`** — Verify the API response is valid JSON and the login credentials are correct; check vRA gateway logs with `tail -f /var/log/vra/gateway.log`.
-    **`command not found: jq`** — Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the vRA certificate into your system CA bundle with `curl-config --ca-bundle`. |
+    | `jq: parse error: Cannot index string with string "token"` | Verify the API response is valid JSON and the login credentials are correct; check vRA gateway logs with `tail -f /var/log/vra/gateway.log`. |
+    | `command not found: jq` | Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS). |
 ---
 
 ## API Service Account
@@ -119,9 +123,11 @@ update-ca-certificates: 1 added, 0 removed; 0 removed unlisted.
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot stat 'internal-ca.pem': No such file or directory`** — Verify the CA certificate file path is correct and exists in the current working directory, or provide the full absolute path.
-    **`requests.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED]`** — Run `update-ca-certificates` with sudo and ensure the certificate was copied to `/usr/local/share/ca-certificates/` with a `.crt` extension before updating.
-    **`requests.exceptions.ConnectionError: HTTPSConnectionPool(host='vra-prod-01.example.local')`** — Verify the Aria Automation hostname resolves correctly and is reachable from the client, and confirm the token has not expired.
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot stat 'internal-ca.pem': No such file or directory` | Verify the CA certificate file path is correct and exists in the current working directory, or provide the full absolute path. |
+    | `requests.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED]` | Run `update-ca-certificates` with sudo and ensure the certificate was copied to `/usr/local/share/ca-certificates/` with a `.crt` extension before updating. |
+    | `requests.exceptions.ConnectionError: HTTPSConnectionPool(host='vra-prod-01.example.local')` | Verify the Aria Automation hostname resolves correctly and is reachable from the client, and confirm the token has not expired. |
 ---
 
 ## Related Reference

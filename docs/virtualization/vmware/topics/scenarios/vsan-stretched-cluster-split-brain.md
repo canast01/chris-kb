@@ -85,9 +85,11 @@ round-trip min/avg/max = 44.756/45.114/45.567 ms
 ```
 
 !!! warning "Common errors"
-    **`Unable to find vmkernel interface vmk2`** — Verify the correct vmkernel interface name with `esxcli network ip interface list` and substitute the correct interface (e.g., vmk1, vmk3).
-    **`No route to host`** — Confirm the witness vSAN VMkernel IP is reachable from the source site's network and that firewall rules permit ICMP traffic on port 8084 (vSAN traffic).
-    **`Network is unreachable`** — Check that the witness vSAN VMkernel interface is configured on the correct VLAN and that inter-site network connectivity is established.
+    | Error | Fix |
+    |---|---|
+    | `Unable to find vmkernel interface vmk2` | Verify the correct vmkernel interface name with `esxcli network ip interface list` and substitute the correct interface (e.g., vmk1, vmk3). |
+    | `No route to host` | Confirm the witness vSAN VMkernel IP is reachable from the source site's network and that firewall rules permit ICMP traffic on port 8084 (vSAN traffic). |
+    | `Network is unreachable` | Check that the witness vSAN VMkernel interface is configured on the correct VLAN and that inter-site network connectivity is established. |
 ---
 
 ## 3. Confirm the Preferred Site Configuration
@@ -146,8 +148,10 @@ vmk3    Fault Tolerance 192.168.30.15   255.255.255.0   192.168.30.255  STATIC
 ```
 
 !!! warning "Common errors"
-    **`PING <site-b-vsan-vmk-ip> (<site-b-vsan-vmk-ip>): sendto: No route to host`** — Verify the vSAN network routing between sites is configured and the target IP is reachable; check firewall rules and VLAN configuration.
-    **`Error: Could not find interface vmk2`** — Confirm vmk2 exists and is bound to the vSAN port group using `esxcli network ip interface list`.
+    | Error | Fix |
+    |---|---|
+    | `PING <site-b-vsan-vmk-ip> (<site-b-vsan-vmk-ip>): sendto: No route to host` | Verify the vSAN network routing between sites is configured and the target IP is reachable; check firewall rules and VLAN configuration. |
+    | `Error: Could not find interface vmk2` | Confirm vmk2 exists and is bound to the vSAN port group using `esxcli network ip interface list`. |
 Look for: failed 8972-byte ping with successful small-packet ping = MTU mismatch on the inter-site link (vSAN requires MTU 9000).
 
 ```bash
@@ -176,8 +180,10 @@ vm-dev-test_1-flat.vmdk                       esx-prod-01.lab.local    25600MB  
 ```
 
 !!! warning "Common errors"
-    **`vSAN cluster is not enabled on this host`** — Enable vSAN on the host via vCenter or run `esxcli vsan cluster new` to initialize the cluster.
-    **`Unable to contact vSAN cluster — no quorum`** — Verify network connectivity between hosts and check that at least half of the cluster members are online and reachable.
+    | Error | Fix |
+    |---|---|
+    | `vSAN cluster is not enabled on this host` | Enable vSAN on the host via vCenter or run `esxcli vsan cluster new` to initialize the cluster. |
+    | `Unable to contact vSAN cluster — no quorum` | Verify network connectivity between hosts and check that at least half of the cluster members are online and reachable. |
 ---
 
 ## 6. Forced Recovery — Full Isolation (Last Resort)
@@ -204,9 +210,11 @@ Cluster UUID: 522e2d12-a4f2-8f1a-c3e8-7b9a2f4d1e5c
 ```
 
 !!! warning "Common errors"
-    **`Error: VSAN cluster is not in a valid state for master election`** — Verify all nodes in the cluster are in healthy state using `esxcli vsan cluster get` before forcing election.
-    **`Error: Cannot perform master election while both sites are active`** — Confirm the remote site is completely powered down and unreachable before running this command to prevent split-brain scenarios.
-    **`Error: This command requires VSAN license and cluster mode enabled`** — Ensure VSAN is properly licensed on all hosts and cluster mode is activated via vSphere Client before attempting forced election.
+    | Error | Fix |
+    |---|---|
+    | `Error: VSAN cluster is not in a valid state for master election` | Verify all nodes in the cluster are in healthy state using `esxcli vsan cluster get` before forcing election. |
+    | `Error: Cannot perform master election while both sites are active` | Confirm the remote site is completely powered down and unreachable before running this command to prevent split-brain scenarios. |
+    | `Error: This command requires VSAN license and cluster mode enabled` | Ensure VSAN is properly licensed on all hosts and cluster mode is activated via vSphere Client before attempting forced election. |
 After forced election, start VMs on the surviving site only; treat the secondary site as potentially diverged and do not start it until vSAN resync completes after connectivity is restored.
 
 ---
@@ -241,8 +249,10 @@ Network Throughput: 52 MB/s
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Ensure you are logged into an ESXi host directly via SSH; this command is not available on vCenter.
-    **`No matching processes were found`** — The VSAN service may not be running; restart it with `systemctl restart vsanmgmt` or verify VSAN is enabled on the cluster.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Ensure you are logged into an ESXi host directly via SSH; this command is not available on vCenter. |
+    | `No matching processes were found` | The VSAN service may not be running; restart it with `systemctl restart vsanmgmt` or verify VSAN is enabled on the cluster. |
 **Do not perform host maintenance, storage policy changes, or vSAN upgrades until resync completes** — resync adds I/O overhead, and any disruption risks further object degradation.
 
 ---

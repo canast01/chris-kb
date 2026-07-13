@@ -115,9 +115,11 @@ Enabled: true
 ```
 
 !!! warning "Common errors"
-    **`PING 192.168.20.1 (192.168.20.1): 100% packet loss`** — Verify network connectivity between sites and confirm vmk_vsan interface is routable across the stretched cluster network.
-    **`NTP Servers: (empty list)`** — Configure NTP servers on all ESXi hosts using `esxcli system ntp set --server=<ntp-server>` before proceeding with stretch.
-    **`Cluster Health Status: red`** — Run `esxcli vsan health cluster get --verbose` to identify failing components and resolve disk/network issues before stretching the cluster.
+    | Error | Fix |
+    |---|---|
+    | `PING 192.168.20.1 (192.168.20.1): 100% packet loss` | Verify network connectivity between sites and confirm vmk_vsan interface is routable across the stretched cluster network. |
+    | `NTP Servers: (empty list)` | Configure NTP servers on all ESXi hosts using `esxcli system ntp set --server=<ntp-server>` before proceeding with stretch. |
+    | `Cluster Health Status: red` | Run `esxcli vsan health cluster get --verbose` to identify failing components and resolve disk/network issues before stretching the cluster. |
 ---
 
 ## Phase 1: Deploy the Witness Host
@@ -176,9 +178,11 @@ vmk1       Up      Witness
 ```
 
 !!! warning "Common errors"
-    **`Network interface vmk1 already exists.`** — Check existing interfaces with `esxcli network ip interface list` and skip the add command if vmk1 is present.
-    **`Portgroup "Witness Traffic" does not exist.`** — Create the portgroup first using `esxcli network vswitch standard portgroup add --vswitch-name vSwitch0 --portgroup-name "Witness Traffic"`.
-    **`vSAN witness traffic is not enabled on this host.`** — Verify vSAN licensing and cluster configuration, then retry the `esxcli vsan network ip add` command.
+    | Error | Fix |
+    |---|---|
+    | `Network interface vmk1 already exists.` | Check existing interfaces with `esxcli network ip interface list` and skip the add command if vmk1 is present. |
+    | `Portgroup "Witness Traffic" does not exist.` | Create the portgroup first using `esxcli network vswitch standard portgroup add --vswitch-name vSwitch0 --portgroup-name "Witness Traffic"`. |
+    | `vSAN witness traffic is not enabled on this host.` | Verify vSAN licensing and cluster configuration, then retry the `esxcli vsan network ip add` command. |
 ### 1.3 Add Witness Host to vCenter
 
 1. In vCenter UI: **Hosts and Clusters → Right-click datacenter → Add Host**
@@ -258,9 +262,11 @@ Fault Domain: FD-Witness
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the ESXi host is reachable and SSH is enabled via `esxcli system ssh set --enabled=true` on the target host.
-    **`vSAN cluster is not enabled`** — Enable vSAN on the cluster through vCenter: Home > Cluster > Configure > vSAN > General and toggle the vSAN service on.
-    **`Witness Host: <unknown>`** — Ensure the witness host is properly configured and added to the stretched cluster; verify witness connectivity from both sites via `esxcli vsan cluster get`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the ESXi host is reachable and SSH is enabled via `esxcli system ssh set --enabled=true` on the target host. |
+    | `vSAN cluster is not enabled` | Enable vSAN on the cluster through vCenter: Home > Cluster > Configure > vSAN > General and toggle the vSAN service on. |
+    | `Witness Host: <unknown>` | Ensure the witness host is properly configured and added to the stretched cluster; verify witness connectivity from both sites via `esxcli vsan cluster get`. |
 ### 2.4 PowerCLI — Verify Stretched Cluster Configuration
 
 ```powershell
@@ -374,9 +380,11 @@ round-trip min/avg/max = 2.145/2.378/4.821 ms
 ```
 
 !!! warning "Common errors"
-    **`vmkping: Unknown interface vmk_vsan`** — Verify the vSAN vmkernel interface name with `esxcli network ip interface list` and use the correct interface (typically `vmk1` or `vmk2`).
-    **`PING 192.168.20.11 (192.168.20.11): 100% packet loss`** — Check network connectivity between sites, verify the vSAN network route exists with `esxcli network ip route ipv4 list`, and confirm the remote host is reachable.
-    **`Permission denied (publickey)`** — Ensure SSH key is configured for root access or use `ssh -u root` with password authentication enabled on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `vmkping: Unknown interface vmk_vsan` | Verify the vSAN vmkernel interface name with `esxcli network ip interface list` and use the correct interface (typically `vmk1` or `vmk2`). |
+    | `PING 192.168.20.11 (192.168.20.11): 100% packet loss` | Check network connectivity between sites, verify the vSAN network route exists with `esxcli network ip route ipv4 list`, and confirm the remote host is reachable. |
+    | `Permission denied (publickey)` | Ensure SSH key is configured for root access or use `ssh -u root` with password authentication enabled on the ESXi host. |
 ### 4.2 Verify Witness Traffic Routing
 
 ```bash
@@ -412,9 +420,11 @@ round-trip min/avg/max = 156.891/157.923/159.123 ms
 ```
 
 !!! warning "Common errors"
-    **`vmkping: Unknown interface vmk_vsan`** — Verify the vSAN vmkernel interface name with `esxcli network ip interface list` and use the correct interface (e.g., `vmk1`).
-    **`PING 192.168.30.10 (192.168.30.10): 56 data bytes (no response)`** — Confirm the witness appliance is running, the IP is correct, and network connectivity exists between sites (check firewall rules and routing).
-    **`ssh: Could not resolve hostname esxi-b01.corp.local`** — Ensure DNS resolution is working or use the IP address directly instead of the hostname.
+    | Error | Fix |
+    |---|---|
+    | `vmkping: Unknown interface vmk_vsan` | Verify the vSAN vmkernel interface name with `esxcli network ip interface list` and use the correct interface (e.g., `vmk1`). |
+    | `PING 192.168.30.10 (192.168.30.10): 56 data bytes (no response)` | Confirm the witness appliance is running, the IP is correct, and network connectivity exists between sites (check firewall rules and routing). |
+    | `ssh: Could not resolve hostname esxi-b01.corp.local` | Ensure DNS resolution is working or use the IP address directly instead of the hostname. |
 ### 4.3 Check vSAN Health Service
 
 ```bash
@@ -456,9 +466,11 @@ Physical Disk Health              Green
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Run the command directly on an ESXi host via SSH or use `Get-VMHost | Invoke-VMScript -ScriptText "esxcli vsan health cluster get"` from PowerCLI instead.
-    **`Unable to find type [Invoke-VsanHealthCheck]`** — Load the VMware.VimAutomation.Vsan module first with `Import-Module VMware.VimAutomation.Vsan`.
-    **`The vSAN cluster is not healthy. Witness host is unreachable.`** — Verify network connectivity between stretched cluster sites and confirm the witness host ESXi service is running with `esxcli system maintenanceMode get` on the witness.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Run the command directly on an ESXi host via SSH or use `Get-VMHost | Invoke-VMScript -ScriptText "esxcli vsan health cluster get"` from PowerCLI instead. |
+    | `Unable to find type [Invoke-VsanHealthCheck]` | Load the VMware.VimAutomation.Vsan module first with `Import-Module VMware.VimAutomation.Vsan`. |
+    | `The vSAN cluster is not healthy. Witness host is unreachable.` | Verify network connectivity between stretched cluster sites and confirm the witness host ESXi service is running with `esxcli system maintenanceMode get` on the witness. |
 ### 4.4 Verify vSAN Object Placement
 
 ```bash
@@ -489,8 +501,10 @@ Object UUID                          Policy                 Health  FD-SiteA  FD
 ```
 
 !!! warning "Common errors"
-    **`Error: vSAN is not enabled on this cluster`** — Verify vSAN is licensed and enabled on the cluster, and run the command from a host that is part of the vSAN cluster.
-    **`Error: No objects found`** — Confirm that virtual machines exist on the vSAN datastore; if the cluster is newly configured, create a test VM or check that vSAN has finished initial synchronization.
+    | Error | Fix |
+    |---|---|
+    | `Error: vSAN is not enabled on this cluster` | Verify vSAN is licensed and enabled on the cluster, and run the command from a host that is part of the vSAN cluster. |
+    | `Error: No objects found` | Confirm that virtual machines exist on the vSAN datastore; if the cluster is newly configured, create a test VM or check that vSAN has finished initial synchronization. |
 ---
 
 ## Phase 5: Failover Simulation
@@ -516,8 +530,10 @@ esxcli network firewall ruleset set --enabled false --ruleset-id vsanEncryption
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option --ruleset-id.`** — Use `--ruleset-name` instead of `--ruleset-id` in ESXi 6.5+.
-    **`Error: Unable to connect to Management Agent on <hostname>.`** — Ensure SSH is enabled on the ESXi host and network connectivity to the management vmkernel is active before running the command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option --ruleset-id.` | Use `--ruleset-name` instead of `--ruleset-id` in ESXi 6.5+. |
+    | `Error: Unable to connect to Management Agent on <hostname>.` | Ensure SSH is enabled on the ESXi host and network connectivity to the management vmkernel is active before running the command. |
 ### 5.2 Verify VM Restart on Site B
 
 ```powershell
@@ -577,8 +593,10 @@ Cluster Information
 ```
 
 !!! warning "Common errors"
-    **`Cluster Quorum Status: No quorum`** — Verify witness host connectivity with `esxcli vsan cluster get` and check network partitioning between sites; if witness is unreachable, failover to witness host or restore network connectivity.
-    **`Connection refused` or `ssh: connect to host esxi-b01.corp.local port 22: Connection refused`** — Verify the ESXi host is powered on and reachable with `ping esxi-b01.corp.local`, then check firewall rules allowing SSH on port 22.
+    | Error | Fix |
+    |---|---|
+    | `Cluster Quorum Status: No quorum` | Verify witness host connectivity with `esxcli vsan cluster get` and check network partitioning between sites; if witness is unreachable, failover to witness host or restore network connectivity. |
+    | `Connection refused` or `ssh: connect to host esxi-b01.corp.local port 22: Connection refused` | Verify the ESXi host is powered on and reachable with `ping esxi-b01.corp.local`, then check firewall rules allowing SSH on port 22. |
 ### 5.4 Restore Site A and Verify Resync
 
 ```bash
@@ -632,9 +650,11 @@ Cluster Health Status:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace firewall ruleset`** — Verify the ESXi version supports this command; use `esxcli network firewall ruleset list` to confirm the ruleset exists first.
-    **`Error: VSAN is not enabled on this cluster`** — Ensure vSAN is licensed and enabled on the cluster before running vSAN debug commands.
-    **`Error: Network partition detected — Site B unreachable`** — Verify network connectivity and firewall rules between sites; resync cannot proceed until both sites communicate.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace firewall ruleset` | Verify the ESXi version supports this command; use `esxcli network firewall ruleset list` to confirm the ruleset exists first. |
+    | `Error: VSAN is not enabled on this cluster` | Ensure vSAN is licensed and enabled on the cluster before running vSAN debug commands. |
+    | `Error: Network partition detected — Site B unreachable` | Verify network connectivity and firewall rules between sites; resync cannot proceed until both sites communicate. |
 ### 5.5 vSAN Stretched Cluster Health in UI
 
 1. Navigate to **Cluster → Monitor → vSAN → Skyline Health**
@@ -709,9 +729,11 @@ vSAN Health: Healthy
 ```
 
 !!! warning "Common errors"
-    **`Stretched Cluster Enabled: true`** — The UI wizard did not complete successfully; re-run the vSAN Stretched Cluster wizard in vCenter and ensure you selected "Disable Stretched Cluster" in the final step.
-    **`Error: vSAN cluster is not accessible`** — Verify all ESXi hosts in the cluster are in a connected state and vSAN is running on at least three hosts using `esxcli vsan cluster list`.
-    **`Witness host is still present but not in Site A or Site B`** — Manually remove the witness host from the cluster configuration in vCenter before attempting to disable stretched cluster mode.
+    | Error | Fix |
+    |---|---|
+    | `Stretched Cluster Enabled: true` | The UI wizard did not complete successfully; re-run the vSAN Stretched Cluster wizard in vCenter and ensure you selected "Disable Stretched Cluster" in the final step. |
+    | `Error: vSAN cluster is not accessible` | Verify all ESXi hosts in the cluster are in a connected state and vSAN is running on at least three hosts using `esxcli vsan cluster list`. |
+    | `Witness host is still present but not in Site A or Site B` | Manually remove the witness host from the cluster configuration in vCenter before attempting to disable stretched cluster mode. |
 ### Emergency: Force vSAN to Site B Without Witness Quorum
 
 ```bash
@@ -737,8 +759,10 @@ Status: In Progress
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Verify you are logged into an ESXi host (not vCenter) and that VSAN is installed with `esxcli vsan cluster get`.
-    **`Error: The VSAN cluster is not in a degraded state`** — This command only works when the cluster has lost quorum; confirm Site A and Witness are truly unreachable before proceeding.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Verify you are logged into an ESXi host (not vCenter) and that VSAN is installed with `esxcli vsan cluster get`. |
+    | `Error: The VSAN cluster is not in a degraded state` | This command only works when the cluster has lost quorum; confirm Site A and Witness are truly unreachable before proceeding. |
 ---
 
 ## See Also

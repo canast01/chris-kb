@@ -177,9 +177,11 @@ prod-web-vm-05                Normal    312      primaryLocation
 ```
 
 !!! warning "Common errors"
-    **`The subscription '<sub-id>' could not be found.`** — Replace `<sub-id>` with your actual subscription ID from `az account show --query id`.
-    **`ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<dr-rg>' was not found.`** — Verify the vault name and resource group exist in the correct subscription using `az recovery-services vault list -g <dr-rg>`.
-    **`Authorization failed for request. Caller is not authorized to perform action 'Microsoft.RecoveryServices/vaults/replicationProtectedItems/read' on resource.`** — Ensure your account has Reader or Site Recovery Operator role on the Recovery Services vault using `az role assignment list --scope /subscriptions/<sub-id>/resourceGroups/<dr-rg>`.
+    | Error | Fix |
+    |---|---|
+    | `The subscription '<sub-id>' could not be found.` | Replace `<sub-id>` with your actual subscription ID from `az account show --query id`. |
+    | `ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<dr-rg>' was not found.` | Verify the vault name and resource group exist in the correct subscription using `az recovery-services vault list -g <dr-rg>`. |
+    | `Authorization failed for request. Caller is not authorized to perform action 'Microsoft.RecoveryServices/vaults/replicationProtectedItems/read' on resource.` | Ensure your account has Reader or Site Recovery Operator role on the Recovery Services vault using `az role assignment list --scope /subscriptions/<sub-id>/resourceGroups/<dr-rg>`. |
 ---
 
 ## RPO Warnings
@@ -206,11 +208,11 @@ vm-dr-failover-test-03                  401    Warning
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The subscription '<sub-id>' could not be found.`** — Replace `<sub-id>` with your actual subscription ID from `az account show --query id -o tsv`.
-    
-    **`ERROR: The resource group '<dr-rg>' could not be found in the subscription.`** — Verify the resource group name with `az group list --query "[].name" -o tsv` and ensure it exists in the correct subscription.
-    
-    **`ERROR: The vault '<vault-name>' could not be found in the specified resource group.`** — Confirm the Recovery Services vault name using `az backup vault list --resource-group <dr-rg> --query "[].name" -o tsv`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The subscription '<sub-id>' could not be found.` | Replace `<sub-id>` with your actual subscription ID from `az account show --query id -o tsv`. |
+    | `ERROR: The resource group '<dr-rg>' could not be found in the subscription.` | Verify the resource group name with `az group list --query "[].name" -o tsv` and ensure it exists in the correct subscription. |
+    | `ERROR: The vault '<vault-name>' could not be found in the specified resource group.` | Confirm the Recovery Services vault name using `az backup vault list --resource-group <dr-rg> --query "[].name" -o tsv`. |
 Common RPO warning causes:
 
 | Cause | Symptom | Resolution |
@@ -260,9 +262,11 @@ b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e  Succeeded     Resync completed
 ```
 
 !!! warning "Common errors"
-    **`The URI is invalid.`** — Replace all placeholder values (`<sub-id>`, `<dr-rg>`, `<vault-name>`, `<fabric>`, `<container>`, `<item-name>`) with actual resource names from your Azure environment.
-    **`AuthorizationFailed: The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationJobs/read' over scope...`** — Ensure your Azure account has the "Site Recovery Contributor" or "Backup Operator" role assigned on the Recovery Services vault.
-    **`ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>/replicationProtectedItems/<item-name>' under resource group '<dr-rg>' was not found.`** — Verify the protected item name and container name are correct by running `az recovery-services-backup item list --vault-name <vault-name> --resource-group <dr-rg>`.
+    | Error | Fix |
+    |---|---|
+    | `The URI is invalid.` | Replace all placeholder values (`<sub-id>`, `<dr-rg>`, `<vault-name>`, `<fabric>`, `<container>`, `<item-name>`) with actual resource names from your Azure environment. |
+    | `AuthorizationFailed: The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationJobs/read' over scope...` | Ensure your Azure account has the "Site Recovery Contributor" or "Backup Operator" role assigned on the Recovery Services vault. |
+    | `ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>/replicationProtectedItems/<item-name>' under resource group '<dr-rg>' was not found.` | Verify the protected item name and container name are correct by running `az recovery-services-backup item list --vault-name <vault-name> --resource-group <dr-rg>`. |
 ---
 
 ## Monitoring via Azure Monitor Alerts
@@ -308,8 +312,10 @@ vault-backup-failure-alert               prod-rg          True       3
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/.../providers/Microsoft.RecoveryServices/vaults/<vault-resource-id>' could not be found.`** — Verify the vault resource ID is correct and exists in the specified resource group using `az recovery-services vault list --resource-group <rg>`.
-    **`InvalidMetricName: The metric 'ReplicationHealthErrors' is not valid for this resource type.`** — Replace with the correct metric name `ReplicationHealthStatus` or `ReplicationLatency` by checking available metrics with `az monitor metrics list-definitions --resource <vault-resource-id>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/.../providers/Microsoft.RecoveryServices/vaults/<vault-resource-id>' could not be found.` | Verify the vault resource ID is correct and exists in the specified resource group using `az recovery-services vault list --resource-group <rg>`. |
+    | `InvalidMetricName: The metric 'ReplicationHealthErrors' is not valid for this resource type.` | Replace with the correct metric name `ReplicationHealthStatus` or `ReplicationLatency` by checking available metrics with `az monitor metrics list-definitions --resource <vault-resource-id>`. |
 ---
 
 ## Replication Jobs Monitoring
@@ -344,9 +350,11 @@ dr-resync-20250114-001                        Resynchronize       Target resourc
 ```
 
 !!! warning "Common errors"
-    **`AuthorizationError: The client '<client-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/read'`** — Ensure your Azure CLI account has the Reader or Contributor role on the Recovery Services vault resource.
-    **`ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<dr-rg>' was not found`** — Verify the subscription ID, resource group name, and vault name are correct and exist in your Azure subscription.
-    **`InvalidApiVersion: The api-version '2022-10-01' is not supported for this resource type`** — Update the api-version parameter to a currently supported version by running `az provider show --namespace Microsoft.RecoveryServices --query "resourceTypes[?resourceType=='vaults/replicationJobs'].apiVersions"`.
+    | Error | Fix |
+    |---|---|
+    | `AuthorizationError: The client '<client-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/read'` | Ensure your Azure CLI account has the Reader or Contributor role on the Recovery Services vault resource. |
+    | `ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<dr-rg>' was not found` | Verify the subscription ID, resource group name, and vault name are correct and exist in your Azure subscription. |
+    | `InvalidApiVersion: The api-version '2022-10-01' is not supported for this resource type` | Update the api-version parameter to a currently supported version by running `az provider show --namespace Microsoft.RecoveryServices --query "resourceTypes[?resourceType=='vaults/replicationJobs'].apiVersions"`. |
 ---
 
 ## Replication Health Dashboard Metrics

@@ -132,8 +132,10 @@ root@vrli-master:~# curl -sk https://localhost/api/v2/cluster/nodes | python3 -m
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to localhost port 443: Connection refused`** — Verify the Aria Logs services are running with `systemctl status` and check that port 443 is listening with `netstat -tlnp | grep 443`.
-    **`command not found: python3`** — Install Python 3 with `apt-get install python3` or use `jq` instead: `curl -sk https://localhost/api/v2/cluster/nodes | jq .`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to localhost port 443: Connection refused` | Verify the Aria Logs services are running with `systemctl status` and check that port 443 is listening with `netstat -tlnp | grep 443`. |
+    | `command not found: python3` | Install Python 3 with `apt-get install python3` or use `jq` instead: `curl -sk https://localhost/api/v2/cluster/nodes | jq .`. |
 Note the version string and the state of each cluster node.
 
 ### 2. Generate the VAMI support bundle
@@ -173,9 +175,11 @@ root@vrli-master-01:~# ls -lh /var/tmp/loginsight-support-bundle*.zip
 ```
 
 !!! warning "Common errors"
-    **`/usr/lib/loginsight/application/bin/loginsight-ls.sh: Permission denied`** — Ensure you are logged in as root or use `sudo` to execute the script.
-    **`No such file or directory`** — Verify the vRLI application is installed and the path `/usr/lib/loginsight/application/bin/` exists; reinstall or check installation status if missing.
-    **`/var/tmp/: No space left on device`** — Free up disk space on the node (bundles are typically 400MB–1GB) before regenerating the bundle.
+    | Error | Fix |
+    |---|---|
+    | `/usr/lib/loginsight/application/bin/loginsight-ls.sh: Permission denied` | Ensure you are logged in as root or use `sudo` to execute the script. |
+    | `No such file or directory` | Verify the vRLI application is installed and the path `/usr/lib/loginsight/application/bin/` exists; reinstall or check installation status if missing. |
+    | `/var/tmp/: No space left on device` | Free up disk space on the node (bundles are typically 400MB–1GB) before regenerating the bundle. |
 ### 3. Collect issue-specific logs
 
 | Issue Type | Additional Collection |

@@ -76,9 +76,11 @@ Estimated Time (seconds)    : 180
 ```
 
 !!! warning "Common errors"
-    **`vsan cluster get: Unknown command or namespace`** — Ensure vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster list` to verify vSAN is active.
-    **`Error: Unable to connect to vSAN cluster`** — Verify the ESXi host is part of a vSAN cluster and network connectivity exists between cluster nodes on the vSAN network.
-    **`Permission denied`** — Run the command as root or with appropriate vSAN administrator privileges on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `vsan cluster get: Unknown command or namespace` | Ensure vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster list` to verify vSAN is active. |
+    | `Error: Unable to connect to vSAN cluster` | Verify the ESXi host is part of a vSAN cluster and network connectivity exists between cluster nodes on the vSAN network. |
+    | `Permission denied` | Run the command as root or with appropriate vSAN administrator privileges on the ESXi host. |
 ## Ping vSAN VMkernel Between Hosts
 
 ```bash
@@ -109,9 +111,11 @@ PING 192.168.100.45 (192.168.100.45): 8972 data bytes
 ```
 
 !!! warning "Common errors"
-    **`Unknown interface vmk2`** — Verify the correct VMkernel interface name with `esxcli network ip interface list` and use the correct interface (e.g., vmk1, vmk3).
-    **`100% packet loss`** — Check that the target vSAN VMkernel IP is reachable and that vSAN network connectivity is established between hosts.
-    **`Packet size too large for link MTU`** — Reduce the packet size with `-s` flag or verify that jumbo frames (MTU 9000) are configured on both the ESXi host and physical switch.
+    | Error | Fix |
+    |---|---|
+    | `Unknown interface vmk2` | Verify the correct VMkernel interface name with `esxcli network ip interface list` and use the correct interface (e.g., vmk1, vmk3). |
+    | `100% packet loss` | Check that the target vSAN VMkernel IP is reachable and that vSAN network connectivity is established between hosts. |
+    | `Packet size too large for link MTU` | Reduce the packet size with `-s` flag or verify that jumbo frames (MTU 9000) are configured on both the ESXi host and physical switch. |
 ## Common Issues
 
 | Symptom | First Check |

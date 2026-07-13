@@ -88,9 +88,11 @@ fs-backup-replica     synced    push         flashblade-dr-02    2s
 ```
 
 !!! warning "Common errors"
-    **`purefb: command not found`** — Install the Pure FlashBlade CLI tools or ensure the PATH includes the installation directory.
-    **`Error: Invalid credentials`** — Verify PUREFB_HOST and PUREFB_API_TOKEN environment variables are set correctly.
-    **`Error: Connection refused`** — Confirm the FlashBlade management IP is reachable and the REST API service is running.
+    | Error | Fix |
+    |---|---|
+    | `purefb: command not found` | Install the Pure FlashBlade CLI tools or ensure the PATH includes the installation directory. |
+    | `Error: Invalid credentials` | Verify PUREFB_HOST and PUREFB_API_TOKEN environment variables are set correctly. |
+    | `Error: Connection refused` | Confirm the FlashBlade management IP is reachable and the REST API service is running. |
 **Upgrade execution:**
 
 - FlashBlade upgrades are non-disruptive; Purity//FB performs a rolling blade upgrade

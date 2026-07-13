@@ -120,9 +120,11 @@ round-trip min/avg/max/stddev = 1.987/2.173/2.341/0.132 ms
 ```
 
 !!! warning "Common errors"
-    **`PING: cannot find vrf management`** — Verify the management VRF exists with `show vrf` and confirm it is configured on the switch.
-    **`PING: sendto: No route to host`** — Check that the management interface is up with `show interface mgmt0` and that routing to 10.0.0.1 is configured.
-    **`PING: sendto: Permission denied`** — Ensure you have administrative privileges; use `enable` to enter privileged EXEC mode before running the ping command.
+    | Error | Fix |
+    |---|---|
+    | `PING: cannot find vrf management` | Verify the management VRF exists with `show vrf` and confirm it is configured on the switch. |
+    | `PING: sendto: No route to host` | Check that the management interface is up with `show interface mgmt0` and that routing to 10.0.0.1 is configured. |
+    | `PING: sendto: Permission denied` | Ensure you have administrative privileges; use `enable` to enter privileged EXEC mode before running the ping command. |
 **Apply NX-OS license:**
 
 ```bash
@@ -151,9 +153,11 @@ License Usage:
 ```
 
 !!! warning "Common errors"
-    **`%Error opening tftp://10.0.0.100/mds-license.lic (Connection timed out)`** — Verify TFTP server is reachable and running on 10.0.0.100, and check network connectivity from the MDS switch.
-    **`%License file is invalid or corrupted`** — Ensure the license file is a valid Cisco MDS .lic file and was not corrupted during transfer; re-download from Cisco if needed.
-    **`%Insufficient space on bootflash`** — Free up space on bootflash using `delete bootflash:` command before copying the license file.
+    | Error | Fix |
+    |---|---|
+    | `%Error opening tftp://10.0.0.100/mds-license.lic (Connection timed out)` | Verify TFTP server is reachable and running on 10.0.0.100, and check network connectivity from the MDS switch. |
+    | `%License file is invalid or corrupted` | Ensure the license file is a valid Cisco MDS .lic file and was not corrupted during transfer; re-download from Cisco if needed. |
+    | `%Insufficient space on bootflash` | Free up space on bootflash using `delete bootflash:` command before copying the license file. |
 ---
 
 ## Configure VSAN and Port Channels
@@ -184,8 +188,10 @@ VSAN       Name                             State   Interoperability
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Ensure you are in the correct configuration mode (enter `config t` then `vsan database` before entering VSAN definitions).
-    **`% VSAN 10 already exists`** — Delete the existing VSAN with `no vsan 10` before redefining it, or use a different VSAN ID.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Ensure you are in the correct configuration mode (enter `config t` then `vsan database` before entering VSAN definitions). |
+    | `% VSAN 10 already exists` | Delete the existing VSAN with `no vsan 10` before redefining it, or use a different VSAN ID. |
 **Assign ports to VSANs:**
 
 ```bash
@@ -200,8 +206,10 @@ vsan database
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (`config t`) and that the MDS switch supports VSAN configuration.
-    **`% Interface fc1/1-16 not found`** — Confirm the port range exists on your specific MDS model (e.g., MDS 9148S has fc1/1-48); adjust the range accordingly.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (`config t`) and that the MDS switch supports VSAN configuration. |
+    | `% Interface fc1/1-16 not found` | Confirm the port range exists on your specific MDS model (e.g., MDS 9148S has fc1/1-48); adjust the range accordingly. |
 **Set the domain ID per VSAN:**
 
 ```bash
@@ -215,8 +223,10 @@ fcdomain domain 2 preferred vsan 20
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode with `config t` and that the MDS switch supports fcdomain commands.
-    **`% VSAN <vsan-id> does not exist`** — Create the VSAN first using `vsan <vsan-id>` command before assigning it as preferred in fcdomain configuration.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode with `config t` and that the MDS switch supports fcdomain commands. |
+    | `% VSAN <vsan-id> does not exist` | Create the VSAN first using `vsan <vsan-id>` command before assigning it as preferred in fcdomain configuration. |
 **Configure ISL Port Channels (if multiple ISL links exist):**
 
 ```bash
@@ -256,9 +266,11 @@ Topology for VSAN 10:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact syntax for your MDS firmware version; `switchport mode E` may need to be `switchport mode fport` or configured differently depending on the context.
-    **`% Port fc1/33 is already bound to a channel group`** — Remove the port from any existing channel group with `no channel-group` before assigning it to port-channel 1.
-    **`% VSAN 10 does not exist`** — Create the VSAN first using `vsan 10` in configuration mode before assigning it to the trunk.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact syntax for your MDS firmware version; `switchport mode E` may need to be `switchport mode fport` or configured differently depending on the context. |
+    | `% Port fc1/33 is already bound to a channel group` | Remove the port from any existing channel group with `no channel-group` before assigning it to port-channel 1. |
+    | `% VSAN 10 does not exist` | Create the VSAN first using `vsan 10` in configuration mode before assigning it to the trunk. |
 ---
 
 ## Zone Configuration
@@ -283,8 +295,10 @@ zone name z_esx01_hba1_pmax_fa2_p0 vsan 10
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (enter `config t` then `zone` submode) before entering zone member commands.
-    **`% Incomplete command`** — Ensure each zone definition includes at least one `member pwwn` statement; incomplete zone configurations will be rejected.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (enter `config t` then `zone` submode) before entering zone member commands. |
+    | `% Incomplete command` | Ensure each zone definition includes at least one `member pwwn` statement; incomplete zone configurations will be rejected. |
 **Create a zoneset and add zones:**
 
 ```bash
@@ -299,8 +313,10 @@ zoneset name zs_fabric_a vsan 10
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode by entering `config t` and `san-device-alias database` context first.
-    **`% Zone member not found: z_esx01_hba0_pmax_fa1_p0`** — Create the zone and its device aliases before adding them to the zoneset using `zone name <zone_name> vsan 10` commands.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode by entering `config t` and `san-device-alias database` context first. |
+    | `% Zone member not found: z_esx01_hba0_pmax_fa1_p0` | Create the zone and its device aliases before adding them to the zoneset using `zone name <zone_name> vsan 10` commands. |
 **Activate the zoneset:**
 
 ```bash
@@ -317,8 +333,10 @@ Copy complete.
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (use `config terminal` first if needed).
-    **`% Zoneset zs_fabric_a not found`** — Create the zoneset with `zoneset name zs_fabric_a vsan 10` before attempting to activate it.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (use `config terminal` first if needed). |
+    | `% Zoneset zs_fabric_a not found` | Create the zoneset with `zoneset name zs_fabric_a vsan 10` before attempting to activate it. |
 **Verify zones:**
 
 ```bash
@@ -352,8 +370,10 @@ FCNS Database for VSAN 10:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the VSAN number exists with `show vsan` and confirm you are in the correct mode (config or exec).
-    **`FCNS Database for VSAN 10: (empty)`** — Check that devices are logged in and zoning is activated with `show zoneset active vsan 10`; if empty, devices have not registered with the name server yet.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the VSAN number exists with `show vsan` and confirm you are in the correct mode (config or exec). |
+    | `FCNS Database for VSAN 10: (empty)` | Check that devices are logged in and zoning is activated with `show zoneset active vsan 10`; if empty, devices have not registered with the name server yet. |
 ---
 
 ## NDFC Integration
@@ -374,8 +394,10 @@ snmp-server enable traps all
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (config-if or config) by checking the prompt ends with `(config)#` or `(config-if)#`.
-    **`% Incomplete command`** — Ensure the SNMP community string and trap host IP are both specified; the syntax requires `snmp-server community <string> ro` and `snmp-server host <ip> traps version 2c <community>`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (config-if or config) by checking the prompt ends with `(config)#` or `(config-if)#`. |
+    | `% Incomplete command` | Ensure the SNMP community string and trap host IP are both specified; the syntax requires `snmp-server community <string> ro` and `snmp-server host <ip> traps version 2c <community>`. |
 **Enable CFS (Cisco Fabric Services) for zone distribution:**
 
 CFS automatically distributes zone changes across all switches in the VSAN when activated.
@@ -403,9 +425,11 @@ CFS Status Information
 ```
 
 !!! warning "Common errors"
-    **`CFS is already enabled`** — CFS is already active; skip the `cfs enable` command or verify current state with `show cfs status` first.
-    **`Distribution failed: peer switch unreachable`** — Verify all fabric switches are online and reachable using `show fabric status` before running `cfs distribute`.
-    **`CFS State: disabled`** — Run `cfs enable` before attempting distribution; the feature must be activated on the switch.
+    | Error | Fix |
+    |---|---|
+    | `CFS is already enabled` | CFS is already active; skip the `cfs enable` command or verify current state with `show cfs status` first. |
+    | `Distribution failed: peer switch unreachable` | Verify all fabric switches are online and reachable using `show fabric status` before running `cfs distribute`. |
+    | `CFS State: disabled` | Run `cfs enable` before attempting distribution; the feature must be activated on the switch. |
 **Add the MDS switch to NDFC:**
 
 1. Log in to the NDFC web interface at `https://<ndfc_server>`.
@@ -459,8 +483,10 @@ VSAN 10:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct mode (enable mode on MDS switch) and use `show fcns database detail vsan <vsan-id>` syntax.
-    **`VSAN <vsan-id> does not exist`** — Confirm the VSAN exists with `show vsan` and verify the VSAN ID is correct and active.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct mode (enable mode on MDS switch) and use `show fcns database detail vsan <vsan-id>` syntax. |
+    | `VSAN <vsan-id> does not exist` | Confirm the VSAN exists with `show vsan` and verify the VSAN ID is correct and active. |
 **Verify zone enforcement:**
 
 ```bash
@@ -483,9 +509,11 @@ Total of 2 zones found
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct MDS CLI mode (use `config terminal` if needed) and that the VSAN exists with `show vsan`.
-    **`% VSAN 10 does not exist`** — Confirm VSAN 10 is created and active using `show vsan id 10`.
-    **`% No zones found containing this member`** — Verify the WWN format is correct (use colons, not hyphens) and the HBA is actually zoned in VSAN 10 with `show zoneset active vsan 10`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct MDS CLI mode (use `config terminal` if needed) and that the VSAN exists with `show vsan`. |
+    | `% VSAN 10 does not exist` | Confirm VSAN 10 is created and active using `show vsan id 10`. |
+    | `% No zones found containing this member` | Verify the WWN format is correct (use colons, not hyphens) and the HBA is actually zoned in VSAN 10 with `show zoneset active vsan 10`. |
 **From the host (Linux):**
 
 ```bash
@@ -545,7 +573,9 @@ size=1.5T features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp
 ```
 
 !!! warning "Common errors"
-    **`rescan-scsi-bus.sh: command not found`** — Install sg3
+    | Error | Fix |
+    |---|---|
+    | `rescan-scsi-bus.sh: command not found` | Install sg3 |
 ---
 
 ## Validate
@@ -589,9 +619,11 @@ Topology for VSAN 10:
 ```
 
 !!! warning "Common errors"
-    **`fc1/6    -- down    --    SFP    Fabric  fc1/6`** — Check SFP transceiver seating, cable connections, and run `show interface fc1/6` for detailed diagnostics including error counters.
-    **`Domain ID conflict detected on VSAN 10`** — Verify domain IDs are unique across all switches in the fabric and reload the switch if a duplicate persists after reconfiguration.
-    **`ISL port down: fc1/15 (mds-core-01 to mds-core-02)`** — Inspect the ISL cable for damage, reseat both SFP transceivers, and confirm speed negotiation with `show interface fc1/15 detail`.
+    | Error | Fix |
+    |---|---|
+    | `fc1/6    -- down    --    SFP    Fabric  fc1/6` | Check SFP transceiver seating, cable connections, and run `show interface fc1/6` for detailed diagnostics including error counters. |
+    | `Domain ID conflict detected on VSAN 10` | Verify domain IDs are unique across all switches in the fabric and reload the switch if a duplicate persists after reconfiguration. |
+    | `ISL port down: fc1/15 (mds-core-01 to mds-core-02)` | Inspect the ISL cable for damage, reseat both SFP transceivers, and confirm speed negotiation with `show interface fc1/15 detail`. |
 **Error counter check:**
 
 ```bash
@@ -624,8 +656,10 @@ Clear counters on interface fc1/1
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the interface name matches your MDS model (e.g., `fc1/1` vs `Ethernet1/1`) and use `show interface` first to confirm the port exists.
-    **`% Interface fc1/1 is down`** — Check physical cable connection and port status with `show interface fc1/1` before clearing counters on a non-operational link.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the interface name matches your MDS model (e.g., `fc1/1` vs `Ethernet1/1`) and use `show interface` first to confirm the port exists. |
+    | `% Interface fc1/1 is down` | Check physical cable connection and port status with `show interface fc1/1` before clearing counters on a non-operational link. |
 **End-to-end path verification:**
 
 ```bash
@@ -647,9 +681,11 @@ round-trip min/avg/max = 2.156/2.279/2.412 ms
 ```
 
 !!! warning "Common errors"
-    **`FCPING: No response from 50:00:09:73:00:1a:2b:3c`** — Verify the target PWWN is correct and the storage port is online and zoned to the initiator.
-    **`FCPING: VSAN 10 is not configured`** — Create the VSAN first using `vsan <id>` command or confirm the VSAN number matches your fabric configuration.
-    **`FCPING: Permission denied`** — Ensure you are in the correct VSAN context or have appropriate user role permissions to execute fcping commands.
+    | Error | Fix |
+    |---|---|
+    | `FCPING: No response from 50:00:09:73:00:1a:2b:3c` | Verify the target PWWN is correct and the storage port is online and zoned to the initiator. |
+    | `FCPING: VSAN 10 is not configured` | Create the VSAN first using `vsan <id>` command or confirm the VSAN number matches your fabric configuration. |
+    | `FCPING: Permission denied` | Ensure you are in the correct VSAN context or have appropriate user role permissions to execute fcping commands. |
 **Traceroute within the fabric:**
 
 ```bash
@@ -678,9 +714,11 @@ Target Port Found:
 ```
 
 !!! warning "Common errors"
-    **`fctrace: PWWN not found in VSAN 10`** — Verify the PWWN is correct and the device is zoned into the specified VSAN using `fcping` or `zone name` commands.
-    **`fctrace: VSAN 10 does not exist or is suspended`** — Confirm the VSAN is active with `show vsan` and ensure it is not in suspended state.
-    **`fctrace: Command not found`** — Enable the fctrace feature on the MDS switch using `feature fctrace` in configuration mode.
+    | Error | Fix |
+    |---|---|
+    | `fctrace: PWWN not found in VSAN 10` | Verify the PWWN is correct and the device is zoned into the specified VSAN using `fcping` or `zone name` commands. |
+    | `fctrace: VSAN 10 does not exist or is suspended` | Confirm the VSAN is active with `show vsan` and ensure it is not in suspended state. |
+    | `fctrace: Command not found` | Enable the fctrace feature on the MDS switch using `feature fctrace` in configuration mode. |
 Save configuration:
 
 ```bash
@@ -695,8 +733,10 @@ Copy complete.
 ```
 
 !!! warning "Common errors"
-    **`% Error opening tftp://255.255.255.255/network-confg (Timed out)`** — Verify TFTP server is reachable and configured; use `ping` to test connectivity to the TFTP server IP.
-    **`% Invalid command`** — Ensure you are in privileged EXEC mode (prompt shows `#`); type `enable` if needed.
+    | Error | Fix |
+    |---|---|
+    | `% Error opening tftp://255.255.255.255/network-confg (Timed out)` | Verify TFTP server is reachable and configured; use `ping` to test connectivity to the TFTP server IP. |
+    | `% Invalid command` | Ensure you are in privileged EXEC mode (prompt shows `#`); type `enable` if needed. |
 ---
 
 ## Verify

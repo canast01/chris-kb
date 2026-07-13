@@ -139,9 +139,11 @@ nutanix@cvm-45:~$ ncli disk list | grep -v NORMAL
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the CVM IP is correct and SSH service is running; check firewall rules allow port 22 from your source IP.
-    **`ncli: command not found`** — Ensure you are logged in as the nutanix user and the PATH includes /usr/local/nutanix/bin; run `source /etc/profile` if needed.
-    **`Permission denied (publickey,password)`** — Confirm the nutanix user credentials are correct and the CVM's SSH key-based authentication is configured if required by your environment.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the CVM IP is correct and SSH service is running; check firewall rules allow port 22 from your source IP. |
+    | `ncli: command not found` | Ensure you are logged in as the nutanix user and the PATH includes /usr/local/nutanix/bin; run `source /etc/profile` if needed. |
+    | `Permission denied (publickey,password)` | Confirm the nutanix user credentials are correct and the CVM's SSH key-based authentication is configured if required by your environment. |
 ### 2. Run NCC health checks
 
 ```bash
@@ -175,9 +177,11 @@ Running critical checks only...
 ```
 
 !!! warning "Common errors"
-    **`ncc: command not found`** — Ensure NCC is installed on the Prism Central or CVM by running `yum install ncc` or verify it is in your PATH.
-    **`ERROR: Unable to connect to cluster — Connection refused`** — Verify cluster connectivity and that you are running the command from a node with network access to the cluster management interface.
-    **`ERROR: Permission denied — ncc requires root or sudoer privileges`** — Run the command with `sudo` or ensure your user account has appropriate sudo permissions for NCC execution.
+    | Error | Fix |
+    |---|---|
+    | `ncc: command not found` | Ensure NCC is installed on the Prism Central or CVM by running `yum install ncc` or verify it is in your PATH. |
+    | `ERROR: Unable to connect to cluster — Connection refused` | Verify cluster connectivity and that you are running the command from a node with network access to the cluster management interface. |
+    | `ERROR: Permission denied — ncc requires root or sudoer privileges` | Run the command with `sudo` or ensure your user account has appropriate sudo permissions for NCC execution. |
 GSS will ask for the full NCC output as the first diagnostic step. A fresh NCC run captures the current cluster health state.
 
 ### 3. Collect the support bundle
@@ -222,9 +226,11 @@ total 9.2G
 ```
 
 !!! warning "Common errors"
-    **`logbay: command not found`** — Ensure you are SSH'd to a Nutanix CVM and have the correct PATH set, or source the Nutanix environment setup script.
-    **`Permission denied`** — Run the command as the nutanix user or with sudo; verify your user has write access to /home/nutanix/support-bundle/.
-    **`Disk space low: insufficient space for bundle`** — Free up disk space on the CVM or specify an alternate output directory with `--output_dir` pointing to a partition with adequate free space.
+    | Error | Fix |
+    |---|---|
+    | `logbay: command not found` | Ensure you are SSH'd to a Nutanix CVM and have the correct PATH set, or source the Nutanix environment setup script. |
+    | `Permission denied` | Run the command as the nutanix user or with sudo; verify your user has write access to /home/nutanix/support-bundle/. |
+    | `Disk space low: insufficient space for bundle` | Free up disk space on the CVM or specify an alternate output directory with `--output_dir` pointing to a partition with adequate free space. |
 ### 4. Collect targeted logs for specific issues
 
 | Issue Type | Additional Collection |
@@ -407,9 +413,11 @@ nutanix@NTNX-CVM-001:~$ ncli cluster info | grep -i "storage\|usage\|capacity"
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the CVM is running and SSH is enabled; check firewall rules allowing port 22 to the CVM IP.
-    **`ncli: command not found`** — Confirm you are logged in as the nutanix user and the PATH includes /home/nutanix/bin; source the environment if needed.
-    **`Permission denied`** — Ensure your SSH key is authorized in /home/nut
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the CVM is running and SSH is enabled; check firewall rules allowing port 22 to the CVM IP. |
+    | `ncli: command not found` | Confirm you are logged in as the nutanix user and the PATH includes /home/nutanix/bin; source the environment if needed. |
+    | `Permission denied` | Ensure your SSH key is authorized in /home/nut |
 ---
 
 ## Support SLA Reference

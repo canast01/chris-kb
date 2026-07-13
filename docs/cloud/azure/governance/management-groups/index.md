@@ -159,9 +159,11 @@ mg-decommissioned   Decommissioned Resources   /subscriptions
 ```
 
 !!! warning "Common errors"
-    **`ManagementGroupNotFound: Management group 'mg-new-workloads' not found.`** — Verify the management group name exists with `az account management-group list` before attempting operations.
-    **`ChildrenOperationNotAllowed: Cannot move management group 'mg-new-workloads' because it contains subscriptions or child groups.`** — Remove all child management groups and subscriptions before moving or deleting a management group.
-    **`AuthorizationFailed: The client does not have authorization to perform action 'Microsoft.Management/managementGroups/write' on scope.`** — Ensure your Azure account has Management Group Contributor or Owner role at the tenant root scope.
+    | Error | Fix |
+    |---|---|
+    | `ManagementGroupNotFound: Management group 'mg-new-workloads' not found.` | Verify the management group name exists with `az account management-group list` before attempting operations. |
+    | `ChildrenOperationNotAllowed: Cannot move management group 'mg-new-workloads' because it contains subscriptions or child groups.` | Remove all child management groups and subscriptions before moving or deleting a management group. |
+    | `AuthorizationFailed: The client does not have authorization to perform action 'Microsoft.Management/managementGroups/write' on scope.` | Ensure your Azure account has Management Group Contributor or Owner role at the tenant root scope. |
 ## Policy Inheritance
 
 Policies assigned at a management group level are automatically inherited by all child management groups and subscriptions.
@@ -221,8 +223,10 @@ ResourceId                                                                      
 ```
 
 !!! warning "Common errors"
-    **`The policy definition with ID '9daedab3-fb2d-461e-b861-71790eead4f6' could not be found.`** — Verify the policy definition ID exists in your subscription or use `az policy definition list` to find the correct ID.
-    **`The scope '/providers/Microsoft.Management/managementGroups/mg-production' is invalid or you do not have access to this management group.`** — Confirm the management group name is correct and you have Reader or higher permissions on it using `az account management-group show --name mg-production`.
+    | Error | Fix |
+    |---|---|
+    | `The policy definition with ID '9daedab3-fb2d-461e-b861-71790eead4f6' could not be found.` | Verify the policy definition ID exists in your subscription or use `az policy definition list` to find the correct ID. |
+    | `The scope '/providers/Microsoft.Management/managementGroups/mg-production' is invalid or you do not have access to this management group.` | Confirm the management group name is correct and you have Reader or higher permissions on it using `az account management-group show --name mg-production`. |
     **`Operation failed with status: 'Forbidden'. The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ### Policy Assignment Hierarchy
 

@@ -42,8 +42,10 @@ CA Certificate: corp-ldap-ca
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate file not found: /tmp/corp-ca.crt`** — Verify the certificate file exists at the specified path and is readable by the ndadmin user.
-    **`Error: Invalid certificate format. Expected PEM or DER encoded X.509 certificate`** — Ensure the certificate file is properly formatted; convert from PKCS#12 or other formats using `openssl x509 -in cert.p12 -out cert.crt`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate file not found: /tmp/corp-ca.crt` | Verify the certificate file exists at the specified path and is readable by the ndadmin user. |
+    | `Error: Invalid certificate format. Expected PEM or DER encoded X.509 certificate` | Ensure the certificate file is properly formatted; convert from PKCS#12 or other formats using `openssl x509 -in cert.p12 -out cert.crt`. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

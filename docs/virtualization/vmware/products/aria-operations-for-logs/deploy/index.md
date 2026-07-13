@@ -86,9 +86,11 @@ Address: 192.168.1.110
 ```
 
 !!! warning "Common errors"
-    **`** server can't find vrli-master.example.local: NXDOMAIN`** — Verify the DNS zone is configured on your DNS server and the hostname is registered in DNS.
-    **`nslookup: command not found`** — Install bind-utils (RHEL/CentOS) or dnsutils (Debian/Ubuntu) package on the management workstation.
-    **`connection timed out; no servers could be reached`** — Confirm the DNS server IP (10.0.0.53) is reachable and correct in /etc/resolv.conf.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find vrli-master.example.local: NXDOMAIN` | Verify the DNS zone is configured on your DNS server and the hostname is registered in DNS. |
+    | `nslookup: command not found` | Install bind-utils (RHEL/CentOS) or dnsutils (Debian/Ubuntu) package on the management workstation. |
+    | `connection timed out; no servers could be reached` | Confirm the DNS server IP (10.0.0.53) is reachable and correct in /etc/resolv.conf. |
 Required firewall ports:
 
 | Port | Protocol | Direction | Purpose |
@@ -111,8 +113,10 @@ Connection to vrli-master.example.local 9543 [tcp/*] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`nc: getaddrinfo for host "vrli-master.example.local" port 514/udp failed: Name or service not known`** — Verify DNS resolution with `nslookup vrli-master.example.local` or use the IP address directly instead of the hostname.
-    **`Connection refused`** — Confirm the Aria Operations for Logs syslog receiver (port 514) and CFAPI agent (port 9543) are running on the target host with `netstat -tuln | grep -E '514|9543'`.
+    | Error | Fix |
+    |---|---|
+    | `nc: getaddrinfo for host "vrli-master.example.local" port 514/udp failed: Name or service not known` | Verify DNS resolution with `nslookup vrli-master.example.local` or use the IP address directly instead of the hostname. |
+    | `Connection refused` | Confirm the Aria Operations for Logs syslog receiver (port 514) and CFAPI agent (port 9543) are running on the target host with `netstat -tuln | grep -E '514|9543'`. |
 Ingest sizing:
 
 | Environment | Daily Volume | Recommended Config |
@@ -172,8 +176,10 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`li-admin: command not found`** — Ensure you are logged in as root and the VRLI service is running; check `/opt/vmware/var/log/` for startup errors.
-    **`/storage/core: No such file or directory`** — Verify the storage mount completed successfully by running `mount | grep storage` and check `/etc/fstab` for mount configuration.
+    | Error | Fix |
+    |---|---|
+    | `li-admin: command not found` | Ensure you are logged in as root and the VRLI service is running; check `/opt/vmware/var/log/` for startup errors. |
+    | `/storage/core: No such file or directory` | Verify the storage mount completed successfully by running `mount | grep storage` and check `/etc/fstab` for mount configuration. |
 ---
 
 ## Phase 3 — Worker Node Deployment
@@ -221,9 +227,11 @@ curl -sk -u 'admin:<password>' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the master's CA certificate into your system trust store.
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API endpoint is correct and the cluster service is fully started; check `systemctl status aria-ops-logs` on the master node.
-    **`401 Unauthorized`** — Confirm the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u 'admin:password' https://vrli-master.example.local/api/v2/cluster/nodes`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag (already present) or import the master's CA certificate into your system trust store. |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the API endpoint is correct and the cluster service is fully started; check `systemctl status aria-ops-logs` on the master node. |
+    | `401 Unauthorized` | Confirm the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u 'admin:password' https://vrli-master.example.local/api/v2/cluster/nodes`. |
 Configure VIP for HA (if using a load balancer):
 
 ```text
@@ -268,8 +276,10 @@ DefaultFormat: [%b %d %H:%M:%S %s] %b %d %H:%M:%S %hostName %syslog-tag
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to parse options.`** — Verify the syslog configuration syntax matches the format `udp://hostname:port` without extra spaces or special characters.
-    **`Connection refused`** — Confirm that vrli-master.example.local is reachable on port 514 and that the Aria Operations for Logs collector is running and listening on that port.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to parse options.` | Verify the syslog configuration syntax matches the format `udp://hostname:port` without extra spaces or special characters. |
+    | `Connection refused` | Confirm that vrli-master.example.local is reachable on port 514 and that the Aria Operations for Logs collector is running and listening on that port. |
 ### CFAPI Agent on Linux VMs
 
 ```bash
@@ -295,9 +305,11 @@ Agent successfully registered with master at vrli-master.example.local
 ```
 
 !!! warning "Common errors"
-    **`./VMware-Log-Insight-Agent-<version>.bin: Permission denied`** — Run `chmod +x VMware-Log-Insight-Agent-<version>.bin` before executing the installer.
-    **`Error: Unable to connect to vrli-master.example.local:9543 (Connection refused)`** — Verify the VRLI master hostname/IP is correct and the service is listening on port 9543 with `telnet vrli-master.example.local 9543`.
-    **`ERROR: Agent failed to register - SSL certificate verification failed`** — Add `--ssl-verify=no` flag to the installer command or ensure the VRLI master's SSL certificate is trusted on the agent host.
+    | Error | Fix |
+    |---|---|
+    | `./VMware-Log-Insight-Agent-<version>.bin: Permission denied` | Run `chmod +x VMware-Log-Insight-Agent-<version>.bin` before executing the installer. |
+    | `Error: Unable to connect to vrli-master.example.local:9543 (Connection refused)` | Verify the VRLI master hostname/IP is correct and the service is listening on port 9543 with `telnet vrli-master.example.local 9543`. |
+    | `ERROR: Agent failed to register - SSL certificate verification failed` | Add `--ssl-verify=no` flag to the installer command or ensure the VRLI master's SSL certificate is trusted on the agent host. |
 Syslog from network devices: point switches and firewalls at the VIP on UDP 514. For TLS syslog on port 6514, download the Aria Logs CA cert from Administration → SSL and install it on each source before enabling TCP 6514.
 
 ---
@@ -367,9 +379,11 @@ Filesystem              Size    Used    Available   Use%
 ```
 
 !!! warning "Common errors"
-    **`li-admin: command not found`** — SSH to the correct vRealize Log Insight master node or verify the admin CLI tools are installed in the PATH.
-    **`MISSING_SHARDS detected on vrli-node-2.example.local`** — Run `li-admin cluster repair` and wait for shard rebalancing to complete before proceeding.
-    **`/storage/core usage: 87%`** — Increase storage capacity or implement log retention policies to reduce disk usage below 80%.
+    | Error | Fix |
+    |---|---|
+    | `li-admin: command not found` | SSH to the correct vRealize Log Insight master node or verify the admin CLI tools are installed in the PATH. |
+    | `MISSING_SHARDS detected on vrli-node-2.example.local` | Run `li-admin cluster repair` and wait for shard rebalancing to complete before proceeding. |
+    | `/storage/core usage: 87%` | Increase storage capacity or implement log retention policies to reduce disk usage below 80%. |
 ```bash
 # Confirm version and node health via API
 curl -sk -u 'admin:<password>' \
@@ -398,9 +412,11 @@ curl -sk -u 'admin:<password>' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the CA certificate into your system trust store.
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API endpoint is correct and the vRLI service is fully started; check logs with `tail -f /var/log/aria/vrli/api.log`.
-    **`curl: (401) Unauthorized`** — Confirm the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u 'admin:password' https://vrli-master.example.local/api/v2/system/info`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the CA certificate into your system trust store. |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the API endpoint is correct and the vRLI service is fully started; check logs with `tail -f /var/log/aria/vrli/api.log`. |
+    | `curl: (401) Unauthorized` | Confirm the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u 'admin:password' https://vrli-master.example.local/api/v2/system/info`. |
 | Check | Command / Location | Expected |
 |---|---|---|
 | All nodes Active | `li-admin cluster` | All nodes: ACTIVE, no missing shards |

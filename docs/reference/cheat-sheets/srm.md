@@ -99,9 +99,11 @@ curl -sk $AUTH $BASE/plans/<id>/history | python3 -m json.tool             # pla
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example, but ensure it's not removed).
-    **`curl: (7) Failed to connect to srm: Name or service not known`** — Verify the SRM hostname/IP in the BASE variable and ensure network connectivity to the SRM appliance.
-    **`jq: parse error: Invalid JSON`** — Ensure the API endpoint is correct and the SRM service is running; check response with `curl -sk $AUTH $BASE/pairing` without piping to json.tool first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example, but ensure it's not removed). |
+    | `curl: (7) Failed to connect to srm: Name or service not known` | Verify the SRM hostname/IP in the BASE variable and ensure network connectivity to the SRM appliance. |
+    | `jq: parse error: Invalid JSON` | Ensure the API endpoint is correct and the SRM service is running; check response with `curl -sk $AUTH $BASE/pairing` without piping to json.tool first. |
 ## See also
 
 - [SRM Operations](../../../virtualization/vmware/products/srm/operations/procedures/)

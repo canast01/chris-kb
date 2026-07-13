@@ -29,8 +29,10 @@ API token: 02a8d4c1-7f3e-4a9b-8c2e-9b1f5e3a2c4d
 ```
 
 !!! warning "Common errors"
-    **`Error: User svc-monitoring already exists`** — Delete the existing user with `pureadmin delete --role array_admin svc-monitoring` before recreating it.
-    **`Error: Invalid role specified`** — Verify the role name is correct; use `pureadmin list --role` to see available roles on your array version.
+    | Error | Fix |
+    |---|---|
+    | `Error: User svc-monitoring already exists` | Delete the existing user with `pureadmin delete --role array_admin svc-monitoring` before recreating it. |
+    | `Error: Invalid role specified` | Verify the role name is correct; use `pureadmin list --role` to see available roles on your array version. |
 **Common API calls:**
 
 ```bash
@@ -99,9 +101,11 @@ GET /api/2.x/arrays?space=true
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to flasharray.local port 443: Connection refused`** — Verify the array hostname/IP is reachable and the management interface is running with `ping` and `telnet <ip> 443`.
-    **`{"error_code":401,"message":"Unauthorized"}`** — Ensure your API token is valid and included in the Authorization header with `curl -H "Authorization: Bearer <token>"`.
-    **`{"error_code":400,"message":"Invalid filter syntax"}`** — URL-encode filter parameters correctly; use `filter=state%3D%27open%27` instead of unencoded quotes.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to flasharray.local port 443: Connection refused` | Verify the array hostname/IP is reachable and the management interface is running with `ping` and `telnet <ip> 443`. |
+    | `{"error_code":401,"message":"Unauthorized"}` | Ensure your API token is valid and included in the Authorization header with `curl -H "Authorization: Bearer <token>"`. |
+    | `{"error_code":400,"message":"Invalid filter syntax"}` | URL-encode filter parameters correctly; use `filter=state%3D%27open%27` instead of unencoded quotes. |
 Full API reference: [Pure Storage API documentation](https://support.purestorage.com/bundle/m_fa_rest_api)
 
 ---

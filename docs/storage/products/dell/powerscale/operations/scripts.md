@@ -151,9 +151,11 @@ Health Check Complete: PASSED
 ```
 
 !!! warning "Common errors"
-    **`Can't locate Net/SSH/Perl.pm in @INC`** — Install the required Perl module with `cpan Net::SSH::Perl` or use your system package manager.
-    **`Connection refused at powerscale_health_check.pl line 45`** — Verify the PowerScale cluster IP address in PS_HOST is correct and the management interface is reachable with `ping 192.168.1.30`.
-    **`Authentication failed: Invalid credentials`** — Confirm the PS_USER account exists on the PowerScale cluster and has appropriate admin permissions via the OneFS web UI.
+    | Error | Fix |
+    |---|---|
+    | `Can't locate Net/SSH/Perl.pm in @INC` | Install the required Perl module with `cpan Net::SSH::Perl` or use your system package manager. |
+    | `Connection refused at powerscale_health_check.pl line 45` | Verify the PowerScale cluster IP address in PS_HOST is correct and the management interface is reachable with `ping 192.168.1.30`. |
+    | `Authentication failed: Invalid credentials` | Confirm the PS_USER account exists on the PowerScale cluster and has appropriate admin permissions via the OneFS web UI. |
 **What you should see**
 
 Five labelled sections: node status (isi status), storage pools, active jobs, recent events (last 20), and SyncIQ policies. After the sections, any SMARTFAIL or DOWN nodes, FAILED jobs, or CRITICAL events are highlighted with `>>> ALERT:` lines. The final STATUS line shows OK or DEGRADED with a count of issues found. Exits 0 or 1.
@@ -270,9 +272,11 @@ STATUS: DEGRADED — 1 SyncIQ policy/policies in FAILED state.
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH key is installed on the PowerScale cluster and PS_USER has correct permissions; use `ssh-copy-id -i ~/.ssh/id_rsa ${PS_USER}@${PS_HOST}` to add your key.
-    **`ERROR: PS_HOST is not set.`** — Export the PS_HOST environment variable before running the script: `export PS_HOST=ps01.example.com`.
-    **`isi: command not found`** — SSH is connecting but OneFS CLI tools are not in the PATH; verify you are connecting to the correct PowerScale node and that OneFS is fully operational.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH key is installed on the PowerScale cluster and PS_USER has correct permissions; use `ssh-copy-id -i ~/.ssh/id_rsa ${PS_USER}@${PS_HOST}` to add your key. |
+    | `ERROR: PS_HOST is not set.` | Export the PS_HOST environment variable before running the script: `export PS_HOST=ps01.example.com`. |
+    | `isi: command not found` | SSH is connecting but OneFS CLI tools are not in the PATH; verify you are connecting to the correct PowerScale node and that OneFS is fully operational. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -330,9 +334,11 @@ Last Check: 2024-01-15 14:47:32 UTC
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host 192.168.1.30 port 22: Connection timed out`** — Verify the PowerScale cluster IP is reachable and SSH is enabled; check network connectivity with `ping 192.168.1.30`.
-    **`Permission denied (publickey,password)`** — Ensure the PS_USER account has SSH access configured and valid credentials are in place, or add SSH key authentication to the script.
-    **`/path/to/script/powerscale_synciq_monitor.sh: No such file or directory`** — Verify the script path is correct and the file exists in the specified directory with `ls -la /path/to/script/`.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host 192.168.1.30 port 22: Connection timed out` | Verify the PowerScale cluster IP is reachable and SSH is enabled; check network connectivity with `ping 192.168.1.30`. |
+    | `Permission denied (publickey,password)` | Ensure the PS_USER account has SSH access configured and valid credentials are in place, or add SSH key authentication to the script. |
+    | `/path/to/script/powerscale_synciq_monitor.sh: No such file or directory` | Verify the script path is correct and the file exists in the specified directory with `ls -la /path/to/script/`. |
 **What you should see**
 
 First the raw verbose policy list and last 5 reports are printed, then a summary table with columns POLICY, STATE, LAST-RUN, and STATUS. Any policy in FAILED state is marked in the STATUS column. The final STATUS line shows OK or DEGRADED with a count of failed policies. Exits 0 or 1.
@@ -437,9 +443,11 @@ PATH,TYPE,USAGE_GB,SOFT_GB,HARD_GB,PCT_USED,FLAG
 ```
 
 !!! warning "Common errors"
-    **`ERROR: PS_HOST is not set.`** — Set the PS_HOST environment variable before running the script: `export PS_HOST=ps01.example.com`.
-    **`Permission denied (publickey,password).`** — Ensure SSH key-based authentication is configured for the PS_USER account on the PowerScale cluster, or add `-o PubkeyAuthentication=yes` to the SSH command.
-    **`command not found: bc`** — Install the bc calculator utility on the local system with `apt-get install bc` (Debian/Ubuntu) or `yum install bc` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `ERROR: PS_HOST is not set.` | Set the PS_HOST environment variable before running the script: `export PS_HOST=ps01.example.com`. |
+    | `Permission denied (publickey,password).` | Ensure SSH key-based authentication is configured for the PS_USER account on the PowerScale cluster, or add `-o PubkeyAuthentication=yes` to the SSH command. |
+    | `command not found: bc` | Install the bc calculator utility on the local system with `apt-get install bc` (Debian/Ubuntu) or `yum install bc` (RHEL/CentOS). |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -754,9 +762,11 @@ pool-hdd            400TB     298TB   74%
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host ps01.example.com port 22: Connection timed out`** — Verify the PS_HOST is reachable and SSH port 22 is open; check network connectivity with `ping` or `nc -zv`.
-    **`Permission denied (publickey,password).`** — Ensure SSH_USER has valid key-based authentication configured or add `-o PubkeyAuthentication=yes` and provide a password via SSH agent.
-    **`isi: command not found`** — Verify you are connecting to a PowerScale cluster node with OneFS installed; confirm SSH_USER has appropriate shell access and OneFS CLI tools in PATH.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host ps01.example.com port 22: Connection timed out` | Verify the PS_HOST is reachable and SSH port 22 is open; check network connectivity with `ping` or `nc -zv`. |
+    | `Permission denied (publickey,password).` | Ensure SSH_USER has valid key-based authentication configured or add `-o PubkeyAuthentication=yes` and provide a password via SSH agent. |
+    | `isi: command not found` | Verify you are connecting to a PowerScale cluster node with OneFS installed; confirm SSH_USER has appropriate shell access and OneFS CLI tools in PATH. |
 ---
 
 ## Change Pre-Check Script
@@ -836,9 +846,11 @@ exit 0
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host ps01.example.com port 22: Connection timed out`** — Verify PS_HOST is reachable and SSH port 22 is open; check firewall rules and network connectivity.
-    **`Permission denied (publickey,password).`** — Ensure SSH_USER has valid key-based authentication configured or add `-o PubkeyAuthentication=yes` and provide a password via SSH agent.
-    **`isi: command not found`** — Confirm SSH_USER is root or has sudo access to OneFS CLI commands; verify OneFS is running on the target node.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host ps01.example.com port 22: Connection timed out` | Verify PS_HOST is reachable and SSH port 22 is open; check firewall rules and network connectivity. |
+    | `Permission denied (publickey,password).` | Ensure SSH_USER has valid key-based authentication configured or add `-o PubkeyAuthentication=yes` and provide a password via SSH agent. |
+    | `isi: command not found` | Confirm SSH_USER is root or has sudo access to OneFS CLI commands; verify OneFS is running on the target node. |
 ---
 
 ## Post-Change Validation Script
@@ -926,9 +938,11 @@ exit 0
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host ps01.example.com port 22: Connection timed out`** — Verify PS_HOST is correct and SSH connectivity exists; check firewall rules and network routing to the PowerScale cluster.
-    **`Permission denied (publickey,password).`** — Ensure SSH_USER has valid credentials configured in ~/.ssh/config or that key-based authentication is enabled on the PowerScale management interface.
-    **`isi: command not found`** — Confirm you are connecting to the PowerScale OneFS CLI (not a generic Linux host); verify PS_HOST points to the cluster's management IP, not a non-OneFS appliance.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host ps01.example.com port 22: Connection timed out` | Verify PS_HOST is correct and SSH connectivity exists; check firewall rules and network routing to the PowerScale cluster. |
+    | `Permission denied (publickey,password).` | Ensure SSH_USER has valid credentials configured in ~/.ssh/config or that key-based authentication is enabled on the PowerScale management interface. |
+    | `isi: command not found` | Confirm you are connecting to the PowerScale OneFS CLI (not a generic Linux host); verify PS_HOST points to the cluster's management IP, not a non-OneFS appliance. |
 ---
 
 ## Health Check Script
@@ -1008,9 +1022,11 @@ OVERALL: WARN
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host ps01.example.com port 22: Connection timed out`** — Verify PS_HOST is reachable and SSH service is running; check firewall rules and network connectivity.
-    **`Permission denied (publickey,password).`** — Ensure SSH_USER has valid key-based authentication configured or add password authentication; verify SSH key permissions are 600.
-    **`isi: command not found`** — Confirm you are SSHing directly to the PowerScale cluster node (not a gateway); some OneFS versions require full path like `/usr/local/bin/isi`.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host ps01.example.com port 22: Connection timed out` | Verify PS_HOST is reachable and SSH service is running; check firewall rules and network connectivity. |
+    | `Permission denied (publickey,password).` | Ensure SSH_USER has valid key-based authentication configured or add password authentication; verify SSH key permissions are 600. |
+    | `isi: command not found` | Confirm you are SSHing directly to the PowerScale cluster node (not a gateway); some OneFS versions require full path like `/usr/local/bin/isi`. |
 ---
 
 ## Windows: PowerScale Cluster Health via REST API (PowerShell)
@@ -1227,9 +1243,11 @@ Triage data written to: ps_triage_20240115_143247.txt
 ```
 
 !!! warning "Common errors"
-    **`ERROR: PS_HOST is not set.`** — Export the PS_HOST environment variable before running the script: `export PS_HOST=ps01.example.com`
-    **`ssh: connect to host ps01.example.com port 22: Connection timed out`** — Verify network connectivity and that the PowerScale cluster hostname/IP is reachable; check firewall rules allowing SSH on port 22.
-    **`Permission denied (publickey,password).`** — Ensure SSH key authentication is configured or use `SSH_USER=admin` if the root account requires a different username for your environment.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: PS_HOST is not set.` | Export the PS_HOST environment variable before running the script: `export PS_HOST=ps01.example.com` |
+    | `ssh: connect to host ps01.example.com port 22: Connection timed out` | Verify network connectivity and that the PowerScale cluster hostname/IP is reachable; check firewall rules allowing SSH on port 22. |
+    | `Permission denied (publickey,password).` | Ensure SSH key authentication is configured or use `SSH_USER=admin` if the root account requires a different username for your environment. |
 ---
 
 ## Verify

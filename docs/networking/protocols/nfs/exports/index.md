@@ -49,9 +49,11 @@ NFS exports are defined in `/etc/exports` on Linux servers. Each line specifies 
 ```
 
 !!! warning "Common errors"
-    **`exportfs: /data/shared: No such file or directory`** — Verify the export path exists on the NFS server with `ls -ld /data/shared` before adding it to /etc/exports.
-    **`exportfs: /etc/exports:1: syntax error - unexpected character after line`** — Check for trailing whitespace, missing parentheses, or invalid characters; use `exportfs -v` to validate syntax after editing.
-    **`mount.nfs: access denied by server while mounting 192.168.10.5:/data/shared`** — Run `exportfs -ra` on the server to reload /etc/exports after making changes, then retry the client mount.
+    | Error | Fix |
+    |---|---|
+    | `exportfs: /data/shared: No such file or directory` | Verify the export path exists on the NFS server with `ls -ld /data/shared` before adding it to /etc/exports. |
+    | `exportfs: /etc/exports:1: syntax error - unexpected character after line` | Check for trailing whitespace, missing parentheses, or invalid characters; use `exportfs -v` to validate syntax after editing. |
+    | `mount.nfs: access denied by server while mounting 192.168.10.5:/data/shared` | Run `exportfs -ra` on the server to reload /etc/exports after making changes, then retry the client mount. |
 ## Key Export Options
 
 | Option | Meaning |
@@ -102,9 +104,11 @@ Redirecting to /bin/systemctl restart nfs-server
 ```
 
 !!! warning "Common errors"
-    **`exportfs: /data/tmp does not exist or access denied`** — Verify the directory exists and the nfs-server process has read permissions on the parent path.
-    **`exportfs: No such file or directory`** — Ensure /etc/exports exists and contains valid export entries before running `exportfs -ra`.
-    **`Job for nfs-server.service failed because the control process exited with error code`** — Check `/var/log/messages` or `journalctl -xe` for NFS daemon startup errors, often caused by invalid /etc/exports syntax.
+    | Error | Fix |
+    |---|---|
+    | `exportfs: /data/tmp does not exist or access denied` | Verify the directory exists and the nfs-server process has read permissions on the parent path. |
+    | `exportfs: No such file or directory` | Ensure /etc/exports exists and contains valid export entries before running `exportfs -ra`. |
+    | `Job for nfs-server.service failed because the control process exited with error code` | Check `/var/log/messages` or `journalctl -xe` for NFS daemon startup errors, often caused by invalid /etc/exports syntax. |
 ## Verifying Exports from Client Side
 
 ```bash
@@ -138,8 +142,10 @@ Export list for 192.168.10.10:
 ```
 
 !!! warning "Common errors"
-    **`clnt_create: RPC: Port mapper failure - Unable to receive`** — Verify the NFS server is running with `systemctl status nfs-server` and that port 111 (portmapper) is accessible.
-    **`showmount: clnt_create error: RPC: Authentication error; why = Client authentication has failed`** — Check firewall rules allow NFS traffic (ports 111, 2049) from your client to the server using `sudo ufw allow from 192.168.1.0/24 to any port 2049`.
+    | Error | Fix |
+    |---|---|
+    | `clnt_create: RPC: Port mapper failure - Unable to receive` | Verify the NFS server is running with `systemctl status nfs-server` and that port 111 (portmapper) is accessible. |
+    | `showmount: clnt_create error: RPC: Authentication error; why = Client authentication has failed` | Check firewall rules allow NFS traffic (ports 111, 2049) from your client to the server using `sudo ufw allow from 192.168.1.0/24 to any port 2049`. |
 ## Known Issues
 
 - `exportfs -ra` silently ignores malformed lines in `/etc/exports`. Check `journalctl -u nfs-server` or `exportfs -v` output to confirm an export actually loaded.

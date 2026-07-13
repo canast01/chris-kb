@@ -129,9 +129,11 @@ Testing connectivity to system EMC123456789ABC...
 ```
 
 !!! warning "Common errors"
-    **`scg: command not found`** — Ensure you are logged in as the admin user and the SCG CLI tools are in your PATH; run `export PATH=$PATH:/opt/dell/scg/bin` if needed.
-    **`Error: Unable to connect to CloudIQ endpoint (timeout)`** — Verify network connectivity and firewall rules allow outbound HTTPS (port 443) to cloudiq.dell.com from the SCG appliance.
-    **`Error: System EMC123456789ABC not found in SCG inventory`** — Confirm the system serial number is correct and the array has been successfully registered in SCG using `scg system list`.
+    | Error | Fix |
+    |---|---|
+    | `scg: command not found` | Ensure you are logged in as the admin user and the SCG CLI tools are in your PATH; run `export PATH=$PATH:/opt/dell/scg/bin` if needed. |
+    | `Error: Unable to connect to CloudIQ endpoint (timeout)` | Verify network connectivity and firewall rules allow outbound HTTPS (port 443) to cloudiq.dell.com from the SCG appliance. |
+    | `Error: System EMC123456789ABC not found in SCG inventory` | Confirm the system serial number is correct and the array has been successfully registered in SCG using `scg system list`. |
 ### 2. Collect SCG log bundle
 
 ```bash
@@ -163,9 +165,11 @@ Timestamp: 2024-01-15T14:32:18Z
 ```
 
 !!! warning "Common errors"
-    **`Permission denied: /var/log/dsagw/`** — Run the command with `sudo` or as a user with read access to the SCG log directory.
-    **`No space left on device`** — Specify an output directory with sufficient free space using `--output /var/tmp/scg-logs-$(date +%F).zip` or similar.
-    **`scg: command not found`** — Ensure the SCG CLI is installed and its installation directory is in your `$PATH`, or use the full path to the scg binary.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied: /var/log/dsagw/` | Run the command with `sudo` or as a user with read access to the SCG log directory. |
+    | `No space left on device` | Specify an output directory with sufficient free space using `--output /var/tmp/scg-logs-$(date +%F).zip` or similar. |
+    | `scg: command not found` | Ensure the SCG CLI is installed and its installation directory is in your `$PATH`, or use the full path to the scg binary. |
 ### 3. Collect application logs manually (if scg logs collect fails)
 
 ```bash
@@ -224,7 +228,9 @@ Last Sync: 2025-01-15 14:35:22 UTC
 ```
 
 !!! warning "Common errors"
-    **`scg: command not found`** — Verify the scg CLI tool is installed and in PATH by running `which scg` or reinst
+    | Error | Fix |
+    |---|---|
+    | `scg: command not found` | Verify the scg CLI tool is installed and in PATH by running `which scg` or reinst |
 ### 4. Collect CloudIQ API diagnostics
 
 ```bash
@@ -290,9 +296,11 @@ Health: 92
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or update your CA certificate bundle.
-    **`{"error": "Unauthorized", "code": 401}`** — Verify your API token is valid and not expired by regenerating it in CloudIQ Settings → API Keys.
-    **`curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection refused`** — Check your network connectivity and firewall rules; confirm CloudIQ API endpoint is accessible from your location.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or update your CA certificate bundle. |
+    | `{"error": "Unauthorized", "code": 401}` | Verify your API token is valid and not expired by regenerating it in CloudIQ Settings → API Keys. |
+    | `curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection refused` | Check your network connectivity and firewall rules; confirm CloudIQ API endpoint is accessible from your location. |
 ### 5. Write the timeline
 
 ```text
@@ -428,9 +436,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the CloudIQ CA certificate into the SCG trust store.
-    **`grep: /var/log/dsagw/application.log: No such file or directory`** — Verify the SCG application log path with `find /var/log -name "application.log"` and adjust the path accordingly.
-    **`df: '/var/log': No such file or directory`** — Run `df -h` without the mount point argument to verify the filesystem layout, then check if `/var/log` is on a separate partition.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the CloudIQ CA certificate into the SCG trust store. |
+    | `grep: /var/log/dsagw/application.log: No such file or directory` | Verify the SCG application log path with `find /var/log -name "application.log"` and adjust the path accordingly. |
+    | `df: '/var/log': No such file or directory` | Run `df -h` without the mount point argument to verify the filesystem layout, then check if `/var/log` is on a separate partition. |
 ---
 
 ## Verify resolution

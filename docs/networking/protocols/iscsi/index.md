@@ -209,8 +209,10 @@ node.session.auth.password_in = target-secret
 ```
 
 !!! warning "Common errors"
-    **`iscsid: cannot open /etc/iscsi/iscsid.conf: Permission denied`** — Run the commands with `sudo` or edit the file as root.
-    **`iscsid: parse error in /etc/iscsi/iscsid.conf at line X`** — Verify syntax matches the format exactly (no extra spaces around `=`, proper key names) and reload with `sudo systemctl restart iscsid`.
+    | Error | Fix |
+    |---|---|
+    | `iscsid: cannot open /etc/iscsi/iscsid.conf: Permission denied` | Run the commands with `sudo` or edit the file as root. |
+    | `iscsid: parse error in /etc/iscsi/iscsid.conf at line X` | Verify syntax matches the format exactly (no extra spaces around `=`, proper key names) and reload with `sudo systemctl restart iscsid`. |
 ## Troubleshooting
 
 | Symptom | Check | Action |

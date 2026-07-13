@@ -82,8 +82,10 @@ git version 2.43.0
 ```
 
 !!! warning "Common errors"
-    **`sudo: command not found`** — Install sudo with `dnf install sudo` or run the command as root directly.
-    **`Error: Unable to find a match: git`** — Enable the fedora repository with `sudo dnf config-manager --set-enabled fedora` or check your internet connection.
+    | Error | Fix |
+    |---|---|
+    | `sudo: command not found` | Install sudo with `dnf install sudo` or run the command as root directly. |
+    | `Error: Unable to find a match: git` | Enable the fedora repository with `sudo dnf config-manager --set-enabled fedora` or check your internet connection. |
 **Linux (Ubuntu/Debian):**
 
 ```bash
@@ -105,8 +107,10 @@ git version 2.34.1
 ```
 
 !!! warning "Common errors"
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the command with `sudo` or ensure your user has passwordless sudo configured.
-    **`E: Unable to locate package git`** — Run `sudo apt update` first to refresh the package index before attempting installation.
+    | Error | Fix |
+    |---|---|
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the command with `sudo` or ensure your user has passwordless sudo configured. |
+    | `E: Unable to locate package git` | Run `sudo apt update` first to refresh the package index before attempting installation. |
 **macOS:**
 
 ```bash
@@ -132,8 +136,10 @@ git version 2.43.0
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not symlink bin/git`** — Run `brew link --overwrite git` to force symlink creation if another git installation is blocking it.
-    **`command not found: brew`** — Install Homebrew first by running `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not symlink bin/git` | Run `brew link --overwrite git` to force symlink creation if another git installation is blocking it. |
+    | `command not found: brew` | Install Homebrew first by running `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`. |
 **Windows:**
 
 1. Download the Git for Windows installer from `https://git-scm.com/download/win`.
@@ -178,8 +184,10 @@ pull.rebase=false
 ```
 
 !!! warning "Common errors"
-    **`error: key does not contain a section: user.name`** — Ensure you are using `git config --global` (not `git config`) and that the syntax is exactly `git config --global user.name "Your Name"`.
-    **`fatal: not in a git repository`** — The `--global` flag writes to `~/.gitconfig` regardless of location, so this error indicates a syntax issue; verify the command has no typos.
+    | Error | Fix |
+    |---|---|
+    | `error: key does not contain a section: user.name` | Ensure you are using `git config --global` (not `git config`) and that the syntax is exactly `git config --global user.name "Your Name"`. |
+    | `fatal: not in a git repository` | The `--global` flag writes to `~/.gitconfig` regardless of location, so this error indicates a syntax issue; verify the command has no typos. |
 **Set the default branch name for new repositories:**
 
 ```bash
@@ -192,8 +200,10 @@ git config --global init.defaultBranch main
 ```
 
 !!! warning "Common errors"
-    **`fatal: not in a git repository`** — This command sets a global Git config and doesn't require a repository; if you see this error, you're likely in a corrupted git directory—try running the command outside any git folder.
-    **`error: key does not contain a section: init.defaultBranch`** — Upgrade to Git 2.28 or later, as `init.defaultBranch` is not supported in older versions.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not in a git repository` | This command sets a global Git config and doesn't require a repository; if you see this error, you're likely in a corrupted git directory—try running the command outside any git folder. |
+    | `error: key does not contain a section: init.defaultBranch` | Upgrade to Git 2.28 or later, as `init.defaultBranch` is not supported in older versions. |
 **Set pull behaviour (rebase recommended for clean history):**
 
 ```bash
@@ -206,8 +216,10 @@ git config --global pull.rebase true
 ```
 
 !!! warning "Common errors"
-    **`error: key does not contain a section: pull.rebase`** — Upgrade Git to version 2.27 or later, which introduced the `pull.rebase` configuration option.
-    **`fatal: not in a git repository`** — Run this command outside of a repository context; use `--global` flag (already present) or navigate into a Git repository and remove `--global` to set local config instead.
+    | Error | Fix |
+    |---|---|
+    | `error: key does not contain a section: pull.rebase` | Upgrade Git to version 2.27 or later, which introduced the `pull.rebase` configuration option. |
+    | `fatal: not in a git repository` | Run this command outside of a repository context; use `--global` flag (already present) or navigate into a Git repository and remove `--global` to set local config instead. |
 **Confirm the full global config:**
 
 ```bash
@@ -235,8 +247,10 @@ cat ~/.gitconfig
 ```
 
 !!! warning "Common errors"
-    **`cat: /home/username/.gitconfig: No such file or directory`** — Run `git config --global user.name "Your Name"` and `git config --global user.email "your@email.com"` to initialize a global config file.
-    **`Permission denied`** — Check file permissions with `ls -la ~/.gitconfig` and restore read access using `chmod 644 ~/.gitconfig`.
+    | Error | Fix |
+    |---|---|
+    | `cat: /home/username/.gitconfig: No such file or directory` | Run `git config --global user.name "Your Name"` and `git config --global user.email "your@email.com"` to initialize a global config file. |
+    | `Permission denied` | Check file permissions with `ls -la ~/.gitconfig` and restore read access using `chmod 644 ~/.gitconfig`. |
 ---
 
 ## Set Up SSH Key Authentication
@@ -271,8 +285,10 @@ The key's randomart image is:
 ```
 
 !!! warning "Common errors"
-    **`Generating public/private ed25519 key pair. Enter file in which to save the key (/home/jane/.ssh/id_ed25519): Permission denied`** — Ensure the `.ssh` directory exists with `mkdir -p ~/.ssh` and has correct permissions `chmod 700 ~/.ssh`.
-    **`Enter passphrase (empty for no passphrase): No such file or directory`** — Check that your home directory is accessible and writable; verify with `ls -la ~`.
+    | Error | Fix |
+    |---|---|
+    | `Generating public/private ed25519 key pair. Enter file in which to save the key (/home/jane/.ssh/id_ed25519): Permission denied` | Ensure the `.ssh` directory exists with `mkdir -p ~/.ssh` and has correct permissions `chmod 700 ~/.ssh`. |
+    | `Enter passphrase (empty for no passphrase): No such file or directory` | Check that your home directory is accessible and writable; verify with `ls -la ~`. |
 When prompted:
 - **File location:** press Enter to accept the default (`~/.ssh/id_ed25519`)
 - **Passphrase:** enter a passphrase (required for security — use the SSH agent to avoid re-entering it)
@@ -292,8 +308,10 @@ Identity added: /home/ubuntu/.ssh/id_ed25519 (ubuntu@deployment-server)
 ```
 
 !!! warning "Common errors"
-    **`Could not open a connection to your authentication agent.`** — Ensure ssh-agent is running by executing `eval "$(ssh-agent -s)"` before attempting ssh-add.
-    **`Permission denied (publickey).`** — Verify the private key file has correct permissions with `chmod 600 ~/.ssh/id_ed25519` and that the corresponding public key is authorized on the remote host.
+    | Error | Fix |
+    |---|---|
+    | `Could not open a connection to your authentication agent.` | Ensure ssh-agent is running by executing `eval "$(ssh-agent -s)"` before attempting ssh-add. |
+    | `Permission denied (publickey).` | Verify the private key file has correct permissions with `chmod 600 ~/.ssh/id_ed25519` and that the corresponding public key is authorized on the remote host. |
 **On macOS, add this to `~/.ssh/config` to persist key loading across reboots:**
 
 ```text
@@ -316,8 +334,10 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKp7vJ8mQ2nRxL9vK4wPmZqT6sB3dN1xY9hJ2kL5mN6o
 ```
 
 !!! warning "Common errors"
-    **`cat: /home/user/.ssh/id_ed25519.pub: No such file or directory`** — Generate the key pair first with `ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519`.
-    **`Permission denied`** — Fix permissions on the `.ssh` directory with `chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_ed25519.pub`.
+    | Error | Fix |
+    |---|---|
+    | `cat: /home/user/.ssh/id_ed25519.pub: No such file or directory` | Generate the key pair first with `ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519`. |
+    | `Permission denied` | Fix permissions on the `.ssh` directory with `chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_ed25519.pub`. |
 Copy the output and paste it into:
 - **GitHub:** Settings → SSH and GPG keys → New SSH key
 - **GitLab:** User Settings → SSH Keys → Add key
@@ -349,9 +369,11 @@ Hi username! You've successfully authenticated to git.company.local.
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Ensure your SSH public key is added to your Git provider's account settings and your SSH agent is running with `ssh-add ~/.ssh/id_rsa`.
-    **`ssh: Could not resolve hostname git.company.local: Name or service not known`** — Verify the self-hosted Git server hostname is correct and resolvable via DNS or add it to your `/etc/hosts` file.
-    **`Connection refused`** — Confirm the self-hosted Git server is running and SSH is listening on port 22, or use `-p <port>` if it runs on a non-standard port.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Ensure your SSH public key is added to your Git provider's account settings and your SSH agent is running with `ssh-add ~/.ssh/id_rsa`. |
+    | `ssh: Could not resolve hostname git.company.local: Name or service not known` | Verify the self-hosted Git server hostname is correct and resolvable via DNS or add it to your `/etc/hosts` file. |
+    | `Connection refused` | Confirm the self-hosted Git server is running and SSH is listening on port 22, or use `-p <port>` if it runs on a non-standard port. |
 Expected response (GitHub): `Hi jane.smith! You've successfully authenticated, but GitHub does not provide shell access.`
 
 ---
@@ -376,9 +398,11 @@ Resolving deltas: 100% (1654/1654), done.
 ```
 
 !!! warning "Common errors"
-    **`git@github.com: Permission denied (publickey).`** — Ensure your SSH public key is added to your GitHub account and ssh-agent is running with `eval $(ssh-agent -s) && ssh-add ~/.ssh/id_rsa`.
-    **`fatal: could not read Username for 'https://github.com': terminal prompts disabled`** — Use SSH URL format (`git@github.com:org/repo-name.git`) instead of HTTPS, or configure a personal access token for HTTPS authentication.
-    **`fatal: destination path 'repo-name' already exists and is not an empty directory.`** — Remove or rename the existing `repo-name` directory before cloning, or clone into a different directory with `git clone git@github.com:org/repo-name.git new-dir-name`.
+    | Error | Fix |
+    |---|---|
+    | `git@github.com: Permission denied (publickey).` | Ensure your SSH public key is added to your GitHub account and ssh-agent is running with `eval $(ssh-agent -s) && ssh-add ~/.ssh/id_rsa`. |
+    | `fatal: could not read Username for 'https://github.com': terminal prompts disabled` | Use SSH URL format (`git@github.com:org/repo-name.git`) instead of HTTPS, or configure a personal access token for HTTPS authentication. |
+    | `fatal: destination path 'repo-name' already exists and is not an empty directory.` | Remove or rename the existing `repo-name` directory before cloning, or clone into a different directory with `git clone git@github.com:org/repo-name.git new-dir-name`. |
 **Clone via HTTPS (if SSH is not yet set up):**
 
 ```bash
@@ -397,9 +421,11 @@ remote: Resolving deltas: 100% (1456/1456), done.
 ```
 
 !!! warning "Common errors"
-    **`fatal: unable to access 'https://github.com/org/repo-name.git/': Could not resolve host: github.com`** — Verify network connectivity and DNS resolution with `ping github.com` or check firewall/proxy settings.
-    **`fatal: repository 'https://github.com/org/repo-name.git/' not found`** — Confirm the repository URL is correct and you have access permissions; verify with `git ls-remote https://github.com/org/repo-name.git`.
-    **`fatal: destination path 'repo-name' already exists and is not an empty directory`** — Remove or rename the existing directory with `rm -rf repo-name` before cloning.
+    | Error | Fix |
+    |---|---|
+    | `fatal: unable to access 'https://github.com/org/repo-name.git/': Could not resolve host: github.com` | Verify network connectivity and DNS resolution with `ping github.com` or check firewall/proxy settings. |
+    | `fatal: repository 'https://github.com/org/repo-name.git/' not found` | Confirm the repository URL is correct and you have access permissions; verify with `git ls-remote https://github.com/org/repo-name.git`. |
+    | `fatal: destination path 'repo-name' already exists and is not an empty directory` | Remove or rename the existing directory with `rm -rf repo-name` before cloning. |
 **Confirm the remote is set correctly:**
 
 ```bash
@@ -416,8 +442,10 @@ origin  git@github.com:org/repo-name.git (push)
 ```
 
 !!! warning "Common errors"
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Navigate to the root of a cloned git repository before running this command.
-    **`fatal: No remote named 'origin'`** — The repository has no configured remote; add one with `git remote add origin <url>`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not a git repository (or any of the parent directories): .git` | Navigate to the root of a cloned git repository before running this command. |
+    | `fatal: No remote named 'origin'` | The repository has no configured remote; add one with `git remote add origin <url>`. |
 **Verify you can fetch updates:**
 
 ```bash
@@ -442,8 +470,10 @@ nothing to commit, working tree clean
 ```
 
 !!! warning "Common errors"
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Ensure you are in the root directory of a cloned git repository.
-    **`fatal: unable to access 'https://github.com/company/infrastructure.git': Could not resolve host: github.com`** — Verify network connectivity and that the remote URL is correctly configured with `git remote -v`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not a git repository (or any of the parent directories): .git` | Ensure you are in the root directory of a cloned git repository. |
+    | `fatal: unable to access 'https://github.com/company/infrastructure.git': Could not resolve host: github.com` | Verify network connectivity and that the remote URL is correctly configured with `git remote -v`. |
 ---
 
 ## Configure Default Editor and Diff Tool
@@ -467,8 +497,10 @@ git config --global core.editor "nano"
 ```
 
 !!! warning "Common errors"
-    **`error: pathspec 'code' did not match any files`** — Ensure VS Code is installed and in your PATH; run `code --version` to verify, then use the full path if needed (e.g., `/usr/bin/code`).
-    **`fatal: not in a git repository`** — These are global config commands that work outside repos, but if you see this error, remove the `--global` flag to set local repo config instead.
+    | Error | Fix |
+    |---|---|
+    | `error: pathspec 'code' did not match any files` | Ensure VS Code is installed and in your PATH; run `code --version` to verify, then use the full path if needed (e.g., `/usr/bin/code`). |
+    | `fatal: not in a git repository` | These are global config commands that work outside repos, but if you see this error, remove the `--global` flag to set local repo config instead. |
 **Set the diff and merge tool:**
 
 ```bash
@@ -486,8 +518,10 @@ git config --global mergetool.vscode.cmd 'code --wait $MERGED'
 ```
 
 !!! warning "Common errors"
-    **`error: could not expand include directive`** — Ensure VS Code is installed and accessible in your system PATH; run `code --version` to verify.
-    **`fatal: bad config file at /home/user/.gitconfig`** — Check for syntax errors in your `.gitconfig` file by opening it directly with `cat ~/.gitconfig` and ensure no lines are malformed.
+    | Error | Fix |
+    |---|---|
+    | `error: could not expand include directive` | Ensure VS Code is installed and accessible in your system PATH; run `code --version` to verify. |
+    | `fatal: bad config file at /home/user/.gitconfig` | Check for syntax errors in your `.gitconfig` file by opening it directly with `cat ~/.gitconfig` and ensure no lines are malformed. |
 **Test the diff tool:**
 
 ```bash
@@ -506,9 +540,11 @@ VS Code window opens with a diff view showing:
 ```
 
 !!! warning "Common errors"
-    **`error: no changes added to commit`** — Ensure you've actually modified a tracked file; run `git status` to verify changes exist.
-    **`error: external diff tool not found`** — Install your configured difftool (e.g., `code`, `vimdiff`) or set it with `git config --global diff.tool <toolname>`.
-    **`fatal: not a git repository`** — Run this command from within a git repository root directory.
+    | Error | Fix |
+    |---|---|
+    | `error: no changes added to commit` | Ensure you've actually modified a tracked file; run `git status` to verify changes exist. |
+    | `error: external diff tool not found` | Install your configured difftool (e.g., `code`, `vimdiff`) or set it with `git config --global diff.tool <toolname>`. |
+    | `fatal: not a git repository` | Run this command from within a git repository root directory. |
 **Enable colour output:**
 
 ```bash
@@ -521,8 +557,10 @@ git config --global color.ui auto
 ```
 
 !!! warning "Common errors"
-    **`error: key does not contain a section: color.ui`** — Use the correct syntax `git config --global color.ui auto` with the section name included (color is the section, ui is the key).
-    **`fatal: unable to write to /home/username/.gitconfig: Permission denied`** — Run the command with appropriate permissions or check that your home directory is writable with `ls -ld ~`.
+    | Error | Fix |
+    |---|---|
+    | `error: key does not contain a section: color.ui` | Use the correct syntax `git config --global color.ui auto` with the section name included (color is the section, ui is the key). |
+    | `fatal: unable to write to /home/username/.gitconfig: Permission denied` | Run the command with appropriate permissions or check that your home directory is writable with `ls -ld ~`. |
 ---
 
 ## Set Up .gitignore
@@ -540,8 +578,10 @@ git config --global core.excludesfile ~/.gitignore_global
 ```
 
 !!! warning "Common errors"
-    **`fatal: not in a git repository`** — These are global git config commands that work outside a repo; if you see this error, ensure git is installed and in your PATH with `which git`.
-    **`error: could not lock config file /home/user/.gitconfig: Permission denied`** — Change permissions on your home directory or `.gitconfig` file with `chmod 644 ~/.gitconfig` and ensure your user owns it.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not in a git repository` | These are global git config commands that work outside a repo; if you see this error, ensure git is installed and in your PATH with `which git`. |
+    | `error: could not lock config file /home/user/.gitconfig: Permission denied` | Change permissions on your home directory or `.gitconfig` file with `chmod 644 ~/.gitconfig` and ensure your user owns it. |
 **Recommended global .gitignore entries:**
 
 ```bash
@@ -586,8 +626,10 @@ EOF
 ```
 
 !!! warning "Common errors"
-    **`bash: ~/.gitignore_global: Permission denied`** — Ensure your home directory is writable with `chmod u+w ~` or check disk space with `df -h`.
-    **`No such file or directory`** — Create the parent directory first with `mkdir -p ~/.config/git` if using a non-standard location, or verify `~` expands correctly with `echo ~`.
+    | Error | Fix |
+    |---|---|
+    | `bash: ~/.gitignore_global: Permission denied` | Ensure your home directory is writable with `chmod u+w ~` or check disk space with `df -h`. |
+    | `No such file or directory` | Create the parent directory first with `mkdir -p ~/.config/git` if using a non-standard location, or verify `~` expands correctly with `echo ~`. |
 **Per-project .gitignore:**
 
 Add a `.gitignore` in the root of each repository for project-specific patterns. Use `gitignore.io` (`https://www.toptal.com/developers/gitignore`) to generate language and framework-specific templates.
@@ -610,8 +652,10 @@ git config --global credential.helper osxkeychain
 ```
 
 !!! warning "Common errors"
-    **`fatal: not in a git repository`** — This command sets a global Git config and doesn't require a repo; if you see this error, you're likely in a non-git directory, but the command will still succeed—ignore the error or run from any directory.
-    **`xcrun: error: unable to find utility`** — The osxkeychain helper requires Xcode Command Line Tools; install them with `xcode-select --install`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not in a git repository` | This command sets a global Git config and doesn't require a repo; if you see this error, you're likely in a non-git directory, but the command will still succeed—ignore the error or run from any directory. |
+    | `xcrun: error: unable to find utility` | The osxkeychain helper requires Xcode Command Line Tools; install them with `xcode-select --install`. |
 **Linux — use the libsecret store (GNOME Keyring):**
 
 ```bash
@@ -636,9 +680,11 @@ make: Leaving directory '/usr/share/doc/git/contrib/credential/libsecret'
 ```
 
 !!! warning "Common errors"
-    **`make: *** No rule to make target 'install'. Stop.`** — The libsecret credential helper is pre-built in recent git versions; skip the `make` command and point credential.helper directly to the binary path.
-    **`fatal: not in a git repository`** — The git config command succeeded but you're not in a repository; this is expected for `--global` config and does not prevent credential storage from working.
-    **`error: could not lock config file /home/user/.gitconfig: Permission denied`** — Run the git config command without `sudo` to write to your user's home directory instead of root's.
+    | Error | Fix |
+    |---|---|
+    | `make: *** No rule to make target 'install'. Stop.` | The libsecret credential helper is pre-built in recent git versions; skip the `make` command and point credential.helper directly to the binary path. |
+    | `fatal: not in a git repository` | The git config command succeeded but you're not in a repository; this is expected for `--global` config and does not prevent credential storage from working. |
+    | `error: could not lock config file /home/user/.gitconfig: Permission denied` | Run the git config command without `sudo` to write to your user's home directory instead of root's. |
 **Linux — cache credentials in memory for 1 hour:**
 
 ```bash
@@ -651,8 +697,10 @@ git config --global credential.helper 'cache --timeout=3600'
 ```
 
 !!! warning "Common errors"
-    **`error: key contains invalid characters`** — Ensure the timeout value is numeric only; remove any non-digit characters from the `--timeout` parameter.
-    **`fatal: not in a git repository`** — This is a global config command that works outside repos, but if you see this error, verify git is installed with `git --version` and your PATH is correct.
+    | Error | Fix |
+    |---|---|
+    | `error: key contains invalid characters` | Ensure the timeout value is numeric only; remove any non-digit characters from the `--timeout` parameter. |
+    | `fatal: not in a git repository` | This is a global config command that works outside repos, but if you see this error, verify git is installed with `git --version` and your PATH is correct. |
 **Windows — use the Windows Credential Manager (set automatically by Git for Windows):**
 
 ```bash
@@ -665,8 +713,10 @@ git config --global credential.helper manager-core
 ```
 
 !!! warning "Common errors"
-    **`fatal: not in a git repository`** — This command sets a global Git config and doesn't require a repository; if you see this error, you may have a shell alias or wrapper interfering—run the command with the full path `/usr/bin/git config --global credential.helper manager-core` instead.
-    **`error: key does not contain a section: credential.helper`** — This indicates a corrupted Git config file; repair it by running `git config --global --unset credential.helper` followed by the original command.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not in a git repository` | This command sets a global Git config and doesn't require a repository; if you see this error, you may have a shell alias or wrapper interfering—run the command with the full path `/usr/bin/git config --global credential.helper manager-core` instead. |
+    | `error: key does not contain a section: credential.helper` | This indicates a corrupted Git config file; repair it by running `git config --global --unset credential.helper` followed by the original command. |
 **GitHub — use the GitHub CLI for credential management:**
 
 ```bash
@@ -691,9 +741,11 @@ Press Enter to open github.com in your browser...
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not find git: git is not installed`** — Install git first with `apt-get install git` (Ubuntu/Debian) or `brew install git` (macOS) before running `gh auth login`.
-    **`Error: Failed to authenticate: The redirect URI does not match the registered callback URLs`** — Ensure you're using the correct GitHub organization/instance URL and that your browser can reach github.com without proxy/firewall blocking.
-    **`Error: authentication failed - could not read Username for 'https://github.com': terminal prompts disabled`** — Run `gh auth login` interactively in a terminal (not in a non-interactive script context) or use `gh auth login --with-token` to provide a PAT instead.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not find git: git is not installed` | Install git first with `apt-get install git` (Ubuntu/Debian) or `brew install git` (macOS) before running `gh auth login`. |
+    | `Error: Failed to authenticate: The redirect URI does not match the registered callback URLs` | Ensure you're using the correct GitHub organization/instance URL and that your browser can reach github.com without proxy/firewall blocking. |
+    | `Error: authentication failed - could not read Username for 'https://github.com': terminal prompts disabled` | Run `gh auth login` interactively in a terminal (not in a non-interactive script context) or use `gh auth login --with-token` to provide a PAT instead. |
 ---
 
 ## Validate Setup
@@ -724,8 +776,10 @@ pull.rebase=false
 ```
 
 !!! warning "Common errors"
-    **`fatal: not in a git repository`** — Run these commands outside a repository or ensure git is properly initialized; the `--global` flag should work anywhere, so verify git is installed with `git --version`.
-    **`error: key does not contain a section: user.name`** — The config key syntax is incorrect; use `git config --global user.name "Your Name"` to set values, or just `git config --global user.name` to read them.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not in a git repository` | Run these commands outside a repository or ensure git is properly initialized; the `--global` flag should work anywhere, so verify git is installed with `git --version`. |
+    | `error: key does not contain a section: user.name` | The config key syntax is incorrect; use `git config --global user.name "Your Name"` to set values, or just `git config --global user.name` to read them. |
 **SSH authentication:**
 
 ```bash
@@ -739,8 +793,10 @@ Hi username! You've successfully authenticated, but GitHub does not provide shel
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Ensure your SSH public key is added to your GitHub account and the private key is loaded in your SSH agent with `ssh-add ~/.ssh/id_rsa`.
-    **`ssh: Could not resolve hostname git@github.com: Name or service not known`** — Verify your network connectivity and that DNS resolution is working; check `/etc/ssh/ssh_config` for correct hostname configuration.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Ensure your SSH public key is added to your GitHub account and the private key is loaded in your SSH agent with `ssh-add ~/.ssh/id_rsa`. |
+    | `ssh: Could not resolve hostname git@github.com: Name or service not known` | Verify your network connectivity and that DNS resolution is working; check `/etc/ssh/ssh_config` for correct hostname configuration. |
 **Create a test repository and make a commit:**
 
 ```bash
@@ -763,8 +819,10 @@ a3f7e2c Initial commit
 ```
 
 !!! warning "Common errors"
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Run `git init` before attempting to add or commit files.
-    **`*** Please tell me who you are. Run git config --global user.email "you@example.com" git config --global user.name "Your Name"`** — Configure your Git identity with `git config --global user.email "your@email.com" && git config --global user.name "Your Name"` before committing.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not a git repository (or any of the parent directories): .git` | Run `git init` before attempting to add or commit files. |
+    | `*** Please tell me who you are. Run git config --global user.email "you@example.com" git config --global user.name "Your Name"` | Configure your Git identity with `git config --global user.email "your@email.com" && git config --global user.name "Your Name"` before committing. |
 **Diff tool:**
 
 ```bash
@@ -791,8 +849,10 @@ index 4e2c8f1..9a3d5e7 100644
 ```
 
 !!! warning "Common errors"
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Initialize the repository with `git init` or clone an existing one with `git clone`.
-    **`No such file or directory`** — Ensure README.md exists in the current directory; create it with `touch README.md` if needed.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not a git repository (or any of the parent directories): .git` | Initialize the repository with `git init` or clone an existing one with `git clone`. |
+    | `No such file or directory` | Ensure README.md exists in the current directory; create it with `touch README.md` if needed. |
 **Clone over SSH:**
 
 ```bash
@@ -820,9 +880,11 @@ package.json
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Ensure your SSH key is added to the SSH agent with `ssh-add ~/.ssh/id_rsa` and that your public key is registered in GitHub.
-    **`fatal: destination path '/tmp/clone-test' already exists and is not an empty directory.`** — Remove the existing directory with `rm -rf /tmp/clone-test` before cloning.
-    **`fatal: repository 'git@github.com:org/some-repo.git' not found.`** — Verify the repository name and organization are correct, and that your account has access to the repository.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Ensure your SSH key is added to the SSH agent with `ssh-add ~/.ssh/id_rsa` and that your public key is registered in GitHub. |
+    | `fatal: destination path '/tmp/clone-test' already exists and is not an empty directory.` | Remove the existing directory with `rm -rf /tmp/clone-test` before cloning. |
+    | `fatal: repository 'git@github.com:org/some-repo.git' not found.` | Verify the repository name and organization are correct, and that your account has access to the repository. |
 **Confirm .gitignore is active:**
 
 ```bash
@@ -840,8 +902,10 @@ nothing to commit, working tree clean
 ```
 
 !!! warning "Common errors"
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Initialize the repository first with `git init` or clone an existing repo into `~/git-test`.
-    **`.DS_Store` appears in the untracked files list** — Add `.DS_Store` to `.gitignore` with `echo ".DS_Store" >> ~/.gitignore` to exclude macOS system files from tracking.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not a git repository (or any of the parent directories): .git` | Initialize the repository first with `git init` or clone an existing repo into `~/git-test`. |
+    | `.DS_Store` appears in the untracked files list` | Add `.DS_Store` to `.gitignore` with `echo ".DS_Store" >> ~/.gitignore` to exclude macOS system files from tracking. |
 ---
 
 ## Verify

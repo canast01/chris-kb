@@ -31,8 +31,10 @@ Successfully logged in. Your AWS SSO session will expire in 12 hours.
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterException) when calling the ListPermissionSets operation: 1 validation error detected: Value 'arn:aws:sso:::instance/ssoins-<id>' at 'instanceArn' failed to match pattern`** — Replace `<id>` with the actual SSO instance ID from `aws sso-admin list-instances`.
-    **`An error occurred (AccessDeniedException) when calling the Login operation: User is not authorized to perform: sso:GetRoleCredentials`** — Ensure the IAM user has `sso:GetRoleCredentials` and `sso:ListAccounts` permissions attached.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterException) when calling the ListPermissionSets operation: 1 validation error detected: Value 'arn:aws:sso:::instance/ssoins-<id>' at 'instanceArn' failed to match pattern` | Replace `<id>` with the actual SSO instance ID from `aws sso-admin list-instances`. |
+    | `An error occurred (AccessDeniedException) when calling the Login operation: User is not authorized to perform: sso:GetRoleCredentials` | Ensure the IAM user has `sso:GetRoleCredentials` and `sso:ListAccounts` permissions attached. |
 ```bash
 # Attach policy that denies all actions unless MFA is present
 # Apply this to IAM groups used for human console access:
@@ -86,8 +88,10 @@ marcus.thompson,arn:aws:iam::123456789012:user/marcus.thompson,2023-11-03T16:55:
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchEntity) when calling the PutGroupPolicy operation: The group with name Operators cannot be found.`** — Create the IAM group first using `aws iam create-group --group-name Operators` before attaching the policy.
-    **`An error occurred (MalformedPolicyDocument) when calling the PutGroupPolicy operation: Invalid principal in policy: "NotAction"`** — Use `"Action"` instead of `"NotAction"` in the Deny statement, or restructure the policy to explicitly list denied actions.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchEntity) when calling the PutGroupPolicy operation: The group with name Operators cannot be found.` | Create the IAM group first using `aws iam create-group --group-name Operators` before attaching the policy. |
+    | `An error occurred (MalformedPolicyDocument) when calling the PutGroupPolicy operation: Invalid principal in policy: "NotAction"` | Use `"Action"` instead of `"NotAction"` in the Deny statement, or restructure the policy to explicitly list denied actions. |
     **`The
 ```bash
 # Create OIDC provider for GitHub
@@ -213,8 +217,10 @@ aws ec2 describe-instance-metadata-options \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidInstanceID.NotFound) when calling the ModifyInstanceMetadataOptions operation: The instance ID 'i-0abc123' does not exist`** — Verify the instance ID exists in the target region using `aws ec2 describe-instances --instance-ids i-0abc123`.
-    **`An error occurred (UnauthorizedOperation) when calling the ModifyInstanceMetadataDefaults operation: You are not authorized to perform: ec2:ModifyInstanceMetadataDefaults`** — Add the `ec2:ModifyInstanceMetadataDefaults` permission to your IAM policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidInstanceID.NotFound) when calling the ModifyInstanceMetadataOptions operation: The instance ID 'i-0abc123' does not exist` | Verify the instance ID exists in the target region using `aws ec2 describe-instances --instance-ids i-0abc123`. |
+    | `An error occurred (UnauthorizedOperation) when calling the ModifyInstanceMetadataDefaults operation: You are not authorized to perform: ec2:ModifyInstanceMetadataDefaults` | Add the `ec2:ModifyInstanceMetadataDefaults` permission to your IAM policy. |
 ```bash
 # List all access keys across all users (via credential report)
 aws iam get-credential-report --output text | base64 -d | \
@@ -246,9 +252,11 @@ New key: AKIAIOSFODNN7EXAMPLE	wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchEntity) when calling the GetCredentialReport operation: The credential report does not exist. Please call GenerateCredentialReport.`** — Run `aws iam generate-credential-report` first, then wait 5–10 seconds before retrying the get-credential-report command.
-    **`An error occurred (NoSuchEntity) when calling the DeleteAccessKey operation: The Access Key with id AKIA<old-id> cannot be found.`** — Verify the correct access key ID using `aws iam list-access-keys --user-name svc-deploy` before attempting deletion.
-    **`An error occurred (AccessDenied) when calling the CreateAccessKey operation: User: arn:aws:iam::123456789012:user/svc-deploy is not authorized to perform: iam:CreateAccessKey`** — Ensure your IAM user has the `iam:CreateAccessKey` permission attached via an inline or managed policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchEntity) when calling the GetCredentialReport operation: The credential report does not exist. Please call GenerateCredentialReport.` | Run `aws iam generate-credential-report` first, then wait 5–10 seconds before retrying the get-credential-report command. |
+    | `An error occurred (NoSuchEntity) when calling the DeleteAccessKey operation: The Access Key with id AKIA<old-id> cannot be found.` | Verify the correct access key ID using `aws iam list-access-keys --user-name svc-deploy` before attempting deletion. |
+    | `An error occurred (AccessDenied) when calling the CreateAccessKey operation: User: arn:aws:iam::123456789012:user/svc-deploy is not authorized to perform: iam:CreateAccessKey` | Ensure your IAM user has the `iam:CreateAccessKey` permission attached via an inline or managed policy. |
 ```bash
 # Create a break-glass user (used only when SSO/IdP is unavailable)
 aws iam create-user --user-name break-glass-admin

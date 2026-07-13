@@ -86,8 +86,10 @@ Create snapshot 'pre-change' for VM id 104
 ```
 
 !!! warning "Common errors"
-    **`Unknown command: vmsvc/snapshot.create`** — Ensure you are running this command on an ESXi host with vim-cmd available, not from a vCenter server or external system.
-    **`Unable to find a VM with Moid '<VMID>'`** — Replace `<VMID>` with the actual numeric VM ID (e.g., `104`); use `vim-cmd vmsvc/getallvms` to list valid IDs.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command: vmsvc/snapshot.create` | Ensure you are running this command on an ESXi host with vim-cmd available, not from a vCenter server or external system. |
+    | `Unable to find a VM with Moid '<VMID>'` | Replace `<VMID>` with the actual numeric VM ID (e.g., `104`); use `vim-cmd vmsvc/getallvms` to list valid IDs. |
 ## Step 3 — Revert to Snapshot (if change fails)
 
 ```powershell

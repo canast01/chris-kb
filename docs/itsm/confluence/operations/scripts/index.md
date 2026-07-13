@@ -24,8 +24,10 @@ export BACKUP_DIR="/backup/confluence"
 ```
 
 !!! warning "Common errors"
-    **`bash: CF_TOKEN: command not found`** — Ensure you're using `export` syntax correctly and that the token value is quoted if it contains special characters.
-    **`bash: PGPASSWORD: Syntax error near unexpected token '<'`** — Replace `<db-password>` and `<personal-access-token>` with actual values; literal angle brackets are not valid in variable assignments.
+    | Error | Fix |
+    |---|---|
+    | `bash: CF_TOKEN: command not found` | Ensure you're using `export` syntax correctly and that the token value is quoted if it contains special characters. |
+    | `bash: PGPASSWORD: Syntax error near unexpected token '<'` | Replace `<db-password>` and `<personal-access-token>` with actual values; literal angle brackets are not valid in variable assignments. |
 ```bash
 #!/bin/bash
 # stale-page-cleanup.sh
@@ -83,9 +85,11 @@ DRY RUN — use --execute to trash pages
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to host`** — Verify `$CF_URL` is set correctly and Confluence server is reachable (e.g., `echo $CF_URL`).
-    **`jq: parse error: Invalid JSON text at line 1`** — Confirm `$CF_TOKEN` is valid and has API access; an auth failure returns HTML instead of JSON.
-    **`curl: (22) HTTP 403`** — Ensure the bearer token has `delete:content` permission in Confluence; request elevated access if needed.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to host` | Verify `$CF_URL` is set correctly and Confluence server is reachable (e.g., `echo $CF_URL`). |
+    | `jq: parse error: Invalid JSON text at line 1` | Confirm `$CF_TOKEN` is valid and has API access; an auth failure returns HTML instead of JSON. |
+    | `curl: (22) HTTP 403` | Ensure the bearer token has `delete:content` permission in Confluence; request elevated access if needed. |
 ```bash
 #!/bin/bash
 # audit-log-export.sh
@@ -127,9 +131,11 @@ Audit log exported: confluence_audit_20240115.csv (1247 records)
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the CF_URL environment variable is set correctly and the Confluence instance is running and accessible.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure CF_TOKEN is valid and has audit API permissions; an authentication error returns HTML instead of JSON.
-    **`wc: confluence_audit_20240115.csv: No such file or directory`** — Check that the script has write permissions in the current directory and sufficient disk space.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443: Connection refused` | Verify the CF_URL environment variable is set correctly and the Confluence instance is running and accessible. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure CF_TOKEN is valid and has audit API permissions; an authentication error returns HTML instead of JSON. |
+    | `wc: confluence_audit_20240115.csv: No such file or directory` | Check that the script has write permissions in the current directory and sufficient disk space. |
 ```bash
 #!/bin/bash
 # disk-usage-report.sh

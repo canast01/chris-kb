@@ -69,8 +69,10 @@ User 'admin' password has been changed.
 ```
 
 !!! warning "Common errors"
-    **`Error: The system is unable to connect to the specified management server.`** — Verify the Dell Unity array IP address is correct and reachable from your management host using `ping <ip>`.
-    **`Error: Authentication failed. Invalid username or password.`** — Ensure you are currently authenticated with valid admin credentials before attempting to change the password.
+    | Error | Fix |
+    |---|---|
+    | `Error: The system is unable to connect to the specified management server.` | Verify the Dell Unity array IP address is correct and reachable from your management host using `ping <ip>`. |
+    | `Error: Authentication failed. Invalid username or password.` | Ensure you are currently authenticated with valid admin credentials before attempting to change the password. |
 Requirements for a strong password:
 - Minimum 16 characters.
 - Mix of uppercase, lowercase, digits, and special characters.
@@ -115,9 +117,11 @@ CONNECTED(00000003)
 ```
 
 !!! warning "Common errors"
-    **`uemcli: command not found`** — Install the EMC CLI tools package or add the uemcli binary directory to your PATH.
-    **`alert handshake failure`** — This is expected output when testing disabled TLS versions; if TLSv1_2 also shows handshake failure, verify the array accepted the setting with `uemcli -d <ip> -u admin /sys/security show -tlsMinVersion`.
-    **`connect: Connection refused`** — Ensure the storage processor IP is correct and reachable from your Linux host, and that the array's management interface is online.
+    | Error | Fix |
+    |---|---|
+    | `uemcli: command not found` | Install the EMC CLI tools package or add the uemcli binary directory to your PATH. |
+    | `alert handshake failure` | This is expected output when testing disabled TLS versions; if TLSv1_2 also shows handshake failure, verify the array accepted the setting with `uemcli -d <ip> -u admin /sys/security show -tlsMinVersion`. |
+    | `connect: Connection refused` | Ensure the storage processor IP is correct and reachable from your Linux host, and that the array's management interface is online. |
 ### Replacing the Self-Signed Management Certificate
 
 By default, Unity uses a self-signed certificate for the Unisphere HTTPS management interface. For production environments, replace this with a certificate signed by your internal CA or a commercial CA:
@@ -151,8 +155,10 @@ SSH_Port                                       22
 ```
 
 !!! warning "Common errors"
-    **`Error: The system is not responding to management requests`** — Verify the Dell Unity array IP address is correct and reachable with `ping <ip>`, and confirm the management interface is online.
-    **`Error: Authentication failed`** — Ensure the admin user credentials are correct and the account has not been locked after failed login attempts; reset via the Unisphere GUI if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: The system is not responding to management requests` | Verify the Dell Unity array IP address is correct and reachable with `ping <ip>`, and confirm the management interface is online. |
+    | `Error: Authentication failed` | Ensure the admin user credentials are correct and the account has not been locked after failed login attempts; reset via the Unisphere GUI if needed. |
 Only SSH and HTTPS should be enabled for management access.
 
 ### Disabling Unused Host Ports
@@ -211,9 +217,11 @@ iSCSI Port Information:
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed: Invalid credentials`** — Verify the admin username and password, or use `-p` flag to prompt for password interactively.
-    **`Error: Unable to connect to <ip>. Connection refused.`** — Confirm the Unity array IP address is reachable and the management interface is accessible on port 443.
-    **`Error: Command not found: uemcli`** — Install the EMC Unity CLI package or ensure the uemcli binary is in your system PATH.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed: Invalid credentials` | Verify the admin username and password, or use `-p` flag to prompt for password interactively. |
+    | `Error: Unable to connect to <ip>. Connection refused.` | Confirm the Unity array IP address is reachable and the management interface is accessible on port 443. |
+    | `Error: Command not found: uemcli` | Install the EMC Unity CLI package or ensure the uemcli binary is in your system PATH. |
 ## Management Access Restrictions
 
 Restrict which source IP addresses can access Unity management interfaces. Only the storage management VLAN, jump hosts, and monitoring servers should have access.
@@ -243,9 +251,11 @@ Duplex:                         Full
 ```
 
 !!! warning "Common errors"
-    **`The system cannot find the file specified.`** — Ensure uemcli is installed and in your system PATH, or use the full path to the binary (typically `/opt/emc/uemcli/uemcli`).
-    **`Connection refused`** — Verify the Dell Unity array IP address is correct, reachable, and that the management interface is online with `ping <ip>`.
-    **`Authentication failed`** — Confirm the admin credentials are correct and the user account has sufficient privileges to query network interface details.
+    | Error | Fix |
+    |---|---|
+    | `The system cannot find the file specified.` | Ensure uemcli is installed and in your system PATH, or use the full path to the binary (typically `/opt/emc/uemcli/uemcli`). |
+    | `Connection refused` | Verify the Dell Unity array IP address is correct, reachable, and that the management interface is online with `ping <ip>`. |
+    | `Authentication failed` | Confirm the admin credentials are correct and the user account has sufficient privileges to query network interface details. |
 ## Alerting and Monitoring
 
 Configure email and SNMP alerting to ensure all security-relevant events are actioned promptly.
@@ -287,9 +297,11 @@ Request completed successfully with status: 0x0.
 ```
 
 !!! warning "Common errors"
-    **`Error: The SMTP server is not reachable on port 25`** — Verify network connectivity to mail.example.local and confirm the SMTP port is open in firewall rules.
-    **`Error: Authentication failed for user admin`** — Ensure the admin credentials are correct and the user has sufficient privileges; use `-p` flag to provide password interactively if needed.
-    **`Error: Invalid email address format in -toList parameter`** — Verify all email addresses follow standard format (user@domain.local) with no spaces or special characters.
+    | Error | Fix |
+    |---|---|
+    | `Error: The SMTP server is not reachable on port 25` | Verify network connectivity to mail.example.local and confirm the SMTP port is open in firewall rules. |
+    | `Error: Authentication failed for user admin` | Ensure the admin credentials are correct and the user has sufficient privileges; use `-p` flag to provide password interactively if needed. |
+    | `Error: Invalid email address format in -toList parameter` | Verify all email addresses follow standard format (user@domain.local) with no spaces or special characters. |
 ### SNMP
 
 ```bash
@@ -329,9 +341,11 @@ SNMP Configuration:
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed: Invalid credentials for admin user`** — Verify the Unity array IP address is correct and admin credentials are valid with `uemcli -d <ip> -u admin /sys/general show`.
-    **`SNMP version v2c is not supported on this system`** — Use SNMP v3 instead, as v2c may be disabled by default on newer Unity firmware versions.
-    **`Invalid password: Password does not meet complexity requirements`** — Ensure auth and priv passwords contain at least 8 characters with uppercase, lowercase, numbers, and special characters.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed: Invalid credentials for admin user` | Verify the Unity array IP address is correct and admin credentials are valid with `uemcli -d <ip> -u admin /sys/general show`. |
+    | `SNMP version v2c is not supported on this system` | Use SNMP v3 instead, as v2c may be disabled by default on newer Unity firmware versions. |
+    | `Invalid password: Password does not meet complexity requirements` | Ensure auth and priv passwords contain at least 8 characters with uppercase, lowercase, numbers, and special characters. |
 Use SNMP v3 with authentication and privacy (authPriv) in all environments. SNMP v2c community strings are transmitted in plain text and are vulnerable to interception.
 
 ## SupportAssist (ESRS)
@@ -374,9 +388,11 @@ Heartbeat transmission initiated.
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused on <ip>:443`** — Verify the Unity array IP address is correct and reachable from your management network, and that port 443 is not blocked by firewall rules.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the admin credentials are correct and the user account has not been locked due to failed login attempts.
-    **`Error: ESRS gateway unreachable - heartbeat timeout after 30s`** — Check that the Unity array has outbound HTTPS connectivity to Dell's ESRS servers and that any proxy/firewall rules allow the connection.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused on <ip>:443` | Verify the Unity array IP address is correct and reachable from your management network, and that port 443 is not blocked by firewall rules. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin credentials are correct and the user account has not been locked due to failed login attempts. |
+    | `Error: ESRS gateway unreachable - heartbeat timeout after 30s` | Check that the Unity array has outbound HTTPS connectivity to Dell's ESRS servers and that any proxy/firewall rules allow the connection. |
 SupportAssist does not provide Dell with unrestricted access to the array. Remote diagnostic sessions require explicit acceptance from an administrator before Dell support can connect.
 
 ## OE Patching
@@ -405,9 +421,11 @@ Recommended Action: Schedule upgrade during maintenance window
 ```
 
 !!! warning "Common errors"
-    **`Connection refused (111)`** — Verify the Unity array IP is reachable with `ping <ip>` and confirm uemcli is installed with `which uemcli`.
-    **`Authentication failed for user 'admin'`** — Reset the admin password in Unisphere or use `-p` flag to provide the correct password interactively.
-    **`Command not found: uemcli`** — Install the EMC CLI tools package or add the uemcli binary directory to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused (111)` | Verify the Unity array IP is reachable with `ping <ip>` and confirm uemcli is installed with `which uemcli`. |
+    | `Authentication failed for user 'admin'` | Reset the admin password in Unisphere or use `-p` flag to provide the correct password interactively. |
+    | `Command not found: uemcli` | Install the EMC CLI tools package or add the uemcli binary directory to your PATH environment variable. |
 Maintain a Unity OE upgrade cadence:
 - Apply security-focused patch releases within 90 days of availability.
 - Apply major OE version upgrades within the lifecycle support window.

@@ -177,9 +177,11 @@ Successfully tagged my-org/custom-ee:1.0
 ```
 
 !!! warning "Common errors"
-    **`ERROR! the role 'common' was not found on 'localhost'`** — Verify the role exists in your roles/ directory or install it via ansible-galaxy install.
-    **`podman: command not found`** — Install podman or docker and ensure it is in your PATH; ansible-builder requires a container runtime.
-    **`Error validating execution-environment.yml: 'version' is a required property`** — Add a `version:` field to your execution-environment.yml file (e.g., `version: 1`).
+    | Error | Fix |
+    |---|---|
+    | `ERROR! the role 'common' was not found on 'localhost'` | Verify the role exists in your roles/ directory or install it via ansible-galaxy install. |
+    | `podman: command not found` | Install podman or docker and ensure it is in your PATH; ansible-builder requires a container runtime. |
+    | `Error validating execution-environment.yml: 'version' is a required property` | Add a `version:` field to your execution-environment.yml file (e.g., `version: 1`). |
 ---
 
 ## See also

@@ -98,9 +98,11 @@ Connection to gitaly-prod-01.internal 8075 port [tcp/*] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`fatal: unable to access 'https://<gitlab-host>/test/repo.git/': SSL certificate problem: self signed certificate`** — Add `git config --global http.sslVerify false` or use a valid CA-signed certificate on the GitLab host.
-    **`Permission denied (publickey). fatal: Could not read from remote repository.`** — Verify the SSH public key is added to the GitLab user account and the runner's SSH private key has correct permissions (`chmod 600 ~/.ssh/id_rsa`).
-    **`Connection refused`** — Confirm Gitaly service is running on the target host with `systemctl status gitaly` and verify the firewall allows port 8075 from the GitLab app server.
+    | Error | Fix |
+    |---|---|
+    | `fatal: unable to access 'https://<gitlab-host>/test/repo.git/': SSL certificate problem: self signed certificate` | Add `git config --global http.sslVerify false` or use a valid CA-signed certificate on the GitLab host. |
+    | `Permission denied (publickey). fatal: Could not read from remote repository.` | Verify the SSH public key is added to the GitLab user account and the runner's SSH private key has correct permissions (`chmod 600 ~/.ssh/id_rsa`). |
+    | `Connection refused` | Confirm Gitaly service is running on the target host with `systemctl status gitaly` and verify the firewall allows port 8075 from the GitLab app server. |
 ## See also
 
 - [Git — Architecture](../how-it-works/)

@@ -138,9 +138,11 @@ All services restarted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed for user administrator@vsphere.local`** — Verify the password is correct and the user account is not locked; reset credentials via DCUI if needed.
-    **`Certificate replacement failed: Certificate chain validation error`** — Ensure VMCA root certificate is valid and not expired by checking `/etc/vmware-vpx/ssl/vmca_issued_certs.pem`.
-    **`Service restart timeout: vmware-vpxd did not respond within 120 seconds`** — Wait 2-3 minutes for services to stabilize, then manually restart with `service-control --restart --all` if the issue persists.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed for user administrator@vsphere.local` | Verify the password is correct and the user account is not locked; reset credentials via DCUI if needed. |
+    | `Certificate replacement failed: Certificate chain validation error` | Ensure VMCA root certificate is valid and not expired by checking `/etc/vmware-vpx/ssl/vmca_issued_certs.pem`. |
+    | `Service restart timeout: vmware-vpxd did not respond within 120 seconds` | Wait 2-3 minutes for services to stabilize, then manually restart with `service-control --restart --all` if the issue persists. |
 After renewal:
 ```bash
 # Verify new certificate dates
@@ -166,8 +168,10 @@ Service pschealth is running
 ```
 
 !!! warning "Common errors"
-    **`error in x509 lookup v3 extensions`** — Ensure the certificate chain is complete; use `openssl s_client -connect vcenter.example.local:443 -showcerts` to verify all intermediate certificates are present.
-    **`Service vpxd is stopped`** — Restart the vCenter service with `service-control --start --all` and wait 2–3 minutes for dependent services to initialize.
+    | Error | Fix |
+    |---|---|
+    | `error in x509 lookup v3 extensions` | Ensure the certificate chain is complete; use `openssl s_client -connect vcenter.example.local:443 -showcerts` to verify all intermediate certificates are present. |
+    | `Service vpxd is stopped` | Restart the vCenter service with `service-control --start --all` and wait 2–3 minutes for dependent services to initialize. |
 ### Machine SSL Certificate (Custom CA)
 
 When your organisation uses an enterprise CA (Microsoft CA, DigiCert, etc.):
@@ -245,9 +249,11 @@ Services will restart automatically. Please wait...
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate file not found at /tmp/vcenter.crt`** — Verify the signed certificate file path is correct and readable by the root user.
-    **`Error: Private key does not match certificate`** — Ensure the key file corresponds to the CSR that was signed by your CA.
-    **`Error: Certificate chain validation failed: untrusted root`** — Include the complete CA chain from intermediate to root CA in the chain file, in order from leaf to root.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate file not found at /tmp/vcenter.crt` | Verify the signed certificate file path is correct and readable by the root user. |
+    | `Error: Private key does not match certificate` | Ensure the key file corresponds to the CSR that was signed by your CA. |
+    | `Error: Certificate chain validation failed: untrusted root` | Include the complete CA chain from intermediate to root CA in the chain file, in order from leaf to root. |
 ### STS Signing Certificate
 
 The STS (Security Token Service) signing certificate is the most impactful — its expiry causes complete login failure for all vSphere accounts. It has a 10-year validity by default but may have been set shorter on older installations.
@@ -309,9 +315,11 @@ All services started successfully.
 ```
 
 !!! warning "Common errors"
-    **`vecs-cli: command not found`** — Verify you are running this command on the vCenter Server appliance (not a remote host) and that VMware vSphere Authentication Daemon is installed.
-    **`Error: Failed to stop service — timeout waiting for service to stop`** — Increase the timeout or manually kill lingering processes with `pkill -9 vmware` before retrying service-control.
-    **`certificate-manager: Permission denied`** — Run the command with `sudo` or as root user, as certificate operations require elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `vecs-cli: command not found` | Verify you are running this command on the vCenter Server appliance (not a remote host) and that VMware vSphere Authentication Daemon is installed. |
+    | `Error: Failed to stop service — timeout waiting for service to stop` | Increase the timeout or manually kill lingering processes with `pkill -9 vmware` before retrying service-control. |
+    | `certificate-manager: Permission denied` | Run the command with `sudo` or as root user, as certificate operations require elevated privileges. |
 **Warning**: If the STS certificate is already expired, the `certificate-manager` may not be able to authenticate. In this case, use the `fix_sts_cert.py` script from VMware KB 79248 or engage VMware Support directly.
 
 ---

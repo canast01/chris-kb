@@ -116,8 +116,10 @@ your.ntp.server: 203.0.113.42
 ```
 
 !!! warning "Common errors"
-    **`Error: DNS resolution failed for your.ntp.server`** — Verify the hostname is correct and that the FlashArray's DNS servers are configured with `puredns list` and update if needed using `puredns set --servers <ip1> <ip2>`.
-    **`Error: Connection refused`** — Ensure you are SSH'd into the FlashArray management VIP as the pureuser account and have network connectivity to the management interface.
+    | Error | Fix |
+    |---|---|
+    | `Error: DNS resolution failed for your.ntp.server` | Verify the hostname is correct and that the FlashArray's DNS servers are configured with `puredns list` and update if needed using `puredns set --servers <ip1> <ip2>`. |
+    | `Error: Connection refused` | Ensure you are SSH'd into the FlashArray management VIP as the pureuser account and have network connectivity to the management interface. |
 4. Set the time zone:
 
 ```bash
@@ -137,8 +139,10 @@ Current Time: 2024-01-15 14:32:45 GMT
 ```
 
 !!! warning "Common errors"
-    **`puretime: command not found`** — Ensure you are logged into the Pure FlashArray management interface or SSH session with appropriate CLI access.
-    **`NTP Sync Status: Unsynced`** — Verify NTP servers are reachable and correctly configured; check network connectivity to the configured NTP server IPs.
+    | Error | Fix |
+    |---|---|
+    | `puretime: command not found` | Ensure you are logged into the Pure FlashArray management interface or SSH session with appropriate CLI access. |
+    | `NTP Sync Status: Unsynced` | Verify NTP servers are reachable and correctly configured; check network connectivity to the configured NTP server IPs. |
 5. Configure the management interface for a dedicated management VLAN if required:
 
 Navigate to **System > Network > Management Interfaces** and set the VLAN tag on the management ports.
@@ -204,9 +208,11 @@ Updating / installing...
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: No records found`** — Verify the FlashArray iSCSI portal IP (10.0.10.10) is reachable and iSCSI service is enabled on the array using `ping 10.0.10.10` and checking array network settings.
-    **`rpm: error reading package header`** — Download the correct Pure Host Package RPM file from support.purestorage.com matching your OS version and verify the file is not corrupted with `file pure-storage-host-utilities-*.x86_64.rpm`.
-    **`iscsid.service is not running`** — Start the iSCSI daemon explicitly with `systemctl start iscsid` before attempting discovery or login.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: No records found` | Verify the FlashArray iSCSI portal IP (10.0.10.10) is reachable and iSCSI service is enabled on the array using `ping 10.0.10.10` and checking array network settings. |
+    | `rpm: error reading package header` | Download the correct Pure Host Package RPM file from support.purestorage.com matching your OS version and verify the file is not corrupted with `file pure-storage-host-utilities-*.x86_64.rpm`. |
+    | `iscsid.service is not running` | Start the iSCSI daemon explicitly with `systemctl start iscsid` before attempting discovery or login. |
 4. Register the host in Purity by entering its IQN manually:
 
 Navigate to **Storage > Hosts > Create Host**. Enter the host name and IQN.
@@ -258,9 +264,11 @@ size=1.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`No such file or directory`** — Ensure the `sg3_utils` package is installed with `apt-get install sg3-utils` or `yum install sg3_utils`.
-    **`multipathd is not running`** — Start the multipath daemon with `systemctl start multipathd && systemctl enable multipathd`.
-    **`No multipath output or device shows "faulty" status`** — Verify iSCSI/FC connectivity with `iscsiadm -m session` or `fcinfo fcportlogin`, and confirm Pure array target configuration.
+    | Error | Fix |
+    |---|---|
+    | `No such file or directory` | Ensure the `sg3_utils` package is installed with `apt-get install sg3-utils` or `yum install sg3_utils`. |
+    | `multipathd is not running` | Start the multipath daemon with `systemctl start multipathd && systemctl enable multipathd`. |
+    | `No multipath output or device shows "faulty" status` | Verify iSCSI/FC connectivity with `iscsiadm -m session` or `fcinfo fcportlogin`, and confirm Pure array target configuration. |
 ---
 
 ## Set Up Protection Group
@@ -325,9 +333,11 @@ size=2.0T features='0' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`mpatha: sda: checker msg is "open error"`** — Verify iSCSI/FC connectivity to the array and ensure the initiator can reach the target portal or fabric.
-    **`mpatha: sda: path checker timed out`** — Check network latency and array responsiveness; restart multipathd with `systemctl restart multipathd` if paths remain stuck.
-    **`mpatha (dm-0) status: faulty`** — Run `multipath -f mpatha` to remove the failed device, then rescan with `echo 1 > /sys/block/sda/device/rescan` and rebuild the multipath map.
+    | Error | Fix |
+    |---|---|
+    | `mpatha: sda: checker msg is "open error"` | Verify iSCSI/FC connectivity to the array and ensure the initiator can reach the target portal or fabric. |
+    | `mpatha: sda: path checker timed out` | Check network latency and array responsiveness; restart multipathd with `systemctl restart multipathd` if paths remain stuck. |
+    | `mpatha (dm-0) status: faulty` | Run `multipath -f mpatha` to remove the failed device, then rescan with `echo 1 > /sys/block/sda/device/rescan` and rebuild the multipath map. |
 3. Run a write/read I/O test:
 
 ```bash
@@ -346,9 +356,11 @@ dd if=/dev/mapper/<pure_mpath_dev> of=/dev/null bs=1M count=2048 iflag=direct
 ```
 
 !!! warning "Common errors"
-    **`dd: opening '/dev/mapper/<pure_mpath_dev>': No such file or directory`** — Verify the multipath device exists with `multipath -ll` and confirm the Pure FlashArray LUN is properly mapped and the multipathd daemon is running.
-    **`dd: writing to '/dev/mapper/<pure_mpath_dev>': Read-only file system`** — Check device permissions with `ls -l /dev/mapper/<pure_mpath_dev>` and ensure the device is not write-protected; run `blockdev --setrw /dev/mapper/<pure_mpath_dev>` if needed.
-    **`dd: error writing '/dev/mapper/<pure_mpath_dev>': No space left on device`** — Reduce the count parameter (e.g., `count=1024`) or verify the LUN size matches expectations with `lsblk` or `fdisk -l`.
+    | Error | Fix |
+    |---|---|
+    | `dd: opening '/dev/mapper/<pure_mpath_dev>': No such file or directory` | Verify the multipath device exists with `multipath -ll` and confirm the Pure FlashArray LUN is properly mapped and the multipathd daemon is running. |
+    | `dd: writing to '/dev/mapper/<pure_mpath_dev>': Read-only file system` | Check device permissions with `ls -l /dev/mapper/<pure_mpath_dev>` and ensure the device is not write-protected; run `blockdev --setrw /dev/mapper/<pure_mpath_dev>` if needed. |
+    | `dd: error writing '/dev/mapper/<pure_mpath_dev>': No space left on device` | Reduce the count parameter (e.g., `count=1024`) or verify the LUN size matches expectations with `lsblk` or `fdisk -l`. |
 4. Check no errors in `/var/log/messages` or the multipath log.
 5. Verify the protection group snapshot schedule is running: navigate to **Storage > Snapshots** and confirm hourly snapshots are being created.
 6. In Pure1, confirm the array shows as **Connected** and no critical alerts are active.

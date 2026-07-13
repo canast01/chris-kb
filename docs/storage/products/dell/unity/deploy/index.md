@@ -184,8 +184,10 @@ Health Status: OK
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid command or syntax`** — Verify the uemcli binary is installed and in your PATH, or use the full path `/opt/emc/uemcli/uemcli`.
-    **`Error: Connection refused to management interface`** — Ensure the Unity array management IP is reachable and uemcli is configured with correct credentials via `-u` and `-p` flags or environment variables.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid command or syntax` | Verify the uemcli binary is installed and in your PATH, or use the full path `/opt/emc/uemcli/uemcli`. |
+    | `Error: Connection refused to management interface` | Ensure the Unity array management IP is reachable and uemcli is configured with correct credentials via `-u` and `-p` flags or environment variables. |
 ---
 
 ## Configure iSCSI or FC Host Access
@@ -209,8 +211,10 @@ InitiatorName=iqn.1993-08.org.debian:01:a4c2f8e9d5b2
 ```
 
 !!! warning "Common errors"
-    **`cat: /etc/iscsi/initiatorname.iscsi: No such file or directory`** — Install open-iscsi package with `apt-get install open-iscsi` or `yum install iscsi-initiator-utils`.
-    **`cat: /etc/iscsi/initiatorname.iscsi: Permission denied`** — Run the command with `sudo` or as root user.
+    | Error | Fix |
+    |---|---|
+    | `cat: /etc/iscsi/initiatorname.iscsi: No such file or directory` | Install open-iscsi package with `apt-get install open-iscsi` or `yum install iscsi-initiator-utils`. |
+    | `cat: /etc/iscsi/initiatorname.iscsi: Permission denied` | Run the command with `sudo` or as root user. |
 2. In Unisphere, navigate to **Hosts > Create Host**.
 3. Enter the host name and select **iSCSI** as the initiator type.
 4. Add the host's IQN to the host object.
@@ -266,9 +270,11 @@ size=1T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`bash: rescan-scsi-bus.sh: command not found`** — Install sg3-utils package with `apt-get install sg3-utils` or `yum install sg3-utils`.
-    **`multipath: command not found`** — Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`.
-    **`multipathd is not running`** — Start the multipath daemon with `systemctl start multipathd` and enable it with `systemctl enable multipathd`.
+    | Error | Fix |
+    |---|---|
+    | `bash: rescan-scsi-bus.sh: command not found` | Install sg3-utils package with `apt-get install sg3-utils` or `yum install sg3-utils`. |
+    | `multipath: command not found` | Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`. |
+    | `multipathd is not running` | Start the multipath daemon with `systemctl start multipathd` and enable it with `systemctl enable multipathd`. |
 **NFS File System:**
 
 1. Navigate to **Storage > File Storage > File Systems > Create**.
@@ -286,9 +292,11 @@ mount -t nfs <NAS_VIP>:/export/fs01 /mnt/unity_nfs
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: access denied by server while mounting <NAS_VIP>:/export/fs01`** — Verify the NAS export policy allows the client IP and check firewall rules between client and NAS.
-    **`mount.nfs: No such file or directory`** — Confirm the export path `/export/fs01` exists on the NAS and the mount point `/mnt/unity_nfs` exists locally.
-    **`mount: only root can use "--options" option`** — Run the command with `sudo` or as the root user.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: access denied by server while mounting <NAS_VIP>:/export/fs01` | Verify the NAS export policy allows the client IP and check firewall rules between client and NAS. |
+    | `mount.nfs: No such file or directory` | Confirm the export path `/export/fs01` exists on the NAS and the mount point `/mnt/unity_nfs` exists locally. |
+    | `mount: only root can use "--options" option` | Run the command with `sudo` or as the root user. |
 ---
 
 ## Validate
@@ -324,8 +332,10 @@ System Health
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (111)`** — Verify the Unity array is reachable and uemcli service is running with `systemctl status uemcli`.
-    **`Error: Authentication failed`** — Ensure you have valid credentials configured in `/etc/uemcli/credentials` or pass `-u` and `-p` flags to authenticate.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (111)` | Verify the Unity array is reachable and uemcli service is running with `systemctl status uemcli`. |
+    | `Error: Authentication failed` | Ensure you have valid credentials configured in `/etc/uemcli/credentials` or pass `-u` and `-p` flags to authenticate. |
 **Verify LUN path count from host:**
 
 ```bash
@@ -354,8 +364,10 @@ size=250G features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`mpatha: No such file or directory`** — Ensure the `device-mapper-multipath` package is installed and the `multipathd` service is running with `systemctl start multipathd`.
-    **`the following lines in the output show failed paths: ... failed faulty offline`** — Check fabric connectivity and SAN switch zoning; verify both FC/iSCSI initiators are logged in with `iscsiadm -m session` or `fcinfo fcportlogin`.
+    | Error | Fix |
+    |---|---|
+    | `mpatha: No such file or directory` | Ensure the `device-mapper-multipath` package is installed and the `multipathd` service is running with `systemctl start multipathd`. |
+    | `the following lines in the output show failed paths: ... failed faulty offline` | Check fabric connectivity and SAN switch zoning; verify both FC/iSCSI initiators are logged in with `iscsiadm -m session` or `fcinfo fcportlogin`. |
 **Confirm pool statistics:**
 
 1. Navigate to **Performance > Storage Pools** and verify I/O latency is normal (sub-1ms for SSD pools under light load).

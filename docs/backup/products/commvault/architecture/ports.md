@@ -159,9 +159,11 @@ Connection to 192.168.1.50 port 8400 (tcp) succeeded!
 ```
 
 !!! warning "Common errors"
-    **`Connection to <ip> port <port> (tcp) failed: Connection refused`** — Verify the target service is running and listening on that port using `netstat -tlnp | grep <port>` on the remote host.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip certificate verification, or import the CommServe's CA certificate into your system trust store.
-    **`nc: getaddrinfo: Name or service not known`** — Ensure the hostname or IP address is correct and resolvable; test with `ping <commserve-ip>` first to confirm network connectivity.
+    | Error | Fix |
+    |---|---|
+    | `Connection to <ip> port <port> (tcp) failed: Connection refused` | Verify the target service is running and listening on that port using `netstat -tlnp | grep <port>` on the remote host. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip certificate verification, or import the CommServe's CA certificate into your system trust store. |
+    | `nc: getaddrinfo: Name or service not known` | Ensure the hostname or IP address is correct and resolvable; test with `ping <commserve-ip>` first to confirm network connectivity. |
 ---
 
 ## See also

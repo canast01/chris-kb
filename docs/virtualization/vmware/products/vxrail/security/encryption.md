@@ -143,8 +143,10 @@ Object value modified successfully.
 ```
 
 !!! warning "Common errors"
-    **`ERRO0403: Unable to perform the requested operation because the object value cannot be modified at this time.`** — Ensure iDRAC is not currently processing another configuration change; wait 30 seconds and retry.
-    **`ERRO0402: Invalid object name or property name specified in the command.`** — Verify the iDRAC firmware version supports these parameters; some older Dell firmware versions use different property names like `iDRAC.WebServer.HttpPort` (capital S).
+    | Error | Fix |
+    |---|---|
+    | `ERRO0403: Unable to perform the requested operation because the object value cannot be modified at this time.` | Ensure iDRAC is not currently processing another configuration change; wait 30 seconds and retry. |
+    | `ERRO0402: Invalid object name or property name specified in the command.` | Verify the iDRAC firmware version supports these parameters; some older Dell firmware versions use different property names like `iDRAC.WebServer.HttpPort` (capital S). |
 ### Check and Replace the iDRAC SSL Certificate
 
 iDRAC ships with a self-signed certificate. Replace it with a certificate signed by the organisation's internal CA.
@@ -184,9 +186,11 @@ CSR saved to: /tmp/idrac.csr
 ```
 
 !!! warning "Common errors"
-    **`RACADM600: Unable to perform SSL key upload`** — Verify the server.key file exists, is readable, and in PEM format without password protection.
-    **`RACADM611: Certificate and key do not match`** — Ensure server.crt and server.key are a matching pair signed by the same CA.
-    **`RACADM612: Invalid CSR parameters - CN cannot be empty`** — Provide a valid fully-qualified domain name for the `-cn` parameter matching your iDRAC hostname.
+    | Error | Fix |
+    |---|---|
+    | `RACADM600: Unable to perform SSL key upload` | Verify the server.key file exists, is readable, and in PEM format without password protection. |
+    | `RACADM611: Certificate and key do not match` | Ensure server.crt and server.key are a matching pair signed by the same CA. |
+    | `RACADM612: Invalid CSR parameters - CN cannot be empty` | Provide a valid fully-qualified domain name for the `-cn` parameter matching your iDRAC hostname. |
 After the CA signs the CSR, upload the signed certificate:
 
 ```bash
@@ -211,9 +215,11 @@ New SSL certificate and key are now active.
 ```
 
 !!! warning "Common errors"
-    **`RACADM0001: Certificate file not found or invalid path`** — Verify the certificate file exists at `/tmp/idrac.crt` and is readable with `ls -la /tmp/idrac.crt`.
-    **`RACADM0341: Certificate and key mismatch or key is invalid`** — Ensure the private key in `/tmp/idrac.key` corresponds to the certificate in `/tmp/idrac.crt` by comparing their modulus with `openssl x509 -noout -modulus -in /tmp/idrac.crt` and `openssl rsa -noout -modulus -in /tmp/idrac.key`.
-    **`Connection refused or timeout after racreset`** — Wait the full 2 minutes for iDRAC to restart before attempting reconnection, then verify network connectivity with `ping <idrac-ip>`.
+    | Error | Fix |
+    |---|---|
+    | `RACADM0001: Certificate file not found or invalid path` | Verify the certificate file exists at `/tmp/idrac.crt` and is readable with `ls -la /tmp/idrac.crt`. |
+    | `RACADM0341: Certificate and key mismatch or key is invalid` | Ensure the private key in `/tmp/idrac.key` corresponds to the certificate in `/tmp/idrac.crt` by comparing their modulus with `openssl x509 -noout -modulus -in /tmp/idrac.crt` and `openssl rsa -noout -modulus -in /tmp/idrac.key`. |
+    | `Connection refused or timeout after racreset` | Wait the full 2 minutes for iDRAC to restart before attempting reconnection, then verify network connectivity with `ping <idrac-ip>`. |
 ---
 
 ## Secure Boot on ESXi Nodes
@@ -248,8 +254,10 @@ Release Date: 2024-01-10
 ```
 
 !!! warning "Common errors"
-    **`RACADM0001: Unable to perform requested operation. iDRAC is not ready.`** — Wait 30–60 seconds after node boot before running RACADM commands, as iDRAC requires time to initialize.
-    **`RACADM0211: IPMI command failed with error: Command not supported in present state`** — Ensure the iDRAC user account has Superuser or equivalent IPMI permissions; check iDRAC user role in Dell iDRAC web UI.
+    | Error | Fix |
+    |---|---|
+    | `RACADM0001: Unable to perform requested operation. iDRAC is not ready.` | Wait 30–60 seconds after node boot before running RACADM commands, as iDRAC requires time to initialize. |
+    | `RACADM0211: IPMI command failed with error: Command not supported in present state` | Ensure the iDRAC user account has Superuser or equivalent IPMI permissions; check iDRAC user role in Dell iDRAC web UI. |
 ### Enable Secure Boot via RACADM
 
 ```bash
@@ -266,8 +274,10 @@ Job queued with Job ID = JID_123456789012
 ```
 
 !!! warning "Common errors"
-    **`RACADM.1.0.GEN1.CRAC382 : A user with sufficient privileges is required to execute this command`** — Ensure you are running racadm with root/administrator privileges or use `sudo racadm`.
-    **`RACADM.2.0.GEN9.CRAC440 : The target BIOS object property does not exist or is not supported on this system`** — Verify the iDRAC firmware version supports Secure Boot; check with `racadm get BIOS.SysProfileSettings` to confirm available settings.
+    | Error | Fix |
+    |---|---|
+    | `RACADM.1.0.GEN1.CRAC382 : A user with sufficient privileges is required to execute this command` | Ensure you are running racadm with root/administrator privileges or use `sudo racadm`. |
+    | `RACADM.2.0.GEN9.CRAC440 : The target BIOS object property does not exist or is not supported on this system` | Verify the iDRAC firmware version supports Secure Boot; check with `racadm get BIOS.SysProfileSettings` to confirm available settings. |
 **Note:** Enabling Secure Boot on a node with unsigned VIBs will prevent ESXi from booting. Confirm all installed VIBs are signed before enabling. VxRail-managed nodes with standard LCM builds will have signed VIBs. Custom VIBs from third-party vendors must be verified before enabling Secure Boot.
 
 ---
@@ -311,9 +321,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or install the VxRail Manager's CA certificate in your system trust store.
-    **`{"error": "Invalid credentials", "status_code": 401}`** — Verify the VxRail Manager username and password are correct and base64-encoded properly with `echo -n 'user:pass' | base64`.
-    **`{"error": "Certificate validation failed: private key does not match certificate", "status_code": 400}`** — Ensure the certificate and private key files are from the same CSR and that both files are in PEM format (not DER).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or install the VxRail Manager's CA certificate in your system trust store. |
+    | `{"error": "Invalid credentials", "status_code": 401}` | Verify the VxRail Manager username and password are correct and base64-encoded properly with `echo -n 'user:pass' | base64`. |
+    | `{"error": "Certificate validation failed: private key does not match certificate", "status_code": 400}` | Ensure the certificate and private key files are from the same CSR and that both files are in PEM format (not DER). |
 After uploading, VxRail Manager will restart its web service to apply the new certificate. Allow 2–3 minutes for the service to come back online. Reconnect the vCenter plugin after the certificate change.
 
 ### Certificate Renewal
@@ -346,9 +358,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example, but ensure it's not removed in production without proper CA setup).
-    **`curl: (7) Failed to connect to <vxrail-manager-ip> port 443: Connection refused`** — Verify the VxRail Manager IP address is correct and the HTTPS service is running with `curl -v https://<vxrail-manager-ip>/rest/vxm/v1/system/health`.
-    **`{"error":"Invalid credentials","code":401}`** — Ensure the base64-encoded credentials match an active VxRail Manager admin account by testing with `echo -n 'mystic:password' | base64`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example, but ensure it's not removed in production without proper CA setup). |
+    | `curl: (7) Failed to connect to <vxrail-manager-ip> port 443: Connection refused` | Verify the VxRail Manager IP address is correct and the HTTPS service is running with `curl -v https://<vxrail-manager-ip>/rest/vxm/v1/system/health`. |
+    | `{"error":"Invalid credentials","code":401}` | Ensure the base64-encoded credentials match an active VxRail Manager admin account by testing with `echo -n 'mystic:password' | base64`. |
 ---
 
 ## Native Key Provider Backup

@@ -163,9 +163,11 @@ Processing triggers for libc-bin (2.35-0ubuntu3.4) ...
 ```
 
 !!! warning "Common errors"
-    **`NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.`** — Reinstall the NVIDIA driver with `sudo apt install --reinstall nvidia-driver-550` or verify the driver is loaded with `lsmod | grep nvidia`.
-    **`curl: (7) Failed to connect to nvidia.github.io port 443: Connection timed out`** — Check network connectivity and firewall rules, or download the nvidia-container-toolkit `.deb` package manually from the NVIDIA repository.
-    **`E: Unable to locate package nvidia-container-toolkit`** — Verify the distribution variable is correct with `echo $distribution` and ensure the APT sources list was added properly with `cat /etc/apt/sources.list.d/nvidia-container-toolkit.
+    | Error | Fix |
+    |---|---|
+    | `NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.` | Reinstall the NVIDIA driver with `sudo apt install --reinstall nvidia-driver-550` or verify the driver is loaded with `lsmod | grep nvidia`. |
+    | `curl: (7) Failed to connect to nvidia.github.io port 443: Connection timed out` | Check network connectivity and firewall rules, or download the nvidia-container-toolkit `.deb` package manually from the NVIDIA repository. |
+    | `E: Unable to locate package nvidia-container-toolkit` | Verify the distribution variable is correct with `echo $distribution` and ensure the APT sources list was added properly with `cat /etc/apt/sources.list.d/nvidia-container-toolkit. |
 ```bash
 # Run a GPU-enabled Docker container
 docker run --gpus all nvidia/cuda:12.4.0-base-ubuntu22.04 nvidia-smi

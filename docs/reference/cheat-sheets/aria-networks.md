@@ -130,9 +130,11 @@ curl -sk $HDR "$BASE/data-sources/nsxv-managers" | python3 -m json.tool    # NSX
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the vRNI certificate into your system trust store.
-    **`jq: parse error: Cannot index string with string "token"`** — Ensure the authentication response is valid JSON and the password is correct; check vRNI logs if login fails silently.
-    **`curl: (7) Failed to connect to vrni port 443: Connection refused`** — Verify the vRNI appliance is running and accessible at the BASE URL, and check network connectivity with `ping vrni` or `nc -zv vrni 443`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the vRNI certificate into your system trust store. |
+    | `jq: parse error: Cannot index string with string "token"` | Ensure the authentication response is valid JSON and the password is correct; check vRNI logs if login fails silently. |
+    | `curl: (7) Failed to connect to vrni port 443: Connection refused` | Verify the vRNI appliance is running and accessible at the BASE URL, and check network connectivity with `ping vrni` or `nc -zv vrni 443`. |
 ## See also
 
 - [Aria Networks Procedures](../../../virtualization/vmware/products/aria-operations-for-networks/operations/procedures/)

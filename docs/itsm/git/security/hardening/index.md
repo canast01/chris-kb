@@ -37,8 +37,10 @@ pre-commit installed at .git/hooks/pre-push
 ```
 
 !!! warning "Common errors"
-    **`error: not a git repository (or any parent up to mount point /)`** — Ensure you are in a valid git repository directory before running `pre-commit install`.
-    **`ERROR: Could not find a version that satisfies the requirement pre-commit`** — Verify your pip is up to date with `pip install --upgrade pip` and check your internet connection.
+    | Error | Fix |
+    |---|---|
+    | `error: not a git repository (or any parent up to mount point /)` | Ensure you are in a valid git repository directory before running `pre-commit install`. |
+    | `ERROR: Could not find a version that satisfies the requirement pre-commit` | Verify your pip is up to date with `pip install --upgrade pip` and check your internet connection. |
 ```bash
 # Scan full history with gitleaks
 gitleaks detect \
@@ -84,9 +86,11 @@ Audit complete. Baseline updated.
 ```
 
 !!! warning "Common errors"
-    **`gitleaks: command not found`** — Install gitleaks with `brew install gitleaks` (macOS) or download from https://github.com/gitleaks/gitleaks/releases.
-    **`Error: failed to create report file: permission denied`** — Run the command from a directory where your user has write permissions, or use `sudo` if scanning a restricted repository.
-    **`detect-secrets: command not found`** — Install with `pip install detect-secrets` and ensure the installation directory is in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `gitleaks: command not found` | Install gitleaks with `brew install gitleaks` (macOS) or download from https://github.com/gitleaks/gitleaks/releases. |
+    | `Error: failed to create report file: permission denied` | Run the command from a directory where your user has write permissions, or use `sudo` if scanning a restricted repository. |
+    | `detect-secrets: command not found` | Install with `pip install detect-secrets` and ensure the installation directory is in your PATH. |
 ```bash
 # Check if secret scanning is enabled on a repo
 gh api /repos/{org}/{repo} --jq '.security_and_analysis.secret_scanning.status'
@@ -234,9 +238,11 @@ security-audit-action@v2.1.0
 ```
 
 !!! warning "Common errors"
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Run the command from the repository root directory where `.github/workflows/` exists.
-    **`gh: repository not found`** — Verify the `{org}` and `{repo}` placeholders are replaced with actual values and that your GitHub CLI authentication is valid with `gh auth status`.
-    **`grep: .github/workflows/: No such file or directory`** — Ensure the repository contains a `.github/workflows/` directory; create it if workflows haven't been initialized yet.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not a git repository (or any of the parent directories): .git` | Run the command from the repository root directory where `.github/workflows/` exists. |
+    | `gh: repository not found` | Verify the `{org}` and `{repo}` placeholders are replaced with actual values and that your GitHub CLI authentication is valid with `gh auth status`. |
+    | `grep: .github/workflows/: No such file or directory` | Ensure the repository contains a `.github/workflows/` directory; create it if workflows haven't been initialized yet. |
 ```bash
 # Store a secret in GitHub Actions
 gh secret set DATABASE_PASSWORD --body "$(cat /dev/stdin)" <<< "$SECRET_VALUE"
@@ -264,9 +270,11 @@ STAGING_API_KEY         2024-01-15T08:22:41Z
 ```
 
 !!! warning "Common errors"
-    **`Error: authentication required`** — Run `gh auth login` to authenticate with GitHub before managing secrets.
-    **`Error: could not resolve to a repository with the field name of 'owner/repo'`** — Ensure you are in a cloned repository directory or specify the repository with `--repo owner/repo` flag.
-    **`Error: secret PROD_API_KEY not found`** — Verify the secret name exists in the target environment using `gh secret list --env production` before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: authentication required` | Run `gh auth login` to authenticate with GitHub before managing secrets. |
+    | `Error: could not resolve to a repository with the field name of 'owner/repo'` | Ensure you are in a cloned repository directory or specify the repository with `--repo owner/repo` flag. |
+    | `Error: secret PROD_API_KEY not found` | Verify the secret name exists in the target environment using `gh secret list --env production` before attempting deletion. |
 ```bash
 #!/bin/bash
 ORG="your-org"

@@ -71,9 +71,11 @@ Operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to VMware Directory Service`** — Ensure the vCenter Server service is running with `systemctl status vmware-vmafd` and check network connectivity to localhost:389.
-    **`Error: Authentication failed for user 'administrator@vsphere.local'`** — Verify the password is correct and the account has not been locked; reset via `dir-cli user reset-password` if needed.
-    **`Error: dir-cli: command not found`** — Confirm you are running this command on the vCenter Server appliance itself, not a remote client; SSH directly to the vCenter FQDN or IP.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to VMware Directory Service` | Ensure the vCenter Server service is running with `systemctl status vmware-vmafd` and check network connectivity to localhost:389. |
+    | `Error: Authentication failed for user 'administrator@vsphere.local'` | Verify the password is correct and the account has not been locked; reset via `dir-cli user reset-password` if needed. |
+    | `Error: dir-cli: command not found` | Confirm you are running this command on the vCenter Server appliance itself, not a remote client; SSH directly to the vCenter FQDN or IP. |
 **LDAP binding account best practice:**
 
 - Create a dedicated read-only AD service account (e.g., `svc-vcenter-bind`)
@@ -342,9 +344,11 @@ Select an option [1 to 8]:
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed for user administrator@vsphere.local`** — Verify the vCenter password is correct and the user account is not locked by running `dir-cli user find --name administrator@vsphere.local`.
-    **`Error: Could not connect to VMware Certificate Store`** — Ensure the vmafd and vmca services are running with `systemctl status vmware-vmafd vmware-vmca` and restart if needed.
-    **`certificate-manager: command not found`** — Verify you are running the command as root on the VCSA appliance itself, not a remote system, and check that `/usr/lib/vmware-vmca/bin/` exists.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed for user administrator@vsphere.local` | Verify the vCenter password is correct and the user account is not locked by running `dir-cli user find --name administrator@vsphere.local`. |
+    | `Error: Could not connect to VMware Certificate Store` | Ensure the vmafd and vmca services are running with `systemctl status vmware-vmafd vmware-vmca` and restart if needed. |
+    | `certificate-manager: command not found` | Verify you are running the command as root on the VCSA appliance itself, not a remote system, and check that `/usr/lib/vmware-vmca/bin/` exists. |
 **Certificate expiry is a common production incident.** Solution user certificates expire after 2 years by default in some vCenter versions. When they expire, vCenter services cannot communicate internally — symptoms include grey hosts, missing datastores in vCenter UI, and API authentication failures.
 
 ### Service Accounts for Automation and Backup
@@ -457,9 +461,11 @@ CreatedTime          UserName                    FullFormattedMessage
 ```
 
 !!! warning "Common errors"
-    **`Get-VIEvent : The term 'Get-VIEvent' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Import the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running the command.
-    **`You are not currently connected to any servers. Please connect to at least one server before running this command.`** — Connect to vCenter first using `Connect-VIServer -Server vcenter.corp.local -Credential (Get-Credential)`.
-    **`The property "FullFormattedMessage" cannot be found on this object. Verify that the property exists.`** — Use `Get-VIEvent -MaxSamples 10 | Select-Object * | Format-List` to verify available properties for your vSphere version.
+    | Error | Fix |
+    |---|---|
+    | `Get-VIEvent : The term 'Get-VIEvent' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Import the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running the command. |
+    | `You are not currently connected to any servers. Please connect to at least one server before running this command.` | Connect to vCenter first using `Connect-VIServer -Server vcenter.corp.local -Credential (Get-Credential)`. |
+    | `The property "FullFormattedMessage" cannot be found on this object. Verify that the property exists.` | Use `Get-VIEvent -MaxSamples 10 | Select-Object * | Format-List` to verify available properties for your vSphere version. |
 ### Quarterly Permission Audit Checklist
 
 ```text

@@ -89,9 +89,11 @@ Staging-Internal                        AzureCloud   c3d4e5f6-a7b8-9012-cdef-123
 ```
 
 !!! warning "Common errors"
-    **`Subscription 'invalid-sub-id' not found.`** — Verify the subscription ID or name exists in your tenant by running `az account list`.
-    **`The user does not have permission to perform action 'Microsoft.Subscription/subscriptions/write' on scope '/subscriptions/<id>'.`** — Ensure your account has Owner or Subscription Admin role on the target subscription.
-    **`The subscription cannot be cancelled because it is in 'Disabled' state.`** — Contact Azure Support to re-enable the subscription before attempting cancellation.
+    | Error | Fix |
+    |---|---|
+    | `Subscription 'invalid-sub-id' not found.` | Verify the subscription ID or name exists in your tenant by running `az account list`. |
+    | `The user does not have permission to perform action 'Microsoft.Subscription/subscriptions/write' on scope '/subscriptions/<id>'.` | Ensure your account has Owner or Subscription Admin role on the target subscription. |
+    | `The subscription cannot be cancelled because it is in 'Disabled' state.` | Contact Azure Support to re-enable the subscription before attempting cancellation. |
 ## Moving Resources Between Subscriptions
 
 Resources can be moved between subscriptions as long as the target subscription is in the same tenant and the resource type supports cross-subscription moves.
@@ -133,9 +135,11 @@ ProvisioningState: Succeeded
 ```
 
 !!! warning "Common errors"
-    **`InvalidResourceId.IncorrectSegmentLengths : The provided URI has an invalid number of segments.`** — Verify the resource ID format matches `/subscriptions/<sub-id>/resourceGroups/<rg>/providers/<namespace>/<type>/<name>` exactly.
-    **`MissingMoveDependencies : The resource cannot be moved because it has dependent resources that are not included in the move.`** — Include all dependent resources (network interfaces, disks, NSGs) in the resources array of the validateMoveResources call.
-    **`TargetResourceGroupNotFound : The target resource group does not exist in the destination subscription.`** — Create the target resource group in the destination subscription before attempting the move operation.
+    | Error | Fix |
+    |---|---|
+    | `InvalidResourceId.IncorrectSegmentLengths : The provided URI has an invalid number of segments.` | Verify the resource ID format matches `/subscriptions/<sub-id>/resourceGroups/<rg>/providers/<namespace>/<type>/<name>` exactly. |
+    | `MissingMoveDependencies : The resource cannot be moved because it has dependent resources that are not included in the move.` | Include all dependent resources (network interfaces, disks, NSGs) in the resources array of the validateMoveResources call. |
+    | `TargetResourceGroupNotFound : The target resource group does not exist in the destination subscription.` | Create the target resource group in the destination subscription before attempting the move operation. |
 ### Resource Types That Cannot Be Moved Cross-Subscription
 
 | Resource Type | Move Limitation |
@@ -193,9 +197,11 @@ Subscription 12a34b5c-d6e7-8f9a-0b1c-2d3e4f5a6b7c moved to management group mg-p
 ```
 
 !!! warning "Common errors"
-    **`Policy definition 'e56962a6-4747-49cd-b67b-bf8b01975c4f' not found.`** — Verify the policy definition ID exists in your subscription or use `az policy definition list` to find the correct ID.
-    **`The subscription is already assigned to a management group.`** — Remove the subscription from its current management group first using `az account management-group subscription remove`.
-    **`Invalid scope format. Scope must be in the format /subscriptions/{subscriptionId}.`** — Ensure the subscription ID is correctly formatted and wrapped in the full scope path without angle brackets.
+    | Error | Fix |
+    |---|---|
+    | `Policy definition 'e56962a6-4747-49cd-b67b-bf8b01975c4f' not found.` | Verify the policy definition ID exists in your subscription or use `az policy definition list` to find the correct ID. |
+    | `The subscription is already assigned to a management group.` | Remove the subscription from its current management group first using `az account management-group subscription remove`. |
+    | `Invalid scope format. Scope must be in the format /subscriptions/{subscriptionId}.` | Ensure the subscription ID is correctly formatted and wrapped in the full scope path without angle brackets. |
 ## Subscription Limits
 
 | Resource | Default Limit | Notes |
@@ -244,8 +250,10 @@ Managed Disks                           42              50000
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The subscription of type 'Free Trial' is not permitted to query usages for location 'uksouth'.`** — Switch to a paid subscription or use a supported region like `eastus` or `westeurope`.
-    **`ERROR: No registered resource provider found for location 'uksouth'.`** — Run `az provider register --namespace Microsoft.Compute` and `az provider register --namespace Microsoft.Network` to enable the resource providers.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The subscription of type 'Free Trial' is not permitted to query usages for location 'uksouth'.` | Switch to a paid subscription or use a supported region like `eastus` or `westeurope`. |
+    | `ERROR: No registered resource provider found for location 'uksouth'.` | Run `az provider register --namespace Microsoft.Compute` and `az provider register --namespace Microsoft.Network` to enable the resource providers. |
 ## Subscription Tagging
 
 Tag subscriptions themselves to enable filtering and reporting in cost management.
@@ -290,5 +298,7 @@ az tag list \
 ```
 
 !!! warning "Common errors"
-    **`The client 'user@contoso.com' with object id '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d' does not have authorization to perform action 'Microsoft.Resources/tags/write'`** — Ensure your user or service principal has the Owner or Contributor role on the subscription.
-    **`Invalid resource ID format. Resource ID should start with '/subscriptions/'`** — Verify the subscription ID is correctly formatted and wrapped in quotes if containing special characters.
+    | Error | Fix |
+    |---|---|
+    | `The client 'user@contoso.com' with object id '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d' does not have authorization to perform action 'Microsoft.Resources/tags/write'` | Ensure your user or service principal has the Owner or Contributor role on the subscription. |
+    | `Invalid resource ID format. Resource ID should start with '/subscriptions/'` | Verify the subscription ID is correctly formatted and wrapped in quotes if containing special characters. |

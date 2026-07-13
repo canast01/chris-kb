@@ -88,8 +88,10 @@ Created symlink /etc/systemd/system/multi-user.target.wants/mysqld.service → /
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to download repository metadata`** — Verify internet connectivity and ensure the MySQL repository URL is accessible from your network.
-    **`grep: /var/log/mysqld.log: No such file or directory`** — Wait 10-15 seconds after `systemctl enable --now mysqld` completes for the log file to be created, or check `/var/log/mysql/mysqld.log` if using a custom log path.
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to download repository metadata` | Verify internet connectivity and ensure the MySQL repository URL is accessible from your network. |
+    | `grep: /var/log/mysqld.log: No such file or directory` | Wait 10-15 seconds after `systemctl enable --now mysqld` completes for the log file to be created, or check `/var/log/mysql/mysqld.log` if using a custom log path. |
 ## Install on Ubuntu / Debian
 
 ```bash
@@ -113,8 +115,10 @@ Created symlink /etc/systemd/system/multi-user.target.wants/mysql.service → /l
 ```
 
 !!! warning "Common errors"
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the command with `sudo` or ensure your user has passwordless sudo configured.
-    **`Unit mysql.service could not be found.`** — Install mysql-server first before enabling the service, or verify the package name matches your distribution (use `apt search mysql-server`).
+    | Error | Fix |
+    |---|---|
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the command with `sudo` or ensure your user has passwordless sudo configured. |
+    | `Unit mysql.service could not be found.` | Install mysql-server first before enabling the service, or verify the package name matches your distribution (use `apt search mysql-server`). |
 ## Post-Install Hardening
 
 ```bash
@@ -164,8 +168,10 @@ All done!
 ```
 
 !!! warning "Common errors"
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password you entered matches what you typed in the confirmation prompt, or reset it with `sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'newpassword';"`
-    **`Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)`** — Ensure the MySQL service is running with `sudo systemctl start mysql` before running the secure installation wizard.
+    | Error | Fix |
+    |---|---|
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)` | Verify the root password you entered matches what you typed in the confirmation prompt, or reset it with `sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'newpassword';"` |
+    | `Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)` | Ensure the MySQL service is running with `sudo systemctl start mysql` before running the secure installation wizard. |
 ## Initial Configuration (`/etc/mysql/mysql.conf.d/mysqld.cnf`)
 
 ```ini
@@ -194,8 +200,10 @@ success
 ```
 
 !!! warning "Common errors"
-    **`Error: INVALID_RULE: rule family=ipv4 source address=10.0.1.0/24 port port=3306 protocol=tcp accept: bad attribute`** — Remove the duplicate "port" keyword; the correct syntax is `source address=10.0.1.0/24 port protocol=tcp port=3306 accept`.
-    **`Error: COMMAND_FAILED: '/usr/sbin/firewall-cmd --add-rich-rule=...' exited with status 1: org.fedoraproject.FirewallD1.Exception: INVALID_RULE`** — Ensure firewalld is running with `sudo systemctl start firewalld` before adding rules.
+    | Error | Fix |
+    |---|---|
+    | `Error: INVALID_RULE: rule family=ipv4 source address=10.0.1.0/24 port port=3306 protocol=tcp accept: bad attribute` | Remove the duplicate "port" keyword; the correct syntax is `source address=10.0.1.0/24 port protocol=tcp port=3306 accept`. |
+    | `Error: COMMAND_FAILED: '/usr/sbin/firewall-cmd --add-rich-rule=...' exited with status 1: org.fedoraproject.FirewallD1.Exception: INVALID_RULE` | Ensure firewalld is running with `sudo systemctl start firewalld` before adding rules. |
 ## First-Connection Validation
 
 ```bash
@@ -219,8 +227,10 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
 ```
 
 !!! warning "Common errors"
-    **`Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password is correct and the MySQL service is running with `systemctl status mysql`.
-    **`ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`** — Start the MySQL service with `systemctl start mysql` and confirm the socket file exists.
+    | Error | Fix |
+    |---|---|
+    | `Access denied for user 'root'@'localhost' (using password: YES)` | Verify the root password is correct and the MySQL service is running with `systemctl status mysql`. |
+    | `ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'` | Start the MySQL service with `systemctl start mysql` and confirm the socket file exists. |
 ## Create Application User
 
 ```sql
@@ -260,9 +270,11 @@ LISTEN     0      80                 127.0.0.1:3306            0.0.0.0:*      us
 ```
 
 !!! warning "Common errors"
-    **`Active: inactive (dead)`** — Run `systemctl start mysql` to start the service, then verify with `systemctl status mysql`.
-    **`Job for mysql.service failed because the control process exited with error code`** — Check `/var/log/mysql/error.log` for startup errors and ensure `/var/lib/mysql` has correct permissions (`chown -R mysql:mysql /var/lib/mysql`).
-    **`Address already in use`** — Verify no other MySQL instance is running on port 3306 with `lsof -i :3306` and kill conflicting processes if needed.
+    | Error | Fix |
+    |---|---|
+    | `Active: inactive (dead)` | Run `systemctl start mysql` to start the service, then verify with `systemctl status mysql`. |
+    | `Job for mysql.service failed because the control process exited with error code` | Check `/var/log/mysql/error.log` for startup errors and ensure `/var/lib/mysql` has correct permissions (`chown -R mysql:mysql /var/lib/mysql`). |
+    | `Address already in use` | Verify no other MySQL instance is running on port 3306 with `lsof -i :3306` and kill conflicting processes if needed. |
 ---
 
 ## See also

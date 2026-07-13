@@ -109,9 +109,11 @@ Volume database-vol-01: IOPS limit removed (set to unlimited)
 ```
 
 !!! warning "Common errors"
-    **`Error: Volume '<volume_name>' not found`** — Replace `<volume_name>` with an actual volume name from your array (e.g., `purevol list` to see available volumes).
-    **`Error: Connection refused — unable to reach management interface`** — Verify the Pure array is reachable and you have valid credentials configured in your Pure CLI profile.
-    **`Error: Permission denied — insufficient privileges for QoS modification`** — Ensure your Pure user account has admin or storage admin role assigned.
+    | Error | Fix |
+    |---|---|
+    | `Error: Volume '<volume_name>' not found` | Replace `<volume_name>` with an actual volume name from your array (e.g., `purevol list` to see available volumes). |
+    | `Error: Connection refused — unable to reach management interface` | Verify the Pure array is reachable and you have valid credentials configured in your Pure CLI profile. |
+    | `Error: Permission denied — insufficient privileges for QoS modification` | Ensure your Pure user account has admin or storage admin role assigned. |
 ## Latency Targets
 
 | Range | Status | Action |

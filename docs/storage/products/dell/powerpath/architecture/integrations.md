@@ -59,8 +59,10 @@ blacklist {
 ```
 
 !!! warning "Common errors"
-    **`syntax error in /etc/multipath.conf at line 3`** — Verify the blacklist block syntax matches the multipath.conf man page format and check for mismatched braces.
-    **`multipathd: configuration reload failed`** — Run `multipath -v3` to validate the configuration file syntax before reloading the daemon with `systemctl reload multipathd`.
+    | Error | Fix |
+    |---|---|
+    | `syntax error in /etc/multipath.conf at line 3` | Verify the blacklist block syntax matches the multipath.conf man page format and check for mismatched braces. |
+    | `multipathd: configuration reload failed` | Run `multipath -v3` to validate the configuration file syntax before reloading the daemon with `systemctl reload multipathd`. |
 After modifying `multipath.conf`, reload: `systemctl reload multipathd`
 
 ## VMware VAAI Integration (PowerPath/VE)
@@ -106,8 +108,10 @@ DEAD PATH on emcpowerab
 ```
 
 !!! warning "Common errors"
-    **`journalctl: command not found`** — Install systemd-journal or use `tail -f /var/log/messages` on systems without journald.
-    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep -i powerpath` and add `/opt/emc/powerpath/bin` to PATH.
+    | Error | Fix |
+    |---|---|
+    | `journalctl: command not found` | Install systemd-journal or use `tail -f /var/log/messages` on systems without journald. |
+    | `powermt: command not found` | Verify PowerPath is installed with `rpm -qa | grep -i powerpath` and add `/opt/emc/powerpath/bin` to PATH. |
 Integrate the path health check script from the scripts section into your monitoring platform (Nagios, Zabbix, Prometheus textfile collector) to alert on degraded path counts.
 
 ---

@@ -207,8 +207,10 @@ WORKER_MACHINE_COUNT: 5
 ```
 
 !!! warning "Common errors"
-    **`error: CLUSTER_PLAN: command not found`** — Wrap variable assignments in quotes or use `export` prefix, or source this as a configuration file rather than executing directly.
-    **`error: unexpected operator ":" in conditional expression`** — Remove colons from variable names; use `CLUSTER_PLAN=dev` instead of `CLUSTER_PLAN: dev` for bash syntax compatibility.
+    | Error | Fix |
+    |---|---|
+    | `error: CLUSTER_PLAN: command not found` | Wrap variable assignments in quotes or use `export` prefix, or source this as a configuration file rather than executing directly. |
+    | `error: unexpected operator ":" in conditional expression` | Remove colons from variable names; use `CLUSTER_PLAN=dev` instead of `CLUSTER_PLAN: dev` for bash syntax compatibility. |
 ---
 
 ## Networking Models
@@ -297,9 +299,11 @@ Verified OK
 ```
 
 !!! warning "Common errors"
-    **`Error: signing image: PUT https://harbor.example.com/v2/myproject/myapp/manifests/v1.0.0: UNAUTHORIZED`** — Authenticate to Harbor first with `docker login harbor.example.com` and ensure your user has push permissions on the project.
-    **`Error: public key not found`** — Ensure cosign.pub exists in the current directory or provide the full path with `--key /path/to/cosign.pub`.
-    **`Error: no matching signatures found`** — Verify the image tag matches exactly what was signed and that the signature was successfully pushed to Harbor's OCI repository.
+    | Error | Fix |
+    |---|---|
+    | `Error: signing image: PUT https://harbor.example.com/v2/myproject/myapp/manifests/v1.0.0: UNAUTHORIZED` | Authenticate to Harbor first with `docker login harbor.example.com` and ensure your user has push permissions on the project. |
+    | `Error: public key not found` | Ensure cosign.pub exists in the current directory or provide the full path with `--key /path/to/cosign.pub`. |
+    | `Error: no matching signatures found` | Verify the image tag matches exactly what was signed and that the signature was successfully pushed to Harbor's OCI repository. |
 ### Vulnerability Scanning
 
 Harbor integrates with Trivy (default in Harbor 2.x) or Clair for CVE scanning:
@@ -348,9 +352,11 @@ curl -u admin:password \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or configure Harbor with a valid CA-signed certificate.
-    **`{"errors":[{"code":"UNAUTHORIZED","message":"Unauthorized"}]}`** — Verify Harbor credentials are correct and the user has project read/write permissions.
-    **`{"errors":[{"code":"NOT_FOUND","message":"artifact not found"}]}`** — Ensure the artifact tag `v1.0.0` exists in the repository and use the correct project and repository names.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl or configure Harbor with a valid CA-signed certificate. |
+    | `{"errors":[{"code":"UNAUTHORIZED","message":"Unauthorized"}]}` | Verify Harbor credentials are correct and the user has project read/write permissions. |
+    | `{"errors":[{"code":"NOT_FOUND","message":"artifact not found"}]}` | Ensure the artifact tag `v1.0.0` exists in the repository and use the correct project and repository names. |
 Project-level scan policy: Harbor UI → Project → Configuration → Automatically scan images on push.
 
 ### RBAC and Project Structure

@@ -112,8 +112,10 @@ useradd: warning: home directory '/home/github-runner' already exists and is not
 ```
 
 !!! warning "Common errors"
-    **`useradd: user 'github-runner' already exists`** — Check existing users with `getent passwd github-runner` and either remove the user with `userdel -r github-runner` or skip user creation if already present.
-    **`./config.sh: command not found`** — Ensure you are in the GitHub Actions runner directory (typically `/opt/actions-runner` or similar) where `config.sh` is located, or provide the full path to the script.
+    | Error | Fix |
+    |---|---|
+    | `useradd: user 'github-runner' already exists` | Check existing users with `getent passwd github-runner` and either remove the user with `userdel -r github-runner` or skip user creation if already present. |
+    | `./config.sh: command not found` | Ensure you are in the GitHub Actions runner directory (typically `/opt/actions-runner` or similar) where `config.sh` is located, or provide the full path to the script. |
 ```bash
 ## Enable secret scanning and push protection via API
 gh api --method PATCH repos/ORG/REPO \
@@ -148,9 +150,11 @@ gh api repos/ORG/REPO/secret-scanning/alerts | jq '.[] | {state, secret_type, ht
 ```
 
 !!! warning "Common errors"
-    **`HTTP 403: Resource not accessible by integration`** — Ensure the GitHub token has `repo` and `security_events:read` scopes, or use a PAT with appropriate permissions.
-    **`jq: parse error: Cannot index string with string "state"`** — The API returned an error response instead of JSON array; verify the repository exists and secret scanning is enabled with `gh api repos/ORG/REPO | jq '.security_and_analysis'`.
-    **`HTTP 404: Not Found`** — Replace `ORG/REPO` with actual organization and repository names, or verify the repository is accessible to the authenticated user.
+    | Error | Fix |
+    |---|---|
+    | `HTTP 403: Resource not accessible by integration` | Ensure the GitHub token has `repo` and `security_events:read` scopes, or use a PAT with appropriate permissions. |
+    | `jq: parse error: Cannot index string with string "state"` | The API returned an error response instead of JSON array; verify the repository exists and secret scanning is enabled with `gh api repos/ORG/REPO | jq '.security_and_analysis'`. |
+    | `HTTP 404: Not Found` | Replace `ORG/REPO` with actual organization and repository names, or verify the repository is accessible to the authenticated user. |
 ```bash
 ## Org audit log — all Actions-related events
 gh api orgs/ORG/audit-log \

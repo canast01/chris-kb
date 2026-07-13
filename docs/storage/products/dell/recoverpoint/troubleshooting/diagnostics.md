@@ -131,9 +131,11 @@ RPA-02 (10.45.12.34):
 ```
 
 !!! warning "Common errors"
-    **`Connection refused — check that the RecoverPoint management appliance is powered on and SSH is enabled on port 22.`** — Verify network connectivity and appliance status with `ping <rpa-management-ip>` first.
-    **`Authentication failed for user admin`** — Confirm credentials with your RecoverPoint administrator or reset the admin password via the appliance console.
-    **`RPA-02 STATUS: Unreachable — communication error`** — Check network connectivity between management appliance and RPA-02, and verify no firewall rules are blocking the replication network.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused — check that the RecoverPoint management appliance is powered on and SSH is enabled on port 22.` | Verify network connectivity and appliance status with `ping <rpa-management-ip>` first. |
+    | `Authentication failed for user admin` | Confirm credentials with your RecoverPoint administrator or reset the admin password via the appliance console. |
+    | `RPA-02 STATUS: Unreachable — communication error` | Check network connectivity between management appliance and RPA-02, and verify no firewall rules are blocking the replication network. |
 **If output shows:**
 - `System health status: ERROR` → check `get alerts` for the specific fault
 - One RPA offline → check ESXi host where the RPA VM runs; verify power state and datastore access
@@ -183,9 +185,11 @@ Replication Link Status: Connected
 ```
 
 !!! warning "Common errors"
-    **`Journal utilization > 80%`** — Increase journal size on the RPA or reduce write rate to the protected volume by identifying and throttling heavy workloads.
-    **`Splitter connectivity lost`** — Verify the hypervisor/array splitter is running and has network connectivity to the RPA by checking splitter logs and restarting the splitter service if needed.
-    **`Link communication error`** — Check network connectivity between sites using `ping` and `traceroute` to the DR site IP, and verify firewall rules allow RPA replication ports (typically 7105-7110).
+    | Error | Fix |
+    |---|---|
+    | `Journal utilization > 80%` | Increase journal size on the RPA or reduce write rate to the protected volume by identifying and throttling heavy workloads. |
+    | `Splitter connectivity lost` | Verify the hypervisor/array splitter is running and has network connectivity to the RPA by checking splitter logs and restarting the splitter service if needed. |
+    | `Link communication error` | Check network connectivity between sites using `ping` and `traceroute` to the DR site IP, and verify firewall rules allow RPA replication ports (typically 7105-7110). |
 **Decision flow:**
 - `Active` with high lag → proceed to journal and link diagnostics (Steps 3–4)
 - `Paused` → identify who paused it; check for maintenance windows; resume only after confirming data is consistent
@@ -230,9 +234,11 @@ archive-old-05      | 52.3%     | 49.8%       | 78.9    | 75.2
 ```
 
 !!! warning "Common errors"
-    **`Error: CG '<cg-name>' not found in cluster`** — Verify the exact CG name with `get cgs` and ensure it exists on the connected RecoverPoint appliance.
-    **`Error: Journal statistics unavailable - replication not initialized`** — Initialize replication for the CG or wait for the initial snapshot to complete before querying journal stats.
-    **`Connection timeout: unable to reach RecoverPoint management interface`** — Confirm network connectivity to the RecoverPoint appliance IP and verify credentials with `connect <rp-ip>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: CG '<cg-name>' not found in cluster` | Verify the exact CG name with `get cgs` and ensure it exists on the connected RecoverPoint appliance. |
+    | `Error: Journal statistics unavailable - replication not initialized` | Initialize replication for the CG or wait for the initial snapshot to complete before querying journal stats. |
+    | `Connection timeout: unable to reach RecoverPoint management interface` | Confirm network connectivity to the RecoverPoint appliance IP and verify credentials with `connect <rp-ip>`. |
 **If journal utilization is high (> 60%):**
 1. Check if host I/O to the production LUNs is abnormally elevated
 2. Check WAN link bandwidth in Step 4 — journal drains to DR over the replication link
@@ -288,9 +294,11 @@ Connectivity Status:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to retrieve network status — connection timeout`** — Verify network connectivity to the RPA management interface and confirm firewall rules allow port 9443 between clusters.
-    **`Packet Loss: 2.3% detected on replication link`** — Check for congested network interfaces, duplex mismatches, or faulty cables; consider reducing replication load or increasing link bandwidth.
-    **`RPA Node prod-rpa-02-node2 → prod-rpa-01-node1: UNREACHABLE`** — Verify the unreachable node is online, check routing tables, and confirm no network ACLs are blocking inter-cluster traffic on port 9898.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to retrieve network status — connection timeout` | Verify network connectivity to the RPA management interface and confirm firewall rules allow port 9443 between clusters. |
+    | `Packet Loss: 2.3% detected on replication link` | Check for congested network interfaces, duplex mismatches, or faulty cables; consider reducing replication load or increasing link bandwidth. |
+    | `RPA Node prod-rpa-02-node2 → prod-rpa-01-node1: UNREACHABLE` | Verify the unreachable node is online, check routing tables, and confirm no network ACLs are blocking inter-cluster traffic on port 9898. |
 **If connectivity is degraded:**
 - Contact the network team to check the WAN link quality between sites
 - Verify QoS policy is applying the correct priority to RecoverPoint replication traffic
@@ -318,8 +326,10 @@ splitter-dr-01         vRPA    Connected   2024-01-15 14:32:20 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to RPA management interface`** — Verify RPA cluster is running with `get system status` and check network connectivity to the RPA management IP.
-    **`Splitter <name> status: Disconnected`** — Restart the splitter service with `set splitter restart <name>` or verify network path and firewall rules between RPA and splitter.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to RPA management interface` | Verify RPA cluster is running with `get system status` and check network connectivity to the RPA management IP. |
+    | `Splitter <name> status: Disconnected` | Restart the splitter service with `set splitter restart <name>` or verify network path and firewall rules between RPA and splitter. |
 **If a vSphere splitter shows "Disconnected":**
 1. Check network from RPA to ESXi management interface (TCP 7225)
 2. On the ESXi host, verify the splitter VIB is installed:
@@ -349,8 +359,10 @@ Remote Array: 000298765432
 ```
 
 !!! warning "Common errors"
-    **`SYMRDF ERROR (4): RDF group '<journal-rdfg>' not found on array <SID>`** — Verify the RDF group name matches exactly (case-sensitive) using `symrdf list -sid <SID>`.
-    **`SYMRDF ERROR (26): Cannot connect to array <SID> - Check Symmetrix connectivity`** — Ensure the Symmetrix array is reachable and the SID is correct; verify network connectivity with `symcfg list -v`.
+    | Error | Fix |
+    |---|---|
+    | `SYMRDF ERROR (4): RDF group '<journal-rdfg>' not found on array <SID>` | Verify the RDF group name matches exactly (case-sensitive) using `symrdf list -sid <SID>`. |
+    | `SYMRDF ERROR (26): Cannot connect to array <SID> - Check Symmetrix connectivity` | Ensure the Symmetrix array is reachable and the SID is correct; verify network connectivity with `symcfg list -v`. |
 ---
 
 ## Step 6 — Collect support bundle
@@ -384,9 +396,11 @@ admin@192.168.1.45:/opt/rp/var/support/rp-bundle-20240115-143022.zip 100%  487MB
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password)`** — Verify SSH credentials and ensure the admin user exists on the RPA management interface with correct network connectivity.
-    **`No such file or directory`** — Confirm the RPA management IP address is correct and the support bundle collection completed successfully before attempting SCP download.
-    **`Disk quota exceeded`** — Ensure `/tmp/` has at least 500 MB free space or specify an alternate download destination with sufficient capacity.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password)` | Verify SSH credentials and ensure the admin user exists on the RPA management interface with correct network connectivity. |
+    | `No such file or directory` | Confirm the RPA management IP address is correct and the support bundle collection completed successfully before attempting SCP download. |
+    | `Disk quota exceeded` | Ensure `/tmp/` has at least 500 MB free space or specify an alternate download destination with sufficient capacity. |
 ---
 
 ## Log locations
@@ -457,9 +471,11 @@ Journal Stats:
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname <rpa-mgmt-ip>`** — Replace `<rpa-mgmt-ip>` with the actual RecoverPoint management IP address (e.g., 192.168.10.45).
-    **`Permission denied (publickey,password)`** — Verify the admin account credentials and that your SSH key is authorized on the RPA, or use `ssh -u admin@<rpa-mgmt-ip>` with password authentication enabled.
-    **`get: command not found`** — Ensure you are connecting to a RecoverPoint Appliance management interface; these commands only work on the RPA CLI, not standard Linux shells.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname <rpa-mgmt-ip>` | Replace `<rpa-mgmt-ip>` with the actual RecoverPoint management IP address (e.g., 192.168.10.45). |
+    | `Permission denied (publickey,password)` | Verify the admin account credentials and that your SSH key is authorized on the RPA, or use `ssh -u admin@<rpa-mgmt-ip>` with password authentication enabled. |
+    | `get: command not found` | Ensure you are connecting to a RecoverPoint Appliance management interface; these commands only work on the RPA CLI, not standard Linux shells. |
 ---
 
 ## See also

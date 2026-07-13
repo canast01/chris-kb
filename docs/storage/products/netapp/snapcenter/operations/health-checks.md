@@ -133,7 +133,9 @@ Monthly_Archive               MySQL       Full
 ```
 
 !!! warning "Common errors"
-    **`Open-SmConnection : Cannot find a promo provider 'SnapCenter' for PowerShell version 5.1`** — Install the SnapCenter PowerShell toolkit matching your PowerShell version, or run the script from a SnapCenter server with the toolkit pre-installed.
+    | Error | Fix |
+    |---|---|
+    | `Open-SmConnection : Cannot find a promo provider 'SnapCenter' for PowerShell version 5.1` | Install the SnapCenter PowerShell toolkit matching your PowerShell version, or run the script from a SnapCenter server with the toolkit pre-installed. |
     **`Get-SmJob : The term 'Get-
 ---
 

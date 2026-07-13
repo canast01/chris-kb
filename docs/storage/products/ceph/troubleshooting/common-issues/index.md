@@ -163,9 +163,11 @@ osd.6: commit_latency_ms 12.1 apply_latency_ms 34.5
 ```
 
 !!! warning "Common errors"
-    **`error: unable to get daemon logs: No such container for osd.5`** — Verify the OSD exists with `ceph osd ls` and use correct daemon name format `osd.N`.
-    **`Error: DEVICE FAILED [90%] Reallocated_Sector_Ct`** — Replace the disk immediately following the OSD replacement procedure, as sector reallocation indicates imminent disk failure.
-    **`command not found: smartctl`** — Install smartmontools package with `apt install smartmontools` (Debian/Ubuntu) or `yum install smartmontools` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `error: unable to get daemon logs: No such container for osd.5` | Verify the OSD exists with `ceph osd ls` and use correct daemon name format `osd.N`. |
+    | `Error: DEVICE FAILED [90%] Reallocated_Sector_Ct` | Replace the disk immediately following the OSD replacement procedure, as sector reallocation indicates imminent disk failure. |
+    | `command not found: smartctl` | Install smartmontools package with `apt install smartmontools` (Debian/Ubuntu) or `yum install smartmontools` (RHEL/CentOS). |
 ## HEALTH_ERR: OSD Full
 
 When the cluster hits the `full ratio` (default 95%), all writes are blocked including replication and recovery.
@@ -240,9 +242,11 @@ set-full-ratio 0.95
 ```
 
 !!! warning "Common errors"
-    **`Error ENOSPC: no space left on device`** — Run `ceph osd set nofull` immediately to allow writes, then delete data or add OSDs urgently.
-    **`Error: pool 'rbd' does not exist`** — Replace `rbd` with the correct pool name from `ceph osd pool ls`.
-    **`Error EINVAL: invalid full ratio 0.97: must be between 0.0 and 1.0`** — Use decimal notation (0.97) not percentage; ensure the value is less than set-full-ratio.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOSPC: no space left on device` | Run `ceph osd set nofull` immediately to allow writes, then delete data or add OSDs urgently. |
+    | `Error: pool 'rbd' does not exist` | Replace `rbd` with the correct pool name from `ceph osd pool ls`. |
+    | `Error EINVAL: invalid full ratio 0.97: must be between 0.0 and 1.0` | Use decimal notation (0.97) not percentage; ensure the value is less than set-full-ratio. |
 ## Slow Ops / High Latency
 
 ```bash
@@ -383,8 +387,10 @@ reweighted osd.5 to 0.0
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: pg 1.5a not found`** — Verify the PG ID exists with `ceph pg stat` and use the correct hexadecimal format (e.g., `1.5a` not `1.90`).
-    **`Error EPERM: you do not have permission to perform this operation`** — Run the command with appropriate Ceph admin privileges or use `sudo` if the client is not in the ceph group.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: pg 1.5a not found` | Verify the PG ID exists with `ceph pg stat` and use the correct hexadecimal format (e.g., `1.5a` not `1.90`). |
+    | `Error EPERM: you do not have permission to perform this operation` | Run the command with appropriate Ceph admin privileges or use `sudo` if the client is not in the ceph group. |
     **`Error EINVAL: invalid min_size
 ## Clock Skew
 
@@ -460,9 +466,11 @@ HEALTH_OK
 ```
 
 !!! warning "Common errors"
-    **`CLOCK_SKEW clock skew detected on mon.ceph-mon-02`** — Restart chronyd on the affected MON node and verify NTP synchronization with `chronyc tracking` shows skew under 50ms.
-    **`Connection refused when running ssh $host date`** — Ensure passwordless SSH is configured between MON nodes or use explicit credentials; verify SSH keys are in place with `ssh-keyscan`.
-    **`chronyd.service is not running`** — Enable and start the service with `systemctl enable chronyd && systemctl start chronyd`, then verify with `systemctl status chronyd`.
+    | Error | Fix |
+    |---|---|
+    | `CLOCK_SKEW clock skew detected on mon.ceph-mon-02` | Restart chronyd on the affected MON node and verify NTP synchronization with `chronyc tracking` shows skew under 50ms. |
+    | `Connection refused when running ssh $host date` | Ensure passwordless SSH is configured between MON nodes or use explicit credentials; verify SSH keys are in place with `ssh-keyscan`. |
+    | `chronyd.service is not running` | Enable and start the service with `systemctl enable chronyd && systemctl start chronyd`, then verify with `systemctl status chronyd`. |
 ## MON Quorum Lost
 
 A MON quorum loss blocks all writes and most reads. Minimum 2 of 3 MONs (or 3 of 5) must be up.
@@ -544,8 +552,10 @@ Jan 18 14:35:25 ceph-mon1 ceph-mon[8904]: WARNING: mon0 not responding to heartb
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: error calling conf_read_file`** — Verify the MON's data directory exists at `/var/lib/ceph/mon/ceph-<id>` and has correct ownership (`chown -R ceph:ceph /var/lib/ceph/mon/ceph-<id>`).
-    **`unable to bind monitor socket: Address already in use`** — Kill any orphaned ceph-mon processes with `pkill -9 ceph-mon` before restarting, or check if port 6789 is blocked by a firewall rule.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: error calling conf_read_file` | Verify the MON's data directory exists at `/var/lib/ceph/mon/ceph-<id>` and has correct ownership (`chown -R ceph:ceph /var/lib/ceph/mon/ceph-<id>`). |
+    | `unable to bind monitor socket: Address already in use` | Kill any orphaned ceph-mon processes with `pkill -9 ceph-mon` before restarting, or check if port 6789 is blocked by a firewall rule. |
     **`mon.X is down (
 ---
 

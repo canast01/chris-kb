@@ -90,9 +90,11 @@ Snapshot deleted successfully. Freed 2.3 GB.
 ```
 
 !!! warning "Common errors"
-    **`Error: VM must be powered off before reverting snapshot`** — Power off the VM with `acli vm.off <vm-name>` before running snapshot_revert.
-    **`Error: NGT not installed on VM for APPLICATION_CONSISTENT snapshots`** — Install Nutanix Guest Tools on the VM or use crash-consistent snapshots instead.
-    **`Error: Snapshot 'pre-change-appcons' not found`** — Verify the snapshot name exists by running `acli vm.snapshot_list <vm-name>` and use the exact name from the output.
+    | Error | Fix |
+    |---|---|
+    | `Error: VM must be powered off before reverting snapshot` | Power off the VM with `acli vm.off <vm-name>` before running snapshot_revert. |
+    | `Error: NGT not installed on VM for APPLICATION_CONSISTENT snapshots` | Install Nutanix Guest Tools on the VM or use crash-consistent snapshots instead. |
+    | `Error: Snapshot 'pre-change-appcons' not found` | Verify the snapshot name exists by running `acli vm.snapshot_list <vm-name>` and use the exact name from the output. |
 ---
 
 ## Protection Domains (Replication to Remote Cluster)
@@ -123,9 +125,11 @@ Connection status: HEALTHY
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid address format for remote site`** — Verify the remote CVM IP is valid and reachable; use `ping <remote-cvm-ip>` to test connectivity first.
-    **`Error: Remote site 'dr-site-prod' already exists`** — Choose a unique name for the remote site or delete the existing one with `ncli remote-site delete name=<dr-site-name>`.
-    **`Error: Connection timeout - unable to reach remote site at 192.168.50.29`** — Confirm network connectivity between clusters, check firewall rules allow port 2009, and verify the remote CVM IP address is correct.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid address format for remote site` | Verify the remote CVM IP is valid and reachable; use `ping <remote-cvm-ip>` to test connectivity first. |
+    | `Error: Remote site 'dr-site-prod' already exists` | Choose a unique name for the remote site or delete the existing one with `ncli remote-site delete name=<dr-site-name>`. |
+    | `Error: Connection timeout - unable to reach remote site at 192.168.50.29` | Confirm network connectivity between clusters, check firewall rules allow port 2009, and verify the remote CVM IP address is correct. |
 ### Create and Configure Protection Domain
 
 ```bash
@@ -171,9 +175,11 @@ Replication completed successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection Domain '<pd-name>' already exists`** — Use a unique name or delete the existing PD with `ncli pd delete name=<pd-name>` first.
-    **`Error: VM 'vm1' not found or not accessible`** — Verify VM names are correct and the Prism user has permissions to access those VMs.
-    **`Error: Remote site '<dr-site-name>' is not reachable or not configured`** — Confirm the DR site is registered in Prism and network connectivity exists between clusters.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection Domain '<pd-name>' already exists` | Use a unique name or delete the existing PD with `ncli pd delete name=<pd-name>` first. |
+    | `Error: VM 'vm1' not found or not accessible` | Verify VM names are correct and the Prism user has permissions to access those VMs. |
+    | `Error: Remote site '<dr-site-name>' is not reachable or not configured` | Confirm the DR site is registered in Prism and network connectivity exists between clusters. |
 ### Monitor Replication
 
 ```bash
@@ -214,8 +220,10 @@ Replication Bytes Remaining: 0 B
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection Domain <pd-name> not found`** — Verify the PD name with `ncli pd ls` and use the exact name from the output.
-    **`Error: Connection refused (10.0.0.1:9440)`** — Ensure the Nutanix cluster is reachable and ncli is configured with correct cluster credentials via `ncli -h <cluster-ip>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection Domain <pd-name> not found` | Verify the PD name with `ncli pd ls` and use the exact name from the output. |
+    | `Error: Connection refused (10.0.0.1:9440)` | Ensure the Nutanix cluster is reachable and ncli is configured with correct cluster credentials via `ncli -h <cluster-ip>`. |
 ### Failover to Remote Site
 
 ```bash
@@ -246,9 +254,11 @@ VM db-primary-03 powered on successfully.
 ```
 
 !!! warning "Common errors"
-    **`ncli pd activate name=prod-pd-01: Error: Protection Domain not found`** — Verify the PD name matches exactly with `ncli pd list` and confirm you are connected to the correct remote cluster.
-    **`acli vm.on web-server-01: Error: VM not found or not in activated PD`** — Ensure the PD activation completed successfully and the VM name is correct; use `acli vm.list` to verify VM presence on the remote site.
-    **`ncli pd activate name=prod-pd-01: Error: Protection Domain is already active`** — The PD is already activated on this site; check if failover was already completed or if you are on the wrong cluster.
+    | Error | Fix |
+    |---|---|
+    | `ncli pd activate name=prod-pd-01: Error: Protection Domain not found` | Verify the PD name matches exactly with `ncli pd list` and confirm you are connected to the correct remote cluster. |
+    | `acli vm.on web-server-01: Error: VM not found or not in activated PD` | Ensure the PD activation completed successfully and the VM name is correct; use `acli vm.list` to verify VM presence on the remote site. |
+    | `ncli pd activate name=prod-pd-01: Error: Protection Domain is already active` | The PD is already activated on this site; check if failover was already completed or if you are on the wrong cluster. |
 ---
 
 ## Nutanix DR (Prism Central — Policy-Based)
@@ -398,8 +408,10 @@ VM powered on successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: VM prod-web-01 is powered on. Cannot revert snapshot on running VM.`** — Power off the VM with `acli vm.off <vm-name>` before attempting snapshot revert.
-    **`Error: Snapshot daily-2024-01-15 not found for VM prod-web-01.`** — Verify the snapshot name exists by running `acli vm.snapshot_list <vm-name>` and use the exact snapshot name from the output.
+    | Error | Fix |
+    |---|---|
+    | `Error: VM prod-web-01 is powered on. Cannot revert snapshot on running VM.` | Power off the VM with `acli vm.off <vm-name>` before attempting snapshot revert. |
+    | `Error: Snapshot daily-2024-01-15 not found for VM prod-web-01.` | Verify the snapshot name exists by running `acli vm.snapshot_list <vm-name>` and use the exact snapshot name from the output. |
 ### Restore a VM from Protection Domain
 
 ```bash
@@ -428,9 +440,11 @@ Network configuration restored: eth0 (192.168.1.45/24), eth1 (10.0.0.12/24)
 ```
 
 !!! warning "Common errors"
-    **`Error: PD 'prod-cluster-pd' not found`** — Verify the PD name with `ncli pd ls` and ensure you have cluster connectivity.
-    **`Error: Snapshot ID 'a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6' does not exist for PD 'prod-cluster-pd'`** — Confirm the snapshot ID matches the output of `ncli pd ls-snapshots` for the correct PD.
-    **`Error: VM 'web-server-01' already exists in the cluster`** — Use a different VM name in the restore command or delete the existing VM before restoring.
+    | Error | Fix |
+    |---|---|
+    | `Error: PD 'prod-cluster-pd' not found` | Verify the PD name with `ncli pd ls` and ensure you have cluster connectivity. |
+    | `Error: Snapshot ID 'a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6' does not exist for PD 'prod-cluster-pd'` | Confirm the snapshot ID matches the output of `ncli pd ls-snapshots` for the correct PD. |
+    | `Error: VM 'web-server-01' already exists in the cluster` | Use a different VM name in the restore command or delete the existing VM before restoring. |
 ---
 
 ## Verify

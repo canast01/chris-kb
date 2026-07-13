@@ -113,9 +113,11 @@ round-trip min/avg/max = 2.156/2.262/2.341 ms
 ```
 
 !!! warning "Common errors"
-    **`nc: getaddrinfo: Name or service not known`** — Verify DNS resolution with `nslookup vra-amsterdam.example.local` or use the VRA's IP address directly instead of hostname.
-    **`(no response / timeout after 5 seconds)`** — Check network routing with `esxcli network ip route ipv4 list` and confirm the VRA subnet is reachable from the ESXi management network.
-    **`PING: sendto() failed (Permission denied)`** — Ensure you are running the command from the ESXi host shell (SSH/console) with appropriate network stack permissions, not from a vSphere client.
+    | Error | Fix |
+    |---|---|
+    | `nc: getaddrinfo: Name or service not known` | Verify DNS resolution with `nslookup vra-amsterdam.example.local` or use the VRA's IP address directly instead of hostname. |
+    | `(no response / timeout after 5 seconds)` | Check network routing with `esxcli network ip route ipv4 list` and confirm the VRA subnet is reachable from the ESXi management network. |
+    | `PING: sendto() failed (Permission denied)` | Ensure you are running the command from the ESXi host shell (SSH/console) with appropriate network stack permissions, not from a vSphere client. |
 ```bash
 ssh admin@vra-london.example.local
 df -h
@@ -139,8 +141,10 @@ Vacuumed 847 journal files, freed 512.3M of disk space.
 ```
 
 !!! warning "Common errors"
-    **`sudo: find: command not found`** — Verify the full path `/usr/bin/find` exists or reinstall findutils package with `apt-get install findutils`.
-    **`Permission denied`** — Ensure the admin user has passwordless sudo configured or run `sudo -l` to verify sudo privileges for the find and journalctl commands.
+    | Error | Fix |
+    |---|---|
+    | `sudo: find: command not found` | Verify the full path `/usr/bin/find` exists or reinstall findutils package with `apt-get install findutils`. |
+    | `Permission denied` | Ensure the admin user has passwordless sudo configured or run `sudo -l` to verify sudo privileges for the find and journalctl commands. |
 ```bash
 vCenter → [VRA VM] → Edit Settings → Disk → increase size
 Then expand filesystem inside VRA:
@@ -155,8 +159,10 @@ Then expand filesystem inside VRA:
 ```
 
 !!! warning "Common errors"
-    **`NODEV: growpart: error: partition 1 is size 0. it cannot be grown`** — Ensure the disk was actually resized in vCenter settings and the VM was powered off before expanding, or try `sudo partprobe` to refresh the partition table.
-    **`resize2fs: Bad magic number in super-block while trying to open /dev/sda1`** — Verify the correct partition number with `lsblk` or `fdisk -l` and confirm the filesystem type matches (ext4 vs ext3); if using LVM, use `sudo pvresize /dev/sda1` instead.
+    | Error | Fix |
+    |---|---|
+    | `NODEV: growpart: error: partition 1 is size 0. it cannot be grown` | Ensure the disk was actually resized in vCenter settings and the VM was powered off before expanding, or try `sudo partprobe` to refresh the partition table. |
+    | `resize2fs: Bad magic number in super-block while trying to open /dev/sda1` | Verify the correct partition number with `lsblk` or `fdisk -l` and confirm the filesystem type matches (ext4 vs ext3); if using LVM, use `sudo pvresize /dev/sda1` instead. |
 ---
 
 ## See also

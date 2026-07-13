@@ -82,8 +82,10 @@ vol-backup-daily     10.0 TB   6.7 TB     3.2x              28
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or verify the PATH includes the Pure bin directory; contact Pure Support for CLI access credentials.
-    **`Error: Invalid credentials or array unreachable`** — Verify network connectivity to the array management IP and confirm API token/credentials are valid and not expired.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or verify the PATH includes the Pure bin directory; contact Pure Support for CLI access credentials. |
+    | `Error: Invalid credentials or array unreachable` | Verify network connectivity to the array management IP and confirm API token/credentials are valid and not expired. |
 ## Change Readiness
 
 - [ ] Review billing period timing before any large provisioning change — avoid large capacity spikes immediately before the monthly billing close

@@ -144,9 +144,11 @@ server promoted
 ```
 
 !!! warning "Common errors"
-    **`FATAL: role "postgres" does not exist`** — Create the postgres role with `createuser -s postgres` or connect as the actual superuser account.
-    **`could not open file "/var/lib/postgresql/data/promote_standby": Permission denied`** — Run the `touch` command as the postgres user with `sudo -u postgres touch /var/lib/postgresql/data/promote_standby`.
-    **`pg_is_in_recovery returned 't' (true) after promotion`** — Wait 10–15 seconds for the promotion to fully complete, then re-run the verification query.
+    | Error | Fix |
+    |---|---|
+    | `FATAL: role "postgres" does not exist` | Create the postgres role with `createuser -s postgres` or connect as the actual superuser account. |
+    | `could not open file "/var/lib/postgresql/data/promote_standby": Permission denied` | Run the `touch` command as the postgres user with `sudo -u postgres touch /var/lib/postgresql/data/promote_standby`. |
+    | `pg_is_in_recovery returned 't' (true) after promotion` | Wait 10–15 seconds for the promotion to fully complete, then re-run the verification query. |
 ```bash
 # Automatic failover — check MHA status
 masterha_check_repl --conf=/etc/mha/app.conf
@@ -206,9 +208,11 @@ OK
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "<new-primary>" to address: Name or service not known`** — Replace `<new-primary>` with the actual hostname or IP address of the new primary server.
-    **`ERROR 1045 (28000): Access denied for user 'appuser'@'<new-primary>'`** — Verify the appuser password is correct and the user has INSERT privileges on the health_check table.
-    **`curl: (7) Failed to connect to <app-endpoint> port 443: Connection refused`** — Confirm the application endpoint is running and accessible; check firewall rules and application service status.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "<new-primary>" to address: Name or service not known` | Replace `<new-primary>` with the actual hostname or IP address of the new primary server. |
+    | `ERROR 1045 (28000): Access denied for user 'appuser'@'<new-primary>'` | Verify the appuser password is correct and the user has INSERT privileges on the health_check table. |
+    | `curl: (7) Failed to connect to <app-endpoint> port 443: Connection refused` | Confirm the application endpoint is running and accessible; check firewall rules and application service status. |
 ---
 
 ## Verify

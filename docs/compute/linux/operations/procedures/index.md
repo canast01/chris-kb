@@ -30,9 +30,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`df: /dev/sda1: Permission denied`** — Run the command with `sudo` to access all filesystem information.
-    **`rpm: command not found`** — Comment out the rpm command on Ubuntu systems or the dpkg command on RHEL systems depending on your distribution.
-    **`cannot open /tmp/pre-change-packages.txt: Permission denied`** — Ensure `/tmp` is writable or redirect output to a directory with write permissions like `~/pre-change-packages.txt`.
+    | Error | Fix |
+    |---|---|
+    | `df: /dev/sda1: Permission denied` | Run the command with `sudo` to access all filesystem information. |
+    | `rpm: command not found` | Comment out the rpm command on Ubuntu systems or the dpkg command on RHEL systems depending on your distribution. |
+    | `cannot open /tmp/pre-change-packages.txt: Permission denied` | Ensure `/tmp` is writable or redirect output to a directory with write permissions like `~/pre-change-packages.txt`. |
 ```bash
 # Detailed memory breakdown
 cat /proc/meminfo
@@ -70,9 +72,11 @@ SUnreclaim:      128000 kB
 ```
 
 !!! warning "Common errors"
-    **`bash: /proc/sys/vm/drop_caches: Permission denied`** — Run the command with `sudo` or as root user.
-    **`journalctl: command not found`** — Install systemd utilities with `apt-get install systemd` or use `dmesg` alone on systems without journalctl.
-    **`dmesg: read error`** — Increase dmesg buffer size with `sysctl kernel.printk_ratelimit=0` or run with `sudo dmesg`.
+    | Error | Fix |
+    |---|---|
+    | `bash: /proc/sys/vm/drop_caches: Permission denied` | Run the command with `sudo` or as root user. |
+    | `journalctl: command not found` | Install systemd utilities with `apt-get install systemd` or use `dmesg` alone on systems without journalctl. |
+    | `dmesg: read error` | Increase dmesg buffer size with `sysctl kernel.printk_ratelimit=0` or run with `sudo dmesg`. |
 ```bash
 # Check interface state and IP addresses
 ip addr show
@@ -178,9 +182,11 @@ Mon Jan 15 08:56:11 2024 prod-web-01 kernel: [13056.789012] systemd-journald[847
 ```
 
 !!! warning "Common errors"
-    **`journalctl: No such file or directory`** — Ensure journalctl is available (systemd-based systems only); use `cat /var/log/secure` or `/var/log/auth.log` on non-systemd systems.
-    **`Failed to open /var/log/secure: Permission denied`** — Run the command with `sudo` to read protected log files.
-    **`dmesg: read kernel buffer failed: Operation not permitted`** — Execute `dmesg` with `sudo` or add your user to the `adm` group with `sudo usermod -aG adm $USER`.
+    | Error | Fix |
+    |---|---|
+    | `journalctl: No such file or directory` | Ensure journalctl is available (systemd-based systems only); use `cat /var/log/secure` or `/var/log/auth.log` on non-systemd systems. |
+    | `Failed to open /var/log/secure: Permission denied` | Run the command with `sudo` to read protected log files. |
+    | `dmesg: read kernel buffer failed: Operation not permitted` | Execute `dmesg` with `sudo` or add your user to the `adm` group with `sudo usermod -aG adm $USER`. |
 ```bash
 # List logged-in users
 who
@@ -279,9 +285,11 @@ Jan 17 09:43:02 prod-web-01 nginx[4521]: 192.168.1.107 - - [17/Jan/2024:09:43:02
 ```
 
 !!! warning "Common errors"
-    **`Failed to start <service>.service: Unit <service>.service not found.`** — Verify the correct service name with `systemctl list-units --all` and use the exact unit name.
-    **`Failed to enable <service>.service: Unit <service>.service is masked.`** — Unmask the service with `systemctl unmask <service>` before enabling it.
-    **`Failed to get unit file state for <service>.service: No such file or directory`** — Ensure
+    | Error | Fix |
+    |---|---|
+    | `Failed to start <service>.service: Unit <service>.service not found.` | Verify the correct service name with `systemctl list-units --all` and use the exact unit name. |
+    | `Failed to enable <service>.service: Unit <service>.service is masked.` | Unmask the service with `systemctl unmask <service>` before enabling it. |
+    | `Failed to get unit file state for <service>.service: No such file or directory` | Ensure |
 ```bash
 # All active services
 systemctl list-units --type=service --state=active
@@ -325,8 +333,10 @@ docker.service                         loaded active   running     Docker Applic
 ```
 
 !!! warning "Common errors"
-    **`Failed to get unit file state for <service>: No such file or directory`** — Verify the service name is correct and the unit file exists in `/etc/systemd/system/` or `/usr/lib/systemd/system/`.
-    **`System has not been booted with systemd as init system (PID 1). Can't operate.`** — Ensure you are running on a systemd-based distribution; this command is not compatible with init or other init systems.
+    | Error | Fix |
+    |---|---|
+    | `Failed to get unit file state for <service>: No such file or directory` | Verify the service name is correct and the unit file exists in `/etc/systemd/system/` or `/usr/lib/systemd/system/`. |
+    | `System has not been booted with systemd as init system (PID 1). Can't operate.` | Ensure you are running on a systemd-based distribution; this command is not compatible with init or other init systems. |
 ```bash
 # What does a service depend on?
 systemctl list-dependencies <service>
@@ -371,8 +381,10 @@ systemctl enable --now myapp
 ```
 
 !!! warning "Common errors"
-    **`Failed to enable unit: Unit file does not exist.`** — Verify the unit file exists at `/etc/systemd/system/myapp.service` or the correct path before running `systemctl enable`.
-    **`Failed to start myapp.service: Unit myapp.service not found.`** — Run `systemctl daemon-reload` first to refresh systemd's view of available units, then retry `systemctl enable --now myapp`.
+    | Error | Fix |
+    |---|---|
+    | `Failed to enable unit: Unit file does not exist.` | Verify the unit file exists at `/etc/systemd/system/myapp.service` or the correct path before running `systemctl enable`. |
+    | `Failed to start myapp.service: Unit myapp.service not found.` | Run `systemctl daemon-reload` first to refresh systemd's view of available units, then retry `systemctl enable --now myapp`. |
 ```bash
 # Check current limits on a running service
 systemctl show <service> | grep -E "LimitNOFILE|LimitNPROC|MemoryMax|CPUQuota"
@@ -400,9 +412,11 @@ CPUQuota=80%
 ```
 
 !!! warning "Common errors"
-    **`Failed to restart <service>.service: Unit <service>.service not found.`** — Replace `<service>` with the actual service name (e.g., `nginx`, `postgresql`) and verify it exists with `systemctl list-units --type=service`.
-    **`Permission denied`** — Run the entire block with `sudo` or as root, since `/etc/systemd/system/` requires elevated privileges.
-    **`Failed to parse config file '/etc/systemd/system/<service>.service.d/limits.conf': Invalid value for MemoryMax=`** — Ensure memory values use valid suffixes (K, M, G, T) and are properly formatted (e.g., `2G` not `2GB`).
+    | Error | Fix |
+    |---|---|
+    | `Failed to restart <service>.service: Unit <service>.service not found.` | Replace `<service>` with the actual service name (e.g., `nginx`, `postgresql`) and verify it exists with `systemctl list-units --type=service`. |
+    | `Permission denied` | Run the entire block with `sudo` or as root, since `/etc/systemd/system/` requires elevated privileges. |
+    | `Failed to parse config file '/etc/systemd/system/<service>.service.d/limits.conf': Invalid value for MemoryMax=` | Ensure memory values use valid suffixes (K, M, G, T) and are properly formatted (e.g., `2G` not `2GB`). |
 ```bash
 # Mask a service (prevents any start, even manual)
 systemctl mask <service>
@@ -423,9 +437,11 @@ Removed /etc/systemd/system/avahi-daemon.service.
 ```
 
 !!! warning "Common errors"
-    **`Failed to mask unit: Unit file /etc/systemd/system/<service>.service does not exist.`** — Verify the exact service name with `systemctl list-unit-files | grep <service>` before masking.
-    **`Failed to disable unit, unit /etc/systemd/system/<service>.service does not exist.`** — Confirm the service is installed and enabled first with `systemctl is-enabled <service>`.
-    **`Access denied`** — Run the commands with `sudo` or as root, as masking/disabling services requires elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `Failed to mask unit: Unit file /etc/systemd/system/<service>.service does not exist.` | Verify the exact service name with `systemctl list-unit-files | grep <service>` before masking. |
+    | `Failed to disable unit, unit /etc/systemd/system/<service>.service does not exist.` | Confirm the service is installed and enabled first with `systemctl is-enabled <service>`. |
+    | `Access denied` | Run the commands with `sudo` or as root, as masking/disabling services requires elevated privileges. |
 ```bash
 # 1. Check status for the error message
 systemctl status <service> -l
@@ -493,9 +509,11 @@ systemd.x86_64                                252-18.el9_1                 252-2
 ```
 
 !!! warning "Common errors"
-    **`df: command not found`** — Verify coreutils is installed with `yum install coreutils` or `apt install coreutils`.
-    **`rpm: command not found`** — This script targets RHEL/CentOS; use `dpkg -l` instead on Debian/Ubuntu systems.
-    **`dnf check-update: command not found`** — Install dnf with `yum install dnf` or use `yum check-update` on older RHEL versions.
+    | Error | Fix |
+    |---|---|
+    | `df: command not found` | Verify coreutils is installed with `yum install coreutils` or `apt install coreutils`. |
+    | `rpm: command not found` | This script targets RHEL/CentOS; use `dpkg -l` instead on Debian/Ubuntu systems. |
+    | `dnf check-update: command not found` | Install dnf with `yum install dnf` or use `yum check-update` on older RHEL versions. |
 ```bash
 # List available updates
 dnf check-update
@@ -556,8 +574,10 @@ RHSA-2026:1237 Low/Sec.       curl-7.76.1-29.el9_4.1 x86_64
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to synchronize cache for repo 'rhel-9-baseos-rpms'`** — Verify network connectivity and subscription status with `subscription-manager status`, then retry the command.
-    **`Error: Package kernel-5.14.0-427.13.1.el9_4.x86_64 not found`** — Run `dnf clean all` to clear the metadata cache, then re-run the update command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to synchronize cache for repo 'rhel-9-baseos-rpms'` | Verify network connectivity and subscription status with `subscription-manager status`, then retry the command. |
+    | `Error: Package kernel-5.14.0-427.13.1.el9_4.x86_64 not found` | Run `dnf clean all` to clear the metadata cache, then re-run the update command. |
 ```bash
 # List recent transactions
 yum history list | head -20
@@ -600,9 +620,11 @@ Complete!
 ```
 
 !!! warning "Common errors"
-    **`Transaction ID "99" doesn't exist`** — Verify the transaction ID exists by running `yum history list` and use a valid ID from the output.
-    **`Cannot undo transaction 99, it is not the last transaction`** — Use `yum history undo last` to undo the most recent transaction, or check if dependencies prevent rolling back older transactions.
-    **`Error: Could not invoke yum plugins during: as_yum_plugin_hook`** — Ensure yum plugins are properly installed and the system has sufficient disk space to complete the rollback operation.
+    | Error | Fix |
+    |---|---|
+    | `Transaction ID "99" doesn't exist` | Verify the transaction ID exists by running `yum history list` and use a valid ID from the output. |
+    | `Cannot undo transaction 99, it is not the last transaction` | Use `yum history undo last` to undo the most recent transaction, or check if dependencies prevent rolling back older transactions. |
+    | `Error: Could not invoke yum plugins during: as_yum_plugin_hook` | Ensure yum plugins are properly installed and the system has sufficient disk space to complete the rollback operation. |
 ```bash
 # Refresh package index
 apt update
@@ -664,9 +686,11 @@ Processing triggers for linux-image-generic (5.4.0.150-generic.202110) ...
 ```
 
 !!! warning "Common errors"
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the command with `sudo` or as the root user.
-    **`E: Unable to locate package <package-name>`** — Run `apt update` first to refresh the package index before attempting upgrades.
-    **`E: The following packages have unmet dependencies`** — Review the dependency conflict with `apt install -f` or use `apt full-upgrade -y` instead of `apt upgrade -y` to allow dependency resolution.
+    | Error | Fix |
+    |---|---|
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the command with `sudo` or as the root user. |
+    | `E: Unable to locate package <package-name>` | Run `apt update` first to refresh the package index before attempting upgrades. |
+    | `E: The following packages have unmet dependencies` | Review the dependency conflict with `apt install -f` or use `apt full-upgrade -y` instead of `apt upgrade -y` to allow dependency resolution. |
 ```bash
 # Check if a reboot is required (RHEL)
 needs-restarting -r
@@ -681,8 +705,10 @@ Reboot is required
 ```
 
 !!! warning "Common errors"
-    **`command not found: needs-restarting`** — Install the yum-utils package with `sudo yum install yum-utils` on RHEL/CentOS systems.
-    **`ls: cannot access '/var/run/reboot-required': No such file or directory`** — This is expected on systems that don't require a reboot; the script correctly handles this with `2>/dev/null` redirection, so verify the system is Ubuntu/Debian-based.
+    | Error | Fix |
+    |---|---|
+    | `command not found: needs-restarting` | Install the yum-utils package with `sudo yum install yum-utils` on RHEL/CentOS systems. |
+    | `ls: cannot access '/var/run/reboot-required': No such file or directory` | This is expected on systems that don't require a reboot; the script correctly handles this with `2>/dev/null` redirection, so verify the system is Ubuntu/Debian-based. |
 ```bash
 # Confirm updated kernel is running (after reboot)
 uname -r
@@ -715,9 +741,11 @@ active
 ```
 
 !!! warning "Common errors"
-    **`systemctl is-active: command not found`** — Verify systemctl is available on this system (RHEL 6 and older use `service` instead).
-    **`diff: /tmp/pre-patch-packages.txt: No such file or directory`** — Run the pre-patch snapshot capture command (`rpm -qa --qf "%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n" | sort > /tmp/pre-patch-packages.txt`) before patching.
-    **`Unit sshd.service could not be found`** — Check the actual SSH service name with `systemctl list-units --type=service | grep ssh` (may be `ssh` on Debian-based systems).
+    | Error | Fix |
+    |---|---|
+    | `systemctl is-active: command not found` | Verify systemctl is available on this system (RHEL 6 and older use `service` instead). |
+    | `diff: /tmp/pre-patch-packages.txt: No such file or directory` | Run the pre-patch snapshot capture command (`rpm -qa --qf "%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n" | sort > /tmp/pre-patch-packages.txt`) before patching. |
+    | `Unit sshd.service could not be found` | Check the actual SSH service name with `systemctl list-units --type=service | grep ssh` (may be `ssh` on Debian-based systems). |
 ---
 
 ## Before you begin
@@ -768,8 +796,10 @@ testuser : wheel adm
 ```
 
 !!! warning "Common errors"
-    **`useradd: user 'testuser' already exists`** — Use `userdel -r testuser` to remove the existing user first, or choose a different username.
-    **`usermod: user 'testuser' does not exist`** — Ensure the `useradd -m` command completed successfully before running `usermod`.
+    | Error | Fix |
+    |---|---|
+    | `useradd: user 'testuser' already exists` | Use `userdel -r testuser` to remove the existing user first, or choose a different username. |
+    | `usermod: user 'testuser' does not exist` | Ensure the `useradd -m` command completed successfully before running `usermod`. |
 Home directory is created automatically with `-m`; skeleton files from `/etc/skel` are copied in. On RHEL, `wheel` group members get sudo access by default.
 
 ---
@@ -789,8 +819,10 @@ visudo -f /etc/sudoers.d/<username>
 ```
 
 !!! warning "Common errors"
-    **`visudo: /etc/sudoers.d/<username>: No such file or directory`** — Create the parent directory first with `mkdir -p /etc/sudoers.d` if it doesn't exist.
-    **`visudo: syntax error near line 1`** — Ensure the sudoers syntax is correct (e.g., `username ALL=(ALL) NOPASSWD: ALL`) before saving; visudo will reject invalid syntax.
+    | Error | Fix |
+    |---|---|
+    | `visudo: /etc/sudoers.d/<username>: No such file or directory` | Create the parent directory first with `mkdir -p /etc/sudoers.d` if it doesn't exist. |
+    | `visudo: syntax error near line 1` | Ensure the sudoers syntax is correct (e.g., `username ALL=(ALL) NOPASSWD: ALL`) before saving; visudo will reject invalid syntax. |
 Drop-in file contents:
 ```bash
 # Validate sudoers syntax before saving
@@ -818,8 +850,10 @@ User jsmith may run the following commands on host-prod-01:
 ```
 
 !!! warning "Common errors"
-    **`/etc/sudoers.d/jsmith: syntax error near line 3`** — Review the specified file for typos in command paths or user/group syntax using `visudo -c -f /etc/sudoers.d/jsmith` to pinpoint the exact line.
-    **`sudo: user <username> not found in sudoers`** — Verify the username exists with `getent passwd <username>` and that a sudoers entry has been created for that user or their group.
+    | Error | Fix |
+    |---|---|
+    | `/etc/sudoers.d/jsmith: syntax error near line 3` | Review the specified file for typos in command paths or user/group syntax using `visudo -c -f /etc/sudoers.d/jsmith` to pinpoint the exact line. |
+    | `sudo: user <username> not found in sudoers` | Verify the username exists with `getent passwd <username>` and that a sudoers entry has been created for that user or their group. |
 Drop-in files in `/etc/sudoers.d/` are included automatically. File names must not contain `.` or `~`. Set permissions to `0440`.
 
 ---
@@ -889,9 +923,11 @@ nameserver 8.8.8.8
 ```
 
 !!! warning "Common errors"
-    **`Error: unknown or ambiguous command 'con show'`** — Verify nmcli version supports this syntax; use `nmcli connection show` on older versions.
-    **`Error: Connection '<connection-name>' does not exist`** — Replace `<connection-name>` with the actual connection name from the first `nmcli con show` output (e.g., "Wired connection 1").
-    **`Error: Connection 'Wired connection 1' does not exist or is not active`** — Ensure the connection name is correct and the device is physically connected before running `nmcli con up`.
+    | Error | Fix |
+    |---|---|
+    | `Error: unknown or ambiguous command 'con show'` | Verify nmcli version supports this syntax; use `nmcli connection show` on older versions. |
+    | `Error: Connection '<connection-name>' does not exist` | Replace `<connection-name>` with the actual connection name from the first `nmcli con show` output (e.g., "Wired connection 1"). |
+    | `Error: Connection 'Wired connection 1' does not exist or is not active` | Ensure the connection name is correct and the device is physically connected before running `nmcli con up`. |
 ```bash
 # Add a secondary DNS search domain
 nmcli con mod "<connection-name>" ipv4.dns-search "example.local,corp.local"
@@ -918,8 +954,10 @@ ipv6.dns-search:
 ```
 
 !!! warning "Common errors"
-    **`Error: unknown or ambiguous command 'mod'.`** — Use `nmcli connection modify` instead of `nmcli con mod`, or verify your NetworkManager version supports the shorthand.
-    **`Error: Connection '<connection-name>' not found.`** — Replace `<connection-name>` with the actual connection name from `nmcli con show` output (e.g., "Wired connection 1" or "eth0").
+    | Error | Fix |
+    |---|---|
+    | `Error: unknown or ambiguous command 'mod'.` | Use `nmcli connection modify` instead of `nmcli con mod`, or verify your NetworkManager version supports the shorthand. |
+    | `Error: Connection '<connection-name>' not found.` | Replace `<connection-name>` with the actual connection name from `nmcli con show` output (e.g., "Wired connection 1" or "eth0"). |
 ---
 
 ## Mount a Filesystem Permanently
@@ -950,9 +988,11 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`mount: /mnt/data: special device /dev/sdb1 does not exist.`** — Verify the correct device name with `lsblk` or `fdisk -l` before mounting.
-    **`mount: /mnt/data: mount point does not exist.`** — Create the mount point directory first with `mkdir -p /mnt/data`.
-    **`mount: /mnt/data: wrong fs type, bad option, bad superblock on /dev/sdb1, missing codepage or helper program, or other error.`** — Check the filesystem type with `blkid` and ensure the device is formatted; if needed, run `mkfs.ext4 /dev/sdb1` to initialize it.
+    | Error | Fix |
+    |---|---|
+    | `mount: /mnt/data: special device /dev/sdb1 does not exist.` | Verify the correct device name with `lsblk` or `fdisk -l` before mounting. |
+    | `mount: /mnt/data: mount point does not exist.` | Create the mount point directory first with `mkdir -p /mnt/data`. |
+    | `mount: /mnt/data: wrong fs type, bad option, bad superblock on /dev/sdb1, missing codepage or helper program, or other error.` | Check the filesystem type with `blkid` and ensure the device is formatted; if needed, run `mkfs.ext4 /dev/sdb1` to initialize it. |
 Add entry to `/etc/fstab`:
 Common NFS mount options in `/etc/fstab`:
 The `_netdev` option tells systemd to wait for the network before mounting. Use `pass` value `0` for network filesystems and non-root local disks; use `2` for additional local disks; `1` is reserved for `/`.
@@ -974,8 +1014,10 @@ vi /etc/chrony.conf
 ```
 
 !!! warning "Common errors"
-    **`E212: Can't open file for writing`** — Ensure you have write permissions on /etc/chrony.conf or run with sudo: `sudo vi /etc/chrony.conf`
-    **`E325: ATTENTION: Found a swap file`** — A previous vi session crashed; press `D` to delete the swap file or `R` to recover, then retry the edit.
+    | Error | Fix |
+    |---|---|
+    | `E212: Can't open file for writing` | Ensure you have write permissions on /etc/chrony.conf or run with sudo: `sudo vi /etc/chrony.conf` |
+    | `E325: ATTENTION: Found a swap file` | A previous vi session crashed; press `D` to delete the swap file or `R` to recover, then retry the edit. |
 Key directives in `/etc/chrony.conf`:
 ```bash
 # Restart and enable chrony
@@ -1037,9 +1079,11 @@ System clock synchronized: yes
 ```
 
 !!! warning "Common errors"
-    **`chronyd: command not found`** — Install chrony with `apt-get install chrony` (Debian/Ubuntu) or `yum install chrony` (RHEL/CentOS).
-    **`Failed to enable unit: Unit /etc/systemd/system/chronyd.service is masked.`** — Unmask the service with `systemctl unmask chronyd` before enabling.
-    **`System time     : 1.234567 seconds fast of NTP time`** — Check network connectivity to NTP servers and verify firewall allows UDP port 123 outbound.
+    | Error | Fix |
+    |---|---|
+    | `chronyd: command not found` | Install chrony with `apt-get install chrony` (Debian/Ubuntu) or `yum install chrony` (RHEL/CentOS). |
+    | `Failed to enable unit: Unit /etc/systemd/system/chronyd.service is masked.` | Unmask the service with `systemctl unmask chronyd` before enabling. |
+    | `System time     : 1.234567 seconds fast of NTP time` | Check network connectivity to NTP servers and verify firewall allows UDP port 123 outbound. |
 Ubuntu/Debian — systemd-timesyncd alternative:
 
 ```ini
@@ -1075,8 +1119,10 @@ Dest timestamp: Wed 2024-01-17 14:32:19.869213 UTC
 ```
 
 !!! warning "Common errors"
-    **`Failed to restart systemd-timesyncd.service: Unit systemd-timesyncd.service not found.`** — Verify the service is installed with `systemctl list-unit-files | grep timesyncd` and install systemd if missing.
-    **`Failed to get properties: Unit systemd-timesyncd.service not loaded.`** — Enable and start the service with `systemctl enable --now systemd-timesyncd`.
+    | Error | Fix |
+    |---|---|
+    | `Failed to restart systemd-timesyncd.service: Unit systemd-timesyncd.service not found.` | Verify the service is installed with `systemctl list-unit-files | grep timesyncd` and install systemd if missing. |
+    | `Failed to get properties: Unit systemd-timesyncd.service not loaded.` | Enable and start the service with `systemctl enable --now systemd-timesyncd`. |
 ---
 
 ## Extend an LVM Volume
@@ -1150,9 +1196,11 @@ Filesystem           Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`Device /dev/sdb not found`** — Verify the disk is attached with `lsblk` and use the correct device name (e.g., `/dev/nvme0n1` for NVMe drives).
-    **`Physical volume "/dev/sdb" already exists with uuid <uuid>`** — The disk is already initialized as a PV; skip `pvcreate` or use `pvremove /dev/sdb` first if repurposing.
-    **`Filesystem has unsupported feature: metadata_csum_seed`** — Use `resize2fs -f` to force resize on ext4, or ensure the kernel supports the filesystem version.
+    | Error | Fix |
+    |---|---|
+    | `Device /dev/sdb not found` | Verify the disk is attached with `lsblk` and use the correct device name (e.g., `/dev/nvme0n1` for NVMe drives). |
+    | `Physical volume "/dev/sdb" already exists with uuid <uuid>` | The disk is already initialized as a PV; skip `pvcreate` or use `pvremove /dev/sdb` first if repurposing. |
+    | `Filesystem has unsupported feature: metadata_csum_seed` | Use `resize2fs -f` to force resize on ext4, or ensure the kernel supports the filesystem version. |
 XFS filesystems can only grow, not shrink. `resize2fs` works online for ext4 on kernels 3.8+.
 
 ---
@@ -1172,8 +1220,10 @@ vi /etc/rsyslog.d/90-remote.conf
 ```
 
 !!! warning "Common errors"
-    **`E212: Can't open file for writing`** — Ensure you have sudo privileges: `sudo vi /etc/rsyslog.d/90-remote.conf`
-    **`/etc/rsyslog.d/: No such file or directory`** — Create the directory first with `sudo mkdir -p /etc/rsyslog.d`
+    | Error | Fix |
+    |---|---|
+    | `E212: Can't open file for writing` | Ensure you have sudo privileges: `sudo vi /etc/rsyslog.d/90-remote.conf` |
+    | `/etc/rsyslog.d/: No such file or directory` | Create the directory first with `sudo mkdir -p /etc/rsyslog.d` |
 Contents of `/etc/rsyslog.d/90-remote.conf`:
 ```bash
 # Validate rsyslog configuration syntax
@@ -1200,9 +1250,11 @@ LISTEN    0      25              [::]:514         [::]:*    users:(("rsyslogd",p
 ```
 
 !!! warning "Common errors"
-    **`rsyslogd: syntax error on line X of /etc/rsyslog.conf`** — Review the specified line for malformed directives, unclosed quotes, or invalid action syntax.
-    **`Job for rsyslog.service failed because the control process exited with error code.`** — Run `rsyslogd -N1` again to identify the syntax error, then correct the configuration file before retrying the restart.
-    **`ss: No such file or directory`** — Install the `iproute2` package or use `netstat -tnp | grep :514` as an alternative on older systems.
+    | Error | Fix |
+    |---|---|
+    | `rsyslogd: syntax error on line X of /etc/rsyslog.conf` | Review the specified line for malformed directives, unclosed quotes, or invalid action syntax. |
+    | `Job for rsyslog.service failed because the control process exited with error code.` | Run `rsyslogd -N1` again to identify the syntax error, then correct the configuration file before retrying the restart. |
+    | `ss: No such file or directory` | Install the `iproute2` package or use `netstat -tnp | grep :514` as an alternative on older systems. |
 Use TLS encryption (`omfwd` with `StreamDriver="gtls"`) for forwarding across untrusted networks.
 
 ---
@@ -1253,9 +1305,11 @@ Removed /etc/systemd/system/multi-user.target.wants/nginx.service.
 ```
 
 !!! warning "Common errors"
-    **`Failed to enable unit: Unit file /etc/systemd/system/<service>.service does not exist.`** — Verify the service name is correct and the package is installed with `systemctl list-unit-files | grep <service>`.
-    **`Failed to start <service>.service: Unit <service>.service not found.`** — Install the service package first (e.g., `apt install nginx`) or use the full path to the unit file.
-    **`Job for <service>.service failed because the control process exited with error code.`** — Check the service configuration for syntax errors using `systemctl status <service>` and review logs with `journalctl -u <service> -n 20`.
+    | Error | Fix |
+    |---|---|
+    | `Failed to enable unit: Unit file /etc/systemd/system/<service>.service does not exist.` | Verify the service name is correct and the package is installed with `systemctl list-unit-files | grep <service>`. |
+    | `Failed to start <service>.service: Unit <service>.service not found.` | Install the service package first (e.g., `apt install nginx`) or use the full path to the unit file. |
+    | `Job for <service>.service failed because the control process exited with error code.` | Check the service configuration for syntax errors using `systemctl status <service>` and review logs with `journalctl -u <service> -n 20`. |
 ```bash
 # Follow service logs in real time
 journalctl -u <service> -f
@@ -1282,9 +1336,11 @@ Jan 15 14:52:19 prod-app-01 nginx[2847]: 2024-01-15T14:52:19.567Z [INFO] Cache h
 ```
 
 !!! warning "Common errors"
-    **`Failed to get unit file state for <service>: No such file or directory`** — Verify the service name is correct with `systemctl list-units --type=service` and use the exact unit name.
-    **`Failed to open journal: Permission denied`** — Run the command with `sudo` or add your user to the `systemd-journal` group with `sudo usermod -aG systemd-journal $USER`.
-    **`Unit <service> not found.`** — Confirm the service is installed and enabled with `systemctl status <service>` before attempting to view its logs.
+    | Error | Fix |
+    |---|---|
+    | `Failed to get unit file state for <service>: No such file or directory` | Verify the service name is correct with `systemctl list-units --type=service` and use the exact unit name. |
+    | `Failed to open journal: Permission denied` | Run the command with `sudo` or add your user to the `systemd-journal` group with `sudo usermod -aG systemd-journal $USER`. |
+    | `Unit <service> not found.` | Confirm the service is installed and enabled with `systemctl status <service>` before attempting to view its logs. |
 ```bash
 # Check all failed services
 systemctl --failed
@@ -1316,8 +1372,10 @@ Created symlink /etc/systemd/system/<service>.service → /dev/null.
 ```
 
 !!! warning "Common errors"
-    **`Failed to mask unit, unit <service>.service does not exist.`** — Verify the service name with `systemctl list-units --type=service --all` and use the correct unit name.
-    **`Access denied`** — Run the command with `sudo` or as root to modify systemd service states.
+    | Error | Fix |
+    |---|---|
+    | `Failed to mask unit, unit <service>.service does not exist.` | Verify the service name with `systemctl list-units --type=service --all` and use the correct unit name. |
+    | `Access denied` | Run the command with `sudo` or as root to modify systemd service states. |
 ---
 
 ## Apply Security Updates
@@ -1388,8 +1446,10 @@ Core libraries or services have been updated since boot:
 ```
 
 !!! warning "Common errors"
-    **`Error: No security updates available`** — Run `dnf check-update` without the `--security` flag to see all available updates, or verify your subscription/repository configuration is correct.
-    **`Error: Failed to download metadata for repo 'baseos': Cannot prepare internal mirrorlist: No URLs in mirrorlist`** — Check network connectivity and verify your repository URLs are accessible with `dnf repolist all` and `ping` to the mirror host.
+    | Error | Fix |
+    |---|---|
+    | `Error: No security updates available` | Run `dnf check-update` without the `--security` flag to see all available updates, or verify your subscription/repository configuration is correct. |
+    | `Error: Failed to download metadata for repo 'baseos': Cannot prepare internal mirrorlist: No URLs in mirrorlist` | Check network connectivity and verify your repository URLs are accessible with `dnf repolist all` and `ping` to the mirror host. |
     **`Error: Advisory RHSA-2026:1234 not found`
 ```bash
 # Ubuntu / Debian — update package index and apply security upgrades
@@ -1418,8 +1478,10 @@ linux-headers-generic
 ```
 
 !!! warning "Common errors"
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the commands with `sudo` or as the root user.
-    **`E: Unable to locate package`** — Run `apt update` first to refresh the package index before attempting upgrades.
+    | Error | Fix |
+    |---|---|
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the commands with `sudo` or as the root user. |
+    | `E: Unable to locate package` | Run `apt update` first to refresh the package index before attempting upgrades. |
 ```bash
 # Post-patch: verify critical services are still running
 systemctl is-active sshd chronyd auditd rsyslog
@@ -1438,8 +1500,10 @@ active
 ```
 
 !!! warning "Common errors"
-    **`inactive`** — Run `systemctl start <service-name>` to restart the stopped service and investigate why it failed to auto-start.
-    **`Unit <service> could not be found.`** — Verify the service name is correct with `systemctl list-unit-files | grep <service>` and check if the package is installed.
+    | Error | Fix |
+    |---|---|
+    | `inactive` | Run `systemctl start <service-name>` to restart the stopped service and investigate why it failed to auto-start. |
+    | `Unit <service> could not be found.` | Verify the service name is correct with `systemctl list-unit-files | grep <service>` and check if the package is installed. |
 ---
 
 ## Configure SSH Key Authentication
@@ -1492,9 +1556,11 @@ Connection to prod-web-01 closed.
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the public key was copied to `~/.ssh/authorized_keys` on the remote host and that SSH daemon is configured to accept public key authentication.
-    **`ssh-copy-id: ERROR: No identities found`** — Ensure the private key exists at the specified path and has correct permissions (600 for the key file, 700 for ~/.ssh directory).
-    **`Host key verification failed.`** — Add the remote host's key to `~/.ssh/known_hosts` by running `ssh-keyscan -H <remote-host> >> ~/.ssh/known_hosts` first.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the public key was copied to `~/.ssh/authorized_keys` on the remote host and that SSH daemon is configured to accept public key authentication. |
+    | `ssh-copy-id: ERROR: No identities found` | Ensure the private key exists at the specified path and has correct permissions (600 for the key file, 700 for ~/.ssh directory). |
+    | `Host key verification failed.` | Add the remote host's key to `~/.ssh/known_hosts` by running `ssh-keyscan -H <remote-host> >> ~/.ssh/known_hosts` first. |
 ```bash
 # Manually add a public key (when ssh-copy-id is not available)
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
@@ -1508,8 +1574,10 @@ chmod 600 ~/.ssh/authorized_keys
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the authorized_keys file has 600 permissions and ~/.ssh has 700 permissions using `ls -la ~/.ssh/`.
-    **`bash: ~/.ssh/authorized_keys: Permission denied`** — Run `chmod 600 ~/.ssh/authorized_keys` to make the file writable by the current user.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the authorized_keys file has 600 permissions and ~/.ssh has 700 permissions using `ls -la ~/.ssh/`. |
+    | `bash: ~/.ssh/authorized_keys: Permission denied` | Run `chmod 600 ~/.ssh/authorized_keys` to make the file writable by the current user. |
 Harden `/etc/ssh/sshd_config`:
 ```bash
 # Validate sshd_config syntax before restarting
@@ -1526,8 +1594,10 @@ systemctl reload sshd
 ```
 
 !!! warning "Common errors"
-    **`sshd: line 42: Bad configuration option: "PermitRootLogin yes"`** — Fix the syntax error in `/etc/ssh/sshd_config` (remove extra spaces, check for typos) and run `sshd -t` again before reloading.
-    **`Failed to reload sshd.service: Unit sshd.service not found.`** — Verify the service name with `systemctl list-unit-files | grep ssh` and use the correct name (may be `ssh` instead of `sshd` on some distributions).
+    | Error | Fix |
+    |---|---|
+    | `sshd: line 42: Bad configuration option: "PermitRootLogin yes"` | Fix the syntax error in `/etc/ssh/sshd_config` (remove extra spaces, check for typos) and run `sshd -t` again before reloading. |
+    | `Failed to reload sshd.service: Unit sshd.service not found.` | Verify the service name with `systemctl list-unit-files | grep ssh` and use the correct name (may be `ssh` instead of `sshd` on some distributions). |
 ---
 
 ## Verify

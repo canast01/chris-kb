@@ -59,8 +59,10 @@ To github.com:acme-corp/infrastructure.git
 ```
 
 !!! warning "Common errors"
-    **`fatal: The current branch feature/PLAT-42-s3-lifecycle has no upstream branch.`** — Run `git push -u origin feature/PLAT-42-s3-lifecycle` to set the upstream before pushing.
-    **`error: src refspec local-branch does not match any file or directory`** — Verify the local branch exists with `git branch -a` and use the correct branch name in the push command.
+    | Error | Fix |
+    |---|---|
+    | `fatal: The current branch feature/PLAT-42-s3-lifecycle has no upstream branch.` | Run `git push -u origin feature/PLAT-42-s3-lifecycle` to set the upstream before pushing. |
+    | `error: src refspec local-branch does not match any file or directory` | Verify the local branch exists with `git branch -a` and use the correct branch name in the push command. |
 ```bash
 # Merge feature into main (creates merge commit)
 git switch main
@@ -104,9 +106,11 @@ Current branch feature/PLAT-42-s3-lifecycle is up to date with 'main'.
 ```
 
 !!! warning "Common errors"
-    **`error: Your local changes to the following files would be overwritten by merge: src/lifecycle/policy.py`** — Commit or stash uncommitted changes with `git stash` before switching branches.
-    **`error: cannot rebase: You have unstaged changes.`** — Stage all changes with `git add .` and commit them before rebasing.
-    **`error: could not apply 7a3c9e1... Add S3 lifecycle policy parser`** — Resolve merge conflicts in the affected files, then run `git rebase --continue` to resume the rebase.
+    | Error | Fix |
+    |---|---|
+    | `error: Your local changes to the following files would be overwritten by merge: src/lifecycle/policy.py` | Commit or stash uncommitted changes with `git stash` before switching branches. |
+    | `error: cannot rebase: You have unstaged changes.` | Stage all changes with `git add .` and commit them before rebasing. |
+    | `error: could not apply 7a3c9e1... Add S3 lifecycle policy parser` | Resolve merge conflicts in the affected files, then run `git rebase --continue` to resume the rebase. |
 ```bash
 # Find branches with no commits ahead of main
 git branch --merged main
@@ -132,8 +136,10 @@ develop
 ```
 
 !!! warning "Common errors"
-    **`fatal: your current branch 'main' does not have any commits yet`** — Initialize main with at least one commit before running branch merge checks.
-    **`date: illegal time format`** — Use `date -d "90 days ago" +%Y-%m-%d` on Linux or `date -v-90d +%Y-%m-%d` on macOS; adjust syntax for your OS.
+    | Error | Fix |
+    |---|---|
+    | `fatal: your current branch 'main' does not have any commits yet` | Initialize main with at least one commit before running branch merge checks. |
+    | `date: illegal time format` | Use `date -d "90 days ago" +%Y-%m-%d` on Linux or `date -v-90d +%Y-%m-%d` on macOS; adjust syntax for your OS. |
 ```bash
 # View full reflog
 git reflog
@@ -170,8 +176,10 @@ a9c3f1b 2024-01-15T14:15:22+00:00 HEAD@{2}: commit: Add user validation checks
 ```
 
 !!! warning "Common errors"
-    **`fatal: your current branch 'feature/my-branch' does not have any commits yet`** — Ensure you're in a repository with commit history; initialize the repo and make at least one commit first.
-    **`fatal: bad revision 'feature/my-branch'`** — Verify the branch name exists by running `git branch -a` and use the correct branch name in the reflog command.
+    | Error | Fix |
+    |---|---|
+    | `fatal: your current branch 'feature/my-branch' does not have any commits yet` | Ensure you're in a repository with commit history; initialize the repo and make at least one commit first. |
+    | `fatal: bad revision 'feature/my-branch'` | Verify the branch name exists by running `git branch -a` and use the correct branch name in the reflog command. |
 ```bash
 # Soft reset — keep changes staged
 git reset --soft HEAD~1
@@ -201,8 +209,10 @@ HEAD is now at 5c4b3a2 Initial commit
 ```
 
 !!! warning "Common errors"
-    **`fatal: ambiguous argument 'HEAD@{3}': unknown revision or malformed revision`** — Check available reflog entries with `git reflog` and use a valid index (e.g., `HEAD@{0}`, `HEAD@{1}`).
-    **`error: Your local changes to the following files would be overwritten by merge: src/config.yaml`** — Stash uncommitted changes with `git stash` before running the hard reset, or use `git reset --mixed` to preserve them unstaged.
+    | Error | Fix |
+    |---|---|
+    | `fatal: ambiguous argument 'HEAD@{3}': unknown revision or malformed revision` | Check available reflog entries with `git reflog` and use a valid index (e.g., `HEAD@{0}`, `HEAD@{1}`). |
+    | `error: Your local changes to the following files would be overwritten by merge: src/config.yaml` | Stash uncommitted changes with `git stash` before running the hard reset, or use `git reset --mixed` to preserve them unstaged. |
 ```bash
 # Revert the most recent commit
 git revert HEAD
@@ -236,8 +246,10 @@ git revert -m 1 <merge-commit-hash>
 ```
 
 !!! warning "Common errors"
-    **`error: commit a1b2c3d4 is a merge but no -m option was given.`** — Add the `-m 1` or `-m 2` flag to specify which parent branch to revert to.
-    **`error: could not apply a1b2c3d4... <commit message>`** — Resolve the merge conflict manually in your editor, then run `git revert --continue` to complete the revert.
+    | Error | Fix |
+    |---|---|
+    | `error: commit a1b2c3d4 is a merge but no -m option was given.` | Add the `-m 1` or `-m 2` flag to specify which parent branch to revert to. |
+    | `error: could not apply a1b2c3d4... <commit message>` | Resolve the merge conflict manually in your editor, then run `git revert --continue` to complete the revert. |
 ```bash
 # Step 1: find the tip commit of the deleted branch in reflog
 git reflog | grep "branch-name"
@@ -264,8 +276,10 @@ c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8
 ```
 
 !!! warning "Common errors"
-    **`error: pathspec 'a1b2c3d4' did not match any file(s) known to git`** — Verify the commit hash exists in reflog output and copy it exactly, including all characters.
-    **`fatal: A branch named 'recovered-branch' already exists.`** — Use a different branch name or delete the existing branch first with `git branch -D recovered-branch`.
+    | Error | Fix |
+    |---|---|
+    | `error: pathspec 'a1b2c3d4' did not match any file(s) known to git` | Verify the commit hash exists in reflog output and copy it exactly, including all characters. |
+    | `fatal: A branch named 'recovered-branch' already exists.` | Use a different branch name or delete the existing branch first with `git branch -D recovered-branch`. |
 ```bash
 # Find dangling commits (not reachable from any ref)
 git fsck --no-reflogs | grep "dangling commit"
@@ -300,8 +314,10 @@ Date:   Wed Mar 15 14:32:18 2024 +0000
 ```
 
 !!! warning "Common errors"
-    **`fatal: bad revision '<dangling-commit-hash>'`** — Replace the placeholder with an actual commit hash from the fsck output (e.g., `git show 7a3f9c2e1b4d6f8a9c0e1d2f3a4b5c6d7e8f9a0b`).
-    **`fatal: A branch named 'recovery-branch' already exists.`** — Use a unique branch name or delete the existing branch first with `git branch -D recovery-branch`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: bad revision '<dangling-commit-hash>'` | Replace the placeholder with an actual commit hash from the fsck output (e.g., `git show 7a3f9c2e1b4d6f8a9c0e1d2f3a4b5c6d7e8f9a0b`). |
+    | `fatal: A branch named 'recovery-branch' already exists.` | Use a unique branch name or delete the existing branch first with `git branch -D recovery-branch`. |
 ```bash
 # List all stashes
 git stash list
@@ -340,8 +356,10 @@ dangling commit 9e7f6a2b1c3d4e5f6a7b8c9d0e1f2a3b
 ```
 
 !!! warning "Common errors"
-    **`error: Your local changes to the following files would be overwritten by merge:`** — Commit or stash your current working changes before applying a stash.
-    **`error: No stash entries found.`** — Verify the stash index exists with `git stash list` before referencing it.
+    | Error | Fix |
+    |---|---|
+    | `error: Your local changes to the following files would be overwritten by merge:` | Commit or stash your current working changes before applying a stash. |
+    | `error: No stash entries found.` | Verify the stash index exists with `git stash list` before referencing it. |
 ---
 
 ```d2
@@ -409,9 +427,11 @@ Branch 'main' set up to track remote branch 'main' from 'origin'.
 ```
 
 !!! warning "Common errors"
-    **`fatal: pathspec 'README.md' did not match any files`** — Create the README.md file before running `git add README.md`.
-    **`fatal: 'origin' does not appear to be a 'git' repository`** — Verify the remote URL is correct and accessible with `git remote -v`.
-    **`error: src refspec main does not match any branch`** — Ensure your default branch matches the remote (check with `git branch` and verify remote branch name).
+    | Error | Fix |
+    |---|---|
+    | `fatal: pathspec 'README.md' did not match any files` | Create the README.md file before running `git add README.md`. |
+    | `fatal: 'origin' does not appear to be a 'git' repository` | Verify the remote URL is correct and accessible with `git remote -v`. |
+    | `error: src refspec main does not match any branch` | Ensure your default branch matches the remote (check with `git branch` and verify remote branch name). |
 ---
 
 ## Clone a Repository
@@ -437,9 +457,11 @@ Resolving deltas: 100% (1456/1456), done.
 ```
 
 !!! warning "Common errors"
-    **`fatal: could not read Username for 'https://<host>': No such device or address`** — Ensure your token is set in `~/.git-credentials` or use `git config --global credential.helper store` after entering credentials once.
-    **`fatal: Could not read from remote repository. Please make sure you have the correct access rights and the repository exists.`** — Verify your SSH key is added to the Git server (`ssh-add ~/.ssh/id_rsa`) and your public key is registered in your account's SSH keys.
-    **`fatal: repository '<url>' not found`** — Confirm the repository URL is correct, the owner/repo names match exactly, and you have access permissions to the repository.
+    | Error | Fix |
+    |---|---|
+    | `fatal: could not read Username for 'https://<host>': No such device or address` | Ensure your token is set in `~/.git-credentials` or use `git config --global credential.helper store` after entering credentials once. |
+    | `fatal: Could not read from remote repository. Please make sure you have the correct access rights and the repository exists.` | Verify your SSH key is added to the Git server (`ssh-add ~/.ssh/id_rsa`) and your public key is registered in your account's SSH keys. |
+    | `fatal: repository '<url>' not found` | Confirm the repository URL is correct, the owner/repo names match exactly, and you have access permissions to the repository. |
 After cloning, verify `git status` shows a clean working tree before making changes.
 
 ---
@@ -478,9 +500,11 @@ Branch 'feature/my-branch' set up to track remote branch 'feature/my-branch' fro
 ```
 
 !!! warning "Common errors"
-    **`fatal: Not a git repository (or any of the parent directories): .git`** — Run `git init` or `cd` into an existing Git repository before creating branches.
-    **`fatal: 'origin' does not appear to be a 'git' repository`** — Verify the remote exists with `git remote -v` and add it with `git remote add origin <url>` if missing.
-    **`error: pathspec 'feature/my-branch' did not match any file(s) known to git`** — Ensure you are on the correct branch with `git branch -a` and check for typos in the branch name.
+    | Error | Fix |
+    |---|---|
+    | `fatal: Not a git repository (or any of the parent directories): .git` | Run `git init` or `cd` into an existing Git repository before creating branches. |
+    | `fatal: 'origin' does not appear to be a 'git' repository` | Verify the remote exists with `git remote -v` and add it with `git remote add origin <url>` if missing. |
+    | `error: pathspec 'feature/my-branch' did not match any file(s) known to git` | Ensure you are on the correct branch with `git branch -a` and check for typos in the branch name. |
 Always branch from an up-to-date main: `git switch main && git pull` before creating the branch.
 
 ---
@@ -520,9 +544,11 @@ To github.com:ops-team/infrastructure.git
 ```
 
 !!! warning "Common errors"
-    **`fatal: pathspec '<file1>' did not match any files`** — Verify the file paths exist and use correct relative paths from the repository root.
-    **`fatal: The current branch main has no upstream branch.`** — Run `git push -u origin main` to set the upstream branch before pushing.
-    **`error: Your local changes to the following files would be overwritten by merge`** — Pull the latest changes with `git pull` before pushing, or stash uncommitted changes with `git stash`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: pathspec '<file1>' did not match any files` | Verify the file paths exist and use correct relative paths from the repository root. |
+    | `fatal: The current branch main has no upstream branch.` | Run `git push -u origin main` to set the upstream branch before pushing. |
+    | `error: Your local changes to the following files would be overwritten by merge` | Pull the latest changes with `git pull` before pushing, or stash uncommitted changes with `git stash`. |
 Write commit messages in the imperative mood and reference the issue or ticket number where applicable.
 
 ---
@@ -575,8 +601,10 @@ Automatic merge failed; fix conflicts and then commit the result.
 ```
 
 !!! warning "Common errors"
-    **`error: Your local changes to 'config/deployment.yaml' would be overwritten by merge`** — Stash uncommitted changes with `git stash` before running `git merge`.
-    **`fatal: pathspec '<resolved-file>' did not match any files`** — Verify the exact filename with `git status` and ensure you're in the repository root directory.
+    | Error | Fix |
+    |---|---|
+    | `error: Your local changes to 'config/deployment.yaml' would be overwritten by merge` | Stash uncommitted changes with `git stash` before running `git merge`. |
+    | `fatal: pathspec '<resolved-file>' did not match any files` | Verify the exact filename with `git status` and ensure you're in the repository root directory. |
 ---
 
 ## Revert a Bad Commit
@@ -602,9 +630,11 @@ HEAD is now at 5e8b1a2 Update database connection pool settings
 ```
 
 !!! warning "Common errors"
-    **`error: commit <commit-sha> is not a valid SHA-1`** — Verify the commit SHA is correct by running `git log --oneline` and copy the full or abbreviated hash.
-    **`fatal: You are currently in the middle of a revert. Cannot proceed.`** — Complete or abort the ongoing revert with `git revert --abort` before attempting another operation.
-    **`error: Your local changes to the following files would be overwritten by merge`** — Stash uncommitted changes with `git stash` before running `git reset --hard`.
+    | Error | Fix |
+    |---|---|
+    | `error: commit <commit-sha> is not a valid SHA-1` | Verify the commit SHA is correct by running `git log --oneline` and copy the full or abbreviated hash. |
+    | `fatal: You are currently in the middle of a revert. Cannot proceed.` | Complete or abort the ongoing revert with `git revert --abort` before attempting another operation. |
+    | `error: Your local changes to the following files would be overwritten by merge` | Stash uncommitted changes with `git stash` before running `git reset --hard`. |
 Never hard-reset a commit that others have already pulled from a shared branch.
 
 ---

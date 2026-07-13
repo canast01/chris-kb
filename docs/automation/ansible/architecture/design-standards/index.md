@@ -188,9 +188,11 @@ Skipping, missing the prepare playbook.
 ```
 
 !!! warning "Common errors"
-    **`ERROR: molecule test failed`** — Verify that molecule.yml exists in the scenario directory and all required drivers (Docker/Vagrant) are installed and running.
-    **`FAILED - Instance failed to start`** — Check that the Docker daemon is running (`docker ps`) or that the VM provider has sufficient resources allocated.
-    **`ERROR: Molecule could not find a valid driver`** — Install the required driver with `pip install molecule-docker` or `pip install molecule-vagrant` depending on your molecule.yml configuration.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: molecule test failed` | Verify that molecule.yml exists in the scenario directory and all required drivers (Docker/Vagrant) are installed and running. |
+    | `FAILED - Instance failed to start` | Check that the Docker daemon is running (`docker ps`) or that the VM provider has sufficient resources allocated. |
+    | `ERROR: Molecule could not find a valid driver` | Install the required driver with `pip install molecule-docker` or `pip install molecule-vagrant` depending on your molecule.yml configuration. |
 ## Code Review Checklist
 
 | Item | Check |

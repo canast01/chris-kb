@@ -66,8 +66,10 @@ Account-Status: active
 ```
 
 !!! warning "Common errors"
-    **`Error: /management/accounts: No such file or directory`** — Verify the GeoSynchrony version supports management account queries; older versions may require alternative authentication inspection methods.
-    **`Error: Authentication failed for user vplexcli`** — Ensure the vplexcli user has sufficient privileges; run the command with appropriate credentials or use `sudo vplexcli` if permitted.
+    | Error | Fix |
+    |---|---|
+    | `Error: /management/accounts: No such file or directory` | Verify the GeoSynchrony version supports management account queries; older versions may require alternative authentication inspection methods. |
+    | `Error: Authentication failed for user vplexcli` | Ensure the vplexcli user has sufficient privileges; run the command with appropriate credentials or use `sudo vplexcli` if permitted. |
 ## Data Plane Access Control — Storage Views
 
 Host access to VPLEX virtual volumes is exclusively controlled via storage views. A host can only see volumes that are:
@@ -162,9 +164,11 @@ View State           Active
 ```
 
 !!! warning "Common errors"
-    **`Error: Initiator port 10:00:00:00:c9:ab:cd:ef not found`** — Verify the WWN is correctly obtained from the host and registered before adding it to the storage view.
-    **`Error: Virtual volume /virtual-volumes/vv_oracle_prod_01 does not exist`** — Confirm the virtual volume names exist in VPLEX using `vplexcli -q -e "ls /virtual-volumes"` before adding them to the view.
-    **`Error: Port /clusters/cluster-1/exports/ports/A0-FC00 is already in use by another storage view`** — Use different front-end ports or remove the port from the conflicting storage view first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Initiator port 10:00:00:00:c9:ab:cd:ef not found` | Verify the WWN is correctly obtained from the host and registered before adding it to the storage view. |
+    | `Error: Virtual volume /virtual-volumes/vv_oracle_prod_01 does not exist` | Confirm the virtual volume names exist in VPLEX using `vplexcli -q -e "ls /virtual-volumes"` before adding them to the view. |
+    | `Error: Port /clusters/cluster-1/exports/ports/A0-FC00 is already in use by another storage view` | Use different front-end ports or remove the port from the conflicting storage view first. |
 ### Storage View Design Principles
 
 | Principle | Detail |
@@ -225,9 +229,11 @@ Storage view sv_db_prod_01 destroyed successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Storage view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 not found`** — Verify the storage view path exists using `vplexcli -q -e "ll /clusters/cluster-1/exports/storage-views/"` and correct the name.
-    **`Error: Virtual volume /virtual-volumes/vv_oracle_prod_01 is still mapped to initiators`** — Remove all initiator mappings from the virtual volume before removal using `storage-view remove-virtual-volumes` or unregister initiators first.
-    **`Error: Cannot destroy storage view: active I/O detected`** — Ensure all host I/O is quiesced and the storage view has no active connections before retrying with `--force`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Storage view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 not found` | Verify the storage view path exists using `vplexcli -q -e "ll /clusters/cluster-1/exports/storage-views/"` and correct the name. |
+    | `Error: Virtual volume /virtual-volumes/vv_oracle_prod_01 is still mapped to initiators` | Remove all initiator mappings from the virtual volume before removal using `storage-view remove-virtual-volumes` or unregister initiators first. |
+    | `Error: Cannot destroy storage view: active I/O detected` | Ensure all host I/O is quiesced and the storage view has no active connections before retrying with `--force`. |
 **Quarterly review task**: list all storage views and cross-reference initiator WWNs against the CMDB. Remove any views for decommissioned hosts and unregister their initiators.
 
 ## SAN Fabric Zoning

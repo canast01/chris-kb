@@ -39,9 +39,11 @@ Duplex: Full
 ```
 
 !!! warning "Common errors"
-    **`dmidecode: permission denied`** — Run the command with `sudo` or as root user.
-    **`ethtool: No such device`** — Replace `<interface>` with an actual interface name from the `ip link show` output (e.g., `eth0`).
-    **`smartctl: command not found`** — Install smartmontools package with `sudo apt install smartmontools` (Debian/Ubuntu) or `sudo yum install smartmontools` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `dmidecode: permission denied` | Run the command with `sudo` or as root user. |
+    | `ethtool: No such device` | Replace `<interface>` with an actual interface name from the `ip link show` output (e.g., `eth0`). |
+    | `smartctl: command not found` | Install smartmontools package with `sudo apt install smartmontools` (Debian/Ubuntu) or `sudo yum install smartmontools` (RHEL/CentOS). |
 ```bash
 # All VMs across subscription
 az vm list --query '[*].{Name:name,RG:resourceGroup,Size:hardwareProfile.vmSize,Location:location,OS:storageProfile.osDisk.osType}' -o table

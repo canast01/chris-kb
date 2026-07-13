@@ -201,8 +201,10 @@ az network private-endpoint dns-zone-group create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Network/privateEndpoints/pe-keyvault' under resource group 'myRG' was not found.`** — Create the private endpoint `pe-keyvault` before creating the DNS zone group, or verify the endpoint name matches exactly.
-    **`InvalidResourceId: Provided resource id is invalid.`** — Replace `<sub-id>` with your actual subscription ID from `az account show --query id -o tsv`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Network/privateEndpoints/pe-keyvault' under resource group 'myRG' was not found.` | Create the private endpoint `pe-keyvault` before creating the DNS zone group, or verify the endpoint name matches exactly. |
+    | `InvalidResourceId: Provided resource id is invalid.` | Replace `<sub-id>` with your actual subscription ID from `az account show --query id -o tsv`. |
 ## Approving a Private Endpoint Connection
 
 For services with manual approval, the connection must be approved by the resource owner.
@@ -264,9 +266,11 @@ PrivateEndpointConnectionProperties:
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.KeyVault/vaults/myKeyVault' under resource group 'myRG' was not found.`** — Verify the Key Vault name and resource group name are correct using `az keyvault list --resource-group myRG`.
-    **`InvalidResourceName: The resource name '<connection-name>' is invalid or does not exist.`** — Replace `<connection-name>` with the actual connection name from the list output (e.g., `pe-conn-prod-eastus-20240115`).
-    **`AuthorizationFailed: The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' does not have permission to perform action 'Microsoft.Network/privateEndpointConnections/write' over scope '/subscriptions/...'.`** — Ensure your user account has the Network Contributor or Owner role on the Key Vault's resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.KeyVault/vaults/myKeyVault' under resource group 'myRG' was not found.` | Verify the Key Vault name and resource group name are correct using `az keyvault list --resource-group myRG`. |
+    | `InvalidResourceName: The resource name '<connection-name>' is invalid or does not exist.` | Replace `<connection-name>` with the actual connection name from the list output (e.g., `pe-conn-prod-eastus-20240115`). |
+    | `AuthorizationFailed: The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' does not have permission to perform action 'Microsoft.Network/privateEndpointConnections/write' over scope '/subscriptions/...'.` | Ensure your user account has the Network Contributor or Owner role on the Key Vault's resource group. |
 ## Network Policy for Private Endpoints
 
 ```bash
@@ -310,9 +314,11 @@ pe-sqldb            myRG             /subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) No registered resource provider found for location 'eastus' and API version '2021-02-01' for type 'subnets'.`** — Verify the resource group name and VNet name are correct, and the subnet exists in the specified region.
-    **`(AuthorizationFailed) The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' does not have authorization to perform action 'Microsoft.Network/virtualNetworks/subnets/read'.`** — Ensure your Azure account has Network Contributor or higher role assigned to the resource group.
-    **`(InvalidResourceName) The name 'pe-keyvault' is invalid. It must begin with a letter or underscore, contain only letters, numbers, underscores, and hyphens, and end with a letter or number.`** — Rename the private endpoint to follow Azure naming conventions (alphanumeric, hyphens, and underscores only).
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) No registered resource provider found for location 'eastus' and API version '2021-02-01' for type 'subnets'.` | Verify the resource group name and VNet name are correct, and the subnet exists in the specified region. |
+    | `(AuthorizationFailed) The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' does not have authorization to perform action 'Microsoft.Network/virtualNetworks/subnets/read'.` | Ensure your Azure account has Network Contributor or higher role assigned to the resource group. |
+    | `(InvalidResourceName) The name 'pe-keyvault' is invalid. It must begin with a letter or underscore, contain only letters, numbers, underscores, and hyphens, and end with a letter or number.` | Rename the private endpoint to follow Azure naming conventions (alphanumeric, hyphens, and underscores only). |
 ## Verification
 
 ```bash
@@ -334,5 +340,7 @@ Address: 10.42.1.16
 ```
 
 !!! warning "Common errors"
-    **`** server can't find myKeyVault.vault.azure.net: NXDOMAIN`** — Verify the private endpoint is created in the correct VNet and the private DNS zone is linked to your VNet.
-    **`Non-authoritative answer: Name: myKeyVault.vault.azure.net Address: 52.xxx.xxx.xxx`** — The DNS is resolving to a public IP instead of private; confirm the private DNS zone (vault.azure.net) is linked to your VNet and the private endpoint A record exists.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find myKeyVault.vault.azure.net: NXDOMAIN` | Verify the private endpoint is created in the correct VNet and the private DNS zone is linked to your VNet. |
+    | `Non-authoritative answer: Name: myKeyVault.vault.azure.net Address: 52.xxx.xxx.xxx` | The DNS is resolving to a public IP instead of private; confirm the private DNS zone (vault.azure.net) is linked to your VNet and the private endpoint A record exists. |

@@ -62,9 +62,11 @@ Last Error: None
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`).
-    **`Error: Unable to connect to array management interface`** — Verify network connectivity to the array's management IP and that SSH credentials are properly configured.
-    **`Phone Home service is DISABLED`** — Run `purearray phonehome --enable` to activate phone home functionality for vendor support.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`). |
+    | `Error: Unable to connect to array management interface` | Verify network connectivity to the array's management IP and that SSH credentials are properly configured. |
+    | `Phone Home service is DISABLED` | Run `purearray phonehome --enable` to activate phone home functionality for vendor support. |
 ## Opening a Case
 
 When opening a case manually through the support portal or by phone, provide:
@@ -143,9 +145,11 @@ pod-us-west-01       Synced      Healthy        secondary
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the PATH includes the Pure management tools directory.
-    **`Error: Array unreachable at 192.168.1.100`** — Verify network connectivity to the array management IP and confirm credentials are set via `pureauthenticate`.
-    **`Error: Insufficient privileges for this operation`** — Ensure your user account has the required Pure Storage role permissions (typically "Administrator" or "Operator").
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or ensure the PATH includes the Pure management tools directory. |
+    | `Error: Array unreachable at 192.168.1.100` | Verify network connectivity to the array management IP and confirm credentials are set via `pureauthenticate`. |
+    | `Error: Insufficient privileges for this operation` | Ensure your user account has the required Pure Storage role permissions (typically "Administrator" or "Operator"). |
 Attach `purediag` output to the case if phonehome is offline. If phonehome is active, inform the support engineer that the diagnostic bundle is available for remote pull.
 
 ## SLA Tiers

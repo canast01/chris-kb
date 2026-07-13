@@ -271,9 +271,11 @@ curl -sk -o /dev/null -w "%{http_code}" https://<instance>.service-now.com/api/n
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the instance's CA certificate into the MID Server's truststore.
-    **`Connection timeout to instance.service-now.com:443 after 30000ms`** — Verify network connectivity and firewall rules allow outbound HTTPS from the MID Server host to the ServiceNow instance on port 443.
-    **`Unable to authenticate: Invalid credentials for user mid_server_user`** — Confirm the MID Server user credentials in the ServiceNow instance match the encrypted credentials stored in the MID Server's `config.xml` file.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the instance's CA certificate into the MID Server's truststore. |
+    | `Connection timeout to instance.service-now.com:443 after 30000ms` | Verify network connectivity and firewall rules allow outbound HTTPS from the MID Server host to the ServiceNow instance on port 443. |
+    | `Unable to authenticate: Invalid credentials for user mid_server_user` | Confirm the MID Server user credentials in the ServiceNow instance match the encrypted credentials stored in the MID Server's `config.xml` file. |
 ---
 
 ## See also

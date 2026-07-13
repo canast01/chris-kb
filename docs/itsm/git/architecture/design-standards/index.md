@@ -57,8 +57,10 @@ git cherry-pick --abort
 ```
 
 !!! warning "Common errors"
-    **`error: commit a1b2c3d4 is a merge but no -m option was given.`** — Use `git cherry-pick -m 1 <commit>` to specify which parent of the merge commit to use.
-    **`error: could not apply a1b2c3d4... Fix authentication timeout`** — Resolve merge conflicts manually with `git status`, edit conflicted files, then run `git cherry-pick --continue`.
+    | Error | Fix |
+    |---|---|
+    | `error: commit a1b2c3d4 is a merge but no -m option was given.` | Use `git cherry-pick -m 1 <commit>` to specify which parent of the merge commit to use. |
+    | `error: could not apply a1b2c3d4... Fix authentication timeout` | Resolve merge conflicts manually with `git status`, edit conflicted files, then run `git cherry-pick --continue`. |
 ```bash
 # Oneline log
 git log --oneline -20
@@ -145,7 +147,9 @@ index 0000000..a1b2c3d
 ```
 
 !!! warning "Common errors"
-    **`fatal: your current branch 'main' does not have any commits yet`** — Initialize the repository with at
+    | Error | Fix |
+    |---|---|
+    | `fatal: your current branch 'main' does not have any commits yet` | Initialize the repository with at |
 ```bash
 # Create a lightweight tag
 git tag v2.3.0
@@ -184,9 +188,11 @@ Date:   Thu Mar 14 09:45:12 2024 -0700
 ```
 
 !!! warning "Common errors"
-    **`fatal: tag 'v2.3.0' already exists`** — Delete the existing tag with `git tag -d v2.3.0` before recreating it, or use a different version number.
-    **`error: object 'a1b2c3d4' not found`** — Verify the commit hash exists in your repository with `git log --oneline` and use the full or correct short SHA.
-    **`fatal: Failed to resolve 'HEAD' as a valid ref.`** — Initialize the repository with `git init` and create an initial commit before tagging.
+    | Error | Fix |
+    |---|---|
+    | `fatal: tag 'v2.3.0' already exists` | Delete the existing tag with `git tag -d v2.3.0` before recreating it, or use a different version number. |
+    | `error: object 'a1b2c3d4' not found` | Verify the commit hash exists in your repository with `git log --oneline` and use the full or correct short SHA. |
+    | `fatal: Failed to resolve 'HEAD' as a valid ref.` | Initialize the repository with `git init` and create an initial commit before tagging. |
 ```bash
 # Sign a tag with your default GPG key
 git tag -s v2.3.0 -m "Signed release v2.3.0"
@@ -233,9 +239,11 @@ gpg: Good signature from "Jane Smith <jane.smith@company.com>" [ultimate]
 ```
 
 !!! warning "Common errors"
-    **`error: gpg failed to sign the data`** — Ensure GPG is installed (`apt install gnupg` or `brew install gnupg`) and your GPG agent is running (`gpg-agent --daemon`).
-    **`error: key KEYID not found`** — Verify the key ID exists with `gpg --list-secret-keys --keyid-format=long` and use the correct 16-character ID.
-    **`fatal: tag 'v2.3.0' already exists`** — Delete the existing tag with `git tag -d v2.3.0` before creating a new one, or use a different version number.
+    | Error | Fix |
+    |---|---|
+    | `error: gpg failed to sign the data` | Ensure GPG is installed (`apt install gnupg` or `brew install gnupg`) and your GPG agent is running (`gpg-agent --daemon`). |
+    | `error: key KEYID not found` | Verify the key ID exists with `gpg --list-secret-keys --keyid-format=long` and use the correct 16-character ID. |
+    | `fatal: tag 'v2.3.0' already exists` | Delete the existing tag with `git tag -d v2.3.0` before creating a new one, or use a different version number. |
 ```bash
 # Push a single tag
 git push origin v2.3.0
@@ -278,8 +286,10 @@ Deleted tag 'v2.3.0' (was abc1234)
 ```
 
 !!! warning "Common errors"
-    **`fatal: tag 'v2.3.0' not found.`** — Verify the tag exists locally with `git tag -l` before attempting deletion.
-    **`remote: error: deny updating a hidden ref`** — Ensure you have push permissions on the repository and the tag is not protected by branch protection rules.
+    | Error | Fix |
+    |---|---|
+    | `fatal: tag 'v2.3.0' not found.` | Verify the tag exists locally with `git tag -l` before attempting deletion. |
+    | `remote: error: deny updating a hidden ref` | Ensure you have push permissions on the repository and the tag is not protected by branch protection rules. |
 ```bash
 # 1. Ensure you're on main and up to date
 git switch main
@@ -330,9 +340,11 @@ To github.com:platform/infra-core.git
 ```
 
 !!! warning "Common errors"
-    **`error: pathspec 'main' did not match any file known to git`** — Verify the default branch name with `git branch -a` and use the correct name (e.g., `master` or `main`).
-    **`fatal: Not a git repository (or any of the parent directories): .git`** — Run the command from the root of the git repository or clone the repository first.
-    **`fatal: Authentication failed for 'https://github.com/...'`** — Configure SSH keys with `ssh-keygen` and update the remote URL to SSH format with `git remote set-url origin git@github.com:owner/repo.git`.
+    | Error | Fix |
+    |---|---|
+    | `error: pathspec 'main' did not match any file known to git` | Verify the default branch name with `git branch -a` and use the correct name (e.g., `master` or `main`). |
+    | `fatal: Not a git repository (or any of the parent directories): .git` | Run the command from the root of the git repository or clone the repository first. |
+    | `fatal: Authentication failed for 'https://github.com/...'` | Configure SSH keys with `ssh-keygen` and update the remote URL to SSH format with `git remote set-url origin git@github.com:owner/repo.git`. |
 ```bash
 # Find the latest release tag
 git describe --tags --abbrev=0
@@ -360,8 +372,10 @@ v2.4.1
 ```
 
 !!! warning "Common errors"
-    **`fatal: No names found, cannot describe anything.`** — Initialize tags in the repository with `git tag v1.0.0` or fetch tags from remote with `git fetch --tags`.
-    **`fatal: No annotated tags can describe '<commit>'.`** — Create annotated tags instead of lightweight tags using `git tag -a v2.5.0 -m "Release 2.5.0"` rather than `git tag v2.5.0`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: No names found, cannot describe anything.` | Initialize tags in the repository with `git tag v1.0.0` or fetch tags from remote with `git fetch --tags`. |
+    | `fatal: No annotated tags can describe '<commit>'.` | Create annotated tags instead of lightweight tags using `git tag -a v2.5.0 -m "Release 2.5.0"` rather than `git tag v2.5.0`. |
 ---
 
 ```d2

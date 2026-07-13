@@ -221,9 +221,11 @@ total 2048
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vmware/vrlcm/vlcm.log: No such file or directory`** — Verify the LCM service is running with `systemctl status vrlcm` and check the correct log path with `find /var/log -name "vlcm.log" 2>/dev/null`.
-    **`tail: cannot open '/var/log/vmware/vrlcm/installer*.log' for reading: No such file or directory`** — Run `ls -la /var/log/vmware/vrlcm/` to confirm installer logs exist, or check if the operation has actually started yet.
-    **`grep: (standard input): line too long`** — Pipe through `sed 's/.\{1000\}/&\n/g'` before grep to handle extremely long
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vmware/vrlcm/vlcm.log: No such file or directory` | Verify the LCM service is running with `systemctl status vrlcm` and check the correct log path with `find /var/log -name "vlcm.log" 2>/dev/null`. |
+    | `tail: cannot open '/var/log/vmware/vrlcm/installer*.log' for reading: No such file or directory` | Run `ls -la /var/log/vmware/vrlcm/` to confirm installer logs exist, or check if the operation has actually started yet. |
+    | `grep: (standard input): line too long` | Pipe through `sed 's/.\{1000\}/&\n/g'` before grep to handle extremely long |
 ---
 
 ## Step 3 — Check certificate expiry
@@ -260,8 +262,10 @@ notAfter=Mar 14 08:22:14 2026 GMT
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the LCM CA certificate into your system trust store.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the LCM API endpoint is accessible and the credentials are correct by testing `curl -sk -u admin:<password> https://<lcm-fqdn>/lcm/api/v1/health` first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the LCM CA certificate into your system trust store. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify the LCM API endpoint is accessible and the credentials are correct by testing `curl -sk -u admin:<password> https://<lcm-fqdn>/lcm/api/v1/health` first. |
 Certificate check thresholds:
 
 | Days to Expiry | Status | Action |
@@ -328,8 +332,10 @@ tmpfs        4194304   1847 4192457   1% /dev/shm
 ```
 
 !!! warning "Common errors"
-    **`find: '/data/vmware/vrlcm/bundles/': No such file or directory`** — Create the bundles directory with `mkdir -p /data/vmware/vrlcm/bundles/` before running cleanup operations.
-    **`Permission denied`** — Run the script with `sudo` or as root to access VMware system directories and delete files.
+    | Error | Fix |
+    |---|---|
+    | `find: '/data/vmware/vrlcm/bundles/': No such file or directory` | Create the bundles directory with `mkdir -p /data/vmware/vrlcm/bundles/` before running cleanup operations. |
+    | `Permission denied` | Run the script with `sudo` or as root to access VMware system directories and delete files. |
 Disk space thresholds:
 
 | Mount | Warning | Critical | Action if Critical |
@@ -400,9 +406,11 @@ RTC in local TZ    : No
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the LCM certificate into your system trust store.
-    **`curl: (7) Failed to connect to <lcm-fqdn> port 443: Connection refused`** — Verify the LCM FQDN is correct and the nginx service is running with `systemctl status nginx`.
-    **`System time offset : 45.234 seconds`** — Run `sudo chronyc makestep` to force NTP synchronization, as Aria SSO requires offset under 5 seconds.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the LCM certificate into your system trust store. |
+    | `curl: (7) Failed to connect to <lcm-fqdn> port 443: Connection refused` | Verify the LCM FQDN is correct and the nginx service is running with `systemctl status nginx`. |
+    | `System time offset : 45.234 seconds` | Run `sudo chronyc makestep` to force NTP synchronization, as Aria SSO requires offset under 5 seconds. |
 ---
 
 ## Step 6 — Check environment and product status
@@ -475,9 +483,11 @@ aria-staging-env | COMPLETED
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the LCM server's certificate into your system trust store.
-    **`jq: command not found`** — Install `python3-json` or use `python3 -m json.tool` instead of piping to `jq`.
-    **`401 Unauthorized`** — Verify the admin credentials are correct and URL-encoded if they contain special characters; use `curl -u "admin:$(cat /path/to/password)"`  to avoid shell interpretation issues.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the LCM server's certificate into your system trust store. |
+    | `jq: command not found` | Install `python3-json` or use `python3 -m json.tool` instead of piping to `jq`. |
+    | `401 Unauthorized` | Verify the admin credentials are correct and URL-encoded if they contain special characters; use `curl -u "admin:$(cat /path/to/password)"`  to avoid shell interpretation issues. |
 ---
 
 ## Step 7 — Collect logscraper bundle for VMware SR
@@ -521,9 +531,11 @@ Timestamp: 2024-02-15 14:30:22 UTC
 ```
 
 !!! warning "Common errors"
-    **`/opt/vmware/vlcm/tools/lcm-support.sh: Permission denied`** — Run the command with sudo or ensure the admin user has execute permissions on the script.
-    **`ssh: Could not resolve hostname <lcm-fqdn>: Name or service not known`** — Replace `<lcm-fqdn>` with the actual LCM appliance FQDN or IP address (e.g., `lcm-prod-01.corp.local`).
-    **`tar: /tmp/lcm-support-*.tar.gz: Cannot open: No space left on device`** — Free up disk space on the LCM appliance or specify an alternate output directory with sufficient capacity.
+    | Error | Fix |
+    |---|---|
+    | `/opt/vmware/vlcm/tools/lcm-support.sh: Permission denied` | Run the command with sudo or ensure the admin user has execute permissions on the script. |
+    | `ssh: Could not resolve hostname <lcm-fqdn>: Name or service not known` | Replace `<lcm-fqdn>` with the actual LCM appliance FQDN or IP address (e.g., `lcm-prod-01.corp.local`). |
+    | `tar: /tmp/lcm-support-*.tar.gz: Cannot open: No space left on device` | Free up disk space on the LCM appliance or specify an alternate output directory with sufficient capacity. |
 ---
 
 ## Log locations

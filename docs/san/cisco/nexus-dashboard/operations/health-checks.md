@@ -88,8 +88,10 @@ Remote Backup Destination:
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed for ndadmin@nd-dc1-1.corp.example.com`** — Verify SSH key is loaded with `ssh-add` or use password authentication if key-based auth is not configured.
-    **`Remote destination unreachable: Connection refused on backup-server.corp.example.com:22`** — Confirm the backup server is online and SFTP service is running; check firewall rules allow traffic from the Nexus Dashboard to the backup server.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed for ndadmin@nd-dc1-1.corp.example.com` | Verify SSH key is loaded with `ssh-add` or use password authentication if key-based auth is not configured. |
+    | `Remote destination unreachable: Connection refused on backup-server.corp.example.com:22` | Confirm the backup server is online and SFTP service is running; check firewall rules allow traffic from the Nexus Dashboard to the backup server. |
 ```bash
 # Check ND UI certificate expiry
 openssl s_client -connect nd-dc1.corp.example.com:443 \
@@ -117,9 +119,11 @@ Expires in 47 days (2025-08-14)
 ```
 
 !!! warning "Common errors"
-    **`unable to get local issuer certificate`** — Add the Nexus Dashboard root CA certificate to your system's trusted store or use `openssl s_client -connect nd-dc1.corp.example.com:443 -CAfile /path/to/ca-bundle.crt` to bypass validation.
-    **`Name or service not known`** — Verify DNS resolution with `nslookup nd-dc1.corp.example.com` and ensure the hostname matches your ND deployment's FQDN.
-    **`Connection refused`** — Confirm the Nexus Dashboard UI is running and accessible on port 443 with `curl -k https://nd-dc1.corp.example.com/login` before checking the certificate.
+    | Error | Fix |
+    |---|---|
+    | `unable to get local issuer certificate` | Add the Nexus Dashboard root CA certificate to your system's trusted store or use `openssl s_client -connect nd-dc1.corp.example.com:443 -CAfile /path/to/ca-bundle.crt` to bypass validation. |
+    | `Name or service not known` | Verify DNS resolution with `nslookup nd-dc1.corp.example.com` and ensure the hostname matches your ND deployment's FQDN. |
+    | `Connection refused` | Confirm the Nexus Dashboard UI is running and accessible on port 443 with `curl -k https://nd-dc1.corp.example.com/login` before checking the certificate. |
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -165,8 +169,10 @@ nd-dc1-3 2024-01-15T14:32:45.456Z
 ```
 
 !!! warning "Common errors"
-    **`error: NTP Status: unsynchronized`** — Verify NTP server connectivity with `acs system ntp servers test` and check firewall rules allowing UDP port 123 to configured NTP servers.
-    **`json.decoder.JSONDecodeError: Expecting value`** — Ensure the `acs` CLI is properly initialized by running `acs login` and verify cluster is fully operational with `acs cluster status`.
+    | Error | Fix |
+    |---|---|
+    | `error: NTP Status: unsynchronized` | Verify NTP server connectivity with `acs system ntp servers test` and check firewall rules allowing UDP port 123 to configured NTP servers. |
+    | `json.decoder.JSONDecodeError: Expecting value` | Ensure the `acs` CLI is properly initialized by running `acs login` and verify cluster is fully operational with `acs cluster status`. |
 ---
 
 ## Verify

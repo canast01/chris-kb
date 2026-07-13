@@ -104,9 +104,11 @@ Run from Pure1 UI or CLI. No impact to production.
     ```
 
     !!! warning "Common errors"
-        **`ssh: Could not resolve hostname <flasharray-ip>: Name or service not known`** — Replace `<flasharray-ip>` with the actual management IP address of your Pure Storage array.
-        **`ERROR: Invalid credentials`** — Verify the pureuser account exists and password is correct, or use SSH key authentication if configured.
-        **`ERROR: Command not found: purehw`** — Ensure you are connected to the Pure Storage array's management interface (SSH to the correct IP) and not a local shell.
+        | Error | Fix |
+        |---|---|
+        | `ssh: Could not resolve hostname <flasharray-ip>: Name or service not known` | Replace `<flasharray-ip>` with the actual management IP address of your Pure Storage array. |
+        | `ERROR: Invalid credentials` | Verify the pureuser account exists and password is correct, or use SSH key authentication if configured. |
+        | `ERROR: Command not found: purehw` | Ensure you are connected to the Pure Storage array's management interface (SSH to the correct IP) and not a local shell. |
 ## Full Health Check (20 minutes)
 
 ![Full Health Check (20 minutes)](../../../../../assets/storage-pure-evergreen-hc-full-health-check-20-minutes.svg)
@@ -152,8 +154,10 @@ SSD.BAY.4                      Degraded    1.92TB    PFE21000123459
 ```
 
 !!! warning "Common errors"
-    **`purehw: command not found`** — Ensure the Pure Storage CLI tools are installed and the `pureuser` environment is sourced with `source /opt/pureuser/bashrc`.
-    **`grep: (standard input): Permission denied`** — Run the command with appropriate credentials or use `pureadmin` account that has hardware inspection privileges.
+    | Error | Fix |
+    |---|---|
+    | `purehw: command not found` | Ensure the Pure Storage CLI tools are installed and the `pureuser` environment is sourced with `source /opt/pureuser/bashrc`. |
+    | `grep: (standard input): Permission denied` | Run the command with appropriate credentials or use `pureadmin` account that has hardware inspection privileges. |
 ### 2. Capacity Deep-Dive
 
 ![2. Capacity Deep-Dive](../../../../../assets/storage-pure-evergreen-hc-2-capacity-deep-dive.svg)
@@ -198,9 +202,11 @@ Data reduction ratio: 3.2x
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the `purearray` binary is in your PATH.
-    **`Error: Unable to connect to array management interface`** — Verify network connectivity to the array management IP and that your credentials are valid with `purearray login`.
-    **`awk: syntax error: unexpected newline or end of file`** — Ensure the purearray output contains at least 2 rows; if the array has no data, the awk command will fail on an empty result set.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or ensure the `purearray` binary is in your PATH. |
+    | `Error: Unable to connect to array management interface` | Verify network connectivity to the array management IP and that your credentials are valid with `purearray login`. |
+    | `awk: syntax error: unexpected newline or end of file` | Ensure the purearray output contains at least 2 rows; if the array has no data, the awk command will fail on an empty result set. |
 ### 3. Performance Baseline
 
 ![3. Performance Baseline](../../../../../assets/storage-pure-evergreen-hc-3-performance-baseline.svg)
@@ -244,9 +250,11 @@ array-prod-02      eth1  10Gbps   19470     553               43
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused — check that the Pure array management IP is reachable and SSH/REST API port is open`** — Verify network connectivity to the array with `ping` and confirm firewall rules allow access to port 443 (REST API) or 22 (SSH).
-    **`Error: Authentication failed for user 'admin' — check credentials`** — Ensure the Pure API token or password is valid and has not expired; regenerate the API token in the Pure management console if needed.
-    **`purearray: command not found`** — Install the Pure Storage Python SDK and CLI tools with `pip install purestorage` or verify the PATH includes the Pure CLI installation directory.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused — check that the Pure array management IP is reachable and SSH/REST API port is open` | Verify network connectivity to the array with `ping` and confirm firewall rules allow access to port 443 (REST API) or 22 (SSH). |
+    | `Error: Authentication failed for user 'admin' — check credentials` | Ensure the Pure API token or password is valid and has not expired; regenerate the API token in the Pure management console if needed. |
+    | `purearray: command not found` | Install the Pure Storage Python SDK and CLI tools with `pip install purestorage` or verify the PATH includes the Pure CLI installation directory. |
 ### 4. Replication Health
 
 ![4. Replication Health](../../../../../assets/storage-pure-evergreen-hc-4-replication-health.svg)
@@ -289,8 +297,10 @@ pg-prod-db01.1704412800       2024-01-05T12:00:00Z       536870912
 ```
 
 !!! warning "Common errors"
-    **`purepgroup: command not found`** — Install the Pure Storage CLI tools or source the environment setup script that adds them to your PATH.
-    **`Error: Invalid credentials or API token expired`** — Re-authenticate using `pureadmin login` or refresh your API token in the management console.
+    | Error | Fix |
+    |---|---|
+    | `purepgroup: command not found` | Install the Pure Storage CLI tools or source the environment setup script that adds them to your PATH. |
+    | `Error: Invalid credentials or API token expired` | Re-authenticate using `pureadmin login` or refresh your API token in the management console. |
 ### 5. Network and Connectivity
 
 ![5. Network and Connectivity](../../../../../assets/storage-pure-evergreen-hc-5-network-and-connectivity.svg)
@@ -337,9 +347,11 @@ Current Support Configuration:
 ```
 
 !!! warning "Common errors"
-    **`pureport: command not found`** — Verify the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/pureport/bin`).
-    **`Error: Array not responding or credentials invalid`** — Confirm array connectivity with `ping <array-mgmt-ip>` and verify credentials are set via `pureauth login`.
-    **`Error: No such option '--performance'`** — Check the Pure Storage CLI version with `pureport --version` as older versions may not support the `--performance` flag; use `pureport list` without flags as fallback.
+    | Error | Fix |
+    |---|---|
+    | `pureport: command not found` | Verify the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/pureport/bin`). |
+    | `Error: Array not responding or credentials invalid` | Confirm array connectivity with `ping <array-mgmt-ip>` and verify credentials are set via `pureauth login`. |
+    | `Error: No such option '--performance'` | Check the Pure Storage CLI version with `pureport --version` as older versions may not support the `--performance` flag; use `pureport list` without flags as fallback. |
 ### 6. Purity Version Check
 
 ![6. Purity Version Check](../../../../../assets/storage-pure-evergreen-hc-6-purity-version-check.svg)
@@ -362,8 +374,10 @@ purearray-test-01             6.4.2.1234
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the `purearray` binary is in your PATH.
-    **`grep: (standard input) is empty`** — Verify the array is reachable and you have valid credentials configured in your Pure1 environment.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or ensure the `purearray` binary is in your PATH. |
+    | `grep: (standard input) is empty` | Verify the array is reachable and you have valid credentials configured in your Pure1 environment. |
 Compare against [Pure Storage EOL/support matrix](https://support.purestorage.com) to confirm the installed version is within support window.
 
 ### 7. Host Connectivity
@@ -404,9 +418,11 @@ host-dev-01.dc1.local WARNING: only 1 paths
 ```
 
 !!! warning "Common errors"
-    **`purehost: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purehost/bin`).
-    **`Error: Unable to connect to array management IP`** — Verify network connectivity to the Pure Storage array and that credentials are configured via `pureauth login` or environment variables.
-    **`Error: Permission denied`** — Confirm your user account has sufficient role-based access control (RBAC) permissions to query host and volume inventory on the array.
+    | Error | Fix |
+    |---|---|
+    | `purehost: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purehost/bin`). |
+    | `Error: Unable to connect to array management IP` | Verify network connectivity to the Pure Storage array and that credentials are configured via `pureauth login` or environment variables. |
+    | `Error: Permission denied` | Confirm your user account has sufficient role-based access control (RBAC) permissions to query host and volume inventory on the array. |
 ## Health Check Checklist Template
 
 ![Health Check Checklist Template](../../../../../assets/storage-pure-evergreen-hc-health-check-checklist-template.svg)
@@ -453,8 +469,10 @@ pure-fa-x90-backup,True
 ```
 
 !!! warning "Common errors"
-    **`command not found: purearray`** — Ensure the Pure Storage CLI tools are installed and the `purearray` binary is in your PATH, or use the full path to the executable.
-    **`Error: Array unreachable or authentication failed`** — Verify network connectivity to the array management interface and confirm your Pure1 API credentials are correctly configured in `~/.purerc` or environment variables.
+    | Error | Fix |
+    |---|---|
+    | `command not found: purearray` | Ensure the Pure Storage CLI tools are installed and the `purearray` binary is in your PATH, or use the full path to the executable. |
+    | `Error: Array unreachable or authentication failed` | Verify network connectivity to the array management interface and confirm your Pure1 API credentials are correctly configured in `~/.purerc` or environment variables. |
 ## Common Issues During Health Checks
 
 ![Common Issues During Health Checks](../../../../../assets/storage-pure-evergreen-hc-common-issues-during-health-checks.svg)

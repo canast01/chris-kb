@@ -107,9 +107,11 @@ mtree_prod_data01 replication_stats bytes_pending=2.3GB estimated_completion=45m
 ```
 
 !!! warning "Common errors"
-    **`mtree_name: command not found`** — Replace `<mtree_name>` with the actual MTree name (e.g., `mtree_prod_data01`).
-    **`replication: command not found`** — Ensure you are logged into the Data Domain CLI or run commands via SSH to the management interface.
-    **`grep: (standard input) is empty`** — The specified MTree does not exist or has no active replication; verify the MTree name with `replication show all` first.
+    | Error | Fix |
+    |---|---|
+    | `mtree_name: command not found` | Replace `<mtree_name>` with the actual MTree name (e.g., `mtree_prod_data01`). |
+    | `replication: command not found` | Ensure you are logged into the Data Domain CLI or run commands via SSH to the management interface. |
+    | `grep: (standard input) is empty` | The specified MTree does not exist or has no active replication; verify the MTree name with `replication show all` first. |
 ### Retention Lock Review
 
 ![Retention Lock Review](../../../../../assets/data-domain-proc-retention-lock-review.svg)
@@ -140,9 +142,11 @@ media_archive                 Standard    Enabled           Active
 ```
 
 !!! warning "Common errors"
-    **`mtree: command not found`** — Ensure you are logged into the Data Domain CLI (via SSH or console) and not a standard Linux shell; use `sysadmin` or `admin` account.
-    **`Permission denied: /data/col1/<mtree_name>`** — Verify the MTree name is correct and your user account has administrative privileges; use `user show` to check current role.
-    **`Retention Lock Status: Not Available`** — Confirm the MTree exists and is fully initialized; newly created MTrees may take several minutes before retention lock status is queryable.
+    | Error | Fix |
+    |---|---|
+    | `mtree: command not found` | Ensure you are logged into the Data Domain CLI (via SSH or console) and not a standard Linux shell; use `sysadmin` or `admin` account. |
+    | `Permission denied: /data/col1/<mtree_name>` | Verify the MTree name is correct and your user account has administrative privileges; use `user show` to check current role. |
+    | `Retention Lock Status: Not Available` | Confirm the MTree exists and is fully initialized; newly created MTrees may take several minutes before retention lock status is queryable. |
 ### Creating MTrees for New Backup Applications
 
 ![Creating MTrees for New Backup Applications](../../../../../assets/data-domain-proc-creating-mtrees-for-new-backup-applications.svg)
@@ -186,9 +190,11 @@ Quota Summary
 ```
 
 !!! warning "Common errors"
-    **`Error: MTree /data/col1/<application>_backup already exists`** — Use `mtree show /data/col1/<application>_backup` to verify the MTree exists, or choose a different name.
-    **`Error: NFS export failed - client IP 192.168.x.x is unreachable`** — Verify the backup server IP is correct and reachable from the Data Domain appliance before adding the export.
-    **`Error: Quota hard-limit must be greater than soft-limit`** — Ensure the hard-limit value is larger than the soft-limit value (e.g., hard 5 TiB, soft 4 TiB).
+    | Error | Fix |
+    |---|---|
+    | `Error: MTree /data/col1/<application>_backup already exists` | Use `mtree show /data/col1/<application>_backup` to verify the MTree exists, or choose a different name. |
+    | `Error: NFS export failed - client IP 192.168.x.x is unreachable` | Verify the backup server IP is correct and reachable from the Data Domain appliance before adding the export. |
+    | `Error: Quota hard-limit must be greater than soft-limit` | Ensure the hard-limit value is larger than the soft-limit value (e.g., hard 5 TiB, soft 4 TiB). |
 ### Decommissioning an MTree
 
 ![Decommissioning an MTree](../../../../../assets/data-domain-proc-decommissioning-an-mtree.svg)
@@ -236,9 +242,11 @@ Estimated total reclaim: 6.8 TB
 ```
 
 !!! warning "Common errors"
-    **`Error: MTree /data/col1/prod_backup_mtree is still mounted`** — Unmount the MTree with `nfs unmount /data/col1/prod_backup_mtree` before deletion.
-    **`Error: NFS export /data/col1/prod_backup_mtree in use by 3 clients`** — Disconnect all client connections or force-unmount with `nfs del export /data/col1/prod_backup_mtree -force`.
-    **`Error: filesys clean already in progress (Job ID: 847291)`** — Wait for the current cleaning job to complete or cancel it with `filesys clean stop 847291` before starting a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: MTree /data/col1/prod_backup_mtree is still mounted` | Unmount the MTree with `nfs unmount /data/col1/prod_backup_mtree` before deletion. |
+    | `Error: NFS export /data/col1/prod_backup_mtree in use by 3 clients` | Disconnect all client connections or force-unmount with `nfs del export /data/col1/prod_backup_mtree -force`. |
+    | `Error: filesys clean already in progress (Job ID: 847291)` | Wait for the current cleaning job to complete or cancel it with `filesys clean stop 847291` before starting a new one. |
 ### MTree Health Summary
 
 ![MTree Health Summary](../../../../../assets/data-domain-proc-mtree-health-summary.svg)
@@ -301,9 +309,11 @@ Data integrity check: PASSED
 ```
 
 !!! warning "Common errors"
-    **`filesys clean start: ERROR - Another cleaning cycle is already in progress (Cycle ID: CC-2024-01-15-0701)`** — Wait for the current cycle to complete or use `filesys clean stop` to terminate it first.
-    **`filesys clean status: ERROR - No active cleaning cycle found`** — Start a cleaning cycle with `filesys clean start` before checking status.
-    **`filesys clean stop: ERROR - Insufficient privileges to stop cleaning cycle`** — Run the command with appropriate administrative credentials or use the Data Domain management console.
+    | Error | Fix |
+    |---|---|
+    | `filesys clean start: ERROR - Another cleaning cycle is already in progress (Cycle ID: CC-2024-01-15-0701)` | Wait for the current cycle to complete or use `filesys clean stop` to terminate it first. |
+    | `filesys clean status: ERROR - No active cleaning cycle found` | Start a cleaning cycle with `filesys clean start` before checking status. |
+    | `filesys clean stop: ERROR - Insufficient privileges to stop cleaning cycle` | Run the command with appropriate administrative credentials or use the Data Domain management console. |
 ### Automatic Cleaning Schedule
 
 ![Automatic Cleaning Schedule](../../../../../assets/data-domain-proc-automatic-cleaning-schedule.svg)
@@ -346,9 +356,11 @@ System is now in manual cleaning mode only.
 ```
 
 !!! warning "Common errors"
-    **`filesys clean schedule: command not found`** — Verify you are logged into the Data Domain CLI (use `ssh admin@<dd-ip>`) and not a standard Linux shell.
-    **`Error: Schedule day must be 3-letter abbreviation (mon, tue, wed, etc.)`** — Use lowercase three-letter day abbreviations (e.g., `tue` instead of `Tuesday` or `TUE`).
-    **`Error: Start time must be in HH:MM format (00:00-23:59)`** — Correct the time format to 24-hour notation, e.g., `02:00` instead of `2:00 AM`.
+    | Error | Fix |
+    |---|---|
+    | `filesys clean schedule: command not found` | Verify you are logged into the Data Domain CLI (use `ssh admin@<dd-ip>`) and not a standard Linux shell. |
+    | `Error: Schedule day must be 3-letter abbreviation (mon, tue, wed, etc.)` | Use lowercase three-letter day abbreviations (e.g., `tue` instead of `Tuesday` or `TUE`). |
+    | `Error: Start time must be in HH:MM format (00:00-23:59)` | Correct the time format to 24-hour notation, e.g., `02:00` instead of `2:00 AM`. |
 ### Monitoring Cleaning Progress
 
 ![Monitoring Cleaning Progress](../../../../../assets/data-domain-proc-monitoring-cleaning-progress.svg)
@@ -385,8 +397,10 @@ Date                Time      Status    Space Freed   Duration
 ```
 
 !!! warning "Common errors"
-    **`filesys: command not found`** — Verify you are logged into the Data Domain management interface or SSH session with proper CLI access.
-    **`Permission denied`** — Ensure your user account has administrative privileges; use `sysadmin` or equivalent privileged account.
+    | Error | Fix |
+    |---|---|
+    | `filesys: command not found` | Verify you are logged into the Data Domain management interface or SSH session with proper CLI access. |
+    | `Permission denied` | Ensure your user account has administrative privileges; use `sysadmin` or equivalent privileged account. |
 ### Space Reclaim Expectations
 
 ![Space Reclaim Expectations](../../../../../assets/data-domain-proc-space-reclaim-expectations.svg)
@@ -443,9 +457,11 @@ System Statistics:
 ```
 
 !!! warning "Common errors"
-    **`Cleaning job failed: insufficient free space in journal`** — Increase journal size or reduce concurrent cleaning jobs via `system set cleaning max-concurrent-jobs 1`.
-    **`Cleaning phase 1: scanning metadata — timeout after 3600s`** — Extend cleaning timeout with `system set cleaning timeout 7200` or exclude large pools temporarily.
-    **`Cleaning paused — high I/O detected`** — Schedule cleaning during off-peak hours using `system set cleaning schedule "02:00-06:00"` or reduce backup window overlap.
+    | Error | Fix |
+    |---|---|
+    | `Cleaning job failed: insufficient free space in journal` | Increase journal size or reduce concurrent cleaning jobs via `system set cleaning max-concurrent-jobs 1`. |
+    | `Cleaning phase 1: scanning metadata — timeout after 3600s` | Extend cleaning timeout with `system set cleaning timeout 7200` or exclude large pools temporarily. |
+    | `Cleaning paused — high I/O detected` | Schedule cleaning during off-peak hours using `system set cleaning schedule "02:00-06:00"` or reduce backup window overlap. |
 ---
 
 ## Add a Replication Context (DD Boost)
@@ -481,9 +497,11 @@ ctx-5d8c3f4a       backup-mtree              REPLICATING   100%        —
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid source path 'ddboost://<source-dd>/data/col1/<source-mtree>'`** — Replace `<source-dd>`, `<source-mtree>`, and `<target-mtree>` with actual hostnames and MTree names (e.g., `ddboost://dd-prod-01.example.com/data/col1/mtree01`).
-    **`Error: Connection refused to target-dd.example.com:3009`** — Verify network connectivity and that DD Boost is enabled on the target Data Domain with `ddboost client show`.
-    **`Error: Authentication failed for ddboost context`** — Ensure DD Boost credentials are configured on the source system using `ddboost client config` with valid username and password.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid source path 'ddboost://<source-dd>/data/col1/<source-mtree>'` | Replace `<source-dd>`, `<source-mtree>`, and `<target-mtree>` with actual hostnames and MTree names (e.g., `ddboost://dd-prod-01.example.com/data/col1/mtree01`). |
+    | `Error: Connection refused to target-dd.example.com:3009` | Verify network connectivity and that DD Boost is enabled on the target Data Domain with `ddboost client show`. |
+    | `Error: Authentication failed for ddboost context` | Ensure DD Boost credentials are configured on the source system using `ddboost client config` with valid username and password. |
 Monitor with `replication show all` until the context reports `Normal` state. Initial seeding time depends on dataset size and WAN bandwidth.
 
 ## Configure NFS Export
@@ -516,9 +534,11 @@ NFS Exports:
 ```
 
 !!! warning "Common errors"
-    **`Error: MTree /data/col1/<mtree> does not exist`** — Verify the MTree name with `mtree show` and replace `<mtree>` with the actual MTree identifier.
-    **`Error: NFS export already exists for /data/col1/<mtree>`** — Remove the existing export with `nfs delete /data/col1/<mtree>` before re-adding it with different options.
-    **`Error: Invalid client IP/subnet format`** — Ensure the client IP is in dotted-decimal notation (e.g., 192.168.10.50) and subnet uses CIDR notation (e.g., 10.20.0.0/24).
+    | Error | Fix |
+    |---|---|
+    | `Error: MTree /data/col1/<mtree> does not exist` | Verify the MTree name with `mtree show` and replace `<mtree>` with the actual MTree identifier. |
+    | `Error: NFS export already exists for /data/col1/<mtree>` | Remove the existing export with `nfs delete /data/col1/<mtree>` before re-adding it with different options. |
+    | `Error: Invalid client IP/subnet format` | Ensure the client IP is in dotted-decimal notation (e.g., 192.168.10.50) and subnet uses CIDR notation (e.g., 10.20.0.0/24). |
 Test the mount from the client:
 ```bash
 mount -t nfs <dd-ip>:/data/col1/<mtree> /mnt/test
@@ -538,9 +558,11 @@ drwxr-xr-x   2 root root  4096 Mar 12 14:09 temp
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: mount to NFS server '<dd-ip>' failed: Connection refused`** — Verify the Data Domain IP is correct, the NFS service is running on the appliance, and network connectivity exists between the client and DD system.
-    **`mount.nfs: access denied by server while mounting <dd-ip>:/data/col1/<mtree>`** — Confirm the export policy on the Data Domain allows NFS access from the client IP and that the mtree name is correct.
-    **`No such file or directory`** — Ensure the mount point `/mnt/test` exists; create it with `mkdir -p /mnt/test` if needed.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: mount to NFS server '<dd-ip>' failed: Connection refused` | Verify the Data Domain IP is correct, the NFS service is running on the appliance, and network connectivity exists between the client and DD system. |
+    | `mount.nfs: access denied by server while mounting <dd-ip>:/data/col1/<mtree>` | Confirm the export policy on the Data Domain allows NFS access from the client IP and that the mtree name is correct. |
+    | `No such file or directory` | Ensure the mount point `/mnt/test` exists; create it with `mkdir -p /mnt/test` if needed. |
 ## Configure CIFS Share
 
 ```bash
@@ -567,9 +589,11 @@ media_vault                    Media library access       enabled   /data/col1/m
 ```
 
 !!! warning "Common errors"
-    **`Error: Share '<share-name>' already exists`** — Use a unique share name or delete the existing share with `cifs share delete <share-name>` first.
-    **`Error: Path '/data/col1/<mtree>' does not exist or is invalid`** — Verify the MTree exists with `mtree show` and confirm the path is correct.
-    **`Error: CIFS service is not running`** — Start the CIFS service with `cifs service start` before creating shares.
+    | Error | Fix |
+    |---|---|
+    | `Error: Share '<share-name>' already exists` | Use a unique share name or delete the existing share with `cifs share delete <share-name>` first. |
+    | `Error: Path '/data/col1/<mtree>' does not exist or is invalid` | Verify the MTree exists with `mtree show` and confirm the path is correct. |
+    | `Error: CIFS service is not running` | Start the CIFS service with `cifs service start` before creating shares. |
 Test access from a Windows client by mapping a drive to `\\<dd-hostname>\<share-name>` using an account with access. Confirm read/write as expected by the share permissions.
 
 ## Run Filesystem Cleaner
@@ -617,9 +641,11 @@ Data freed so far: 412 GB
 ```
 
 !!! warning "Common errors"
-    **`filesys clean: command not found`** — Verify you are logged into the Data Domain CLI (via SSH or console) and have appropriate administrative privileges.
-    **`Error: A cleaning cycle is already in progress. Cycle ID: CC-2024-01-15-0801`** — Wait for the current cycle to complete or use `filesys clean abort` to stop it before starting a new one.
-    **`Error: Insufficient free space to start cleaning cycle`** — Ensure at least 5% of total capacity is available before initiating a new cleaning cycle.
+    | Error | Fix |
+    |---|---|
+    | `filesys clean: command not found` | Verify you are logged into the Data Domain CLI (via SSH or console) and have appropriate administrative privileges. |
+    | `Error: A cleaning cycle is already in progress. Cycle ID: CC-2024-01-15-0801` | Wait for the current cycle to complete or use `filesys clean abort` to stop it before starting a new one. |
+    | `Error: Insufficient free space to start cleaning cycle` | Ensure at least 5% of total capacity is available before initiating a new cleaning cycle. |
 Cleaning reclaims space from expired or deleted backup data. Run `filesys show space` before and after to confirm space was recovered. See also the [Filesystem Cleaning](#filesystem-cleaning) section for scheduling and troubleshooting.
 
 ## Change Replication Throttle
@@ -643,8 +669,10 @@ Throttle limit removed - replication bandwidth unrestricted
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid throttle value. Must be between 1024 and 10737418240 bytes per second`** — Ensure the bandwidth value is within the valid range; 52428800 bps (50 MB/s) is acceptable, but values below 1 KB/s or above 10 GB/s will be rejected.
-    **`Error: Replication in progress. Cannot modify throttle settings during active replication`** — Wait for the current replication job to complete before adjusting throttle settings, or use `replication status` to monitor progress.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid throttle value. Must be between 1024 and 10737418240 bytes per second` | Ensure the bandwidth value is within the valid range; 52428800 bps (50 MB/s) is acceptable, but values below 1 KB/s or above 10 GB/s will be rejected. |
+    | `Error: Replication in progress. Cannot modify throttle settings during active replication` | Wait for the current replication job to complete before adjusting throttle settings, or use `replication status` to monitor progress. |
 Apply a throttle during business hours to protect production I/O from replication traffic. Remove or raise the limit during off-peak windows to reduce replication lag. Verify lag after any change with `replication show stats`.
 
 ## Expand Data Domain Capacity (DD Expansion Shelf)

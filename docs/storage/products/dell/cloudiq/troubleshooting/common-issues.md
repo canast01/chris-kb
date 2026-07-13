@@ -49,9 +49,11 @@ Jan 15 14:33:12 SCG-PROD-01 dsagw[3847]: 2025-01-15T14:33:12.556Z INFO telemetry
 ```
 
 !!! warning "Common errors"
-    **`connection refused`** — Verify the CloudIQ endpoint is reachable with `telnet cloudiq.dell.com 443` and check firewall rules allow outbound HTTPS from the SCG appliance.
-    **`TLS handshake failed`** — Ensure the SCG appliance certificate is valid with `openssl s_client -connect cloudiq.dell.com:443` and update CA bundles if expired with `update-ca-certificates`.
-    **`authentication error`** — Confirm the SCG registration token in `/etc/dsagw/config.yaml` matches the one in CloudIQ portal and regenerate if necessary.
+    | Error | Fix |
+    |---|---|
+    | `connection refused` | Verify the CloudIQ endpoint is reachable with `telnet cloudiq.dell.com 443` and check firewall rules allow outbound HTTPS from the SCG appliance. |
+    | `TLS handshake failed` | Ensure the SCG appliance certificate is valid with `openssl s_client -connect cloudiq.dell.com:443` and update CA bundles if expired with `update-ca-certificates`. |
+    | `authentication error` | Confirm the SCG registration token in `/etc/dsagw/config.yaml` matches the one in CloudIQ portal and regenerate if necessary. |
 ```bash
 # Reproduce the failure with verbose output
 CLIENT_ID="<your-client-id>"
@@ -91,9 +93,11 @@ curl -v -X POST "https://cloudiq.apis.dell.com/auth/oauth/v2/token" \
 ```
 
 !!! warning "Common errors"
-    **`HTTP/1.1 401 Unauthorized`** — Verify CLIENT_ID and CLIENT_SECRET are correct and match the credentials registered in Dell CloudIQ portal.
-    **`HTTP/1.1 400 Bad Request: invalid_grant`** — Ensure grant_type is set to exactly `client_credentials` with no typos or extra spaces.
-    **`HTTP/1.1 403 Forbidden`** — Check Dell CloudIQ console to confirm the API credentials have not been revoked or expired, and regenerate if necessary.
+    | Error | Fix |
+    |---|---|
+    | `HTTP/1.1 401 Unauthorized` | Verify CLIENT_ID and CLIENT_SECRET are correct and match the credentials registered in Dell CloudIQ portal. |
+    | `HTTP/1.1 400 Bad Request: invalid_grant` | Ensure grant_type is set to exactly `client_credentials` with no typos or extra spaces. |
+    | `HTTP/1.1 403 Forbidden` | Check Dell CloudIQ console to confirm the API credentials have not been revoked or expired, and regenerate if necessary. |
 ```bash
 # Step 1: Test the webhook endpoint externally (from a machine that has internet access)
 curl -X POST "<your-webhook-url>" \
@@ -135,9 +139,11 @@ curl -X POST "<your-webhook-url>" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to webhook.example.com port 443: Connection refused`** — Verify the webhook endpoint URL is correct and the target service is running and accessible from your network.
-    **`HTTP/1.1 401 Unauthorized`** — Check that any required authentication headers (API keys, bearer tokens) are configured correctly in CloudIQ's webhook settings.
-    **`HTTP/1.1 400 Bad Request`** — Validate that the JSON payload format matches the endpoint's expected schema and that all required fields are present.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to webhook.example.com port 443: Connection refused` | Verify the webhook endpoint URL is correct and the target service is running and accessible from your network. |
+    | `HTTP/1.1 401 Unauthorized` | Check that any required authentication headers (API keys, bearer tokens) are configured correctly in CloudIQ's webhook settings. |
+    | `HTTP/1.1 400 Bad Request` | Validate that the JSON payload format matches the endpoint's expected schema and that all required fields are present. |
 ```bash
 # Query current capacity state to validate against CloudIQ forecast
 TOKEN="<your-token>"
@@ -174,9 +180,11 @@ curl -s -X GET "${BASE}/systems/${SYSTEM_ID}/capacity" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: cloudiq.apis.dell.com`** — Verify network connectivity and DNS resolution; check if your firewall blocks Dell CloudIQ API endpoints.
-    **`{"error": "401 Unauthorized", "message": "Invalid or expired token"}`** — Regenerate your API token in the CloudIQ portal and ensure it has capacity query permissions.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip certificate verification, or update your CA bundle if using a corporate proxy.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: cloudiq.apis.dell.com` | Verify network connectivity and DNS resolution; check if your firewall blocks Dell CloudIQ API endpoints. |
+    | `{"error": "401 Unauthorized", "message": "Invalid or expired token"}` | Regenerate your API token in the CloudIQ portal and ensure it has capacity query permissions. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl to skip certificate verification, or update your CA bundle if using a corporate proxy. |
 ```bash
 # Full SCG connectivity diagnostic sequence
 # Run on the SCG appliance (SSH as admin)
@@ -242,9 +250,11 @@ Jan 17 15:13:45 scg-prod-01 dsagw[4821]: WARN: Retrying ESRS upload (attempt 2/5
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection timed out`** — Verify firewall rules allow outbound HTTPS to cloudiq.dell.com and check network connectivity with `ping -c 4 cloudiq.dell.com`.
-    **`dsagw: command not found`** — Ensure the dsagw CLI tools are installed in PATH or run `source /opt/dell/dsagw/bin/dsagw-env.sh` to load the environment.
-    **`ERROR: Failed to sync metrics for device ... : timeout after 30s`** — Increase the dsagw connection timeout in `/etc/dsagw/dsagw.conf` (set `connection.timeout.ms=60000`) and restart the service with `systemctl restart dsagw`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection timed out` | Verify firewall rules allow outbound HTTPS to cloudiq.dell.com and check network connectivity with `ping -c 4 cloudiq.dell.com`. |
+    | `dsagw: command not found` | Ensure the dsagw CLI tools are installed in PATH or run `source /opt/dell/dsagw/bin/dsagw-env.sh` to load the environment. |
+    | `ERROR: Failed to sync metrics for device ... : timeout after 30s` | Increase the dsagw connection timeout in `/etc/dsagw/dsagw.conf` (set `connection.timeout.ms=60000`) and restart the service with `systemctl restart dsagw`. |
 ```bash
 # Acknowledge an anomaly alert (dismiss as known/planned)
 ALERT_ID="<alert-id>"

@@ -162,9 +162,11 @@ performance: 0.034 s: diff-index
 ```
 
 !!! warning "Common errors"
-    **`fatal: could not read Username for 'https://github.com': No such file or directory`** — Configure SSH keys or use a personal access token with `git config --global credential.helper store`.
-    **`fatal: The remote end hung up unexpectedly`** — Check network connectivity and SSH key permissions with `ssh -T git@github.com`; increase timeout with `git config --global http.postBuffer 524288000`.
-    **`trace: run_command: 'ssh' ... fatal: Could not resolve hostname`** — Verify DNS resolution with `nslookup github.com` and check SSH config in `~/.ssh/config` for correct Host entries.
+    | Error | Fix |
+    |---|---|
+    | `fatal: could not read Username for 'https://github.com': No such file or directory` | Configure SSH keys or use a personal access token with `git config --global credential.helper store`. |
+    | `fatal: The remote end hung up unexpectedly` | Check network connectivity and SSH key permissions with `ssh -T git@github.com`; increase timeout with `git config --global http.postBuffer 524288000`. |
+    | `trace: run_command: 'ssh' ... fatal: Could not resolve hostname` | Verify DNS resolution with `nslookup github.com` and check SSH config in `~/.ssh/config` for correct Host entries. |
 ---
 
 ## Step 2 — Verify remote connectivity
@@ -219,9 +221,11 @@ a9f2e1d8c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3f2	refs/heads/main
 ```
 
 !!! warning "Common errors"
-    **`fatal: 'origin' does not appear to be a 'git' repository`** — Verify you are in a git repository root directory with `git rev-parse --git-dir`.
-    **`Permission denied (publickey). fatal: Could not read from remote repository.`** — Ensure your SSH key is added to the SSH agent with `ssh-add ~/.ssh/id_rsa` and registered in your GitHub account.
-    **`fatal: repository not found`** — Confirm the remote URL is correct and you have access to the repository with `git remote set-url origin <correct-url>`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: 'origin' does not appear to be a 'git' repository` | Verify you are in a git repository root directory with `git rev-parse --git-dir`. |
+    | `Permission denied (publickey). fatal: Could not read from remote repository.` | Ensure your SSH key is added to the SSH agent with `ssh-add ~/.ssh/id_rsa` and registered in your GitHub account. |
+    | `fatal: repository not found` | Confirm the remote URL is correct and you have access to the repository with `git remote set-url origin <correct-url>`. |
 `git ls-remote origin` is the fastest test — it authenticates and fetches the remote ref list. If this succeeds, the auth and network path are working. If it fails, the error message narrows the problem to DNS, firewall, auth, or permissions.
 
 ---
@@ -314,8 +318,10 @@ file:.git/config	core.sshCommand=ssh -i ~/.ssh/id_rsa_deploy -o StrictHostKeyChe
 ```
 
 !!! warning "Common errors"
-    **`error: key does not contain a section: user.email`** — Ensure you're running `git config` inside a valid git repository or use `--global` flag for user-level config.
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Navigate to the root of a git repository before running config commands, or use `--global` to query system-wide settings.
+    | Error | Fix |
+    |---|---|
+    | `error: key does not contain a section: user.email` | Ensure you're running `git config` inside a valid git repository or use `--global` flag for user-level config. |
+    | `fatal: not a git repository (or any of the parent directories): .git` | Navigate to the root of a git repository before running config commands, or use `--global` to query system-wide settings. |
 ---
 
 ## Step 4 — Diagnose SSH authentication
@@ -365,9 +371,11 @@ Connection to gitlab.example.com port 2222 closed.
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the public key is added to your Git provider account and the private key path in ~/.ssh/config matches your actual key file.
-    **`ssh: connect to host gitlab.example.com port 2222: Connection refused`** — Confirm the GitLab SSH service is running on port 2222 and any firewall rules allow outbound connections to that port.
-    **`Could not resolve hostname gitlab.example.com: Name or service not known`** — Check DNS resolution with `nslookup gitlab.example.com` and verify the hostname is correct in your SSH config.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the public key is added to your Git provider account and the private key path in ~/.ssh/config matches your actual key file. |
+    | `ssh: connect to host gitlab.example.com port 2222: Connection refused` | Confirm the GitLab SSH service is running on port 2222 and any firewall rules allow outbound connections to that port. |
+    | `Could not resolve hostname gitlab.example.com: Name or service not known` | Check DNS resolution with `nslookup gitlab.example.com` and verify the hostname is correct in your SSH config. |
 Key signatures in `ssh -vvvT` output:
 
 ```yaml
@@ -458,9 +466,11 @@ Receiving objects: 100% (42/42), 15.23 KiB | 2.54 MiB/s, done.
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the private key path is correct and readable (`ls -la ~/.ssh/id_ed25519`), then confirm the public key is added to your Git hosting provider's SSH keys.
-    **`Could not open a connection to your authentication agent.`** — Start the SSH agent with `eval "$(ssh-agent -s)"` before running `ssh-add`.
-    **`Host key verification failed.`** — Run `ssh-keyscan -H github.com >> ~/.ssh/
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the private key path is correct and readable (`ls -la ~/.ssh/id_ed25519`), then confirm the public key is added to your Git hosting provider's SSH keys. |
+    | `Could not open a connection to your authentication agent.` | Start the SSH agent with `eval "$(ssh-agent -s)"` before running `ssh-add`. |
+    | `Host key verification failed.` | Run `ssh-keyscan -H github.com >> ~/.ssh/ |
 ---
 
 ## Step 5 — Diagnose HTTPS authentication and proxy
@@ -516,9 +526,11 @@ true
 ```
 
 !!! warning "Common errors"
-    **`fatal: unable to access 'https://github.com/...': Could not resolve host: github.com`** — Check DNS resolution with `nslookup github.com` and verify network connectivity; if behind a proxy, ensure `git config http.proxy` is set correctly.
-    **`fatal: unable to access 'https://github.com/...': SSL certificate problem: self signed certificate`** — Verify the certificate with `openssl s_client -connect github.com:443` and either update your CA bundle path via `git config http.sslCAInfo /path/to/ca-bundle.crt` or contact your security team if using a corporate proxy.
-    **`fatal: unable to access 'https://github.com/...': The requested URL returned error: 401`** — Refresh your GitHub PAT credentials by running the `git credential reject` block above, then retry the operation to be prompted for new credentials.
+    | Error | Fix |
+    |---|---|
+    | `fatal: unable to access 'https://github.com/...': Could not resolve host: github.com` | Check DNS resolution with `nslookup github.com` and verify network connectivity; if behind a proxy, ensure `git config http.proxy` is set correctly. |
+    | `fatal: unable to access 'https://github.com/...': SSL certificate problem: self signed certificate` | Verify the certificate with `openssl s_client -connect github.com:443` and either update your CA bundle path via `git config http.sslCAInfo /path/to/ca-bundle.crt` or contact your security team if using a corporate proxy. |
+    | `fatal: unable to access 'https://github.com/...': The requested URL returned error: 401` | Refresh your GitHub PAT credentials by running the `git credential reject` block above, then retry the operation to be prompted for new credentials. |
 ---
 
 ## Step 6 — Recover lost work
@@ -564,8 +576,10 @@ Branch 'recover/lost-commit' set up to track 'def5678'.
 ```
 
 !!! warning "Common errors"
-    **`fatal: bad revision 'def5678'`** — Verify the commit hash from `git reflog` output is correct and hasn't been garbage collected by running `git gc --aggressive` to preserve reflog entries.
-    **`error: commit def5678 is not an ancestor of HEAD`** — Use `git cherry-pick def5678` instead of `git rebase` if the commit is not in the current branch's history.
+    | Error | Fix |
+    |---|---|
+    | `fatal: bad revision 'def5678'` | Verify the commit hash from `git reflog` output is correct and hasn't been garbage collected by running `git gc --aggressive` to preserve reflog entries. |
+    | `error: commit def5678 is not an ancestor of HEAD` | Use `git cherry-pick def5678` instead of `git rebase` if the commit is not in the current branch's history. |
 ### Recover a deleted branch
 
 ```bash
@@ -595,8 +609,10 @@ Switched to branch 'recovered-branch'
 ```
 
 !!! warning "Common errors"
-    **`fatal: your current branch 'deleted-branch' does not have any commits yet`** — Run `git reflog --all` instead of `git reflog` to search across all refs, not just HEAD.
-    **`error: pathspec '0a1f2c3' did not match any file(s) known to git`** — Ensure you copied the full SHA from reflog output (at least 7 characters) and use it directly in `git branch recovered-branch <sha>` without quotes or extra whitespace.
+    | Error | Fix |
+    |---|---|
+    | `fatal: your current branch 'deleted-branch' does not have any commits yet` | Run `git reflog --all` instead of `git reflog` to search across all refs, not just HEAD. |
+    | `error: pathspec '0a1f2c3' did not match any file(s) known to git` | Ensure you copied the full SHA from reflog output (at least 7 characters) and use it directly in `git branch recovered-branch <sha>` without quotes or extra whitespace. |
 ### Recover a dropped stash
 
 ```bash
@@ -625,8 +641,10 @@ index 1a2b3c4d..5e6f7g8h 100644
 ```
 
 !!! warning "Common errors"
-    **`fatal: Not a valid object name`** — Verify the SHA exists in `git fsck --unreachable` output and copy it exactly without truncation.
-    **`No stash entries found`** — Ensure you're using a commit SHA from the unreachable list, not a stash reference; use `git stash apply <sha>` only for stashes recovered via fsck.
+    | Error | Fix |
+    |---|---|
+    | `fatal: Not a valid object name` | Verify the SHA exists in `git fsck --unreachable` output and copy it exactly without truncation. |
+    | `No stash entries found` | Ensure you're using a commit SHA from the unreachable list, not a stash reference; use `git stash apply <sha>` only for stashes recovered via fsck. |
 ### Recover staged content discarded by checkout
 
 ```bash
@@ -649,8 +667,10 @@ ls: cannot access '.git/lost-found/other/': No such file or directory
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '.git/lost-found/other/': No such file or directory`** — Run `git fsck --lost-found` first to populate the lost-found directory, or check that you're in the root of a Git repository.
-    **`fatal: Not a git repository (or any of the parent directories): .git`** — Navigate to the root directory of your Git repository before running these commands.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '.git/lost-found/other/': No such file or directory` | Run `git fsck --lost-found` first to populate the lost-found directory, or check that you're in the root of a Git repository. |
+    | `fatal: Not a git repository (or any of the parent directories): .git` | Navigate to the root directory of your Git repository before running these commands. |
 ---
 
 ## Step 7 — Collect diagnostic bundle
@@ -772,7 +792,9 @@ Review before sharing to ensure no secrets are present.
 ```
 
 !!! warning "Common errors"
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Ensure the script is
+    | Error | Fix |
+    |---|---|
+    | `fatal: not a git repository (or any of the parent directories): .git` | Ensure the script is |
 ---
 
 ## Log locations

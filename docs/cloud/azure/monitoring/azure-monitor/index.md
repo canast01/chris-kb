@@ -106,9 +106,11 @@ app-logs-dcr  myRG             eastus      Succeeded
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace' could not be found.`** — Verify the Log Analytics workspace exists in the specified subscription and resource group, and use the correct workspace resource ID.
-    **`(InvalidParameter) The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM' does not exist.`** — Ensure the VM exists in the specified resource group and subscription before creating the DCR association.
-    **`(BadRequest) Invalid JSON in --data-flows or --destinations parameter.`** — Validate JSON syntax by escaping quotes properly or using a JSON file with `@filename` syntax instead of inline strings.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace' could not be found.` | Verify the Log Analytics workspace exists in the specified subscription and resource group, and use the correct workspace resource ID. |
+    | `(InvalidParameter) The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM' does not exist.` | Ensure the VM exists in the specified resource group and subscription before creating the DCR association. |
+    | `(BadRequest) Invalid JSON in --data-flows or --destinations parameter.` | Validate JSON syntax by escaping quotes properly or using a JSON file with `@filename` syntax instead of inline strings. |
 ## Azure Monitor Agents
 
 The Azure Monitor Agent (AMA) replaces the legacy Log Analytics Agent (MMA/OMS) and Diagnostics Extension. It uses DCRs for configuration.
@@ -176,8 +178,10 @@ AzureMonitorLinuxAgent        myRG             myVM      Microsoft.Azure.Monitor
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/myVM' under resource group 'myRG' was not found.`** — Verify the VM name and resource group name are correct with `az vm list --resource-group myRG`.
-    **`The extension with name 'AzureMonitorLinuxAgent' could not be found on virtual machine 'myVM'.`** — Ensure the extension was successfully installed by checking the provisioningState in the first command output.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/myVM' under resource group 'myRG' was not found.` | Verify the VM name and resource group name are correct with `az vm list --resource-group myRG`. |
+    | `The extension with name 'AzureMonitorLinuxAgent' could not be found on virtual machine 'myVM'.` | Ensure the extension was successfully installed by checking the provisioningState in the first command output. |
 ## Diagnostics Settings Pipeline
 
 Diagnostic settings route resource-level logs and metrics to one or more destinations.
@@ -261,9 +265,11 @@ az monitor diagnostic-settings delete \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Storage/storageAccounts/myStorageAccount' could not be found.`** — Verify the subscription ID, resource group name, and storage account name are correct and exist in your Azure subscription.
-    **`(InvalidResourceId) The provided resource ID is invalid or malformed.`** — Ensure the resource ID follows the exact format with correct casing and no trailing slashes: `/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Storage/storageAccounts/<name>`.
-    **`(WorkspaceNotFound) The Log Analytics workspace does not exist or you do not have access to it.`** — Confirm the workspace exists in the same subscription and resource group, and that your account has `Microsoft.OperationalInsights/workspaces/read` permissions.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Storage/storageAccounts/myStorageAccount' could not be found.` | Verify the subscription ID, resource group name, and storage account name are correct and exist in your Azure subscription. |
+    | `(InvalidResourceId) The provided resource ID is invalid or malformed.` | Ensure the resource ID follows the exact format with correct casing and no trailing slashes: `/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Storage/storageAccounts/<name>`. |
+    | `(WorkspaceNotFound) The Log Analytics workspace does not exist or you do not have access to it.` | Confirm the workspace exists in the same subscription and resource group, and that your account has `Microsoft.OperationalInsights/workspaces/read` permissions. |
 ## Key Azure Monitor Components
 
 | Component              | Purpose                                              |
@@ -317,6 +323,8 @@ Disk Write Bytes     Microsoft.Compute    Bytes        {"name":"VMName"}
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM' could not be found.`** — Verify the subscription ID, resource group name, and VM name are correct using `az vm list --output table`.
-    **`InvalidMetricName: The metric 'Percentage CPU' is not valid for this resource type.`** — Use `az monitor metrics list-definitions` to retrieve the exact metric name for your resource type.
-    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'microsoft.insights/metrics/read' over scope '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM'.`** — Assign the "Monitoring Reader" role to your user account using `az role assignment create --role "Monitoring Reader" --assignee <user-email> --scope <resource-id>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM' could not be found.` | Verify the subscription ID, resource group name, and VM name are correct using `az vm list --output table`. |
+    | `InvalidMetricName: The metric 'Percentage CPU' is not valid for this resource type.` | Use `az monitor metrics list-definitions` to retrieve the exact metric name for your resource type. |
+    | `AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'microsoft.insights/metrics/read' over scope '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM'.` | Assign the "Monitoring Reader" role to your user account using `az role assignment create --role "Monitoring Reader" --assignee <user-email> --scope <resource-id>`. |

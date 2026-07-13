@@ -48,8 +48,10 @@ wusa /uninstall /kb:<KBnumber> /quiet /norestart
 ```
 
 !!! warning "Common errors"
-    **`Error: 0x80240017 - CBS_E_NOT_APPLICABLE`** — Verify the KB number matches an installed update using `wmic qfe list brief` and confirm the update is not a prerequisite for other installed patches.
-    **`Error: 0x80070005 - Access Denied`** — Run the command prompt as Administrator; right-click cmd.exe and select "Run as administrator" before executing wusa.
+    | Error | Fix |
+    |---|---|
+    | `Error: 0x80240017 - CBS_E_NOT_APPLICABLE` | Verify the KB number matches an installed update using `wmic qfe list brief` and confirm the update is not a prerequisite for other installed patches. |
+    | `Error: 0x80070005 - Access Denied` | Run the command prompt as Administrator; right-click cmd.exe and select "Run as administrator" before executing wusa. |
 ## Method 3 — Configuration Revert
 
 ```bash
@@ -89,9 +91,11 @@ Rollback completed successfully. 1247 lines restored.
 ```
 
 !!! warning "Common errors"
-    **`fatal: your current branch 'main' is ahead of <previous-commit>`** — Ensure the commit hash exists in your repository history using `git log` and verify the correct commit SHA.
-    **`nginx: [error] open() "/etc/nginx/nginx.conf.bak.2025-01-15" failed (2: No such file or directory)`** — Confirm the backup file exists with the correct date format using `ls -la /etc/nginx/nginx.conf.bak.*` before attempting restore.
-    **`% Invalid command`** — Verify the device is in enable mode with `enable` and that the startup-config exists using `show startup-config | include Running`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: your current branch 'main' is ahead of <previous-commit>` | Ensure the commit hash exists in your repository history using `git log` and verify the correct commit SHA. |
+    | `nginx: [error] open() "/etc/nginx/nginx.conf.bak.2025-01-15" failed (2: No such file or directory)` | Confirm the backup file exists with the correct date format using `ls -la /etc/nginx/nginx.conf.bak.*` before attempting restore. |
+    | `% Invalid command` | Verify the device is in enable mode with `enable` and that the startup-config exists using `show startup-config | include Running`. |
 ## Method 4 — Database Rollback
 
 ```bash
@@ -124,9 +128,11 @@ pg_restore: [archiver] set_session_authorization must be called after the initia
 ```
 
 !!! warning "Common errors"
-    **`pg_restore: [archiver] could not open input file "/backups/servicenow_prod-pre-change-2026-05-10.dump": No such file or directory`** — Verify the backup file exists at the specified path and the date variable expands correctly by running `ls -la /backups/` first.
-    **`FATAL: role "postgres" does not exist`** — Create the postgres user with `createuser -s postgres` or use an existing superuser role with the `-U` flag.
-    **`ERROR: database "servicenow_prod" is being accessed by other users`** — Terminate active connections with `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='servicenow_prod';` before restore.
+    | Error | Fix |
+    |---|---|
+    | `pg_restore: [archiver] could not open input file "/backups/servicenow_prod-pre-change-2026-05-10.dump": No such file or directory` | Verify the backup file exists at the specified path and the date variable expands correctly by running `ls -la /backups/` first. |
+    | `FATAL: role "postgres" does not exist` | Create the postgres user with `createuser -s postgres` or use an existing superuser role with the `-U` flag. |
+    | `ERROR: database "servicenow_prod" is being accessed by other users` | Terminate active connections with `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='servicenow_prod';` before restore. |
 ## Method 5 — Full Backup Restore
 
 ```bash
@@ -156,9 +162,11 @@ RestoreTime             : 2024-01-15 14:45:22
 ```
 
 !!! warning "Common errors"
-    **`Get-VBRBackup : Cannot find backup with name "Production VMs"`** — Verify the exact backup name with `Get-VBRBackup | Select-Object Name` and update the script accordingly.
-    **`Start-VBRRestoreVM : Restore point is corrupted or inaccessible`** — Check backup integrity with `Get-VBRBackup -Name "Production VMs" | Get-VBRRestorePoint | Where-Object {$_.IsCorrupted -eq $true}` and select an earlier restore point.
-    **`Access denied: Insufficient permissions to restore VM`** — Ensure your Veeam service account has Restore operator role or higher in Veeam Backup & Replication console.
+    | Error | Fix |
+    |---|---|
+    | `Get-VBRBackup : Cannot find backup with name "Production VMs"` | Verify the exact backup name with `Get-VBRBackup | Select-Object Name` and update the script accordingly. |
+    | `Start-VBRRestoreVM : Restore point is corrupted or inaccessible` | Check backup integrity with `Get-VBRBackup -Name "Production VMs" | Get-VBRRestorePoint | Where-Object {$_.IsCorrupted -eq $true}` and select an earlier restore point. |
+    | `Access denied: Insufficient permissions to restore VM` | Ensure your Veeam service account has Restore operator role or higher in Veeam Backup & Replication console. |
 **Expected time:** 30–120 minutes depending on backup size.
 
 ## Post-Rollback Validation
@@ -197,9 +205,11 @@ nginx-1.24.0-1.el8.x86_64
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the CA certificate into your system trust store.
-    **`journalctl: command not found`** — Install systemd-devel package or use `tail -f /var/log/messages` on systems without journalctl support.
-    **`systemctl: command not found`** — Verify you are running as root or with sudo, and that systemd is installed on this system.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the CA certificate into your system trust store. |
+    | `journalctl: command not found` | Install systemd-devel package or use `tail -f /var/log/messages` on systems without journalctl support. |
+    | `systemctl: command not found` | Verify you are running as root or with sudo, and that systemd is installed on this system. |
 ## Rollback Checklist
 
 | Step | Done |

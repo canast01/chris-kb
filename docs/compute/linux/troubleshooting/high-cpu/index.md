@@ -105,9 +105,11 @@ Wrote SVG output to cpu_flame.svg (487 KB)
 ```
 
 !!! warning "Common errors"
-    **`command not found: perf`** — Install linux-tools package with `apt-get install linux-tools-generic` (Ubuntu/Debian) or `yum install perf` (RHEL/CentOS).
-    **`command not found: stackcollapse-perf.pl`** — Clone FlameGraph tools with `git clone https://github.com/brendangregg/FlameGraph.git` and add the directory to your PATH.
-    **`Permission denied writing to perf.data`** — Run the perf record command with `sudo` or ensure your user is in the `perf_event_paranoid` group.
+    | Error | Fix |
+    |---|---|
+    | `command not found: perf` | Install linux-tools package with `apt-get install linux-tools-generic` (Ubuntu/Debian) or `yum install perf` (RHEL/CentOS). |
+    | `command not found: stackcollapse-perf.pl` | Clone FlameGraph tools with `git clone https://github.com/brendangregg/FlameGraph.git` and add the directory to your PATH. |
+    | `Permission denied writing to perf.data` | Run the perf record command with `sudo` or ensure your user is in the `perf_event_paranoid` group. |
 ### Safe Process Termination
 
 ```bash
@@ -133,8 +135,10 @@ systemctl set-property application.service CPUQuota=50%
 ```
 
 !!! warning "Common errors"
-    **`kill: (14321) - No such process`** — Verify the PID is correct with `ps aux | grep <process-name>` before attempting to kill it.
-    **`Failed to set property: Unit application.service not found.`** — Ensure the service name is correct and exists by running `systemctl list-units --type=service | grep application`.
+    | Error | Fix |
+    |---|---|
+    | `kill: (14321) - No such process` | Verify the PID is correct with `ps aux | grep <process-name>` before attempting to kill it. |
+    | `Failed to set property: Unit application.service not found.` | Ensure the service name is correct and exists by running `systemctl list-units --type=service | grep application`. |
 ---
 
 ## Windows CPU Diagnosis
@@ -205,9 +209,11 @@ esxtop -b -d 2 -n 30 > /tmp/esxtop_20240115_143022.csv
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Run esxtop directly on the ESXi host via SSH or use vCenter's embedded esxtop client; it is not available on standard Linux systems.
-    **`Permission denied`** — Ensure your user account has Administrator or equivalent privileges on the ESXi host; non-root users cannot access esxtop.
-    **`/tmp/esxtop_*.csv: Read-only file system`** — Verify /tmp has write permissions and sufficient free space; try writing to /var/tmp or a mounted datastore instead.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Run esxtop directly on the ESXi host via SSH or use vCenter's embedded esxtop client; it is not available on standard Linux systems. |
+    | `Permission denied` | Ensure your user account has Administrator or equivalent privileges on the ESXi host; non-root users cannot access esxtop. |
+    | `/tmp/esxtop_*.csv: Read-only file system` | Verify /tmp has write permissions and sufficient free space; try writing to /var/tmp or a mounted datastore instead. |
 ### CPU Ready Time Interpretation
 
 | %RDY Value | Interpretation | Action |
@@ -246,9 +252,11 @@ ntp-sync-01                 156.21
 ```
 
 !!! warning "Common errors"
-    **`Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the command.
-    **`Get-Stat : A parameter cannot be found that matches parameter name 'Realtime'.`** — Use `-Real` instead of `-Realtime` for real-time statistics in your PowerCLI version.
-    **`The property "Value" cannot be found on this object.`** — Verify the CPU ready statistic exists by running `Get-Stat -Stat cpu.ready.summation` alone to confirm the metric name and data availability.
+    | Error | Fix |
+    |---|---|
+    | `Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the command. |
+    | `Get-Stat : A parameter cannot be found that matches parameter name 'Realtime'.` | Use `-Real` instead of `-Realtime` for real-time statistics in your PowerCLI version. |
+    | `The property "Value" cannot be found on this object.` | Verify the CPU ready statistic exists by running `Get-Stat -Stat cpu.ready.summation` alone to confirm the metric name and data availability. |
 ---
 
 ## Java/JVM High CPU Troubleshooting
@@ -389,9 +397,11 @@ ActiveEnterTimestamp=Mon 2024-01-15 08:06:11 UTC
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/dpkg.log: No such file or directory`** — Check the correct log path for your distribution; RHEL/CentOS systems use `/var/log/yum.log` or `/var/log/dnf.log` instead.
-    **`xargs: unterminated quote`** — Escape special characters in the systemctl show command or use `systemctl list-units --state=active --type=service --no-pager` with a simpler follow-up query.
-    **`permission denied`** — Run the commands with `sudo` to access system logs and systemd service details.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/dpkg.log: No such file or directory` | Check the correct log path for your distribution; RHEL/CentOS systems use `/var/log/yum.log` or `/var/log/dnf.log` instead. |
+    | `xargs: unterminated quote` | Escape special characters in the systemctl show command or use `systemctl list-units --state=active --type=service --no-pager` with a simpler follow-up query. |
+    | `permission denied` | Run the commands with `sudo` to access system logs and systemd service details. |
 ---
 
 ## Escalation Criteria

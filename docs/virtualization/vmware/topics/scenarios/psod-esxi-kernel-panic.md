@@ -125,8 +125,10 @@ cat /var/log/vmkernel.log | grep -iE "PSOD|panic|backtrace|oops" | tail -50
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input): No such file or directory`** — Ensure vmkernel.log exists at /var/log/vmkernel.log; check file permissions with `ls -la /var/log/vmkernel.log`.
-    **`tail: cannot open '50' for reading: No such file or directory`** — Remove the pipe and use `tail -50 /var/log/vmkernel.log | grep -iE "PSOD|panic|backtrace|oops"` instead (correct command order).
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input): No such file or directory` | Ensure vmkernel.log exists at /var/log/vmkernel.log; check file permissions with `ls -la /var/log/vmkernel.log`. |
+    | `tail: cannot open '50' for reading: No such file or directory` | Remove the pipe and use `tail -50 /var/log/vmkernel.log | grep -iE "PSOD|panic|backtrace|oops"` instead (correct command order). |
 ```bash
 cat /var/log/vmksummary.log | tail -20
 ```
@@ -146,8 +148,10 @@ cat /var/log/vmksummary.log | tail -20
 ```
 
 !!! warning "Common errors"
-    **`cat: /var/log/vmksummary.log: No such file or directory`** — Verify the ESXi host is running and the log file path is correct; on some ESXi versions the file may be `/var/log/vmkernel.log` instead.
-    **`tail: cannot open '/var/log/vmksummary.log' for reading: Permission denied`** — Run the command with root privileges using `sudo` or SSH directly as root to the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `cat: /var/log/vmksummary.log: No such file or directory` | Verify the ESXi host is running and the log file path is correct; on some ESXi versions the file may be `/var/log/vmkernel.log` instead. |
+    | `tail: cannot open '/var/log/vmksummary.log' for reading: Permission denied` | Run the command with root privileges using `sudo` or SSH directly as root to the ESXi host. |
 Look for: the vmksummary.log gives a concise summary of the crash (timestamp, panic type, initiating world). The vmkernel.log contains the full backtrace.
 
 Check hostd for precursor events in the seconds before the crash:
@@ -171,8 +175,10 @@ cat /var/log/hostd.log | grep -E "ERROR|WARNING" | tail -50
 ```
 
 !!! warning "Common errors"
-    **`cat: /var/log/hostd.log: No such file or directory`** — Verify the ESXi host is running and the hostd service is active with `systemctl status hostd` or check the correct log path for your vSphere version.
-    **`grep: (standard input): Permission denied`** — Run the command with elevated privileges using `sudo` or as root, since hostd logs typically require root access.
+    | Error | Fix |
+    |---|---|
+    | `cat: /var/log/hostd.log: No such file or directory` | Verify the ESXi host is running and the hostd service is active with `systemctl status hostd` or check the correct log path for your vSphere version. |
+    | `grep: (standard input): Permission denied` | Run the command with elevated privileges using `sudo` or as root, since hostd logs typically require root access. |
 ---
 
 ## 5. Generate a vm-support Bundle
@@ -197,9 +203,11 @@ Support information collection completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`vm-support: command not found`** — Ensure you are running this command on an ESXi host with VMware Tools installed, or load the appropriate VMware module.
-    **`Permission denied: /tmp/`** — Run the command with appropriate privileges (sudo or as root) or specify a writable directory where your user has write permissions.
-    **`No space left on device`** — Free up disk space on the target filesystem or specify an alternate output directory with sufficient capacity (typically 500 MB+ required).
+    | Error | Fix |
+    |---|---|
+    | `vm-support: command not found` | Ensure you are running this command on an ESXi host with VMware Tools installed, or load the appropriate VMware module. |
+    | `Permission denied: /tmp/` | Run the command with appropriate privileges (sudo or as root) or specify a writable directory where your user has write permissions. |
+    | `No space left on device` | Free up disk space on the target filesystem or specify an alternate output directory with sufficient capacity (typically 500 MB+ required). |
 This creates a compressed archive in `/tmp/` containing all logs, configuration, and system state. Transfer with SCP.
 
 Alternatively, generate from vCenter: right-click the host → **Export System Logs** — equivalent but saves directly to your local machine.
@@ -269,8 +277,10 @@ net-driver-bnx2x               20.2.209.0-1OEM.700.1.0.15160482  Broadcom  Partn
 ```
 
 !!! warning "Common errors"
-    **`VIB net-driver-bnx2x not found.`** — Verify the exact VIB name with `esxcli software vib list | grep -i <partial-name>` and use the correct name from the output.
-    **`Cannot remove VIB: VIB is part of an Image Profile and cannot be removed independently.`** — Use LCM (Lifecycle Manager) or boot into maintenance mode and remove via `esxcli software vib remove --vibname <vib-name> --force` if safe to do so.
+    | Error | Fix |
+    |---|---|
+    | `VIB net-driver-bnx2x not found.` | Verify the exact VIB name with `esxcli software vib list | grep -i <partial-name>` and use the correct name from the output. |
+    | `Cannot remove VIB: VIB is part of an Image Profile and cannot be removed independently.` | Use LCM (Lifecycle Manager) or boot into maintenance mode and remove via `esxcli software vib remove --vibname <vib-name> --force` if safe to do so. |
 Then use VxRail Manager → LCM to apply the correct validated driver as part of a bundle upgrade. For the full VxRail LCM upgrade procedure, see the
 [VxRail LCM Upgrade Failure](vxrail-lcm-upgrade-failure.md) scenario.
 

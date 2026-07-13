@@ -60,9 +60,11 @@ BUM Handling: Enabled
 ```
 
 !!! warning "Common errors"
-    **`Error: Fabric not found or access denied`** — Verify you are connected to the DCNM controller and have fabric admin privileges; check `show fabric list` first.
-    **`Deployment Status: OUT_OF_SYNC with 3 pending changes`** — Navigate to Fabric → Deploy → Recalculate & Deploy in the DCNM UI to push pending configurations to switches.
-    **`Config Diff shows 247 lines of changes — deployment blocked`** — Review the diff in DCNM UI (Fabric → Switches → View Config Diff) to identify breaking changes before forcing deployment.
+    | Error | Fix |
+    |---|---|
+    | `Error: Fabric not found or access denied` | Verify you are connected to the DCNM controller and have fabric admin privileges; check `show fabric list` first. |
+    | `Deployment Status: OUT_OF_SYNC with 3 pending changes` | Navigate to Fabric → Deploy → Recalculate & Deploy in the DCNM UI to push pending configurations to switches. |
+    | `Config Diff shows 247 lines of changes — deployment blocked` | Review the diff in DCNM UI (Fabric → Switches → View Config Diff) to identify breaking changes before forcing deployment. |
 ### "Out-of-Sync" Switch After Manual Change
 
 Direct CLI changes on switches bypass DCNM and cause out-of-sync status.
@@ -146,9 +148,11 @@ All services started successfully in 45 seconds
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Disk usage on / exceeds 90%, service startup may fail`** — Delete old logs in `/var/log` or increase root partition size before restarting services.
-    **`ERROR: elasticsearch failed to start - connection refused on port 9200`** — Wait 30 seconds for elasticsearch to fully initialize, then verify with `appmgr status all`.
-    **`ERROR: postgres connection pool exhausted - max_connections limit reached`** — Increase `max_connections` in postgres configuration or restart the application to clear stale connections.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Disk usage on / exceeds 90%, service startup may fail` | Delete old logs in `/var/log` or increase root partition size before restarting services. |
+    | `ERROR: elasticsearch failed to start - connection refused on port 9200` | Wait 30 seconds for elasticsearch to fully initialize, then verify with `appmgr status all`. |
+    | `ERROR: postgres connection pool exhausted - max_connections limit reached` | Increase `max_connections` in postgres configuration or restart the application to clear stale connections. |
 ### High CPU on DCNM Server
 
 ```bash
@@ -188,8 +192,10 @@ Database Connections:   47 / 100 available
 ```
 
 !!! warning "Common errors"
-    **`appmgr: command not found`** — Ensure you are logged into the DCNM appliance CLI (via SSH to the management IP) rather than a remote host, or source the DCNM environment variables.
-    **`Permission denied`** — Run the command with appropriate DCNM admin credentials or use `sudo dcnm-cli` if required by your deployment.
+    | Error | Fix |
+    |---|---|
+    | `appmgr: command not found` | Ensure you are logged into the DCNM appliance CLI (via SSH to the management IP) rather than a remote host, or source the DCNM environment variables. |
+    | `Permission denied` | Run the command with appropriate DCNM admin credentials or use `sudo dcnm-cli` if required by your deployment. |
 ## VXLAN / VPC Issues
 
 ### VPC Peer-Link Down Alarm
@@ -238,9 +244,11 @@ Port-channel100 is up, line protocol is up (connected)
 ```
 
 !!! warning "Common errors"
-    **`%VPC-2-PEER_LINK_DOWN: VPC peer link is down`** — Verify physical connectivity on port-channel member interfaces and check for spanning-tree BPDU guard or port-security blocking the peer-link.
-    **`%VPC-3-CONSISTENCY_FAILED: VPC consistency check failed for VLAN`** — Ensure both VPC peers have identical VLAN configurations and allowed VLAN lists on the peer-link trunk.
-    **`%ETHPORT-5-IF_DOWN_SUSPENDED: Interface Ethernet suspended`** — Clear the vpc consistency failure by resolving the underlying VLAN or configuration mismatch, then use `no shut` on the suspended interfaces.
+    | Error | Fix |
+    |---|---|
+    | `%VPC-2-PEER_LINK_DOWN: VPC peer link is down` | Verify physical connectivity on port-channel member interfaces and check for spanning-tree BPDU guard or port-security blocking the peer-link. |
+    | `%VPC-3-CONSISTENCY_FAILED: VPC consistency check failed for VLAN` | Ensure both VPC peers have identical VLAN configurations and allowed VLAN lists on the peer-link trunk. |
+    | `%ETHPORT-5-IF_DOWN_SUSPENDED: Interface Ethernet suspended` | Clear the vpc consistency failure by resolving the underlying VLAN or configuration mismatch, then use `no shut` on the suspended interfaces. |
 ### VXLAN Tunnel Not Forming
 
 ```bash
@@ -287,9 +295,11 @@ Ethernet1/1
 ```
 
 !!! warning "Common errors"
-    **`NVE peer information for switch prod-leaf-01: NVE peer not found`** — Verify the remote VTEP loopback is reachable and BGP EVPN routes are being advertised with `show bgp l2vpn evpn neighbors`.
-    **`PING 10.1.1.6 (10.1.1.6) from 10.1.1.5: 100.00% packet loss`** — Confirm loopback0 interface is up and routed connectivity exists between spines; check `show ip route` for the remote loopback prefix.
-    **`MTU 9216` (actual interface MTU less than 9216)`** — Increase the interface MTU to at least 9216 with `config t; interface ethernet X/X; mtu 9216` to accommodate VXLAN 50-byte overhead.
+    | Error | Fix |
+    |---|---|
+    | `NVE peer information for switch prod-leaf-01: NVE peer not found` | Verify the remote VTEP loopback is reachable and BGP EVPN routes are being advertised with `show bgp l2vpn evpn neighbors`. |
+    | `PING 10.1.1.6 (10.1.1.6) from 10.1.1.5: 100.00% packet loss` | Confirm loopback0 interface is up and routed connectivity exists between spines; check `show ip route` for the remote loopback prefix. |
+    | `MTU 9216` (actual interface MTU less than 9216)` | Increase the interface MTU to at least 9216 with `config t; interface ethernet X/X; mtu 9216` to accommodate VXLAN 50-byte overhead. |
 ## License Issues
 
 ### "License Expired" Warning
@@ -322,8 +332,10 @@ Host ID Information:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct DCNM CLI context; these commands may require admin-level access or must be run from the DCNM appliance console.
-    **`License expired or invalid`** — Upload a valid license file through the DCNM UI (Administration → Licensing) or contact Cisco support to renew your SmartNet contract.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct DCNM CLI context; these commands may require admin-level access or must be run from the DCNM appliance console. |
+    | `License expired or invalid` | Upload a valid license file through the DCNM UI (Administration → Licensing) or contact Cisco support to renew your SmartNet contract. |
 ## Log Collection for TAC
 
 ```bash
@@ -353,8 +365,10 @@ switch# dir bootflash:tech-support-20240115.txt
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct DCNM CLI context; use `appmgr` command only from the DCNM appliance prompt, not the switch.
-    **`Error: Insufficient disk space available`** — Check available bootflash space with `dir bootflash:` and free up space or redirect output to a remote location using `> tftp://server/path`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct DCNM CLI context; use `appmgr` command only from the DCNM appliance prompt, not the switch. |
+    | `Error: Insufficient disk space available` | Check available bootflash space with `dir bootflash:` and free up space or redirect output to a remote location using `> tftp://server/path`. |
 ## Quick Diagnostics Reference
 
 | Symptom | First Check | Command |

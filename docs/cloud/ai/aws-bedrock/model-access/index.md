@@ -76,9 +76,11 @@ aws bedrock get-foundation-model \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDeniedException) when calling the ListFoundationModels operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: bedrock:ListFoundationModels`** — Add `bedrock:ListFoundationModels` permission to the IAM user or role policy.
-    **`An error occurred (ValidationException) when calling the GetFoundationModel operation: Could not find model with identifier anthropic.claude-3-5-sonnet-20241022-v2:0`** — Verify the exact model identifier using `list-foundation-models` and ensure the model is available in your region.
-    **`An error occurred (ThrottlingException) when calling the ListFoundationModels operation: Rate exceeded`** — Wait a few seconds before retrying the command, or implement exponential backoff in automation scripts.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDeniedException) when calling the ListFoundationModels operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: bedrock:ListFoundationModels` | Add `bedrock:ListFoundationModels` permission to the IAM user or role policy. |
+    | `An error occurred (ValidationException) when calling the GetFoundationModel operation: Could not find model with identifier anthropic.claude-3-5-sonnet-20241022-v2:0` | Verify the exact model identifier using `list-foundation-models` and ensure the model is available in your region. |
+    | `An error occurred (ThrottlingException) when calling the ListFoundationModels operation: Rate exceeded` | Wait a few seconds before retrying the command, or implement exponential backoff in automation scripts. |
 Access is per-region. A model enabled in `us-east-1` is not automatically available in `eu-west-1`.
 
 ## On-Demand vs Provisioned Throughput
@@ -124,9 +126,11 @@ aws bedrock get-provisioned-model-throughput \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ValidationException) when calling the CreateProvisionedModelThroughput operation: Model anthropic.claude-3-sonnet-20240229-v1:0 is not available in region us-east-1`** — Verify the model ID is available in your region using `aws bedrock list-foundation-models --region us-east-1` and update the model-id parameter.
-    **`An error occurred (AccessDeniedException) when calling the CreateProvisionedModelThroughput operation: User is not authorized to perform bedrock:CreateProvisionedModelThroughput`** — Add the `bedrock:CreateProvisionedModelThroughput` permission to your IAM user or role policy.
-    **`An error occurred (ResourceNotFoundException) when calling the GetProvisionedModelThroughput operation: Could not find provisioned model with id prod-claude-sonnet`** — Wait 30-60 seconds for the provisioned model creation to complete before querying it, or verify the provisioned-model-id matches the provisioned-model-name from creation.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ValidationException) when calling the CreateProvisionedModelThroughput operation: Model anthropic.claude-3-sonnet-20240229-v1:0 is not available in region us-east-1` | Verify the model ID is available in your region using `aws bedrock list-foundation-models --region us-east-1` and update the model-id parameter. |
+    | `An error occurred (AccessDeniedException) when calling the CreateProvisionedModelThroughput operation: User is not authorized to perform bedrock:CreateProvisionedModelThroughput` | Add the `bedrock:CreateProvisionedModelThroughput` permission to your IAM user or role policy. |
+    | `An error occurred (ResourceNotFoundException) when calling the GetProvisionedModelThroughput operation: Could not find provisioned model with id prod-claude-sonnet` | Wait 30-60 seconds for the provisioned model creation to complete before querying it, or verify the provisioned-model-id matches the provisioned-model-name from creation. |
 Each Model Unit provides a defined tokens-per-minute (TPM) rate that varies by model. Check the Bedrock pricing page for current MU rates.
 
 ## Invoking Models
@@ -198,9 +202,11 @@ aws service-quotas request-service-quota-increase \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDenied) when calling the ListServiceQuotas operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: servicequotas:ListServiceQuotas`** — Add the `servicequotas:ListServiceQuotas` and `servicequotas:RequestServiceQuotaIncrease` permissions to the IAM user or role.
-    **`An error occurred (InvalidParameterException) when calling the RequestServiceQuotaIncrease operation: Invalid quota code: L-XXXXXXXX`** — Replace `L-XXXXXXXX` with the actual quota code from the list output (e.g., `L-4B902E5D`).
-    **`An error occurred (QuotaExceededException) when calling the RequestServiceQuotaIncrease operation: You have reached the maximum number of quota increase requests`** — Wait for pending quota requests to complete or be denied before submitting new ones.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDenied) when calling the ListServiceQuotas operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: servicequotas:ListServiceQuotas` | Add the `servicequotas:ListServiceQuotas` and `servicequotas:RequestServiceQuotaIncrease` permissions to the IAM user or role. |
+    | `An error occurred (InvalidParameterException) when calling the RequestServiceQuotaIncrease operation: Invalid quota code: L-XXXXXXXX` | Replace `L-XXXXXXXX` with the actual quota code from the list output (e.g., `L-4B902E5D`). |
+    | `An error occurred (QuotaExceededException) when calling the RequestServiceQuotaIncrease operation: You have reached the maximum number of quota increase requests` | Wait for pending quota requests to complete or be denied before submitting new ones. |
 Key quotas to monitor: `InvokeModel` requests per minute (RPM) and tokens per minute (TPM) per model.
 
 ## Cross-Region Inference Profiles
@@ -228,6 +234,8 @@ aws bedrock invoke-model \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ValidationException) when calling the InvokeModel operation: Could not validate the provided model identifier`** — Verify the model ID is correct and available in your region with `aws bedrock list-foundation-models --region us-east-1`.
-    **`An error occurred (AccessDeniedException) when calling the InvokeModel operation: User is not authorized to perform: bedrock:InvokeModel`** — Add the `bedrock:InvokeModel` permission to your IAM user or role policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ValidationException) when calling the InvokeModel operation: Could not validate the provided model identifier` | Verify the model ID is correct and available in your region with `aws bedrock list-foundation-models --region us-east-1`. |
+    | `An error occurred (AccessDeniedException) when calling the InvokeModel operation: User is not authorized to perform: bedrock:InvokeModel` | Add the `bedrock:InvokeModel` permission to your IAM user or role policy. |
 The `us.` prefix denotes the US cross-region inference profile. Use `eu.` for Europe and `ap.` for Asia-Pacific.

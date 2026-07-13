@@ -89,8 +89,10 @@ true
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.`** — Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`.
-    **`AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/read' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01'.`** — Ensure your Azure account has at least Storage Account Contributor or Reader role assigned on the storage account or resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.` | Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`. |
+    | `AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/read' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01'.` | Ensure your Azure account has at least Storage Account Contributor or Reader role assigned on the storage account or resource group. |
 ## Enabling Customer-Managed Keys (CMK)
 
 CMK requires an Azure Key Vault with soft delete and purge protection enabled.
@@ -218,8 +220,10 @@ Key created successfully with kid: https://kv-storage-prod.vault.azure.net/keys/
 ```
 
 !!! warning "Common errors"
-    **`The user, group or application 'appid=12345678-1234-1234-1234-123456789012;oid=87654321-4321-4321-4321-210987654321' does not have access to key 'storage-cmk' in this vault.`** — Grant the storage account's managed identity Key Vault access with `az keyvault set-policy --name kv-storage-prod --object-id <storage-identity-oid> --key-permissions get unwrapKey wrapKey`.
-    **`(ResourceNotFound) The storage account 'stprodblobs01' could not be found.`** — Verify the storage account name and resource group are correct with `az storage account list --resource-group rg-storage-prod`.
+    | Error | Fix |
+    |---|---|
+    | `The user, group or application 'appid=12345678-1234-1234-1234-123456789012;oid=87654321-4321-4321-4321-210987654321' does not have access to key 'storage-cmk' in this vault.` | Grant the storage account's managed identity Key Vault access with `az keyvault set-policy --name kv-storage-prod --object-id <storage-identity-oid> --key-permissions get unwrapKey wrapKey`. |
+    | `(ResourceNotFound) The storage account 'stprodblobs01' could not be found.` | Verify the storage account name and resource group are correct with `az storage account list --resource-group rg-storage-prod`. |
 ## Infrastructure Encryption
 
 Infrastructure encryption adds a second independent encryption layer using a different algorithm at the storage infrastructure level.
@@ -260,9 +264,11 @@ true
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound : Resource group 'rg-storage-prod' could not be found.`** — Create the resource group first with `az group create --name rg-storage-prod --location eastus`.
-    **`StorageAccountAlreadyTaken : The storage account named 'stprodinfraenc01' is already taken.`** — Choose a unique storage account name (must be globally unique across Azure) and retry.
-    **`InvalidParameter : The value of parameter 'require-infrastructure-encryption' is invalid.`** — Use lowercase `true` or `false` as string values, or remove quotes if using boolean flags.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound : Resource group 'rg-storage-prod' could not be found.` | Create the resource group first with `az group create --name rg-storage-prod --location eastus`. |
+    | `StorageAccountAlreadyTaken : The storage account named 'stprodinfraenc01' is already taken.` | Choose a unique storage account name (must be globally unique across Azure) and retry. |
+    | `InvalidParameter : The value of parameter 'require-infrastructure-encryption' is invalid.` | Use lowercase `true` or `false` as string values, or remove quotes if using boolean flags. |
 ## Transport Encryption (TLS)
 
 ```bash
@@ -294,8 +300,10 @@ az storage account show \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.`** — Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`.
-    **`AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01'.`** — Ensure your Azure account has Storage Account Contributor or Owner role on the resource group using `az role assignment list --resource-group rg-storage-prod`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.` | Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`. |
+    | `AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01'.` | Ensure your Azure account has Storage Account Contributor or Owner role on the resource group using `az role assignment list --resource-group rg-storage-prod`. |
 ## See also
 
 - [Azure — Overview](../../)

@@ -117,9 +117,11 @@ vol_snapshots_reserve                    svm_prod                     256       
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the ONTAP certificate into your system's CA bundle.
-    **`jq: parse error: Cannot index number with string "name"`** — Verify the ONTAP API version supports the `/storage/volumes` endpoint and that `fields=name,svm,space` returns valid JSON with `.svm.name` structure.
-    **`ONTAP_IP required`** — Set the ONTAP_IP environment variable before running the script: `export ONTAP_IP=192.168.1.50`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the ONTAP certificate into your system's CA bundle. |
+    | `jq: parse error: Cannot index number with string "name"` | Verify the ONTAP API version supports the `/storage/volumes` endpoint and that `fields=name,svm,space` returns valid JSON with `.svm.name` structure. |
+    | `ONTAP_IP required` | Set the ONTAP_IP environment variable before running the script: `export ONTAP_IP=192.168.1.50`. |
 ## Keystone Collector Health Monitor
 
 Runs from cron on the Collector VM. Sends an alert if Collector has not collected within the last 2 hours.
@@ -160,8 +162,10 @@ Keystone Collector OK - last collection 0h ago
 ```
 
 !!! warning "Common errors"
-    **`keystone-collector: command not found`** — Ensure the NetApp Keystone Collector package is installed and `/opt/keystone/bin` is in your PATH, or use the full path to the binary.
-    **`date: invalid date 'YYYY-MM-DDTHH:MM:SS'`** — The `show-last-collection` output format differs from expected; verify the actual output format with `keystone-collector show-last-collection` and adjust the grep pattern accordingly.
+    | Error | Fix |
+    |---|---|
+    | `keystone-collector: command not found` | Ensure the NetApp Keystone Collector package is installed and `/opt/keystone/bin` is in your PATH, or use the full path to the binary. |
+    | `date: invalid date 'YYYY-MM-DDTHH:MM:SS'` | The `show-last-collection` output format differs from expected; verify the actual output format with `keystone-collector show-last-collection` and adjust the grep pattern accordingly. |
 ---
 
 ## Verify

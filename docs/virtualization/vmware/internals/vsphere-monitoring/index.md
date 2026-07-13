@@ -198,9 +198,11 @@ Timestamp           Value
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Run esxtop directly on an ESXi host via SSH or vSphere Client console, not from a Windows/Linux management station.
-    **`Get-Stat : The term 'Get-Stat' is not recognized`** — Install VMware PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force` and import it via `Import-Module VMware.PowerCLI`.
-    **`Exception calling "AddHours" with "1" argument(s): Object reference not set to an instance of an object.`** — Ensure you are connected to vCenter with `Connect-VIServer -Server vcenter.example.com` before running Get-Stat.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Run esxtop directly on an ESXi host via SSH or vSphere Client console, not from a Windows/Linux management station. |
+    | `Get-Stat : The term 'Get-Stat' is not recognized` | Install VMware PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force` and import it via `Import-Module VMware.PowerCLI`. |
+    | `Exception calling "AddHours" with "1" argument(s): Object reference not set to an instance of an object.` | Ensure you are connected to vCenter with `Connect-VIServer -Server vcenter.example.com` before running Get-Stat. |
 > **VCP-DCV Exam Note:** **CPU Ready threshold is typically > 10 ms per 20-second interval** (or expressed as > 5% in some older references). CPU Ready is caused by too many vCPUs competing for too few physical cores — common with over-provisioned VMs. The fix is to reduce the number of vCPUs on VMs that don't need them, not to add more hosts. **CPU Co-Stop** is specific to Fault Tolerance VMs — it measures synchronization pauses between primary and secondary VMs.
 
 ---
@@ -260,8 +262,10 @@ Timestamp                     Entity         Metric                 Value
 ```
 
 !!! warning "Common errors"
-    **`Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.`** — Add `-SkipCertificateCheck` parameter or import the vCenter certificate into PowerCLI's certificate store.
-    **`Get-Stat : Cannot bind argument to parameter 'Entity' because it is null.`** — Verify the ESXi hostname matches exactly and the vCenter account has permissions to query that host.
+    | Error | Fix |
+    |---|---|
+    | `Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.` | Add `-SkipCertificateCheck` parameter or import the vCenter certificate into PowerCLI's certificate store. |
+    | `Get-Stat : Cannot bind argument to parameter 'Entity' because it is null.` | Verify the ESXi hostname matches exactly and the vCenter account has permissions to query that host. |
 > **VCP-DCV Exam Note:** Know what each memory metric means and the reclamation order. **Balloon** means the VMkernel is asking guests to return memory. **Swap** means memory is being written to disk — this indicates severe pressure and will cause noticeable VM performance degradation. **Active memory** is the most accurate measure of a VM's true memory need — a VM with 8 GB allocated but only 500 MB active is a candidate for reclamation.
 
 ---
@@ -310,8 +314,10 @@ Device naa.6001405abcdef1234567890123456789 Statistics:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown device naa.xxxxxx`** — Replace `naa.xxxxxx` with the actual NAA identifier from `esxcli storage core device list`.
-    **`Error: esxtop: command not found`** — Ensure you are connected directly to an ESXi host via SSH or console; esxtop only runs on ESXi, not vCenter.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown device naa.xxxxxx` | Replace `naa.xxxxxx` with the actual NAA identifier from `esxcli storage core device list`. |
+    | `Error: esxtop: command not found` | Ensure you are connected directly to an ESXi host via SSH or console; esxtop only runs on ESXi, not vCenter. |
 ### Network Metrics
 
 | Metric | Description | Concern |
@@ -446,9 +452,11 @@ esx-esxi01-2024-01-15-14-32-45.tgz                    100%  287MB   4.2MB/s   01
 ```
 
 !!! warning "Common errors"
-    **`vm-support: error: insufficient space on /var/tmp`** — Specify an alternate writable datastore path with `-w /vmfs/volumes/datastore_name/` or free space on the host.
-    **`Permission denied (publickey,password).`** — Ensure SSH is enabled on the ESXi host and root credentials are correct; verify firewall rules allow port 22 inbound.
-    **`vim-cmd: Unknown command`** — Run the command from the ESXi shell directly (not from vCenter); if using vCenter, use `esxcli system syslog config get` instead.
+    | Error | Fix |
+    |---|---|
+    | `vm-support: error: insufficient space on /var/tmp` | Specify an alternate writable datastore path with `-w /vmfs/volumes/datastore_name/` or free space on the host. |
+    | `Permission denied (publickey,password).` | Ensure SSH is enabled on the ESXi host and root credentials are correct; verify firewall rules allow port 22 inbound. |
+    | `vim-cmd: Unknown command` | Run the command from the ESXi shell directly (not from vCenter); if using vCenter, use `esxcli system syslog config get` instead. |
 ### VCSA Support Bundle
 
 ```bash
@@ -486,9 +494,11 @@ Bundle size: 487 MB
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or use the FQDN that matches the certificate CN.
-    **`HTTP/1.1 401 Unauthorized`** — Ensure the session token is valid and not expired; obtain a fresh token via `/api/session` endpoint with valid vCenter credentials.
-    **`vc-support.sh: command not found`** — Run the command from the vCenter shell (SSH to VCSA) or use the full path `/usr/lib/vmware-vmafd/bin/vc-support.sh`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or use the FQDN that matches the certificate CN. |
+    | `HTTP/1.1 401 Unauthorized` | Ensure the session token is valid and not expired; obtain a fresh token via `/api/session` endpoint with valid vCenter credentials. |
+    | `vc-support.sh: command not found` | Run the command from the vCenter shell (SSH to VCSA) or use the full path `/usr/lib/vmware-vmafd/bin/vc-support.sh`. |
 ---
 
 ## vSphere Cluster Services (vCLS) Retreat Mode
@@ -525,8 +535,10 @@ domain-c123
 ```
 
 !!! warning "Common errors"
-    **`Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Load the VMware PowerCLI module first with `Import-Module VMware.PowerCLI`.
-    **`You do not have permission to perform this operation.`** — Ensure your vCenter user account has Administrator or Cluster Administrator role on the target cluster.
+    | Error | Fix |
+    |---|---|
+    | `Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Load the VMware PowerCLI module first with `Import-Module VMware.PowerCLI`. |
+    | `You do not have permission to perform this operation.` | Ensure your vCenter user account has Administrator or Cluster Administrator role on the target cluster. |
 **Impact of retreat mode:**
 - vCLS agent VMs are powered off and removed
 - **DRS enters manual mode** — automated load balancing stops
@@ -584,9 +596,11 @@ numericSensorInfo   {NumericSensorInfo, NumericSensorInfo, NumericSensorInfo...}
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the collector's CA certificate into your system trust store.
-    **`The term 'Get-View' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Load the VMware.VimAutomation.Core PowerCLI module with `Import-Module VMware.VimAutomation.Core` before running Get-View commands.
-    **`Unable to connect to the remote server`** — Verify the Skyline Collector appliance is running and accessible on the network; check firewall rules and DNS resolution for sc-collector.vmware.com.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the collector's CA certificate into your system trust store. |
+    | `The term 'Get-View' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Load the VMware.VimAutomation.Core PowerCLI module with `Import-Module VMware.VimAutomation.Core` before running Get-View commands. |
+    | `Unable to connect to the remote server` | Verify the Skyline Collector appliance is running and accessible on the network; check firewall rules and DNS resolution for sc-collector.vmware.com. |
 ### Relationship to Aria Operations
 
 VMware Aria Operations (formerly vRealize Operations) and Skyline serve different purposes:
@@ -643,9 +657,11 @@ Sample 2 of 30 (timestamp: 2024-01-15T14:32:47Z)
 ```
 
 !!! warning "Common errors"
-    **`Error: Cannot open batch file /tmp/perf_data.csv`** — Verify the batch file exists and was created successfully with `ls -la /tmp/perf_data.csv`.
-    **`Error: esxtop: command not found`** — Run esxtop directly on an ESXi host via SSH or vSphere console, not from a remote management station.
-    **`Error: Permission denied writing to /tmp/perf_data.csv`** — Ensure the user running esxtop has write permissions to /tmp or specify an alternative writable directory.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cannot open batch file /tmp/perf_data.csv` | Verify the batch file exists and was created successfully with `ls -la /tmp/perf_data.csv`. |
+    | `Error: esxtop: command not found` | Run esxtop directly on an ESXi host via SSH or vSphere console, not from a remote management station. |
+    | `Error: Permission denied writing to /tmp/perf_data.csv` | Ensure the user running esxtop has write permissions to /tmp or specify an alternative writable directory. |
 ### RESXTOP
 
 RESXTOP is ESXTOP accessed remotely without SSH, using the vSphere CLI. It connects to a host via the vSphere API and presents the same interface as ESXTOP.
@@ -681,9 +697,11 @@ Data written to output.csv
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to host esxi01.corp.local on port 443`** — Verify the ESXi hostname is resolvable and accessible, and check firewall rules for port 443.
-    **`Error: Authentication failed for user root`** — Confirm the root password is correct and the account is not locked; use `--password` flag or enter interactively when prompted.
-    **`Error: resxtop: command not found`** — Install the vSphere CLI package (e.g., `apt-get install vmware-vsphere-cli` on Linux or download from VMware) and ensure it is in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to host esxi01.corp.local on port 443` | Verify the ESXi hostname is resolvable and accessible, and check firewall rules for port 443. |
+    | `Error: Authentication failed for user root` | Confirm the root password is correct and the account is not locked; use `--password` flag or enter interactively when prompted. |
+    | `Error: resxtop: command not found` | Install the vSphere CLI package (e.g., `apt-get install vmware-vsphere-cli` on Linux or download from VMware) and ensure it is in your PATH. |
 ### PowerCLI Get-Stat
 
 ```bash
@@ -729,9 +747,11 @@ Timestamp            Value
 ```
 
 !!! warning "Common errors"
-    **`Get-VM : The term 'Get-VM' is not recognized`** — Load the VMware PowerCLI module with `Import-Module VMware.VimAutomation.Core` before running these commands.
-    **`You are not currently connected to any vCenter servers`** — Connect to vCenter first using `Connect-VIServer -Server <vcenter-fqdn>` with appropriate credentials.
-    **`Get-Stat : A parameter cannot be found that matches parameter name 'Interval'`** — Use `-IntervalSecs` instead of `-Interval` for the time period in seconds.
+    | Error | Fix |
+    |---|---|
+    | `Get-VM : The term 'Get-VM' is not recognized` | Load the VMware PowerCLI module with `Import-Module VMware.VimAutomation.Core` before running these commands. |
+    | `You are not currently connected to any vCenter servers` | Connect to vCenter first using `Connect-VIServer -Server <vcenter-fqdn>` with appropriate credentials. |
+    | `Get-Stat : A parameter cannot be found that matches parameter name 'Interval'` | Use `-IntervalSecs` instead of `-Interval` for the time period in seconds. |
 ### Key Metrics Summary Table
 
 | Metric | Tool | Threshold | Action If Exceeded |

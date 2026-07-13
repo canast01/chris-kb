@@ -30,8 +30,10 @@ To github.com:ops-team/backup-restore.git
 ```
 
 !!! warning "Common errors"
-    **`fatal: No names found, cannot describe anything.`** — Ensure you have at least one commit in the repository before creating tags.
-    **`fatal: 'origin' does not appear to be a 'git' repository`** — Verify the remote is configured with `git remote -v` and add it with `git remote add origin <url>` if missing.
+    | Error | Fix |
+    |---|---|
+    | `fatal: No names found, cannot describe anything.` | Ensure you have at least one commit in the repository before creating tags. |
+    | `fatal: 'origin' does not appear to be a 'git' repository` | Verify the remote is configured with `git remote -v` and add it with `git remote add origin <url>` if missing. |
 ```bash
 # Download all packages for offline use
 pip download -r requirements.txt -d /opt/pip-cache/
@@ -62,9 +64,11 @@ Successfully installed setuptools-65.5.0 wheel-0.38.4 requests-2.28.1 paramiko-3
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Could not find a version that satisfies the requirement <package> (from -r requirements.txt (line X))`** — Verify the package name and version in requirements.txt match PyPI, or add `--pre` flag if pre-release versions are needed.
-    **`ERROR: Could not install packages due to missing dependencies`** — Run `pip download` with `--no-deps` flag removed to ensure all transitive dependencies are cached, or manually add missing packages to requirements.txt.
-    **`error: Microsoft Visual C++ 14.0 or greater is required`** — On Windows systems, install the Microsoft C++ Build Tools or use pre-built wheels by upgrading pip and setuptools before running the download command.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Could not find a version that satisfies the requirement <package> (from -r requirements.txt (line X))` | Verify the package name and version in requirements.txt match PyPI, or add `--pre` flag if pre-release versions are needed. |
+    | `ERROR: Could not install packages due to missing dependencies` | Run `pip download` with `--no-deps` flag removed to ensure all transitive dependencies are cached, or manually add missing packages to requirements.txt. |
+    | `error: Microsoft Visual C++ 14.0 or greater is required` | On Windows systems, install the Microsoft C++ Build Tools or use pre-built wheels by upgrading pip and setuptools before running the download command. |
 ```bash
 # Write a secret
 vault kv put secret/automation/widget-api \
@@ -222,9 +226,11 @@ tests/integration/test_restore.py .....
 ```
 
 !!! warning "Common errors"
-    **`pip install -r requirements.txt: ERROR: Could not find a version that satisfies the requirement`** — Update requirements.txt to compatible versions or run `pip install --upgrade pip setuptools wheel` before installing.
-    **`./scripts/restore-secrets.sh: Permission denied`** — Run `chmod +x ./scripts/restore-secrets.sh` to make the script executable.
-    **`sudo systemctl enable --now widget-sync.timer: Unit widget-sync.timer not found.`** — Verify the systemd timer file exists at `deploy/systemd/widget-sync.timer` and was copied to `/etc/systemd/system/` before enabling.
+    | Error | Fix |
+    |---|---|
+    | `pip install -r requirements.txt: ERROR: Could not find a version that satisfies the requirement` | Update requirements.txt to compatible versions or run `pip install --upgrade pip setuptools wheel` before installing. |
+    | `./scripts/restore-secrets.sh: Permission denied` | Run `chmod +x ./scripts/restore-secrets.sh` to make the script executable. |
+    | `sudo systemctl enable --now widget-sync.timer: Unit widget-sync.timer not found.` | Verify the systemd timer file exists at `deploy/systemd/widget-sync.timer` and was copied to `/etc/systemd/system/` before enabling. |
 ```bash
 # 1. Identify what ran and what failed
 journalctl -u widget-sync.service --since "1 hour ago"

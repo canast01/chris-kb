@@ -50,9 +50,11 @@ notAfter=Jan 15 10:23:45 2026 GMT
 ```
 
 !!! warning "Common errors"
-    **`sudo: no tty present and no askpass program specified`** — Run `ssh -t admin@sannav-dc1.corp.example.com` to allocate a pseudo-terminal for sudo commands.
-    **`cat: sannav.crt: No such file or directory`** — Ensure the CA-signed certificate file is in the current working directory or provide the full path to the certificate.
-    **`openssl s_client: connect: Connection refused`** — Verify NGINX reloaded successfully with `sudo systemctl status nginx` and confirm port 443 is listening with `sudo netstat -tlnp | grep 443`.
+    | Error | Fix |
+    |---|---|
+    | `sudo: no tty present and no askpass program specified` | Run `ssh -t admin@sannav-dc1.corp.example.com` to allocate a pseudo-terminal for sudo commands. |
+    | `cat: sannav.crt: No such file or directory` | Ensure the CA-signed certificate file is in the current working directory or provide the full path to the certificate. |
+    | `openssl s_client: connect: Connection refused` | Verify NGINX reloaded successfully with `sudo systemctl status nginx` and confirm port 443 is listening with `sudo netstat -tlnp | grep 443`. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

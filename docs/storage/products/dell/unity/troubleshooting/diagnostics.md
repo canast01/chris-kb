@@ -163,9 +163,11 @@ Software Version:
 ```
 
 !!! warning "Common errors"
-    **`Connection refused — unable to connect to <sp_ip>:443`** — Verify the SP IP address is correct and reachable with `ping <sp_ip>`, and ensure the management port is accessible.
-    **`Authentication failed for user admin`** — Confirm the password is correct and the admin account is not locked; reset credentials in Unisphere if needed.
-    **`uemcli: command not found`** — Install the UEMCLI package on your management host or add its installation directory to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused — unable to connect to <sp_ip>:443` | Verify the SP IP address is correct and reachable with `ping <sp_ip>`, and ensure the management port is accessible. |
+    | `Authentication failed for user admin` | Confirm the password is correct and the admin account is not locked; reset credentials in Unisphere if needed. |
+    | `uemcli: command not found` | Install the UEMCLI package on your management host or add its installation directory to your PATH environment variable. |
 ### Alert severity reference
 
 | Severity Code | Meaning | Expected Response Time |
@@ -244,9 +246,11 @@ Power Supply 1
 ```
 
 !!! warning "Common errors"
-    **`The specified SP could not be found.`** — Verify the SP IP address is correct and reachable with `ping <sp_ip>`.
-    **`Authentication failed: Invalid username or password`** — Confirm admin credentials are correct and the account has not been locked after failed login attempts.
-    **`Connection timeout: Unable to reach management interface`** — Check network connectivity to the SP and ensure the management port (port 443) is not blocked by firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `The specified SP could not be found.` | Verify the SP IP address is correct and reachable with `ping <sp_ip>`. |
+    | `Authentication failed: Invalid username or password` | Confirm admin credentials are correct and the account has not been locked after failed login attempts. |
+    | `Connection timeout: Unable to reach management interface` | Check network connectivity to the SP and ensure the management port (port 443) is not blocked by firewall rules. |
 ---
 
 ## Step 3 — Storage pool and disk diagnostics
@@ -308,9 +312,11 @@ Yes        78.4%            65.2%             3.2 TB      OK              Ready
 ```
 
 !!! warning "Common errors"
-    **`Connection failed: Authentication error`** — Verify the SP IP address is correct and admin credentials are valid with `uemcli -d <sp_ip> -u admin -p <password> /sys show`.
-    **`Command not found: uemcli`** — Install the EMC Unity CLI package or ensure the uemcli binary is in your system PATH.
-    **`Error: Invalid pool ID '<pool_id>'`** — Confirm the pool ID exists by running the first command to list all pools and their IDs.
+    | Error | Fix |
+    |---|---|
+    | `Connection failed: Authentication error` | Verify the SP IP address is correct and admin credentials are valid with `uemcli -d <sp_ip> -u admin -p <password> /sys show`. |
+    | `Command not found: uemcli` | Install the EMC Unity CLI package or ensure the uemcli binary is in your system PATH. |
+    | `Error: Invalid pool ID '<pool_id>'` | Confirm the pool ID exists by running the first command to list all pools and their IDs. |
 ### RAID rebuild status
 
 When a drive is replaced, Unity begins a RAID rebuild automatically. Monitor rebuild progress:
@@ -342,9 +348,11 @@ Health: Rebuilding
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (Connection refused)`** — Verify the SP IP address is correct and reachable with `ping <sp_ip>`, and confirm the management interface is online.
-    **`Error: Authentication failed`** — Confirm the admin credentials are correct and the user account has not been locked after failed login attempts; reset the password if needed.
-    **`Error: Command not found: uemcli`** — Install the EMC CLI tools or add the installation directory to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (Connection refused)` | Verify the SP IP address is correct and reachable with `ping <sp_ip>`, and confirm the management interface is online. |
+    | `Error: Authentication failed` | Confirm the admin credentials are correct and the user account has not been locked after failed login attempts; reset the password if needed. |
+    | `Error: Command not found: uemcli` | Install the EMC CLI tools or add the installation directory to your PATH environment variable. |
 Do not expand a pool, add disk groups, or perform OE upgrades while a RAID rebuild is in progress. Allow the rebuild to complete before making further changes.
 
 ---
@@ -405,9 +413,11 @@ snap_lun0_20240113    lun_0         2024-01-13 18:47    38.9 GB     Ready
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed. Invalid credentials.`** — Verify the SP IP address is correct and admin password is current; reset credentials in Unisphere if needed.
-    **`The specified LUN ID <lun_id> does not exist.`** — Confirm the LUN ID exists by running the list command without filters first.
-    **`Connection timeout: Unable to reach <sp_ip>.`** — Ensure the storage processor IP is reachable and the management network is configured; test with `ping <sp_ip>`.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed. Invalid credentials.` | Verify the SP IP address is correct and admin password is current; reset credentials in Unisphere if needed. |
+    | `The specified LUN ID <lun_id> does not exist.` | Confirm the LUN ID exists by running the list command without filters first. |
+    | `Connection timeout: Unable to reach <sp_ip>.` | Ensure the storage processor IP is reachable and the management network is configured; test with `ping <sp_ip>`. |
 ---
 
 ## Step 5 — NAS and file system diagnostics
@@ -481,9 +491,11 @@ File System: "fs_data_01"
 ```
 
 !!! warning "Common errors"
-    **`Error: The specified Storage Processor is not reachable`** — Verify the SP IP address is correct and the management network is accessible from your admin host.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the password is correct and the admin account has not been locked due to failed login attempts.
-    **`Error: Object not found: /prot/nfs/session`** — Ensure NFS protocol is licensed and enabled on the array; if no NFS exports exist, this command will return empty results.
+    | Error | Fix |
+    |---|---|
+    | `Error: The specified Storage Processor is not reachable` | Verify the SP IP address is correct and the management network is accessible from your admin host. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the password is correct and the admin account has not been locked due to failed login attempts. |
+    | `Error: Object not found: /prot/nfs/session` | Ensure NFS protocol is licensed and enabled on the array; if no NFS exports exist, this command will return empty results. |
 ---
 
 ## Step 6 — Network interface diagnostics
@@ -546,9 +558,11 @@ Stratum: 2
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed. Verify credentials and SP IP address.`** — Confirm the SP IP address is reachable and admin credentials are correct by testing with `ping <sp_ip>` first.
-    **`Command not found: uemcli`** — Install the EMC Unity CLI package or add its installation directory to your PATH environment variable.
-    **`Connection timeout after 30 seconds`** — Verify network connectivity to the SP management interface and ensure the storage processor is powered on and responsive.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed. Verify credentials and SP IP address.` | Confirm the SP IP address is reachable and admin credentials are correct by testing with `ping <sp_ip>` first. |
+    | `Command not found: uemcli` | Install the EMC Unity CLI package or add its installation directory to your PATH environment variable. |
+    | `Connection timeout after 30 seconds` | Verify network connectivity to the SP management interface and ensure the storage processor is powered on and responsive. |
 ---
 
 ## Step 7 — Replication diagnostics
@@ -602,9 +616,11 @@ Connection conn_rep_001 verification: PASSED
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to <sp_ip>:443`** — Verify the SP IP address is correct, the array is powered on, and network connectivity exists from your management station.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the password is correct and the admin account is not locked; reset credentials in Unisphere if needed.
-    **`Error: Session rep_session_004 not found`** — Check the session ID spelling and verify the session exists with the first `show` command before querying specific sessions.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to <sp_ip>:443` | Verify the SP IP address is correct, the array is powered on, and network connectivity exists from your management station. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the password is correct and the admin account is not locked; reset credentials in Unisphere if needed. |
+    | `Error: Session rep_session_004 not found` | Check the session ID spelling and verify the session exists with the first `show` command before querying specific sessions. |
 ---
 
 ## Step 8 — Performance diagnostics
@@ -646,9 +662,11 @@ Available real-time metrics:
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed for user 'admin' on <sp_ip>`** — Verify the storage processor IP address is reachable and credentials are correct with `ping <sp_ip>` and confirm password has no special characters requiring escaping.
-    **`Connection timeout connecting to <sp_ip>:443`** — Ensure the management network interface on the storage processor is configured and the firewall allows HTTPS (port 443) from your management host.
-    **`Metric 'cpu.utilization.avg' not available on this system`** — Confirm the Unity system firmware supports real-time metrics collection; older firmware versions may require a REST API call instead of uemcli.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed for user 'admin' on <sp_ip>` | Verify the storage processor IP address is reachable and credentials are correct with `ping <sp_ip>` and confirm password has no special characters requiring escaping. |
+    | `Connection timeout connecting to <sp_ip>:443` | Ensure the management network interface on the storage processor is configured and the firewall allows HTTPS (port 443) from your management host. |
+    | `Metric 'cpu.utilization.avg' not available on this system` | Confirm the Unity system firmware supports real-time metrics collection; older firmware versions may require a REST API call instead of uemcli. |
 For sustained performance investigation, use the Unisphere Performance dashboard to identify:
 
 - Peak I/O periods.
@@ -684,9 +702,11 @@ Expiration: 2024-02-14 14:32:18
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed`** — Verify the SP IP address is correct and admin credentials are current; reset the password if needed.
-    **`Command not found: uemcli`** — Install the EMC CLI tools package or ensure the uemcli binary is in your system PATH.
-    **`Connection timeout to <sp_ip>`** — Confirm network connectivity to the Storage Processor and that the management interface is reachable via ping.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed` | Verify the SP IP address is correct and admin credentials are current; reset the password if needed. |
+    | `Command not found: uemcli` | Install the EMC CLI tools package or ensure the uemcli binary is in your system PATH. |
+    | `Connection timeout to <sp_ip>` | Confirm network connectivity to the Storage Processor and that the management interface is reachable via ping. |
 Via Unisphere:
 
 1. Navigate to **System > Support > Collect Service Information**.
@@ -758,9 +778,11 @@ unity_diagnostics_20240115_143215.txt
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to <sp_ip>. Connection refused.`** — Verify the UNITY_IP variable is correct and the management interface is reachable with `ping $UNITY_IP`.
-    **`Error: Authentication failed for user 'admin'. Invalid credentials.`** — Confirm UNITY_USER and UNITY_PASS are correct by testing with `uemcli -d $UNITY_IP -u $UNITY_USER -p $UNITY_PASS /sys/general show`.
-    **`Error: uemcli: command not found`** — Install the EMC Unity CLI tools or add the installation directory to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to <sp_ip>. Connection refused.` | Verify the UNITY_IP variable is correct and the management interface is reachable with `ping $UNITY_IP`. |
+    | `Error: Authentication failed for user 'admin'. Invalid credentials.` | Confirm UNITY_USER and UNITY_PASS are correct by testing with `uemcli -d $UNITY_IP -u $UNITY_USER -p $UNITY_PASS /sys/general show`. |
+    | `Error: uemcli: command not found` | Install the EMC Unity CLI tools or add the installation directory to your PATH environment variable. |
 Attach the resulting file to the support case along with the support bundle.
 
 ---

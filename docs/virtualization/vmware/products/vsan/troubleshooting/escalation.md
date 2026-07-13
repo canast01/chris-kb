@@ -147,8 +147,10 @@ Cluster information:
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the vSAN cluster`** — Verify the host is part of an active vSAN cluster and network connectivity exists between cluster nodes.
-    **`Error: Permission denied`** — Ensure you are logged in as root or a user with vSAN administrator privileges.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the vSAN cluster` | Verify the host is part of an active vSAN cluster and network connectivity exists between cluster nodes. |
+    | `Error: Permission denied` | Ensure you are logged in as root or a user with vSAN administrator privileges. |
 Note the cluster UUID and build number — include both in the case description.
 
 ### 2. Capture cmmds-tool output (component placement)
@@ -191,9 +193,11 @@ LSOM_OBJECT Component Summary:
 ```
 
 !!! warning "Common errors"
-    **`cmmds-tool: command not found`** — Ensure you are running this command directly on an ESXi host (SSH as root), not from vCenter or a management workstation.
-    **`Permission denied: /tmp/cmmds-*.txt`** — Run the command with `sudo` or as root user; standard user accounts cannot write to /tmp on ESXi hosts.
-    **`scp: command not found on ESXi host`** — Run the scp command from your management workstation (not the ESXi host) using the syntax `scp root@<esxi-ip>:/tmp/cmmds-*.txt /tmp/`.
+    | Error | Fix |
+    |---|---|
+    | `cmmds-tool: command not found` | Ensure you are running this command directly on an ESXi host (SSH as root), not from vCenter or a management workstation. |
+    | `Permission denied: /tmp/cmmds-*.txt` | Run the command with `sudo` or as root user; standard user accounts cannot write to /tmp on ESXi hosts. |
+    | `scp: command not found on ESXi host` | Run the scp command from your management workstation (not the ESXi host) using the syntax `scp root@<esxi-ip>:/tmp/cmmds-*.txt /tmp/`. |
 This is the most critical data for GSS. Run it on every host, not just the one where the issue first appeared.
 
 ### 3. Run vm-support with vSAN flag on all hosts
@@ -224,9 +228,11 @@ vm-support bundle written to: /var/core/vm-support-esx-prod-01-20240115-143022.t
 ```
 
 !!! warning "Common errors"
-    **`vm-support: command not found`** — Verify the ESXi host is running vSphere 6.5 or later and that the vm-support utility is available in the PATH.
-    **`Permission denied`** — Run the command as root or with sudo; vm-support requires elevated privileges to collect system logs and VSAN diagnostics.
-    **`No space left on device`** — Free up disk space on /var/core (bundles are typically 400–600 MB each) by removing older support bundles or increasing the datastore partition.
+    | Error | Fix |
+    |---|---|
+    | `vm-support: command not found` | Verify the ESXi host is running vSphere 6.5 or later and that the vm-support utility is available in the PATH. |
+    | `Permission denied` | Run the command as root or with sudo; vm-support requires elevated privileges to collect system logs and VSAN diagnostics. |
+    | `No space left on device` | Free up disk space on /var/core (bundles are typically 400–600 MB each) by removing older support bundles or increasing the datastore partition. |
 ### 4. Capture vSAN health checks and resync state
 
 In vSphere Client: navigate to the vSAN cluster → **Monitor** → **vSAN** → **Health**.
@@ -285,9 +291,11 @@ Object Accessibility:
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the vSAN cluster`** — Verify vSAN is enabled on the cluster and the ESXi host is a vSAN participant using `esxcli vsan cluster get`.
-    **`Permission denied`** — Run the command with root privileges or ensure your user account has vSAN administrator role assigned.
-    **`Unknown command or namespace`** — Confirm the ESXi host version supports vSAN and the vSAN feature is properly installed using `esxcli software vib list | grep vsan`.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the vSAN cluster` | Verify vSAN is enabled on the cluster and the ESXi host is a vSAN participant using `esxcli vsan cluster get`. |
+    | `Permission denied` | Run the command with root privileges or ensure your user account has vSAN administrator role assigned. |
+    | `Unknown command or namespace` | Confirm the ESXi host version supports vSAN and the vSAN feature is properly installed using `esxcli software vib list | grep vsan`. |
 ### 5. Write the timeline
 
 ```text
@@ -456,9 +464,11 @@ VMDK perf snapshot:
 ```
 
 !!! warning "Common errors"
-    **`Error: vSAN cluster is not enabled on this host`** — Run `esxcli vsan cluster new` to initialize the cluster or verify the host is part of an existing vSAN cluster.
-    **`Error: CMMDS server is not running`** — Restart the CMMDS service with `systemctl restart cmmds` or reboot the host if the service fails to start.
-    **`Error: Network partition detected - Quorum: QUORUM_ABSENT`** — Check physical network connectivity between hosts and verify vSAN VMkernel ports are on the correct VLAN with no packet loss.
+    | Error | Fix |
+    |---|---|
+    | `Error: vSAN cluster is not enabled on this host` | Run `esxcli vsan cluster new` to initialize the cluster or verify the host is part of an existing vSAN cluster. |
+    | `Error: CMMDS server is not running` | Restart the CMMDS service with `systemctl restart cmmds` or reboot the host if the service fails to start. |
+    | `Error: Network partition detected - Quorum: QUORUM_ABSENT` | Check physical network connectivity between hosts and verify vSAN VMkernel ports are on the correct VLAN with no packet loss. |
 ---
 
 ## Support SLA Reference

@@ -122,9 +122,11 @@ System time offset      : 0.000012345 seconds slow of NTP time
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host <linux-host> port 22: Connection timed out`** — Verify the host is reachable with `ping <linux-host>` and check firewall rules allow SSH from the jump host.
-    **`curl: (7) Failed to connect to <linux-host> port 9100: Connection refused`** — Confirm node_exporter is running with `systemctl status node_exporter` and listening on port 9100.
-    **`dig: couldn't get address for '<dns-server>': not known`** — Replace `<dns-server>` with a valid IP address (e.g., `8.8.8.8`) or verify DNS server hostname resolves.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host <linux-host> port 22: Connection timed out` | Verify the host is reachable with `ping <linux-host>` and check firewall rules allow SSH from the jump host. |
+    | `curl: (7) Failed to connect to <linux-host> port 9100: Connection refused` | Confirm node_exporter is running with `systemctl status node_exporter` and listening on port 9100. |
+    | `dig: couldn't get address for '<dns-server>': not known` | Replace `<dns-server>` with a valid IP address (e.g., `8.8.8.8`) or verify DNS server hostname resolves. |
 ---
 
 ## See also

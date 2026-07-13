@@ -63,9 +63,11 @@ https://github.com/cli/cli/releases/tag/v2.48.0
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to cli.github.com port 443: Connection refused`** — Verify network connectivity and check if the GitHub CLI repository is accessible from your environment.
-    **`E: Unable to locate package gh`** — Run `apt update` before `apt install gh` to refresh the package cache.
-    **`error: failed to authenticate git credential`** — Complete `gh auth login` with valid GitHub credentials before attempting to use authenticated git operations.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to cli.github.com port 443: Connection refused` | Verify network connectivity and check if the GitHub CLI repository is accessible from your environment. |
+    | `E: Unable to locate package gh` | Run `apt update` before `apt install gh` to refresh the package cache. |
+    | `error: failed to authenticate git credential` | Complete `gh auth login` with valid GitHub credentials before attempting to use authenticated git operations. |
 ```bash
 # List environments
 gh api repos/OWNER/REPO/environments | jq '.environments[].name'
@@ -107,9 +109,11 @@ gh api repos/OWNER/REPO/environments/production | jq .
 ```
 
 !!! warning "Common errors"
-    **`HTTP 404: Not Found`** — Verify OWNER and REPO values match your GitHub repository path exactly (case-sensitive).
-    **`HTTP 403: Forbidden`** — Ensure your GitHub token has `repo` scope and admin access to the target repository.
-    **`parse error: Cannot index number with string "environments"`** — The API response is not an array; check that the endpoint returns an object with an `environments` key, or remove the array indexing from the jq filter.
+    | Error | Fix |
+    |---|---|
+    | `HTTP 404: Not Found` | Verify OWNER and REPO values match your GitHub repository path exactly (case-sensitive). |
+    | `HTTP 403: Forbidden` | Ensure your GitHub token has `repo` scope and admin access to the target repository. |
+    | `parse error: Cannot index number with string "environments"` | The API response is not an array; check that the endpoint returns an object with an `environments` key, or remove the array indexing from the jq filter. |
 ```bash
 # List runners
 gh api repos/OWNER/REPO/actions/runners | jq '.runners[] | {id, name, status, labels}'
@@ -178,9 +182,11 @@ ghr_1A2B3C4D5E6F7G8H9I0J1K2L3M4N5O6P7Q8R9S0T
 ```
 
 !!! warning "Common errors"
-    **`HTTP 404: Not Found (repository.actions.disabled)`** — Enable GitHub Actions in the repository settings under Actions > General.
-    **`HTTP 401: Unauthorized`** — Ensure your GitHub CLI token has `admin:org` or `repo` scope by running `gh auth status` and re-authenticating with `gh auth login`.
-    **`jq: error (at <stdin>:0): Cannot index null with string "runners"`** — Verify OWNER/REPO/ORG values are correct and the runner exists before querying.
+    | Error | Fix |
+    |---|---|
+    | `HTTP 404: Not Found (repository.actions.disabled)` | Enable GitHub Actions in the repository settings under Actions > General. |
+    | `HTTP 401: Unauthorized` | Ensure your GitHub CLI token has `admin:org` or `repo` scope by running `gh auth status` and re-authenticating with `gh auth login`. |
+    | `jq: error (at <stdin>:0): Cannot index null with string "runners"` | Verify OWNER/REPO/ORG values are correct and the runner exists before querying. |
 ```bash
 # List artifacts for a run
 gh api repos/OWNER/REPO/actions/runs/RUN_ID/artifacts | jq '.artifacts[]'
@@ -228,8 +234,10 @@ Deleted artifact 1847293849
 ```
 
 !!! warning "Common errors"
-    **`HTTP 404: Not Found`** — Verify OWNER, REPO, and RUN_ID are correct and the run exists in your repository.
-    **`gh: could not authenticate`** — Ensure you are logged in with `gh auth login` and have `repo` scope permissions.
+    | Error | Fix |
+    |---|---|
+    | `HTTP 404: Not Found` | Verify OWNER, REPO, and RUN_ID are correct and the run exists in your repository. |
+    | `gh: could not authenticate` | Ensure you are logged in with `gh auth login` and have `repo` scope permissions. |
 ```bash
 # List caches
 gh cache list
@@ -272,8 +280,10 @@ gh api repos/OWNER/REPO/actions/cache/usage | jq .
 ```
 
 !!! warning "Common errors"
-    **`gh: resource not found`** — Verify the CACHE_KEY exists by running `gh cache list` and use the exact ID from the output.
-    **`gh: authentication required`** — Ensure you are authenticated with `gh auth login` and have `repo` scope permissions.
+    | Error | Fix |
+    |---|---|
+    | `gh: resource not found` | Verify the CACHE_KEY exists by running `gh cache list` and use the exact ID from the output. |
+    | `gh: authentication required` | Ensure you are authenticated with `gh auth login` and have `repo` scope permissions. |
 ```bash
 # Check Actions minutes usage (org)
 gh api orgs/ORG/settings/billing/actions | jq '{
@@ -304,8 +314,10 @@ gh api repos/OWNER/REPO/actions/cache/usage | jq .
 ```
 
 !!! warning "Common errors"
-    **`HTTP 404: Not Found (https://api.github.com/orgs/ORG/settings/billing/actions)`** — Replace `ORG` with your actual organization name and verify you have admin permissions on that org.
-    **`HTTP 403: Resource not accessible by integration`** — Ensure your GitHub token has `admin:org_hook` and `read:org` scopes, or use `gh auth login` to re-authenticate with proper permissions.
+    | Error | Fix |
+    |---|---|
+    | `HTTP 404: Not Found (https://api.github.com/orgs/ORG/settings/billing/actions)` | Replace `ORG` with your actual organization name and verify you have admin permissions on that org. |
+    | `HTTP 403: Resource not accessible by integration` | Ensure your GitHub token has `admin:org_hook` and `read:org` scopes, or use `gh auth login` to re-authenticate with proper permissions. |
 ```bash
 # Find all failed runs in the last 7 days
 gh run list --status failure --json databaseId,name,createdAt \

@@ -139,8 +139,10 @@ PRETTY_NAME="Ubuntu 22.04.3 LTS"
 ```
 
 !!! warning "Common errors"
-    **`pip show: WARNING: pip is configured with locations that require TLS/SSL, however the ssl module in Python is not available.`** — Reinstall Python with SSL support or use `apt install python3-dev libssl-dev` and rebuild Python.
-    **`ansible-galaxy collection list: [WARNING]: Unable to parse /etc/ansible/requirements.yml as an inventory source`** — Remove or fix the malformed requirements.yml file, or specify the correct inventory path in ansible.cfg.
+    | Error | Fix |
+    |---|---|
+    | `pip show: WARNING: pip is configured with locations that require TLS/SSL, however the ssl module in Python is not available.` | Reinstall Python with SSL support or use `apt install python3-dev libssl-dev` and rebuild Python. |
+    | `ansible-galaxy collection list: [WARNING]: Unable to parse /etc/ansible/requirements.yml as an inventory source` | Remove or fix the malformed requirements.yml file, or specify the correct inventory path in ansible.cfg. |
 ### 2. Run the failing playbook with full verbosity
 
 ```bash
@@ -190,11 +192,11 @@ Playbook run took 8.42 seconds
 ```
 
 !!! warning "Common errors"
-    **`fatal: [hostname]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey,password)."}`** — Verify the SSH key path in inventory with `ansible-inventory --host <hostname>` and ensure the user has passwordless sudo or the correct `-u` flag is set.
-    
-    **`fatal: [hostname]: FAILED! => {"msg": "Timeout (12s) waiting for privilege escalation prompt"}`** — Add `ansible_become_pass` to inventory or use `--ask-become-pass` flag; check that `become_user` has sudo access without a password prompt.
-    
-    **`ERROR! the playbook: <failing-playbook.yml> could not be loaded as a file or dir`** — Verify the playbook path is correct and relative to the current working directory, or provide an absolute path.
+    | Error | Fix |
+    |---|---|
+    | `fatal: [hostname]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey,password)."}` | Verify the SSH key path in inventory with `ansible-inventory --host <hostname>` and ensure the user has passwordless sudo or the correct `-u` flag is set. |
+    | `fatal: [hostname]: FAILED! => {"msg": "Timeout (12s) waiting for privilege escalation prompt"}` | Add `ansible_become_pass` to inventory or use `--ask-become-pass` flag; check that `become_user` has sudo access without a password prompt. |
+    | `ERROR! the playbook: <failing-playbook.yml> could not be loaded as a file or dir` | Verify the playbook path is correct and relative to the current working directory, or provide an absolute path. |
 ### 3. Collect AWX job details (if using AWX)
 
 ```bash
@@ -230,9 +232,11 @@ curl -sk "${AWX_URL}/api/v2/jobs/${JOB_ID}/job_events/?page_size=50" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <awx-hostname> port 443: Connection refused`** — Verify the AWX_URL is correct and the AWX service is running with `systemctl status awx-service` or equivalent.
-    **`{"detail":"Invalid token","status_code":401}`** — Regenerate the OAuth token in AWX UI (Settings > Users > Tokens) and ensure it has not expired.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if using a valid certificate, or ensure your CA bundle is current; the `-k` flag bypasses verification for self-signed certs.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <awx-hostname> port 443: Connection refused` | Verify the AWX_URL is correct and the AWX service is running with `systemctl status awx-service` or equivalent. |
+    | `{"detail":"Invalid token","status_code":401}` | Regenerate the OAuth token in AWX UI (Settings > Users > Tokens) and ensure it has not expired. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag if using a valid certificate, or ensure your CA bundle is current; the `-k` flag bypasses verification for self-signed certs. |
 ### 4. Collect AWX pod logs (for platform-level failures)
 
 ```bash
@@ -277,9 +281,11 @@ LAST SEEN   TYPE      REASON                 OBJECT                          MES
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "statefulset"`** — Verify the correct resource name with `kubectl get statefulsets -n awx` and use the exact name (e.g., `awx-postgres-15` vs `postgres-15`).
-    **`error: unable to upgrade connection: container not found ("awx-web")`** — The pod may not exist or the deployment hasn't rolled out yet; check pod status with `kubectl get pods -n awx` and wait for Ready status.
-    **`No resources found in awx namespace.`** — Ensure the AWX namespace exists with `kubectl get namespace awx` and that AWX is actually deployed in that namespace.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "statefulset"` | Verify the correct resource name with `kubectl get statefulsets -n awx` and use the exact name (e.g., `awx-postgres-15` vs `postgres-15`). |
+    | `error: unable to upgrade connection: container not found ("awx-web")` | The pod may not exist or the deployment hasn't rolled out yet; check pod status with `kubectl get pods -n awx` and wait for Ready status. |
+    | `No resources found in awx namespace.` | Ensure the AWX namespace exists with `kubectl get namespace awx` and that AWX is actually deployed in that namespace. |
 ### 5. Write the timeline
 
 ```text
@@ -412,9 +418,11 @@ localhost                  : ok=1    changed=1    unreachable=0    failed=0    s
 ```
 
 !!! warning "Common errors"
-    **`ERROR! Unexpected Exception: 'NoneType' object is not subscriptable`** — Verify the playbook YAML syntax with `ansible-playbook --syntax-check /tmp/repro.yml` and ensure all task keys are properly indented.
-    **`fatal: [localhost]: FAILED! => {"msg": "The task includes an option with an undefined variable. Undefined variable: <variable_name>"}`** — Check that all variables referenced in the playbook are defined in group_vars, host_vars, or passed via `-e` flag.
-    **`[WARNING]: Unable to parse /tmp/repro.yml as an inventory source`** — Ensure the playbook file exists and is readable; use `cat /tmp/repro.yml` to verify the file was created correctly.
+    | Error | Fix |
+    |---|---|
+    | `ERROR! Unexpected Exception: 'NoneType' object is not subscriptable` | Verify the playbook YAML syntax with `ansible-playbook --syntax-check /tmp/repro.yml` and ensure all task keys are properly indented. |
+    | `fatal: [localhost]: FAILED! => {"msg": "The task includes an option with an undefined variable. Undefined variable: <variable_name>"}` | Check that all variables referenced in the playbook are defined in group_vars, host_vars, or passed via `-e` flag. |
+    | `[WARNING]: Unable to parse /tmp/repro.yml as an inventory source` | Ensure the playbook file exists and is readable; use `cat /tmp/repro.yml` to verify the file was created correctly. |
 GitHub issue must include:
 - `ansible --version` output
 - Python version and OS

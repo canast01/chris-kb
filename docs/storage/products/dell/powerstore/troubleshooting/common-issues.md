@@ -172,9 +172,11 @@ HBA Port 2 (vmhba2) rescan started.
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to the curl command to skip SSL verification, or import the PowerStore management certificate into your system's trusted store.
-    **`HTTP/1.1 401 Unauthorized`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating with the PowerStore API using your credentials.
-    **`zone: ZONE_ESXi_Prod_01 not found`** — Confirm the host WWN is spelled correctly and check that the zone exists on the active zoneset using `zoneshow` or `show zoneset active`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to the curl command to skip SSL verification, or import the PowerStore management certificate into your system's trusted store. |
+    | `HTTP/1.1 401 Unauthorized` | Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating with the PowerStore API using your credentials. |
+    | `zone: ZONE_ESXi_Prod_01 not found` | Confirm the host WWN is spelled correctly and check that the zone exists on the active zoneset using `zoneshow` or `show zoneset active`. |
 ### iSCSI Host Cannot Connect
 
 ```bash
@@ -230,9 +232,11 @@ iscsiadm: No active sessions.
 ```
 
 !!! warning "Common errors"
-    **`ping: sendto: Operation not permitted`** — Add `-M do` flag to enforce DF bit and verify MTU settings match across network path (typically 9000 for jumbo frames).
-    **`iscsiadm: No records found`** — Verify the PowerStore iSCSI IP is reachable and the iSCSI service is running on the array; check firewall rules allowing port 3260.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification or import the PowerStore CA certificate into the host's certificate store.
+    | Error | Fix |
+    |---|---|
+    | `ping: sendto: Operation not permitted` | Add `-M do` flag to enforce DF bit and verify MTU settings match across network path (typically 9000 for jumbo frames). |
+    | `iscsiadm: No records found` | Verify the PowerStore iSCSI IP is reachable and the iSCSI service is running on the array; check firewall rules allowing port 3260. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification or import the PowerStore CA certificate into the host's certificate store. |
 ### Multipath Not Working (Linux)
 
 ```bash
@@ -294,9 +298,11 @@ devices {
 ```
 
 !!! warning "Common errors"
-    **`multipathd.service is not running.`** — Run `systemctl start multipathd` and verify with `systemctl status multipathd`.
-    **`No multipath devices found. Is multipathd running?`** — Ensure multipath daemon is active and FC/iSCSI initiators are properly configured; check `dmesg` for device discovery errors.
-    **`grep: /etc/multipath.conf: No such file or directory`** — Create the multipath configuration file with `touch /etc/multipath.conf` or restore it from a backup, then add the DELL PowerStore device stanza.
+    | Error | Fix |
+    |---|---|
+    | `multipathd.service is not running.` | Run `systemctl start multipathd` and verify with `systemctl status multipathd`. |
+    | `No multipath devices found. Is multipathd running?` | Ensure multipath daemon is active and FC/iSCSI initiators are properly configured; check `dmesg` for device discovery errors. |
+    | `grep: /etc/multipath.conf: No such file or directory` | Create the multipath configuration file with `touch /etc/multipath.conf` or restore it from a backup, then add the DELL PowerStore device stanza. |
 ## Replication Issues
 
 ### Replication Session in `Failed` State
@@ -364,9 +370,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/replication_session/<session-id>/res
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to bypass certificate verification, or import the PowerStore management certificate into your system's CA bundle.
-    **`{"error_code": 401, "message": "Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN by re-authenticating to the PowerStore management API and update the token in your request headers.
-    **`{"error_code": 404, "message": "Remote system not found"}`** — Verify the `<remote-id>` value matches an existing remote system by listing all remote systems with `curl -k -X GET "https://<mgmt-ip>/api/rest/remote_system" -H "DELL-EMC-TOKEN: <token>"`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to bypass certificate verification, or import the PowerStore management certificate into your system's CA bundle. |
+    | `{"error_code": 401, "message": "Invalid or expired token"}` | Regenerate the DELL-EMC-TOKEN by re-authenticating to the PowerStore management API and update the token in your request headers. |
+    | `{"error_code": 404, "message": "Remote system not found"}` | Verify the `<remote-id>` value matches an existing remote system by listing all remote systems with `curl -k -X GET "https://<mgmt-ip>/api/rest/remote_system" -H "DELL-EMC-TOKEN: <token>"`. |
 ### Metro Volume Link Down
 
 ```bash
@@ -423,9 +431,11 @@ Connection to 192.168.50.45 6666 port [tcp/*] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to bypass certificate verification, or import the PowerStore management certificate into your system trust store.
-    **`Connection to <mediator-ip> 6666 port [tcp/*] failed!`** — Verify mediator VM is running and network connectivity exists; check firewall rules allow TCP 6666 between PowerStore sites and mediator.
-    **`{"error_code":"REPL_SESSION_NOT_FOUND","message":"Session <session-id> not found"}`** — Confirm the session ID is correct by re-running the GET query to list all replication sessions and their IDs.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to bypass certificate verification, or import the PowerStore management certificate into your system trust store. |
+    | `Connection to <mediator-ip> 6666 port [tcp/*] failed!` | Verify mediator VM is running and network connectivity exists; check firewall rules allow TCP 6666 between PowerStore sites and mediator. |
+    | `{"error_code":"REPL_SESSION_NOT_FOUND","message":"Session <session-id> not found"}` | Confirm the session ID is correct by re-running the GET query to list all replication sessions and their IDs. |
 ## Performance Issues
 
 ### High Latency
@@ -504,9 +514,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/pool?select=name,percent_used,size_us
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed in production use).
-    **`{"error": "Unauthorized", "error_code": "UNAUTHENTICATED"}`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating against the management IP.
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP is reachable and the REST API service is running with `ping <mgmt-ip>` and check array status.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed in production use). |
+    | `{"error": "Unauthorized", "error_code": "UNAUTHENTICATED"}` | Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating against the management IP. |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Confirm the management IP is reachable and the REST API service is running with `ping <mgmt-ip>` and check array status. |
 ### Data Reduction Ratio Below Expectation
 
 ```bash
@@ -554,9 +566,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/volume_group/<vg-id>?select=name,is_r
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to bypass SSL verification (already present in the example, but ensure it's included if removed).
-    **`{"error_code":"401","message":"Unauthorized"}`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the management API.
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP is correct and reachable on port 443 using `ping` or `nc -zv <mgmt-ip> 443`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to bypass SSL verification (already present in the example, but ensure it's included if removed). |
+    | `{"error_code":"401","message":"Unauthorized"}` | Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the management API. |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Confirm the management IP is correct and reachable on port 443 using `ping` or `nc -zv <mgmt-ip> 443`. |
 ## Capacity Issues
 
 ### Pool Approaching Full Capacity
@@ -637,9 +651,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/volume_snapshot?select=name,size,crea
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to bypass SSL verification, or import the PowerStore management certificate into your system's CA bundle.
-    **`{"error_code":"401","message":"Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN via the PowerStore management UI (Settings > Security > API Tokens) and ensure it has not exceeded its expiration window.
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Verify the management IP is correct and reachable with `ping <mgmt-ip>`, and confirm the PowerStore management service is running with `ssh <mgmt-ip> systemctl status rest-server`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to bypass SSL verification, or import the PowerStore management certificate into your system's CA bundle. |
+    | `{"error_code":"401","message":"Invalid or expired token"}` | Regenerate the DELL-EMC-TOKEN via the PowerStore management UI (Settings > Security > API Tokens) and ensure it has not exceeded its expiration window. |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Verify the management IP is correct and reachable with `ping <mgmt-ip>`, and confirm the PowerStore management service is running with `ssh <mgmt-ip> systemctl status rest-server`. |
 ## Snapshot Failures
 
 ```bash
@@ -697,9 +713,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/volume_snapshot?select=volume_id&volu
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip SSL verification, or import the management node's certificate into your CA bundle.
-    **`{"error_code":"INVALID_TOKEN","message":"Authentication token expired or invalid"}`** — Regenerate the API token in the PowerStore management console and update the DELL-EMC-TOKEN header value.
-    **`jq: command not found`** — Install `jq` package (`apt install jq` or `yum install jq`) or use the provided `python3 -c` JSON parser instead.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to the curl command to skip SSL verification, or import the management node's certificate into your CA bundle. |
+    | `{"error_code":"INVALID_TOKEN","message":"Authentication token expired or invalid"}` | Regenerate the API token in the PowerStore management console and update the DELL-EMC-TOKEN header value. |
+    | `jq: command not found` | Install `jq` package (`apt install jq` or `yum install jq`) or use the provided `python3 -c` JSON parser instead. |
 ## Management Plane Issues
 
 ### PowerStore Manager Inaccessible
@@ -761,9 +779,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTcwNTMzODk1Myw
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the PowerStore management certificate into your system's CA bundle.
-    **`jq: parse error: Invalid numeric literal at line 1 column 10`** — Verify the API response is valid JSON by removing the `jq` filter temporarily and checking the raw response for error messages.
-    **`{"error":"Invalid or expired token"}`** — Re-authenticate using the login endpoint to obtain a fresh token, as the current token has exceeded its idle timeout or session limit.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the PowerStore management certificate into your system's CA bundle. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 10` | Verify the API response is valid JSON by removing the `jq` filter temporarily and checking the raw response for error messages. |
+    | `{"error":"Invalid or expired token"}` | Re-authenticate using the login endpoint to obtain a fresh token, as the current token has exceeded its idle timeout or session limit. |
 ---
 
 ## Verify resolution

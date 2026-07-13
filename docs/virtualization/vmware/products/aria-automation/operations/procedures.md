@@ -60,9 +60,11 @@ root@vra-prod-01:~#
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to vcenter-prod.example.local port 443: Connection refused`** — Verify vCenter is running and accessible; check firewall rules between vRA and vCenter networks.
-    **`curl: (6) Could not resolve host: vcenter-prod.example.local`** — Confirm DNS resolution is working on the vRA appliance with `nslookup vcenter-prod.example.local` or update `/etc/hosts` with the vCenter IP.
-    **`000`** — Check network connectivity with `ping vcenter-prod.example.local` and verify the vRA appliance has a route to the vCenter subnet.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to vcenter-prod.example.local port 443: Connection refused` | Verify vCenter is running and accessible; check firewall rules between vRA and vCenter networks. |
+    | `curl: (6) Could not resolve host: vcenter-prod.example.local` | Confirm DNS resolution is working on the vRA appliance with `nslookup vcenter-prod.example.local` or update `/etc/hosts` with the vCenter IP. |
+    | `000` | Check network connectivity with `ping vcenter-prod.example.local` and verify the vRA appliance has a route to the vCenter subnet. |
 ---
 
 ## Update Cloud Account Credentials
@@ -105,8 +107,10 @@ kubectl logs -n prelude -l app=iaas-gateway --tail=100 | grep -i "error\|vcenter
 ```
 
 !!! warning "Common errors"
-    **`error: no matching resources found in prelude namespace`** — Verify the prelude namespace exists with `kubectl get ns prelude` and confirm iaas-gateway pods are deployed.
-    **`error: unable to forward port because pod does not exist`** — Ensure iaas-gateway pods are running with `kubectl get pods -n prelude -l app=iaas-gateway` before querying logs.
+    | Error | Fix |
+    |---|---|
+    | `error: no matching resources found in prelude namespace` | Verify the prelude namespace exists with `kubectl get ns prelude` and confirm iaas-gateway pods are deployed. |
+    | `error: unable to forward port because pod does not exist` | Ensure iaas-gateway pods are running with `kubectl get pods -n prelude -l app=iaas-gateway` before querying logs. |
 ---
 
 ## Configure Image Mappings and Flavor Mappings
@@ -399,9 +403,11 @@ curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification (already present in the example, so verify the certificate is actually trusted or use `-k`).
-    **`jq: error (at <stdin>:1): Cannot index null with string "access_token"`** — Verify the username, password, and domain are correct, and that the vRA authentication service is responding by testing the login endpoint separately.
-    **`curl: (7) Failed to connect to vra-prod-01.example.local port 443: Connection refused`** — Confirm the vRA appliance hostname is correct and the HTTPS service is running with `curl -sk https://vra-prod-01.example.local/`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip SSL verification (already present in the example, so verify the certificate is actually trusted or use `-k`). |
+    | `jq: error (at <stdin>:1): Cannot index null with string "access_token"` | Verify the username, password, and domain are correct, and that the vRA authentication service is responding by testing the login endpoint separately. |
+    | `curl: (7) Failed to connect to vra-prod-01.example.local port 443: Connection refused` | Confirm the vRA appliance hostname is correct and the HTTPS service is running with `curl -sk https://vra-prod-01.example.local/`. |
 After the API call returns, refresh the deployments view in the UI to confirm the record is removed. If the underlying VMs were not cleaned up by the destroy workflow, delete them directly from vCenter.
 
 ---
@@ -447,9 +453,11 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vRA certificate into your system trust store.
-    **`jq: parse error: Invalid JSON at line 1`** — Verify the API token is valid and the vRA endpoint is responding with JSON; check `curl` output without piping to `jq` first.
-    **`curl: (401) Unauthorized`** — Regenerate or verify the Bearer token has not expired; confirm it was issued with appropriate API scope permissions.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the vRA certificate into your system trust store. |
+    | `jq: parse error: Invalid JSON at line 1` | Verify the API token is valid and the vRA endpoint is responding with JSON; check `curl` output without piping to `jq` first. |
+    | `curl: (401) Unauthorized` | Regenerate or verify the Bearer token has not expired; confirm it was issued with appropriate API scope permissions. |
 1. Export the deployment list from the API (above).
 2. Cross-reference against the vCenter VM inventory or AWS EC2 instance list.
 3. Identify deployment IDs with no corresponding resource.
@@ -488,8 +496,10 @@ notAfter=Jan 15 10:22:33 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Ensure the vRA appliance is running and port 443 is accessible; verify firewall rules and network connectivity to vra-prod-01.example.local.
-    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Add `-showcerts` flag or use `openssl s_client -connect vra-prod-01.example.local:443 -servername vra-prod-01.example.local 2>&1 | grep -A 5 "subject="` to bypass verification and inspect the certificate chain.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Ensure the vRA appliance is running and port 443 is accessible; verify firewall rules and network connectivity to vra-prod-01.example.local. |
+    | `error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed` | Add `-showcerts` flag or use `openssl s_client -connect vra-prod-01.example.local:443 -servername vra-prod-01.example.local 2>&1 | grep -A 5 "subject="` to bypass verification and inspect the certificate chain. |
 ---
 
 ## Rotate the Postgres Password
@@ -531,9 +541,11 @@ vra-prod-01:~ #
 ```
 
 !!! warning "Common errors"
-    **`vracli: command not found`** — Ensure you are logged in as root and the vRA appliance is fully initialized; if just deployed, wait 10-15 minutes for the management agent to start.
-    **`Error: Failed to update PostgreSQL password - Connection refused`** — Verify PostgreSQL is running with `systemctl status postgres` and check that the database is not in recovery mode.
-    **`Error: Service restart timed out after 10 minutes`** — Increase the timeout or check service logs with `vracli log view --service identity-manager` to identify which service is hung.
+    | Error | Fix |
+    |---|---|
+    | `vracli: command not found` | Ensure you are logged in as root and the vRA appliance is fully initialized; if just deployed, wait 10-15 minutes for the management agent to start. |
+    | `Error: Failed to update PostgreSQL password - Connection refused` | Verify PostgreSQL is running with `systemctl status postgres` and check that the database is not in recovery mode. |
+    | `Error: Service restart timed out after 10 minutes` | Increase the timeout or check service logs with `vracli log view --service identity-manager` to identify which service is hung. |
 After the restart, verify the vRA UI is accessible and that data collection runs complete without database connection errors. Check the Postgres-related logs if services fail to come up:
 
 ```bash
@@ -552,9 +564,11 @@ kubectl logs -n prelude -l app=vra-nginx --tail=100 | grep -i "error\|5[0-9][0-9
 ```
 
 !!! warning "Common errors"
-    **`error: resource name may not be empty`** — Verify the namespace exists with `kubectl get namespace prelude` and check pod label selector with `kubectl get pods -n prelude --show-labels`.
-    **`Unable to match a pod using the label selectors: app=vra-nginx`** — Confirm the correct label with `kubectl get pods -n prelude -o wide` and update the label selector if pods use different labels like `app.kubernetes.io/name=vra-nginx`.
-    **`The connection to the server was refused`** — Ensure kubectl is configured to the correct cluster context with `kubectl config current-context` and verify API server connectivity.
+    | Error | Fix |
+    |---|---|
+    | `error: resource name may not be empty` | Verify the namespace exists with `kubectl get namespace prelude` and check pod label selector with `kubectl get pods -n prelude --show-labels`. |
+    | `Unable to match a pod using the label selectors: app=vra-nginx` | Confirm the correct label with `kubectl get pods -n prelude -o wide` and update the label selector if pods use different labels like `app.kubernetes.io/name=vra-nginx`. |
+    | `The connection to the server was refused` | Ensure kubectl is configured to the correct cluster context with `kubectl config current-context` and verify API server connectivity. |
 ---
 
 ## Rotate the Admin Account Password
@@ -630,9 +644,11 @@ root@aria-automation-01:~# tail -f /var/log/vmware/vra/deployment-service.log | 
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify SSH key is loaded with `ssh-add` and the root user's authorized_keys contains your public key.
-    **`No such file or directory`** — Confirm the Aria Automation service is running with `systemctl status vra-deployment-service` and the log path exists.
-    **`tail: cannot open '/var/log/vmware/vra/deployment-service.log' for reading: Permission denied`** — Run the command with `sudo` or switch to root user before executing tail.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify SSH key is loaded with `ssh-add` and the root user's authorized_keys contains your public key. |
+    | `No such file or directory` | Confirm the Aria Automation service is running with `systemctl status vra-deployment-service` and the log path exists. |
+    | `tail: cannot open '/var/log/vmware/vra/deployment-service.log' for reading: Permission denied` | Run the command with `sudo` or switch to root user before executing tail. |
 ### Step 4 — Fix and Retry
 
 ![Step 4 — Fix and Retry](../../../../../assets/aria-automation-proc-step-4-fix-and-retry.svg)

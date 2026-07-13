@@ -114,9 +114,11 @@ Expiration Date: 2026-03-15
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host <node-ip> port 22: Connection timed out`** — Verify the node IP is correct, the node is powered on, and network connectivity exists from your admin workstation to the management network.
-    **`Permission denied (publickey,password).`** — Confirm you are using the correct admin credentials and that SSH password authentication is enabled on the cluster (check SSH settings in WebUI under Cluster Management > Security).
-    **`isi: command not found`** — Ensure you are logged in as the admin user on a PowerScale node; this command is not available on non-OneFS systems or non-admin accounts.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host <node-ip> port 22: Connection timed out` | Verify the node IP is correct, the node is powered on, and network connectivity exists from your admin workstation to the management network. |
+    | `Permission denied (publickey,password).` | Confirm you are using the correct admin credentials and that SSH password authentication is enabled on the cluster (check SSH settings in WebUI under Cluster Management > Security). |
+    | `isi: command not found` | Ensure you are logged in as the admin user on a PowerScale node; this command is not available on non-OneFS systems or non-admin accounts. |
 ### 2. Run isi_gather_info (full cluster diagnostic bundle)
 
 ```bash
@@ -150,8 +152,10 @@ isilon_support_info_10.1.2024_14-32-18.tar.gz          100% 2.3GB   45.2MB/s   0
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host <node-ip> port 22: Connection timed out`** — Replace `<node-ip>` with the actual cluster node IP address and verify network connectivity to that node.
-    **`scp: /ifs/data/Isilon_Support/<bundle-filename>.tar.gz: No such file or directory`** — Run `isi_gather_info` first to generate the bundle, or check the actual bundle filename with `ls /ifs/data/Isilon_Support/`.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host <node-ip> port 22: Connection timed out` | Replace `<node-ip>` with the actual cluster node IP address and verify network connectivity to that node. |
+    | `scp: /ifs/data/Isilon_Support/<bundle-filename>.tar.gz: No such file or directory` | Run `isi_gather_info` first to generate the bundle, or check the actual bundle filename with `ls /ifs/data/Isilon_Support/`. |
 This bundle contains: OneFS logs, cluster config, hardware inventory, performance stats, alert history, and job state from every node.
 
 ### 3. Capture current cluster status
@@ -218,9 +222,11 @@ Report_ID  Policy_Name      Status      Duration  Bytes_Transferred
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the PATH includes `/usr/local/bin` or run commands directly as `/usr/local/bin/isi`.
-    **`Error: Invalid credentials or insufficient permissions`** — Verify your user account has cluster admin privileges and authentication is configured (check `isi auth status`).
-    **`Connection refused on port 8080`** — Confirm the OneFS management service is running with `systemctl status isilon-mgmt` and the cluster is not in maintenance mode.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the PATH includes `/usr/local/bin` or run commands directly as `/usr/local/bin/isi`. |
+    | `Error: Invalid credentials or insufficient permissions` | Verify your user account has cluster admin privileges and authentication is configured (check `isi auth status`). |
+    | `Connection refused on port 8080` | Confirm the OneFS management service is running with `systemctl status isilon-mgmt` and the cluster is not in maintenance mode. |
 ### 4. Collect SupportAssist phone-home status
 
 ```bash
@@ -311,9 +317,11 @@ Delivery confirmed at 2024-01-15T14:32:18Z
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster CLI or SSH session with appropriate admin credentials.
-    **`Error: ESRS gateway unreachable`** — Verify network connectivity to the ESRS gateway and check firewall rules allow outbound HTTPS (port 443) to Dell support servers.
-    **`Permission denied`** — Run the command with root or admin-level privileges using `sudo` or ensure your user account has SupportAssist configuration rights.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are logged into the PowerScale cluster CLI or SSH session with appropriate admin credentials. |
+    | `Error: ESRS gateway unreachable` | Verify network connectivity to the ESRS gateway and check firewall rules allow outbound HTTPS (port 443) to Dell support servers. |
+    | `Permission denied` | Run the command with root or admin-level privileges using `sudo` or ensure your user account has SupportAssist configuration rights. |
 ### 5. Write the timeline
 
 ```text
@@ -449,9 +457,11 @@ Archive_Weekly      /ifs/archive archive-01      2024-01-14 23:30  SYNCED
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Verify SSH session is connected to a PowerScale node (not a generic Linux server) and the admin user has OneFS CLI access.
-    **`Permission denied`** — Ensure you are logged in as the admin user or a role with cluster monitoring privileges; use `isi auth list` to verify your current permissions.
-    **`Connection refused on port 22`** — Confirm the PowerScale node IP is reachable and SSH is enabled; check firewall rules and verify the node is not in maintenance mode with `isi_nodes -l`.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Verify SSH session is connected to a PowerScale node (not a generic Linux server) and the admin user has OneFS CLI access. |
+    | `Permission denied` | Ensure you are logged in as the admin user or a role with cluster monitoring privileges; use `isi auth list` to verify your current permissions. |
+    | `Connection refused on port 22` | Confirm the PowerScale node IP is reachable and SSH is enabled; check firewall rules and verify the node is not in maintenance mode with `isi_nodes -l`. |
 ---
 
 ## Support SLA Reference

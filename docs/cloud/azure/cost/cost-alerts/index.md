@@ -72,8 +72,10 @@ alert-003-anomaly-2024               Anomaly      Active      2024-01-18T16:45:0
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource 'alert-id' does not exist`** — Verify the alert ID is correct by running `az costmanagement alert list` and copy the exact AlertId value.
-    **`AuthorizationFailed: The client 'user@example.com' with object id 'xxxx' does not have authorization to perform action 'Microsoft.CostManagement/alerts/read'`** — Ensure your user account has the Cost Management Reader or Owner role assigned on the subscription scope.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource 'alert-id' does not exist` | Verify the alert ID is correct by running `az costmanagement alert list` and copy the exact AlertId value. |
+    | `AuthorizationFailed: The client 'user@example.com' with object id 'xxxx' does not have authorization to perform action 'Microsoft.CostManagement/alerts/read'` | Ensure your user account has the Cost Management Reader or Owner role assigned on the subscription scope. |
 ### Anomaly Alert Properties
 
 | Property | Description |
@@ -139,8 +141,10 @@ prod-cost-limit-alert         Budget    Active    2024-01-18T11:08:47Z
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (ResourceNotFound) The resource 'subscriptions/<subscription-id>/providers/microsoft.costmanagement/budgets/monthly-sub-budget' could not be found.`** — Verify the budget name and subscription ID are correct using `az costmanagement budget list --scope "/subscriptions/<subscription-id>"`.
-    **`ERROR: The following arguments are required: --scope`** — Ensure the `--scope` parameter is provided with a valid subscription path like `/subscriptions/12345678-1234-1234-1234-123456789012`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (ResourceNotFound) The resource 'subscriptions/<subscription-id>/providers/microsoft.costmanagement/budgets/monthly-sub-budget' could not be found.` | Verify the budget name and subscription ID are correct using `az costmanagement budget list --scope "/subscriptions/<subscription-id>"`. |
+    | `ERROR: The following arguments are required: --scope` | Ensure the `--scope` parameter is provided with a valid subscription path like `/subscriptions/12345678-1234-1234-1234-123456789012`. |
 ## Alert Channels
 
 Alerts are delivered through one or more of the following channels:
@@ -185,9 +189,11 @@ ag-slack-notify    rg-finops        slack-ntf   global
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure you have access to the subscription.
-    **`InvalidEmailAddress`** — Ensure the email address is properly formatted and use quotes around the email parameter if it contains special characters.
-    **`WebhookUrlInvalid`** — Confirm the webhook URL is accessible and returns a 200 status code by testing with `curl -X POST https://hooks.example.com/cost-alert`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure you have access to the subscription. |
+    | `InvalidEmailAddress` | Ensure the email address is properly formatted and use quotes around the email parameter if it contains special characters. |
+    | `WebhookUrlInvalid` | Confirm the webhook URL is accessible and returns a 200 status code by testing with `curl -X POST https://hooks.example.com/cost-alert`. |
 ## Threshold Configuration
 
 For budget-based alerts the threshold is a percentage of the budget amount. Thresholds should be set in tiers to give progressive warning.
@@ -222,9 +228,11 @@ alert-spending-trend-warning            TrendAlert            Active    2024-01-
 ```
 
 !!! warning "Common errors"
-    **`The subscription '<subscription-id>' could not be found.`** — Replace `<subscription-id>` with your actual subscription ID from `az account show --query id -o tsv`.
-    **`No registered resource provider found for location 'microsoft.costmanagement'.`** — Register the Cost Management provider with `az provider register --namespace Microsoft.CostManagement`.
-    **`Authorization failed: The client does not have permission to perform action 'microsoft.costmanagement/alerts/read'.`** — Ensure your Azure account has the Cost Management Reader role assigned at the subscription scope.
+    | Error | Fix |
+    |---|---|
+    | `The subscription '<subscription-id>' could not be found.` | Replace `<subscription-id>` with your actual subscription ID from `az account show --query id -o tsv`. |
+    | `No registered resource provider found for location 'microsoft.costmanagement'.` | Register the Cost Management provider with `az provider register --namespace Microsoft.CostManagement`. |
+    | `Authorization failed: The client does not have permission to perform action 'microsoft.costmanagement/alerts/read'.` | Ensure your Azure account has the Cost Management Reader role assigned at the subscription scope. |
 ## Alert Best Practices
 
 - Always pair anomaly detection with a budget alert — anomaly detection catches unexpected spikes; budgets catch slow overruns.

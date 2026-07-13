@@ -78,9 +78,11 @@ rtt min/avg/max/stddev = 2.34/2.39/2.45/0.04 ms
 ```
 
 !!! warning "Common errors"
-    **`ping: vcenter.corp.local: Name or service not known`** — Verify DNS resolution with `nslookup vcenter.corp.local` or check `/etc/resolv.conf` for correct nameserver entries.
-    **`From 192.168.1.1 icmp_seq=1 Destination Host Unreachable`** — Confirm vCenter host is powered on and check network connectivity with `traceroute vcenter.corp.local` to identify where the path breaks.
-    **`100% packet loss`** — Verify the vCenter VM is running, check firewall rules allow ICMP, and confirm the host is on the correct network segment.
+    | Error | Fix |
+    |---|---|
+    | `ping: vcenter.corp.local: Name or service not known` | Verify DNS resolution with `nslookup vcenter.corp.local` or check `/etc/resolv.conf` for correct nameserver entries. |
+    | `From 192.168.1.1 icmp_seq=1 Destination Host Unreachable` | Confirm vCenter host is powered on and check network connectivity with `traceroute vcenter.corp.local` to identify where the path breaks. |
+    | `100% packet loss` | Verify the vCenter VM is running, check firewall rules allow ICMP, and confirm the host is on the correct network segment. |
 **2. Attempt HTTPS connectivity:**
 
 ```bash
@@ -93,9 +95,11 @@ curl -k -o /dev/null -s -w "%{http_code}" https://vcenter.corp.local
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to vcenter.corp.local port 443: Connection refused`** — Verify vCenter service is running with `systemctl status vmware-vpxd` on the vCenter server and check network connectivity to port 443.
-    **`curl: (6) Could not resolve host: vcenter.corp.local`** — Confirm DNS resolution is working by running `nslookup vcenter.corp.local` and verify the hostname is correct in your environment.
-    **`000`** — The connection timed out or was blocked by a firewall; check network ACLs and security groups allowing traffic from your client to vCenter on port 443.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to vcenter.corp.local port 443: Connection refused` | Verify vCenter service is running with `systemctl status vmware-vpxd` on the vCenter server and check network connectivity to port 443. |
+    | `curl: (6) Could not resolve host: vcenter.corp.local` | Confirm DNS resolution is working by running `nslookup vcenter.corp.local` and verify the hostname is correct in your environment. |
+    | `000` | The connection timed out or was blocked by a firewall; check network ACLs and security groups allowing traffic from your client to vCenter on port 443. |
 Expected: `200` or `302`. Anything else means the web service is down.
 
 **3. Check from a different host (rule out network segmentation):**
@@ -113,8 +117,10 @@ Connection to 192.168.1.10 5480 port [tcp/] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 192.168.1.10 port 443 (tcp) failed: Connection refused`** — Verify vCenter service is running with `systemctl status vmware-vpxd` on the vCenter appliance, or check if the IP address is correct.
-    **`nc: getaddrinfo for host "192.168.1.10" port 443: Name or service not known`** — Confirm network connectivity and DNS resolution by pinging the vCenter IP or checking `/etc/hosts` entries on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 192.168.1.10 port 443 (tcp) failed: Connection refused` | Verify vCenter service is running with `systemctl status vmware-vpxd` on the vCenter appliance, or check if the IP address is correct. |
+    | `nc: getaddrinfo for host "192.168.1.10" port 443: Name or service not known` | Confirm network connectivity and DNS resolution by pinging the vCenter IP or checking `/etc/hosts` entries on the ESXi host. |
 **4. SSH to vCenter appliance and check service status:**
 
 ```bash
@@ -150,9 +156,11 @@ vsphereui                               true     true
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname vcenter.corp.local: Name or service not known`** — Verify the vCenter hostname or IP address is correct and resolvable from your network.
-    **`Connection refused`** — Ensure SSH is enabled on vCenter and the management network is reachable; check firewall rules on port 22.
-    **`service-control: command not found`** — Confirm you are logged into a vCenter Server Appliance (VCSA); this command does not exist on Windows vCenter installations.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname vcenter.corp.local: Name or service not known` | Verify the vCenter hostname or IP address is correct and resolvable from your network. |
+    | `Connection refused` | Ensure SSH is enabled on vCenter and the management network is reachable; check firewall rules on port 22. |
+    | `service-control: command not found` | Confirm you are logged into a vCenter Server Appliance (VCSA); this command does not exist on Windows vCenter installations. |
 Look for services in `stopped` state, especially `vpxd`, `vmware-vpostgres`, `vmware-rhttpproxy`.
 
 ---
@@ -207,7 +215,9 @@ grep -i "error\|fatal\|exception" /var/log/vmware/vpxd/vpxd.log | tail -50
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory`** — Verify vCenter is installed and running with `systemctl status vmware-vpxd`, or
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/vmware/vpxd/vpxd.log' for reading: No such file or directory` | Verify vCenter is installed and running with `systemctl status vmware-vpxd`, or |
 Check the reverse proxy log if HTTPS is not responding:
 
 ```bash
@@ -229,8 +239,10 @@ tail -100 /var/log/vmware/rhttpproxy/rhttpproxy.log
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/vmware/rhttpproxy/rhttpproxy.log' for reading: No such file or directory`** — Verify the vSphere host is running and the rhttpproxy service is active with `systemctl status rhttpproxy`.
-    **`Permission denied`** — Run the command with `sudo` or as root to access VMware log files.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/vmware/rhttpproxy/rhttpproxy.log' for reading: No such file or directory` | Verify the vSphere host is running and the rhttpproxy service is active with `systemctl status rhttpproxy`. |
+    | `Permission denied` | Run the command with `sudo` or as root to access VMware log files. |
 Check database connectivity:
 
 ```bash
@@ -246,9 +258,11 @@ Check database connectivity:
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not connect to server: No such file or directory`** — Verify the vPostgres service is running with `systemctl status vpostgres` and check that the socket directory `/var/run/vpostgres` exists.
-    **`psql: error: FATAL: role "vc" does not exist`** — Confirm the vCenter database user exists by running `sudo -u postgres psql -c "\du"` and recreate it if necessary using vCenter's database initialization scripts.
-    **`psql: error: FATAL: database "VCDB" does not exist`** — Verify the vCenter database was initialized correctly; check `/var/log/vmware/vpostgres/` logs and re-run the vCenter installer's database setup if the database is missing.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not connect to server: No such file or directory` | Verify the vPostgres service is running with `systemctl status vpostgres` and check that the socket directory `/var/run/vpostgres` exists. |
+    | `psql: error: FATAL: role "vc" does not exist` | Confirm the vCenter database user exists by running `sudo -u postgres psql -c "\du"` and recreate it if necessary using vCenter's database initialization scripts. |
+    | `psql: error: FATAL: database "VCDB" does not exist` | Verify the vCenter database was initialized correctly; check `/var/log/vmware/vpostgres/` logs and re-run the vCenter installer's database setup if the database is missing. |
 If the DB query returns `ERROR: could not connect to server`, the database service is the root cause.
 
 ---
@@ -286,8 +300,10 @@ All services started successfully. Startup took 45 seconds.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to stop service vmware-vpxd: Service is not responding`** — Run `service-control --stop --all --force` to forcefully terminate unresponsive services.
-    **`Error: Failed to start vmware-vpostgres: Port 5432 already in use`** — Wait 30–60 seconds after stopping before starting, or check for orphaned processes with `lsof -i :5432`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to stop service vmware-vpxd: Service is not responding` | Run `service-control --stop --all --force` to forcefully terminate unresponsive services. |
+    | `Error: Failed to start vmware-vpostgres: Port 5432 already in use` | Wait 30–60 seconds after stopping before starting, or check for orphaned processes with `lsof -i :5432`. |
 Monitor startup progress:
 
 ```bash
@@ -317,8 +333,10 @@ imagebuilder                                                 1        0
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Run this command directly on the vCenter Server appliance (SSH as root), not from a remote client.
-    **`watch: command not found`** — Install the procps-ng package or use `while true; do clear; service-control --status | grep -E "stopped|running"; sleep 5; done` as an alternative.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Run this command directly on the vCenter Server appliance (SSH as root), not from a remote client. |
+    | `watch: command not found` | Install the procps-ng package or use `while true; do clear; service-control --status | grep -E "stopped|running"; sleep 5; done` as an alternative. |
 Services take 3–8 minutes to fully start. `vpxd` is the last to become healthy.
 
 ### Procedure B: Restart vCenter VM (scenario A)
@@ -356,9 +374,11 @@ VMware Appliance Management Service      true     true
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname vcenter.corp.local: Name or service not known`** — Verify the hostname is correct and resolvable by running `nslookup vcenter.corp.local` or update your `/etc/hosts` file.
-    **`Permission denied (publickey,password).`** — Ensure you have the correct root password and SSH access is enabled; check vCenter's SSH service status in the DCUI.
-    **`service-control: command not found`** — This command only works on vCenter Server appliances; if using Windows vCenter, use `Get-Service` in PowerShell instead.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname vcenter.corp.local: Name or service not known` | Verify the hostname is correct and resolvable by running `nslookup vcenter.corp.local` or update your `/etc/hosts` file. |
+    | `Permission denied (publickey,password).` | Ensure you have the correct root password and SSH access is enabled; check vCenter's SSH service status in the DCUI. |
+    | `service-control: command not found` | This command only works on vCenter Server appliances; if using Windows vCenter, use `Get-Service` in PowerShell instead. |
 ### Procedure C: Restore from backup (catastrophic failure)
 
 If services cannot be recovered:
@@ -410,9 +430,11 @@ Property :
 ```
 
 !!! warning "Common errors"
-    **`Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.`** — Add `-SkipCertificateCheck` parameter or import the vCenter certificate into your PowerCLI trusted store.
-    **`Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Install VMware.PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force`.
-    **`Connect-VIServer : Cannot find an overload for "Connect" and the argument count: "3".`** — Ensure you are running PowerShell 5.1+ and have imported the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core`.
+    | Error | Fix |
+    |---|---|
+    | `Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.` | Add `-SkipCertificateCheck` parameter or import the vCenter certificate into your PowerCLI trusted store. |
+    | `Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Install VMware.PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force`. |
+    | `Connect-VIServer : Cannot find an overload for "Connect" and the argument count: "3".` | Ensure you are running PowerShell 5.1+ and have imported the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core`. |
 - Confirm vSphere Client loads and inventory is visible
 - Confirm no active critical alarms on the cluster
 - Confirm HA and DRS are active on all clusters
@@ -449,6 +471,8 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`df: '/storage/log': No such file or directory`** — Verify the mount points exist and are mounted with `mount | grep storage`, then remount if necessary.
-    **`df: cannot access '/storage/db': Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the mount point.
+    | Error | Fix |
+    |---|---|
+    | `df: '/storage/log': No such file or directory` | Verify the mount points exist and are mounted with `mount | grep storage`, then remount if necessary. |
+    | `df: cannot access '/storage/db': Permission denied` | Run the command with `sudo` or ensure your user has read permissions on the mount point. |
 Alert threshold: >80% on any vCenter storage partition.

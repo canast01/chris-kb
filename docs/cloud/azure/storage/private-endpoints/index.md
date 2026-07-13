@@ -98,9 +98,11 @@ az network private-endpoint create \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.`** — Verify the storage account name and resource group exist with `az storage account show --resource-group $RG --name $SA`.
-    **`(InvalidResourceId) The subnet 'snet-private-endpoints' does not exist in virtual network 'vnet-prod-eastus'.`** — Confirm the subnet name and VNET name are correct by running `az network vnet subnet list --resource-group $RG --vnet-name $VNET`.
-    **`(BadRequest) Private endpoint cannot be created in a subnet that has a Network Security Group with deny rules for the storage service.`** — Review and adjust NSG rules on the subnet to allow private endpoint traffic, or temporarily associate a permissive NSG.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.` | Verify the storage account name and resource group exist with `az storage account show --resource-group $RG --name $SA`. |
+    | `(InvalidResourceId) The subnet 'snet-private-endpoints' does not exist in virtual network 'vnet-prod-eastus'.` | Confirm the subnet name and VNET name are correct by running `az network vnet subnet list --resource-group $RG --vnet-name $VNET`. |
+    | `(BadRequest) Private endpoint cannot be created in a subnet that has a Network Security Group with deny rules for the storage service.` | Review and adjust NSG rules on the subnet to allow private endpoint traffic, or temporarily associate a permissive NSG. |
 Sub-resources (group IDs) per storage service:
 
 | Storage Service | Group ID |
@@ -180,8 +182,10 @@ Address: 10.2.1.15
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net' under resource group 'rg-prod-eastus' was not found.`** — Run the first `az network private-dns zone create` command before attempting to link or create the zone group.
-    **`InvalidResourceReference: The private endpoint 'pe-blob-prod' does not exist in resource group 'rg-prod-eastus'.`** — Ensure the private endpoint
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net' under resource group 'rg-prod-eastus' was not found.` | Run the first `az network private-dns zone create` command before attempting to link or create the zone group. |
+    | `InvalidResourceReference: The private endpoint 'pe-blob-prod' does not exist in resource group 'rg-prod-eastus'.` | Ensure the private endpoint |
 ## Verifying Connectivity
 
 ```bash
@@ -227,8 +231,10 @@ stprodfiles01-pe              Succeeded          /subscriptions/a1b2c3d4-e5f6-78
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Network/privateEndpoints/stprodblobs01-pe' under resource group 'prod-rg' was not found.`** — Verify the private endpoint name matches exactly and the resource group variable `$RG` is set correctly with `echo $RG`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip certificate verification, or ensure the private DNS zone is properly linked to the VNet so the FQDN resolves to the private IP.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Network/privateEndpoints/stprodblobs01-pe' under resource group 'prod-rg' was not found.` | Verify the private endpoint name matches exactly and the resource group variable `$RG` is set correctly with `echo $RG`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip certificate verification, or ensure the private DNS zone is properly linked to the VNet so the FQDN resolves to the private IP. |
 ## Network Isolation Configuration
 
 ```bash
@@ -282,9 +288,11 @@ az storage account update \
 ```
 
 !!! warning "Common errors"
-    **`The subnet 'storage-subnet' under virtual network 'prod-vnet' does not have 'Microsoft.Storage' service endpoint enabled.`** — Enable the service endpoint on the subnet with `az network vnet subnet update --resource-group $RG --vnet-name $VNET --name $SUBNET --service-endpoints Microsoft.Storage`.
-    **`The resource group '$RG' could not be found.`** — Verify the resource group name is correct and exists in your subscription with `az group list --query "[].name"`.
-    **`The storage account '$SA' could not be found in the specified resource group.`** — Confirm the storage account name and resource group are correct with `az storage account list --resource-group $RG --query "[].name"`.
+    | Error | Fix |
+    |---|---|
+    | `The subnet 'storage-subnet' under virtual network 'prod-vnet' does not have 'Microsoft.Storage' service endpoint enabled.` | Enable the service endpoint on the subnet with `az network vnet subnet update --resource-group $RG --vnet-name $VNET --name $SUBNET --service-endpoints Microsoft.Storage`. |
+    | `The resource group '$RG' could not be found.` | Verify the resource group name is correct and exists in your subscription with `az group list --query "[].name"`. |
+    | `The storage account '$SA' could not be found in the specified resource group.` | Confirm the storage account name and resource group are correct with `az storage account list --resource-group $RG --query "[].name"`. |
 ## Troubleshooting
 
 | Symptom | Likely Cause | Resolution |

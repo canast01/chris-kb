@@ -76,8 +76,10 @@ Entry [1]
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to VMware Certificate Store`** — Ensure the vmafd service is running with `systemctl status vmware-vmafd` and restart if needed.
-    **`Error: Permission denied`** — Run the command with root privileges using `sudo` or as the root user.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to VMware Certificate Store` | Ensure the vmafd service is running with `systemctl status vmware-vmafd` and restart if needed. |
+    | `Error: Permission denied` | Run the command with root privileges using `sudo` or as the root user. |
 ## Validate After Replacement
 
 - Browser access to vCenter — no certificate warning

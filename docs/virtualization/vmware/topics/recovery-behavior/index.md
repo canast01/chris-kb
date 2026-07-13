@@ -84,8 +84,10 @@ Device: naa.60001405l3m4n5o6p7q8r9s0t1u2v3w4
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vmkernel.log: No such file or directory`** — SSH directly to the ESXi host instead of running commands through vCenter; the vmkernel.log path is only accessible on the ESXi host itself.
-    **`esxcli: command not found`** — Ensure you are logged into an ESXi host with SSH access; esxcli is not available on vCenter Server or Windows hosts.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vmkernel.log: No such file or directory` | SSH directly to the ESXi host instead of running commands through vCenter; the vmkernel.log path is only accessible on the ESXi host itself. |
+    | `esxcli: command not found` | Ensure you are logged into an ESXi host with SSH access; esxcli is not available on vCenter Server or Windows hosts. |
 **Do not rescan storage unnecessarily during a recovery** — it can delay path re-establishment.
 
 ## After Network Failure
@@ -134,8 +136,10 @@ Bytes Already Synced: 746.5 GB
 ```
 
 !!! warning "Common errors"
-    **`Resync operations are not running`** — Verify the failed disk has been replaced and the host has rejoined the cluster with `esxcli vsan cluster get`.
-    **`grep: (standard input): No such input`** — Ensure VSAN is enabled on the cluster and the host has valid VSAN membership with `esxcli vsan cluster info`.
+    | Error | Fix |
+    |---|---|
+    | `Resync operations are not running` | Verify the failed disk has been replaced and the host has rejoined the cluster with `esxcli vsan cluster get`. |
+    | `grep: (standard input): No such input` | Ensure VSAN is enabled on the cluster and the host has valid VSAN membership with `esxcli vsan cluster info`. |
 ## Recovery Performance Impact
 
 | Event | Performance Impact | Duration |

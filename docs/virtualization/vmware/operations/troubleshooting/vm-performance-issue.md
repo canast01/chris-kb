@@ -103,8 +103,10 @@ GID  NAME                                   PCPU  %USED  %RDY  %SYS  %WAIT
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Ensure you are running this command directly on an ESXi host via SSH or console, not from vCenter Server.
-    **`Unable to open /proc/vmware/sched/cpu: Permission denied`** — Run esxtop with root privileges or as a user with administrative permissions on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Ensure you are running this command directly on an ESXi host via SSH or console, not from vCenter Server. |
+    | `Unable to open /proc/vmware/sched/cpu: Permission denied` | Run esxtop with root privileges or as a user with administrative permissions on the ESXi host. |
 **Resolutions:**
 
 - Reduce vCPU count on oversized VMs (a 16-vCPU VM may schedule worse than an 8-vCPU VM on a 20-core host)
@@ -140,8 +142,10 @@ Press 'q' to exit esxtop
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Ensure you are logged into an ESXi host directly via SSH (not vCenter); esxtop is a local ESXi utility.
-    **`Cannot open /proc/vmware/sched/cpu: Permission denied`** — Run esxtop with root privileges or as a user with administrative ESXi permissions.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Ensure you are logged into an ESXi host directly via SSH (not vCenter); esxtop is a local ESXi utility. |
+    | `Cannot open /proc/vmware/sched/cpu: Permission denied` | Run esxtop with root privileges or as a user with administrative ESXi permissions. |
 Key indicators:
 
 | Metric | Meaning |
@@ -181,9 +185,11 @@ vmhba3   4       0      128    3.12  0.45  2.67  52%   71%
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Ensure you are running this command directly on an ESXi host (SSH session), not from vCenter; esxtop is ESXi-only.
-    **`Error: Cannot open /proc/vmware/sched/pcpu`** — Verify the ESXi host is fully booted and the hostd service is running with `systemctl status hostd`.
-    **`Permission denied`** — Run esxtop as root or a user with administrative privileges; use `su -` or ensure your SSH user has root access.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Ensure you are running this command directly on an ESXi host (SSH session), not from vCenter; esxtop is ESXi-only. |
+    | `Error: Cannot open /proc/vmware/sched/pcpu` | Verify the ESXi host is fully booted and the hostd service is running with `systemctl status hostd`. |
+    | `Permission denied` | Run esxtop as root or a user with administrative privileges; use `su -` or ensure your SSH user has root access. |
 - Under 10ms GAVG — normal for most workloads
 - 10–20ms — acceptable for non-latency-sensitive workloads
 - Over 20ms — investigate array-side performance
@@ -246,8 +252,10 @@ PortgroupName: Management Network
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace network.vswitch.dvs.vmware.portgroup.list`** — Verify the ESXi version supports DVS commands; use `esxcli network vswitch standard portgroup list` for standard vSwitches instead.
-    **`Error: Unable to connect to management daemon`** — Restart the hostd service with `services.sh restart` or reboot the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace network.vswitch.dvs.vmware.portgroup.list` | Verify the ESXi version supports DVS commands; use `esxcli network vswitch standard portgroup list` for standard vSwitches instead. |
+    | `Error: Unable to connect to management daemon` | Restart the hostd service with `services.sh restart` or reboot the ESXi host. |
 **Step 4 — Check for MAC address conflict** — duplicate MAC addresses on the same VLAN will cause flapping.
 
 ---
@@ -303,8 +311,10 @@ du -sh /var/log/* | sort -rh | head -10
 ```
 
 !!! warning "Common errors"
-    **`du: cannot read directory '/proc/kcore': Permission denied`** — Run the command with `sudo` or redirect stderr to /dev/null (already done in the first command).
-    **`du: cannot access '/var/log/vmware': Permission denied`** — Execute with `sudo du -sh /var/log/*` to access restricted log directories.
+    | Error | Fix |
+    |---|---|
+    | `du: cannot read directory '/proc/kcore': Permission denied` | Run the command with `sudo` or redirect stderr to /dev/null (already done in the first command). |
+    | `du: cannot access '/var/log/vmware': Permission denied` | Execute with `sudo du -sh /var/log/*` to access restricted log directories. |
 **Extending the VMDK (hot-extend):**
 
 ```powershell

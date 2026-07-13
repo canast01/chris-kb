@@ -131,8 +131,10 @@ az cognitiveservices account update \
 ```
 
 !!! warning "Common errors"
-    **`The resource 'my-aoai-resource' could not be found in resource group 'my-rg'.`** — Verify the resource name and resource group name match exactly with `az cognitiveservices account list --resource-group my-rg`.
-    **`InvalidParameter: The value of parameter publicNetworkAccess is invalid.`** — Use `Enabled` or `Disabled` (case-sensitive) and ensure the resource supports network access restrictions; some older deployments may not support this parameter.
+    | Error | Fix |
+    |---|---|
+    | `The resource 'my-aoai-resource' could not be found in resource group 'my-rg'.` | Verify the resource name and resource group name match exactly with `az cognitiveservices account list --resource-group my-rg`. |
+    | `InvalidParameter: The value of parameter publicNetworkAccess is invalid.` | Use `Enabled` or `Disabled` (case-sensitive) and ensure the resource supports network access restrictions; some older deployments may not support this parameter. |
 Traffic now flows only through the private endpoint.
 
 ## Firewall Rules
@@ -193,9 +195,11 @@ az cognitiveservices account update \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.CognitiveServices/accounts/my-aoai-resource' under resource group 'my-rg' was not found.`** — Verify the resource name and resource group name match exactly with `az cognitiveservices account list -g my-rg`.
-    **`(InvalidParameter) The subnet 'app-subnet' does not exist in virtual network 'my-vnet'.`** — Confirm the subnet exists in the VNet using `az network vnet subnet list -g my-rg --vnet-name my-vnet`.
-    **`(InvalidParameter) The IP address '203.0.113.0/24' is not a valid CIDR notation.`** — Use valid CIDR notation (e.g., `203.0.113.0/24` or `203.0.113.5/32` for a single IP).
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.CognitiveServices/accounts/my-aoai-resource' under resource group 'my-rg' was not found.` | Verify the resource name and resource group name match exactly with `az cognitiveservices account list -g my-rg`. |
+    | `(InvalidParameter) The subnet 'app-subnet' does not exist in virtual network 'my-vnet'.` | Confirm the subnet exists in the VNet using `az network vnet subnet list -g my-rg --vnet-name my-vnet`. |
+    | `(InvalidParameter) The IP address '203.0.113.0/24' is not a valid CIDR notation.` | Use valid CIDR notation (e.g., `203.0.113.0/24` or `203.0.113.5/32` for a single IP). |
 ## Network Architecture Patterns
 
 | Pattern | Use Case | Pros | Cons |
@@ -247,9 +251,11 @@ Address: 10.1.2.45
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to my-aoai-resource.openai.azure.com port 443: Connection refused`** — Verify the private endpoint is created and the DNS A record points to the correct private IP (10.x.x.x or 172.x.x.x range).
-    **`nslookup: can't find my-aoai-resource.openai.azure.com: NXDOMAIN`** — Ensure the private DNS zone is linked to the VNet and the private endpoint is registered in the zone.
-    **`"error":{"code":"InvalidAuthenticationToken"}`** — Confirm the `$AZURE_OPENAI_API_KEY` environment variable is set and contains a valid API key from the Azure OpenAI resource.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to my-aoai-resource.openai.azure.com port 443: Connection refused` | Verify the private endpoint is created and the DNS A record points to the correct private IP (10.x.x.x or 172.x.x.x range). |
+    | `nslookup: can't find my-aoai-resource.openai.azure.com: NXDOMAIN` | Ensure the private DNS zone is linked to the VNet and the private endpoint is registered in the zone. |
+    | `"error":{"code":"InvalidAuthenticationToken"}` | Confirm the `$AZURE_OPENAI_API_KEY` environment variable is set and contains a valid API key from the Azure OpenAI resource. |
 ## Outbound Connectivity for App Services
 
 When deploying applications on Azure App Service or Azure Functions, use VNet Integration to route outbound calls through the VNet:
@@ -282,7 +288,9 @@ Integrating webapp 'my-app' with vnet 'my-vnet' and subnet 'app-subnet'...
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Web/sites/my-app' under resource group 'my-rg' was not found.`** — Verify the webapp name and resource group exist with `az webapp list -g my-rg`.
-    **`InvalidResourceId: The subnet 'app-subnet' does not exist in vnet 'my-vnet'.`** — Confirm the subnet name with `az network vnet subnet list --vnet-name my-vnet -g my-rg`.
-    **`BadRequest: The subnet must have a service endpoint or delegation for Microsoft.Web.`** — Add the Microsoft.Web service endpoint to the subnet using `az network vnet subnet update --vnet-name my-vnet -n app-subnet -g my-rg --service-endpoints Microsoft.Web`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Web/sites/my-app' under resource group 'my-rg' was not found.` | Verify the webapp name and resource group exist with `az webapp list -g my-rg`. |
+    | `InvalidResourceId: The subnet 'app-subnet' does not exist in vnet 'my-vnet'.` | Confirm the subnet name with `az network vnet subnet list --vnet-name my-vnet -g my-rg`. |
+    | `BadRequest: The subnet must have a service endpoint or delegation for Microsoft.Web.` | Add the Microsoft.Web service endpoint to the subnet using `az network vnet subnet update --vnet-name my-vnet -n app-subnet -g my-rg --service-endpoints Microsoft.Web`. |
 Ensure the subnet has `Microsoft.CognitiveServices` service endpoint enabled if using service endpoints instead of private endpoints.

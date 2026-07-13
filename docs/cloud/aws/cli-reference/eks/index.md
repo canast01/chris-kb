@@ -91,9 +91,11 @@ aws eks create-fargate-profile \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the ListFargateProfiles operation: No cluster found in us-east-1: <cluster>`** — Verify the cluster name is correct and exists in the specified region with `aws eks describe-cluster --name <cluster> --region <region>`.
-    **`An error occurred (InvalidParameterException) when calling the CreateFargateProfile operation: Invalid ARN: arn:aws:iam::<account_id>:role/<FargatePodExecutionRole>`** — Replace `<account_id>` and `<FargatePodExecutionRole>` with actual values, and confirm the IAM role exists with `aws iam get-role --role-name <FargatePodExecutionRole>`.
-    **`An error occurred (InvalidParameterException) when calling the CreateFargateProfile operation: Fargate profile with name <profile> already exists`** — Use a unique profile name or delete the existing profile with `aws eks delete-fargate-profile --cluster-name <cluster> --fargate-profile-name <profile>` first.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the ListFargateProfiles operation: No cluster found in us-east-1: <cluster>` | Verify the cluster name is correct and exists in the specified region with `aws eks describe-cluster --name <cluster> --region <region>`. |
+    | `An error occurred (InvalidParameterException) when calling the CreateFargateProfile operation: Invalid ARN: arn:aws:iam::<account_id>:role/<FargatePodExecutionRole>` | Replace `<account_id>` and `<FargatePodExecutionRole>` with actual values, and confirm the IAM role exists with `aws iam get-role --role-name <FargatePodExecutionRole>`. |
+    | `An error occurred (InvalidParameterException) when calling the CreateFargateProfile operation: Fargate profile with name <profile> already exists` | Use a unique profile name or delete the existing profile with `aws eks delete-fargate-profile --cluster-name <cluster> --fargate-profile-name <profile>` first. |
 ## IAM OIDC Provider
 
 ```bash
@@ -127,8 +129,10 @@ OpenIdConnectProviderList:
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceInUseException) when calling the AssociateOpenIDConnectProvider operation: OIDC provider already exists`** — Run the describe-cluster command first to verify the provider exists, then skip the associate step.
-    **`error: cluster not found: "prod-cluster"`** — Verify the cluster name matches exactly and confirm you are querying the correct region with `--region`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceInUseException) when calling the AssociateOpenIDConnectProvider operation: OIDC provider already exists` | Run the describe-cluster command first to verify the provider exists, then skip the associate step. |
+    | `error: cluster not found: "prod-cluster"` | Verify the cluster name matches exactly and confirm you are querying the correct region with `--region`. |
 ## Access Entries and Auth Mode
 
 ```bash
@@ -203,9 +207,11 @@ Updating cluster configuration...
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the DescribeCluster operation: No cluster found for name: <cluster>`** — Replace `<cluster>` with the actual EKS cluster name and verify the cluster exists in the current AWS region.
-    **`An error occurred (InvalidParameterException) when calling the UpdateClusterConfig operation: Invalid authentication mode. Valid values are: CONFIG_MAP, API, API_AND_CONFIG_MAP`** — Ensure the authenticationMode value is spelled correctly and is one of the three valid options.
-    **`An error occurred (InvalidParameterException) when calling the CreateAccessEntry operation: Invalid principal ARN format`** — Verify the IAM principal ARN follows the correct format (e.g., `arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME`) and that the role exists.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the DescribeCluster operation: No cluster found for name: <cluster>` | Replace `<cluster>` with the actual EKS cluster name and verify the cluster exists in the current AWS region. |
+    | `An error occurred (InvalidParameterException) when calling the UpdateClusterConfig operation: Invalid authentication mode. Valid values are: CONFIG_MAP, API, API_AND_CONFIG_MAP` | Ensure the authenticationMode value is spelled correctly and is one of the three valid options. |
+    | `An error occurred (InvalidParameterException) when calling the CreateAccessEntry operation: Invalid principal ARN format` | Verify the IAM principal ARN follows the correct format (e.g., `arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME`) and that the role exists. |
 ## Add-ons
 
 ```bash

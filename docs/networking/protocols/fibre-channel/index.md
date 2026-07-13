@@ -122,9 +122,11 @@ Interface fc1/1 Counters (brief):
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch model supports these show commands (some older switches use different syntax like `show interface fcp` instead of `show interface fc`).
-    **`FLOGI database is empty`** — Confirm HBAs are properly zoned and logged in; check `show flogi database` for pending FLOGI requests with `show flogi pending`.
-    **`Interface fc1/1 not found`** — Use `show interface fc brief` first to list valid port names, as numbering varies by switch model (e.g., `Ethernet1/1` vs `fc1/1`).
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch model supports these show commands (some older switches use different syntax like `show interface fcp` instead of `show interface fc`). |
+    | `FLOGI database is empty` | Confirm HBAs are properly zoned and logged in; check `show flogi database` for pending FLOGI requests with `show flogi pending`. |
+    | `Interface fc1/1 not found` | Use `show interface fc brief` first to list valid port names, as numbering varies by switch model (e.g., `Ethernet1/1` vs `fc1/1`). |
 ```bash
 ## Switch and port status
 switchshow
@@ -197,9 +199,11 @@ Port 3 Statistics:
 ```
 
 !!! warning "Common errors"
-    **`switchshow: command not found`** — Verify you are logged into the Fibre Channel switch via SSH/Telnet, not a Linux host; use `ssh admin@<switch-ip>` to connect.
-    **`Error: Port <port-number> does not exist`** — Confirm the port number is within the valid range for your switch model (typically 0-15 for 16-port switches) using `switchshow` first.
-    **`Permission denied`** — Ensure your user account has administrative privileges on the switch; contact your switch administrator to grant the necessary role.
+    | Error | Fix |
+    |---|---|
+    | `switchshow: command not found` | Verify you are logged into the Fibre Channel switch via SSH/Telnet, not a Linux host; use `ssh admin@<switch-ip>` to connect. |
+    | `Error: Port <port-number> does not exist` | Confirm the port number is within the valid range for your switch model (typically 0-15 for 16-port switches) using `switchshow` first. |
+    | `Permission denied` | Ensure your user account has administrative privileges on the switch; contact your switch administrator to grant the necessary role. |
 ```bash
 conf t
 zone name <zone-name> vsan <vsan-id>
@@ -221,9 +225,11 @@ config#
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (conf t) and that the switch supports zoning commands.
-    **`% Zone member already exists`** — Remove the duplicate PWWN entry or use a different zone name before adding the member again.
-    **`% VSAN <vsan-id> does not exist`** — Create the VSAN first using `vsan <vsan-id>` command before attempting to create zones in it.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (conf t) and that the switch supports zoning commands. |
+    | `% Zone member already exists` | Remove the duplicate PWWN entry or use a different zone name before adding the member again. |
+    | `% VSAN <vsan-id> does not exist` | Create the VSAN first using `vsan <vsan-id>` command before attempting to create zones in it. |
 ```bash
 zoneadd "<zone-name>", "<wwpn>"
 cfgsave
@@ -239,6 +245,8 @@ Zoning changes will take effect after fabric initialization.
 ```
 
 !!! warning "Common errors"
-    **`Invalid WWPN format`** — Ensure the WWPN is in the correct format (16 hexadecimal characters, typically formatted as xx:xx:xx:xx:xx:xx:xx:xx).
-    **`Zone name already exists`** — Use a unique zone name or delete the existing zone before creating a new one with `zonedelete "<zone-name>"`.
-    **`Zone set does not exist`** — Verify the zone set name exists with `cfgshow` before attempting to enable it.
+    | Error | Fix |
+    |---|---|
+    | `Invalid WWPN format` | Ensure the WWPN is in the correct format (16 hexadecimal characters, typically formatted as xx:xx:xx:xx:xx:xx:xx:xx). |
+    | `Zone name already exists` | Use a unique zone name or delete the existing zone before creating a new one with `zonedelete "<zone-name>"`. |
+    | `Zone set does not exist` | Verify the zone set name exists with `cfgshow` before attempting to enable it. |

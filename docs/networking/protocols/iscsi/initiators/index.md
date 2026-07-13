@@ -71,8 +71,10 @@ Created symlink /etc/systemd/system/multi-user.target.wants/iscsid.service → /
 ```
 
 !!! warning "Common errors"
-    **`cat: /etc/iscsi/initiatorname.iscsi: No such file or directory`** — Install iscsi-initiator-utils or open-iscsi first before attempting to read the initiator configuration file.
-    **`Failed to restart iscsid.service: Unit iscsid.service not found.`** — Ensure the iSCSI package is fully installed and the systemd daemon is reloaded with `systemctl daemon-reload`.
+    | Error | Fix |
+    |---|---|
+    | `cat: /etc/iscsi/initiatorname.iscsi: No such file or directory` | Install iscsi-initiator-utils or open-iscsi first before attempting to read the initiator configuration file. |
+    | `Failed to restart iscsid.service: Unit iscsid.service not found.` | Ensure the iSCSI package is fully installed and the systemd daemon is reloaded with `systemctl daemon-reload`. |
 ## Windows iSCSI Initiator
 
 ```powershell
@@ -125,9 +127,11 @@ Rescan of adapter vmhba65 completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option --enabled=true`** — Use `--enabled true` (space-separated, not equals sign) in older ESXi versions.
-    **`Error: Discovery address already exists`** — Remove the duplicate target portal first with `esxcli iscsi adapter discovery sendtarget remove --adapter vmhba65 --address <target-ip>`.
-    **`Error: Could not find adapter vmhba65`** — Verify the adapter name with `esxcli iscsi adapter list` and use the correct vmhba identifier.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option --enabled=true` | Use `--enabled true` (space-separated, not equals sign) in older ESXi versions. |
+    | `Error: Discovery address already exists` | Remove the duplicate target portal first with `esxcli iscsi adapter discovery sendtarget remove --adapter vmhba65 --address <target-ip>`. |
+    | `Error: Could not find adapter vmhba65` | Verify the adapter name with `esxcli iscsi adapter list` and use the correct vmhba identifier. |
 ## Initiator Standards
 
 - One initiator IQN per HBA port — do not share IQNs across hosts

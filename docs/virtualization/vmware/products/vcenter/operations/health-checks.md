@@ -113,9 +113,11 @@ System clock synchronized: yes
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if still failing, verify curl is installed with `which curl`).
-    **`python3: command not found`** — Install Python 3 with `apt-get install python3` on Debian-based VCSA or use the full path `/usr/bin/python3`.
-    **`/var/log/vmware/vpxd/vpxd.log: No such file or directory`** — Verify vpxd service is running with `service-control --status vmware-vpxd` and check log location with `find /var/log -name vpxd.log`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if still failing, verify curl is installed with `which curl`). |
+    | `python3: command not found` | Install Python 3 with `apt-get install python3` on Debian-based VCSA or use the full path `/usr/bin/python3`. |
+    | `/var/log/vmware/vpxd/vpxd.log: No such file or directory` | Verify vpxd service is running with `service-control --status vmware-vpxd` and check log location with `find /var/log -name vpxd.log`. |
 Key partitions to monitor:
 - `/storage/log` — fills quickly during issues
 - `/storage/db` — vCenter database
@@ -139,8 +141,10 @@ vmware-eam is running
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Ensure you are running this command on the vCenter Server appliance (VCSA) with root privileges, as `service-control` is only available in the vCenter environment.
-    **`vmware-sts is stopped`** — Restart the STS service with `service-control --start vmware-sts` and wait 30-60 seconds for dependent services to recover.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Ensure you are running this command on the vCenter Server appliance (VCSA) with root privileges, as `service-control` is only available in the vCenter environment. |
+    | `vmware-sts is stopped` | Restart the STS service with `service-control --start vmware-sts` and wait 30-60 seconds for dependent services to recover. |
 ## DNS and NTP Validation
 
 ![DNS and NTP Validation](../../../../../assets/virtualization-vmware-vcenter-hc-dns-and-ntp-validation.svg)
@@ -185,9 +189,11 @@ System clock synchronized: yes
 ```
 
 !!! warning "Common errors"
-    **`nslookup: command not found`** — Install bind-utils package with `yum install bind-utils` or use `dig` instead.
-    **`connection timed out; no servers could be reached`** — Verify DNS server IP is correct in `/etc/resolv.conf` and network connectivity to the DNS server exists.
-    **`System clock synchronized: no`** — Restart the NTP service with `systemctl restart ntp` or `systemctl restart chrony` depending on your time daemon.
+    | Error | Fix |
+    |---|---|
+    | `nslookup: command not found` | Install bind-utils package with `yum install bind-utils` or use `dig` instead. |
+    | `connection timed out; no servers could be reached` | Verify DNS server IP is correct in `/etc/resolv.conf` and network connectivity to the DNS server exists. |
+    | `System clock synchronized: no` | Restart the NTP service with `systemctl restart ntp` or `systemctl restart chrony` depending on your time daemon. |
 ## PowerCLI Health Checks
 
 ![PowerCLI Health Checks](../../../../../assets/virtualization-vmware-vcenter-hc-powercli-health-checks.svg)

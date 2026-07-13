@@ -98,9 +98,11 @@ kernel-5.10.0-26.el7_9.x86_64
 ```
 
 !!! warning "Common errors"
-    **`yum: command not found`** — Verify the system is RHEL/CentOS by checking `/etc/os-release`, or use `dnf` on RHEL 8+.
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the apt command with `sudo` or as root.
-    **`grep: /var/log/dpkg.log: No such file or directory`** — Check `/var/log/apt/history.log` instead on some Debian/Ubuntu versions.
+    | Error | Fix |
+    |---|---|
+    | `yum: command not found` | Verify the system is RHEL/CentOS by checking `/etc/os-release`, or use `dnf` on RHEL 8+. |
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the apt command with `sudo` or as root. |
+    | `grep: /var/log/dpkg.log: No such file or directory` | Check `/var/log/apt/history.log` instead on some Debian/Ubuntu versions. |
 ## SCCM / Endpoint Manager (Windows fleet)
 
 ```powershell
@@ -154,9 +156,11 @@ curl -s -H "X-ApiKey: accessKey=<ak>;secretKey=<sk>" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: cloud.tenable.com`** — Verify network connectivity and DNS resolution, or check if your firewall blocks access to Tenable.io endpoints.
-    **`{"error":"Invalid Credentials","status":401}`** — Ensure your API key and secret key are correctly formatted and have not expired in the Tenable.io console.
-    **`jq: parse error: Invalid JSON`** — Confirm the API response is valid JSON by testing the curl command without the jq filter first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: cloud.tenable.com` | Verify network connectivity and DNS resolution, or check if your firewall blocks access to Tenable.io endpoints. |
+    | `{"error":"Invalid Credentials","status":401}` | Ensure your API key and secret key are correctly formatted and have not expired in the Tenable.io console. |
+    | `jq: parse error: Invalid JSON` | Confirm the API response is valid JSON by testing the curl command without the jq filter first. |
 **Azure Update Manager:**
 ```bash
 # List VMs with missing critical updates
@@ -192,8 +196,10 @@ dev-emergency-patches         dev-rg             eastus      InGuestPatch
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure you're using the correct subscription with `az account show`.
-    **`ResourceNotFound`** — Confirm the VM exists in the specified resource group using `az vm list -g <rg> -o table` and check the exact VM name spelling.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure you're using the correct subscription with `az account show`. |
+    | `ResourceNotFound` | Confirm the VM exists in the specified resource group using `az vm list -g <rg> -o table` and check the exact VM name spelling. |
 ## Exception Handling
 
 When a patch cannot be applied within the SLA:

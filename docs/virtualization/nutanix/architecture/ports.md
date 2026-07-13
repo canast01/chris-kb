@@ -185,9 +185,11 @@ Connection to 10.20.40.12 port 16514 [tcp/*] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <prism-element-vip> port 9440: Connection refused`** — Verify the Prism Element VIP is reachable and port 9440 is open on the network firewall.
-    **`ssh: connect to host <cvm-ip> port 22: Connection timed out`** — Confirm the CVM IP is correct, the CVM is powered on, and SSH port 22 is not blocked by network ACLs or host firewall.
-    **`nc: getaddrinfo: Name or service not known`** — Ensure the remote CVM IP address is valid and resolvable; check DNS or use the full IP instead of a hostname.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <prism-element-vip> port 9440: Connection refused` | Verify the Prism Element VIP is reachable and port 9440 is open on the network firewall. |
+    | `ssh: connect to host <cvm-ip> port 22: Connection timed out` | Confirm the CVM IP is correct, the CVM is powered on, and SSH port 22 is not blocked by network ACLs or host firewall. |
+    | `nc: getaddrinfo: Name or service not known` | Ensure the remote CVM IP address is valid and resolvable; check DNS or use the full IP instead of a hostname. |
 ---
 
 ## See also

@@ -58,8 +58,10 @@ AzureOpenAIRequests  Total          /subscriptions/a1b2c3d4-e5f6-7890-abcd-ef123
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/SUB_ID/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-aoai-resource' could not be found.`** — Replace SUB_ID with your actual subscription ID and verify the resource group and account names exist.
-    **`AuthorizationFailed: The client 'user@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.Insights/metrics/read' over scope '/subscriptions/...'.`** — Assign the "Monitoring Reader" role to your user or service principal on the Azure OpenAI resource.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/SUB_ID/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-aoai-resource' could not be found.` | Replace SUB_ID with your actual subscription ID and verify the resource group and account names exist. |
+    | `AuthorizationFailed: The client 'user@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.Insights/metrics/read' over scope '/subscriptions/...'.` | Assign the "Monitoring Reader" role to your user or service principal on the Azure OpenAI resource. |
 ## Key Metrics
 
 | Metric Name | Unit | Description |
@@ -137,9 +139,11 @@ az monitor diagnostic-settings create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/SUB_ID/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-aoai-resource' could not be found.`** — Verify the subscription ID, resource group name, and Azure OpenAI resource name are correct using `az cognitiveservices account list -g my-rg`.
-    **`InvalidResourceId: The provided resource ID is malformed or does not exist.`** — Ensure the workspace resource ID path uses correct casing and that the Log Analytics Workspace exists in the same subscription using `az monitor log-analytics workspace list -g my-rg`.
-    **`BadRequest: Invalid JSON in logs or metrics parameter.`** — Validate JSON syntax by removing trailing commas and ensuring all quotes are properly escaped; test with `echo '[{"category":"Audit","enabled":true}]' | jq .` before running the command.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/SUB_ID/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-aoai-resource' could not be found.` | Verify the subscription ID, resource group name, and Azure OpenAI resource name are correct using `az cognitiveservices account list -g my-rg`. |
+    | `InvalidResourceId: The provided resource ID is malformed or does not exist.` | Ensure the workspace resource ID path uses correct casing and that the Log Analytics Workspace exists in the same subscription using `az monitor log-analytics workspace list -g my-rg`. |
+    | `BadRequest: Invalid JSON in logs or metrics parameter.` | Validate JSON syntax by removing trailing commas and ensuring all quotes are properly escaped; test with `echo '[{"category":"Audit","enabled":true}]' | jq .` before running the command. |
 `RequestResponse` logs capture model, deployment, token counts, latency, and status for every request.
 
 ## Log Analytics Queries
@@ -230,6 +234,8 @@ az monitor metrics alert create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The resource '/subscriptions/SUB_ID/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-aoai-resource' could not be found.`** — Replace `SUB_ID` with your actual subscription ID and verify the Azure OpenAI resource name matches exactly.
-    **`InvalidParameter : The metric 'AzureOpenAIThrottledRequests' is not supported for this resource type.`** — Verify the metric name is correct by running `az monitor metrics list-definitions --resource /subscriptions/SUB_ID/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-aoai-resource`.
-    **`ResourceNotFound : The action group '/subscriptions/SUB_ID/resourceGroups/my-rg/providers/Microsoft.Insights/actionGroups/pagerduty-ag' does not exist.`** — Create the action group first with `az monitor action-group create` or verify the name and subscription ID are correct.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The resource '/subscriptions/SUB_ID/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-aoai-resource' could not be found.` | Replace `SUB_ID` with your actual subscription ID and verify the Azure OpenAI resource name matches exactly. |
+    | `InvalidParameter : The metric 'AzureOpenAIThrottledRequests' is not supported for this resource type.` | Verify the metric name is correct by running `az monitor metrics list-definitions --resource /subscriptions/SUB_ID/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-aoai-resource`. |
+    | `ResourceNotFound : The action group '/subscriptions/SUB_ID/resourceGroups/my-rg/providers/Microsoft.Insights/actionGroups/pagerduty-ag' does not exist.` | Create the action group first with `az monitor action-group create` or verify the name and subscription ID are correct. |

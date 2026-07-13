@@ -139,8 +139,10 @@ Device  R1_State  R2_State        Pair_State    Link_State  Mode
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_ERROR_DB (191): Could not open the database`** — Verify the Symmetrix array is online and the SID is correct with `symcfg list -v`.
-    **`Error: Invalid RDFG number <rdfg-number>`** — Confirm the RDFG exists by running `symrdf -sid <SID> list -rdfg all` first.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_ERROR_DB (191): Could not open the database` | Verify the Symmetrix array is online and the SID is correct with `symcfg list -v`. |
+    | `Error: Invalid RDFG number <rdfg-number>` | Confirm the RDFG exists by running `symrdf -sid <SID> list -rdfg all` first. |
 **Decision flow:**
 - `Synchronized / Consistent` but hosts see high latency → measure RTT (Step 2)
 - `Partitioned` → network link between sites was interrupted; fix network first, then `symrdf establish` to re-sync
@@ -194,9 +196,11 @@ Keys:  Help   Display mode   Restart statistics   Order of fields   quit
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <dr-site-ip>`** — Replace `<dr-site-ip>` with the actual DR site IP address (e.g., 10.45.120.8) and verify DNS resolution or network routing.
-    **`100% packet loss`** — Verify the DR site IP is reachable from the production network, check firewall rules allow ICMP, and confirm the network path is active.
-    **`mtr: command not found`** — Install mtr using `apt-get install mtr` (Debian/Ubuntu) or `yum install mtr` (RHEL/CentOS), or use `traceroute` as an alternative.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <dr-site-ip>` | Replace `<dr-site-ip>` with the actual DR site IP address (e.g., 10.45.120.8) and verify DNS resolution or network routing. |
+    | `100% packet loss` | Verify the DR site IP is reachable from the production network, check firewall rules allow ICMP, and confirm the network path is active. |
+    | `mtr: command not found` | Install mtr using `apt-get install mtr` (Debian/Ubuntu) or `yum install mtr` (RHEL/CentOS), or use `traceroute` as an alternative. |
 **SRDF/S latency impact:**
 - Maximum recommended RTT is typically **5 ms** for SRDF/S (check Dell sizing guide for your use case)
 - A 5 ms RTT adds 5 ms to every synchronous host write on R1 volumes
@@ -242,9 +246,11 @@ Event ID    Time                 Severity  Message
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid SID <SID>`** — Replace `<SID>` with the actual Symmetrix ID (e.g., `000297123456`) or use `symcfg list -v` to verify the correct SID.
-    **`Error: No events found matching filter criteria`** — Expand the time range by increasing `-last` value or remove the `-severity` filter to confirm events exist in the log.
-    **`Permission denied: /tmp/rdf_events_*.csv`** — Ensure the Symmetrix user has write permissions to `/tmp` or redirect output to a writable directory like `$HOME`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid SID <SID>` | Replace `<SID>` with the actual Symmetrix ID (e.g., `000297123456`) or use `symcfg list -v` to verify the correct SID. |
+    | `Error: No events found matching filter criteria` | Expand the time range by increasing `-last` value or remove the `-severity` filter to confirm events exist in the log. |
+    | `Permission denied: /tmp/rdf_events_*.csv` | Ensure the Symmetrix user has write permissions to `/tmp` or redirect output to a writable directory like `$HOME`. |
 ---
 
 ## Step 4 — Check RF director ports and link statistics
@@ -294,8 +300,10 @@ Timestamp                Write Response Time (ms)  Link Utilization (%)  Through
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Error: Invalid SID <SID>`** — Replace `<SID>` with the actual Symmetrix ID (e.g., `000297900001`).
-    **`symstat: Error: RDF link not configured for this array`** — Verify SRDF is licensed and configured; check `symcfg list -rdf` output shows active ports.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Error: Invalid SID <SID>` | Replace `<SID>` with the actual Symmetrix ID (e.g., `000297900001`). |
+    | `symstat: Error: RDF link not configured for this array` | Verify SRDF is licensed and configured; check `symcfg list -rdf` output shows active ports. |
 ---
 
 ## Step 5 — Collect diagnostic bundle for Dell SR

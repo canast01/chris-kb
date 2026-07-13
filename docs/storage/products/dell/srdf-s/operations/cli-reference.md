@@ -105,9 +105,11 @@ Resynchronization completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`RDF pair not in a valid state for failover`** — Verify pair state is Synchronized using `symrdf -sid <sid> -g <group> query` before attempting failover.
-    **`RDF group <group> not found for Symmetrix <sid>`** — Confirm the correct SID and group number with `symrdf -sid <sid> list` and verify RDF licensing is enabled.
-    **`Cannot failback: R1 site is not accessible`** — Ensure R1 array is online and network connectivity between sites is restored before issuing failback.
+    | Error | Fix |
+    |---|---|
+    | `RDF pair not in a valid state for failover` | Verify pair state is Synchronized using `symrdf -sid <sid> -g <group> query` before attempting failover. |
+    | `RDF group <group> not found for Symmetrix <sid>` | Confirm the correct SID and group number with `symrdf -sid <sid> list` and verify RDF licensing is enabled. |
+    | `Cannot failback: R1 site is not accessible` | Ensure R1 array is online and network connectivity between sites is restored before issuing failback. |
 ---
 
 ## Swap & Metro Operations
@@ -150,9 +152,11 @@ RDF link latency: 45ms
 ```
 
 !!! warning "Common errors"
-    **`SRDF group SRDF_GRP_001 not found on array 000123456789`** — Verify the group name with `symrdf -sid <sid> list` and confirm the SID matches your target array.
-    **`RDF link is not READY — cannot perform swap operation`** — Check RDF link status with `symrdf -sid <sid> -g <group> query` and wait for SYNCED state before retrying.
-    **`User does not have privilege to execute SRDF operations`** — Ensure your Symmetrix user account has SRDF admin privileges in Solutions Enabler or contact your storage administrator.
+    | Error | Fix |
+    |---|---|
+    | `SRDF group SRDF_GRP_001 not found on array 000123456789` | Verify the group name with `symrdf -sid <sid> list` and confirm the SID matches your target array. |
+    | `RDF link is not READY — cannot perform swap operation` | Check RDF link status with `symrdf -sid <sid> -g <group> query` and wait for SYNCED state before retrying. |
+    | `User does not have privilege to execute SRDF operations` | Ensure your Symmetrix user account has SRDF admin privileges in Solutions Enabler or contact your storage administrator. |
 ---
 
 ## Common Health Check Sequence
@@ -196,9 +200,11 @@ PROD_VOL_002   250           TDEV    Ready
 ```
 
 !!! warning "Common errors"
-    **`SYMCFG-00001: Cannot find Symmetrix with ID <sid>`** — Verify the correct Symmetrix ID with `symcfg list` and ensure the array is accessible.
-    **`SYMRDF-00456: RDF group <group> does not exist`** — Confirm the RDF group name exists using `symrdf -sid <sid> list` before querying.
-    **`SYMDG-00789: Device group <group_name> not found`** — Check the exact device group name spelling with `symdg list` and retry.
+    | Error | Fix |
+    |---|---|
+    | `SYMCFG-00001: Cannot find Symmetrix with ID <sid>` | Verify the correct Symmetrix ID with `symcfg list` and ensure the array is accessible. |
+    | `SYMRDF-00456: RDF group <group> does not exist` | Confirm the RDF group name exists using `symrdf -sid <sid> list` before querying. |
+    | `SYMDG-00789: Device group <group_name> not found` | Check the exact device group name spelling with `symdg list` and retry. |
 ---
 
 ## Verify

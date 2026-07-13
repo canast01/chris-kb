@@ -79,9 +79,11 @@ Are you sure you want to perform this operation? (y/n): y
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.`** — Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`.
-    **`FileNotFoundError: [Errno 2] No such file or directory: 'lifecycle-policy.json'`** — Ensure the JSON policy file exists in the current directory or provide the full path with `@/path/to/lifecycle-policy.json`.
-    **`InvalidJsonInput: The provided JSON is invalid.`** — Validate the JSON syntax in your policy file using `jq . < lifecycle-policy.json` or an online JSON validator before applying.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.` | Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: 'lifecycle-policy.json'` | Ensure the JSON policy file exists in the current directory or provide the full path with `@/path/to/lifecycle-policy.json`. |
+    | `InvalidJsonInput: The provided JSON is invalid.` | Validate the JSON syntax in your policy file using `jq . < lifecycle-policy.json` or an online JSON validator before applying. |
 ## Tier Transitions
 
 Example policy with full tier transition and deletion chain:
@@ -207,9 +209,11 @@ az storage account management-policy create \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.`** — Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`.
-    **`Invalid JSON in policy definition`** — Ensure the JSON policy is properly formatted by validating it with a JSON linter before passing to the command.
-    **`(AuthorizationFailed) The client does not have permission to perform action 'Microsoft.Storage/storageAccounts/managementPolicies/write'`** — Confirm your Azure account has the Storage Account Contributor role or higher on the storage account using `az role assignment list --scope /subscriptions/{subscriptionId}/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01`.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.` | Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`. |
+    | `Invalid JSON in policy definition` | Ensure the JSON policy is properly formatted by validating it with a JSON linter before passing to the command. |
+    | `(AuthorizationFailed) The client does not have permission to perform action 'Microsoft.Storage/storageAccounts/managementPolicies/write'` | Confirm your Azure account has the Storage Account Contributor role or higher on the storage account using `az role assignment list --scope /subscriptions/{subscriptionId}/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01`. |
 ## Deletion Rules
 
 ```json
@@ -272,5 +276,7 @@ Storage logging properties updated for account stprodblobs01.
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.`** — Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`.
-    **`AuthorizationFailed : The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01'.`** — Ensure your Azure account has Storage Account Contributor or Owner role on the storage account using `az role assignment list --scope /subscriptions/{subscriptionId}/resourceGroups/rg-storage-prod`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.` | Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`. |
+    | `AuthorizationFailed : The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01'.` | Ensure your Azure account has Storage Account Contributor or Owner role on the storage account using `az role assignment list --scope /subscriptions/{subscriptionId}/resourceGroups/rg-storage-prod`. |

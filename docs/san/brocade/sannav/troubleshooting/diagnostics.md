@@ -168,8 +168,10 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification, or import the SANnav CA certificate into your system's trust store.
-    **`sannav-admin: command not found`** — Ensure you are logged in as the `admin` user and `/opt/sannav/
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip SSL verification, or import the SANnav CA certificate into your system's trust store. |
+    | `sannav-admin: command not found` | Ensure you are logged in as the `admin` user and `/opt/sannav/ |
 ---
 
 ## Step 2 — Check database health
@@ -206,8 +208,10 @@ tmpfs          7.8G     0  7.8G   0% /dev/shm
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to localhost port 8086: Connection refused`** — Verify InfluxDB is running with `systemctl status influxdb` and check firewall rules allowing localhost:8086.
-    **`du: cannot access '/opt/sannav/data/influxdb/': No such file or directory`** — Confirm InfluxDB data directory path matches your installation; check actual path with `find /opt -name influxdb -type d 2>/dev/null`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to localhost port 8086: Connection refused` | Verify InfluxDB is running with `systemctl status influxdb` and check firewall rules allowing localhost:8086. |
+    | `du: cannot access '/opt/sannav/data/influxdb/': No such file or directory` | Confirm InfluxDB data directory path matches your installation; check actual path with `find /opt -name influxdb -type d 2>/dev/null`. |
 ---
 
 ## Step 3 — Diagnose switch discovery failures
@@ -262,9 +266,11 @@ Management Port: 443
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 10.50.12.45 port 443: Connection refused`** — Verify the switch management IP is correct and HTTPS is enabled on the switch via `httpcfg --show`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Use the `-k` flag to skip certificate verification (already included in the example), or import the switch's certificate into your CA bundle.
-    **`{"errorCode": 401, "errorMessage": "Authentication required"}`** — Reset the SANnav service account password on the switch and update the credentials in SANnav's configuration file.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 10.50.12.45 port 443: Connection refused` | Verify the switch management IP is correct and HTTPS is enabled on the switch via `httpcfg --show`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Use the `-k` flag to skip certificate verification (already included in the example), or import the switch's certificate into your CA bundle. |
+    | `{"errorCode": 401, "errorMessage": "Authentication required"}` | Reset the SANnav service account password on the switch and update the credentials in SANnav's configuration file. |
 ---
 
 ## Step 4 — Check SNMP trap reception
@@ -318,9 +324,11 @@ sannav-event-engine.service restarted successfully.
 ```
 
 !!! warning "Common errors"
-    **`ss: command not found`** — Install net-tools or use `netstat -tulnp | grep 162` instead on older systems.
-    **`tcpdump: Permission denied`** — Run the tcpdump command with `sudo` or ensure the user is in the pcap group.
-    **`Unit sannav-event-engine.service not found`** — Verify the service name with `sudo systemctl list-units | grep sannav` and use the correct service name.
+    | Error | Fix |
+    |---|---|
+    | `ss: command not found` | Install net-tools or use `netstat -tulnp | grep 162` instead on older systems. |
+    | `tcpdump: Permission denied` | Run the tcpdump command with `sudo` or ensure the user is in the pcap group. |
+    | `Unit sannav-event-engine.service not found` | Verify the service name with `sudo systemctl list-units | grep sannav` and use the correct service name. |
 ---
 
 ## Step 5 — Check SANnav host system performance
@@ -431,9 +439,11 @@ Completed successfully
 ```
 
 !!! warning "Common errors"
-    **`sannav-admin: command not found`** — Ensure you are logged in as the admin user on the SANnav VM and the sannav-admin CLI tool is in your PATH (typically pre-installed).
-    **`Permission denied (publickey)`** — Verify SSH key is configured for the admin user on the SANnav VM, or use password authentication with `scp -o PubkeyAuthentication=no`.
-    **`supportsave: command not found`** — SSH directly to the Brocade switch (not the SANnav VM) and run supportsave with admin or root privileges.
+    | Error | Fix |
+    |---|---|
+    | `sannav-admin: command not found` | Ensure you are logged in as the admin user on the SANnav VM and the sannav-admin CLI tool is in your PATH (typically pre-installed). |
+    | `Permission denied (publickey)` | Verify SSH key is configured for the admin user on the SANnav VM, or use password authentication with `scp -o PubkeyAuthentication=no`. |
+    | `supportsave: command not found` | SSH directly to the Brocade switch (not the SANnav VM) and run supportsave with admin or root privileges. |
 ---
 
 ## Log locations

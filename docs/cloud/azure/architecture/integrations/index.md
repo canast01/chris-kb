@@ -106,9 +106,11 @@ az eventhubs eventhub create --name azure-logs --namespace-name <ns> -g <rg>
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '<nsg-resource-id>' could not be found.`** — Verify the NSG resource ID is correct and exists in the specified subscription using `az network nsg show -g <rg> -n <nsg-name>`.
-    **`InvalidOperation: The workspace '<log-analytics-workspace-id>' does not exist or the user does not have access.`** — Confirm the Log Analytics workspace ID is valid and your account has Contributor role on that workspace using `az monitor log-analytics workspace show --resource-group <rg> -n <workspace-name>`.
-    **`BadRequest: The namespace '<ns>' already exists in the resource group.`** — Use a unique Event Hub namespace name or retrieve the existing one with `az eventhubs namespace list -g <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '<nsg-resource-id>' could not be found.` | Verify the NSG resource ID is correct and exists in the specified subscription using `az network nsg show -g <rg> -n <nsg-name>`. |
+    | `InvalidOperation: The workspace '<log-analytics-workspace-id>' does not exist or the user does not have access.` | Confirm the Log Analytics workspace ID is valid and your account has Contributor role on that workspace using `az monitor log-analytics workspace show --resource-group <rg> -n <workspace-name>`. |
+    | `BadRequest: The namespace '<ns>' already exists in the resource group.` | Use a unique Event Hub namespace name or retrieve the existing one with `az eventhubs namespace list -g <rg>`. |
 ## GitHub Actions + OIDC Federation
 
 No client secrets — use OIDC:
@@ -183,9 +185,11 @@ Backup triggered for item 'web-server-01' in vault 'prod-recovery-vault-eastus'.
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The specified vault 'invalid-vault' could not be found in resource group 'infrastructure-prod'.`** — Verify the vault name and resource group name match exactly using `az backup vault list`.
-    **`MissingRequiredArgument: the following arguments are required: --container-name`** — Retrieve the correct container name with `az backup container list --vault-name <vault> -g <rg>` before running backup-now.
-    **`InvalidArgument: The retain-until date '2026-12-31' must be in the future and within 99 years from today.`** — Use a valid future date in YYYY-MM-DD format that is less than 99 years away.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The specified vault 'invalid-vault' could not be found in resource group 'infrastructure-prod'.` | Verify the vault name and resource group name match exactly using `az backup vault list`. |
+    | `MissingRequiredArgument: the following arguments are required: --container-name` | Retrieve the correct container name with `az backup container list --vault-name <vault> -g <rg>` before running backup-now. |
+    | `InvalidArgument: The retain-until date '2026-12-31' must be in the future and within 99 years from today.` | Use a valid future date in YYYY-MM-DD format that is less than 99 years away. |
 ## Key Vault Integration
 
 ```bash
@@ -222,9 +226,11 @@ az keyvault secret show --vault-name <kv-name> --name <secret-name>
 ```
 
 !!! warning "Common errors"
-    **`(KeyVaultAccessDenied) The user, group or application 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have secrets get permission on key vault 'prod-kv-eastus'.`** — Run the `az keyvault set-policy` command to grant the managed identity `get` and `list` permissions on the vault.
-    **`(ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/<kv-name>' under resource group '<rg-name>' was not found.`** — Verify the Key Vault name and resource group are correct, and that the vault exists in your current Azure subscription.
-    **`(InvalidSecretName) The secret name '<secret-name>' is invalid.`** — Confirm the secret name exists in the vault by running `az keyvault secret list --vault-name <kv-name>` to list all available secrets.
+    | Error | Fix |
+    |---|---|
+    | `(KeyVaultAccessDenied) The user, group or application 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have secrets get permission on key vault 'prod-kv-eastus'.` | Run the `az keyvault set-policy` command to grant the managed identity `get` and `list` permissions on the vault. |
+    | `(ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/<kv-name>' under resource group '<rg-name>' was not found.` | Verify the Key Vault name and resource group are correct, and that the vault exists in your current Azure subscription. |
+    | `(InvalidSecretName) The secret name '<secret-name>' is invalid.` | Confirm the secret name exists in the vault by running `az keyvault secret list --vault-name <kv-name>` to list all available secrets. |
 ---
 
 ## See also

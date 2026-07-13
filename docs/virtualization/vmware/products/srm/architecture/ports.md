@@ -131,9 +131,11 @@ Connection to 192.168.51.20 port 10443 [tcp/*] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`Connection to 192.168.50.42 port 9086 [tcp/*] failed: Connection refused`** — Verify SRM service is running on the remote site with `systemctl status vmware-srm` and check firewall rules allow port 9086.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip certificate verification, or import the SRM server's certificate into your admin workstation's certificate store.
-    **`nc: getaddrinfo for host "192.168.51.10": Name or service not known`** — Verify the IP address is correct and the remote host is reachable by testing with `ping` first, then confirm DNS resolution if using hostnames.
+    | Error | Fix |
+    |---|---|
+    | `Connection to 192.168.50.42 port 9086 [tcp/*] failed: Connection refused` | Verify SRM service is running on the remote site with `systemctl status vmware-srm` and check firewall rules allow port 9086. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip certificate verification, or import the SRM server's certificate into your admin workstation's certificate store. |
+    | `nc: getaddrinfo for host "192.168.51.10": Name or service not known` | Verify the IP address is correct and the remote host is reachable by testing with `ping` first, then confirm DNS resolution if using hostnames. |
 ---
 
 ## See also

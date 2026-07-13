@@ -88,9 +88,11 @@ Completed 3 files, 2.8 GiB total
 ```
 
 !!! warning "Common errors"
-    **`Unable to locate credentials`** — Run `aws configure --profile ecs` first and ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are set or credentials file exists at ~/.aws/credentials.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is already included in the PROFILE variable; if still failing, verify the ECS endpoint certificate is valid or use `export AWS_CA_BUNDLE=/path/to/ca-cert.pem` before running commands.
-    **`NoSuchBucket`** — Verify the bucket name in the s3:// path matches exactly (case-sensitive) and that the configured user has s3:GetObject and s3:PutObject permissions on that bucket.
+    | Error | Fix |
+    |---|---|
+    | `Unable to locate credentials` | Run `aws configure --profile ecs` first and ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables are set or credentials file exists at ~/.aws/credentials. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | The `--no-verify-ssl` flag is already included in the PROFILE variable; if still failing, verify the ECS endpoint certificate is valid or use `export AWS_CA_BUNDLE=/path/to/ca-cert.pem` before running commands. |
+    | `NoSuchBucket` | Verify the bucket name in the s3:// path matches exactly (case-sensitive) and that the configured user has s3:GetObject and s3:PutObject permissions on that bucket. |
 ECS supports S3 multipart upload, S3 Object Lock (WORM), presigned URLs, bucket versioning, and lifecycle policies. Virtual-hosted-style (`<bucket>.<ecs-endpoint>`) requires DNS configuration pointing `*.ecs.example.com` to the ECS load balancer VIP; path-style (`<ecs-endpoint>/<bucket>`) works without DNS changes and is easier to configure in most clients.
 
 **s3cmd configuration:**
@@ -135,9 +137,11 @@ Done. Synced 3 files.
 ```
 
 !!! warning "Common errors"
-    **`ERROR: S3 error: 403 Forbidden`** — Verify AWS credentials are configured correctly in `~/.s3cfg` and the IAM user has s3:GetObject and s3:ListBucket permissions.
-    **`ERROR: Unable to open file 'localfile.tar.gz'`** — Confirm the file exists and the current user has read permissions with `ls -l localfile.tar.gz`.
-    **`ERROR: S3 error: 404 Not Found`** — Verify the bucket name is correct and exists in the ECS cluster with `s3cmd ls`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: S3 error: 403 Forbidden` | Verify AWS credentials are configured correctly in `~/.s3cfg` and the IAM user has s3:GetObject and s3:ListBucket permissions. |
+    | `ERROR: Unable to open file 'localfile.tar.gz'` | Confirm the file exists and the current user has read permissions with `ls -l localfile.tar.gz`. |
+    | `ERROR: S3 error: 404 Not Found` | Verify the bucket name is correct and exists in the ECS cluster with `s3cmd ls`. |
 ## Veeam Object Repository
 
 ECS is a certified S3-compatible target for Veeam Backup & Replication object repositories (Scale-out Backup Repository offload and Capacity Tier).
@@ -196,9 +200,11 @@ Total Size: 18.9 GiB
 ```
 
 !!! warning "Common errors"
-    **`Unable to locate credentials`** — Ensure the `ecs` profile exists in `~/.aws/credentials` with valid access key and secret key for the ECS S3 endpoint.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is already present; if the error persists, verify the ECS endpoint hostname matches the certificate or update the CA bundle with `export AWS_CA_BUNDLE=/path/to/ca-cert.pem`.
-    **`NoSuchBucket`** — Confirm the bucket name `veeam-prod-offload` exists on the ECS cluster by running `aws s3 ls --endpoint-url https://<ecs-endpoint>:9021 --profile ecs` without the bucket path.
+    | Error | Fix |
+    |---|---|
+    | `Unable to locate credentials` | Ensure the `ecs` profile exists in `~/.aws/credentials` with valid access key and secret key for the ECS S3 endpoint. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | The `--no-verify-ssl` flag is already present; if the error persists, verify the ECS endpoint hostname matches the certificate or update the CA bundle with `export AWS_CA_BUNDLE=/path/to/ca-cert.pem`. |
+    | `NoSuchBucket` | Confirm the bucket name `veeam-prod-offload` exists on the ECS cluster by running `aws s3 ls --endpoint-url https://<ecs-endpoint>:9021 --profile ecs` without the bucket path. |
 ## Commvault Integration
 
 Commvault supports ECS as an S3-compatible cloud library target for secondary copy and archival. Configuration is performed in the Commvault Command Center.
@@ -306,9 +312,11 @@ aws s3api put-object \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidAccessKeyId) when calling the PutObject operation: The Access Key Id you provided does not exist in our records.`** — Verify the AWS credentials in your `ecs` profile match the ECS S3 user account with `aws configure --profile ecs`.
-    **`An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist.`** — Confirm the bucket `analytics-prod-raw` exists on the ECS endpoint with `aws s3 ls --endpoint-url https://<ecs-endpoint>:9021 --profile ecs`.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is present but still failing; verify the ECS endpoint URL is correct and reachable with `curl -k https://<ecs-endpoint>:9021`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidAccessKeyId) when calling the PutObject operation: The Access Key Id you provided does not exist in our records.` | Verify the AWS credentials in your `ecs` profile match the ECS S3 user account with `aws configure --profile ecs`. |
+    | `An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist.` | Confirm the bucket `analytics-prod-raw` exists on the ECS endpoint with `aws s3 ls --endpoint-url https://<ecs-endpoint>:9021 --profile ecs`. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | The `--no-verify-ssl` flag is present but still failing; verify the ECS endpoint URL is correct and reachable with `curl -k https://<ecs-endpoint>:9021`. |
 **Query objects by metadata tag (ECS Query API):**
 
 ```bash
@@ -359,9 +367,11 @@ curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example; if error persists, verify ECS node certificate or use `--cacert` with proper CA bundle).
-    **`{"error":"Invalid query syntax","code":400}`** — Ensure metadata search is enabled on the namespace with `ecs object namespace metadata-search enable` and verify query parameters are properly URL-encoded (spaces as `%20`, equals as `%3D`).
-    **`{"error":"Unauthorized","code":401}`** — Verify `$TOKEN` variable is set with a valid authentication token from `curl -k -u <user>:<pass> https://<ecs-node>:4443/login` and has not expired.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example; if error persists, verify ECS node certificate or use `--cacert` with proper CA bundle). |
+    | `{"error":"Invalid query syntax","code":400}` | Ensure metadata search is enabled on the namespace with `ecs object namespace metadata-search enable` and verify query parameters are properly URL-encoded (spaces as `%20`, equals as `%3D`). |
+    | `{"error":"Unauthorized","code":401}` | Verify `$TOKEN` variable is set with a valid authentication token from `curl -k -u <user>:<pass> https://<ecs-node>:4443/login` and has not expired. |
 ## External Authentication (LDAP/AD)
 
 ECS can delegate IAM user authentication to an external LDAP or Active Directory service for namespace-level management access. Configure under ECS Portal → Namespace → Edit → Authentication Domain.

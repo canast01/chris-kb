@@ -54,9 +54,11 @@ PLATFORM
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-org.atlassian.net port 443: Connection refused`** — Replace `your-org` with your actual Jira instance subdomain (e.g., `mycompany` in `mycompany.atlassian.net`).
-    **`{"errorMessages":["Authentication failed. Invalid username, password, or API token."]}`** — Verify the API token is valid and not expired by regenerating it at https://id.atlassian.com/manage-profile/security/api-tokens.
-    **`jq: command not found`** — Install jq with `apt-get install jq` (Debian/Ubuntu) or `brew install jq` (macOS), or pipe to `grep` instead.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-org.atlassian.net port 443: Connection refused` | Replace `your-org` with your actual Jira instance subdomain (e.g., `mycompany` in `mycompany.atlassian.net`). |
+    | `{"errorMessages":["Authentication failed. Invalid username, password, or API token."]}` | Verify the API token is valid and not expired by regenerating it at https://id.atlassian.com/manage-profile/security/api-tokens. |
+    | `jq: command not found` | Install jq with `apt-get install jq` (Debian/Ubuntu) or `brew install jq` (macOS), or pipe to `grep` instead. |
 ```bash
 # Create a PAT via REST API
 curl -u "admin:password" \

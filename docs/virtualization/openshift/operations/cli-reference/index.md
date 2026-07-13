@@ -83,9 +83,11 @@ my-app
 ```
 
 !!! warning "Common errors"
-    **`error: invalid credentials provided`** — Verify the username, password, and API server URL are correct, then retry the login command.
-    **`error: the server has asked for the client to provide credentials`** — Ensure your token is valid and not expired; generate a new token from the OpenShift web console if needed.
-    **`error: You don't have permission to switch to project "my-app"`** — Confirm the project exists and your user account has access; contact your cluster administrator if access is required.
+    | Error | Fix |
+    |---|---|
+    | `error: invalid credentials provided` | Verify the username, password, and API server URL are correct, then retry the login command. |
+    | `error: the server has asked for the client to provide credentials` | Ensure your token is valid and not expired; generate a new token from the OpenShift web console if needed. |
+    | `error: You don't have permission to switch to project "my-app"` | Confirm the project exists and your user account has access; contact your cluster administrator if access is required. |
 ## Resource Management
 
 ```bash
@@ -199,8 +201,10 @@ dns                        4.13.5    True        False         False      3d
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "co"`** — Use the full name `oc get clusteroperators` or ensure you're on OpenShift 4.x where the `co` shorthand is available.
-    **`error: You must be logged in to the server (Unauthorized)`** — Authenticate with `oc login <cluster-url>` or verify your kubeconfig is set correctly.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "co"` | Use the full name `oc get clusteroperators` or ensure you're on OpenShift 4.x where the `co` shorthand is available. |
+    | `error: You must be logged in to the server (Unauthorized)` | Authenticate with `oc login <cluster-url>` or verify your kubeconfig is set correctly. |
     **`error: namespace "<ns>" not found
 ## Patching Resources
 
@@ -232,9 +236,11 @@ deployment.apps/myapp patched
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "deployment"`** — Verify the resource exists with `oc get deployment` and check you're in the correct namespace with `oc project`.
-    **`error: failed to apply strategic merge patch to body`** — Ensure your JSON syntax is valid (matching quotes and brackets) and the field path exists in the resource spec.
-    **`error: jsonpatch: test failed`** — Use `oc get deployment/myapp -o yaml` to verify the exact current path structure before applying a JSON patch operation.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "deployment"` | Verify the resource exists with `oc get deployment` and check you're in the correct namespace with `oc project`. |
+    | `error: failed to apply strategic merge patch to body` | Ensure your JSON syntax is valid (matching quotes and brackets) and the field path exists in the resource spec. |
+    | `error: jsonpatch: test failed` | Use `oc get deployment/myapp -o yaml` to verify the exact current path structure before applying a JSON patch operation. |
 ## Output Formats
 
 ```bash
@@ -294,9 +300,11 @@ certificatesigningrequest.certificates.k8s.io/node-csr-xyz789uvw012 approved
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "pod" or "pods"`** — Verify the API group and resource name are correct; use `oc api-resources` to list available resources.
-    **`Error from server (NotFound): pods "<pod>" not found`** — Confirm the pod name and namespace are correct with `oc get pods -n <ns>`.
-    **`error: jsonpath expression is invalid`** — Check bracket syntax and field paths match the actual object structure using `oc get pod <pod> -o yaml` to verify field names.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "pod" or "pods"` | Verify the API group and resource name are correct; use `oc api-resources` to list available resources. |
+    | `Error from server (NotFound): pods "<pod>" not found` | Confirm the pod name and namespace are correct with `oc get pods -n <ns>`. |
+    | `error: jsonpath expression is invalid` | Check bracket syntax and field paths match the actual object structure using `oc get pod <pod> -o yaml` to verify field names. |
 ## Labels & Selectors
 
 ```bash
@@ -340,9 +348,11 @@ pod/myapp-5d4c7b9f8-7qm2p annotated
 ```
 
 !!! warning "Common errors"
-    **`error: node "<node>" not found`** — Verify the node name with `oc get nodes` and ensure you're connected to the correct cluster.
-    **`error: label must have a value`** — Add a value after the equals sign (e.g., `node-role.kubernetes.io/infra=true`) or use `--overwrite` flag if updating an existing label.
-    **`Error from server (NotFound): pods "<pod>" not found`** — Confirm the pod name and namespace with `oc get pods -n <ns>`, and ensure the pod exists before annotating.
+    | Error | Fix |
+    |---|---|
+    | `error: node "<node>" not found` | Verify the node name with `oc get nodes` and ensure you're connected to the correct cluster. |
+    | `error: label must have a value` | Add a value after the equals sign (e.g., `node-role.kubernetes.io/infra=true`) or use `--overwrite` flag if updating an existing label. |
+    | `Error from server (NotFound): pods "<pod>" not found` | Confirm the pod name and namespace with `oc get pods -n <ns>`, and ensure the pod exists before annotating. |
 ## Logs
 
 ```bash
@@ -381,9 +391,11 @@ Jan 15 10:15:36 worker-node-02 NetworkManager[567]: <info> [1705318536.1234] dev
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): pods "<pod>" not found`** — Verify the pod name with `oc get pods -n <ns>` and ensure you're querying the correct namespace.
-    **`error: the server doesn't have a resource type "adm"`** — Use `oc adm node-logs` only on OpenShift 4.3+; for earlier versions use `oc debug node/<node>` instead.
-    **`error: you must be logged in to the server`** — Authenticate with `oc login <cluster-url>` before running log commands.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): pods "<pod>" not found` | Verify the pod name with `oc get pods -n <ns>` and ensure you're querying the correct namespace. |
+    | `error: the server doesn't have a resource type "adm"` | Use `oc adm node-logs` only on OpenShift 4.3+; for earlier versions use `oc debug node/<node>` instead. |
+    | `error: you must be logged in to the server` | Authenticate with `oc login <cluster-url>` before running log commands. |
 ## Exec and Remote Shell
 
 ```bash
@@ -457,9 +469,11 @@ sh-4.4# exit
 ```
 
 !!! warning "Common errors"
-    **`error: pod <pod> not found`** — Verify the pod name with `oc get pods -n <ns>` and ensure you're targeting the correct namespace.
-    **`error: container <container> not found`** — List available containers in the pod with `oc get pod <pod> -n <ns> -o jsonpath='{.spec.containers[*].name}'` and use the correct container name.
-    **`error: unable to upgrade connection: container not running or does not exist`** — Ensure the pod is in Running state with `oc get pod <pod> -n <ns>` and retry after the pod fully starts.
+    | Error | Fix |
+    |---|---|
+    | `error: pod <pod> not found` | Verify the pod name with `oc get pods -n <ns>` and ensure you're targeting the correct namespace. |
+    | `error: container <container> not found` | List available containers in the pod with `oc get pod <pod> -n <ns> -o jsonpath='{.spec.containers[*].name}'` and use the correct container name. |
+    | `error: unable to upgrade connection: container not running or does not exist` | Ensure the pod is in Running state with `oc get pod <pod> -n <ns>` and retry after the pod fully starts. |
 ## Administrative Commands
 
 ```bash
@@ -519,9 +533,11 @@ nginx-deployment-5d4f7c9b8   default      42m          125Mi
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): certificatesigningrequest.certificates.k8s.io "<csr-name>" not found`** — Verify the CSR name with `oc get csr` and ensure it exists before approval.
-    **`Error: user "<username>" cannot be found in the cluster`** — Confirm the username exists in your identity provider (LDAP/OAuth) and has logged in at least once.
-    **`error: timed out waiting for the condition on nodes/<node>`** — Increase the `--timeout` value or manually evict pods with `oc delete pod <pod> -n <ns>` before draining.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): certificatesigningrequest.certificates.k8s.io "<csr-name>" not found` | Verify the CSR name with `oc get csr` and ensure it exists before approval. |
+    | `Error: user "<username>" cannot be found in the cluster` | Confirm the username exists in your identity provider (LDAP/OAuth) and has logged in at least once. |
+    | `error: timed out waiting for the condition on nodes/<node>` | Increase the `--timeout` value or manually evict pods with `oc delete pod <pod> -n <ns>` before draining. |
 ## oc adm inspect
 
 `oc adm inspect` dumps all resources associated with an operator or namespace into a local directory. More targeted than must-gather for a single component.
@@ -566,9 +582,11 @@ Inspection complete. Resources saved to /tmp/prom-inspect
 ```
 
 !!! warning "Common errors"
-    **`Error: clusteroperator/etcd not found`** — Verify the cluster operator exists with `oc get clusteroperators` and check the exact name.
-    **`Error: unable to create directory /tmp/etcd-inspect: permission denied`** — Ensure the destination directory is writable or use a different path like `/var/tmp` with appropriate permissions.
-    **`Error: namespace openshift-monitoring not found`** — Confirm the namespace exists with `oc get namespaces` and verify it is not in a terminating state.
+    | Error | Fix |
+    |---|---|
+    | `Error: clusteroperator/etcd not found` | Verify the cluster operator exists with `oc get clusteroperators` and check the exact name. |
+    | `Error: unable to create directory /tmp/etcd-inspect: permission denied` | Ensure the destination directory is writable or use a different path like `/var/tmp` with appropriate permissions. |
+    | `Error: namespace openshift-monitoring not found` | Confirm the namespace exists with `oc get namespaces` and verify it is not in a terminating state. |
 ## must-gather
 
 ```bash
@@ -621,9 +639,11 @@ kube-system               coredns-6d4cf4b4c8-2jk8n                   45       12
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to the server: dial tcp: lookup api.ocp.example.com on 8.8.8.8:53: no such host`** — Verify cluster API endpoint is resolvable and accessible; check your kubeconfig with `oc config view`.
-    **`Error: image pull backoff for registry.redhat.io/odf4/odf-must-gather-rhel9:latest`** — Ensure the node has pull credentials for registry.redhat.io configured in the cluster's pull-secret.
-    **`error: metrics not available yet`** — Wait 2-3 minutes after cluster startup for metrics-server to initialize, then retry the `oc adm top` command.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to the server: dial tcp: lookup api.ocp.example.com on 8.8.8.8:53: no such host` | Verify cluster API endpoint is resolvable and accessible; check your kubeconfig with `oc config view`. |
+    | `Error: image pull backoff for registry.redhat.io/odf4/odf-must-gather-rhel9:latest` | Ensure the node has pull credentials for registry.redhat.io configured in the cluster's pull-secret. |
+    | `error: metrics not available yet` | Wait 2-3 minutes after cluster startup for metrics-server to initialize, then retry the `oc adm top` command. |
 ## Useful Aliases
 
 ```bash
@@ -658,9 +678,11 @@ csr-7p2lq   1m      kubernetes.io/kube-apiserver-client-kubelet   system:service
 ```
 
 !!! warning "Common errors"
-    **`command not found: oc`** — Ensure the OpenShift CLI is installed and in your PATH with `which oc` or install via `curl -L https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz | tar xz -C /usr/local/bin`.
-    **`error: the server doesn't have a resource type "co"`** — Update your OpenShift CLI to match the cluster version, as `clusteroperator` (co) requires a compatible client build.
-    **`grep: (standard input): No such file or directory`** — Verify the parent command (e.g., `oc get pods`) succeeds independently before using the piped alias.
+    | Error | Fix |
+    |---|---|
+    | `command not found: oc` | Ensure the OpenShift CLI is installed and in your PATH with `which oc` or install via `curl -L https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz | tar xz -C /usr/local/bin`. |
+    | `error: the server doesn't have a resource type "co"` | Update your OpenShift CLI to match the cluster version, as `clusteroperator` (co) requires a compatible client build. |
+    | `grep: (standard input): No such file or directory` | Verify the parent command (e.g., `oc get pods`) succeeds independently before using the piped alias. |
 ---
 
 ## See also

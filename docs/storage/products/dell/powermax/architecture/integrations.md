@@ -228,9 +228,11 @@ curl -k -u admin:password -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the Unisphere certificate into your system's CA bundle.
-    **`{"error":"401 Unauthorized"}`** — Verify the admin credentials are correct and the user has API access permissions in Unisphere.
-    **`{"error":"404 Not Found","message":"symmetrix <SID> not found"}`** — Confirm the SID exists by running the list arrays command first and use the correct symmetrix ID from the output.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the Unisphere certificate into your system's CA bundle. |
+    | `{"error":"401 Unauthorized"}` | Verify the admin credentials are correct and the user has API access permissions in Unisphere. |
+    | `{"error":"404 Not Found","message":"symmetrix <SID> not found"}` | Confirm the SID exists by running the list arrays command first and use the correct symmetrix ID from the output. |
 - API version is included in the URL path (e.g., `91` for v9.1). Increment for newer Unisphere releases.
 - Use the interactive API documentation at `https://<unisphere-host>:8443/univmax/restapi/docs`.
 - For programmatic automation, use the `PyU4V` Python library (open source, maintained by Dell): `pip install PyU4V`.

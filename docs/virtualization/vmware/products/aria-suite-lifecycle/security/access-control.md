@@ -78,9 +78,11 @@ grep -i "upgrade\|deploy\|install" /var/log/vmware/vrlcm/lcm-app.log | \
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vmware/vrlcm/lcm-app.log: No such file or directory`** — Verify the log file path is correct and the vRealize Lifecycle Manager service is running with `systemctl status vrlcm`.
-    **`grep: (standard input): line 1234 is too long (exceeding 32767 bytes)`** — Pipe the output through `sed 's/.\{32000\}/&\n/g'` to handle extremely long log lines, or check for corrupted log entries.
-    **`tail: cannot open '/var/log/vmware/vrlcm/lcm-app.log' for reading: Permission denied`** — Run the command with `sudo` or ensure your user is in the appropriate group with `groups $USER`.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vmware/vrlcm/lcm-app.log: No such file or directory` | Verify the log file path is correct and the vRealize Lifecycle Manager service is running with `systemctl status vrlcm`. |
+    | `grep: (standard input): line 1234 is too long (exceeding 32767 bytes)` | Pipe the output through `sed 's/.\{32000\}/&\n/g'` to handle extremely long log lines, or check for corrupted log entries. |
+    | `tail: cannot open '/var/log/vmware/vrlcm/lcm-app.log' for reading: Permission denied` | Run the command with `sudo` or ensure your user is in the appropriate group with `groups $USER`. |
 For formal audit trails, forward the LCM syslog to Aria Operations for Logs or a SIEM:
 
 ```bash
@@ -96,9 +98,11 @@ systemctl restart rsyslog
 ```
 
 !!! warning "Common errors"
-    **`Failed to restart service rsyslog: Unit rsyslog.service not found.`** — Verify rsyslog is installed with `apt-get install rsyslog` or `yum install rsyslog` depending on your OS.
-    **`Permission denied`** — Run the commands with `sudo` or as root user since `/etc/rsyslog.d/` requires elevated privileges.
-    **`Name or service not known`** — Ensure the syslog server hostname `vrli-prod-01.example.local` is resolvable; test with `nslookup vrli-prod-01.example.local` or update `/etc/hosts`.
+    | Error | Fix |
+    |---|---|
+    | `Failed to restart service rsyslog: Unit rsyslog.service not found.` | Verify rsyslog is installed with `apt-get install rsyslog` or `yum install rsyslog` depending on your OS. |
+    | `Permission denied` | Run the commands with `sudo` or as root user since `/etc/rsyslog.d/` requires elevated privileges. |
+    | `Name or service not known` | Ensure the syslog server hostname `vrli-prod-01.example.local` is resolvable; test with `nslookup vrli-prod-01.example.local` or update `/etc/hosts`. |
 ## See also
 
 - [Aria Suite Lifecycle — Authentication](../authentication/)

@@ -197,8 +197,10 @@ Found the following certs:
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to example.com port 80: Connection refused`** — Verify the web server is running and listening on port 80, and that firewall rules allow inbound HTTP traffic.
-    **`Error while running renew for example.com. The following error occurred: [Errno 13] Permission denied: '/etc/letsencrypt/renewal/example.com.conf'`** — Run certbot commands with sudo or ensure the certbot service account has read/
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to example.com port 80: Connection refused` | Verify the web server is running and listening on port 80, and that firewall rules allow inbound HTTP traffic. |
+    | `Error while running renew for example.com. The following error occurred: [Errno 13] Permission denied: '/etc/letsencrypt/renewal/example.com.conf'` | Run certbot commands with sudo or ensure the certbot service account has read/ |
 Common failure causes:
 - Port 80 blocked by firewall during HTTP-01 challenge
 - DNS propagation delay during DNS-01 challenge

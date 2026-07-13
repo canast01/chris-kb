@@ -117,9 +117,11 @@ Current Configuration:
 ```
 
 !!! warning "Common errors"
-    **`symcfg: command not found`** — Ensure you are logged into the SP serial console directly (not the host) and that Symmetrix tools are available in the PATH.
-    **`Error: Invalid IP address format`** — Verify the IP address, netmask, and gateway use valid dotted-decimal notation (e.g., 192.168.10.50, not 192.168.10.256).
-    **`Error: Management network already in use`** — Confirm the IP address is not already assigned to another device on the network before applying the configuration.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: command not found` | Ensure you are logged into the SP serial console directly (not the host) and that Symmetrix tools are available in the PATH. |
+    | `Error: Invalid IP address format` | Verify the IP address, netmask, and gateway use valid dotted-decimal notation (e.g., 192.168.10.50, not 192.168.10.256). |
+    | `Error: Management network already in use` | Confirm the IP address is not already assigned to another device on the network before applying the configuration. |
 **Verify array serial number and PowerMaxOS version:**
 
 ```bash
@@ -144,8 +146,10 @@ Num Symm VDEV: 0
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Ensure the EMC Solutions Enabler (SE) package is installed and the symcfg binary is in your PATH.
-    **`A Symmetrix ID must be supplied`** — Provide the array serial number with the `-sid` flag (e.g., `symcfg -sid 000296900001 show`).
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Ensure the EMC Solutions Enabler (SE) package is installed and the symcfg binary is in your PATH. |
+    | `A Symmetrix ID must be supplied` | Provide the array serial number with the `-sid` flag (e.g., `symcfg -sid 000296900001 show`). |
 **Configure FC director port personalities.** Each front-end director port must be set to the correct persona:
 
 ```bash
@@ -165,9 +169,11 @@ The specified command has been completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`SYMCONFIGURE: Error - Array <array_serial> not found or offline`** — Verify the array serial number is correct and the array is online using `symcfg list -a`.
-    **`SYMCONFIGURE: Error - Port <dir>:<port> does not exist on this array`** — Confirm the director and port numbers are valid for your array model using `symcfg list -port`.
-    **`SYMCONFIGURE: Error - Cannot commit changes: Port is currently in use by active hosts`** — Quiesce I/O to the port or use the `-nop` flag to preview changes before committing.
+    | Error | Fix |
+    |---|---|
+    | `SYMCONFIGURE: Error - Array <array_serial> not found or offline` | Verify the array serial number is correct and the array is online using `symcfg list -a`. |
+    | `SYMCONFIGURE: Error - Port <dir>:<port> does not exist on this array` | Confirm the director and port numbers are valid for your array model using `symcfg list -port`. |
+    | `SYMCONFIGURE: Error - Cannot commit changes: Port is currently in use by active hosts` | Quiesce I/O to the port or use the `-nop` flag to preview changes before committing. |
 **Enable SRDF-capable RA (Remote Adapter) directors** if SRDF replication is licensed:
 
 ```bash
@@ -188,9 +194,11 @@ Timestamp: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_C_ARRAY_NOT_FOUND: The array <array_serial> could not be found`** — Verify the array serial number is correct and the Symmetrix is discoverable via `symcfg discover`.
-    **`SYMCLI_C_INVALID_PORT: Port <ra_dir>:<ra_port> does not exist on this array`** — Confirm the director and port numbers exist on your array using `symcfg list -port`.
-    **`SYMCLI_C_COMMIT_FAILED: Changes could not be committed to the array`** — Ensure you have write permissions and the array is not in a locked state; retry after checking `symcfg -sid <array_serial> list -lock`.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_C_ARRAY_NOT_FOUND: The array <array_serial> could not be found` | Verify the array serial number is correct and the Symmetrix is discoverable via `symcfg discover`. |
+    | `SYMCLI_C_INVALID_PORT: Port <ra_dir>:<ra_port> does not exist on this array` | Confirm the director and port numbers exist on your array using `symcfg list -port`. |
+    | `SYMCLI_C_COMMIT_FAILED: Changes could not be committed to the array` | Ensure you have write permissions and the array is not in a locked state; retry after checking `symcfg -sid <array_serial> list -lock`. |
 **Set array time zone and NTP:**
 
 ```bash
@@ -207,9 +215,11 @@ NTP server 10.50.20.15 configured successfully
 ```
 
 !!! warning "Common errors"
-    **`SYMCFG-00123: Array <array_serial> not found or unreachable`** — Verify the array serial number is correct and the Symmetrix management interface is reachable via network.
-    **`SYMCFG-00456: Invalid timezone identifier "Europe/London"`** — Use `symcfg list -timezones` to display valid timezone strings and correct the spelling.
-    **`SYMCFG-00789: NTP server <ntp_server_ip> failed to resolve or is unreachable`** — Confirm the NTP server IP is correct, reachable from the array, and NTP service is running on that host.
+    | Error | Fix |
+    |---|---|
+    | `SYMCFG-00123: Array <array_serial> not found or unreachable` | Verify the array serial number is correct and the Symmetrix management interface is reachable via network. |
+    | `SYMCFG-00456: Invalid timezone identifier "Europe/London"` | Use `symcfg list -timezones` to display valid timezone strings and correct the spelling. |
+    | `SYMCFG-00789: NTP server <ntp_server_ip> failed to resolve or is unreachable` | Confirm the NTP server IP is correct, reachable from the array, and NTP service is running on that host. |
 ---
 
 ## Connect to Unisphere
@@ -230,9 +240,11 @@ symgate -sid <array_serial> set -username svc_symcli -password <password>
 ```
 
 !!! warning "Common errors"
-    **`symgate: command not found`** — Ensure the Symmetrix CLI tools are installed and the `$PATH` includes the installation directory (typically `/opt/emc/SYMCLI/bin`).
-    **`Error: Invalid array serial number`** — Verify the array serial number matches the actual PowerMax array SID using `symcfg list -v`.
-    **`Error: Authentication failed`** — Confirm the service account credentials are correct and the user has sufficient privileges on the PowerMax array's management interface.
+    | Error | Fix |
+    |---|---|
+    | `symgate: command not found` | Ensure the Symmetrix CLI tools are installed and the `$PATH` includes the installation directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `Error: Invalid array serial number` | Verify the array serial number matches the actual PowerMax array SID using `symcfg list -v`. |
+    | `Error: Authentication failed` | Confirm the service account credentials are correct and the user has sufficient privileges on the PowerMax array's management interface. |
 6. Validate Solutions Enabler connectivity:
 
 ```bash
@@ -253,9 +265,11 @@ Symmetrix ID  Vendor    Model         Status  Local  Remote  SE Version
 ```
 
 !!! warning "Common errors"
-    **`symcfg: command not found`** — Install the EMC Solutions Enabler package (symcli) and ensure /opt/emc/SYMCLI/bin is in your PATH.
-    **`Symmetrix ID: 000296900001 Status: Offline`** — Verify array connectivity, check Fibre Channel fabric zoning, and confirm array power and network connectivity.
-    **`Error: Unable to connect to the Symmetrix`** — Ensure the Symmetrix management IP is reachable, HTTPS port 443 is open, and valid credentials are configured in the Solutions Enabler environment.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: command not found` | Install the EMC Solutions Enabler package (symcli) and ensure /opt/emc/SYMCLI/bin is in your PATH. |
+    | `Symmetrix ID: 000296900001 Status: Offline` | Verify array connectivity, check Fibre Channel fabric zoning, and confirm array power and network connectivity. |
+    | `Error: Unable to connect to the Symmetrix` | Ensure the Symmetrix management IP is reachable, HTTPS port 443 is open, and valid credentials are configured in the Solutions Enabler environment. |
 ---
 
 ## Discover and Configure Storage Pools
@@ -295,9 +309,11 @@ Replication Reserve: 512 GB
 ```
 
 !!! warning "Common errors"
-    **`Symmetrix ID <array_serial> not found`** — Verify the array serial number is correct and the array is online and accessible via the management network.
-    **`SYMCFG command not found`** — Ensure the EMC Solutions Enabler (SE) package is installed and the `$SYMCLI_CONNECT` environment variable is set correctly.
-    **`Permission denied`** — Run the command with appropriate privileges (sudo) or ensure your user account has read access to the Symmetrix array configuration.
+    | Error | Fix |
+    |---|---|
+    | `Symmetrix ID <array_serial> not found` | Verify the array serial number is correct and the array is online and accessible via the management network. |
+    | `SYMCFG command not found` | Ensure the EMC Solutions Enabler (SE) package is installed and the `$SYMCLI_CONNECT` environment variable is set correctly. |
+    | `Permission denied` | Run the command with appropriate privileges (sudo) or ensure your user account has read access to the Symmetrix array configuration. |
 5. Set SRP subscription limit to prevent over-provisioning:
 
 ```bash
@@ -317,9 +333,11 @@ Timestamp: 2024-01-15 14:32:47 UTC
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_C_ARRAY_NOT_FOUND: Could not connect to array <array_serial>`** — Replace `<array_serial>` with the actual 12-digit array serial number (e.g., `000123456789`) and verify the array is online and reachable.
-    **`SYMCLI_C_INVALID_SRP: SRP_1 does not exist on this array`** — Verify the correct SRP name using `symcfg list -srp` and replace `SRP_1` with the actual SRP identifier.
-    **`SYMCLI_C_COMMIT_FAILED: Configuration commit failed - array in use`** — Wait for any ongoing I/O operations to complete or schedule the change during a maintenance window when the array is quiescent.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_C_ARRAY_NOT_FOUND: Could not connect to array <array_serial>` | Replace `<array_serial>` with the actual 12-digit array serial number (e.g., `000123456789`) and verify the array is online and reachable. |
+    | `SYMCLI_C_INVALID_SRP: SRP_1 does not exist on this array` | Verify the correct SRP name using `symcfg list -srp` and replace `SRP_1` with the actual SRP identifier. |
+    | `SYMCLI_C_COMMIT_FAILED: Configuration commit failed - array in use` | Wait for any ongoing I/O operations to complete or schedule the change during a maintenance window when the array is quiescent. |
 ---
 
 ## Create First Storage Group and Masking View
@@ -342,9 +360,11 @@ Created Successfully
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI_C_ARRAY_NOT_FOUND (M-1-1-0-0)`** — Verify the array serial number with `symcfg list` and ensure the Symmetrix is discovered and online.
-    **`SYMAPI_C_INVALID_INPUT (M-1-3-0-0)`** — Check that the storage group name does not already exist on the array using `symaccess -sid <array_serial> list -name SG_ESX01`.
-    **`SYMAPI_C_INSUFFICIENT_PRIVILEGE (M-1-13-0-0)`** — Ensure your user account has Solutions Enabler administrative privileges and the Symmetrix is properly authenticated.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI_C_ARRAY_NOT_FOUND (M-1-1-0-0)` | Verify the array serial number with `symcfg list` and ensure the Symmetrix is discovered and online. |
+    | `SYMAPI_C_INVALID_INPUT (M-1-3-0-0)` | Check that the storage group name does not already exist on the array using `symaccess -sid <array_serial> list -name SG_ESX01`. |
+    | `SYMAPI_C_INSUFFICIENT_PRIVILEGE (M-1-13-0-0)` | Ensure your user account has Solutions Enabler administrative privileges and the Symmetrix is properly authenticated. |
 **Create a thin device and add to the Storage Group:**
 
 ```bash
@@ -372,9 +392,11 @@ Timestamp: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Array <array_serial> not found or not responding`** — Verify the array serial number is correct and the Symmetrix Management Console (SMC) can reach the array.
-    **`Error: Storage Group SG_ESX01 does not exist`** — Create the storage group first using `symacl -sid <array_serial> -create -name SG_ESX01` or verify the correct SG name.
-    **`Error: SLO Diamond not supported for SRP SRP_1`** — Check available SLOs for the specified SRP using `symcapacity -sid <array_serial> -srp SRP_1 -slo` and use a supported SLO.
+    | Error | Fix |
+    |---|---|
+    | `Error: Array <array_serial> not found or not responding` | Verify the array serial number is correct and the Symmetrix Management Console (SMC) can reach the array. |
+    | `Error: Storage Group SG_ESX01 does not exist` | Create the storage group first using `symacl -sid <array_serial> -create -name SG_ESX01` or verify the correct SG name. |
+    | `Error: SLO Diamond not supported for SRP SRP_1` | Check available SLOs for the specified SRP using `symcapacity -sid <array_serial> -srp SRP_1 -slo` and use a supported SLO. |
 **Create an Initiator Group** with the host's WWNs:
 
 ```bash
@@ -389,8 +411,10 @@ symaccess -sid <array_serial> create -name IG_ESX01 -type initiator -wwn 1000009
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI_C_ARRAY_NOT_FOUND (M1)`** — Verify the array serial number is correct and the Symmetrix is online by running `symcfg list`.
-    **`SYMAPI_C_INVALID_INPUT (M2)`** — Ensure the WWN format is valid (16 hex characters) and the initiator group name contains only alphanumeric characters and underscores.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI_C_ARRAY_NOT_FOUND (M1)` | Verify the array serial number is correct and the Symmetrix is online by running `symcfg list`. |
+    | `SYMAPI_C_INVALID_INPUT (M2)` | Ensure the WWN format is valid (16 hex characters) and the initiator group name contains only alphanumeric characters and underscores. |
 **Create a Port Group** with FA director ports:
 
 ```bash
@@ -410,8 +434,10 @@ Port Group PG_FabricA updated with 2 ports.
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI_C_ARRAY_NOT_FOUND (M20013207401)`** — Verify the array serial number with `symcfg list` and ensure the Symmetrix is online and accessible.
-    **`SYMAPI_C_INVALID_PORT (M20013207409)`** — Confirm the director and port numbers exist on your array using `symcfg -sid <array_serial> list -dirport` before adding them to the port group.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI_C_ARRAY_NOT_FOUND (M20013207401)` | Verify the array serial number with `symcfg list` and ensure the Symmetrix is online and accessible. |
+    | `SYMAPI_C_INVALID_PORT (M20013207409)` | Confirm the director and port numbers exist on your array using `symcfg -sid <array_serial> list -dirport` before adding them to the port group. |
 **Create the Masking View:**
 
 ```bash
@@ -429,9 +455,11 @@ Symmetrix Masking View Created Successfully
 ```
 
 !!! warning "Common errors"
-    **`The specified Storage Group 'SG_ESX01' does not exist`** — Verify the storage group exists with `symaccess -sid <array_serial> list sg` and create it if needed.
-    **`The specified Port Group 'PG_FabricA' does not exist`** — Confirm the port group is configured with `symaccess -sid <array_serial> list pg` before creating the masking view.
-    **`The specified Initiator Group 'IG_ESX01' does not exist`** — Check that the initiator group is created with `symaccess -sid <array_serial> list ig` and add initiators if necessary.
+    | Error | Fix |
+    |---|---|
+    | `The specified Storage Group 'SG_ESX01' does not exist` | Verify the storage group exists with `symaccess -sid <array_serial> list sg` and create it if needed. |
+    | `The specified Port Group 'PG_FabricA' does not exist` | Confirm the port group is configured with `symaccess -sid <array_serial> list pg` before creating the masking view. |
+    | `The specified Initiator Group 'IG_ESX01' does not exist` | Check that the initiator group is created with `symaccess -sid <array_serial> list ig` and add initiators if necessary. |
 Verify the masking view is active and the host can see the device.
 
 ---
@@ -462,8 +490,10 @@ Remote RA Port: SE-4E:1
 ```
 
 !!! warning "Common errors"
-    **`SYMCFG_ERROR: The Symmetrix ID is invalid or not found`** — Verify the local_sid value matches the output of `symcfg list` and ensure the Symmetrix is online.
-    **`SYMCFG_ERROR: Cannot connect to the Symmetrix`** — Confirm the Solutions Enabler daemon is running with `sudo /opt/emc/SYMCLI/bin/stordaemon start` and check network connectivity to the array.
+    | Error | Fix |
+    |---|---|
+    | `SYMCFG_ERROR: The Symmetrix ID is invalid or not found` | Verify the local_sid value matches the output of `symcfg list` and ensure the Symmetrix is online. |
+    | `SYMCFG_ERROR: Cannot connect to the Symmetrix` | Confirm the Solutions Enabler daemon is running with `sudo /opt/emc/SYMCLI/bin/stordaemon start` and check network connectivity to the array. |
 2. Create an SRDF group (RDF group) that links local RA ports to remote RA ports:
 
 ```bash
@@ -483,9 +513,11 @@ Replication mode: Synchronous
 ```
 
 !!! warning "Common errors"
-    **`SYMRDF ERROR (0x71000001): RDF group already exists`** — Verify the group number is not in use with `symrdf -sid <local_sid> list` before creation.
-    **`SYMRDF ERROR (0x71000004): Invalid port specification`** — Ensure port lists match the format `FA-xE:y` and correspond to actual Fibre Channel ports on both arrays.
-    **`SYMRDF ERROR (0x71000007): Remote SID unreachable`** — Confirm network connectivity between arrays and that the remote SID is correctly specified and online.
+    | Error | Fix |
+    |---|---|
+    | `SYMRDF ERROR (0x71000001): RDF group already exists` | Verify the group number is not in use with `symrdf -sid <local_sid> list` before creation. |
+    | `SYMRDF ERROR (0x71000004): Invalid port specification` | Ensure port lists match the format `FA-xE:y` and correspond to actual Fibre Channel ports on both arrays. |
+    | `SYMRDF ERROR (0x71000007): Remote SID unreachable` | Confirm network connectivity between arrays and that the remote SID is correctly specified and online. |
 3. Add a device to an SRDF/S (synchronous) pair:
 
 ```bash
@@ -506,9 +538,11 @@ Command completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`SYMRDF ERROR (0x0000): RDF pair already exists`** — Verify the device pair is not already configured with `symrdf -sid <local_sid> -rdfg <group_number> query`.
-    **`SYMRDF ERROR (0x0001): Invalid device ID <local_devid>`** — Confirm the device exists on the local array using `symdev -sid <local_sid> list | grep <local_devid>`.
-    **`SYMRDF ERROR (0x0002): RDF group <group_number> not configured`** — Create the RDF group first with `symrdf -sid <local_sid> -rdfg <group_number> create`.
+    | Error | Fix |
+    |---|---|
+    | `SYMRDF ERROR (0x0000): RDF pair already exists` | Verify the device pair is not already configured with `symrdf -sid <local_sid> -rdfg <group_number> query`. |
+    | `SYMRDF ERROR (0x0001): Invalid device ID <local_devid>` | Confirm the device exists on the local array using `symdev -sid <local_sid> list | grep <local_devid>`. |
+    | `SYMRDF ERROR (0x0002): RDF group <group_number> not configured` | Create the RDF group first with `symrdf -sid <local_sid> -rdfg <group_number> create`. |
 4. Establish the pair (starts initial copy):
 
 ```bash
@@ -529,9 +563,11 @@ Synchronization State: Synchronized
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Could not connect to the Symmetrix`** — Verify the Symmetrix engine is running and accessible via `symcfg list` before attempting RDF establishment.
-    **`symrdf: RDF group <group_number> does not exist`** — Create the RDF group first using `symrdf -sid <local_sid> -rdfg <group_number> create` before establishing the link.
-    **`symrdf: Device <local_devid> is not in the RDF group`** — Add the device to the RDF group using `symrdf -sid <local_sid> -rdfg <group_number> adddev -dev <local_devid>` before establishing.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Could not connect to the Symmetrix` | Verify the Symmetrix engine is running and accessible via `symcfg list` before attempting RDF establishment. |
+    | `symrdf: RDF group <group_number> does not exist` | Create the RDF group first using `symrdf -sid <local_sid> -rdfg <group_number> create` before establishing the link. |
+    | `symrdf: Device <local_devid> is not in the RDF group` | Add the device to the RDF group using `symrdf -sid <local_sid> -rdfg <group_number> adddev -dev <local_devid>` before establishing. |
 5. Monitor sync status:
 
 ```bash
@@ -556,9 +592,11 @@ Replication Status: Normal
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Command not found`** — Ensure the Symmetrix Tools (symcli) package is installed and the bin directory is in your PATH.
-    **`SYMAPI_C_LIBRARY_ERROR (7) : Could not open library`** — Verify the Symmetrix daemon (symcfgd) is running with `sudo /opt/emc/SYMCLI/bin/symcfgd start`.
-    **`Error: Invalid RDF group number`** — Confirm the RDF group number exists on the array using `symrdf -sid <local_sid> list`.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Command not found` | Ensure the Symmetrix Tools (symcli) package is installed and the bin directory is in your PATH. |
+    | `SYMAPI_C_LIBRARY_ERROR (7) : Could not open library` | Verify the Symmetrix daemon (symcfgd) is running with `sudo /opt/emc/SYMCLI/bin/symcfgd start`. |
+    | `Error: Invalid RDF group number` | Confirm the RDF group number exists on the array using `symrdf -sid <local_sid> list`. |
 ---
 
 ## Validate Host Connectivity
@@ -592,9 +630,11 @@ New devices found: /dev/sdb, /dev/sdc, /dev/sdd
 ```
 
 !!! warning "Common errors"
-    **`bash: /sys/class/fc_host/host<N>/issue_lip: No such file or directory`** — Replace `<N>` with the actual host number (e.g., `host0`, `host1`) by checking `ls /sys/class/fc_host/`.
-    **`command not found: rescan-scsi-bus.sh`** — Install the `sg3-utils` package (`apt-get install sg3-utils` or `yum install sg3-utils`) to provide the rescan script.
-    **`Permission denied`** — Run the commands with `sudo` or as the root user since sysfs writes and SCSI rescans require elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `bash: /sys/class/fc_host/host<N>/issue_lip: No such file or directory` | Replace `<N>` with the actual host number (e.g., `host0`, `host1`) by checking `ls /sys/class/fc_host/`. |
+    | `command not found: rescan-scsi-bus.sh` | Install the `sg3-utils` package (`apt-get install sg3-utils` or `yum install sg3-utils`) to provide the rescan script. |
+    | `Permission denied` | Run the commands with `sudo` or as the root user since sysfs writes and SCSI rescans require elevated privileges. |
 2. Verify the device is visible:
 
 ```bash
@@ -618,8 +658,10 @@ size=2.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`lsscsi: command not found`** — Install sg3-utils package with `apt-get install sg3-utils` or `yum install sg3-utils`.
-    **`multipath: command not found`** — Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`.
+    | Error | Fix |
+    |---|---|
+    | `lsscsi: command not found` | Install sg3-utils package with `apt-get install sg3-utils` or `yum install sg3-utils`. |
+    | `multipath: command not found` | Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`. |
 3. Confirm the multipath device has the expected number of paths (typically 4 or 8 for dual-fabric, multi-port configurations).
 4. From Unisphere, navigate to **Storage > Masking Views** and confirm the host's initiator WWNs appear as logged-in under the masking view.
 5. Run a write/read I/O test to confirm no errors:
@@ -636,9 +678,11 @@ dd if=/dev/mapper/<mpath_device> of=/dev/null bs=1M count=1024 iflag=direct
 ```
 
 !!! warning "Common errors"
-    **`dd: failed to open '/dev/mapper/<mpath_device>': No such file or directory`** — Verify the multipath device exists with `multipath -ll` and replace `<mpath_device>` with the actual device name (e.g., `mpatha`).
-    **`dd: opening '/dev/mapper/<mpath_device>': Permission denied`** — Run the commands with `sudo` or as root, since direct device access requires elevated privileges.
-    **`dd: error writing '/dev/mapper/<mpath_device>': Input/output error`** — Check device health with `multipath -ll` and `smartctl` to identify failing paths or hardware issues.
+    | Error | Fix |
+    |---|---|
+    | `dd: failed to open '/dev/mapper/<mpath_device>': No such file or directory` | Verify the multipath device exists with `multipath -ll` and replace `<mpath_device>` with the actual device name (e.g., `mpatha`). |
+    | `dd: opening '/dev/mapper/<mpath_device>': Permission denied` | Run the commands with `sudo` or as root, since direct device access requires elevated privileges. |
+    | `dd: error writing '/dev/mapper/<mpath_device>': Input/output error` | Check device health with `multipath -ll` and `smartctl` to identify failing paths or hardware issues. |
 6. Verify no I/O errors in `/var/log/messages` and no SCSI sense codes reported against the PowerMax in Unisphere alerts.
 
 ---

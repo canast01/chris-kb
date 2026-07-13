@@ -43,9 +43,11 @@ System Status Report - RPA-001 (10.45.120.88)
 ```
 
 !!! warning "Common errors"
-    **`boxmgmt: command not found`** — Ensure you are connected via SSH to the RPA appliance and not a local workstation.
-    **`Error: Consistency Group '<CG-name>' not found`** — Replace `<CG-name>` with an actual consistency group name from the `boxmgmt list cg` output.
-    **`Connection refused on port 22`** — Verify the RPA hostname/IP is reachable and SSH service is running with `ping` and check firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `boxmgmt: command not found` | Ensure you are connected via SSH to the RPA appliance and not a local workstation. |
+    | `Error: Consistency Group '<CG-name>' not found` | Replace `<CG-name>` with an actual consistency group name from the `boxmgmt list cg` output. |
+    | `Connection refused on port 22` | Verify the RPA hostname/IP is reachable and SSH service is running with `ping` and check firewall rules. |
 ```bash
 boxmgmt cg check_cg <CG-name>
 boxmgmt system performance
@@ -70,9 +72,11 @@ Cache Hit Ratio: 87.3%
 ```
 
 !!! warning "Common errors"
-    **`boxmgmt: command not found`** — Ensure the RecoverPoint management tools are installed and the PATH includes the boxmgmt binary location (typically `/opt/emc/recoverpoint/bin`).
-    **`Error: CG '<CG-name>' not found or inaccessible`** — Replace `<CG-name>` with the actual consistency group name and verify you have sufficient permissions to query it.
-    **`Connection refused: Unable to reach appliance at <IP>`** — Verify the RecoverPoint appliance is running and network connectivity exists from your management host to the appliance management interface.
+    | Error | Fix |
+    |---|---|
+    | `boxmgmt: command not found` | Ensure the RecoverPoint management tools are installed and the PATH includes the boxmgmt binary location (typically `/opt/emc/recoverpoint/bin`). |
+    | `Error: CG '<CG-name>' not found or inaccessible` | Replace `<CG-name>` with the actual consistency group name and verify you have sufficient permissions to query it. |
+    | `Connection refused: Unable to reach appliance at <IP>` | Verify the RecoverPoint appliance is running and network connectivity exists from your management host to the appliance management interface. |
 ```bash
 boxmgmt cg enable_image_access <CG-name> <copy-name>
 boxmgmt cg recover_production <CG-name>

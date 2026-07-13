@@ -191,8 +191,10 @@ size=100G features='0' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`cat: /sys/class/fc_host/host*/port_state: No such file or directory`** — Verify FC HBA drivers are loaded with `lsmod | grep qla2xxx` and reseat the HBA if needed.
-    **`failed faulty offline`** — Check FC cable connections and zoning on the SAN switch, then run `multipathd reconfigure` to refresh paths.
+    | Error | Fix |
+    |---|---|
+    | `cat: /sys/class/fc_host/host*/port_state: No such file or directory` | Verify FC HBA drivers are loaded with `lsmod | grep qla2xxx` and reseat the HBA if needed. |
+    | `failed faulty offline` | Check FC cable connections and zoning on the SAN switch, then run `multipathd reconfigure` to refresh paths. |
 ### Windows hosts
 
 ```powershell
@@ -305,9 +307,11 @@ Bundle created: /tmp/scg-apex-2024-01-15.tar.gz (287 MB)
 ```
 
 !!! warning "Common errors"
-    **`scg: command not found`** — Verify SSH session is connected to the SCG appliance (not a standard Linux host) and the scg CLI is in the PATH.
-    **`Authentication failed for device dev-4a7f2c`** — Confirm the APEX array credentials stored in SCG are current and the array's management IP is reachable from the SCG network.
-    **`Connected to CloudIQ = No`** — Check SCG outbound firewall rules allow HTTPS to cloudiq.dell.com and verify the SCG proxy settings if applicable.
+    | Error | Fix |
+    |---|---|
+    | `scg: command not found` | Verify SSH session is connected to the SCG appliance (not a standard Linux host) and the scg CLI is in the PATH. |
+    | `Authentication failed for device dev-4a7f2c` | Confirm the APEX array credentials stored in SCG are current and the array's management IP is reachable from the SCG network. |
+    | `Connected to CloudIQ = No` | Check SCG outbound firewall rules allow HTTPS to cloudiq.dell.com and verify the SCG proxy settings if applicable. |
 ---
 
 ## Step 4 — Check the underlying array (Unisphere)
@@ -371,9 +375,11 @@ curl -sk -H "Authorization: Basic $(echo -n admin:<password> | base64)" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; verify the flag is not being stripped by shell escaping).
-    **`jq: parse error: Invalid numeric literal at line 1 column 7`** — Ensure the API response is valid JSON by checking credentials and endpoint URL are correct; test with `curl -sk ... | head -c 200` to inspect raw response.
-    **`curl: (7) Failed to connect to <powerstore-ip> port 443: Connection refused`** — Verify the PowerStore/PowerFlex management IP is reachable and the REST API service is running with `ping <powerstore-ip>` and check firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; verify the flag is not being stripped by shell escaping). |
+    | `jq: parse error: Invalid numeric literal at line 1 column 7` | Ensure the API response is valid JSON by checking credentials and endpoint URL are correct; test with `curl -sk ... | head -c 200` to inspect raw response. |
+    | `curl: (7) Failed to connect to <powerstore-ip> port 443: Connection refused` | Verify the PowerStore/PowerFlex management IP is reachable and the REST API service is running with `ping <powerstore-ip>` and check firewall rules. |
 ---
 
 ## Collect diagnostic snapshot for Dell SR
@@ -421,9 +427,11 @@ Diagnostic data saved to: /tmp/apex-host-diag-2024-01-15-1430.txt
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: No records found`** — Verify iSCSI target is configured and running with `iscsiadm -m discovery -t st -p <target_ip>`.
-    **`multipath: command not found`** — Install device-mapper-multipath package with `apt-get install device-mapper-multipath` or `yum install device-mapper-multipath`.
-    **`multipathd: socket connect failed, No such file or directory`** — Start the multipathd service with `systemctl start multipathd && systemctl enable multipathd`.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: No records found` | Verify iSCSI target is configured and running with `iscsiadm -m discovery -t st -p <target_ip>`. |
+    | `multipath: command not found` | Install device-mapper-multipath package with `apt-get install device-mapper-multipath` or `yum install device-mapper-multipath`. |
+    | `multipathd: socket connect failed, No such file or directory` | Start the multipathd service with `systemctl start multipathd && systemctl enable multipathd`. |
 ---
 
 ## See also

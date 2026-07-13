@@ -60,9 +60,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/appliance?select=name,is_encryption_e
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the appliance's CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Verify the management IP address is correct and the REST API service is running with `ssh <mgmt-ip> systemctl status rest-api`.
-    **`{"error":"Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN by authenticating to the appliance first using `curl -k -X POST "https://<mgmt-ip>/api/rest/login" -d '{"username":"admin","password":"<password>"}'`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the appliance's CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Verify the management IP address is correct and the REST API service is running with `ssh <mgmt-ip> systemctl status rest-api`. |
+    | `{"error":"Invalid or expired token"}` | Regenerate the DELL-EMC-TOKEN by authenticating to the appliance first using `curl -k -X POST "https://<mgmt-ip>/api/rest/login" -d '{"username":"admin","password":"<password>"}'`. |
 ### Internal Key Management (Default)
 
 By default, PowerStore uses Internal Key Management — the Key Encryption Keys are stored within PowerStoreOS. This provides drive-level encryption (data is unreadable if a drive is physically removed from the appliance) but does not provide appliance-level key separation.
@@ -137,9 +139,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/appliance/<appliance-id>/set_encrypt
 ```
 
 !!! warning "Common errors"
-    **`{"error_code": 401, "message": "Invalid or expired DELL-EMC-TOKEN"}`** — Regenerate the authentication token via the PowerStore management UI or re-authenticate using valid credentials.
-    **`{"error_code": 400, "message": "KMIP server connection failed: Connection timeout after 30s"}`** — Verify network connectivity to the KMIP server at 192.168.10.100:5696 and confirm firewall rules allow outbound traffic from the PowerStore appliance.
-    **`{"error_code": 409, "message": "Cannot switch encryption key manager: existing keys must be migrated first"}`** — Ensure all existing local encryption keys are backed up and migrated to the KMIP server before attempting the mode switch.
+    | Error | Fix |
+    |---|---|
+    | `{"error_code": 401, "message": "Invalid or expired DELL-EMC-TOKEN"}` | Regenerate the authentication token via the PowerStore management UI or re-authenticate using valid credentials. |
+    | `{"error_code": 400, "message": "KMIP server connection failed: Connection timeout after 30s"}` | Verify network connectivity to the KMIP server at 192.168.10.100:5696 and confirm firewall rules allow outbound traffic from the PowerStore appliance. |
+    | `{"error_code": 409, "message": "Cannot switch encryption key manager: existing keys must be migrated first"}` | Ensure all existing local encryption keys are backed up and migrated to the KMIP server before attempting the mode switch. |
 ### KMIP Key Rotation
 
 Rotate encryption keys annually (or per your security policy):
@@ -164,9 +168,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/job?type=encryption_key_rotation" \
 ```
 
 !!! warning "Common errors"
-    **`{"error":"Unauthorized","error_code":401,"message":"Invalid or expired DELL-EMC-TOKEN"}`** — Regenerate the authentication token using the appliance management API or web UI and retry the request.
-    **`{"error":"Not Found","error_code":404,"message":"Appliance <appliance-id> not found"}`** — Verify the appliance ID is correct by running a GET request to `/api/rest/appliance` to list all available appliances.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to the curl command to skip SSL verification, or import the appliance's certificate into your system's trusted store.
+    | Error | Fix |
+    |---|---|
+    | `{"error":"Unauthorized","error_code":401,"message":"Invalid or expired DELL-EMC-TOKEN"}` | Regenerate the authentication token using the appliance management API or web UI and retry the request. |
+    | `{"error":"Not Found","error_code":404,"message":"Appliance <appliance-id> not found"}` | Verify the appliance ID is correct by running a GET request to `/api/rest/appliance` to list all available appliances. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to the curl command to skip SSL verification, or import the appliance's certificate into your system's trusted store. |
 Key rotation does not cause host I/O interruption. The process runs in the background and re-encrypts the DEKs with a new KEK. Duration depends on the number of drives.
 
 ### Cryptographic Erase (Drive Sanitisation)
@@ -245,9 +251,11 @@ notAfter=Jan 15 09:32:00 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Use the `-k` flag to skip certificate verification during initial testing, or ensure your CA certificate is in the system trust store.
-    **`error:0900006e:PEM routines:PEM_read_bio:no start line`** — Verify the base64-encoded certificate and private key are properly formatted without line breaks; use `base64 -w 0` when encoding.
-    **`{"error": "Invalid certificate chain"}`** — Ensure the certificate chain includes all intermediate CAs in the correct order (leaf → intermediate → root) and matches the private key.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Use the `-k` flag to skip certificate verification during initial testing, or ensure your CA certificate is in the system trust store. |
+    | `error:0900006e:PEM routines:PEM_read_bio:no start line` | Verify the base64-encoded certificate and private key are properly formatted without line breaks; use `base64 -w 0` when encoding. |
+    | `{"error": "Invalid certificate chain"}` | Ensure the certificate chain includes all intermediate CAs in the correct order (leaf → intermediate → root) and matches the private key. |
 | Certificate Parameter | Requirement |
 |---|---|
 | Key size | RSA 4096 or ECDSA P-256/P-384 |
@@ -296,9 +304,11 @@ Nmap done at 2024-01-15 14:32:22 UTC; 1 IP address (1 host up) scanned in 4.23 s
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the management IP is correct and the array's HTTPS port is accessible from your network location.
-    **`unable to get local issuer certificate`** — Add the PowerStore certificate to your system's CA bundle or use `openssl s_client -connect <mgmt-ip>:443 -CAfile /path/to/cert.pem` to bypass validation for testing.
-    **`Nmap done; 0 hosts up scanned`** — Ensure nmap can reach the target IP and that no firewall rules are blocking port 443 from your scanning host.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the management IP is correct and the array's HTTPS port is accessible from your network location. |
+    | `unable to get local issuer certificate` | Add the PowerStore certificate to your system's CA bundle or use `openssl s_client -connect <mgmt-ip>:443 -CAfile /path/to/cert.pem` to bypass validation for testing. |
+    | `Nmap done; 0 hosts up scanned` | Ensure nmap can reach the target IP and that no firewall rules are blocking port 443 from your scanning host. |
 Configure TLS settings: PowerStore Manager → **Settings → Security → TLS Configuration**.
 
 ### Replication Encryption

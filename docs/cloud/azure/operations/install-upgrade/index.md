@@ -98,9 +98,11 @@ az update-management-v2 assess --resource-group <rg> --vm-name <vm-name>
 ```
 
 !!! warning "Common errors"
-    **`The resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the VM name and resource group name are correct and the VM exists in your subscription.
-    **`Operation returned an invalid status code 'Forbidden'`** — Ensure your Azure account has the Contributor or Owner role on the resource group or subscription.
-    **`The operation timed out. Please try again later.`** — Retry the command after a few moments, as the maintenance service may be temporarily unavailable.
+    | Error | Fix |
+    |---|---|
+    | `The resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the VM name and resource group name are correct and the VM exists in your subscription. |
+    | `Operation returned an invalid status code 'Forbidden'` | Ensure your Azure account has the Contributor or Owner role on the resource group or subscription. |
+    | `The operation timed out. Please try again later.` | Retry the command after a few moments, as the maintenance service may be temporarily unavailable. |
 Patching waves:
 - Development: Patch Tuesday + 1 day (auto-reboot allowed)
 - Staging: Patch Tuesday + 3 days
@@ -135,9 +137,11 @@ Succeeded
 ```
 
 !!! warning "Common errors"
-    **`The resource 'Microsoft.ContainerService/managedClusters/<cluster-name>' under resource group '<rg>' was not found.`** — Verify the cluster name and resource group name are correct and exist in your subscription.
-    **`Upgrade failed: Node pool <nodepool-name> not found in cluster <cluster-name>.`** — Confirm the node pool name matches exactly (case-sensitive) by running `az aks nodepool list --cluster-name <cluster-name> -g <rg>`.
-    **`Kubernetes version 1.30 is not available for upgrade from version 1.28.5.`** — Check available versions with `az aks get-upgrades --name <cluster-name> -g <rg>` and select a supported target version.
+    | Error | Fix |
+    |---|---|
+    | `The resource 'Microsoft.ContainerService/managedClusters/<cluster-name>' under resource group '<rg>' was not found.` | Verify the cluster name and resource group name are correct and exist in your subscription. |
+    | `Upgrade failed: Node pool <nodepool-name> not found in cluster <cluster-name>.` | Confirm the node pool name matches exactly (case-sensitive) by running `az aks nodepool list --cluster-name <cluster-name> -g <rg>`. |
+    | `Kubernetes version 1.30 is not available for upgrade from version 1.28.5.` | Check available versions with `az aks get-upgrades --name <cluster-name> -g <rg>` and select a supported target version. |
 ## Service Retirement Tracking
 
 Monitor Azure service retirements:
@@ -187,8 +191,10 @@ az advisor recommendation list --category OperationalExcellence \
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --subscription`** — Add `--subscription <subscription-id>` or set the default subscription with `az account set --subscription <id>`.
-    **`ERROR: (AuthorizationFailed) The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Advisor/recommendations/read' over scope '/subscriptions/...'`** — Ensure your Azure account has Reader or Advisor role assigned at the subscription level using `az role assignment create`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --subscription` | Add `--subscription <subscription-id>` or set the default subscription with `az account set --subscription <id>`. |
+    | `ERROR: (AuthorizationFailed) The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Advisor/recommendations/read' over scope '/subscriptions/...'` | Ensure your Azure account has Reader or Advisor role assigned at the subscription level using `az role assignment create`. |
 ## Subscription Lifecycle
 
 ```bash
@@ -218,8 +224,10 @@ Subscription 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' set as default.
 ```
 
 !!! warning "Common errors"
-    **`The subscription 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' could not be found.`** — Verify the subscription ID is correct and you have access to it using `az account list`.
-    **`You do not have permission to perform action 'Microsoft.Management/managementGroups/subscriptions/write' on scope '/providers/Microsoft.Management/managementGroups/<mg-id>'.`** — Ensure your account has Management Group Contributor or Owner role on the target management group.
+    | Error | Fix |
+    |---|---|
+    | `The subscription 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' could not be found.` | Verify the subscription ID is correct and you have access to it using `az account list`. |
+    | `You do not have permission to perform action 'Microsoft.Management/managementGroups/subscriptions/write' on scope '/providers/Microsoft.Management/managementGroups/<mg-id>'.` | Ensure your account has Management Group Contributor or Owner role on the target management group. |
 90-day hold period after cancellation before permanent deletion.
 
 ## Resource Group Expiry (Non-Production)
@@ -244,8 +252,10 @@ rg-sandbox-old                2024-11-10
 ```
 
 !!! warning "Common errors"
-    **`The following arguments are required: --name, --tags`** — Ensure `<rg-name>` is replaced with an actual resource group name and tags are formatted as key=value pairs.
-    **`InvalidTemplateDeployment : The template is invalid: The property 'tags' cannot be found on the resource of type 'Microsoft.Resources/resourceGroups'.`** — Verify the resource group exists and you have sufficient permissions (Contributor or Owner role) to modify tags.
+    | Error | Fix |
+    |---|---|
+    | `The following arguments are required: --name, --tags` | Ensure `<rg-name>` is replaced with an actual resource group name and tags are formatted as key=value pairs. |
+    | `InvalidTemplateDeployment : The template is invalid: The property 'tags' cannot be found on the resource of type 'Microsoft.Resources/resourceGroups'.` | Verify the resource group exists and you have sufficient permissions (Contributor or Owner role) to modify tags. |
 Expired RGs are notified to owner 14 days before deletion.
 
 ## Entra ID App Registration Lifecycle
@@ -285,9 +295,11 @@ cred-002-uuid-string-here-2345678901  2023-06-20T14:22:00Z  2024-06-20T14:22:00Z
 ```
 
 !!! warning "Common errors"
-    **`The following arguments are required: --id`** — Provide the app registration ID using `--id <app-id>` parameter in the credential commands.
-    **`Operation failed with status: 'Forbidden'. Details: Authorization_RequestDenied`** — Ensure your Azure account has sufficient permissions (Application Administrator or Global Administrator role) to manage app credentials.
-    **`ResourceNotFound: Resource not found`** — Verify the app ID exists and is correctly formatted as a valid UUID.
+    | Error | Fix |
+    |---|---|
+    | `The following arguments are required: --id` | Provide the app registration ID using `--id <app-id>` parameter in the credential commands. |
+    | `Operation failed with status: 'Forbidden'. Details: Authorization_RequestDenied` | Ensure your Azure account has sufficient permissions (Application Administrator or Global Administrator role) to manage app credentials. |
+    | `ResourceNotFound: Resource not found` | Verify the app ID exists and is correctly formatted as a valid UUID. |
 Alert 60 days before credential expiry — expired credentials break CI/CD pipelines silently.
 
 ---

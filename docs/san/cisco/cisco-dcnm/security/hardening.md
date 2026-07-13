@@ -37,9 +37,11 @@ dcnm-dc1:~#
 ```
 
 !!! warning "Common errors"
-    **`passwd: Authentication token manipulation error`** — Ensure the root filesystem is not mounted read-only and SELinux is not blocking password changes; run `mount -o remount,rw /` if needed.
-    **`usermod: user 'dcnm' does not exist`** — Verify the dcnm OS account exists on this DCNM appliance version with `id dcnm` before attempting to lock it.
-    **`Permission denied (publickey,password)`** — Confirm SSH root login is enabled in `/etc/ssh/sshd_config` (PermitRootLogin yes) and restart sshd with `systemctl restart sshd`.
+    | Error | Fix |
+    |---|---|
+    | `passwd: Authentication token manipulation error` | Ensure the root filesystem is not mounted read-only and SELinux is not blocking password changes; run `mount -o remount,rw /` if needed. |
+    | `usermod: user 'dcnm' does not exist` | Verify the dcnm OS account exists on this DCNM appliance version with `id dcnm` before attempting to lock it. |
+    | `Permission denied (publickey,password)` | Confirm SSH root login is enabled in `/etc/ssh/sshd_config` (PermitRootLogin yes) and restart sshd with `systemctl restart sshd`. |
 ```bash
 cat > /etc/issue.net << 'EOF'
 WARNING: This system is for authorized use only.
@@ -53,8 +55,10 @@ EOF
 ```
 
 !!! warning "Common errors"
-    **`bash: /etc/issue.net: Permission denied`** — Run the command with `sudo` or as root user.
-    **`bash: line 1: warning: here-document at line 1 delimited by end-of-file (wanted `EOF')`** — Ensure the closing `EOF` is on its own line with no leading whitespace.
+    | Error | Fix |
+    |---|---|
+    | `bash: /etc/issue.net: Permission denied` | Run the command with `sudo` or as root user. |
+    | `bash: line 1: warning: here-document at line 1 delimited by end-of-file (wanted `EOF')` | Ensure the closing `EOF` is on its own line with no leading whitespace. |
 ```bash
 # Check available security updates
 yum updateinfo list security
@@ -94,9 +98,11 @@ DCNM Server Status:
 ```
 
 !!! warning "Common errors"
-    **`Error: Package: dcnm-server-11.4.1-2000.el7.x86_64 (cisco-dcnm) Requires: openssl < 1.0.2k-27`** — Verify DCNM version compatibility with the target OS security patch level before applying updates, or use `yum update --security --skip-broken -y` to defer conflicting packages.
-    **`Error: needs-restarting: command not found`** — Install the yum-utils package with `yum install -y yum-utils` to enable the needs-restarting utility.
-    **`Error: /usr/local/cisco/dcm/dcnm/sbin/dcnm-server: No such file or directory`** — Verify DCNM installation path and ensure the service was properly installed; check actual path with `find / -name dcnm-server -type f 2>/dev/null`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Package: dcnm-server-11.4.1-2000.el7.x86_64 (cisco-dcnm) Requires: openssl < 1.0.2k-27` | Verify DCNM version compatibility with the target OS security patch level before applying updates, or use `yum update --security --skip-broken -y` to defer conflicting packages. |
+    | `Error: needs-restarting: command not found` | Install the yum-utils package with `yum install -y yum-utils` to enable the needs-restarting utility. |
+    | `Error: /usr/local/cisco/dcm/dcnm/sbin/dcnm-server: No such file or directory` | Verify DCNM installation path and ensure the service was properly installed; check actual path with `find / -name dcnm-server -type f 2>/dev/null`. |
 ```bash
 # List all active services
 systemctl list-units --type=service --state=active
@@ -133,9 +139,11 @@ DCNM HA Status: RUNNING (PID: 4856)
 ```
 
 !!! warning "Common errors"
-    **`Failed to disable unit, unit /etc/systemd/system/multi-user.target.wants/postfix.service does not exist.`** — Verify the service is installed with `systemctl list-unit-files | grep postfix` before attempting to disable it.
-    **`Unit dcnm-server.service not found.`** — Ensure DCNM is properly installed and the systemd service file exists at `/etc/systemd/system/dcnm-server.service`.
-    **`Permission denied`** — Run the entire script with `sudo` or as root user since systemctl disable/enable operations require elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `Failed to disable unit, unit /etc/systemd/system/multi-user.target.wants/postfix.service does not exist.` | Verify the service is installed with `systemctl list-unit-files | grep postfix` before attempting to disable it. |
+    | `Unit dcnm-server.service not found.` | Ensure DCNM is properly installed and the systemd service file exists at `/etc/systemd/system/dcnm-server.service`. |
+    | `Permission denied` | Run the entire script with `sudo` or as root user since systemctl disable/enable operations require elevated privileges. |
 ```bash
 # On DCNM appliance, configure SNMPv3 for inbound NMS polling
 # (DCNM acts as an SNMP agent for its own health)
@@ -154,9 +162,11 @@ https://dcnm-dc1.corp.example.com/
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to dcnm-dc1.corp.example.com port 80: Connection refused`** — Verify the DCNM appliance is running and port 80 is accessible; check firewall rules and network connectivity to the host.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if you want to validate certificates, or ensure your CA bundle is current; the `-k` flag bypasses this check for self-signed certs.
-    **`curl: (6) Could not resolve host name`** — Confirm DNS resolution is working and the hostname `dcnm-dc1.corp.example.com` is registered in your DNS or hosts file.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to dcnm-dc1.corp.example.com port 80: Connection refused` | Verify the DCNM appliance is running and port 80 is accessible; check firewall rules and network connectivity to the host. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag if you want to validate certificates, or ensure your CA bundle is current; the `-k` flag bypasses this check for self-signed certs. |
+    | `curl: (6) Could not resolve host name` | Confirm DNS resolution is working and the hostname `dcnm-dc1.corp.example.com` is registered in your DNS or hosts file. |
 ```bash
 # Verify NTP
 timedatectl status
@@ -195,8 +205,10 @@ Min error       : 0.012 ms
 ```
 
 !!! warning "Common errors"
-    **`chronyc: Could not talk to daemon`** — Ensure chronyd is running with `systemctl start chronyd` and check socket permissions.
-    **`Failed to set NTP servers: Invalid argument`** — Verify NTP server IPs are reachable and properly formatted in `/etc/chrony.conf` without trailing comments on server lines.
+    | Error | Fix |
+    |---|---|
+    | `chronyc: Could not talk to daemon` | Ensure chronyd is running with `systemctl start chronyd` and check socket permissions. |
+    | `Failed to set NTP servers: Invalid argument` | Verify NTP server IPs are reachable and properly formatted in `/etc/chrony.conf` without trailing comments on server lines. |
 ```bash
 # Forward DCNM OS syslog to SIEM
 cat > /etc/rsyslog.d/dcnm-siem.conf << 'EOF'
@@ -217,8 +229,10 @@ logger -t dcnm-test "Syslog forwarding test message"
 ```
 
 !!! warning "Common errors"
-    **`Job for rsyslog.service failed because the control process exited with error code.`** — Verify the rsyslog configuration syntax with `rsyslog -N1` and check `/var/log/syslog` for parsing errors in the new conf file.
-    **`logger: send to SIEM 10.10.3.50:514 failed: Connection refused`** — Confirm the SIEM syslog listener is running on port 514 and reachable from the DCNM host with `nc -zv 10.10.3.50 514`.
+    | Error | Fix |
+    |---|---|
+    | `Job for rsyslog.service failed because the control process exited with error code.` | Verify the rsyslog configuration syntax with `rsyslog -N1` and check `/var/log/syslog` for parsing errors in the new conf file. |
+    | `logger: send to SIEM 10.10.3.50:514 failed: Connection refused` | Confirm the SIEM syslog listener is running on port 514 and reachable from the DCNM host with `nc -zv 10.10.3.50 514`. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -87,5 +87,7 @@ datastore3-nfs         12.3     8.9       45.1    8.7
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Ensure you are logged into an ESXi host directly via SSH (not vCenter); esxtop is only available on ESXi.
-    **`Error: Unable to initialize display`** — Set the DISPLAY variable or use esxtop in batch mode with `esxtop -b -n 1` if running remotely.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Ensure you are logged into an ESXi host directly via SSH (not vCenter); esxtop is only available on ESXi. |
+    | `Error: Unable to initialize display` | Set the DISPLAY variable or use esxtop in batch mode with `esxtop -b -n 1` if running remotely. |

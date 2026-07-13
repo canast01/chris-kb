@@ -103,8 +103,10 @@ System time offset                : -0.000000012 seconds
 ```
 
 !!! warning "Common errors"
-    **`FirewallD is not running.`** — Start the firewall service with `systemctl start firewalld` before running firewall-cmd commands.
-    **`unit chrony.service could not be found.`** — Install chrony with `dnf install chrony` and enable it with `systemctl enable --now chronyd`.
+    | Error | Fix |
+    |---|---|
+    | `FirewallD is not running.` | Start the firewall service with `systemctl start firewalld` before running firewall-cmd commands. |
+    | `unit chrony.service could not be found.` | Install chrony with `dnf install chrony` and enable it with `systemctl enable --now chronyd`. |
 ### SSH Key Distribution
 
 ```bash
@@ -144,9 +146,11 @@ ceph-node3
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Ensure the bootstrap node's public key is in `/root/.ssh/authorized_keys` on each target node, or use password authentication for the initial `ssh-copy-id` command.
-    **`ssh-copy-id: INFO: Source of key(s) to be installed: "/home/ceph-admin/.ssh/ceph_deploy.pub" ... ssh: connect to host ceph-node1 port 22: Connection refused`** — Verify that SSH is running on the target nodes and that the hostname/IP is correct and reachable from the bootstrap node.
-    **`Host key verification failed.`** — Add the target hosts to `~/.ssh/known_hosts` by running `ssh-keyscan -H ceph-node1 ceph-node2 ceph-node3 >> ~/.ssh/known_hosts` before deploying.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Ensure the bootstrap node's public key is in `/root/.ssh/authorized_keys` on each target node, or use password authentication for the initial `ssh-copy-id` command. |
+    | `ssh-copy-id: INFO: Source of key(s) to be installed: "/home/ceph-admin/.ssh/ceph_deploy.pub" ... ssh: connect to host ceph-node1 port 22: Connection refused` | Verify that SSH is running on the target nodes and that the hostname/IP is correct and reachable from the bootstrap node. |
+    | `Host key verification failed.` | Add the target hosts to `~/.ssh/known_hosts` by running `ssh-keyscan -H ceph-node1 ceph-node2 ceph-node3 >> ~/.ssh/known_hosts` before deploying. |
 ## Bootstrap
 
 ```bash
@@ -203,9 +207,11 @@ ceph.conf  ceph.client.admin.keyring  ceph.pub
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to github.com port 443: Connection timed out`** — Verify network connectivity and DNS resolution; if behind a proxy, configure curl with `--proxy [proxy-url]`.
-    **`Error: MON bind address 10.0.1.10 is not local to this host`** — Ensure the `--mon-ip` address is assigned to an active network interface on the bootstrap host (verify with `ip addr`).
-    **`Error: public and cluster networks cannot overlap`** — Assign non-overlapping CIDR ranges for `--mon-ip` network and `--cluster-network` (e.g., 10.0.1.0/24 and 10.0.2.0/24).
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to github.com port 443: Connection timed out` | Verify network connectivity and DNS resolution; if behind a proxy, configure curl with `--proxy [proxy-url]`. |
+    | `Error: MON bind address 10.0.1.10 is not local to this host` | Ensure the `--mon-ip` address is assigned to an active network interface on the bootstrap host (verify with `ip addr`). |
+    | `Error: public and cluster networks cannot overlap` | Assign non-overlapping CIDR ranges for `--mon-ip` network and `--cluster-network` (e.g., 10.0.1.0/24 and 10.0.2.0/24). |
 ## Add Hosts
 
 ```bash
@@ -248,9 +254,11 @@ Applying mon deployment requested...
 ```
 
 !!! warning "Common errors"
-    **`ssh-copy-id: ERROR: ssh: connect to host ceph-node2 port 22: No route to host`** — Verify network connectivity and that the target node's IP address is correct and reachable from the orchestrator node.
-    **`Error EACCES: permission denied`** — Ensure the SSH key file `/etc/ceph/ceph.pub` exists and is readable, and that passwordless SSH is configured or you have root credentials available.
-    **`Error EINVAL: invalid placement spec`** — Use the exact hostname format matching the output of `ceph orch host ls` and ensure all specified hosts have already been added with `ceph orch host add`.
+    | Error | Fix |
+    |---|---|
+    | `ssh-copy-id: ERROR: ssh: connect to host ceph-node2 port 22: No route to host` | Verify network connectivity and that the target node's IP address is correct and reachable from the orchestrator node. |
+    | `Error EACCES: permission denied` | Ensure the SSH key file `/etc/ceph/ceph.pub` exists and is readable, and that passwordless SSH is configured or you have root credentials available. |
+    | `Error EINVAL: invalid placement spec` | Use the exact hostname format matching the output of `ceph orch host ls` and ensure all specified hosts have already been added with `ceph orch host add`. |
 ## Add OSDs
 
 ```bash
@@ -310,8 +318,10 @@ TOTAL        10.00000  1.00000  10.0T   2.1T     21.00    227328      10.00000
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: osd.X: OSD does not have bluestore backend`** — Ensure devices are unpartitioned and empty; run `ceph-volume lvm zap /dev/sdX` to clear any existing LVM metadata before deployment.
-    **`Error: device /dev/sdb is not available on ceph-node1`** — Verify the device exists and is visible to cephadm by running `ceph orch device ls` and confirm the device is marked as `avail:
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: osd.X: OSD does not have bluestore backend` | Ensure devices are unpartitioned and empty; run `ceph-volume lvm zap /dev/sdX` to clear any existing LVM metadata before deployment. |
+    | `Error: device /dev/sdb is not available on ceph-node1` | Verify the device exists and is visible to cephadm by running `ceph orch device ls` and confirm the device is marked as `avail: |
 ## Enable RBD Pool
 
 ```bash
@@ -338,9 +348,11 @@ pool rbd id 4
 ```
 
 !!! warning "Common errors"
-    **`Error EEXIST: pool 'rbd' already exists`** — Drop the existing pool with `ceph osd pool delete rbd rbd --yes-i-really-really-mean-it` before recreating it.
-    **`Error EINVAL: pg_num 128 invalid, must be power of 2`** — Use a power-of-2 value for PG count such as 64, 128, or 256 instead of 128 if your cluster rejects it due to autoscale rules.
-    **`Error ENOENT: pool 'rbd' does not exist`** — Ensure the pool creation command completed successfully and check cluster quorum with `ceph status` before running pool stats.
+    | Error | Fix |
+    |---|---|
+    | `Error EEXIST: pool 'rbd' already exists` | Drop the existing pool with `ceph osd pool delete rbd rbd --yes-i-really-really-mean-it` before recreating it. |
+    | `Error EINVAL: pg_num 128 invalid, must be power of 2` | Use a power-of-2 value for PG count such as 64, 128, or 256 instead of 128 if your cluster rejects it due to autoscale rules. |
+    | `Error ENOENT: pool 'rbd' does not exist` | Ensure the pool creation command completed successfully and check cluster quorum with `ceph status` before running pool stats. |
 ## Enable CephFS
 
 ```bash
@@ -393,9 +405,11 @@ mds.myfs.ceph-node3: up:standby (since 35s)
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: error connecting to cluster`** — Verify the monitor address (10.0.1.10:6789) is correct and reachable with `ceph -s` from the client node.
-    **`error: unable to open /etc/ceph/ceph.client.admin.keyring: No such file or directory`** — Copy the keyring from the Ceph admin node with `scp ceph-admin:/etc/ceph/ceph.client.admin.keyring /etc/ceph/` and set permissions to 600.
-    **`error: mds.myfs.ceph-node1: spawn failed`** — Ensure all three nodes have the ceph-mds package installed and the OSD/monitor services are healthy with `ceph health detail`.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: error connecting to cluster` | Verify the monitor address (10.0.1.10:6789) is correct and reachable with `ceph -s` from the client node. |
+    | `error: unable to open /etc/ceph/ceph.client.admin.keyring: No such file or directory` | Copy the keyring from the Ceph admin node with `scp ceph-admin:/etc/ceph/ceph.client.admin.keyring /etc/ceph/` and set permissions to 600. |
+    | `error: mds.myfs.ceph-node1: spawn failed` | Ensure all three nodes have the ceph-mds package installed and the OSD/monitor services are healthy with `ceph health detail`. |
 ## Enable RGW (Object Gateway)
 
 ```bash
@@ -456,9 +470,11 @@ rgw.default.default.ceph-node2       ceph-node2   8080    running     2m ago    
 ```
 
 !!! warning "Common errors"
-    **`error: invalid placement spec "2 ceph-node1 ceph-node2"`** — Use correct syntax: `--placement "count=2 label=rgw"` or list nodes as `--placement "2 ceph-node1,ceph-node2"` with comma separator.
-    **`ERROR: S3 error: 403 (SignatureDoesNotMatch)`** — Verify RGW endpoint is reachable with `curl http://10.0.1.10:8080/` and confirm access/secret keys match the radosgw-admin output exactly.
-    **`error: pool 'default.rgw.buckets.data' does not exist`** — Wait 30–60 seconds for RGW to auto-create pools after daemon startup, then retry `ceph osd lspools`.
+    | Error | Fix |
+    |---|---|
+    | `error: invalid placement spec "2 ceph-node1 ceph-node2"` | Use correct syntax: `--placement "count=2 label=rgw"` or list nodes as `--placement "2 ceph-node1,ceph-node2"` with comma separator. |
+    | `ERROR: S3 error: 403 (SignatureDoesNotMatch)` | Verify RGW endpoint is reachable with `curl http://10.0.1.10:8080/` and confirm access/secret keys match the radosgw-admin output exactly. |
+    | `error: pool 'default.rgw.buckets.data' does not exist` | Wait 30–60 seconds for RGW to auto-create pools after daemon startup, then retry `ceph osd lspools`. |
 ## Post-Deploy Validation
 
 | Check | Command | Expected Result |
@@ -536,9 +552,11 @@ osd.3    2850.1 MB/s
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: pool does not exist`** — Ensure the rbd pool exists by running `ceph osd pool create rbd 128 128` before running rados bench.
-    **`rbd: error: image still has watchers`** — Wait 10–15 seconds after the rbd bench completes before attempting `rbd rm`, or force removal with `rbd rm --force`.
-    **`HEALTH_WARN: 1 pg incomplete`** — Verify all OSDs are up and in with `ceph osd tree` and wait for recovery to complete before running benchmarks.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: pool does not exist` | Ensure the rbd pool exists by running `ceph osd pool create rbd 128 128` before running rados bench. |
+    | `rbd: error: image still has watchers` | Wait 10–15 seconds after the rbd bench completes before attempting `rbd rm`, or force removal with `rbd rm --force`. |
+    | `HEALTH_WARN: 1 pg incomplete` | Verify all OSDs are up and in with `ceph osd tree` and wait for recovery to complete before running benchmarks. |
 ---
 
 ## See also

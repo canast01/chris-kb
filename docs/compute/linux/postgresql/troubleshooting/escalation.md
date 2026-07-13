@@ -124,9 +124,11 @@ version
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: role "postgres" does not exist`** — Create the postgres superuser role with `sudo -u postgres createuser -s postgres` or verify the role exists with `psql -U postgres -l`.
-    **`psql: error: could not translate host name "localhost" to address: Name or service not known`** — Ensure PostgreSQL is running with `sudo systemctl status postgresql` and verify the connection parameters are correct.
-    **`Permission denied` when writing to `/tmp/pg-config-*.txt`** — Check `/tmp` directory permissions with `ls -ld /tmp` and ensure the PostgreSQL system user has write access, or redirect to a user-writable directory like `~/pg-config-$(date +%Y%m%d).txt`.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: role "postgres" does not exist` | Create the postgres superuser role with `sudo -u postgres createuser -s postgres` or verify the role exists with `psql -U postgres -l`. |
+    | `psql: error: could not translate host name "localhost" to address: Name or service not known` | Ensure PostgreSQL is running with `sudo systemctl status postgresql` and verify the connection parameters are correct. |
+    | `Permission denied` when writing to `/tmp/pg-config-*.txt` | Check `/tmp` directory permissions with `ls -ld /tmp` and ensure the PostgreSQL system user has write access, or redirect to a user-writable directory like `~/pg-config-$(date +%Y%m%d).txt`. |
 ### 2. Save the PostgreSQL error log
 
 ```bash
@@ -154,8 +156,10 @@ grep -E "PANIC|FATAL|ERROR" /tmp/pg-error-$(date +%Y%m%d%H%M).log | tail -100
 ```
 
 !!! warning "Common errors"
-    **`grep: /tmp/pg-error-202401151234.log: No such file or directory`** — Run the tail command first or use a fixed timestamp variable: `TS=$(date +%Y%m%d%H%M); sudo tail -500 /var/log/postgresql/postgresql-*.log > /tmp/pg-error-$TS.log; grep -E "PANIC|FATAL|ERROR" /tmp/pg-error-$TS.log | tail -100`
-    **`tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory`** — Check your PostgreSQL log directory location with `sudo -u postgres psql -c "SHOW log_directory;"` and adjust the path accordingly.
+    | Error | Fix |
+    |---|---|
+    | `grep: /tmp/pg-error-202401151234.log: No such file or directory` | Run the tail command first or use a fixed timestamp variable: `TS=$(date +%Y%m%d%H%M); sudo tail -500 /var/log/postgresql/postgresql-*.log > /tmp/pg-error-$TS.log; grep -E "PANIC|FATAL|ERROR" /tmp/pg-error-$TS.log | tail -100` |
+    | `tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory` | Check your PostgreSQL log directory location with `sudo -u postgres psql -c "SHOW log_directory;"` and adjust the path accordingly. |
 ### 3. Capture active sessions and lock waits
 
 ```bash
@@ -201,9 +205,11 @@ pid  | usename  | application_name | client_addr | state  | query_duration | wai
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "postgres"`** — Ensure the postgres user has proper ident authentication configured in pg_hba.conf or use `psql -h localhost -U postgres` with password authentication.
-    **`ERROR: permission denied for schema pg_catalog`** — Grant necessary privileges with `GRANT USAGE ON SCHEMA pg_catalog TO postgres;` or run the query as a superuser.
-    **`ERROR: column "granted" does not exist`** — This query requires PostgreSQL 13+; for earlier versions, use `pg_locks` view instead of `pg_blocking_pids()`.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "postgres"` | Ensure the postgres user has proper ident authentication configured in pg_hba.conf or use `psql -h localhost -U postgres` with password authentication. |
+    | `ERROR: permission denied for schema pg_catalog` | Grant necessary privileges with `GRANT USAGE ON SCHEMA pg_catalog TO postgres;` or run the query as a superuser. |
+    | `ERROR: column "granted" does not exist` | This query requires PostgreSQL 13+; for earlier versions, use `pg_locks` view instead of `pg_blocking_pids()`. |
 ### 4. Capture replication state (if primary with replicas)
 
 ```bash
@@ -237,9 +243,11 @@ client_addr  | state     | sent_lsn   | write_lsn  | flush_lsn  | replay_lsn | l
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed`** — Verify PostgreSQL is running with `systemctl status postgresql` and check `postgresql.conf` for the correct listen_addresses.
-    **`ERROR: permission denied for schema pg_catalog`** — Ensure the postgres user has superuser privileges or grant explicit SELECT permissions on `pg_stat_replication` and `pg_replication_slots` views.
-    **`ERROR: relation "pg_stat_replication" does not exist`** — Confirm this is a primary server with replication enabled; check `wal_level = replica` in `postgresql.conf` and restart if changed.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed` | Verify PostgreSQL is running with `systemctl status postgresql` and check `postgresql.conf` for the correct listen_addresses. |
+    | `ERROR: permission denied for schema pg_catalog` | Ensure the postgres user has superuser privileges or grant explicit SELECT permissions on `pg_stat_replication` and `pg_replication_slots` views. |
+    | `ERROR: relation "pg_stat_replication" does not exist` | Confirm this is a primary server with replication enabled; check `wal_level = replica` in `postgresql.conf` and restart if changed. |
 ### 5. Capture disk usage and vacuum state
 
 ```bash
@@ -294,9 +302,11 @@ tmpfs           16G  8.2G  7.8G  51% /dev/shm
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory`** — Verify PostgreSQL is running with `systemctl status postgresql` and check PGHOST/PGPORT environment variables.
-    **`ERROR: permission denied for schema public`** — Grant necessary privileges with `psql -U postgres -c "GRANT USAGE ON SCHEMA public TO postgres;"` or run the query as a superuser.
-    **`Disk space on PGDATA is critically low (>95% used)`** — Immediately run `VACUUM FULL;` on the largest tables or add storage; autovacuum may not keep pace with write-heavy workloads.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory` | Verify PostgreSQL is running with `systemctl status postgresql` and check PGHOST/PGPORT environment variables. |
+    | `ERROR: permission denied for schema public` | Grant necessary privileges with `psql -U postgres -c "GRANT USAGE ON SCHEMA public TO postgres;"` or run the query as a superuser. |
+    | `Disk space on PGDATA is critically low (>95% used)` | Immediately run `VACUUM FULL;` on the largest tables or add storage; autovacuum may not keep pace with write-heavy workloads. |
 ### 6. Write the timeline
 
 ```text
@@ -447,9 +457,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed`** — Verify PostgreSQL is running with `systemctl status postgresql` and check socket permissions with `ls -la /var/run/postgresql/`.
-    **`ERROR: permission denied for schema public`** — Run the psql commands as the postgres user with `sudo -u postgres psql` or ensure your user has CONNECT privileges on the database.
-    **`tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory`** — Check the actual log file location with `find /var/log -name "postgresql*.log" 2>/dev/null` as the path varies by distribution.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed` | Verify PostgreSQL is running with `systemctl status postgresql` and check socket permissions with `ls -la /var/run/postgresql/`. |
+    | `ERROR: permission denied for schema public` | Run the psql commands as the postgres user with `sudo -u postgres psql` or ensure your user has CONNECT privileges on the database. |
+    | `tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory` | Check the actual log file location with `find /var/log -name "postgresql*.log" 2>/dev/null` as the path varies by distribution. |
 ---
 
 ## Wraparound Emergency Procedure
@@ -495,9 +507,11 @@ VACUUM FREEZE ANALYZE;
 ```
 
 !!! warning "Common errors"
-    **`vacuumdb: error: could not connect to database app_prod: FATAL: the database system is in recovery mode`** — Wait for the standby/replica to finish recovery or run the command on the primary server only.
-    **`vacuumdb: error: permission denied for schema public`** — Ensure you are connected as a PostgreSQL superuser (postgres) using `sudo -u postgres vacuumdb` or set PGUSER environment variable.
-    **`psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections`** — The database is nearly out of connection slots; kill idle sessions with `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle';` before retrying.
+    | Error | Fix |
+    |---|---|
+    | `vacuumdb: error: could not connect to database app_prod: FATAL: the database system is in recovery mode` | Wait for the standby/replica to finish recovery or run the command on the primary server only. |
+    | `vacuumdb: error: permission denied for schema public` | Ensure you are connected as a PostgreSQL superuser (postgres) using `sudo -u postgres vacuumdb` or set PGUSER environment variable. |
+    | `psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections` | The database is nearly out of connection slots; kill idle sessions with `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle';` before retrying. |
 ---
 
 ## Support SLA Reference

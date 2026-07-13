@@ -91,9 +91,11 @@ VFFS (LOCKER)                 VFFS  4.0 GB    2.1 GB      true
 ```
 
 !!! warning "Common errors"
-    **`services.sh: command not found`** — Use the full path `/sbin/services.sh status` or verify the script exists in the current ESXi version.
-    **`Unable to connect to the local hostd agent`** — Wait 30 seconds after restart before running commands, as hostd takes time to fully initialize.
-    **`Permission denied`** — Run all commands as root or with appropriate sudo privileges; standard users cannot access ESXi management commands.
+    | Error | Fix |
+    |---|---|
+    | `services.sh: command not found` | Use the full path `/sbin/services.sh status` or verify the script exists in the current ESXi version. |
+    | `Unable to connect to the local hostd agent` | Wait 30 seconds after restart before running commands, as hostd takes time to fully initialize. |
+    | `Permission denied` | Run all commands as root or with appropriate sudo privileges; standard users cannot access ESXi management commands. |
 ## vSAN Commands
 
 ```bash
@@ -141,9 +143,11 @@ Resync Summary:
 ```
 
 !!! warning "Common errors"
-    **`vSAN cluster is not enabled on this host`** — Enable vSAN on the host through vCenter or run `esxcli vsan cluster new` to initialize the cluster.
-    **`Unable to connect to vSAN cluster`** — Verify vSAN network connectivity on vmk interfaces and ensure all hosts have matching cluster UUIDs with `esxcli vsan cluster get`.
-    **`Permission denied`** — Run the command as root or with appropriate vSAN administrator privileges on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `vSAN cluster is not enabled on this host` | Enable vSAN on the host through vCenter or run `esxcli vsan cluster new` to initialize the cluster. |
+    | `Unable to connect to vSAN cluster` | Verify vSAN network connectivity on vmk interfaces and ensure all hosts have matching cluster UUIDs with `esxcli vsan cluster get`. |
+    | `Permission denied` | Run the command as root or with appropriate vSAN administrator privileges on the ESXi host. |
 ## Network Checks
 
 ```bash
@@ -183,9 +187,11 @@ vSwitch1        iSCSI vmnic2
 ```
 
 !!! warning "Common errors"
-    **`vmkping: Unknown host <target-ip>`** — Verify the target IP address is reachable and correctly formatted (e.g., 192.168.1.100).
-    **`Network adapter vmk1 not found`** — Confirm the VMkernel adapter exists by running `esxcli network ip interface list` and use the correct interface name.
-    **`PING 192.168.1.100 (192.168.1.100): 56 data bytes ... 100% packet loss`** — Check physical network connectivity, verify the target host is online, and confirm firewall rules allow ICMP traffic.
+    | Error | Fix |
+    |---|---|
+    | `vmkping: Unknown host <target-ip>` | Verify the target IP address is reachable and correctly formatted (e.g., 192.168.1.100). |
+    | `Network adapter vmk1 not found` | Confirm the VMkernel adapter exists by running `esxcli network ip interface list` and use the correct interface name. |
+    | `PING 192.168.1.100 (192.168.1.100): 56 data bytes ... 100% packet loss` | Check physical network connectivity, verify the target host is online, and confirm firewall rules allow ICMP traffic. |
 ## Log Locations
 
 ```bash

@@ -99,9 +99,11 @@ Complete!
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or install the NetApp root CA certificate in your system trust store.
-    **`Unit keystone-collector.service not found.`** — Verify the Keystone Collector package is installed with `sudo rpm -qa | grep keystone` and reinstall if missing.
-    **`curl: (7) Failed to connect to keystone.netapp.com port 443: Connection refused`** — Check firewall rules with `sudo firewall-cmd --list-all` and ensure outbound HTTPS to keystone.netapp.com is permitted.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or install the NetApp root CA certificate in your system trust store. |
+    | `Unit keystone-collector.service not found.` | Verify the Keystone Collector package is installed with `sudo rpm -qa | grep keystone` and reinstall if missing. |
+    | `curl: (7) Failed to connect to keystone.netapp.com port 443: Connection refused` | Check firewall rules with `sudo firewall-cmd --list-all` and ensure outbound HTTPS to keystone.netapp.com is permitted. |
 ---
 
 ## Subscription Exit and Migration
@@ -185,9 +187,11 @@ total size is 2,847,392,156  speedup is 1.00
 ```
 
 !!! warning "Common errors"
-    **`Error: cluster peer create: command failed: Cluster peer relationship already exists`** — Verify the peer relationship does not already exist with `cluster peer show` before attempting creation.
-    **`Error: snapmirror create: command failed: Source volume does not exist`** — Confirm the source volume path `svm_prod:vol_data` exists and is accessible using `volume show -vserver svm_prod`.
-    **`rsync: [Receiver] write failed on "/mnt/target-destination/file1.dat": No space left on device`** — Verify the target mount has sufficient free space using `df -h /mnt/target-destination/` before starting the rsync operation.
+    | Error | Fix |
+    |---|---|
+    | `Error: cluster peer create: command failed: Cluster peer relationship already exists` | Verify the peer relationship does not already exist with `cluster peer show` before attempting creation. |
+    | `Error: snapmirror create: command failed: Source volume does not exist` | Confirm the source volume path `svm_prod:vol_data` exists and is accessible using `volume show -vserver svm_prod`. |
+    | `rsync: [Receiver] write failed on "/mnt/target-destination/file1.dat": No space left on device` | Verify the target mount has sufficient free space using `df -h /mnt/target-destination/` before starting the rsync operation. |
 ### Pre-Decommission Validation
 
 Before confirming hardware removal with NetApp:

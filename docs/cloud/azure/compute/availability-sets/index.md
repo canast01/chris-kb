@@ -110,9 +110,11 @@ app-avset-03   prod-rg          eastus      2                            5
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure you have access to the subscription.
-    **`AvailabilitySetAlreadyExists`** — Use a unique name for the availability set or delete the existing one with `az vm availability-set delete --resource-group <rg> --name <avset-name>`.
-    **`InvalidParameterValue: platformFaultDomainCount must be between 1 and 3`** — Reduce the `--platform-fault-domain-count` value to a maximum of 3 for your region.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure you have access to the subscription. |
+    | `AvailabilitySetAlreadyExists` | Use a unique name for the availability set or delete the existing one with `az vm availability-set delete --resource-group <rg> --name <avset-name>`. |
+    | `InvalidParameterValue: platformFaultDomainCount must be between 1 and 3` | Reduce the `--platform-fault-domain-count` value to a maximum of 3 for your region. |
 ---
 
 ## Deploying VMs into an Availability Set
@@ -177,9 +179,11 @@ It is recommended to use parameter "--public-ip-sku Standard" to create new publ
 ```
 
 !!! warning "Common errors"
-    **`The availability set '<avset-name>' does not exist in resource group '<rg>'`** — Create the availability set first using `az vm availability-set create --resource-group <rg> --name <avset-name>`.
-    **`The image 'Ubuntu2204' could not be found`** — Use a valid image URN like `UbuntuLTS` or `Ubuntu2204` (verify with `az vm image list --output table`).
-    **`Insufficient compute capacity in the region`** — Retry the command, use a different VM size, or deploy to an alternative availability zone/region.
+    | Error | Fix |
+    |---|---|
+    | `The availability set '<avset-name>' does not exist in resource group '<rg>'` | Create the availability set first using `az vm availability-set create --resource-group <rg> --name <avset-name>`. |
+    | `The image 'Ubuntu2204' could not be found` | Use a valid image URN like `UbuntuLTS` or `Ubuntu2204` (verify with `az vm image list --output table`). |
+    | `Insufficient compute capacity in the region` | Retry the command, use a different VM size, or deploy to an alternative availability zone/region. |
 ---
 
 ## Fault Domain and Update Domain Distribution
@@ -218,8 +222,10 @@ prod-cache-vm-01    0     2
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the VM name and resource group name are correct and the VM exists in that region.
-    **`The client '<subscription-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '<resource-id>'.`** — Ensure your Azure CLI account has at least Reader role on the resource group or subscription.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the VM name and resource group name are correct and the VM exists in that region. |
+    | `The client '<subscription-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '<resource-id>'.` | Ensure your Azure CLI account has at least Reader role on the resource group or subscription. |
 ---
 
 ## Availability Sets vs Availability Zones vs VMSS
@@ -266,8 +272,10 @@ Standard_F2s_v2                         3
 ```
 
 !!! warning "Common errors"
-    **`ERROR: unrecognized arguments: --resource-type availabilitySets`** — Use `--resource-type virtualMachines` instead, as availability set SKU data is queried through VM SKU listings.
-    **`No subscription found. Run 'az login' to set up account.`** — Authenticate with `az login` and set the correct subscription using `az account set --subscription <subscription-id>`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: unrecognized arguments: --resource-type availabilitySets` | Use `--resource-type virtualMachines` instead, as availability set SKU data is queried through VM SKU listings. |
+    | `No subscription found. Run 'az login' to set up account.` | Authenticate with `az login` and set the correct subscription using `az account set --subscription <subscription-id>`. |
 ---
 
 ## Deleting an Availability Set
@@ -285,5 +293,7 @@ az vm availability-set delete \
 ```
 
 !!! warning "Common errors"
-    **`The resource 'Microsoft.Compute/availabilitySets/<avset-name>' under resource group '<rg>' was not found.`** — Verify the availability set name and resource group name are correct using `az vm availability-set list --resource-group <rg>`.
-    **`The Availability Set '<avset-name>' cannot be deleted because it still contains VM(s).`** — Delete or deallocate all VMs in the availability set before attempting deletion with `az vm delete --resource-group <rg> --name <vm-name>`.
+    | Error | Fix |
+    |---|---|
+    | `The resource 'Microsoft.Compute/availabilitySets/<avset-name>' under resource group '<rg>' was not found.` | Verify the availability set name and resource group name are correct using `az vm availability-set list --resource-group <rg>`. |
+    | `The Availability Set '<avset-name>' cannot be deleted because it still contains VM(s).` | Delete or deallocate all VMs in the availability set before attempting deletion with `az vm delete --resource-group <rg> --name <vm-name>`. |

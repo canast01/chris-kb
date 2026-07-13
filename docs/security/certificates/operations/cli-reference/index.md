@@ -109,9 +109,11 @@ MIICljCCAX4CAQAwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALRiMLAA...
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the certificate file path is correct and the file contains valid PEM-formatted data (check for encoding issues or corruption).
-    **`MAC verification failure`** — Ensure the correct password is provided when prompted for the PKCS#12 bundle, or the file may be corrupted.
-    **`no start line:PEM routines:PEM_read_bio:no start line:../crypto/pem/pem_lib.c`** — Convert the certificate to PEM format using `openssl x509 -inform DER -in cert.der -
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the certificate file path is correct and the file contains valid PEM-formatted data (check for encoding issues or corruption). |
+    | `MAC verification failure` | Ensure the correct password is provided when prompted for the PKCS#12 bundle, or the file may be corrupted. |
+    | `no start line:PEM routines:PEM_read_bio:no start line:../crypto/pem/pem_lib.c` | Convert the certificate to PEM format using `openssl x509 -inform DER -in cert.der - |
 ---
 
 ## openssl — Verification
@@ -141,9 +143,11 @@ cert.pem: OK
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the certificate file path is correct and the file is in PEM format (not DER); use `file cert.pem` to check.
-    **`unable to load Private Key`** — Ensure the private key file exists and is readable; check permissions with `ls -l key.pem` and convert from DER if needed with `openssl rsa -in key.der -inform DER -out key.pem`.
-    **`error 20 at 0 depth lookup: unable to get local issuer certificate`** — Add the issuing CA certificate to the CA bundle or use `-partial_chain` flag if the full chain is not available.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the certificate file path is correct and the file is in PEM format (not DER); use `file cert.pem` to check. |
+    | `unable to load Private Key` | Ensure the private key file exists and is readable; check permissions with `ls -l key.pem` and convert from DER if needed with `openssl rsa -in key.der -inform DER -out key.pem`. |
+    | `error 20 at 0 depth lookup: unable to get local issuer certificate` | Add the issuing CA certificate to the CA bundle or use `-partial_chain` flag if the full chain is not available. |
 ---
 
 ## openssl — TLS Testing
@@ -197,9 +201,11 @@ Not After : Apr 14 08:22:13 2024 GMT
 ```
 
 !!! warning "Common errors"
-    **`connect:errno=111 Connection refused`** — Verify the host is reachable and the port is open with `nc -zv <host> 443`.
-    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Add `-CAfile /etc/ssl/certs/ca-certificates.crt` to verify against your system's CA bundle, or use `-showcerts` to inspect the chain.
-    **`error:1408F10B:SSL routines:SSL3_GET_RECORD:unexpected eof while reading`** — The service may not support TLS on that port; confirm the correct port and protocol with your service documentation.
+    | Error | Fix |
+    |---|---|
+    | `connect:errno=111 Connection refused` | Verify the host is reachable and the port is open with `nc -zv <host> 443`. |
+    | `error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed` | Add `-CAfile /etc/ssl/certs/ca-certificates.crt` to verify against your system's CA bundle, or use `-showcerts` to inspect the chain. |
+    | `error:1408F10B:SSL routines:SSL3_GET_RECORD:unexpected eof while reading` | The service may not support TLS on that port; confirm the correct port and protocol with your service documentation. |
 ---
 
 ## certutil — Windows
@@ -259,9 +265,11 @@ My "Personal" store has 3 certificates:
 ```
 
 !!! warning "Common errors"
-    **`CertUtil: -verify command FAILED: 0x80092012 (-2146885614)`** — Ensure the certificate file path is correct and the file is not corrupted; try `certutil -dump cert.pem` first to verify the file is readable.
-    **`CertUtil: -addstore command FAILED: 0x80070005 (E_ACCESSDENIED)`** — Run the command as Administrator (right-click Command Prompt and select "Run as administrator").
-    **`CertUtil: -delstore command FAILED: 0x80092004 (-2146885628)`** — Verify the thumbprint is correct by listing certificates with `certutil -store My` and copy the exact thumbprint value.
+    | Error | Fix |
+    |---|---|
+    | `CertUtil: -verify command FAILED: 0x80092012 (-2146885614)` | Ensure the certificate file path is correct and the file is not corrupted; try `certutil -dump cert.pem` first to verify the file is readable. |
+    | `CertUtil: -addstore command FAILED: 0x80070005 (E_ACCESSDENIED)` | Run the command as Administrator (right-click Command Prompt and select "Run as administrator"). |
+    | `CertUtil: -delstore command FAILED: 0x80092004 (-2146885628)` | Verify the thumbprint is correct by listing certificates with `certutil -store My` and copy the exact thumbprint value. |
 ---
 
 ## PowerShell — Windows Certificate Store
@@ -333,9 +341,11 @@ into your certificate request.
 ```
 
 !!! warning "Common errors"
-    **`openssl: No such file or directory`** — Install OpenSSL with `apt-get install openssl` (Debian/Ubuntu) or `brew install openssl` (macOS).
-    **`unable to load Private Key`** — Verify the key file exists and the path is correct with `ls -la key.pem`.
-    **`error on line 1 of config request: unknown option`** — Ensure the heredoc syntax is correct and the config file is properly formatted without extra whitespace.
+    | Error | Fix |
+    |---|---|
+    | `openssl: No such file or directory` | Install OpenSSL with `apt-get install openssl` (Debian/Ubuntu) or `brew install openssl` (macOS). |
+    | `unable to load Private Key` | Verify the key file exists and the path is correct with `ls -la key.pem`. |
+    | `error on line 1 of config request: unknown option` | Ensure the heredoc syntax is correct and the config file is properly formatted without extra whitespace. |
 ---
 
 ## Verify

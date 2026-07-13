@@ -116,9 +116,11 @@ tanzu-system                        Active   340d
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to the server: dial tcp: lookup mgmt-cluster on "10.0.0.1:53": no such host`** — Verify the kubeconfig path is correct and the management cluster hostname resolves in your DNS or /etc/hosts.
-    **`error: the server doesn't have a resource type "cluster"`** — Ensure you are logged into the correct Tanzu management cluster context with `tanzu context list` and `tanzu context use <context-name>`.
-    **`Unable to connect to the vSphere Supervisor: certificate verify failed`** — Update your kubeconfig with current credentials using `tanzu cluster kubeconfig get <cluster-name>` or refresh vSphere credentials in your Tanzu configuration.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to the server: dial tcp: lookup mgmt-cluster on "10.0.0.1:53": no such host` | Verify the kubeconfig path is correct and the management cluster hostname resolves in your DNS or /etc/hosts. |
+    | `error: the server doesn't have a resource type "cluster"` | Ensure you are logged into the correct Tanzu management cluster context with `tanzu context list` and `tanzu context use <context-name>`. |
+    | `Unable to connect to the vSphere Supervisor: certificate verify failed` | Update your kubeconfig with current credentials using `tanzu cluster kubeconfig get <cluster-name>` or refresh vSphere credentials in your Tanzu configuration. |
 ### 2. Collect the Tanzu diagnostics bundle
 
 ```bash
@@ -154,9 +156,11 @@ prod-mgmt-01   tkg-system  running  True    -          Cluster is healthy
 ```
 
 !!! warning "Common errors"
-    **`Error: management cluster '<mgmt-cluster-name>' not found in kubeconfig`** — Verify the cluster name matches your kubeconfig context and run `tanzu cluster list` to confirm available clusters.
-    **`Error: failed to collect logs: permission denied`** — Ensure your kubeconfig has sufficient RBAC permissions and run `kubectl auth can-i get pods --all-namespaces` to verify access.
-    **`Error: diagnostics bundle creation failed: disk space insufficient`** — Free up disk space in the current directory (bundles typically require 500MB–2GB) and retry the collection.
+    | Error | Fix |
+    |---|---|
+    | `Error: management cluster '<mgmt-cluster-name>' not found in kubeconfig` | Verify the cluster name matches your kubeconfig context and run `tanzu cluster list` to confirm available clusters. |
+    | `Error: failed to collect logs: permission denied` | Ensure your kubeconfig has sufficient RBAC permissions and run `kubectl auth can-i get pods --all-namespaces` to verify access. |
+    | `Error: diagnostics bundle creation failed: disk space insufficient` | Free up disk space in the current directory (bundles typically require 500MB–2GB) and retry the collection. |
 ### 3. Collect the Kubernetes cluster dump
 
 ```bash
@@ -188,9 +192,11 @@ tar: Removing leading `/' from member names
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to the server: dial tcp: lookup <cluster-kubeconfig>: no such host`** — Verify the kubeconfig file path is correct and the cluster endpoint is reachable with `kubectl cluster-info --kubeconfig <path>`.
-    **`mkdir: cannot create directory '/tmp/cluster-dump-20240315': Permission denied`** — Run the command with `sudo` or ensure `/tmp` is writable by your user with `ls -ld /tmp`.
-    **`tar: /tmp/cluster-dump-20240315/: Cannot stat: No such file or directory`** — Check that the first command completed successfully by verifying the dump directory exists with `ls -la /tmp/cluster-dump-*`.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to the server: dial tcp: lookup <cluster-kubeconfig>: no such host` | Verify the kubeconfig file path is correct and the cluster endpoint is reachable with `kubectl cluster-info --kubeconfig <path>`. |
+    | `mkdir: cannot create directory '/tmp/cluster-dump-20240315': Permission denied` | Run the command with `sudo` or ensure `/tmp` is writable by your user with `ls -ld /tmp`. |
+    | `tar: /tmp/cluster-dump-20240315/: Cannot stat: No such file or directory` | Check that the first command completed successfully by verifying the dump directory exists with `ls -la /tmp/cluster-dump-*`. |
 ### 4. Collect vCenter and NSX events for cluster VMs
 
 In vSphere Client: navigate to the **datacenter or cluster** hosting the Tanzu node VMs.
@@ -238,9 +244,11 @@ main.(*Server).Run(0xc0004a2000, 0x0, 0x0)
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "events"`** — Ensure you have sufficient RBAC permissions and the kubeconfig points to a valid cluster endpoint.
-    **`Unable to connect to the server: dial tcp 10.0.1.45:6443: i/o timeout`** — Verify the cluster-kubeconfig path is correct and the Supervisor cluster API server is reachable from your management network.
-    **`pod "kube-apiserver-supervisor-1" not found`** — Confirm the pod name matches exactly (use `kubectl get pods -n kube-system` first) and you are querying
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "events"` | Ensure you have sufficient RBAC permissions and the kubeconfig points to a valid cluster endpoint. |
+    | `Unable to connect to the server: dial tcp 10.0.1.45:6443: i/o timeout` | Verify the cluster-kubeconfig path is correct and the Supervisor cluster API server is reachable from your management network. |
+    | `pod "kube-apiserver-supervisor-1" not found` | Confirm the pod name matches exactly (use `kubectl get pods -n kube-system` first) and you are querying |
 ### 5. Write the timeline
 
 ```text

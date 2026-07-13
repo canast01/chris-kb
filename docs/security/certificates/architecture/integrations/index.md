@@ -176,9 +176,11 @@ I0115 14:22:53.567890   12847 sync.go:156] Certificate renewed successfully
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "certificates"`** — Ensure cert-manager CRDs are installed with `kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.x.x/cert-manager.crds.yaml`.
-    **`Error from server (NotFound): certificates.cert-manager.io "<name>" not found`** — Verify the certificate name and namespace are correct, and check that the certificate resource exists in the specified namespace.
-    **`Unable to connect to the server: dial tcp: lookup cert-manager on <IP>: no such host`** — Confirm cert-manager pod is running with `kubectl get pods -n cert-manager` and that the cluster context is set correctly.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "certificates"` | Ensure cert-manager CRDs are installed with `kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.x.x/cert-manager.crds.yaml`. |
+    | `Error from server (NotFound): certificates.cert-manager.io "<name>" not found` | Verify the certificate name and namespace are correct, and check that the certificate resource exists in the specified namespace. |
+    | `Unable to connect to the server: dial tcp: lookup cert-manager on <IP>: no such host` | Confirm cert-manager pod is running with `kubectl get pods -n cert-manager` and that the cluster context is set correctly. |
 ## Let's Encrypt ACME (DNS-01 Challenge)
 
 ```bash
@@ -212,9 +214,11 @@ IMPORTANT NOTES:
 ```
 
 !!! warning "Common errors"
-    **`Error while running dns-route53 for corp.example.com: Unable to locate credentials`** — Ensure AWS credentials are configured via `aws configure` or IAM role is attached to the instance.
-    **`PluginError: dns-route53: Unexpected error determining Route53 hosted zone for corp.example.com`** — Verify the Route53 hosted zone exists and the IAM user/role has `route53:ListHostedZones` and `route53:ChangeResourceRecordSets` permissions.
-    **`Error creating new order :: too many certificates already issued for exact set of domains`** — Wait 7 days before retrying the same domain, or use `--force-renewal` only if certificate is expiring within 7 days.
+    | Error | Fix |
+    |---|---|
+    | `Error while running dns-route53 for corp.example.com: Unable to locate credentials` | Ensure AWS credentials are configured via `aws configure` or IAM role is attached to the instance. |
+    | `PluginError: dns-route53: Unexpected error determining Route53 hosted zone for corp.example.com` | Verify the Route53 hosted zone exists and the IAM user/role has `route53:ListHostedZones` and `route53:ChangeResourceRecordSets` permissions. |
+    | `Error creating new order :: too many certificates already issued for exact set of domains` | Wait 7 days before retrying the same domain, or use `--force-renewal` only if certificate is expiring within 7 days. |
 ## ServiceNow Approval Workflow
 
 Venafi TPP can trigger a ServiceNow workflow for certificates that require business approval:
@@ -250,7 +254,9 @@ aria-auto: Feb 28 11:18:05 2024 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to get local issuer certificate`** — Add the issuer's CA certificate to your system trust store or use `openssl s_client -connect host:443 -CAfile /path/to/ca.crt` to specify it explicitly.
-    **`connect: Connection refused`** — Verify the host is reachable and HTTPS is listening on port 443 with `nc -zv host.example.local 443` before retrying.
-    **`(stdin) 1:error:0A000126:SSL routines:tls_choose_sigalg:no shared signature algorithms`** — The remote host's TLS configuration is incompatible with your OpenSSL version; try adding `-tls1_2` flag to force a specific protocol version.
+    | Error | Fix |
+    |---|---|
+    | `unable to get local issuer certificate` | Add the issuer's CA certificate to your system trust store or use `openssl s_client -connect host:443 -CAfile /path/to/ca.crt` to specify it explicitly. |
+    | `connect: Connection refused` | Verify the host is reachable and HTTPS is listening on port 443 with `nc -zv host.example.local 443` before retrying. |
+    | `(stdin) 1:error:0A000126:SSL routines:tls_choose_sigalg:no shared signature algorithms` | The remote host's TLS configuration is incompatible with your OpenSSL version; try adding `-tls1_2` flag to force a specific protocol version. |
 Venafi TPP / Aria Operations integrations provide dashboard-level expiry visibility — raw CLI checks above are for ad-hoc verification.

@@ -69,8 +69,10 @@ uid=105 gid=105 homedir=/home/testuser shell=/bin/sh username=testuser
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or malformed command`** — Verify the username exists by running `esxcli system account list` first and use the exact username spelling.
-    **`Error: Account is in use`** — Stop any active sessions or services using the account before removal, or use `esxcli system account remove -i <username> -f` to force removal.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or malformed command` | Verify the username exists by running `esxcli system account list` first and use the exact username spelling. |
+    | `Error: Account is in use` | Stop any active sessions or services using the account before removal, or use `esxcli system account remove -i <username> -f` to force removal. |
 ---
 
 ## Before you begin
@@ -125,8 +127,10 @@ Path: /Security/PasswordQualityControl
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or flag '-o /Security/PasswordQualityControl'`** — Verify the ESXi host is version 6.5 or later; older versions use different parameter syntax.
-    **`Error: Permission denied`** — Run the command as root or with appropriate ESXi administrative privileges via SSH or the Direct Console User Interface.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or flag '-o /Security/PasswordQualityControl'` | Verify the ESXi host is version 6.5 or later; older versions use different parameter syntax. |
+    | `Error: Permission denied` | Run the command as root or with appropriate ESXi administrative privileges via SSH or the Direct Console User Interface. |
 Or via Host Profile: **Policies and Profiles → Host Profile → Security → Security Settings → Login Banner / Password Policy**
 
 ---
@@ -162,9 +166,11 @@ Domain join completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Domain join failed: Unable to contact domain controller dc01.example.local`** — Verify network connectivity to the DC and ensure the hostname/IP is resolvable from the ESXi host.
-    **`esxcli: error: Unknown module lsass`** — The lsass module may not be loaded; use `esxcli system module list` to confirm it exists, or use `esxcfg-auth` instead which handles module dependencies automatically.
-    **`Permission denied`** — Ensure you are running commands as root or with appropriate ESXi administrative privileges via SSH or the DCUI.
+    | Error | Fix |
+    |---|---|
+    | `Domain join failed: Unable to contact domain controller dc01.example.local` | Verify network connectivity to the DC and ensure the hostname/IP is resolvable from the ESXi host. |
+    | `esxcli: error: Unknown module lsass` | The lsass module may not be loaded; use `esxcli system module list` to confirm it exists, or use `esxcfg-auth` instead which handles module dependencies automatically. |
+    | `Permission denied` | Ensure you are running commands as root or with appropriate ESXi administrative privileges via SSH or the DCUI. |
 Via vSphere Client: **Host → Configure → System → Authentication Services → Change**
 
 After joining, AD users can be assigned roles in vCenter on this host. AD group `ESX Admins` is automatically granted administrator access — rename or disable this group if it exists in AD but should not have host access.
@@ -192,8 +198,10 @@ Value of StringOption /Config/HostAgent/plugins/hostsvc/esxAdminsGroup is ESX Ad
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option /Config/HostAgent/plugins/hostsvc/esxAdminsGroupAutoAdd`** — Verify the exact option path matches your ESXi version (path may differ between 6.7, 7.0, and 8.0); consult VMware documentation for your build.
-    **`Error: Permission denied`** — Run the command as root or with appropriate ESXi host privileges; use `esxcli system permission list` to verify your account permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option /Config/HostAgent/plugins/hostsvc/esxAdminsGroupAutoAdd` | Verify the exact option path matches your ESXi version (path may differ between 6.7, 7.0, and 8.0); consult VMware documentation for your build. |
+    | `Error: Permission denied` | Run the command as root or with appropriate ESXi host privileges; use `esxcli system permission list` to verify your account permissions. |
 ---
 
 ## Authentication Hardening
@@ -223,8 +231,10 @@ telnetServer            true
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or flag '--ruleset-id ftpClient'.`** — Use `--ruleset-id=ftpClient` with an equals sign instead of a space.
-    **`Error: This command requires elevated privileges.`** — Run the commands as root or with appropriate ESXi administrative credentials via SSH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or flag '--ruleset-id ftpClient'.` | Use `--ruleset-id=ftpClient` with an equals sign instead of a space. |
+    | `Error: This command requires elevated privileges.` | Run the commands as root or with appropriate ESXi administrative credentials via SSH. |
 ### SSH Key-Based Authentication
 
 For break-glass SSH access, prefer key-based authentication over passwords:
@@ -250,9 +260,11 @@ Product: VMware ESXi
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Ensure the authorized_keys file contains the correct public key and verify permissions are exactly 600 on the file and 700 on the /etc/ssh/keys-root directory.
-    **`No such file or directory`** — Create the /etc/ssh/keys-root directory with `mkdir -p /etc/ssh/keys-root` before adding the authorized_keys file to it.
-    **`Host key verification failed`** — Add the ESXi host's key to your local known_hosts file by running `ssh-keyscan -H <esxi-host> >> ~/.ssh/known_hosts` first.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Ensure the authorized_keys file contains the correct public key and verify permissions are exactly 600 on the file and 700 on the /etc/ssh/keys-root directory. |
+    | `No such file or directory` | Create the /etc/ssh/keys-root directory with `mkdir -p /etc/ssh/keys-root` before adding the authorized_keys file to it. |
+    | `Host key verification failed` | Add the ESXi host's key to your local known_hosts file by running `ssh-keyscan -H <esxi-host> >> ~/.ssh/known_hosts` first. |
 Keys are not persisted across reboots on stateless ESXi (Auto Deploy) without configuration in the host profile.
 
 ### SSH Hardening (ESXi SSHD)
@@ -295,8 +307,10 @@ Subsystem sftp /usr/lib/vmware-vsan/bin/sftp-server
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input): No such file or directory`** — Use `grep` directly on the file instead: `grep -v "^#" /etc/ssh/sshd_config | grep -v "^$"` (remove the pipe from `cat`).
-    **`Permission denied`** — Run the command with `sudo` or as root: `sudo cat /etc/ssh/sshd_config | grep -v "^#" | grep -v "^$"`.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input): No such file or directory` | Use `grep` directly on the file instead: `grep -v "^#" /etc/ssh/sshd_config | grep -v "^$"` (remove the pipe from `cat`). |
+    | `Permission denied` | Run the command with `sudo` or as root: `sudo cat /etc/ssh/sshd_config | grep -v "^#" | grep -v "^$"`. |
 Note: `/etc/ssh/sshd_config` changes do not persist across reboots unless stored in a persistent config location or enforced via host profile.
 
 ---
@@ -325,8 +339,10 @@ esxcli system settings advanced get -o /Config/Etc/issue
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or flag '-o /Config/Etc/issue'`** — Use the correct syntax `--option /Config/Etc/issue` or verify the ESXi version supports this parameter.
-    **`Error: Permission denied`** — Run the command as root or with appropriate ESXi administrative privileges; standard user accounts cannot modify system settings.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or flag '-o /Config/Etc/issue'` | Use the correct syntax `--option /Config/Etc/issue` or verify the ESXi version supports this parameter. |
+    | `Error: Permission denied` | Run the command as root or with appropriate ESXi administrative privileges; standard user accounts cannot modify system settings. |
 The banner appears on SSH login and in the DCUI. Configure via Host Profile to enforce consistently.
 
 ---
@@ -380,9 +396,11 @@ grep "dcui\|DCUI\|login" /var/log/vobd.log | tail -20
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/auth.log: No such file or directory`** — Use `/var/log/hostd.log` or `/var/log/syslog.log` instead, as ESXi does not maintain a standard auth.log file.
-    **`grep: /var/log/shell.log: No such file or directory`** — Check `/var/log/shell.log` existence with `ls -la /var/log/shell.log` or use `/var/log/hostd.log` for authentication events.
-    **`grep: /var/log/vobd.log: No such file or directory`** — Verify the log file path with `find /var/log -name "vobd.log"` or check `/var/log/auth.log` for DCUI login records.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/auth.log: No such file or directory` | Use `/var/log/hostd.log` or `/var/log/syslog.log` instead, as ESXi does not maintain a standard auth.log file. |
+    | `grep: /var/log/shell.log: No such file or directory` | Check `/var/log/shell.log` existence with `ls -la /var/log/shell.log` or use `/var/log/hostd.log` for authentication events. |
+    | `grep: /var/log/vobd.log: No such file or directory` | Verify the log file path with `find /var/log -name "vobd.log"` or check `/var/log/auth.log` for DCUI login records. |
 ### Verify Logs Are Forwarding
 
 ```bash
@@ -405,9 +423,11 @@ Test auth log entry Thu Mar 14 09:42:17 UTC 2024
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the syslog server IP and port are correct with `esxcli system syslog config set --loghost=<ip>:<port>` and ensure the remote syslog service is running.
-    **`logger: invalid option -- 't'`** — Use `logger -t esxi-auth-test "message"` syntax (the `-t` tag option may require quotes around the entire message on some ESXi versions).
-    **`Loghost: (none)`** — Configure a syslog destination first using `esxcli system syslog config set --loghost=<syslog-server-ip>:514`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the syslog server IP and port are correct with `esxcli system syslog config set --loghost=<ip>:<port>` and ensure the remote syslog service is running. |
+    | `logger: invalid option -- 't'` | Use `logger -t esxi-auth-test "message"` syntax (the `-t` tag option may require quotes around the entire message on some ESXi versions). |
+    | `Loghost: (none)` | Configure a syslog destination first using `esxcli system syslog config set --loghost=<syslog-server-ip>:514`. |
 ---
 
 ## Related Reference

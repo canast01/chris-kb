@@ -65,9 +65,11 @@ enable-reserved-instances-compute       Cost        High      Medium        Purc
 ```
 
 !!! warning "Common errors"
-    **`The subscription '<subscription-id>' could not be found.`** — Replace `<subscription-id>` with a valid subscription ID from `az account list`.
-    **`No recommendations found for the specified criteria.`** — Verify the subscription has completed the Advisor assessment (can take 24 hours) or check that the `--category` filter value matches available categories (Cost, Performance, Security, OperationalExcellence).
-    **`Invalid resource ID format in --ids parameter.`** — Ensure the recommendation ID follows the full path format `/subscriptions/<sub-id>/providers/Microsoft.Advisor/recommendations/<rec-id>` with no extra spaces or characters.
+    | Error | Fix |
+    |---|---|
+    | `The subscription '<subscription-id>' could not be found.` | Replace `<subscription-id>` with a valid subscription ID from `az account list`. |
+    | `No recommendations found for the specified criteria.` | Verify the subscription has completed the Advisor assessment (can take 24 hours) or check that the `--category` filter value matches available categories (Cost, Performance, Security, OperationalExcellence). |
+    | `Invalid resource ID format in --ids parameter.` | Ensure the recommendation ID follows the full path format `/subscriptions/<sub-id>/providers/Microsoft.Advisor/recommendations/<rec-id>` with no extra spaces or characters. |
 ### Recommendation Categories
 
 | Category | Description | Typical Examples |
@@ -108,8 +110,10 @@ Right-size underutilized virtual machines               5680.75      USD
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --subscription`** — Add `--subscription <subscription-id>` or set the default subscription with `az account set --subscription <id>`.
-    **`ERROR: (AuthorizationFailed) The client '<object-id>' does not have authorization to perform action 'Microsoft.Advisor/recommendations/read' over scope '/subscriptions/<id>'`** — Ensure your Azure account has the Reader role or higher assigned on the subscription.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --subscription` | Add `--subscription <subscription-id>` or set the default subscription with `az account set --subscription <id>`. |
+    | `ERROR: (AuthorizationFailed) The client '<object-id>' does not have authorization to perform action 'Microsoft.Advisor/recommendations/read' over scope '/subscriptions/<id>'` | Ensure your Azure account has the Reader role or higher assigned on the subscription. |
 ## Right-Sizing Recommendations
 
 Advisor compares actual CPU, memory, and network metrics against the allocated SKU and recommends downsizing where appropriate.
@@ -146,8 +150,10 @@ vm-prod-cache-04-rightsize-rec-2024-01-12    Cost        Medium    Low          
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --ids`** — Provide the full resource ID of the recommendation from the first command's output.
-    **`ERROR: (ResourceNotFound) The resource 'Microsoft.Advisor/recommendations/<id>' does not exist.`** — Verify the recommendation ID is current and hasn't expired; re-run the list command to get active recommendation IDs.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --ids` | Provide the full resource ID of the recommendation from the first command's output. |
+    | `ERROR: (ResourceNotFound) The resource 'Microsoft.Advisor/recommendations/<id>' does not exist.` | Verify the recommendation ID is current and hasn't expired; re-run the list command to get active recommendation IDs. |
 ### Right-Sizing Decision Criteria
 
 | Signal | Threshold | Action |
@@ -191,8 +197,10 @@ unused-storage-account-suppression            Microsoft.Advisor/suppressions    
 ```
 
 !!! warning "Common errors"
-    **`The provided resource ID is invalid or does not exist.`** — Verify the recommendation ID format matches `/subscriptions/{subscriptionId}/providers/Microsoft.Advisor/recommendations/{recommendationId}` and the subscription is correct.
-    **`The suppression resource was not found.`** — Confirm the suppression resource ID exists by running `az advisor suppression list` and copy the exact Name value from the output.
+    | Error | Fix |
+    |---|---|
+    | `The provided resource ID is invalid or does not exist.` | Verify the recommendation ID format matches `/subscriptions/{subscriptionId}/providers/Microsoft.Advisor/recommendations/{recommendationId}` and the subscription is correct. |
+    | `The suppression resource was not found.` | Confirm the suppression resource ID exists by running `az advisor suppression list` and copy the exact Name value from the output. |
 > **Note:** Dismissals should be documented. Add a comment in the ticket or tag the resource with a justification before dismissing.
 
 ## Automation and Reporting
@@ -241,8 +249,10 @@ az advisor recommendation list \
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The subscription of type 'Microsoft.Subscription/subscriptions' could not be found.`** — Ensure you are logged in with `az login` and the correct subscription is set via `az account set --subscription <subscription-id>`.
-    **`ERROR: This operation requires the 'Microsoft.Advisor/register/action' permission.`** — Register the Advisor resource provider with `az provider register --namespace Microsoft.Advisor`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The subscription of type 'Microsoft.Subscription/subscriptions' could not be found.` | Ensure you are logged in with `az login` and the correct subscription is set via `az account set --subscription <subscription-id>`. |
+    | `ERROR: This operation requires the 'Microsoft.Advisor/register/action' permission.` | Register the Advisor resource provider with `az provider register --namespace Microsoft.Advisor`. |
 ### Recommendation Score
 
 Advisor calculates an overall Advisor Score (0–100) per category. Track score improvements as a KPI.
@@ -265,5 +275,7 @@ Performance Efficiency   81            6
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --subscription`** — Add `--subscription <subscription-id>` or set the default subscription with `az account set --subscription <id>`.
-    **`ERROR: This operation is not supported by your current Azure CLI version.`** — Upgrade Azure CLI with `az upgrade` to ensure Advisor commands are available.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --subscription` | Add `--subscription <subscription-id>` or set the default subscription with `az account set --subscription <id>`. |
+    | `ERROR: This operation is not supported by your current Azure CLI version.` | Upgrade Azure CLI with `az upgrade` to ensure Advisor commands are available. |

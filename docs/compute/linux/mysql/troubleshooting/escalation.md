@@ -118,9 +118,11 @@ innodb_adaptive_hash_index_parts	8
 ```
 
 !!! warning "Common errors"
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password is correct or use `mysql -u root -p` without `-p` if no password is set.
-    **`ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`** — Ensure MySQL/MariaDB service is running with `sudo systemctl start mysql` or `sudo systemctl start mariadb`.
-    **`bash: mysqld: command not found`** — Add the MySQL bin directory to PATH with `export PATH=$PATH:/usr/sbin:/usr/local/mysql/bin` or use the full path `/usr/sbin/mysqld --version`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)` | Verify the root password is correct or use `mysql -u root -p` without `-p` if no password is set. |
+    | `ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'` | Ensure MySQL/MariaDB service is running with `sudo systemctl start mysql` or `sudo systemctl start mariadb`. |
+    | `bash: mysqld: command not found` | Add the MySQL bin directory to PATH with `export PATH=$PATH:/usr/sbin:/usr/local/mysql/bin` or use the full path `/usr/sbin/mysqld --version`. |
 ### 2. Save the error log
 
 ```bash
@@ -144,9 +146,11 @@ tail: cannot open '/var/log/mysqld.log' for reading: No such file or directory
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/mysqld.log' for reading: No such file or directory`** — Verify the correct log path for your distribution by running `mysql -u root -p -e "SHOW VARIABLES LIKE 'log_error';"` first.
-    **`sudo: no tty present and no askpass program specified`** — Run the commands with a TTY or configure passwordless sudo for the mysql log paths in sudoers.
-    **`grep: /var/log/messages: No such file or directory`** — This is expected on systemd-based systems; use `sudo journalctl -u mysql -n 100` instead to check the system journal.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/mysqld.log' for reading: No such file or directory` | Verify the correct log path for your distribution by running `mysql -u root -p -e "SHOW VARIABLES LIKE 'log_error';"` first. |
+    | `sudo: no tty present and no askpass program specified` | Run the commands with a TTY or configure passwordless sudo for the mysql log paths in sudoers. |
+    | `grep: /var/log/messages: No such file or directory` | This is expected on systemd-based systems; use `sudo journalctl -u mysql -n 100` instead to check the system journal. |
 ### 3. Capture InnoDB status (critical for crash and lock issues)
 
 ```bash
@@ -166,9 +170,11 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
 ```
 
 !!! warning "Common errors"
-    **`mysql: [Warning] Using a password on the command line interface can be insecure.`** — Use a MySQL options file (~/.my.cnf) with [client] section containing password, or use mysql_config_editor to store credentials securely.
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost'`** — Verify the root password is correct and the user has SUPER privilege; use `mysql -u root -p` interactively to test credentials first.
-    **`bash: /tmp/innodb-status-20250115143022.txt: Permission denied`** — Ensure the /tmp directory is writable by the user running the command, or redirect to a directory with write permissions like `~/innodb-status.txt`.
+    | Error | Fix |
+    |---|---|
+    | `mysql: [Warning] Using a password on the command line interface can be insecure.` | Use a MySQL options file (~/.my.cnf) with [client] section containing password, or use mysql_config_editor to store credentials securely. |
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost'` | Verify the root password is correct and the user has SUPER privilege; use `mysql -u root -p` interactively to test credentials first. |
+    | `bash: /tmp/innodb-status-20250115143022.txt: Permission denied` | Ensure the /tmp directory is writable by the user running the command, or redirect to a directory with write permissions like `~/innodb-status.txt`. |
 ### 4. Capture replication status (if replica)
 
 ```bash
@@ -221,9 +227,11 @@ Executed_Gtid_Set: 8e4a2c91-7f3b-11ed-9a1c-0242ac110002:1-4521847
 ```
 
 !!! warning "Common errors"
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password is correct and the user has REPLICATION CLIENT privilege; use `mysql -u root -p -e "SHOW GRANTS FOR root@localhost;"` to confirm permissions.
-    **`ERROR 2003 (HY000): Can't connect to MySQL server on '10.45.12.8' (111)`** — Ensure the MySQL service is running on the target host with `systemctl status mysql` and that the firewall allows port 3306 from the replica server.
-    **`ERROR 1227 (42000): Access denied; you need (at least one of) the REPLICATION CLIENT privilege(s) for this operation`** — Grant the required privilege with `GRANT REPLICATION CLIENT ON *.* TO 'root'@'localhost';` on the primary server.
+    | Error | Fix |
+    |---|---|
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)` | Verify the root password is correct and the user has REPLICATION CLIENT privilege; use `mysql -u root -p -e "SHOW GRANTS FOR root@localhost;"` to confirm permissions. |
+    | `ERROR 2003 (HY000): Can't connect to MySQL server on '10.45.12.8' (111)` | Ensure the MySQL service is running on the target host with `systemctl status mysql` and that the firewall allows port 3306 from the replica server. |
+    | `ERROR 1227 (42000): Access denied; you need (at least one of) the REPLICATION CLIENT privilege(s) for this operation` | Grant the required privilege with `GRANT REPLICATION CLIENT ON *.* TO 'root'@'localhost';` on the primary server. |
 ### 5. Capture active process list and blocking
 
 ```bash
@@ -264,9 +272,11 @@ trx_12346	DELETE FROM orders WHERE order_id=5001	trx_12345	SELECT * FROM orders 
 ```
 
 !!! warning "Common errors"
-    **`mysql: [Warning] Using a password on the command line is insecure.`** — Use a MySQL options file (~/.my.cnf) with [client] section containing user and password, or use mysql_config_editor to store credentials securely.
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password is correct and the user has PROCESS and SUPER privileges with `GRANT PROCESS, SUPER ON *.* TO 'root'@'localhost';`.
-    **`ERROR 1064 (42000): You have an error in your SQL syntax`** — Ensure the heredoc SQL block uses proper quoting and that all table names in information_schema match your MySQL version (use SHOW TABLES IN information_schema to verify).
+    | Error | Fix |
+    |---|---|
+    | `mysql: [Warning] Using a password on the command line is insecure.` | Use a MySQL options file (~/.my.cnf) with [client] section containing user and password, or use mysql_config_editor to store credentials securely. |
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)` | Verify the root password is correct and the user has PROCESS and SUPER privileges with `GRANT PROCESS, SUPER ON *.* TO 'root'@'localhost';`. |
+    | `ERROR 1064 (42000): You have an error in your SQL syntax` | Ensure the heredoc SQL block uses proper quoting and that all table names in information_schema match your MySQL version (use SHOW TABLES IN information_schema to verify). |
 ### 6. Write the timeline
 
 ```text

@@ -109,9 +109,11 @@ Authentication Utility Status:
 ```
 
 !!! warning "Common errors"
-    **`TACACS+ server 192.168.100.50 is unreachable on port 49`** — Verify network connectivity to the TACACS+ server and confirm the port is open in your firewall rules.
-    **`Invalid shared secret format: secret must be 8-32 characters`** — Ensure the shared secret meets length requirements and matches the TACACS+ server configuration exactly.
-    **`Authentication order syntax error: use semicolon separator`** — Correct the command to use `--authorder TACACS+;LOCAL` with a semicolon between methods, no spaces.
+    | Error | Fix |
+    |---|---|
+    | `TACACS+ server 192.168.100.50 is unreachable on port 49` | Verify network connectivity to the TACACS+ server and confirm the port is open in your firewall rules. |
+    | `Invalid shared secret format: secret must be 8-32 characters` | Ensure the shared secret meets length requirements and matches the TACACS+ server configuration exactly. |
+    | `Authentication order syntax error: use semicolon separator` | Correct the command to use `--authorder TACACS+;LOCAL` with a semicolon between methods, no spaces. |
 ### TACACS+ vs RADIUS — Choosing Between Them
 
 | Feature | RADIUS | TACACS+ |
@@ -184,9 +186,11 @@ Available Roles:
 ```
 
 !!! warning "Common errors"
-    **`Error: User 'testuser' already exists`** — Choose a different username or delete the existing account first with `userconfig --delete testuser`.
-    **`Error: Invalid role 'invalid_role' specified`** — Run `roleconfig --show` to list valid roles and use one of the available options.
-    **`Error: Password does not meet complexity requirements`** — Ensure the password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters.
+    | Error | Fix |
+    |---|---|
+    | `Error: User 'testuser' already exists` | Choose a different username or delete the existing account first with `userconfig --delete testuser`. |
+    | `Error: Invalid role 'invalid_role' specified` | Run `roleconfig --show` to list valid roles and use one of the available options. |
+    | `Error: Password does not meet complexity requirements` | Ensure the password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters. |
 ### Built-in Roles
 
 | Role | Capabilities |
@@ -258,9 +262,11 @@ Authorized public keys for user 'admin':
 ```
 
 !!! warning "Common errors"
-    **`sshutil: command not found`** — Verify you are running this command on a Brocade switch with FOS installed, not a Linux management server.
-    **`Error: Invalid file path /path/to/id_rsa.pub`** — Replace `/path/to/id_rsa.pub` with the actual absolute path to your public key file and ensure the file is readable.
-    **`Error: User <username> does not exist`** — Create the user account on the switch first using `userconfig --add -name <username>` before importing SSH keys.
+    | Error | Fix |
+    |---|---|
+    | `sshutil: command not found` | Verify you are running this command on a Brocade switch with FOS installed, not a Linux management server. |
+    | `Error: Invalid file path /path/to/id_rsa.pub` | Replace `/path/to/id_rsa.pub` with the actual absolute path to your public key file and ensure the file is readable. |
+    | `Error: User <username> does not exist` | Create the user account on the switch first using `userconfig --add -name <username>` before importing SSH keys. |
 ### Disabling Telnet
 
 Telnet must be disabled on all production switches. Verify after every new switch deployment and firmware upgrade.
@@ -296,9 +302,11 @@ switch:admin>
 ```
 
 !!! warning "Common errors"
-    **`configure: command not found`** — Ensure you are logged into the Brocade switch CLI directly (not a Linux shell); type `exit` if in a nested shell context.
-    **`Telnet Status: enabled`** — Navigate to the correct menu path (System Services → Telnet) and confirm you entered `0` to disable, then run `configupload` to persist changes.
-    **`Permission denied: configure`** — Verify your user account has admin-level privileges; contact the fabric administrator to grant configuration rights.
+    | Error | Fix |
+    |---|---|
+    | `configure: command not found` | Ensure you are logged into the Brocade switch CLI directly (not a Linux shell); type `exit` if in a nested shell context. |
+    | `Telnet Status: enabled` | Navigate to the correct menu path (System Services → Telnet) and confirm you entered `0` to disable, then run `configupload` to persist changes. |
+    | `Permission denied: configure` | Verify your user account has admin-level privileges; contact the fabric administrator to grant configuration rights. |
 ---
 
 ## NTP Requirement
@@ -340,9 +348,11 @@ Last update: 3 seconds ago
 ```
 
 !!! warning "Common errors"
-    **`NTP Server(s) set to: (none)`** — Verify both NTP servers are reachable and specify them with `tsclockserver "server1 server2"` using valid hostnames or IPs.
-    **`ntpshow: command not found`** — Confirm you are running FOS 9.x or later; use `firmwareshow` to verify the FOS version and upgrade if necessary.
-    **`NTP status: unsynchronized`** — Check network connectivity to the NTP servers with `ping`, verify firewall rules allow UDP port 123, and wait 5-10 minutes for initial synchronization.
+    | Error | Fix |
+    |---|---|
+    | `NTP Server(s) set to: (none)` | Verify both NTP servers are reachable and specify them with `tsclockserver "server1 server2"` using valid hostnames or IPs. |
+    | `ntpshow: command not found` | Confirm you are running FOS 9.x or later; use `firmwareshow` to verify the FOS version and upgrade if necessary. |
+    | `NTP status: unsynchronized` | Check network connectivity to the NTP servers with `ping`, verify firewall rules allow UDP port 123, and wait 5-10 minutes for initial synchronization. |
 NTP servers should be on the management network, reachable from the switch management IP. Use internal NTP stratum 2 servers — do not rely on public internet NTP from a SAN switch.
 
 ---

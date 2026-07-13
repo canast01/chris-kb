@@ -192,9 +192,11 @@ PING 10.100.1.43 (10.100.1.43): 56 data bytes
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification for self-signed NSX Manager certificates.
-    **`Connection refused` or `nc: connect to <nsx-manager-ip> port 443 (tcp) failed`** — Verify NSX Manager VIP is reachable and firewall rules allow port 443/5671 from ESXi hosts to NSX Manager.
-    **`PING 10.100.1.43 (10.100.1.43): 100% packet loss`** — Confirm TEP VMkernel adapter MTU is set to 1600+ and remote ESXi host TEP is on same VLAN/network segment.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification for self-signed NSX Manager certificates. |
+    | `Connection refused` or `nc: connect to <nsx-manager-ip> port 443 (tcp) failed` | Verify NSX Manager VIP is reachable and firewall rules allow port 443/5671 from ESXi hosts to NSX Manager. |
+    | `PING 10.100.1.43 (10.100.1.43): 100% packet loss` | Confirm TEP VMkernel adapter MTU is set to 1600+ and remote ESXi host TEP is on same VLAN/network segment. |
 ---
 
 ## See also

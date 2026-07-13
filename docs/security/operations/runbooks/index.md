@@ -85,9 +85,11 @@ notAfter=Dec 10 09:45:33 2026 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to load Private Key`** — Verify the private key path is correct and readable by the current user with `ls -l /etc/ssl/private/server.key`.
-    **`Connection refused`** — Ensure the target host is reachable and the service is listening on port 443 with `nc -zv host.corp.local 443`.
-    **`No such file or directory`** — Confirm the new certificate file exists at the specified path before running the `cp` command with `ls -l new-cert.crt`.
+    | Error | Fix |
+    |---|---|
+    | `unable to load Private Key` | Verify the private key path is correct and readable by the current user with `ls -l /etc/ssl/private/server.key`. |
+    | `Connection refused` | Ensure the target host is reachable and the service is listening on port 443 with `nc -zv host.corp.local 443`. |
+    | `No such file or directory` | Confirm the new certificate file exists at the specified path before running the `cp` command with `ls -l new-cert.crt`. |
 **Expected output (step 5):** `notAfter` shows the new expiry date (≥ 1 year from today). Service responds normally — test with `curl -sk https://host.corp.local/health` returning HTTP 200.
 
 ## CyberArk Password Rotation Check
@@ -119,9 +121,11 @@ mysql>
 ```
 
 !!! warning "Common errors"
-    **`cyberark-cli: command not found`** — Install the CyberArk CLI tool or ensure it is in your PATH environment variable.
-    **`ERROR 1045 (28000): Access denied for user 'app_user'@'localhost'`** — Verify the rotated password was successfully retrieved from CyberArk and that the database user permissions have not changed.
-    **`ERROR 2003 (HY000): Can't connect to MySQL server on 'localhost' (111)`** — Confirm the database host is reachable and the MySQL service is running on the expected port.
+    | Error | Fix |
+    |---|---|
+    | `cyberark-cli: command not found` | Install the CyberArk CLI tool or ensure it is in your PATH environment variable. |
+    | `ERROR 1045 (28000): Access denied for user 'app_user'@'localhost'` | Verify the rotated password was successfully retrieved from CyberArk and that the database user permissions have not changed. |
+    | `ERROR 2003 (HY000): Can't connect to MySQL server on 'localhost' (111)` | Confirm the database host is reachable and the MySQL service is running on the expected port. |
 ## Monthly Access Recertification
 
 1. Export user list from AD: `Get-ADGroupMember -Identity "SQL_DBA" | Select Name, SamAccountName`
@@ -157,8 +161,10 @@ DisplayName                      : Remote Desktop - User Mode (TCP-In)
 ```
 
 !!! warning "Common errors"
-    **`bash: iptables: command not found`** — Install iptables with `sudo apt-get install iptables` on Linux or verify you're running on a Linux system, not Windows.
-    **`Get-NetFirewallRule : The term 'Get-NetFirewallRule' is not recognized`** — Run PowerShell as Administrator and ensure you're on Windows; this cmdlet is not available on Linux.
+    | Error | Fix |
+    |---|---|
+    | `bash: iptables: command not found` | Install iptables with `sudo apt-get install iptables` on Linux or verify you're running on a Linux system, not Windows. |
+    | `Get-NetFirewallRule : The term 'Get-NetFirewallRule' is not recognized` | Run PowerShell as Administrator and ensure you're on Windows; this cmdlet is not available on Linux. |
 ## Hardening Check Schedule
 
 | Frequency | Check | Tool |

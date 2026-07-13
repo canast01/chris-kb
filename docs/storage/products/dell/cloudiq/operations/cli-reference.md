@@ -34,9 +34,11 @@ Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJzdWIiOi...
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: cloudiq.apis.dell.com`** — Verify network connectivity and DNS resolution; check that the CloudIQ API endpoint is accessible from your environment.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Confirm CLIENT_ID and CLIENT_SECRET are correct and valid; check the token endpoint response with `curl -v` to see the actual error message from the API.
-    **`curl: (35) error:1400D102:SSL routines:SSL_CTX_use_certificate:unsupported certificate type`** — Ensure your system's CA certificates are up-to-date with `update-ca-certificates` or equivalent for your OS.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: cloudiq.apis.dell.com` | Verify network connectivity and DNS resolution; check that the CloudIQ API endpoint is accessible from your environment. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Confirm CLIENT_ID and CLIENT_SECRET are correct and valid; check the token endpoint response with `curl -v` to see the actual error message from the API. |
+    | `curl: (35) error:1400D102:SSL routines:SSL_CTX_use_certificate:unsupported certificate type` | Ensure your system's CA certificates are up-to-date with `update-ca-certificates` or equivalent for your OS. |
 ```bash
 # --- Current capacity utilisation for a system ---
 curl -s -X GET "${BASE}/systems/${SYSTEM_ID}/capacity" \
@@ -106,9 +108,11 @@ curl -s -X GET "${BASE}/systems/${SYSTEM_ID}/capacity/forecast?days=90" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to api.cloudiq.dell.com port 443: Connection refused`** — Verify BASE URL is correct and CloudIQ API endpoint is reachable; check firewall rules and VPN connectivity.
-    **`{"error": "Unauthorized", "code": 401}`** — Ensure AUTH header contains valid bearer token and hasn't expired; regenerate credentials in CloudIQ console if needed.
-    **`jq: parse error: Invalid JSON at line 1`** — Confirm the API response is valid JSON by testing with `curl -s ... | head -c 200` to inspect raw output; check for HTML error pages instead of JSON.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to api.cloudiq.dell.com port 443: Connection refused` | Verify BASE URL is correct and CloudIQ API endpoint is reachable; check firewall rules and VPN connectivity. |
+    | `{"error": "Unauthorized", "code": 401}` | Ensure AUTH header contains valid bearer token and hasn't expired; regenerate credentials in CloudIQ console if needed. |
+    | `jq: parse error: Invalid JSON at line 1` | Confirm the API response is valid JSON by testing with `curl -s ... | head -c 200` to inspect raw output; check for HTML error pages instead of JSON. |
 ```bash
 # --- Get available performance metric types for a system ---
 curl -s -X GET "${BASE}/systems/${SYSTEM_ID}/metrics/query" \
@@ -177,9 +181,11 @@ curl -s -X GET "${BASE}/systems/${SYSTEM_ID}/metrics/last" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to cloudiq.example.com port 443: Connection refused`** — Verify BASE URL is correct and CloudIQ API endpoint is accessible; check firewall rules and service status.
-    **`{"error": "Unauthorized", "code": 401}`** — Ensure AUTH header contains valid API token and hasn't expired; regenerate token in CloudIQ console if needed.
-    **`{"error": "Invalid metric type", "code": 400}`** — Verify metric names match available types from the first query (iops, throughput_mb, latency_ms, etc.) and check JSON syntax for typos.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to cloudiq.example.com port 443: Connection refused` | Verify BASE URL is correct and CloudIQ API endpoint is accessible; check firewall rules and service status. |
+    | `{"error": "Unauthorized", "code": 401}` | Ensure AUTH header contains valid API token and hasn't expired; regenerate token in CloudIQ console if needed. |
+    | `{"error": "Invalid metric type", "code": 400}` | Verify metric names match available types from the first query (iops, throughput_mb, latency_ms, etc.) and check JSON syntax for typos. |
 ```bash
 # --- List all existing tags ---
 curl -s -X GET "${BASE}/tags" \
@@ -271,9 +277,11 @@ curl -s -X DELETE "${BASE}/tags/${TAG_ID}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to api.cloudiq.dell.com port 443: Connection refused`** — Verify BASE URL is correct and CloudIQ API endpoint is accessible; check network connectivity and firewall rules.
-    **`{"error": "Unauthorized", "code": 401}`** — Ensure AUTH header contains valid API token and has not expired; regenerate credentials in CloudIQ console if needed.
-    **`{"error": "Tag not found", "code": 404}`** — Confirm TAG_ID variable is set correctly from the create response and the tag has not already been deleted.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to api.cloudiq.dell.com port 443: Connection refused` | Verify BASE URL is correct and CloudIQ API endpoint is accessible; check network connectivity and firewall rules. |
+    | `{"error": "Unauthorized", "code": 401}` | Ensure AUTH header contains valid API token and has not expired; regenerate credentials in CloudIQ console if needed. |
+    | `{"error": "Tag not found", "code": 404}` | Confirm TAG_ID variable is set correctly from the create response and the tag has not already been deleted. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

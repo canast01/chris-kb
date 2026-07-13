@@ -56,8 +56,10 @@ username repladmin role repl-admin
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (enter `config t` first if not already in configuration terminal mode).
-    **`% Role 'repl-admin' not found`** — Create the role before assigning it to a username; ensure the role definition is committed before the username command executes.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (enter `config t` first if not already in configuration terminal mode). |
+    | `% Role 'repl-admin' not found` | Create the role before assigning it to a username; ensure the role definition is committed before the username command executes. |
 ---
 
 ## AAA Integration (TACACS+ / RADIUS)
@@ -92,9 +94,11 @@ aaa accounting default group TACACS-SERVERS
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch is in config mode with `configure terminal` before entering AAA commands.
-    **`% TACACS+ server 10.10.1.10 is unreachable`** — Confirm network connectivity to TACACS+ servers and that the shared key matches the server configuration.
-    **`% Incomplete command`** — Ensure the encrypted key value is provided after `key 7`; use `show tacacs` to verify server configuration syntax.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch is in config mode with `configure terminal` before entering AAA commands. |
+    | `% TACACS+ server 10.10.1.10 is unreachable` | Confirm network connectivity to TACACS+ servers and that the shared key matches the server configuration. |
+    | `% Incomplete command` | Ensure the encrypted key value is provided after `key 7`; use `show tacacs` to verify server configuration syntax. |
 ### Role Mapping via TACACS+
 
 TACACS+ can return the NX-OS role as an AV-pair in the authorization response, eliminating the need for local role configuration:
@@ -110,8 +114,10 @@ cisco-av-pair = shell:roles*"network-admin"
 ```
 
 !!! warning "Common errors"
-    **`TACACS+ authentication failed: Invalid AV-pair syntax`** — Ensure the AV-pair format uses `=` not `:` and wraps the role value in quotes like `shell:roles*"network-admin"`.
-    **`Authorization denied: user lacks network-admin role`** — Verify the cisco-av-pair attribute is correctly configured in the TACACS+ server user profile and that the MDS switch is configured to query TACACS+ for authorization.
+    | Error | Fix |
+    |---|---|
+    | `TACACS+ authentication failed: Invalid AV-pair syntax` | Ensure the AV-pair format uses `=` not `:` and wraps the role value in quotes like `shell:roles*"network-admin"`. |
+    | `Authorization denied: user lacks network-admin role` | Verify the cisco-av-pair attribute is correctly configured in the TACACS+ server user profile and that the MDS switch is configured to query TACACS+ for authorization. |
 When the AV-pair is returned, NX-OS assigns the role dynamically at login. No local role assignment is required beyond the user account existing (or not — TACACS+ can create dynamic accounts).
 
 ### Testing AAA
@@ -165,9 +171,11 @@ AAA Accounting:
 ```
 
 !!! warning "Common errors"
-    **`TACACS+ authentication failed for user 'admin'`** — Verify the username/password are correct and the TACACS+ server is reachable on port 49.
-    **`% Invalid command`** — Ensure you are in the correct mode (exec or config); use `configure terminal` if needed and verify the TACACS-SERVERS group is defined with `show aaa group-server tacacs`.
-    **`Connection refused to TACACS+ server 192.168.100.50`** — Check network connectivity to the TACACS+ server and confirm the server IP, port 49, and firewall rules allow MDS-to-server communication.
+    | Error | Fix |
+    |---|---|
+    | `TACACS+ authentication failed for user 'admin'` | Verify the username/password are correct and the TACACS+ server is reachable on port 49. |
+    | `% Invalid command` | Ensure you are in the correct mode (exec or config); use `configure terminal` if needed and verify the TACACS-SERVERS group is defined with `show aaa group-server tacacs`. |
+    | `Connection refused to TACACS+ server 192.168.100.50` | Check network connectivity to the TACACS+ server and confirm the server IP, port 49, and firewall rules allow MDS-to-server communication. |
 ---
 
 ## Management Plane ACLs
@@ -206,8 +214,10 @@ interface mgmt0
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Ensure you are in the correct configuration mode (config-if for interface commands, config for ACL commands).
-    **`% Access list MGMT-ACL not found`** — Create the access list before applying it to the interface; verify the ACL name matches exactly (case-sensitive).
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Ensure you are in the correct configuration mode (config-if for interface commands, config for ACL commands). |
+    | `% Access list MGMT-ACL not found` | Create the access list before applying it to the interface; verify the ACL name matches exactly (case-sensitive). |
 ### SNMP Source Restriction
 
 ```bash
@@ -240,8 +250,10 @@ MDS9148S# show running-config interface mgmt0 | include access-group
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in config mode (`configure terminal`) and that ACL syntax matches your MDS OS version (NX-OS vs older).
-    **`% Access-list not found`** — Create the ACL before applying it to the interface; ensure the ACL name matches exactly between creation and application.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in config mode (`configure terminal`) and that ACL syntax matches your MDS OS version (NX-OS vs older). |
+    | `% Access-list not found` | Create the ACL before applying it to the interface; ensure the ACL name matches exactly between creation and application. |
 ---
 
 ## VSAN Isolation as an Access Control Boundary
@@ -295,8 +307,10 @@ Trunk Information for fc2/1:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in interface configuration mode (interface fc2/1) before running switchport commands.
-    **`% VSAN 1 cannot be removed from trunk on native VSAN port`** — Change the native VSAN to a production VSAN (switchport trunk native vsan 10) before removing VSAN 1 from the allowed list.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in interface configuration mode (interface fc2/1) before running switchport commands. |
+    | `% VSAN 1 cannot be removed from trunk on native VSAN port` | Change the native VSAN to a production VSAN (switchport trunk native vsan 10) before removing VSAN 1 from the allowed list. |
 ---
 
 ## Zoning as Data-Plane Access Control
@@ -334,9 +348,11 @@ Interop Mode: OFF
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch supports enhanced zoning mode (MDS 9000 series required); basic switches only support basic mode.
-    **`% VSAN <vsan-id> does not exist`** — Create the VSAN first with `vsan <vsan-id>` before applying zone mode configuration.
-    **`% Cannot change zone mode while session is active`** — Deactivate the current zone session with `no zone activate vsan <vsan-id>` before modifying the mode.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch supports enhanced zoning mode (MDS 9000 series required); basic switches only support basic mode. |
+    | `% VSAN <vsan-id> does not exist` | Create the VSAN first with `vsan <vsan-id>` before applying zone mode configuration. |
+    | `% Cannot change zone mode while session is active` | Deactivate the current zone session with `no zone activate vsan <vsan-id>` before modifying the mode. |
 In enhanced mode, any device not explicitly included in an active zone cannot communicate with any other device in the VSAN, regardless of FLOGI state. This is the required production standard.
 
 ---
@@ -383,9 +399,11 @@ mds9148#
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the MDS switch supports the `aaa accounting` command; some older firmware versions require `aaa accounting commands` syntax instead.
-    **`% Unresolved host name`** — Ensure the syslog server IPs (10.10.3.50, 10.10.3.51) are reachable and DNS/routing is configured if using hostnames instead of IPs.
-    **`% TACACS-SERVERS group not configured`** — Define the TACACS+ server group first using `aaa group server tacacs+ TACACS-SERVERS` before referencing it in the accounting command.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the MDS switch supports the `aaa accounting` command; some older firmware versions require `aaa accounting commands` syntax instead. |
+    | `% Unresolved host name` | Ensure the syslog server IPs (10.10.3.50, 10.10.3.51) are reachable and DNS/routing is configured if using hostnames instead of IPs. |
+    | `% TACACS-SERVERS group not configured` | Define the TACACS+ server group first using `aaa group server tacacs+ TACACS-SERVERS` before referencing it in the accounting command. |
 ---
 
 ## Access Control Checklist

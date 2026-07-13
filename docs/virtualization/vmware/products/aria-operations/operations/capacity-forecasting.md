@@ -61,8 +61,10 @@ pure-array-1  FlashArray//X70-2  100.0T        67.4T         4.1:1
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (111)`** — Verify the Pure Storage array is reachable and purecli is configured with correct credentials via `purecli login`.
-    **`Error: Invalid volume name or volume does not exist`** — Ensure the volume name is correct and exists on the array; use `purecli volume list` without filters to verify available volumes.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (111)` | Verify the Pure Storage array is reachable and purecli is configured with correct credentials via `purecli login`. |
+    | `Error: Invalid volume name or volume does not exist` | Ensure the volume name is correct and exists on the array; use `purecli volume list` without filters to verify available volumes. |
 ## Forecasting by Resource Type
 
 ### Storage
@@ -90,9 +92,11 @@ aggr_ssd        5.0TB      4.3TB      86%           700GB
 ```
 
 !!! warning "Common errors"
-    **`df: '/data': No such file or directory`** — Verify the mount point exists and is mounted with `mount | grep /data`.
-    **`Error: command not found: storage`** — Ensure you are connected to the ONTAP cluster via SSH or the NetApp CLI is installed and configured.
-    **`permission denied`** — Run the commands with appropriate privileges (sudo for df, or ensure your ONTAP user has storage admin role).
+    | Error | Fix |
+    |---|---|
+    | `df: '/data': No such file or directory` | Verify the mount point exists and is mounted with `mount | grep /data`. |
+    | `Error: command not found: storage` | Ensure you are connected to the ONTAP cluster via SSH or the NetApp CLI is installed and configured. |
+    | `permission denied` | Run the commands with appropriate privileges (sudo for df, or ensure your ONTAP user has storage admin role). |
 ### Compute (CPU/Memory)
 
 ```bash
@@ -109,8 +113,10 @@ done | awk '{sum+=$1; count++} END {print "30d avg CPU:", sum/count "%"}'
 ```
 
 !!! warning "Common errors"
-    **`sar: Cannot open /var/log/sa/sa01: No such file or directory`** — Enable sysstat collection with `systemctl enable sysstat && systemctl start sysstat`, then wait 24 hours for sa files to be generated.
-    **`awk: syntax error: unexpected newline or EOF`** — Ensure the awk command is on a single line or properly escaped; the pipe chain may have been corrupted during copy-paste.
+    | Error | Fix |
+    |---|---|
+    | `sar: Cannot open /var/log/sa/sa01: No such file or directory` | Enable sysstat collection with `systemctl enable sysstat && systemctl start sysstat`, then wait 24 hours for sa files to be generated. |
+    | `awk: syntax error: unexpected newline or EOF` | Ensure the awk command is on a single line or properly escaped; the pipe chain may have been corrupted during copy-paste. |
 ### Network
 
 ```bash
@@ -133,8 +139,10 @@ Average:        eth0    1265.80    978.40    160.17    136.02      0.00      0.0
 ```
 
 !!! warning "Common errors"
-    **`Cannot open /var/log/sa/saDD: No such file or directory`** — Replace `DD` with the actual date (e.g., `sa15` for the 15th) or check that sysstat logs are enabled with `systemctl status sysstat`.
-    **`command not found: sar`** — Install sysstat package with `apt-get install sysstat` (Debian/Ubuntu) or `yum install sysstat` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `Cannot open /var/log/sa/saDD: No such file or directory` | Replace `DD` with the actual date (e.g., `sa15` for the 15th) or check that sysstat logs are enabled with `systemctl status sysstat`. |
+    | `command not found: sar` | Install sysstat package with `apt-get install sysstat` (Debian/Ubuntu) or `yum install sysstat` (RHEL/CentOS). |
 ## Forecasting Thresholds
 
 | Resource | Alert at | Plan expansion at |
@@ -182,8 +190,10 @@ Storage volumes near capacity:
 ```
 
 !!! warning "Common errors"
-    **`awk: syntax error in pattern near line 1`** — Ensure the script uses standard awk syntax; check for non-ASCII characters or shell encoding issues by running `file script.sh`.
-    **`df: command not found`** — Verify `df` is available in the PATH by running `which df` or use the full path `/bin/df -h`.
+    | Error | Fix |
+    |---|---|
+    | `awk: syntax error in pattern near line 1` | Ensure the script uses standard awk syntax; check for non-ASCII characters or shell encoding issues by running `file script.sh`. |
+    | `df: command not found` | Verify `df` is available in the PATH by running `which df` or use the full path `/bin/df -h`. |
 ---
 
 ## Verify

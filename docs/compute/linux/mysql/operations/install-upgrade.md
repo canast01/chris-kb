@@ -72,9 +72,11 @@ mysqldump: [Warning] Using a password on the command line interface can be insec
 ```
 
 !!! warning "Common errors"
-    **`mysqlcheck: Got error: 1045: Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password is correct and the user has SUPER privilege by running `mysql -u root -p -e "SHOW GRANTS FOR root@localhost;"`
-    **`ERROR: Shell.Sql.Error: Unknown database 'mysql' (code 1049)`** — Ensure the MySQL server is running and accessible with `mysql -u root -p -e "SELECT VERSION();"` before running the upgrade checker.
-    **`mysqldump: Got error: 2003: Can't connect to MySQL server on 'localhost' (111)`** — Confirm the MySQL service is running with `systemctl status mysql` and listening on port 3306 with `netstat -tlnp | grep 3306`.
+    | Error | Fix |
+    |---|---|
+    | `mysqlcheck: Got error: 1045: Access denied for user 'root'@'localhost' (using password: YES)` | Verify the root password is correct and the user has SUPER privilege by running `mysql -u root -p -e "SHOW GRANTS FOR root@localhost;"` |
+    | `ERROR: Shell.Sql.Error: Unknown database 'mysql' (code 1049)` | Ensure the MySQL server is running and accessible with `mysql -u root -p -e "SELECT VERSION();"` before running the upgrade checker. |
+    | `mysqldump: Got error: 2003: Can't connect to MySQL server on 'localhost' (111)` | Confirm the MySQL service is running with `systemctl status mysql` and listening on port 3306 with `netstat -tlnp | grep 3306`. |
 ## In-Place Upgrade (RHEL / Rocky)
 
 ```bash
@@ -128,8 +130,10 @@ Enter password:
 ```
 
 !!! warning "Common errors"
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password is correct and the user account exists; reset it with `sudo mysqld_safe --skip-grant-tables` if needed.
-    **`ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`** — Ensure mysqld is running with `sudo systemctl status mysqld` and check that `/var/run/mysqld/` directory exists with proper permissions.
+    | Error | Fix |
+    |---|---|
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)` | Verify the root password is correct and the user account exists; reset it with `sudo mysqld_safe --skip-grant-tables` if needed. |
+    | `ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'` | Ensure mysqld is running with `sudo systemctl status mysqld` and check that `/var/run/mysqld/` directory exists with proper permissions. |
 ## In-Place Upgrade (Ubuntu)
 
 ```bash
@@ -160,8 +164,10 @@ Upgrade process completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password is correct or reset it using `sudo mysql -u root` if no password is set.
-    **`ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`** — Ensure MySQL started successfully with `sudo systemctl status mysql` and check logs with `sudo journalctl -u mysql -n 20`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)` | Verify the root password is correct or reset it using `sudo mysql -u root` if no password is set. |
+    | `ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'` | Ensure MySQL started successfully with `sudo systemctl status mysql` and check logs with `sudo journalctl -u mysql -n 20`. |
 ## Post-Upgrade Validation
 
 ```bash
@@ -199,9 +205,11 @@ mysql -u root -p -e "SHOW VARIABLES LIKE 'slow_query%';"
 ```
 
 !!! warning "Common errors"
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password is correct and the user has not been locked; reset with `mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'newpassword';"` if needed.
-    **`ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`** — Confirm MySQL service is running with `sudo systemctl status mysql` and restart if necessary using `sudo systemctl restart mysql`.
-    **`grep: /var/log/mysqld.log: No such file or directory`** — Check the actual log location with `sudo find /var/log -name "*mysql*" -type f` as the path may differ by distribution (e.g., `/var/log/mysql/error.log` on Debian).
+    | Error | Fix |
+    |---|---|
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)` | Verify the root password is correct and the user has not been locked; reset with `mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'newpassword';"` if needed. |
+    | `ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'` | Confirm MySQL service is running with `sudo systemctl status mysql` and restart if necessary using `sudo systemctl restart mysql`. |
+    | `grep: /var/log/mysqld.log: No such file or directory` | Check the actual log location with `sudo find /var/log -name "*mysql*" -type f` as the path may differ by distribution (e.g., `/var/log/mysql/error.log` on Debian). |
 ## Rolling Upgrade (Replicated Setup)
 
 1. Upgrade replica(s) first; validate replication resumes

@@ -137,9 +137,11 @@ aws ec2 start-instances --instance-ids i-0abc123def456789
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidSnapshot.NotFound) when calling the CreateVolume operation: The snapshot 'snap-0abc123def456789' does not exist`** — Verify the snapshot ID exists in the correct region using `aws ec2 describe-snapshots --snapshot-ids snap-0abc123def456789`.
-    **`An error occurred (InvalidVolume.InUse) when calling the DetachVolume operation: The volume 'vol-0existing789abc' is still in use`** — Ensure the instance is fully stopped before detaching by waiting 10-15 seconds after the stop command completes.
-    **`An error occurred (InvalidParameterValue) when calling the AttachVolume operation: Invalid device name /dev/xvda`** — Use `/dev/sda1` for EBS-backed instances or verify the correct device mapping for your instance type.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidSnapshot.NotFound) when calling the CreateVolume operation: The snapshot 'snap-0abc123def456789' does not exist` | Verify the snapshot ID exists in the correct region using `aws ec2 describe-snapshots --snapshot-ids snap-0abc123def456789`. |
+    | `An error occurred (InvalidVolume.InUse) when calling the DetachVolume operation: The volume 'vol-0existing789abc' is still in use` | Ensure the instance is fully stopped before detaching by waiting 10-15 seconds after the stop command completes. |
+    | `An error occurred (InvalidParameterValue) when calling the AttachVolume operation: Invalid device name /dev/xvda` | Use `/dev/sda1` for EBS-backed instances or verify the correct device mapping for your instance type. |
 ---
 
 ## RDS Restore
@@ -207,9 +209,11 @@ aws rds restore-db-instance-to-point-in-time \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (DBSnapshotNotFound) when calling the DescribeDBSnapshots operation: DBSnapshot rds:prod-mysql-2026-05-15-02-30 not found.`** — Verify the snapshot identifier exists by running describe-db-snapshots without filters or check the snapshot region.
-    **`An error occurred (InvalidDBInstanceState) when calling the RestoreDBInstanceFromDBSnapshot operation: DB instance prod-mysql is not in a valid state.`** — Ensure the source DB instance is in "available" state and not undergoing maintenance before attempting restore.
-    **`An error occurred (InvalidParameterValue) when calling the RestoreDBInstanceToPointInTime operation: The restore time must be before the current time.`** — Use a restore time in the past within your backup retention period (typically 7 days by default).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (DBSnapshotNotFound) when calling the DescribeDBSnapshots operation: DBSnapshot rds:prod-mysql-2026-05-15-02-30 not found.` | Verify the snapshot identifier exists by running describe-db-snapshots without filters or check the snapshot region. |
+    | `An error occurred (InvalidDBInstanceState) when calling the RestoreDBInstanceFromDBSnapshot operation: DB instance prod-mysql is not in a valid state.` | Ensure the source DB instance is in "available" state and not undergoing maintenance before attempting restore. |
+    | `An error occurred (InvalidParameterValue) when calling the RestoreDBInstanceToPointInTime operation: The restore time must be before the current time.` | Use a restore time in the past within your backup retention period (typically 7 days by default). |
 ---
 
 ## S3 — Restore a Deleted Object (Versioning)
@@ -274,9 +278,11 @@ aws s3api copy-object \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchBucket) when calling the ListObjectVersions operation: The specified bucket does not exist`** — Verify the bucket name is correct and exists in the current AWS region with `aws s3 ls`.
-    **`An error occurred (InvalidArgument) when calling the DeleteObject operation: Invalid version id specified`** — Ensure the `<delete-marker-version-id>` is copied exactly from the DeleteMarkers output and is not a regular version ID.
-    **`An error occurred (NoSuchKey) when calling the CopyObject operation: The specified key does not exist.`** — Confirm the `<version-id>` exists in the Versions list and the source bucket/key path matches the original object location exactly.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchBucket) when calling the ListObjectVersions operation: The specified bucket does not exist` | Verify the bucket name is correct and exists in the current AWS region with `aws s3 ls`. |
+    | `An error occurred (InvalidArgument) when calling the DeleteObject operation: Invalid version id specified` | Ensure the `<delete-marker-version-id>` is copied exactly from the DeleteMarkers output and is not a regular version ID. |
+    | `An error occurred (NoSuchKey) when calling the CopyObject operation: The specified key does not exist.` | Confirm the `<version-id>` exists in the Versions list and the source bucket/key path matches the original object location exactly. |
 ---
 
 ## AWS Backup — Restore Job
@@ -328,9 +334,11 @@ aws backup describe-restore-job --restore-job-id <job-id>
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterException) when calling the ListRecoveryPointsByResource operation: Invalid resource ARN format`** — Verify the resource ARN matches the exact format for your resource type and region.
-    **`An error occurred (AccessDenied) when calling the StartRestoreJob operation: User is not authorized to perform: iam:PassRole on resource`** — Ensure your IAM user has `iam:PassRole` permission for the AWSBackupDefaultServiceRole.
-    **`An error occurred (ResourceNotFoundException) when calling the DescribeRestoreJob operation: Restore job not found`** — Replace `<job-id>` with the actual RestoreJobId returned from the start-restore-job command output.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterException) when calling the ListRecoveryPointsByResource operation: Invalid resource ARN format` | Verify the resource ARN matches the exact format for your resource type and region. |
+    | `An error occurred (AccessDenied) when calling the StartRestoreJob operation: User is not authorized to perform: iam:PassRole on resource` | Ensure your IAM user has `iam:PassRole` permission for the AWSBackupDefaultServiceRole. |
+    | `An error occurred (ResourceNotFoundException) when calling the DescribeRestoreJob operation: Restore job not found` | Replace `<job-id>` with the actual RestoreJobId returned from the start-restore-job command output. |
 ---
 
 ## Verify Backup Coverage
@@ -370,8 +378,10 @@ aws backup list-backup-jobs \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterException) when calling the ListProtectedResources operation: AWS Backup is not enabled for this account`** — Enable AWS Backup in the AWS Backup console or use `aws backup create-backup-vault` to initialize the service.
-    **`An error occurred (AccessDenied) when calling the ListBackupJobs operation: User is not authorized to perform: backup:ListBackupJobs`** — Add the `backup:ListBackupJobs` permission to your IAM user/role policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterException) when calling the ListProtectedResources operation: AWS Backup is not enabled for this account` | Enable AWS Backup in the AWS Backup console or use `aws backup create-backup-vault` to initialize the service. |
+    | `An error occurred (AccessDenied) when calling the ListBackupJobs operation: User is not authorized to perform: backup:ListBackupJobs` | Add the `backup:ListBackupJobs` permission to your IAM user/role policy. |
 ---
 
 ## See also

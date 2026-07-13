@@ -82,8 +82,10 @@ Health Check Results:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan health`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN is active.
-    **`Error: Unable to connect to vSAN cluster`** — Ensure the ESXi host is part of a vSAN cluster and network connectivity exists between cluster members.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan health` | Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN is active. |
+    | `Error: Unable to connect to vSAN cluster` | Ensure the ESXi host is part of a vSAN cluster and network connectivity exists between cluster members. |
 Check performance service status:
 
 ```bash
@@ -118,9 +120,11 @@ Last Updated: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the vSAN cluster`** — Verify the ESXi host is part of an active vSAN cluster and network connectivity to vSAN management is available.
-    **`Error: Permission denied`** — Ensure your user account has the required vSAN.Cluster.Read permission on the vSAN cluster object.
-    **`Error: vSAN service is not running`** — Restart the vSAN service using `systemctl restart vsanvpd` or reboot the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the vSAN cluster` | Verify the ESXi host is part of an active vSAN cluster and network connectivity to vSAN management is available. |
+    | `Error: Permission denied` | Ensure your user account has the required vSAN.Cluster.Read permission on the vSAN cluster object. |
+    | `Error: vSAN service is not running` | Restart the vSAN service using `systemctl restart vsanvpd` or reboot the ESXi host. |
 ---
 
 ## Health & Diagnostics
@@ -260,8 +264,10 @@ VSAN UUID: 52534e41-4d4f-4445-a14d-7c2d1f8b9a4d
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan storage`** — Verify vSAN is installed and enabled on the host by running `esxcli vsan cluster get`.
-    **`Error: Permission denied`** — Run the command with root privileges or ensure your user account has vSAN admin permissions in vCenter.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan storage` | Verify vSAN is installed and enabled on the host by running `esxcli vsan cluster get`. |
+    | `Error: Permission denied` | Run the command with root privileges or ensure your user account has vSAN admin permissions in vCenter. |
 ### Disk and Group Statistics
 
 ```bash
@@ -309,8 +315,10 @@ State: In Use
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the local vSAN cluster`** — Verify vSAN is enabled on the cluster and the ESXi host is a vSAN participant using `esxcli vsan cluster get`.
-    **`Error: No such command or namespace`** — Ensure you are running the command on an ESXi host with vSAN enabled; this command is not available on non-vSAN hosts.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the local vSAN cluster` | Verify vSAN is enabled on the cluster and the ESXi host is a vSAN participant using `esxcli vsan cluster get`. |
+    | `Error: No such command or namespace` | Ensure you are running the command on an ESXi host with vSAN enabled; this command is not available on non-vSAN hosts. |
 ### Add Disks / Create Disk Group
 
 ```bash
@@ -338,9 +346,11 @@ vSAN rebalancing initiated.
 ```
 
 !!! warning "Common errors"
-    **`Error: The specified disk is already in use by another disk group or VMFS datastore`** — Ensure the disk is not already claimed by vSAN or another storage system by running `esxcli storage core device list` and checking the attachment status.
-    **`Error: Cache disk (SSD) and capacity disk must be different devices`** — Verify you are specifying different NAA identifiers for the `-s` (cache) and `-d` (capacity) parameters.
-    **`Error: Disk group does not exist or SSD is not a valid cache device`** — Confirm the SSD NAA is correct and the disk group UUID exists by running `esxcli vsan storage list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: The specified disk is already in use by another disk group or VMFS datastore` | Ensure the disk is not already claimed by vSAN or another storage system by running `esxcli storage core device list` and checking the attachment status. |
+    | `Error: Cache disk (SSD) and capacity disk must be different devices` | Verify you are specifying different NAA identifiers for the `-s` (cache) and `-d` (capacity) parameters. |
+    | `Error: Disk group does not exist or SSD is not a valid cache device` | Confirm the SSD NAA is correct and the disk group UUID exists by running `esxcli vsan storage list`. |
 ### Evacuate Before Removal
 
 Always evacuate data before removing a disk — otherwise object components go absent:
@@ -375,9 +385,11 @@ Device naa.5001405a1b2c3d4e:
 ```
 
 !!! warning "Common errors"
-    **`Error: Device naa.5001405a1b2c3d4e is not a vSAN disk`** — Verify the device NAA identifier is correct by running `esxcli vsan storage list` and matching the exact device name.
-    **`Error: Evacuation failed — insufficient free space on cluster`** — Ensure the cluster has at least 30% free capacity before evacuating; add hosts or expand existing disks if needed.
-    **`Error: Device is in use by another operation`** — Wait for any ongoing rebalancing or maintenance operations to complete, or check `esxcli vsan debug resync list` for blocking tasks.
+    | Error | Fix |
+    |---|---|
+    | `Error: Device naa.5001405a1b2c3d4e is not a vSAN disk` | Verify the device NAA identifier is correct by running `esxcli vsan storage list` and matching the exact device name. |
+    | `Error: Evacuation failed — insufficient free space on cluster` | Ensure the cluster has at least 30% free capacity before evacuating; add hosts or expand existing disks if needed. |
+    | `Error: Device is in use by another operation` | Wait for any ongoing rebalancing or maintenance operations to complete, or check `esxcli vsan debug resync list` for blocking tasks. |
 !!! danger "Removes entire disk group — triggers rebuild"
     `esxcli vsan storage remove -s` removes the cache SSD and all associated capacity disks as a unit. All vSAN objects on that disk group are evacuated to other nodes before removal. Do not run if the cluster has degraded objects or insufficient free space (< 25%). Always verify with `esxcli vsan health cluster get` before proceeding.
 
@@ -404,11 +416,11 @@ Resyncing remaining disks in group
 ```
 
 !!! warning "Common errors"
-    **`Error: Disk group is not empty. Please evacuate data before removal.`** — Run `esxcli vsan storage evacuate -s <ssd_naa>` first and wait for completion before removing.
-    
-    **`Error: Invalid NAA identifier <ssd_naa>. Disk not found.`** — Verify the correct NAA ID using `esxcli vsan storage list` and ensure you're using the full naa.* format.
-    
-    **`Error: Cannot remove capacity disk while rebalancing is in progress.`** — Wait for the current rebalancing operation to complete using `esxcli vsan cluster get` before attempting removal.
+    | Error | Fix |
+    |---|---|
+    | `Error: Disk group is not empty. Please evacuate data before removal.` | Run `esxcli vsan storage evacuate -s <ssd_naa>` first and wait for completion before removing. |
+    | `Error: Invalid NAA identifier <ssd_naa>. Disk not found.` | Verify the correct NAA ID using `esxcli vsan storage list` and ensure you're using the full naa.* format. |
+    | `Error: Cannot remove capacity disk while rebalancing is in progress.` | Wait for the current rebalancing operation to complete using `esxcli vsan cluster get` before attempting removal. |
 ### Disk Group Health
 
 ```bash
@@ -447,8 +459,10 @@ Overall Health: 2 components unhealthy, 1 disk absent
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the vSAN health service`** — Ensure vSAN is enabled on the cluster and the vSAN health service is running with `esxcli vsan cluster get`.
-    **`Error: Unknown command or namespace`** — Verify you are running this command on a vSAN-enabled ESXi host; non-vSAN hosts do not support the `esxcli vsan` namespace.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the vSAN health service` | Ensure vSAN is enabled on the cluster and the vSAN health service is running with `esxcli vsan cluster get`. |
+    | `Error: Unknown command or namespace` | Verify you are running this command on a vSAN-enabled ESXi host; non-vSAN hosts do not support the `esxcli vsan` namespace. |
 ### Disk Group Best Practices
 
 | Guideline | Reason |
@@ -502,8 +516,10 @@ Unicast Agent Configuration
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not retrieve vSAN network information`** — Verify the host is vSAN-enabled and the vSAN service is running with `systemctl status vsanvpd`.
-    **`Error: No vSAN VMkernel adapters found`** — Ensure at least one VMkernel adapter is tagged for vSAN traffic in the host's networking configuration.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not retrieve vSAN network information` | Verify the host is vSAN-enabled and the vSAN service is running with `systemctl status vsanvpd`. |
+    | `Error: No vSAN VMkernel adapters found` | Ensure at least one VMkernel adapter is tagged for vSAN traffic in the host's networking configuration. |
 ### Connectivity Test
 
 ```bash
@@ -524,9 +540,11 @@ Network health: HEALTHY
 ```
 
 !!! warning "Common errors"
-    **`Error: vSAN is not enabled on this host`** — Enable vSAN on the ESXi host via the vSphere Client or run `esxcli vsan cluster join`.
-    **`Error: Could not resolve peer hostname`** — Verify DNS resolution is working with `nslookup` or check `/etc/hosts` entries for all cluster nodes.
-    **`Error: Network timeout - UDP port 12345 blocked`** — Confirm firewall rules allow vSAN traffic on the management network and check vSAN network configuration in vSphere Client.
+    | Error | Fix |
+    |---|---|
+    | `Error: vSAN is not enabled on this host` | Enable vSAN on the ESXi host via the vSphere Client or run `esxcli vsan cluster join`. |
+    | `Error: Could not resolve peer hostname` | Verify DNS resolution is working with `nslookup` or check `/etc/hosts` entries for all cluster nodes. |
+    | `Error: Network timeout - UDP port 12345 blocked` | Confirm firewall rules allow vSAN traffic on the management network and check vSAN network configuration in vSphere Client. |
 ### Verifying VMkernel Tagging
 
 ```bash
@@ -555,9 +573,11 @@ Name: vmk2
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or malformed command line.`** — Verify the VMkernel interface name is correct (e.g., `vmk2` not `vmk02`) and use lowercase `-i` and `-t` flags.
-    **`Error: The object or item referenced by the supplied identifier is not found.`** — Confirm the VMkernel interface exists with `esxcli network ip interface list` before attempting to tag it.
-    **`Error: The VSAN tag is already configured on this interface.`** — The interface already has the VSAN tag; skip the `add` command or use `tag remove` first if reconfiguring.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or malformed command line.` | Verify the VMkernel interface name is correct (e.g., `vmk2` not `vmk02`) and use lowercase `-i` and `-t` flags. |
+    | `Error: The object or item referenced by the supplied identifier is not found.` | Confirm the VMkernel interface exists with `esxcli network ip interface list` before attempting to tag it. |
+    | `Error: The VSAN tag is already configured on this interface.` | The interface already has the VSAN tag; skip the `add` command or use `tag remove` first if reconfiguring. |
 ### MTU Verification
 
 vSAN performs best with jumbo frames (MTU 9000) end-to-end:
@@ -596,9 +616,11 @@ round-trip min/avg/max = 1.156/1.220/1.289 ms
 ```
 
 !!! warning "Common errors"
-    **`PING 192.168.100.43 (192.168.100.43): 8972 data bytes --- 4 packets transmitted, 0 packets received, 100% packet loss`** — Verify MTU is set to 9000 on both the ESXi host and the peer host's vSAN vmkernel interface, and check physical switch port configuration for matching MTU.
-    **`Unknown command or namespace vmkping`** — Ensure you are running the command directly on the ESXi host console or via SSH; vmkping is not available from vCenter or remote shells.
-    **`Name: vmk2 does not exist`** — Confirm the vSAN vmkernel interface is created and bound to the vSAN network stack using `esxcli vsan network list`.
+    | Error | Fix |
+    |---|---|
+    | `PING 192.168.100.43 (192.168.100.43): 8972 data bytes --- 4 packets transmitted, 0 packets received, 100% packet loss` | Verify MTU is set to 9000 on both the ESXi host and the peer host's vSAN vmkernel interface, and check physical switch port configuration for matching MTU. |
+    | `Unknown command or namespace vmkping` | Ensure you are running the command directly on the ESXi host console or via SSH; vmkping is not available from vCenter or remote shells. |
+    | `Name: vmk2 does not exist` | Confirm the vSAN vmkernel interface is created and bound to the vSAN network stack using `esxcli vsan network list`. |
 ### Network Configuration Commands
 
 ```bash
@@ -616,8 +638,10 @@ esxcli vsan network ip remove -i vmk2
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to find vmkernel adapter vmk2`** — Verify the VMkernel interface exists with `esxcli network ip interface list` before adding it to vSAN.
-    **`Error: VMkernel vmk2 is not configured for vSAN`** — Ensure the interface was previously added to vSAN with the add command before attempting to remove it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to find vmkernel adapter vmk2` | Verify the VMkernel interface exists with `esxcli network ip interface list` before adding it to vSAN. |
+    | `Error: VMkernel vmk2 is not configured for vSAN` | Ensure the interface was previously added to vSAN with the add command before attempting to remove it. |
 ### Network Troubleshooting
 
 | Symptom | Check |
@@ -727,8 +751,10 @@ cluster-test-01
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command 'cd localhost/<datacenter>/computers/<cluster>/'`** — Use forward slashes and navigate one level at a time, or use the full path like `cd localhost/Datacenters/Datacenter-1/computers/cluster-prod-01/`.
-    **`Error: Connection refused`** — Verify vCenter FQDN is correct, the appliance is running, and port 443 is accessible from your network.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command 'cd localhost/<datacenter>/computers/<cluster>/'` | Use forward slashes and navigate one level at a time, or use the full path like `cd localhost/Datacenters/Datacenter-1/computers/cluster-prod-01/`. |
+    | `Error: Connection refused` | Verify vCenter FQDN is correct, the appliance is running, and port 443 is accessible from your network. |
 ### Health Checks
 
 ```bash
@@ -758,9 +784,11 @@ Timestamp: 2024-01-19T14:32:47Z
 ```
 
 !!! warning "Common errors"
-    **`error: cluster path not found: /datacenter/cluster-prod-01`** — Verify the cluster path exists and use the correct vCenter inventory path format (e.g., `/Datacenters/DC1/Clusters/ClusterName`).
-    **`error: vSAN not enabled on cluster`** — Enable vSAN on the cluster via vCenter UI or confirm the cluster is a vSAN-capable cluster with at least 3 nodes.
-    **`error: authentication failed — insufficient permissions`** — Ensure your vCenter user account has Administrator or vSAN Administrator role assigned to the target cluster.
+    | Error | Fix |
+    |---|---|
+    | `error: cluster path not found: /datacenter/cluster-prod-01` | Verify the cluster path exists and use the correct vCenter inventory path format (e.g., `/Datacenters/DC1/Clusters/ClusterName`). |
+    | `error: vSAN not enabled on cluster` | Enable vSAN on the cluster via vCenter UI or confirm the cluster is a vSAN-capable cluster with at least 3 nodes. |
+    | `error: authentication failed — insufficient permissions` | Ensure your vCenter user account has Administrator or vSAN Administrator role assigned to the target cluster. |
 ### Disk and Object Status
 
 ```bash
@@ -816,8 +844,10 @@ Last Updated: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Cluster path not found or invalid`** — Verify the cluster path syntax matches your vCenter inventory structure (e.g., `/Datacenters/DC1/Clusters/vsan-cluster`).
-    **`Error: Object UUID does not exist in cluster`** — Confirm the UUID is correct and the object has not been deleted; use `vsan.obj_status_report` to list valid object UUIDs.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cluster path not found or invalid` | Verify the cluster path syntax matches your vCenter inventory structure (e.g., `/Datacenters/DC1/Clusters/vsan-cluster`). |
+    | `Error: Object UUID does not exist in cluster` | Confirm the UUID is correct and the object has not been deleted; use `vsan.obj_status_report` to list valid object UUIDs. |
 ### Resync Dashboard
 
 ```bash
@@ -846,9 +876,11 @@ Cluster Health: Degraded | Resync Rate: 245 MB/s | Network Saturation: 62%
 ```
 
 !!! warning "Common errors"
-    **`vsan.resync_dashboard: command not found`** — Ensure the vSAN CLI tools are installed and the PATH includes the vSAN bin directory, or use the full path to the command.
-    **`Error: Invalid cluster path '<cluster_path>'`** — Verify the cluster path exists and is accessible; use `vsan.cluster_list` to confirm the correct path format.
-    **`Error: Unable to connect to vCenter Server`** — Confirm vCenter credentials are configured in your environment and the vCenter service is running.
+    | Error | Fix |
+    |---|---|
+    | `vsan.resync_dashboard: command not found` | Ensure the vSAN CLI tools are installed and the PATH includes the vSAN bin directory, or use the full path to the command. |
+    | `Error: Invalid cluster path '<cluster_path>'` | Verify the cluster path exists and is accessible; use `vsan.cluster_list` to confirm the correct path format. |
+    | `Error: Unable to connect to vCenter Server` | Confirm vCenter credentials are configured in your environment and the vCenter service is running. |
 ### RVC vs Modern Alternatives
 
 | RVC Command | Modern Equivalent |
@@ -890,9 +922,11 @@ Data Retention Period: 7 days
 ```
 
 !!! warning "Common errors"
-    **`Error: vSAN Performance Service is not running`** — Restart the vSAN Performance Service with `esxcli vsan perf restart` or check service status with `systemctl status vsanperf`.
-    **`Error: Unable to connect to vSAN cluster`** — Verify the host is part of an active vSAN cluster with `esxcli vsan cluster get` and confirm network connectivity between cluster nodes.
-    **`Error: Permission denied`** — Run the command with root privileges or ensure your user account has vSAN administrator permissions in vCenter.
+    | Error | Fix |
+    |---|---|
+    | `Error: vSAN Performance Service is not running` | Restart the vSAN Performance Service with `esxcli vsan perf restart` or check service status with `systemctl status vsanperf`. |
+    | `Error: Unable to connect to vSAN cluster` | Verify the host is part of an active vSAN cluster with `esxcli vsan cluster get` and confirm network connectivity between cluster nodes. |
+    | `Error: Permission denied` | Run the command with root privileges or ensure your user account has vSAN administrator permissions in vCenter. |
 ### Per-VMDK Stats
 
 ```bash
@@ -913,8 +947,10 @@ Total Virtual Disks: 47
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the vSAN cluster`** — Verify the ESXi host is part of an active vSAN cluster and network connectivity to cluster members is functional.
-    **`Error: Permission denied`** — Run the command with root privileges or ensure your user account has vSAN administrator role assigned.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the vSAN cluster` | Verify the ESXi host is part of an active vSAN cluster and network connectivity to cluster members is functional. |
+    | `Error: Permission denied` | Run the command with root privileges or ensure your user account has vSAN administrator role assigned. |
 Look for high `ReadLatency` or `WriteLatency` values (milliseconds). Sustained values above 10 ms read / 20 ms write indicate a problem.
 
 ### Disk-Level Stats
@@ -967,8 +1003,10 @@ Physical Disk Error Counters:
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to VSAN cluster`** — Verify the host is part of an active vSAN cluster and the vSAN service is running with `systemctl status vsand`.
-    **`Error: Permission denied`** — Run the command with root privileges or ensure your user account has vSAN administrator permissions in vCenter.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to VSAN cluster` | Verify the host is part of an active vSAN cluster and the vSAN service is running with `systemctl status vsand`. |
+    | `Error: Permission denied` | Run the command with root privileges or ensure your user account has vSAN administrator permissions in vCenter. |
 ### Cache Buffer Utilisation (OSA only)
 
 ```bash
@@ -988,8 +1026,10 @@ Last Congestion Event: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`esxcli: Unknown command or namespace vsan debug disk`** — Verify vSAN is licensed and enabled on the cluster, and run the command from an ESXi host with vSAN participation.
-    **`grep: (standard input) is empty`** — The vSAN debug command produced no output; check that vSAN is initialized on this host with `esxcli vsan cluster get`.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: Unknown command or namespace vsan debug disk` | Verify vSAN is licensed and enabled on the cluster, and run the command from an ESXi host with vSAN participation. |
+    | `grep: (standard input) is empty` | The vSAN debug command produced no output; check that vSAN is initialized on this host with `esxcli vsan cluster get`. |
 Cache write buffer > 95% sustained = cache SSD is a bottleneck. Options: reduce write IOPS, add capacity disks to the group, or upgrade the cache SSD.
 
 ### Congestion
@@ -1008,8 +1048,10 @@ Congestion Count: 0
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace vsan.`** — Verify vSAN is licensed and enabled on the cluster by checking vCenter > Cluster > Configure > vSAN > General.
-    **`grep: (standard input) is empty`** — Run `esxcli vsan debug disk list` without grep first to confirm the host has vSAN disk groups; if empty, the host may not be part of a vSAN cluster.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace vsan.` | Verify vSAN is licensed and enabled on the cluster by checking vCenter > Cluster > Configure > vSAN > General. |
+    | `grep: (standard input) is empty` | Run `esxcli vsan debug disk list` without grep first to confirm the host has vSAN disk groups; if empty, the host may not be part of a vSAN cluster. |
 ### Historical Performance (PowerCLI)
 
 ```powershell

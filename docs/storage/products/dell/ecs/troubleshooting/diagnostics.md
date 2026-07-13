@@ -286,9 +286,11 @@ issuer=CN=ECS-CA,O=Dell EMC,C=US
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The Access Key Id you provided does not exist in our records.`** — Verify the AWS profile credentials in ~/.aws/credentials are correct and the ECS user has S3 access permissions.
-    **`An error occurred (NoSuchBucket) when calling the HeadBucket operation: The specified bucket does not exist.`** — Confirm the bucket name is spelled correctly and exists in the ECS cluster by listing all buckets first.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `--insecure` flag to curl or import the ECS CA certificate into your system trust store to bypass SSL verification.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The Access Key Id you provided does not exist in our records.` | Verify the AWS profile credentials in ~/.aws/credentials are correct and the ECS user has S3 access permissions. |
+    | `An error occurred (NoSuchBucket) when calling the HeadBucket operation: The specified bucket does not exist.` | Confirm the bucket name is spelled correctly and exists in the ECS cluster by listing all buckets first. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `--insecure` flag to curl or import the ECS CA certificate into your system trust store to bypass SSL verification. |
 ### Workflow: S3 Access Denied
 
 1. Confirm the access key and secret key are correct (secret keys cannot be retrieved from ECS — if lost, rotate)
@@ -432,9 +434,11 @@ Host ID          : a7f2c8d1-9e4b-42f3-8c1a-5d6e9f2b3c4d
 ```
 
 !!! warning "Common errors"
-    **`nodetool: command not found`** — Verify the ECS node is running and `/opt/storageos/tools/` exists; if missing, reinstall the ECS package or check the installation path.
-    **`Connection refused`** — Ensure the Cassandra/ECS metadata service is running with `systemctl status storageos` and restart if needed.
-    **`Flush operation timed out`** — Increase the nodetool timeout with `-Dcom.sun.jndi.rmi.factory.socket.timeout=30000` or reduce concurrent flushes by checking `nodetool compactionstats` for stuck operations.
+    | Error | Fix |
+    |---|---|
+    | `nodetool: command not found` | Verify the ECS node is running and `/opt/storageos/tools/` exists; if missing, reinstall the ECS package or check the installation path. |
+    | `Connection refused` | Ensure the Cassandra/ECS metadata service is running with `systemctl status storageos` and restart if needed. |
+    | `Flush operation timed out` | Increase the nodetool timeout with `-Dcom.sun.jndi.rmi.factory.socket.timeout=30000` or reduce concurrent flushes by checking `nodetool compactionstats` for stuck operations. |
 ### ZooKeeper (cluster coordination)
 
 ```bash
@@ -462,9 +466,11 @@ server.3=zk-node-3.internal:2888:3888
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify ZooKeeper is running with `systemctl status zookeeper` and listening on port 2181.
-    **`Mode: follower` on the expected leader node** — Check cluster quorum status with `echo "stat" | nc localhost 2181` and review ZooKeeper logs at `/var/log/zookeeper/zookeeper.log` for election failures.
-    **`Outstanding: <high number>` (e.g., Outstanding: 847)** — Identify slow clients with `echo "cons" | nc localhost 2181` and check for network latency or client-side processing delays.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify ZooKeeper is running with `systemctl status zookeeper` and listening on port 2181. |
+    | `Mode: follower` on the expected leader node` | Check cluster quorum status with `echo "stat" | nc localhost 2181` and review ZooKeeper logs at `/var/log/zookeeper/zookeeper.log` for election failures. |
+    | `Outstanding: <high number>` (e.g., Outstanding: 847)` | Identify slow clients with `echo "cons" | nc localhost 2181` and check for network latency or client-side processing delays. |
 ### NTP and clock sync
 
 ```bash
@@ -504,9 +510,11 @@ node-03: Fri Nov 17 14:32:18 UTC 2023
 ```
 
 !!! warning "Common errors"
-    **`chronyc: command not found`** — Install chrony with `apt-get install chrony` or `yum install chrony` depending on your OS.
-    **`viprexec: command not found or not in PATH`** — Source the ECS environment setup script or add the viprexec binary directory to your PATH.
-    **`node-02: Fri Nov 17 14:32:28 UTC 2023` (10+ second drift detected)** — Restart the chronyd service on the drifted node with `systemctl restart chronyd` and verify NTP connectivity.
+    | Error | Fix |
+    |---|---|
+    | `chronyc: command not found` | Install chrony with `apt-get install chrony` or `yum install chrony` depending on your OS. |
+    | `viprexec: command not found or not in PATH` | Source the ECS environment setup script or add the viprexec binary directory to your PATH. |
+    | `node-02: Fri Nov 17 14:32:28 UTC 2023` (10+ second drift detected)` | Restart the chronyd service on the drifted node with `systemctl restart chronyd` and verify NTP connectivity. |
 ### Network connectivity
 
 ```bash
@@ -536,9 +544,11 @@ Connection to 203.0.113.54 5696 port [tcp] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`connect to 172.16.8.92 port 9100 (tcp) failed: Connection refused`** — Verify the remote VDC node's replication service is running with `systemctl status ecs-replication` on the target node.
-    **`PING: sendto: No route to host`** — Confirm the data network interface is up and the subnet routing is correct with `ip route show` and `ip link show`.
-    **`connect to 203.0.113.54 port 5696 (tcp) failed: Connection timed out`** — Check firewall rules and network ACLs allow port 5696 from the ECS node to the KMIP server, and verify the KMIP server IP/hostname is correct.
+    | Error | Fix |
+    |---|---|
+    | `connect to 172.16.8.92 port 9100 (tcp) failed: Connection refused` | Verify the remote VDC node's replication service is running with `systemctl status ecs-replication` on the target node. |
+    | `PING: sendto: No route to host` | Confirm the data network interface is up and the subnet routing is correct with `ip route show` and `ip link show`. |
+    | `connect to 203.0.113.54 port 5696 (tcp) failed: Connection timed out` | Check firewall rules and network ACLs allow port 5696 from the ECS node to the KMIP server, and verify the KMIP server IP/hostname is correct. |
 ### Workflow: Node Marked DEGRADED
 
 1. `GET /vdc/nodes` — identify which node is DEGRADED and its node ID
@@ -614,9 +624,11 @@ curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 10.20.30.40 port 443: Connection refused`** — Verify the ECS management endpoint is running and accessible; check `curl -v https://$ECS:4443/` to confirm connectivity.
-    **`error: 401 Unauthorized`** — Ensure the authentication token in `$TOKEN` is valid and not expired; regenerate it with the login endpoint.
-    **`json.tool: No JSON object could be decoded`** — Confirm the API endpoint URL is correct and the response is valid JSON; test with `curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/vdc/geo-replication/status"` without piping to verify raw output.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 10.20.30.40 port 443: Connection refused` | Verify the ECS management endpoint is running and accessible; check `curl -v https://$ECS:4443/` to confirm connectivity. |
+    | `error: 401 Unauthorized` | Ensure the authentication token in `$TOKEN` is valid and not expired; regenerate it with the login endpoint. |
+    | `json.tool: No JSON object could be decoded` | Confirm the API endpoint URL is correct and the response is valid JSON; test with `curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/vdc/geo-replication/status"` without piping to verify raw output. |
 ### Workflow: Geo-Replication Lag Growing
 
 1. **ECS Portal → Geo Monitoring** — identify which replication group has growing lag and which VDC is behind
@@ -662,9 +674,11 @@ Leap status     : Normal
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/ecs/: No such file or directory`** — Verify ECS service is running with `systemctl status ecs-replication-service` and check the correct log path with `find /var/log -name "*replication*" -type f`.
-    **`viprexec: command not found`** — Source the ECS environment setup script with `source /opt/emc/ecs/bin/ecs-env.sh` or verify viprexec is in PATH with `which viprexec`.
-    **`Stratum         : 16`** — NTP is not synchronized; restart chrony with `systemctl restart chrony` and verify NTP server reachability with `chronyc sources`.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/ecs/: No such file or directory` | Verify ECS service is running with `systemctl status ecs-replication-service` and check the correct log path with `find /var/log -name "*replication*" -type f`. |
+    | `viprexec: command not found` | Source the ECS environment setup script with `source /opt/emc/ecs/bin/ecs-env.sh` or verify viprexec is in PATH with `which viprexec`. |
+    | `Stratum         : 16` | NTP is not synchronized; restart chrony with `systemctl restart chrony` and verify NTP server reachability with `chronyc sources`. |
 ---
 
 ## Step 5 — Support bundle collection
@@ -858,9 +872,11 @@ Jan 15 14:38:22 ecs-node-01 cassandra[3294]: EXCEPTION [CassandraDaemon] java.la
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/ecs/*.log' for reading: No such file or directory`** — Verify ECS is installed and running with `systemctl status storageos`, then check actual log path with `find /var/log -name "*ecs*" -o -name "*data*service*"`.
-    **`Unit cassandra.service could not be found.`** — Confirm Cassandra is installed and enabled with `systemctl list-units --type=service | grep cassandra`, or use the correct service name for your ECS version.
-    **`Permission denied`** — Run commands with `sudo` or ensure your user is in the `storageos` or `caspian` group with `groups $USER`.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/ecs/*.log' for reading: No such file or directory` | Verify ECS is installed and running with `systemctl status storageos`, then check actual log path with `find /var/log -name "*ecs*" -o -name "*data*service*"`. |
+    | `Unit cassandra.service could not be found.` | Confirm Cassandra is installed and enabled with `systemctl list-units --type=service | grep cassandra`, or use the correct service name for your ECS version. |
+    | `Permission denied` | Run commands with `sudo` or ensure your user is in the `storageos` or `caspian` group with `groups $USER`. |
 ---
 
 ## See also

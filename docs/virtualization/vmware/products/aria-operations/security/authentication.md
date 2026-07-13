@@ -136,9 +136,11 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present in example, but ensure it's not removed).
-    **`jq: parse error: Cannot index string with string "token"`** — Verify the authentication response is valid JSON and credentials are correct; check that the API endpoint and password are accurate.
-    **`curl: (401) Unauthorized`** — Ensure the token variable is properly set by running `echo $TOKEN` to verify it's not empty, and confirm the token hasn't expired (tokens are valid for 30 minutes).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification (already present in example, but ensure it's not removed). |
+    | `jq: parse error: Cannot index string with string "token"` | Verify the authentication response is valid JSON and credentials are correct; check that the API endpoint and password are accurate. |
+    | `curl: (401) Unauthorized` | Ensure the token variable is properly set by running `echo $TOKEN` to verify it's not empty, and confirm the token hasn't expired (tokens are valid for 30 minutes). |
 **Basic authentication (scripts and monitoring):**
 
 ```bash
@@ -185,9 +187,11 @@ curl -sk -u 'admin:<password>' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vROps certificate into your CA bundle.
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API endpoint is correct and the vROps service is running; check with `curl -sk -u 'admin:<password>' "https://vrops-prod-01.example.local/suite-api/api/about"` first.
-    **`401 Unauthorized`** — Confirm the admin password is correct and the user account has API access permissions in vROps.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the vROps certificate into your CA bundle. |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the API endpoint is correct and the vROps service is running; check with `curl -sk -u 'admin:<password>' "https://vrops-prod-01.example.local/suite-api/api/about"` first. |
+    | `401 Unauthorized` | Confirm the admin password is correct and the user account has API access permissions in vROps. |
 For AD-authenticated API calls, include `authSource`:
 
 ```bash
@@ -204,9 +208,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdmMudnJvcHNAY29ycC5sb2NhbCIsIml
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present; if error persists, verify the FQDN matches the certificate CN).
-    **`jq: parse error: Cannot index null with string "token"`** — Verify credentials are correct and the authentication endpoint is accessible; check the actual response with `curl -sk ... | jq '.'` to see the error message.
-    **`command not found: jq`** — Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present; if error persists, verify the FQDN matches the certificate CN). |
+    | `jq: parse error: Cannot index null with string "token"` | Verify credentials are correct and the authentication endpoint is accessible; check the actual response with `curl -sk ... | jq '.'` to see the error message. |
+    | `command not found: jq` | Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS). |
 ---
 
 ## Token Expiry and Rotation
@@ -245,8 +251,10 @@ done
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the vROps certificate into your system CA bundle with `update-ca-certificates`.
-    **`jq: parse error: Cannot index string with string "token"`** — Verify the API endpoint is correct and the credentials in `$VROPS_USER` and `$VROPS_PASS` are set; test with `curl -sk https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire -d '{"username":"admin","password":"test","authSource":"Local"}' | jq .`
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the vROps certificate into your system CA bundle with `update-ca-certificates`. |
+    | `jq: parse error: Cannot index string with string "token"` | Verify the API endpoint is correct and the credentials in `$VROPS_USER` and `$VROPS_PASS` are set; test with `curl -sk https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire -d '{"username":"admin","password":"test","authSource":"Local"}' | jq .` |
 ---
 
 ## Session Management

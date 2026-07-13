@@ -147,9 +147,11 @@ round-trip min/avg/max = 1.156/1.229/1.289 ms
 ```
 
 !!! warning "Common errors"
-    **`Fragmentation needed and DF set`** — Lower the packet size (try `-s 8972` instead of larger values) or verify MTU 9000 is configured on both the physical NIC and vSAN VMkernel port.
-    **`No route to host`** — Verify the vSAN VMkernel interface (vmk2) is on the correct VLAN and has network connectivity to the remote vSAN cluster node.
-    **`vmkping: Unknown host <remote-vsan-vmk-ip>`** — Replace `<remote-vsan-vmk-ip>` with an actual IP address (e.g., 192.168.100.45) or verify DNS resolution is working.
+    | Error | Fix |
+    |---|---|
+    | `Fragmentation needed and DF set` | Lower the packet size (try `-s 8972` instead of larger values) or verify MTU 9000 is configured on both the physical NIC and vSAN VMkernel port. |
+    | `No route to host` | Verify the vSAN VMkernel interface (vmk2) is on the correct VLAN and has network connectivity to the remote vSAN cluster node. |
+    | `vmkping: Unknown host <remote-vsan-vmk-ip>` | Replace `<remote-vsan-vmk-ip>` with an actual IP address (e.g., 192.168.100.45) or verify DNS resolution is working. |
 ### Stretched Cluster Requirements
 
 | Item | Requirement |
@@ -267,8 +269,10 @@ prod-vsan-cluster-01   18240               24576               10250        1399
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the vSAN cluster`** — Verify the ESXi host is part of a vSAN cluster and network connectivity exists to cluster members.
-    **`Get-VsanSpaceUsage : The term 'Get-VsanSpaceUsage' is not recognized`** — Import the VMware.VimAutomation.Vsan module using `Import-Module VMware.VimAutomation.Vsan` before running PowerCLI commands.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the vSAN cluster` | Verify the ESXi host is part of a vSAN cluster and network connectivity exists to cluster members. |
+    | `Get-VsanSpaceUsage : The term 'Get-VsanSpaceUsage' is not recognized` | Import the VMware.VimAutomation.Vsan module using `Import-Module VMware.VimAutomation.Vsan` before running PowerCLI commands. |
 Capacity monitoring should also be configured in Aria Operations with an alert policy targeting the 70% threshold.
 
 ---

@@ -109,7 +109,9 @@ curl -s -H "Authorization: Bearer <pure1-api-key>" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution; check if your environment requires a proxy configured via `curl -x`.
-    **`{"error_code":"401","message":"Invalid API token"}`** — Regenerate your Pure1 API key in the Pure1 management console and ensure the token is not expired or revoked.
-    **`jq: parse error: Invalid JSON at line 1`** — Confirm the API response is valid JSON by removing the `jq` filter temporarily and checking the raw curl output for error messages.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.pure1.purestorage.com` | Verify network connectivity and DNS resolution; check if your environment requires a proxy configured via `curl -x`. |
+    | `{"error_code":"401","message":"Invalid API token"}` | Regenerate your Pure1 API key in the Pure1 management console and ensure the token is not expired or revoked. |
+    | `jq: parse error: Invalid JSON at line 1` | Confirm the API response is valid JSON by removing the `jq` filter temporarily and checking the raw curl output for error messages. |
 Use the Pure1 API for integration with FinOps platforms, CMDB automation, and capacity planning tools to avoid dependency on per-array management access.

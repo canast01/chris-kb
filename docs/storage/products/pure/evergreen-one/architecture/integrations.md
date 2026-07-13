@@ -62,9 +62,11 @@ Status: OK
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure you are logged into the FlashArray management interface or source the Pure CLI environment variables.
-    **`Connection Status: Disconnected`** — Verify network connectivity from the array to phonehome.purestorage.com on port 443 and check firewall rules allowing outbound HTTPS.
-    **`Error: Phonehome disabled on this array`** — Enable phonehome support using `purearray set --phonehome=true` on the affected array.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure you are logged into the FlashArray management interface or source the Pure CLI environment variables. |
+    | `Connection Status: Disconnected` | Verify network connectivity from the array to phonehome.purestorage.com on port 443 and check firewall rules allowing outbound HTTPS. |
+    | `Error: Phonehome disabled on this array` | Enable phonehome support using `purearray set --phonehome=true` on the affected array. |
 If phonehome is disconnected, Pure cannot monitor SLA compliance and cannot proactively manage the hardware. Treat phonehome connectivity as a critical dependency.
 
 ### Pure1 REST API Access
@@ -142,9 +144,11 @@ curl -sX GET "https://api.pure1.purestorage.com/api/1.latest/metrics/history?nam
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution; check if your firewall allows HTTPS outbound to Pure1 API endpoints.
-    **`{"error_code":"401","message":"Invalid authorization token"}`** — Regenerate your API token in the Pure1 portal and ensure it is not expired or revoked.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Update your CA certificate bundle or use `curl -k` only in non-production testing environments.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.pure1.purestorage.com` | Verify network connectivity and DNS resolution; check if your firewall allows HTTPS outbound to Pure1 API endpoints. |
+    | `{"error_code":"401","message":"Invalid authorization token"}` | Regenerate your API token in the Pure1 portal and ensure it is not expired or revoked. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Update your CA certificate bundle or use `curl -k` only in non-production testing environments. |
 ---
 
 ## vSphere / ESXi Host Connectivity
@@ -197,9 +201,11 @@ Device: naa.624a9370abcd1234ef56 (PURE FlashArray)
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option --adapter vmhba64`** — Verify the iSCSI adapter name with `esxcli iscsi adapter list` and use the correct adapter identifier.
-    **`SATP rule add: Rule already exists for vendor PURE model FlashArray`** — Remove the existing rule first with `esxcli storage nmp satp rule remove --satp VMW_SATP_ALUA --vendor PURE --model FlashArray` before re-adding.
-    **`No devices matched for grep pattern 'pure'`** — Rescan the adapter again and wait 30 seconds for LUN discovery to complete, then verify FlashArray targets are reachable on the iSCSI network.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option --adapter vmhba64` | Verify the iSCSI adapter name with `esxcli iscsi adapter list` and use the correct adapter identifier. |
+    | `SATP rule add: Rule already exists for vendor PURE model FlashArray` | Remove the existing rule first with `esxcli storage nmp satp rule remove --satp VMW_SATP_ALUA --vendor PURE --model FlashArray` before re-adding. |
+    | `No devices matched for grep pattern 'pure'` | Rescan the adapter again and wait 30 seconds for LUN discovery to complete, then verify FlashArray targets are reachable on the iSCSI network. |
 ### Fibre Channel
 
 ```bash
@@ -238,9 +244,11 @@ Paths: vmhba0:C0:T0:L0 vmhba1:C0:T0:L0 vmhba2:C0:T0:L0 vmhba3:C0:T0:L0
 ```
 
 !!! warning "Common errors"
-    **`Could not find a matching vmhba`** — Verify FC HBAs are properly detected with `esxcli storage san fc list` and check vSphere client for hardware errors.
-    **`No matching devices found`** — Confirm FC zoning is complete on the SAN switch and LUNs are presented to the ESXi host with `esxcli storage core device list`.
-    **`Path Policy: VMW_PSP_FIXED`** — Change the path selection policy to Round Robin using `esxcli storage nmp device setpolicy -d <device-naa> -P VMW_PSP_RR`.
+    | Error | Fix |
+    |---|---|
+    | `Could not find a matching vmhba` | Verify FC HBAs are properly detected with `esxcli storage san fc list` and check vSphere client for hardware errors. |
+    | `No matching devices found` | Confirm FC zoning is complete on the SAN switch and LUNs are presented to the ESXi host with `esxcli storage core device list`. |
+    | `Path Policy: VMW_PSP_FIXED` | Change the path selection policy to Round Robin using `esxcli storage nmp device setpolicy -d <device-naa> -P VMW_PSP_RR`. |
 ### NVMe over Fibre Channel (NVMe/FC)
 
 Supported on FlashArray //X and //C with NVMe-enabled controllers:
@@ -278,9 +286,11 @@ nvme2    nvme2n1    ctl:2,ns:1                               Live
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace nvme`** — Verify NVMe drivers are installed with `esxcli software vib list | grep nvme` and install if missing.
-    **`Error: Could not get adapter list`** — Ensure the ESXi host has NVMe-capable hardware and check `esxcli hardware pci list` to confirm NVMe controllers are detected.
-    **`Permission denied`** — Run commands as root or with appropriate ESXi host privileges; use `esxcli system permission list` to verify user permissions.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace nvme` | Verify NVMe drivers are installed with `esxcli software vib list | grep nvme` and install if missing. |
+    | `Error: Could not get adapter list` | Ensure the ESXi host has NVMe-capable hardware and check `esxcli hardware pci list` to confirm NVMe controllers are detected. |
+    | `Permission denied` | Run commands as root or with appropriate ESXi host privileges; use `esxcli system permission list` to verify user permissions. |
 ---
 
 ## VMware VASA Provider (vVols)
@@ -348,9 +358,11 @@ flasharray-pod-03     10.45.12.88       Connected          3s ago
 ```
 
 !!! warning "Common errors"
-    **`purereplicationlink list: error: connection refused`** — Verify the FlashArray CLI is authenticated and the management network is reachable with `purepod list` first.
-    **`purepod list --connection: error: invalid option '--connection'`** — Use the correct flag `purepod list --mediator` or check your Pure OS version supports the connection flag.
-    **`Mediator connection status: Disconnected`** — Confirm the Mediator VM is running and network connectivity exists between pods and Mediator on port 8888.
+    | Error | Fix |
+    |---|---|
+    | `purereplicationlink list: error: connection refused` | Verify the FlashArray CLI is authenticated and the management network is reachable with `purepod list` first. |
+    | `purepod list --connection: error: invalid option '--connection'` | Use the correct flag `purepod list --mediator` or check your Pure OS version supports the connection flag. |
+    | `Mediator connection status: Disconnected` | Confirm the Mediator VM is running and network connectivity exists between pods and Mediator on port 8888. |
 The two arrays must have network connectivity on the replication port (TCP 8081). Mediator VM can run on-premises or in a cloud VPC (GCP/Azure/AWS).
 
 ---
@@ -379,8 +391,10 @@ siem-server   192.168.10.100   514   UDP
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid address format`** — Verify the IP address is valid and reachable from the FlashArray management network.
-    **`Error: Syslog server already exists`** — Use `puresyslog remove --name siem-server` before re-adding with a different configuration.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid address format` | Verify the IP address is valid and reachable from the FlashArray management network. |
+    | `Error: Syslog server already exists` | Use `puresyslog remove --name siem-server` before re-adding with a different configuration. |
 Key events to alert on:
 - Admin login from unexpected IP
 - Volume deletion (especially pod volumes under ActiveCluster)

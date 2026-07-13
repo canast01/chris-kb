@@ -73,9 +73,11 @@ myInternalFrontend      10.0.1.100          Static                       Succeed
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Network/loadBalancers/myLB' under resource group 'myRG' was not found.`** — Verify the load balancer name and resource group exist with `az network lb list --resource-group myRG`.
-    **`(InvalidParameter) The subnet 'mySubnet' does not exist in virtual network 'myVNet'.`** — Confirm the subnet name is correct by running `az network vnet subnet list --resource-group myRG --vnet-name myVNet`.
-    **`(InvalidParameter) The private IP address 10.0.1.100 is not within the address space of subnet mySubnet.`** — Ensure the private IP falls within the subnet's address range using `az network vnet subnet show --resource-group myRG --vnet-name myVNet --name mySubnet`.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Network/loadBalancers/myLB' under resource group 'myRG' was not found.` | Verify the load balancer name and resource group exist with `az network lb list --resource-group myRG`. |
+    | `(InvalidParameter) The subnet 'mySubnet' does not exist in virtual network 'myVNet'.` | Confirm the subnet name is correct by running `az network vnet subnet list --resource-group myRG --vnet-name myVNet`. |
+    | `(InvalidParameter) The private IP address 10.0.1.100 is not within the address space of subnet mySubnet.` | Ensure the private IP falls within the subnet's address range using `az network vnet subnet show --resource-group myRG --vnet-name myVNet --name mySubnet`. |
 ## Backend Pools
 
 ```bash
@@ -134,9 +136,11 @@ vm2-ip    10.0.1.5     /subscriptions/.../virtualNetworks/myVNet
 ```
 
 !!! warning "Common errors"
-    **`(BadRequest) The virtual network resource id is invalid or does not exist.`** — Verify the subscription ID and virtual network name in the `--vnet` parameter match your actual Azure resources.
-    **`(NotFound) The load balancer 'myLB' does not exist in resource group 'myRG'.`** — Confirm the load balancer name and resource group are correct using `az network lb list --resource-group myRG`.
-    **`(Conflict) The address 'vm1-ip' already exists in the backend pool.`** — Use a unique name for each backend address or remove the existing address first with `az network lb address-pool address remove`.
+    | Error | Fix |
+    |---|---|
+    | `(BadRequest) The virtual network resource id is invalid or does not exist.` | Verify the subscription ID and virtual network name in the `--vnet` parameter match your actual Azure resources. |
+    | `(NotFound) The load balancer 'myLB' does not exist in resource group 'myRG'.` | Confirm the load balancer name and resource group are correct using `az network lb list --resource-group myRG`. |
+    | `(Conflict) The address 'vm1-ip' already exists in the backend pool.` | Use a unique name for each backend address or remove the existing address first with `az network lb address-pool address remove`. |
 ## Health Probes
 
 ```bash
@@ -194,8 +198,10 @@ az network lb probe create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Network/loadBalancers/myLB' under resource group 'myRG' was not found.`** — Verify the load balancer name and resource group exist using `az network lb list --resource-group myRG`.
-    **`InvalidParameter : The value of parameter 'port' is invalid.`** — Ensure the port number is between 1 and 65535 and matches a port your backend pool is listening on.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Network/loadBalancers/myLB' under resource group 'myRG' was not found.` | Verify the load balancer name and resource group exist using `az network lb list --resource-group myRG`. |
+    | `InvalidParameter : The value of parameter 'port' is invalid.` | Ensure the port number is between 1 and 65535 and matches a port your backend pool is listening on. |
 ## Load Balancing Rules
 
 ```bash
@@ -249,9 +255,11 @@ HTTP-Rule     Tcp         80               80               myBackendPool     my
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Network/loadBalancers/myLB' under resource group 'myRG' was not found.`** — Verify the load balancer name and resource group exist using `az network lb list --resource-group myRG`.
-    **`(InvalidResourceReference) The referenced resource '/subscriptions/.../frontendIPConfigurations/myFrontendIP' does not exist.`** — Confirm the frontend IP configuration name matches an existing one with `az network lb frontend-ip list --resource-group myRG --lb-name myLB`.
-    **`(InvalidResourceReference) The referenced resource '/subscriptions/.../backendAddressPools/myBackendPool' does not exist.`** — Create the backend pool first with `az network lb address-pool create --resource-group myRG --lb-name myLB --name myBackendPool`.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Network/loadBalancers/myLB' under resource group 'myRG' was not found.` | Verify the load balancer name and resource group exist using `az network lb list --resource-group myRG`. |
+    | `(InvalidResourceReference) The referenced resource '/subscriptions/.../frontendIPConfigurations/myFrontendIP' does not exist.` | Confirm the frontend IP configuration name matches an existing one with `az network lb frontend-ip list --resource-group myRG --lb-name myLB`. |
+    | `(InvalidResourceReference) The referenced resource '/subscriptions/.../backendAddressPools/myBackendPool' does not exist.` | Create the backend pool first with `az network lb address-pool create --resource-group myRG --lb-name myLB --name myBackendPool`. |
 ## Inbound NAT Rules
 
 Inbound NAT rules map a specific frontend port to a backend VM port for direct access (e.g., SSH/RDP).
@@ -290,8 +298,10 @@ az network lb inbound-nat-rule create \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Network/loadBalancers/myLB' under resource group 'myRG' was not found.`** — Verify the load balancer name and resource group exist using `az network lb list --resource-group myRG`.
-    **`(InvalidResourceReference) The resource '/subscriptions/.../frontendIPConfigurations/myFrontendIP' does not exist.`** — Confirm the frontend IP configuration name matches exactly with `az network lb frontend-ip list --resource-group myRG --lb-name myLB`.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Network/loadBalancers/myLB' under resource group 'myRG' was not found.` | Verify the load balancer name and resource group exist using `az network lb list --resource-group myRG`. |
+    | `(InvalidResourceReference) The resource '/subscriptions/.../frontendIPConfigurations/myFrontendIP' does not exist.` | Confirm the frontend IP configuration name matches exactly with `az network lb frontend-ip list --resource-group myRG --lb-name myLB`. |
 ## SKU Comparison
 
 | Feature                 | Basic SKU    | Standard SKU         |

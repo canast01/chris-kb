@@ -70,9 +70,11 @@ collector-lab-test            ACTIVE          Last HB: 2024-01-15 14:33:01 UTC
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present; if still failing, verify the hostname matches the certificate CN).
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify the API endpoint is correct and the Aria Operations for Networks service is running; check `curl -sk "https://aon.example.local/api/ni/health"` for service status.
-    **`curl: (401) Unauthorized`** — Confirm the admin credentials are correct and the user has API access permissions; test authentication separately with `curl -sk -X POST "https://aon.example.local/api/ni/auth/token" -H "Content-Type: application/json" -d '{"username":"admin@local","password":"PASSWORD"}'`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present; if still failing, verify the hostname matches the certificate CN). |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify the API endpoint is correct and the Aria Operations for Networks service is running; check `curl -sk "https://aon.example.local/api/ni/health"` for service status. |
+    | `curl: (401) Unauthorized` | Confirm the admin credentials are correct and the user has API access permissions; test authentication separately with `curl -sk -X POST "https://aon.example.local/api/ni/auth/token" -H "Content-Type: application/json" -d '{"username":"admin@local","password":"PASSWORD"}'`. |
 ## Flow Queries (AON Natural Language)
 
 ![Flow Queries (AON Natural Language)](../../../../../assets/virtualization-vmware-aria-operations-fo-hc-flow-queries-aon-natural-languag.svg)
@@ -100,8 +102,10 @@ Total flows returned: 847 | Query execution time: 2.34s
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid time_range value 'last 15 minutes' — use valid format like 'LAST_15_MINUTES' or specify epoch timestamps`** — Correct the time_range syntax to match the API's expected enum values (e.g., LAST_15_MINUTES, LAST_1_HOUR).
-    **`Error: Query timeout after 30s — too many flows matching criteria`** — Add additional filter conditions (protocol, port, or application) to narrow the result set before ordering by bytes.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid time_range value 'last 15 minutes' — use valid format like 'LAST_15_MINUTES' or specify epoch timestamps` | Correct the time_range syntax to match the API's expected enum values (e.g., LAST_15_MINUTES, LAST_1_HOUR). |
+    | `Error: Query timeout after 30s — too many flows matching criteria` | Add additional filter conditions (protocol, port, or application) to narrow the result set before ordering by bytes. |
 ## Collector Flow Ingestion Check
 
 ![Collector Flow Ingestion Check](../../../../../assets/virtualization-vmware-aria-operations-fo-hc-collector-flow-ingestion-check.svg)
@@ -206,9 +210,11 @@ tmpfs          4.0M   18    4.0M    1% /dev/shm
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH key is loaded with `ssh-add` or use `-i` flag to specify the correct private key file.
-    **`du: cannot access '/var/lib/cassandra/data/*': Permission denied`** — Run the `du` commands with `sudo` or ensure the ubuntu user has read permissions on Cassandra/Elasticsearch data directories.
-    **`Filesystem /var/lib/elasticsearch: No such file or directory`** — Confirm Elasticsearch is installed and the mount point exists; check service status with `systemctl status elasticsearch`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH key is loaded with `ssh-add` or use `-i` flag to specify the correct private key file. |
+    | `du: cannot access '/var/lib/cassandra/data/*': Permission denied` | Run the `du` commands with `sudo` or ensure the ubuntu user has read permissions on Cassandra/Elasticsearch data directories. |
+    | `Filesystem /var/lib/elasticsearch: No such file or directory` | Confirm Elasticsearch is installed and the mount point exists; check service status with `systemctl status elasticsearch`. |
 ## Certificate Expiry Check
 
 ![Certificate Expiry Check](../../../../../assets/virtualization-vmware-aria-operations-fo-hc-certificate-expiry-check.svg)
@@ -236,9 +242,11 @@ notAfter=Sep 15 23:59:59 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to connect to aon.example.local:443`** — Verify the hostname resolves and the AON appliance is reachable on port 443 using `ping` and `nc -zv aon.example.local 443`.
-    **`date: invalid date '{}'`** — Ensure your system's `date` command supports the `-d` flag (GNU coreutils); on macOS, install GNU date via `brew install coreutils` and use `gdate` instead.
-    **`error in x509 parsing`** — Confirm the certificate chain is valid by testing with `openssl s_client -connect aon.example.local:443 -showcerts` to inspect the full chain.
+    | Error | Fix |
+    |---|---|
+    | `unable to connect to aon.example.local:443` | Verify the hostname resolves and the AON appliance is reachable on port 443 using `ping` and `nc -zv aon.example.local 443`. |
+    | `date: invalid date '{}'` | Ensure your system's `date` command supports the `-d` flag (GNU coreutils); on macOS, install GNU date via `brew install coreutils` and use `gdate` instead. |
+    | `error in x509 parsing` | Confirm the certificate chain is valid by testing with `openssl s_client -connect aon.example.local:443 -showcerts` to inspect the full chain. |
 Targeted flow check by collector:
 ```text
 flows where collector = "aon-collector-dc1" and time_range = "last 5 minutes"
@@ -273,9 +281,11 @@ time_range: last 1 hour
 ```
 
 !!! warning "Common errors"
-    **`Error: collector "aon-collector-dc1" not found or offline`** — Verify the collector hostname matches your deployment and check collector status in Aria Operations UI under Administration > Collectors.
-    **`Error: time_range "last 1 hour" is invalid syntax`** — Use proper time range format like `time_range = "3600s"` or `time_range = "1h"` depending on your Aria version.
-    **`Error: source type ESXi not recognized`** — Confirm the source parameter accepts "esxi" (lowercase) or check available source types with `flows show sources`.
+    | Error | Fix |
+    |---|---|
+    | `Error: collector "aon-collector-dc1" not found or offline` | Verify the collector hostname matches your deployment and check collector status in Aria Operations UI under Administration > Collectors. |
+    | `Error: time_range "last 1 hour" is invalid syntax` | Use proper time range format like `time_range = "3600s"` or `time_range = "1h"` depending on your Aria version. |
+    | `Error: source type ESXi not recognized` | Confirm the source parameter accepts "esxi" (lowercase) or check available source types with `flows show sources`. |
 ```bash
 # Capture any UDP 2055 traffic for 30 seconds
 sudo timeout 30 tcpdump -i eth0 -n udp port 2055 -c 100 -w /tmp/netflow-capture.pcap
@@ -304,9 +314,11 @@ reading from file /tmp/netflow-capture.pcap, link-type EN10MB (Ethernet), snapsh
 ```
 
 !!! warning "Common errors"
-    **`tcpdump: eth0: No such device`** — Verify the correct interface name with `ip link show` and replace eth0 with the actual interface (e.g., ens0, enp0s3).
-    **`tcpdump: Permission denied`** — Run the command with `sudo` or add your user to the tcpdump group with `sudo usermod -aG tcpdump $USER`.
-    **`(no packets captured)`** — Confirm NetFlow is enabled on the switch, verify the Collector IP is correct, and check firewall rules with `sudo iptables -L -n | grep 2055`.
+    | Error | Fix |
+    |---|---|
+    | `tcpdump: eth0: No such device` | Verify the correct interface name with `ip link show` and replace eth0 with the actual interface (e.g., ens0, enp0s3). |
+    | `tcpdump: Permission denied` | Run the command with `sudo` or add your user to the tcpdump group with `sudo usermod -aG tcpdump $USER`. |
+    | `(no packets captured)` | Confirm NetFlow is enabled on the switch, verify the Collector IP is correct, and check firewall rules with `sudo iptables -L -n | grep 2055`. |
 ## Automated Health Check Script
 
 ![Automated Health Check Script](../../../../../assets/virtualization-vmware-aria-operations-fo-hc-automated-health-check-script.svg)
@@ -352,8 +364,10 @@ OK: All collectors connected, API reachable
 ```
 
 !!! warning "Common errors"
-    **`CRITICAL: Cannot authenticate to AON API`** — Verify the AON platform URL, service account credentials, and network connectivity with `curl -sk https://aon.example.local/api/ni/auth/token`.
-    **`CRITICAL: Collectors disconnected: collector-01,collector-03`** — Check collector status in the AON UI, verify network connectivity between collectors and platform, and restart disconnected collectors if necessary.
+    | Error | Fix |
+    |---|---|
+    | `CRITICAL: Cannot authenticate to AON API` | Verify the AON platform URL, service account credentials, and network connectivity with `curl -sk https://aon.example.local/api/ni/auth/token`. |
+    | `CRITICAL: Collectors disconnected: collector-01,collector-03` | Check collector status in the AON UI, verify network connectivity between collectors and platform, and restart disconnected collectors if necessary. |
 ## Platform Resource Utilisation
 
 ![Platform Resource Utilisation](../../../../../assets/virtualization-vmware-aria-operations-fo-hc-platform-resource-utilisation.svg)

@@ -144,9 +144,11 @@ static_kuberesources_2024-11-14_102345.tar.gz    100%   12MB    8.4MB/s   00:01
 ```
 
 !!! warning "Common errors"
-    **`/usr/local/bin/cluster-backup.sh: No such file or directory`** — Verify the OCP version includes the backup script; on older versions use `oc debug node/<master-node>` to access the script or manually back up etcd using `etcdctl`.
-    **`scp: /backup/etcd/: No such file or directory`** — Create the destination directory on your workstation with `mkdir -p /backup/etcd/` before running the scp command.
-    **`Permission denied (publickey,gssapi-keyexchange)`** — Ensure your SSH key is added to the ssh-agent (`ssh-add ~/.ssh/id_rsa`) and the core user's authorized_keys includes your public key.
+    | Error | Fix |
+    |---|---|
+    | `/usr/local/bin/cluster-backup.sh: No such file or directory` | Verify the OCP version includes the backup script; on older versions use `oc debug node/<master-node>` to access the script or manually back up etcd using `etcdctl`. |
+    | `scp: /backup/etcd/: No such file or directory` | Create the destination directory on your workstation with `mkdir -p /backup/etcd/` before running the scp command. |
+    | `Permission denied (publickey,gssapi-keyexchange)` | Ensure your SSH key is added to the ssh-agent (`ssh-add ~/.ssh/id_rsa`) and the core user's authorized_keys includes your public key. |
 ## Automate etcd Backup with CronJob
 
 ```yaml
@@ -306,9 +308,11 @@ member 9c2f5e8a3d1b7g64: name=etcd-master-2 peerURLs=http://10.0.1.48:2380 clien
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to etcd: context deadline exceeded`** — Verify the healthy master pod is running with `oc get pod -n openshift-etcd` and use the correct pod name in the rsh command.
-    **`Error from server (NotFound): machines.machine.openshift.io "<machine-name>" not found`** — Confirm the exact machine name with `oc get machine -n openshift-machine-api -o wide` before deletion.
-    **`error: certificate request csr-xxxx is not pending`** — Wait for the CSR to appear in Pending state (may take 1-2 minutes after machine creation) before attempting approval.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to etcd: context deadline exceeded` | Verify the healthy master pod is running with `oc get pod -n openshift-etcd` and use the correct pod name in the rsh command. |
+    | `Error from server (NotFound): machines.machine.openshift.io "<machine-name>" not found` | Confirm the exact machine name with `oc get machine -n openshift-machine-api -o wide` before deletion. |
+    | `error: certificate request csr-xxxx is not pending` | Wait for the CSR to appear in Pending state (may take 1-2 minutes after machine creation) before attempting approval. |
 ## OADP Application Backup
 
 ```bash
@@ -401,9 +405,11 @@ time="2024-01-15T14:32:25Z" level=info msg="Backup completed successfully" backu
 ```
 
 !!! warning "Common errors"
-    **`error: unable to recognize "STDIN": no matches for kind "BackupStorageLocation" in version "velero.io/v1"`** — Verify the OADP operator is fully installed and the velero.io API is registered with `oc api-resources | grep velero`.
-    **`error validating data: data[spec.credential.name]: Invalid value: "cloud-credentials": secret not found`** — Create the AWS credentials secret in the openshift-adp namespace using `oc create secret generic cloud-credentials --from-file=cloud=<path-to-aws-creds> -n openshift-adp`.
-    **`backup.velero.io "my-app-backup" is invalid: spec.storageLocation: Invalid value: "s3-backup": BackupStorageLocation not found`** — Ensure the BackupStorageLocation resource is created and in Completed phase before creating backups with `oc get bsl -n openshift-adp`.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to recognize "STDIN": no matches for kind "BackupStorageLocation" in version "velero.io/v1"` | Verify the OADP operator is fully installed and the velero.io API is registered with `oc api-resources | grep velero`. |
+    | `error validating data: data[spec.credential.name]: Invalid value: "cloud-credentials": secret not found` | Create the AWS credentials secret in the openshift-adp namespace using `oc create secret generic cloud-credentials --from-file=cloud=<path-to-aws-creds> -n openshift-adp`. |
+    | `backup.velero.io "my-app-backup" is invalid: spec.storageLocation: Invalid value: "s3-backup": BackupStorageLocation not found` | Ensure the BackupStorageLocation resource is created and in Completed phase before creating backups with `oc get bsl -n openshift-adp`. |
 ## PV Snapshot Backup (CSI)
 
 CSI-based snapshots are independent of OADP and operate at the storage driver level. Use alongside OADP for complete application protection.
@@ -466,9 +472,11 @@ persistentvolumeclaim/myapp-data-restored created
 ```
 
 !!! warning "Common errors"
-    **`error: resource mapping not found for "snapshot.storage.k8s.io/v1/VolumeSnapshot"`** — Install the snapshot controller with `oc apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml`.
-    **`VolumeSnapshot "myapp-data-snap-2024-01-15" is not ready for use`** — Wait for the snapshot to reach `READYTOUSE: true` status before attempting restore, or check CSI driver logs with `oc logs -n openshift-cluster-csi-drivers -l app=ebs-csi-controller`.
-    **`error: PersistentVolumeClaim in version "v1" cannot be handled as a PersistentVolumeClaim: no kind "PersistentVolumeClaim" is registered for version "snapshot.storage.k8s.io/v1"`** — Replace `<date>` placeholder with actual snapshot name (e.g., `myapp-data-snap-2024-01-15`) in the restore PVC manifest.
+    | Error | Fix |
+    |---|---|
+    | `error: resource mapping not found for "snapshot.storage.k8s.io/v1/VolumeSnapshot"` | Install the snapshot controller with `oc apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml`. |
+    | `VolumeSnapshot "myapp-data-snap-2024-01-15" is not ready for use` | Wait for the snapshot to reach `READYTOUSE: true` status before attempting restore, or check CSI driver logs with `oc logs -n openshift-cluster-csi-drivers -l app=ebs-csi-controller`. |
+    | `error: PersistentVolumeClaim in version "v1" cannot be handled as a PersistentVolumeClaim: no kind "PersistentVolumeClaim" is registered for version "snapshot.storage.k8s.io/v1"` | Replace `<date>` placeholder with actual snapshot name (e.g., `myapp-data-snap-2024-01-15`) in the restore PVC manifest. |
 ---
 
 ## See also

@@ -56,8 +56,10 @@ Hit return to start merge resolution tool (vimdiff):
 ```
 
 !!! warning "Common errors"
-    **`error: Your local changes to 'src/config.go' would be overwritten by merge`** — Stash or commit your uncommitted changes before attempting the merge with `git stash` or `git add && git commit`.
-    **`fatal: mergetool: tool not found: vimdiff`** — Install your preferred merge tool (e.g., `sudo apt-get install vim` on Linux) or configure an alternative with `git config merge.tool <toolname>`.
+    | Error | Fix |
+    |---|---|
+    | `error: Your local changes to 'src/config.go' would be overwritten by merge` | Stash or commit your uncommitted changes before attempting the merge with `git stash` or `git add && git commit`. |
+    | `fatal: mergetool: tool not found: vimdiff` | Install your preferred merge tool (e.g., `sudo apt-get install vim` on Linux) or configure an alternative with `git config merge.tool <toolname>`. |
 ```bash
 # Enable rerere (re-use recorded resolution)
 git config --global rerere.enabled true
@@ -73,8 +75,10 @@ git rerere
 ```
 
 !!! warning "Common errors"
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Run this command from within a git repository directory, or initialize one with `git init`.
-    **`error: could not lock config file /home/user/.gitconfig: Permission denied`** — Check file permissions with `ls -la ~/.gitconfig` and ensure your user owns the file, or use `sudo` if intentionally configuring system-wide settings.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not a git repository (or any of the parent directories): .git` | Run this command from within a git repository directory, or initialize one with `git init`. |
+    | `error: could not lock config file /home/user/.gitconfig: Permission denied` | Check file permissions with `ls -la ~/.gitconfig` and ensure your user owns the file, or use `sudo` if intentionally configuring system-wide settings. |
 ```bash
 git status
 # HEAD detached at a1b2c3d
@@ -95,8 +99,10 @@ f4e5d6c Merge pull request #847 from feature/auth-service
 ```
 
 !!! warning "Common errors"
-    **`fatal: your current branch 'main' does not have any commits yet`** — Initialize the repository with at least one commit using `git add . && git commit -m "Initial commit"`.
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Run `git init` to initialize a git repository in the current directory, or navigate to an existing git project root.
+    | Error | Fix |
+    |---|---|
+    | `fatal: your current branch 'main' does not have any commits yet` | Initialize the repository with at least one commit using `git add . && git commit -m "Initial commit"`. |
+    | `fatal: not a git repository (or any of the parent directories): .git` | Run `git init` to initialize a git repository in the current directory, or navigate to an existing git project root. |
 ```bash
 # Return to wherever you were before
 git switch -
@@ -109,8 +115,10 @@ Switched to branch 'feature/auth-refactor'
 ```
 
 !!! warning "Common errors"
-    **`error: pathspec '-' did not match any file(s) known to git`** — You haven't switched branches yet in this session; use `git branch -a` to see available branches and switch to one first.
-    **`fatal: reference is not a tree: -`** — Your previous branch was deleted; use `git switch <branch-name>` to switch to an existing branch instead.
+    | Error | Fix |
+    |---|---|
+    | `error: pathspec '-' did not match any file(s) known to git` | You haven't switched branches yet in this session; use `git branch -a` to see available branches and switch to one first. |
+    | `fatal: reference is not a tree: -` | Your previous branch was deleted; use `git switch <branch-name>` to switch to an existing branch instead. |
 ```bash
 # Create a new branch at the current (detached) commit
 git switch -c feature/save-my-work
@@ -124,8 +132,10 @@ Switched to a new branch 'feature/save-my-work'
 ```
 
 !!! warning "Common errors"
-    **`fatal: cannot switch branches while carrying a dirty working directory`** — Commit or stash your changes with `git stash` before switching branches.
-    **`fatal: reference is not a tree: HEAD`** — You are in a corrupted detached HEAD state; use `git reflog` to find a valid commit hash and run `git switch -c feature/save-my-work <commit-hash>`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: cannot switch branches while carrying a dirty working directory` | Commit or stash your changes with `git stash` before switching branches. |
+    | `fatal: reference is not a tree: HEAD` | You are in a corrupted detached HEAD state; use `git reflog` to find a valid commit hash and run `git switch -c feature/save-my-work <commit-hash>`. |
 ```bash
 # Return to main, discarding any uncommitted detached-HEAD changes
 git switch main
@@ -171,9 +181,11 @@ To github.com:company/repo.git
 ```
 
 !!! warning "Common errors"
-    **`CONFLICT (content): Merge conflict in src/config.yml`** — Manually resolve the conflicted file(s), run `git add <file>`, then execute `git rebase --continue`.
-    **`error: failed to push some refs to 'origin'`** — Pull the latest changes with `git pull --rebase origin main` again, resolve any new conflicts, and retry the push.
-    **`fatal: Not a git repository (or any of the parent directories): .git`** — Ensure you are in the correct repository directory and have initialized it with `git init` or cloned it with `git clone`.
+    | Error | Fix |
+    |---|---|
+    | `CONFLICT (content): Merge conflict in src/config.yml` | Manually resolve the conflicted file(s), run `git add <file>`, then execute `git rebase --continue`. |
+    | `error: failed to push some refs to 'origin'` | Pull the latest changes with `git pull --rebase origin main` again, resolve any new conflicts, and retry the push. |
+    | `fatal: Not a git repository (or any of the parent directories): .git` | Ensure you are in the correct repository directory and have initialized it with `git init` or cloned it with `git clone`. |
 ```bash
 git pull origin main        # creates a merge commit
 git push origin main
@@ -202,8 +214,10 @@ To github.com:company/repo.git
 ```
 
 !!! warning "Common errors"
-    **`error: Your local changes to the following files would be overwritten by merge`** — Commit or stash your uncommitted changes with `git stash` before pulling.
-    **`fatal: Not a git repository (or any of the parent directories): .git`** — Ensure you are in the correct repository directory and it has been initialized with `git init` or cloned.
+    | Error | Fix |
+    |---|---|
+    | `error: Your local changes to the following files would be overwritten by merge` | Commit or stash your uncommitted changes with `git stash` before pulling. |
+    | `fatal: Not a git repository (or any of the parent directories): .git` | Ensure you are in the correct repository directory and it has been initialized with `git init` or cloned. |
 ```bash
 # WARNING: rewrites remote history — never use on shared/protected branches
 git push --force-with-lease origin feature/my-branch
@@ -223,9 +237,11 @@ To github.com:myorg/myrepo.git
 ```
 
 !!! warning "Common errors"
-    **`remote: error: refusing to allow a forced update of a protected branch`** — Remove branch protection rules in your repository settings or push to an unprotected branch instead.
-    **`error: failed to push some refs to 'origin'`** — Run `git fetch origin` to sync with remote changes, then rebase your commits and try again.
-    **`fatal: 'origin' does not appear to be a 'git' repository`** — Verify your remote URL with `git remote -v` and ensure you have network access to the repository.
+    | Error | Fix |
+    |---|---|
+    | `remote: error: refusing to allow a forced update of a protected branch` | Remove branch protection rules in your repository settings or push to an unprotected branch instead. |
+    | `error: failed to push some refs to 'origin'` | Run `git fetch origin` to sync with remote changes, then rebase your commits and try again. |
+    | `fatal: 'origin' does not appear to be a 'git' repository` | Verify your remote URL with `git remote -v` and ensure you have network access to the repository. |
 ```bash
 # Via API — enable branch protection
 curl -X POST \
@@ -256,8 +272,10 @@ git commit -m "Remove large binary; add to .gitignore"
 ```
 
 !!! warning "Common errors"
-    **`error: pathspec 'path/to/large-binary.bin' did not match any files`** — Verify the exact file path and that the file was actually staged in the previous commit using `git status` or `git diff --cached`.
-    **`fatal: Not a git repository (or any of the parent directories): .git`** — Ensure you are in the root directory of the git repository before running these commands.
+    | Error | Fix |
+    |---|---|
+    | `error: pathspec 'path/to/large-binary.bin' did not match any files` | Verify the exact file path and that the file was actually staged in the previous commit using `git status` or `git diff --cached`. |
+    | `fatal: Not a git repository (or any of the parent directories): .git` | Ensure you are in the root directory of the git repository before running these commands. |
 ```bash
 # Using git-filter-repo (recommended over BFG for complex cases)
 pip install git-filter-repo
@@ -294,9 +312,11 @@ To github.com:myorg/myrepo.git
 ```
 
 !!! warning "Common errors"
-    **`error: pathspec 'path/to/large-binary.bin' did not match any files`** — Verify the exact file path relative to repository root using `git ls-files | grep binary`.
-    **`! [rejected] main -> main (protected branch)`** — Unprotect the branch in your Git hosting platform (GitHub/GitLab/Bitbucket) settings before force-pushing.
-    **`fatal: Not a valid object name`** — Ensure you've run `git filter-repo` successfully and the reflog hasn't been pruned; check `git log --oneline | head -5` to confirm history exists.
+    | Error | Fix |
+    |---|---|
+    | `error: pathspec 'path/to/large-binary.bin' did not match any files` | Verify the exact file path relative to repository root using `git ls-files | grep binary`. |
+    | `! [rejected] main -> main (protected branch)` | Unprotect the branch in your Git hosting platform (GitHub/GitLab/Bitbucket) settings before force-pushing. |
+    | `fatal: Not a valid object name` | Ensure you've run `git filter-repo` successfully and the reflog hasn't been pruned; check `git log --oneline | head -5` to confirm history exists. |
 ```bash
 # Install LFS
 git lfs install
@@ -336,9 +356,11 @@ osxkeychain
 ```
 
 !!! warning "Common errors"
-    **`fatal: could not read Username for 'https://github.com': terminal prompts disabled`** — Ensure the credential helper is properly configured with `git config --global credential.helper osxkeychain` and that Keychain access permissions are granted.
-    **`curl: (22) The requested URL returned error: 401 Unauthorized`** — Verify the personal access token (TOKEN) is valid, has not expired, and includes the required `user:email` scope for API access.
-    **`jq: parse error: Invalid JSON text at line 1`** — Check that the curl request succeeded (remove `-s` flag temporarily to see the actual response) and that the token has sufficient permissions to access `/user` endpoint.
+    | Error | Fix |
+    |---|---|
+    | `fatal: could not read Username for 'https://github.com': terminal prompts disabled` | Ensure the credential helper is properly configured with `git config --global credential.helper osxkeychain` and that Keychain access permissions are granted. |
+    | `curl: (22) The requested URL returned error: 401 Unauthorized` | Verify the personal access token (TOKEN) is valid, has not expired, and includes the required `user:email` scope for API access. |
+    | `jq: parse error: Invalid JSON text at line 1` | Check that the curl request succeeded (remove `-s` flag temporarily to see the actual response) and that the token has sufficient permissions to access `/user` endpoint. |
 ```bash
 # macOS — remove cached entry and let Git re-prompt
 git credential-osxkeychain erase <<EOF
@@ -371,9 +393,11 @@ remote url updated to https://oauth2:NEW_TOKEN@gitlab.example.com/org/repo.git
 ```
 
 !!! warning "Common errors"
-    **`error: credential-osxkeychain not found`** — Install Git via Homebrew (`brew install git`) or Xcode Command Line Tools to include the osxkeychain helper.
-    **`fatal: could not read Username for 'https://github.com': Device not configured`** — Ensure the credential helper is properly installed and configured with `git config --global credential.helper <helper-name>`.
-    **`fatal: remote origin already exists`** — Use `git remote set-url origin <new-url>` instead of `git remote add` when updating an existing remote.
+    | Error | Fix |
+    |---|---|
+    | `error: credential-osxkeychain not found` | Install Git via Homebrew (`brew install git`) or Xcode Command Line Tools to include the osxkeychain helper. |
+    | `fatal: could not read Username for 'https://github.com': Device not configured` | Ensure the credential helper is properly installed and configured with `git config --global credential.helper <helper-name>`. |
+    | `fatal: remote origin already exists` | Use `git remote set-url origin <new-url>` instead of `git remote add` when updating an existing remote. |
 ```bash
 # Verify new token works
 curl -H "Authorization: Bearer $NEW_TOKEN" https://api.github.com/user | jq .login
@@ -419,9 +443,11 @@ Permission denied (publickey).
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the public key is added to your Git provider's account settings and the private key has correct permissions (chmod 600).
-    **`Could not open a connection to your authentication agent.`** — Start the SSH agent with `eval $(ssh-agent -s)` before running ssh-add.
-    **`Host key verification failed.`** — Add the host key to known_hosts by running `ssh-keyscan -H github.com >> ~/.ssh/known_hosts` and retry the connection.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the public key is added to your Git provider's account settings and the private key has correct permissions (chmod 600). |
+    | `Could not open a connection to your authentication agent.` | Start the SSH agent with `eval $(ssh-agent -s)` before running ssh-add. |
+    | `Host key verification failed.` | Add the host key to known_hosts by running `ssh-keyscan -H github.com >> ~/.ssh/known_hosts` and retry the connection. |
 ```bash
 # Start agent if not running
 eval "$(ssh-agent -s)"
@@ -444,9 +470,11 @@ Identity added: /Users/admin/.ssh/id_ed25519 (admin@workstation.local)
 ```
 
 !!! warning "Common errors"
-    **`Could not open a connection to your authentication agent.`** — Run `eval "$(ssh-agent -s)"` before attempting to add keys.
-    **`Permission denied (publickey).`** — Ensure the private key file has 600 permissions with `chmod 600 ~/.ssh/id_ed25519` and the public key is added to the remote server's `~/.ssh/authorized_keys`.
-    **`The specified item could not be found in the keychain.`** — On macOS, the key may not exist at that path; verify with `ls -la ~/.ssh/id_ed25519` and regenerate if needed using `ssh-keygen -t ed25519`.
+    | Error | Fix |
+    |---|---|
+    | `Could not open a connection to your authentication agent.` | Run `eval "$(ssh-agent -s)"` before attempting to add keys. |
+    | `Permission denied (publickey).` | Ensure the private key file has 600 permissions with `chmod 600 ~/.ssh/id_ed25519` and the public key is added to the remote server's `~/.ssh/authorized_keys`. |
+    | `The specified item could not be found in the keychain.` | On macOS, the key may not exist at that path; verify with `ls -la ~/.ssh/id_ed25519` and regenerate if needed using `ssh-keygen -t ed25519`. |
 ```bash
 # Copy public key
 cat ~/.ssh/id_ed25519.pub
@@ -472,9 +500,11 @@ ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKp7vN2xQ8mR9jL4kP1sT5uW6yZ3aB9cD2eF4gH5iJ6k
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to api.github.com port 443: Connection refused`** — Verify network connectivity and that GitHub/GitLab API endpoints are accessible from your environment.
-    **`{"message":"Bad credentials","documentation_url":"https://docs.github.com/rest"}`** — Ensure `$GITHUB_TOKEN` or `$GITLAB_TOKEN` environment variables are set with valid, unexpired tokens.
-    **`jq: parse error: Invalid numeric literal at line 1 column 10`** — The API response contains an error message instead of JSON; check token permissions include `write:public_keys` scope.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to api.github.com port 443: Connection refused` | Verify network connectivity and that GitHub/GitLab API endpoints are accessible from your environment. |
+    | `{"message":"Bad credentials","documentation_url":"https://docs.github.com/rest"}` | Ensure `$GITHUB_TOKEN` or `$GITLAB_TOKEN` environment variables are set with valid, unexpired tokens. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 10` | The API response contains an error message instead of JSON; check token permissions include `write:public_keys` scope. |
 ```bash
 # ~/.ssh/config
 Host github.com
@@ -523,9 +553,11 @@ Resolving deltas: 100% (589/589), done.
 ```
 
 !!! warning "Common errors"
-    **`fatal: could not read Username for 'https://github.com': No such file or directory`** — Ensure SSH keys are configured or use a personal access token in the HTTPS URL format `https://username:token@github.com/org/repo.git`.
-    **`fatal: clone of 'https://github.com/org/repo.git' into submodule path 'vendor/lib-core' failed`** — Verify the submodule repository exists and is accessible; check `.gitmodules` file for correct URLs.
-    **`error: Server does not allow request for unadvertised object`** — Update Git to the latest version and ensure all submodule commits are pushed to the remote repository.
+    | Error | Fix |
+    |---|---|
+    | `fatal: could not read Username for 'https://github.com': No such file or directory` | Ensure SSH keys are configured or use a personal access token in the HTTPS URL format `https://username:token@github.com/org/repo.git`. |
+    | `fatal: clone of 'https://github.com/org/repo.git' into submodule path 'vendor/lib-core' failed` | Verify the submodule repository exists and is accessible; check `.gitmodules` file for correct URLs. |
+    | `error: Server does not allow request for unadvertised object` | Update Git to the latest version and ensure all submodule commits are pushed to the remote repository. |
 ```bash
 # Check submodule status
 git submodule status
@@ -557,8 +589,10 @@ HEAD is now at c3h4d5e Add Prometheus scrape configs
 ```
 
 !!! warning "Common errors"
-    **`fatal: No url found for submodule path 'submodules/terraform-aws' in .gitmodules`** — Verify the submodule entry exists in `.gitmodules` and run `git submodule sync` to refresh the configuration.
-    **`error: Your local changes to the following files would be overwritten by merge`** — Commit or stash uncommitted changes in the submodule directory before running `git submodule update --remote --merge`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: No url found for submodule path 'submodules/terraform-aws' in .gitmodules` | Verify the submodule entry exists in `.gitmodules` and run `git submodule sync` to refresh the configuration. |
+    | `error: Your local changes to the following files would be overwritten by merge` | Commit or stash uncommitted changes in the submodule directory before running `git submodule update --remote --merge`. |
 ```bash
 # Check what changed
 git submodule foreach git status
@@ -608,8 +642,10 @@ Updated 2 paths from the index
 ```
 
 !!! warning "Common errors"
-    **`fatal: No submodules found in .gitmodules`** — Verify submodules are initialized with `git submodule update --init --recursive` before running foreach commands.
-    **`error: pathspec '.' did not match any files`** — Ensure you are in the repository root directory and submodules are properly cloned with `git submodule update --init`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: No submodules found in .gitmodules` | Verify submodules are initialized with `git submodule update --init --recursive` before running foreach commands. |
+    | `error: pathspec '.' did not match any files` | Ensure you are in the repository root directory and submodules are properly cloned with `git submodule update --init`. |
 ```bash
 # Proper removal — three steps required
 git submodule deinit -f path/to/submodule
@@ -628,8 +664,10 @@ rm: removing directory '.git/modules/path/to/submodule'
 ```
 
 !!! warning "Common errors"
-    **`fatal: No submodule mapping found in .gitmodules for path 'path/to/submodule'`** — Verify the exact submodule path with `git config --file .gitmodules --name-only --get-regexp path` before running deinit.
-    **`error: the following file has staged content different from both the file and the working tree: path/to/submodule`** — Run `git reset HEAD path/to/submodule` before attempting `git rm -f` to unstage the submodule entry.
+    | Error | Fix |
+    |---|---|
+    | `fatal: No submodule mapping found in .gitmodules for path 'path/to/submodule'` | Verify the exact submodule path with `git config --file .gitmodules --name-only --get-regexp path` before running deinit. |
+    | `error: the following file has staged content different from both the file and the working tree: path/to/submodule` | Run `git reset HEAD path/to/submodule` before attempting `git rm -f` to unstage the submodule entry. |
 ```bash
 # Show full config (effective, merged from all scopes)
 git config --list --show-origin

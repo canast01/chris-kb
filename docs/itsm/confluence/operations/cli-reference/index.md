@@ -18,8 +18,10 @@ export CF_AUTH="Authorization: Bearer ${CF_TOKEN}"
 ```
 
 !!! warning "Common errors"
-    **`bash: CF_TOKEN: Unbound variable`** — Replace `<your-PAT-here>` with an actual Personal Access Token generated in Confluence settings.
-    **`curl: (6) Could not resolve host: confluence.example.com`** — Update `CF_URL` to match your actual Confluence instance hostname (e.g., `https://confluence.company.internal`).
+    | Error | Fix |
+    |---|---|
+    | `bash: CF_TOKEN: Unbound variable` | Replace `<your-PAT-here>` with an actual Personal Access Token generated in Confluence settings. |
+    | `curl: (6) Could not resolve host: confluence.example.com` | Update `CF_URL` to match your actual Confluence instance hostname (e.g., `https://confluence.company.internal`). |
 ```bash
 # Get current authenticated user
 curl -s -H "$CF_AUTH" \
@@ -69,9 +71,11 @@ confluence-guests
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify `${CF_URL}` is correct and Confluence server is running and accessible.
-    **`jq: parse error: Cannot index string with string "results"`** — Ensure the API endpoint returns JSON; check that `${CF_AUTH}` header is valid and the user has API access permissions.
-    **`{"statusCode":401,"message":"Unauthorized"}`** — Verify the `${CF_AUTH}` header contains a valid Bearer token or Basic auth credentials.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443: Connection refused` | Verify `${CF_URL}` is correct and Confluence server is running and accessible. |
+    | `jq: parse error: Cannot index string with string "results"` | Ensure the API endpoint returns JSON; check that `${CF_AUTH}` header is valid and the user has API access permissions. |
+    | `{"statusCode":401,"message":"Unauthorized"}` | Verify the `${CF_AUTH}` header contains a valid Bearer token or Basic auth credentials. |
 ```bash
 # Get labels on a page
 curl -s -H "$CF_AUTH" \
@@ -120,9 +124,11 @@ curl -s -H "$CF_AUTH" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify `$CF_URL` is correct and the Confluence instance is running and accessible from your network.
-    **`{"statusCode":401,"message":"Unauthorized"}`** — Ensure `$CF_AUTH` is set correctly (e.g., `"Authorization: Bearer $TOKEN"` or `"Authorization: Basic $(echo -n user:pass | base64)"`) and the token/credentials have not expired.
-    **`jq: parse error: Cannot index number with string "results"`** — Check that the API response is valid JSON; the endpoint may have returned an error code instead of the expected data structure.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443: Connection refused` | Verify `$CF_URL` is correct and the Confluence instance is running and accessible from your network. |
+    | `{"statusCode":401,"message":"Unauthorized"}` | Ensure `$CF_AUTH` is set correctly (e.g., `"Authorization: Bearer $TOKEN"` or `"Authorization: Basic $(echo -n user:pass | base64)"`) and the token/credentials have not expired. |
+    | `jq: parse error: Cannot index number with string "results"` | Check that the API response is valid JSON; the endpoint may have returned an error code instead of the expected data structure. |
 ```bash
 #!/bin/bash
 # export-all-pages.sh — outputs CSV: space_key,page_id,page_title
@@ -166,9 +172,11 @@ Done. Output: all_pages_20240115.csv
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the Confluence URL is correct and the instance is accessible from your network (test with `curl -I https://confluence.example.com`).
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure your PAT token is valid and has API access permissions; an invalid token returns HTML error pages instead of JSON.
-    **`Permission denied`** — Run the script from a directory where you have write permissions, or specify an absolute path for the OUTPUT variable.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443: Connection refused` | Verify the Confluence URL is correct and the instance is accessible from your network (test with `curl -I https://confluence.example.com`). |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure your PAT token is valid and has API access permissions; an invalid token returns HTML error pages instead of JSON. |
+    | `Permission denied` | Run the script from a directory where you have write permissions, or specify an absolute path for the OUTPUT variable. |
 ```bash
 #!/bin/bash
 # delete-pages-by-label.sh — trash all pages with a given label in a space
@@ -199,9 +207,11 @@ Trashing page ID: 70832
 ```
 
 !!! warning "Common errors"
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the Confluence URL is correct and the API token has read permissions on the space.
-    **`curl: (401) Unauthorized`** — Ensure the PAT token is valid and has not expired; regenerate it in Confluence if necessary.
-    **`curl: (403) Forbidden`** — Confirm the API token has delete permissions; check Confluence user permissions for the OPS space.
+    | Error | Fix |
+    |---|---|
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the Confluence URL is correct and the API token has read permissions on the space. |
+    | `curl: (401) Unauthorized` | Ensure the PAT token is valid and has not expired; regenerate it in Confluence if necessary. |
+    | `curl: (403) Forbidden` | Confirm the API token has delete permissions; check Confluence user permissions for the OPS space. |
 ```bash
 # Download from https://bobswift.atlassian.net/wiki/spaces/ACLI/
 # Requires Java 11+
@@ -233,9 +243,11 @@ Archive:  acli-9.x.x-distribution.zip
 ```
 
 !!! warning "Common errors"
-    **`wget: command not found`** — Install wget with `apt-get install wget` (Debian/Ubuntu) or `yum install wget` (RHEL/CentOS).
-    **`unzip: command not found`** — Install unzip with `apt-get install unzip` or `yum install unzip`.
-    **`ln: failed to create symbolic link '/usr/local/bin/acli': File exists`** — Remove the existing symlink with `rm /usr/local/bin/acli` before creating a new one.
+    | Error | Fix |
+    |---|---|
+    | `wget: command not found` | Install wget with `apt-get install wget` (Debian/Ubuntu) or `yum install wget` (RHEL/CentOS). |
+    | `unzip: command not found` | Install unzip with `apt-get install unzip` or `yum install unzip`. |
+    | `ln: failed to create symbolic link '/usr/local/bin/acli': File exists` | Remove the existing symlink with `rm /usr/local/bin/acli` before creating a new one. |
 ```bash
 # Base connection options (use in all commands)
 ACLI_OPTS="--server https://confluence.example.com \
@@ -314,9 +326,11 @@ CQL query executed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to authenticate user 'admin'. Check credentials and server URL.`** — Verify `$ADMIN_PASS` is set correctly and the server URL is accessible with `curl -I https://confluence.example.com`.
-    **`Error: Space 'OPS' does not exist or user lacks permission to access it.`** — Confirm the space key is correct and the admin user has space-level permissions in Confluence.
-    **`Error: File 'page_content.html' not found.`** — Ensure the file path is absolute or relative to the current working directory, and verify it exists with `ls -la page_content.html`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to authenticate user 'admin'. Check credentials and server URL.` | Verify `$ADMIN_PASS` is set correctly and the server URL is accessible with `curl -I https://confluence.example.com`. |
+    | `Error: Space 'OPS' does not exist or user lacks permission to access it.` | Confirm the space key is correct and the admin user has space-level permissions in Confluence. |
+    | `Error: File 'page_content.html' not found.` | Ensure the file path is absolute or relative to the current working directory, and verify it exists with `ls -la page_content.html`. |
 ```bash
 # Start Confluence
 /opt/atlassian/confluence/bin/start-confluence.sh
@@ -352,9 +366,11 @@ LISTEN     0      128                 *:8090              *:*      users:(("java
 ```
 
 !!! warning "Common errors"
-    **`/opt/atlassian/confluence/bin/start-confluence.sh: Permission denied`** — Run `chmod +x /opt/atlassian/confluence/bin/start-confluence.sh` to make the script executable.
-    **`Address already in use`** — Either stop the existing Confluence process with `stop-confluence.sh` or change the port in `/opt/atlassian/confluence/conf/server.xml`.
-    **`Not running`** — The process is not active; check `/opt/atlassian/confluence/logs/catalina.out` for startup errors and retry with `start-confluence.sh`.
+    | Error | Fix |
+    |---|---|
+    | `/opt/atlassian/confluence/bin/start-confluence.sh: Permission denied` | Run `chmod +x /opt/atlassian/confluence/bin/start-confluence.sh` to make the script executable. |
+    | `Address already in use` | Either stop the existing Confluence process with `stop-confluence.sh` or change the port in `/opt/atlassian/confluence/conf/server.xml`. |
+    | `Not running` | The process is not active; check `/opt/atlassian/confluence/logs/catalina.out` for startup errors and retry with `start-confluence.sh`. |
 ```bash
 # Production-recommended JVM flags
 JAVA_OPTS="-Xms4g -Xmx8g \
@@ -374,9 +390,11 @@ JAVA_OPTS="-Xms4g -Xmx8g \
 ```
 
 !!! warning "Common errors"
-    **`mkdir: cannot create directory '/var/atlassian/application-data/confluence/dumps/': Permission denied`** — Run the command with sudo or ensure the confluence user owns the parent directory with `chown -R confluence:confluence /var/atlassian/application-data/confluence/`.
-    **`Error occurred during initialization of VM: Could not allocate metaspace: 1073741824 bytes`** — Reduce `-XX:MaxMetaspaceSize` value (e.g., to 512m) or increase system available memory.
-    **`-Xmx8g is invalid or too large for this system`** — Verify available RAM with `free -h` and set `-Xmx` to no more than 75% of total system memory.
+    | Error | Fix |
+    |---|---|
+    | `mkdir: cannot create directory '/var/atlassian/application-data/confluence/dumps/': Permission denied` | Run the command with sudo or ensure the confluence user owns the parent directory with `chown -R confluence:confluence /var/atlassian/application-data/confluence/`. |
+    | `Error occurred during initialization of VM: Could not allocate metaspace: 1073741824 bytes` | Reduce `-XX:MaxMetaspaceSize` value (e.g., to 512m) or increase system available memory. |
+    | `-Xmx8g is invalid or too large for this system` | Verify available RAM with `free -h` and set `-Xmx` to no more than 75% of total system memory. |
 ```bash
 # Find the Confluence PID
 CONF_PID=$(pgrep -f "confluence" | head -1)
@@ -403,9 +421,11 @@ Stack trace written to /tmp/threaddump_3_143042.txt
 ```
 
 !!! warning "Common errors"
-    **`jstack: command not found`** — Install the JDK (not just JRE) or use `kill -3` to write dumps to catalina.out instead.
-    **`jstack: Unable to open socket file: target process not responding or HotSpot VM not loaded`** — Ensure the Confluence process is running and you are executing jstack as the same user (or root) that owns the Java process.
-    **`Permission denied`** — Run the command with `sudo` or as the confluence service user to access the running JVM process.
+    | Error | Fix |
+    |---|---|
+    | `jstack: command not found` | Install the JDK (not just JRE) or use `kill -3` to write dumps to catalina.out instead. |
+    | `jstack: Unable to open socket file: target process not responding or HotSpot VM not loaded` | Ensure the Confluence process is running and you are executing jstack as the same user (or root) that owns the Java process. |
+    | `Permission denied` | Run the command with `sudo` or as the confluence service user to access the running JVM process. |
 ```bash
 # On-demand heap dump (non-destructive, app stays up)
 CONF_PID=$(pgrep -f "confluence" | head -1)

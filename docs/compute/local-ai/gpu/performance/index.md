@@ -84,9 +84,11 @@ Elapsed time: 45.2 seconds
 ```
 
 !!! warning "Common errors"
-    **`Error: NVIDIA Nsight Systems is not installed or not in PATH`** — Install nsys via `apt install nvidia-nsight-systems` or add its installation directory to your PATH.
-    **`Error: CUDA capability not found. Make sure CUDA is installed and accessible`** — Verify CUDA installation with `nvidia-smi` and ensure `CUDA_HOME` environment variable is set correctly.
-    **`Error: Permission denied writing to /tmp/profile_output`** — Run the command with appropriate permissions or specify an output directory where the user has write access.
+    | Error | Fix |
+    |---|---|
+    | `Error: NVIDIA Nsight Systems is not installed or not in PATH` | Install nsys via `apt install nvidia-nsight-systems` or add its installation directory to your PATH. |
+    | `Error: CUDA capability not found. Make sure CUDA is installed and accessible` | Verify CUDA installation with `nvidia-smi` and ensure `CUDA_HOME` environment variable is set correctly. |
+    | `Error: Permission denied writing to /tmp/profile_output` | Run the command with appropriate permissions or specify an output directory where the user has write access. |
 ## Mixed Precision Training
 
 AMP (Automatic Mixed Precision) reduces memory usage by ~50% and accelerates throughput on Tensor Cores by using FP16 for most operations while keeping FP32 for numerically sensitive parts.
@@ -174,9 +176,11 @@ Saving checkpoint: model_epoch_2.pt
 ```
 
 !!! warning "Common errors"
-    **`NCCL operation timed out after 30s`** — Increase timeout with `export NCCL_SOCKET_TIMEOUT=600` and verify all GPUs are accessible via `nvidia-smi`.
-    **`RuntimeError: CUDA out of memory`** — Reduce batch size in train.py or enable gradient checkpointing with `--gradient_checkpointing` flag.
-    **`FileNotFoundError: [Errno 2] No such file or directory: 'train.py'`** — Ensure train.py exists in the current working directory and is executable.
+    | Error | Fix |
+    |---|---|
+    | `NCCL operation timed out after 30s` | Increase timeout with `export NCCL_SOCKET_TIMEOUT=600` and verify all GPUs are accessible via `nvidia-smi`. |
+    | `RuntimeError: CUDA out of memory` | Reduce batch size in train.py or enable gradient checkpointing with `--gradient_checkpointing` flag. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: 'train.py'` | Ensure train.py exists in the current working directory and is executable. |
 ## Performance Benchmarking
 
 | Metric | Command | Target |

@@ -108,9 +108,11 @@ diana                                    tty1                 -                 
 ```
 
 !!! warning "Common errors"
-    **`grep: /etc/sudoers.d/*: No such file or directory`** — Create the `/etc/sudoers.d/` directory with `mkdir -p /etc/sudoers.d/` or remove the glob pattern if the directory doesn't exist.
-    **`awk: command not found`** — Install `gawk` or `mawk` package, or use `cut -d: -f1,3,6,7 /etc/passwd` as an alternative.
-    **`lastlog: command not found`** — Install the `util-linux` package which provides the `lastlog` utility.
+    | Error | Fix |
+    |---|---|
+    | `grep: /etc/sudoers.d/*: No such file or directory` | Create the `/etc/sudoers.d/` directory with `mkdir -p /etc/sudoers.d/` or remove the glob pattern if the directory doesn't exist. |
+    | `awk: command not found` | Install `gawk` or `mawk` package, or use `cut -d: -f1,3,6,7 /etc/passwd` as an alternative. |
+    | `lastlog: command not found` | Install the `util-linux` package which provides the `lastlog` utility. |
 ## Review Workflow
 
 1. **Export** — generate user/access report from AD and relevant systems

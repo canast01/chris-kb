@@ -127,9 +127,11 @@ esx-host-03   fc.0    ct0.fc0 2    active
 ```
 
 !!! warning "Common errors"
-    **`Error: No such command 'puredrive'`** — Verify the Pure Storage CLI is installed and in your PATH; run `which pureadmin` to confirm.
-    **`Error: Connection refused (10.20.50.1:443)`** — Ensure the array management IP is reachable and the array is online; check network connectivity with `ping 10.20.50.1`.
-    **`Error: Authentication failed`** — Verify your Pure Storage API token or credentials are valid; re-authenticate with `pureadmin login`.
+    | Error | Fix |
+    |---|---|
+    | `Error: No such command 'puredrive'` | Verify the Pure Storage CLI is installed and in your PATH; run `which pureadmin` to confirm. |
+    | `Error: Connection refused (10.20.50.1:443)` | Ensure the array management IP is reachable and the array is online; check network connectivity with `ping 10.20.50.1`. |
+    | `Error: Authentication failed` | Verify your Pure Storage API token or credentials are valid; re-authenticate with `pureadmin login`. |
 **Common blockers and resolutions:**
 
 | Blocker | Resolution |
@@ -175,9 +177,11 @@ size=2.0T features='0' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`multipathd: command not found`** — Install device-mapper-multipath package with `apt-get install multipath-tools` or `yum install device-mapper-multipath`.
-    **`open: /sys/class/scsi_host/host*/scan: No such file or directory`** — Verify SCSI host controllers exist with `ls /sys/class/scsi_host/` and ensure the system has active storage adapters.
-    **`multipath: command not found`** — Install multipath-tools with `apt-get install multipath-tools` or `yum install device-mapper-multipath` and start the multipathd service.
+    | Error | Fix |
+    |---|---|
+    | `multipathd: command not found` | Install device-mapper-multipath package with `apt-get install multipath-tools` or `yum install device-mapper-multipath`. |
+    | `open: /sys/class/scsi_host/host*/scan: No such file or directory` | Verify SCSI host controllers exist with `ls /sys/class/scsi_host/` and ensure the system has active storage adapters. |
+    | `multipath: command not found` | Install multipath-tools with `apt-get install multipath-tools` or `yum install device-mapper-multipath` and start the multipathd service. |
 **VMware ESXi:**
 
 ```bash
@@ -211,8 +215,10 @@ Device: naa.624a9370d1234567890abcdef012345
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace storage core adapter rescan`** — Verify the ESXi host version supports this command (6.5+) and that you are connected to the correct host via SSH.
-    **`Error: Could not find device naa.624a9370d1234567890abcdef012345`** — Confirm the NAA ID is correct by running `esxcli storage nmp device list` without grep to view all available devices.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace storage core adapter rescan` | Verify the ESXi host version supports this command (6.5+) and that you are connected to the correct host via SSH. |
+    | `Error: Could not find device naa.624a9370d1234567890abcdef012345` | Confirm the NAA ID is correct by running `esxcli storage nmp device list` without grep to view all available devices. |
 **Windows (MPIO):**
 
 ```powershell
@@ -280,8 +286,10 @@ archive-vol-deprecated        1.9T          0.4T       yes
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or API token expired`** — Verify your Pure Storage API token is valid and re-authenticate using `purelogin`.
-    **`Error: Array not reachable at <hostname>`** — Confirm the array hostname/IP is correct and network connectivity exists with `ping` or `nslookup`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or API token expired` | Verify your Pure Storage API token is valid and re-authenticate using `purelogin`. |
+    | `Error: Array not reachable at <hostname>` | Confirm the array hostname/IP is correct and network connectivity exists with `ping` or `nslookup`. |
 ### Freeing Capacity Before a True Forward Review
 
 ```bash
@@ -321,8 +329,10 @@ pg-archive-compliance         3156       daily     2555  true
 ```
 
 !!! warning "Common errors"
-    **`Error: No destroyed volumes found to eradicate`** — Verify that volumes have been destroyed and are within the eradication timer window; check `purevol list --destroyed` to confirm candidates exist.
-    **`Error: Insufficient permissions to eradicate snapshots`** — Ensure your Pure Storage API token or user account has the `eradicate` privilege assigned in the Pure1 management console.
+    | Error | Fix |
+    |---|---|
+    | `Error: No destroyed volumes found to eradicate` | Verify that volumes have been destroyed and are within the eradication timer window; check `purevol list --destroyed` to confirm candidates exist. |
+    | `Error: Insufficient permissions to eradicate snapshots` | Ensure your Pure Storage API token or user account has the `eradicate` privilege assigned in the Pure1 management console. |
 ### Confirming the Data Reduction Guarantee
 
 ```bash
@@ -348,9 +358,11 @@ Total                          275.0TB   169.9TB   26.6TB    2.7x
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the PATH includes the Pure management utilities directory.
-    **`Error: Unable to connect to array at <ip>. Connection refused.`** — Verify the array management IP is reachable and the Pure REST API service is running with `ssh <array-ip> pureadmin list`.
-    **`Error: Invalid credentials. Authentication failed.`** — Confirm your Pure API token or username/password is current and has sufficient permissions to query space metrics.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or ensure the PATH includes the Pure management utilities directory. |
+    | `Error: Unable to connect to array at <ip>. Connection refused.` | Verify the array management IP is reachable and the Pure REST API service is running with `ssh <array-ip> pureadmin list`. |
+    | `Error: Invalid credentials. Authentication failed.` | Confirm your Pure API token or username/password is current and has sufficient permissions to query space metrics. |
 ---
 
 ## Subscription and Lifecycle Issues
@@ -398,8 +410,10 @@ Subscription Information:
 ```
 
 !!! warning "Common errors"
-    **`phonehome is inactive`** — Enable phonehome with `purearray phonehome --enable` to restore Pure1 connectivity and subscription monitoring.
-    **`Array Registration Status: UNREGISTERED`** — Register the array in Pure1 by navigating to Pure1 portal > Arrays > Register, or contact Pure support to link the serial number to your account.
+    | Error | Fix |
+    |---|---|
+    | `phonehome is inactive` | Enable phonehome with `purearray phonehome --enable` to restore Pure1 connectivity and subscription monitoring. |
+    | `Array Registration Status: UNREGISTERED` | Register the array in Pure1 by navigating to Pure1 portal > Arrays > Register, or contact Pure support to link the serial number to your account. |
 ---
 
 ## Diagnostic Commands Summary
@@ -492,9 +506,11 @@ Diagnostic bundle generated: /var/log/pure/diag_pure-array-01_20240115_094215.ta
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure the Pure Storage management CLI is installed and the PATH includes the Pure bin directory (typically `/opt/purearray/bin`).
-    **`Error: Authentication failed`** — Verify credentials are set via `export PURE_APITOKEN=<token>` or configure `~/.purerc` with valid array management credentials.
-    **`purediag: Insufficient disk space (need 3GB, have 1.2GB available)`** — Free up space on the management host or redirect the bundle to a mounted NFS share with `purediag --output /mnt/nfs/diags/`.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure the Pure Storage management CLI is installed and the PATH includes the Pure bin directory (typically `/opt/purearray/bin`). |
+    | `Error: Authentication failed` | Verify credentials are set via `export PURE_APITOKEN=<token>` or configure `~/.purerc` with valid array management credentials. |
+    | `purediag: Insufficient disk space (need 3GB, have 1.2GB available)` | Free up space on the management host or redirect the bundle to a mounted NFS share with `purediag --output /mnt/nfs/diags/`. |
 ---
 
 ## Before Calling Pure Support

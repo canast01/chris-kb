@@ -85,9 +85,11 @@ Admin account jsmith deleted successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Admin account 'jsmith' already exists`** — Use `pureadmin delete jsmith` first, or choose a different username.
-    **`Error: Invalid role 'readonly'. Valid roles are: system_admin, storage_admin, monitor, readonly`** — Correct the role name in the `--role` parameter to match one of the valid options.
-    **`Error: Cannot delete system_admin account 'admin'`** — Only local admin accounts can be deleted; the default system_admin account is protected.
+    | Error | Fix |
+    |---|---|
+    | `Error: Admin account 'jsmith' already exists` | Use `pureadmin delete jsmith` first, or choose a different username. |
+    | `Error: Invalid role 'readonly'. Valid roles are: system_admin, storage_admin, monitor, readonly` | Correct the role name in the `--role` parameter to match one of the valid options. |
+    | `Error: Cannot delete system_admin account 'admin'` | Only local admin accounts can be deleted; the default system_admin account is protected. |
 **Default `pureuser` account:**
 
 The factory default local admin account is `pureuser` with a default password printed on the array's label. It has `array_admin` privileges. After configuring AD/LDAP authentication and validating that at least two AD accounts can log in successfully:
@@ -141,9 +143,11 @@ Directory service check passed
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to ldaps://dc01.example.com:636`** — Verify the DC hostname is resolvable and the LDAP port is open in the firewall.
-    **`Error: Invalid bind credentials for user svc-pure-bind`** — Confirm the bind user exists in Active Directory and the password is correct and not expired.
-    **`Error: Base DN "DC=example,DC=com" not found`** — Ensure the Base DN matches your Active Directory forest structure (check with `dsquery` or ADSI Edit on a domain controller).
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to ldaps://dc01.example.com:636` | Verify the DC hostname is resolvable and the LDAP port is open in the firewall. |
+    | `Error: Invalid bind credentials for user svc-pure-bind` | Confirm the bind user exists in Active Directory and the password is correct and not expired. |
+    | `Error: Base DN "DC=example,DC=com" not found` | Ensure the Base DN matches your Active Directory forest structure (check with `dsquery` or ADSI Edit on a domain controller). |
 ### Group-to-Role Mapping
 
 Create AD security groups that correspond to Purity roles, then map them:
@@ -188,9 +192,11 @@ CN=pure-readonly,OU=Groups,DC=example,DC=com     readonly          group
 ```
 
 !!! warning "Common errors"
-    **`Error: LDAP group not found`** — Verify the AD group DN is correct and LDAP/AD is configured and reachable on the array.
-    **`Error: Invalid role name`** — Use only valid Purity roles (array_admin, storage_admin, ops_admin, readonly) in the --role parameter.
-    **`Error: User does not have permission to set admin attributes`** — Run the command as a user with array_admin privileges or via SSH key authentication with sufficient permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: LDAP group not found` | Verify the AD group DN is correct and LDAP/AD is configured and reachable on the array. |
+    | `Error: Invalid role name` | Use only valid Purity roles (array_admin, storage_admin, ops_admin, readonly) in the --role parameter. |
+    | `Error: User does not have permission to set admin attributes` | Run the command as a user with array_admin privileges or via SSH key authentication with sufficient permissions. |
 ### Validation Steps
 
 Before removing or disabling local accounts after AD integration:
@@ -246,9 +252,11 @@ Response Time: 42ms
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (111)`** — Verify the LDAP server is running and accessible on the specified hostname and port, and check firewall rules between the array and LDAP server.
-    **`Error: Invalid bind credentials`** — Confirm the bind-user DN and password are correct and that the service account has not been locked or expired in the directory.
-    **`Error: TLS certificate verification failed`** — Import the LDAP server's CA certificate to the array's trust store or disable certificate verification if using self-signed certificates in a test environment.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (111)` | Verify the LDAP server is running and accessible on the specified hostname and port, and check firewall rules between the array and LDAP server. |
+    | `Error: Invalid bind credentials` | Confirm the bind-user DN and password are correct and that the service account has not been locked or expired in the directory. |
+    | `Error: TLS certificate verification failed` | Import the LDAP server's CA certificate to the array's trust store or disable certificate verification if using self-signed certificates in a test environment. |
 **LDAP attribute mapping considerations:**
 
 Purity uses the `memberOf` attribute (or equivalent) to determine group membership for role assignment. Verify that your LDAP directory populates `memberOf` on user objects, or configure the appropriate group attribute mapping. Consult the Purity//FA Administration Guide for the specific attribute names if your LDAP schema differs from the default.
@@ -347,9 +355,11 @@ Account svc-old-automation deleted
 ```
 
 !!! warning "Common errors"
-    **`Error: Account svc-monitoring already exists`** — Check if the account exists first with `pureadmin list` or use a different service account name.
-    **`Error: Insufficient privileges to expose API tokens`** — Ensure your current user has array_admin role; use `pureadmin list --self` to verify your permissions.
-    **`Error: Account svc-old-automation not found`** — Verify the account name exists with `pureadmin list` before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Account svc-monitoring already exists` | Check if the account exists first with `pureadmin list` or use a different service account name. |
+    | `Error: Insufficient privileges to expose API tokens` | Ensure your current user has array_admin role; use `pureadmin list --self` to verify your permissions. |
+    | `Error: Account svc-old-automation not found` | Verify the account name exists with `pureadmin list` before attempting deletion. |
 **Using a token for REST API access:**
 
 ```bash
@@ -412,9 +422,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the array's CA certificate into your system trust store.
-    **`{"error_code":"401000","message":"Invalid API token"}`** — Verify the API token is correct and has not expired; regenerate it in the Pure1 management interface if needed.
-    **`curl: (6) Could not resolve host`** — Confirm the array IP address is correct and reachable from your network; check DNS resolution or use the FQDN instead.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the array's CA certificate into your system trust store. |
+    | `{"error_code":"401000","message":"Invalid API token"}` | Verify the API token is correct and has not expired; regenerate it in the Pure1 management interface if needed. |
+    | `curl: (6) Could not resolve host` | Confirm the array IP address is correct and reachable from your network; check DNS resolution or use the FQDN instead. |
 **Token security guidelines:**
 
 - Store all API tokens in a secrets manager (HashiCorp Vault, AWS Secrets Manager, CyberArk) — never in plaintext config files or environment variables in CI systems
@@ -471,9 +483,11 @@ Lockout Policy:
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid command 'purearray setattr'. Did you mean 'pureadmin global setattr'?`** — Replace `purearray setattr` with `pureadmin global setattr --idle-timeout 15` to use the correct command syntax.
-    **`Error: lockout-duration must be in format: <number>[s|m|h|d]. Got: 30m`** — Ensure the duration format is valid; use lowercase units like `30m` for 30 minutes or `1h` for 1 hour.
-    **`Error: max-login-attempts must be between 1 and 10. Got: 5`** — Verify the value is within the supported range; common values are 3–5 attempts before lockout.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid command 'purearray setattr'. Did you mean 'pureadmin global setattr'?` | Replace `purearray setattr` with `pureadmin global setattr --idle-timeout 15` to use the correct command syntax. |
+    | `Error: lockout-duration must be in format: <number>[s|m|h|d]. Got: 30m` | Ensure the duration format is valid; use lowercase units like `30m` for 30 minutes or `1h` for 1 hour. |
+    | `Error: max-login-attempts must be between 1 and 10. Got: 5` | Verify the value is within the supported range; common values are 3–5 attempts before lockout. |
 **Recommended policy settings:**
 
 | Setting | Recommended Value | Rationale |

@@ -164,9 +164,11 @@ aws bedrock put-model-invocation-logging-configuration \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDeniedException) when calling the ListFoundationModels operation: User is not authorized to perform: bedrock:ListFoundationModels`** — Attach the `AmazonBedrockFullAccess` policy or a custom policy with `bedrock:ListFoundationModels` permission to your IAM user/role.
-    **`An error occurred (ValidationException) when calling the InvokeModel operation: Could not validate the provided model identifier`** — Verify the model ID is correct and that you have requested access to it in the AWS Bedrock console under Model access.
-    **`An error occurred (ValidationException) when calling the PutModelInvocationLoggingConfiguration operation: 1 validation error detected: Value 'arn:aws:iam::123456789012:role/BedrockLoggingRole' is invalid`** — Ensure the IAM role ARN exists, has a trust relationship with the Bedrock service, and has permissions to write to CloudWatch Logs.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDeniedException) when calling the ListFoundationModels operation: User is not authorized to perform: bedrock:ListFoundationModels` | Attach the `AmazonBedrockFullAccess` policy or a custom policy with `bedrock:ListFoundationModels` permission to your IAM user/role. |
+    | `An error occurred (ValidationException) when calling the InvokeModel operation: Could not validate the provided model identifier` | Verify the model ID is correct and that you have requested access to it in the AWS Bedrock console under Model access. |
+    | `An error occurred (ValidationException) when calling the PutModelInvocationLoggingConfiguration operation: 1 validation error detected: Value 'arn:aws:iam::123456789012:role/BedrockLoggingRole' is invalid` | Ensure the IAM role ARN exists, has a trust relationship with the Bedrock service, and has permissions to write to CloudWatch Logs. |
 ## Key Considerations
 
 - **Model access is not automatic:** Each model must be individually enabled in the Bedrock console per AWS account per region. Access requests are usually approved instantly for most models, but some (e.g., Llama) may require a brief wait. Automation pipelines will fail with `AccessDeniedException` if model access is not enabled.

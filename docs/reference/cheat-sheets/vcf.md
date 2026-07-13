@@ -132,7 +132,9 @@ curl -sk -H "$AUTH" $BASE/v1/clusters | python3 -m json.tool         # all clust
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example; ensure curl supports `-k` on your system).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example; ensure curl supports `-k` on your system). |
     **`jq: parse error
 ## Password management (SDDC Manager appliance SSH)
 
@@ -155,8 +157,10 @@ Rotation completed at 2024-01-15T14:32:18Z
 ```
 
 !!! warning "Common errors"
-    **`Error: Component 'VCENTER' not found in configuration`** — Verify the component name matches your VCF deployment (use `vcf-password-ops --listcomponents` to see available options).
-    **`Error: Authentication failed. Insufficient permissions to rotate password`** — Ensure your user account has the VCENTER_ADMIN role or equivalent credentials configured in the VCF environment.
+    | Error | Fix |
+    |---|---|
+    | `Error: Component 'VCENTER' not found in configuration` | Verify the component name matches your VCF deployment (use `vcf-password-ops --listcomponents` to see available options). |
+    | `Error: Authentication failed. Insufficient permissions to rotate password` | Ensure your user account has the VCENTER_ADMIN role or equivalent credentials configured in the VCF environment. |
 ## See also
 
 - [VCF Operations](../../../virtualization/vmware/products/vmware-cloud-foundation/operations/procedures/)

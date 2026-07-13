@@ -81,9 +81,11 @@ Jan 15 14:47:22 ai-server-01 ollama[2847]: time=2024-01-15T14:47:22.891Z level=D
 ```
 
 !!! warning "Common errors"
-    **`Unit ollama.service not found.`** — Verify the service is installed with `systemctl list-unit-files | grep ollama` and reinstall if missing.
-    **`Failed to start ollama.service: Unit ollama.service is masked.`** — Unmask the service with `systemctl unmask ollama` before attempting to stop it.
-    **`error: listen tcp 127.0.0.1:11434: bind: address already in use`** — Kill the existing Ollama process with `pkill -f "ollama serve"` or change the port with `OLLAMA_HOST=127.0.0.1:11435 ollama serve`.
+    | Error | Fix |
+    |---|---|
+    | `Unit ollama.service not found.` | Verify the service is installed with `systemctl list-unit-files | grep ollama` and reinstall if missing. |
+    | `Failed to start ollama.service: Unit ollama.service is masked.` | Unmask the service with `systemctl unmask ollama` before attempting to stop it. |
+    | `error: listen tcp 127.0.0.1:11434: bind: address already in use` | Kill the existing Ollama process with `pkill -f "ollama serve"` or change the port with `OLLAMA_HOST=127.0.0.1:11435 ollama serve`. |
 ## GPU Not Detected
 
 ```bash
@@ -121,8 +123,10 @@ msg="CUDA compute capability" major=8 minor=6
 ```
 
 !!! warning "Common errors"
-    **`NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver`** — Reinstall the NVIDIA driver with `sudo apt install --reinstall nvidia-driver-550` and reboot.
-    **`msg="no NVIDIA GPUs detected"`** — Verify the GPU is visible with `lspci | grep NVIDIA` and check that CUDA_VISIBLE_DEVICES is not restricting access with `echo $CUDA_VISIBLE_DEVICES`.
+    | Error | Fix |
+    |---|---|
+    | `NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver` | Reinstall the NVIDIA driver with `sudo apt install --reinstall nvidia-driver-550` and reboot. |
+    | `msg="no NVIDIA GPUs detected"` | Verify the GPU is visible with `lspci | grep NVIDIA` and check that CUDA_VISIBLE_DEVICES is not restricting access with `echo $CUDA_VISIBLE_DEVICES`. |
 For Docker deployments, ensure `--gpus all` is passed and the NVIDIA Container Toolkit is installed:
 
 ```bash
@@ -156,9 +160,11 @@ docker.service started successfully
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to nvidia.github.io port 443: Connection timed out`** — Verify network connectivity and check if the NVIDIA repository is accessible; try again after confirming DNS resolution with `nslookup nvidia.github.io`.
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the entire script with `sudo` or as the root user.
-    **`Error response from daemon: could not select device driver "" with capabilities: [[gpu]]`** — Verify NVIDIA GPU is present with `lspci | grep -i nvidia` and ensure the NVIDIA driver is installed with `nvidia-smi`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to nvidia.github.io port 443: Connection timed out` | Verify network connectivity and check if the NVIDIA repository is accessible; try again after confirming DNS resolution with `nslookup nvidia.github.io`. |
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the entire script with `sudo` or as the root user. |
+    | `Error response from daemon: could not select device driver "" with capabilities: [[gpu]]` | Verify NVIDIA GPU is present with `lspci | grep -i nvidia` and ensure the NVIDIA driver is installed with `nvidia-smi`. |
 ## Model Load Failures
 
 ```bash
@@ -201,9 +207,11 @@ total 18G
 ```
 
 !!! warning "Common errors"
-    **`error: pull model manifest: not found`** — Verify the model name is correct (e.g., `ollama list` to see available models) and check your internet connection.
-    **`CUDA out of memory: tried to allocate X.XXGiB`** — Reduce model size further with a lower quantization (e.g., `q3_K_S`) or increase available VRAM by closing other GPU applications.
-    **`connection refused`** — Ensure the Ollama daemon is running with `ollama serve` in another terminal before executing `ollama run` commands.
+    | Error | Fix |
+    |---|---|
+    | `error: pull model manifest: not found` | Verify the model name is correct (e.g., `ollama list` to see available models) and check your internet connection. |
+    | `CUDA out of memory: tried to allocate X.XXGiB` | Reduce model size further with a lower quantization (e.g., `q3_K_S`) or increase available VRAM by closing other GPU applications. |
+    | `connection refused` | Ensure the Ollama daemon is running with `ollama serve` in another terminal before executing `ollama run` commands. |
 Common load error causes:
 
 | Error Message | Cause | Fix |
@@ -251,9 +259,11 @@ success
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to port 11434: Connection refused`** — Ensure Ollama service is running with `systemctl start ollama` or `ollama serve` in another terminal.
-    **`jq: parse error: Cannot index number with string "models"`** — The API endpoint returned an empty response; verify the model is loaded with `ollama list` and restart with `ollama run <model-name>`.
-    **`Error: model not found`** — Pull the model first using `ollama pull llama3.1:8b` before attempting to run it.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to port 11434: Connection refused` | Ensure Ollama service is running with `systemctl start ollama` or `ollama serve` in another terminal. |
+    | `jq: parse error: Cannot index number with string "models"` | The API endpoint returned an empty response; verify the model is loaded with `ollama list` and restart with `ollama run <model-name>`. |
+    | `Error: model not found` | Pull the model first using `ollama pull llama3.1:8b` before attempting to run it. |
 ## Port Conflicts
 
 ```bash
@@ -287,9 +297,11 @@ ollama    3847 root    3u  IPv4  45821      0t0  TCP 127.0.0.1:11434 (LISTEN)
 ```
 
 !!! warning "Common errors"
-    **`ss: command not found`** — Install iproute2 with `apt install iproute2` or `yum install iproute2`.
-    **`Failed to open /etc/systemd/system/ollama.service.d/override.conf: Permission denied`** — Run `systemctl edit ollama` with sudo or as root user.
-    **`Job for ollama.service failed because the control process exited with error code`** — Verify the OLLAMA_HOST syntax is correct (e.g., `0.0.0.0:11435` without quotes in the Environment line) and check logs with `journalctl -u ollama -n 20`.
+    | Error | Fix |
+    |---|---|
+    | `ss: command not found` | Install iproute2 with `apt install iproute2` or `yum install iproute2`. |
+    | `Failed to open /etc/systemd/system/ollama.service.d/override.conf: Permission denied` | Run `systemctl edit ollama` with sudo or as root user. |
+    | `Job for ollama.service failed because the control process exited with error code` | Verify the OLLAMA_HOST syntax is correct (e.g., `0.0.0.0:11435` without quotes in the Environment line) and check logs with `journalctl -u ollama -n 20`. |
 ## Service Won't Start
 
 ```bash
@@ -334,8 +346,10 @@ root       3421  0.0  0.0   6408   2304 pts/0 S+   10:31   0:00 grep --color=aut
 ```
 
 !!! warning "Common errors"
-    **`chown: changing ownership of '/usr/share/ollama/.ollama/': No such file or directory`** — Create the directory first with `mkdir -p /usr/share/ollama/.ollama/` before running chown.
-    **`getenforce: command not found`** — Install SELinux tools with `apt install selinux-utils` on Debian/Ubuntu or `yum install policycoreutils` on RHEL/CentOS.
+    | Error | Fix |
+    |---|---|
+    | `chown: changing ownership of '/usr/share/ollama/.ollama/': No such file or directory` | Create the directory first with `mkdir -p /usr/share/ollama/.ollama/` before running chown. |
+    | `getenforce: command not found` | Install SELinux tools with `apt install selinux-utils` on Debian/Ubuntu or `yum install policycoreutils` on RHEL/CentOS. |
     **`Permission denied`** when starting ollama service after chmod — Ensure the ollama user exists with `useradd -r -s /bin/false ollama` and owns the binary's parent directory.
 ## Connectivity from Remote Hosts
 
@@ -374,9 +388,11 @@ LISTEN     0      4096      0.0.0.0:11434            0.0.0.0:*        users:(("o
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.50 port 11434: Connection refused`** — Verify Ollama is running with `systemctl status ollama` and restart if needed.
-    **`Error: INVALID_ARGUMENT: 'ufw' not found`** — Check your firewall tool with `sudo firewall-cmd --version` or `sudo ufw version` and use the appropriate command for your distribution.
-    **`LISTEN     0      4096      127.0.0.1:11434            0.0.0.0:*`** — Set `OLLAMA_HOST=0.0.0.0:11434` in `/etc/systemd/system/ollama.service` environment and run `systemctl daemon-reload && systemctl restart ollama`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.50 port 11434: Connection refused` | Verify Ollama is running with `systemctl status ollama` and restart if needed. |
+    | `Error: INVALID_ARGUMENT: 'ufw' not found` | Check your firewall tool with `sudo firewall-cmd --version` or `sudo ufw version` and use the appropriate command for your distribution. |
+    | `LISTEN     0      4096      127.0.0.1:11434            0.0.0.0:*` | Set `OLLAMA_HOST=0.0.0.0:11434` in `/etc/systemd/system/ollama.service` environment and run `systemctl daemon-reload && systemctl restart ollama`. |
 ---
 
 ## Verify resolution

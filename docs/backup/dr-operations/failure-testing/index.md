@@ -49,9 +49,11 @@ $ tc qdisc del dev eth0 root
 ```
 
 !!! warning "Common errors"
-    **`bash: pgrep: command not found`** — Install procps-ng package with `apt-get install procps-ng` or `yum install procps-ng`.
-    **`stress-ng: error: cannot allocate 80% of memory (requested 6442450944 bytes)`** — Reduce the percentage or number of workers; system lacks sufficient free memory for the test.
-    **`RTNETLINK answers: No such device`** — Verify the network interface name with `ip link show` and replace eth0 with the correct interface (e.g., ens0, wlan0).
+    | Error | Fix |
+    |---|---|
+    | `bash: pgrep: command not found` | Install procps-ng package with `apt-get install procps-ng` or `yum install procps-ng`. |
+    | `stress-ng: error: cannot allocate 80% of memory (requested 6442450944 bytes)` | Reduce the percentage or number of workers; system lacks sufficient free memory for the test. |
+    | `RTNETLINK answers: No such device` | Verify the network interface name with `ip link show` and replace eth0 with the correct interface (e.g., ens0, wlan0). |
 ```bash
 # Test graceful shutdown
 systemctl stop nginx

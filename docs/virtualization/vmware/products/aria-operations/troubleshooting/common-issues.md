@@ -53,9 +53,11 @@ Starting vmware-vcops-watchdog: [  OK  ]
 ```
 
 !!! warning "Common errors"
-    **`ERROR [AdapterManager] VMwareAdapter connection timeout after 30s`** — Verify network connectivity to the target vCenter and check firewall rules allowing port 443 from the vROps appliance.
-    **`ERROR [AuthHandler] Authentication failed for vCenter credentials`** — Re-enter the vCenter adapter credentials in the vROps UI under Administration > Adapters and ensure the service account password has not expired.
-    **`Certificate validation failed for host`** — Add the vCenter SSL certificate to the vROps trust store using `vracli certificate add --file /path/to/cert.pem` or disable certificate validation in the adapter configuration if using a self-signed cert.
+    | Error | Fix |
+    |---|---|
+    | `ERROR [AdapterManager] VMwareAdapter connection timeout after 30s` | Verify network connectivity to the target vCenter and check firewall rules allowing port 443 from the vROps appliance. |
+    | `ERROR [AuthHandler] Authentication failed for vCenter credentials` | Re-enter the vCenter adapter credentials in the vROps UI under Administration > Adapters and ensure the service account password has not expired. |
+    | `Certificate validation failed for host` | Add the vCenter SSL certificate to the vROps trust store using `vracli certificate add --file /path/to/cert.pem` or disable certificate validation in the adapter configuration if using a self-signed cert. |
 ```bash
 # Check analytics processing — if analytics queue is backed up, processing is delayed
 tail -200 /data/vcops/log/analytics.log | grep -i "queue\|backlog\|warn\|error"
@@ -104,9 +106,11 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the vRops certificate into your system CA bundle with `update-ca-certificates`.
-    **`jq: error (at <stdin>:1): Cannot index array with string "resourceList"`** — Verify the API token is valid by checking `echo $TOKEN` and confirm the vRops API endpoint is responding with JSON using `curl -sk ... | head -c 200`.
-    **`Authorization: vRealizeOpsToken: command not found`** — Ensure the TOKEN variable is exported in your shell session with `export TOKEN=$(cat /path/to/token.txt)` before running the curl command.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag (already present) or import the vRops certificate into your system CA bundle with `update-ca-certificates`. |
+    | `jq: error (at <stdin>:1): Cannot index array with string "resourceList"` | Verify the API token is valid by checking `echo $TOKEN` and confirm the vRops API endpoint is responding with JSON using `curl -sk ... | head -c 200`. |
+    | `Authorization: vRealizeOpsToken: command not found` | Ensure the TOKEN variable is exported in your shell session with `export TOKEN=$(cat /path/to/token.txt)` before running the curl command. |
 ```bash
 # Force a capacity recalculation
 curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
@@ -126,9 +130,11 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the vROps certificate into your system trust store.
-    **`jq: error (at <stdin>:1): Cannot index object with string "[]"`** — Ensure the API response is valid JSON by checking that `$TOKEN` is set correctly and the vROps instance is accessible; test with `curl -sk https://vrops-prod-01.example.local/suite-api/api/analytics`.
-    **`{"error":"Invalid token or insufficient permissions"}`** — Regenerate the API token in vROps Administration > API Access and ensure the service account has Analytics Administrator role assigned.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the vROps certificate into your system trust store. |
+    | `jq: error (at <stdin>:1): Cannot index object with string "[]"` | Ensure the API response is valid JSON by checking that `$TOKEN` is set correctly and the vROps instance is accessible; test with `curl -sk https://vrops-prod-01.example.local/suite-api/api/analytics`. |
+    | `{"error":"Invalid token or insufficient permissions"}` | Regenerate the API token in vROps Administration > API Access and ensure the service account has Analytics Administrator role assigned. |
 ```bash
 # Test LDAP connectivity from the Aria Operations appliance
 ssh admin@vrops-prod-01.example.local
@@ -169,9 +175,11 @@ sAMAccountName: testuser
 ```
 
 !!! warning "Common errors"
-    **`ldapsearch: error code 49 "80090308: LdapErr: DSID-0C090453, comment: AcceptSecurityContext error, data 52e, v3839 WILL_NOT_PERFORM"`** — Verify the service account password is correct and the account is not locked; reset credentials in Active Directory if needed.
-    **`ldapsearch: error code 1 "Operations error"`** — Confirm the LDAP source hostname and port (636 for LDAPS) are correct and the firewall allows outbound connectivity from the Aria Operations appliance to the domain controller.
-    **`vracli: command not found`** — SSH into the Aria Operations appliance using the correct admin credentials and ensure you are in the correct shell context; try `/usr/bin/vracli` with the full path if needed.
+    | Error | Fix |
+    |---|---|
+    | `ldapsearch: error code 49 "80090308: LdapErr: DSID-0C090453, comment: AcceptSecurityContext error, data 52e, v3839 WILL_NOT_PERFORM"` | Verify the service account password is correct and the account is not locked; reset credentials in Active Directory if needed. |
+    | `ldapsearch: error code 1 "Operations error"` | Confirm the LDAP source hostname and port (636 for LDAPS) are correct and the firewall allows outbound connectivity from the Aria Operations appliance to the domain controller. |
+    | `vracli: command not found` | SSH into the Aria Operations appliance using the correct admin credentials and ensure you are in the correct shell context; try `/usr/bin/vracli` with the full path if needed. |
 ```bash
 # Verify SMTP configuration
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
@@ -233,9 +241,11 @@ admin@vrops-prod-01.example.local's password:
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification or import the vROps certificate into your system trust store.
-    **`curl: (7) Failed to connect to vrops-prod-01.example.local port 443: Connection refused`** — Verify the vROps appliance is running and accessible on the network; check firewall rules and DNS resolution with `nslookup vrops-prod-01.example.local`.
-    **`jq: parse error: Invalid JSON`** — Confirm the `$TOKEN` variable is set correctly with `echo $TOKEN` and that the API endpoint is responding with valid JSON using `curl -sk ... | head -c 500`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification or import the vROps certificate into your system trust store. |
+    | `curl: (7) Failed to connect to vrops-prod-01.example.local port 443: Connection refused` | Verify the vROps appliance is running and accessible on the network; check firewall rules and DNS resolution with `nslookup vrops-prod-01.example.local`. |
+    | `jq: parse error: Invalid JSON` | Confirm the `$TOKEN` variable is set correctly with `echo $TOKEN` and that the API endpoint is responding with valid JSON using `curl -sk ... | head -c 500`. |
 ```bash
 # Check CPU and memory pressure on the primary node
 ssh admin@vrops-prod-01.example.local

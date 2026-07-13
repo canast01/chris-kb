@@ -187,9 +187,11 @@ Domain Name: example.com
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname esxi-01.example.com: Name or service not known`** — Verify the hostname is resolvable by checking DNS or using the IP address directly (ssh root@192.168.1.45).
-    **`Error: NTP set failed: Unable to set NTP servers`** — Confirm the NTP server hostnames are reachable and that firewall rules allow UDP port 123 outbound from the ESXi host.
-    **`Error: NTP stats not available`** — Wait 30-60 seconds after enabling NTP for the host to synchronize with the configured servers, then retry the stats command.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname esxi-01.example.com: Name or service not known` | Verify the hostname is resolvable by checking DNS or using the IP address directly (ssh root@192.168.1.45). |
+    | `Error: NTP set failed: Unable to set NTP servers` | Confirm the NTP server hostnames are reachable and that firewall rules allow UDP port 123 outbound from the ESXi host. |
+    | `Error: NTP stats not available` | Wait 30-60 seconds after enabling NTP for the host to synchronize with the configured servers, then retry the stats command. |
 ### Verify Connectivity
 
 From a management workstation:
@@ -229,9 +231,11 @@ root@esxi-01.example.com's password:
 ```
 
 !!! warning "Common errors"
-    **`ping: esxi-01.example.com: Name or service not known`** — Verify DNS resolution by checking /etc/resolv.conf and ensure the ESXi hostname is registered in DNS or add it to /etc/hosts.
-    **`nslookup: can't resolve 'esxi-01.example.com': No address associated with hostname`** — Confirm the ESXi host's management IP is correctly registered in DNS or use the IP address directly instead of the hostname.
-    **`ssh: connect to host esxi-01.example.com port 22: Connection refused`** — Verify SSH is enabled on the ESXi host via the vSphere Client and check that the management network is reachable.
+    | Error | Fix |
+    |---|---|
+    | `ping: esxi-01.example.com: Name or service not known` | Verify DNS resolution by checking /etc/resolv.conf and ensure the ESXi hostname is registered in DNS or add it to /etc/hosts. |
+    | `nslookup: can't resolve 'esxi-01.example.com': No address associated with hostname` | Confirm the ESXi host's management IP is correctly registered in DNS or use the IP address directly instead of the hostname. |
+    | `ssh: connect to host esxi-01.example.com port 22: Connection refused` | Verify SSH is enabled on the ESXi host via the vSphere Client and check that the management network is reachable. |
 Repeat for every host. All must have working forward and reverse DNS before vCenter deployment.
 
 ---
@@ -292,8 +296,10 @@ Leap status     : Normal
 ```
 
 !!! warning "Common errors"
-    **`506 Cannot talk to daemon`** — Ensure the chronyd service is running with `systemctl start chronyd` on the VCSA.
-    **`Stratum         : 16`** — The NTP server is unreachable or misconfigured; verify network connectivity and NTP server address in `/etc/chrony.conf`.
+    | Error | Fix |
+    |---|---|
+    | `506 Cannot talk to daemon` | Ensure the chronyd service is running with `systemctl start chronyd` on the VCSA. |
+    | `Stratum         : 16` | The NTP server is unreachable or misconfigured; verify network connectivity and NTP server address in `/etc/chrony.conf`. |
 ---
 
 ## Phase 4 — dvSwitch and vSAN Network Setup
@@ -396,9 +402,11 @@ round-trip min/avg/max = 0.789/0.796/0.801 ms
 ```
 
 !!! warning "Common errors"
-    **`PING 192.168.100.12 (192.168.100.12): 56 data bytes — No response from host`** — Verify the vSAN VMkernel IP is correct and the network path between hosts is unblocked.
-    **`Unknown interface vmk2`** — Confirm vmk2 exists on this host with `esxcli network ip interface list` and use the correct VMkernel interface name.
-    **`4 packets transmitted, 0 packets received, 100% packet loss`** — Check that the vSAN network MTU is set to 9000 on all physical switches and VMkernel interfaces with `esxcli network ip
+    | Error | Fix |
+    |---|---|
+    | `PING 192.168.100.12 (192.168.100.12): 56 data bytes — No response from host` | Verify the vSAN VMkernel IP is correct and the network path between hosts is unblocked. |
+    | `Unknown interface vmk2` | Confirm vmk2 exists on this host with `esxcli network ip interface list` and use the correct VMkernel interface name. |
+    | `4 packets transmitted, 0 packets received, 100% packet loss` | Check that the vSAN network MTU is set to 9000 on all physical switches and VMkernel interfaces with `esxcli network ip |
 Any packet loss means MTU 9000 is not configured somewhere in the path (switch port, trunk, uplink). Fix before enabling vSAN.
 
 ### Configure NIOC (If Sharing NICs)
@@ -458,8 +466,10 @@ Health: Healthy
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan storage list`** — Verify vSAN is licensed and enabled on the cluster, then reconnect the ESXi host to vCenter.
-    **`(empty output)`** — Run the command on each ESXi host individually using SSH; the command does not aggregate across hosts from a single execution point.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan storage list` | Verify vSAN is licensed and enabled on the cluster, then reconnect the ESXi host to vCenter. |
+    | `(empty output)` | Run the command on each ESXi host individually using SSH; the command does not aggregate across hosts from a single execution point. |
 ### Verify vSAN Cluster Formation
 
 ```bash
@@ -491,8 +501,10 @@ Test Results:
 ```
 
 !!! warning "Common errors"
-    **`Cluster UUID: <unknown>`** — Ensure all hosts are licensed for vSAN and the cluster has been properly initialized with `esxcli vsan cluster new`.
-    **`Cluster Health Status: DEGRADED`** — Check individual host health with `esxcli vsan health host get` and verify network connectivity between cluster members.
+    | Error | Fix |
+    |---|---|
+    | `Cluster UUID: <unknown>` | Ensure all hosts are licensed for vSAN and the cluster has been properly initialized with `esxcli vsan cluster new`. |
+    | `Cluster Health Status: DEGRADED` | Check individual host health with `esxcli vsan health host get` and verify network connectivity between cluster members. |
 **From vSphere Client:**
 Cluster → Monitor → vSAN → Skyline Health — resolve any warnings before proceeding.
 
@@ -604,8 +616,10 @@ esxcli vsan health cluster get | grep -v PASS
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the specified host. The session is not authenticated.`** — Authenticate to the ESXi host or vCenter using `esxcli -s <host> -u <user> -p <password>` before running vsan commands.
-    **`Error: Unknown command or namespace 'vsan'.`** — Verify vSAN is licensed and enabled on the cluster; if not installed, the vsan namespace will not be available in esxcli.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the specified host. The session is not authenticated.` | Authenticate to the ESXi host or vCenter using `esxcli -s <host> -u <user> -p <password>` before running vsan commands. |
+    | `Error: Unknown command or namespace 'vsan'.` | Verify vSAN is licensed and enabled on the cluster; if not installed, the vsan namespace will not be available in esxcli. |
 ### Storage Policy Compliance
 
 ```powershell
@@ -642,8 +656,10 @@ State: Enabled
 ```
 
 !!! warning "Common errors"
-    **`VSAN Cluster is not enabled on this host`** — Enable vSAN on the host through vCenter or run `esxcli vsan cluster new` to initialize the cluster.
-    **`Unknown command or namespace vsan`** — Install or enable the vSAN license and ensure the vSAN VIB is installed with `esxcli software vib list | grep vsan`.
+    | Error | Fix |
+    |---|---|
+    | `VSAN Cluster is not enabled on this host` | Enable vSAN on the host through vCenter or run `esxcli vsan cluster new` to initialize the cluster. |
+    | `Unknown command or namespace vsan` | Install or enable the vSAN license and ensure the vSAN VIB is installed with `esxcli software vib list | grep vsan`. |
 ### MTU Verification (Final Check)
 
 ```bash
@@ -674,9 +690,11 @@ round-trip min/avg/max = 1.987/2.055/2.134 ms
 ```
 
 !!! warning "Common errors"
-    **`PING 192.168.100.11 (192.168.100.11): 56 data bytes — 100% packet loss`** — Verify vmk2 is bound to the correct vSAN network and check physical switch connectivity between hosts.
-    **`Unknown host 192.168.100.11`** — Confirm the vSAN vmk IP addresses are correct and reachable from the current host's management network.
-    **`Cannot find device vmk2`** — Ensure vmk2 exists on this host by running `esxcli network ip interface list` and create it if missing.
+    | Error | Fix |
+    |---|---|
+    | `PING 192.168.100.11 (192.168.100.11): 56 data bytes — 100% packet loss` | Verify vmk2 is bound to the correct vSAN network and check physical switch connectivity between hosts. |
+    | `Unknown host 192.168.100.11` | Confirm the vSAN vmk IP addresses are correct and reachable from the current host's management network. |
+    | `Cannot find device vmk2` | Ensure vmk2 exists on this host by running `esxcli network ip interface list` and create it if missing. |
 ### Deploy a Test VM
 
 Provision a test VM on the vSAN datastore using the standard storage policy:

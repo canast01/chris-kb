@@ -66,9 +66,11 @@ Jan 15 14:34:19 collector-vm keystone-collector[2847]: Collection cycle complete
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to keystone.netapp.com port 443: Connection timed out`** — Verify network connectivity and firewall rules allow outbound HTTPS to NetApp Keystone endpoints.
-    **`Collector Status: STOPPED`** — Restart the collector service with `systemctl restart keystone-collector` and check for configuration errors in `/etc/keystone-collector/config.yaml`.
-    **`Collection cycle failed: Authentication error - Invalid API credentials`** — Verify the Keystone API credentials are correctly configured in the collector's authentication file and have not expired.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to keystone.netapp.com port 443: Connection timed out` | Verify network connectivity and firewall rules allow outbound HTTPS to NetApp Keystone endpoints. |
+    | `Collector Status: STOPPED` | Restart the collector service with `systemctl restart keystone-collector` and check for configuration errors in `/etc/keystone-collector/config.yaml`. |
+    | `Collection cycle failed: Authentication error - Invalid API credentials` | Verify the Keystone API credentials are correctly configured in the collector's authentication file and have not expired. |
 **Resolution:**
 
 1. Confirm outbound HTTPS (443) is allowed from Collector VM to NetApp cloud endpoints
@@ -130,8 +132,10 @@ keystone-svm vol_prod_02 qtree_ops    mixed
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: permission denied for "volume show"`** — Verify the ONTAP user account has cluster-admin or appropriate SVM-admin role assigned.
-    **`Error: Vserver "<keystone-svm>" does not exist`** — Confirm the SVM name is correct and exists on the cluster using `vserver show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: permission denied for "volume show"` | Verify the ONTAP user account has cluster-admin or appropriate SVM-admin role assigned. |
+    | `Error: Vserver "<keystone-svm>" does not exist` | Confirm the SVM name is correct and exists on the cluster using `vserver show`. |
 **Common causes:** Snapshot accumulation from a missed cleanup job; a bulk data ingest; a new volume provisioned directly on the SVM outside of Keystone portal workflow.
 
 ---
@@ -176,8 +180,10 @@ Last Transfer Duration: 00:01:29
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No SnapMirror relationship found for destination path "cluster2://vol_dest"`** — Verify the destination path is correct and the relationship exists with `snapmirror show`.
-    **`Error: command failed: Snapmirror relationship is in "broken-off" state and cannot be resynced`** — Release the broken relationship on the destination with `snapmirror release -relationship-info-only` before attempting resync.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No SnapMirror relationship found for destination path "cluster2://vol_dest"` | Verify the destination path is correct and the relationship exists with `snapmirror show`. |
+    | `Error: command failed: Snapmirror relationship is in "broken-off" state and cannot be resynced` | Release the broken relationship on the destination with `snapmirror release -relationship-info-only` before attempting resync. |
 ---
 
 ## Collector VM Cannot Reach ONTAP Array
@@ -211,9 +217,11 @@ cluster-01  cluster-mgmt    192.168.1.50    up
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.50 port 443: Connection refused`** — Verify the ONTAP management IP is correct and the HTTPS service is running on the cluster with `system services web show`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification, or import the ONTAP cluster certificate into your Collector VM's certificate store.
-    **`Error: command not found`** — Run the network interface command directly on the ONTAP cluster via SSH, not from the Collector VM; use `ssh admin@<ontap-mgmt-ip> "network interface show -role cluster-mgmt"` instead.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.50 port 443: Connection refused` | Verify the ONTAP management IP is correct and the HTTPS service is running on the cluster with `system services web show`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip SSL verification, or import the ONTAP cluster certificate into your Collector VM's certificate store. |
+    | `Error: command not found` | Run the network interface command directly on the ONTAP cluster via SSH, not from the Collector VM; use `ssh admin@<ontap-mgmt-ip> "network interface show -role cluster-mgmt"` instead. |
 **Resolution:** Confirm ONTAP management LIF is up, firewall rules allow 443 from Collector VM, and credentials stored in Collector config are current.
 
 ---

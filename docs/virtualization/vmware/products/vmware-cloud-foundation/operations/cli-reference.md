@@ -74,9 +74,11 @@ curl -k -X GET https://<sddc-mgr>/v1/domains \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the SDDC Manager certificate into your system's CA store.
-    **`{"error":"Invalid token","statusCode":401}`** — Ensure the Bearer token is valid and not expired; re-authenticate with the POST /v1/tokens endpoint and use the new accessToken in the Authorization header.
-    **`curl: (7) Failed to connect to <sddc-mgr> port 443: Connection refused`** — Verify the SDDC Manager hostname/IP is correct, reachable on the network, and the API service is running with `systemctl status vcf-api`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the SDDC Manager certificate into your system's CA store. |
+    | `{"error":"Invalid token","statusCode":401}` | Ensure the Bearer token is valid and not expired; re-authenticate with the POST /v1/tokens endpoint and use the new accessToken in the Authorization header. |
+    | `curl: (7) Failed to connect to <sddc-mgr> port 443: Connection refused` | Verify the SDDC Manager hostname/IP is correct, reachable on the network, and the API service is running with `systemctl status vcf-api`. |
 ---
 
 ## Password Management
@@ -143,9 +145,11 @@ curl -k -X PATCH https://<sddc-mgr>/v1/credentials \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the SDDC Manager certificate into your system trust store.
-    **`{"error":"Unauthorized","message":"Invalid or expired token"}`** — Regenerate the API token from the SDDC Manager UI and ensure it has not exceeded its expiration time.
-    **`{"error":"BadRequest","message":"Invalid resourceType: <type>"}`** — Verify resourceType is one of: VCENTER, ESXI, NSX, VSAN, SDDC_MANAGER, or VROPS before submitting the rotation request.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the SDDC Manager certificate into your system trust store. |
+    | `{"error":"Unauthorized","message":"Invalid or expired token"}` | Regenerate the API token from the SDDC Manager UI and ensure it has not exceeded its expiration time. |
+    | `{"error":"BadRequest","message":"Invalid resourceType: <type>"}` | Verify resourceType is one of: VCENTER, ESXI, NSX, VSAN, SDDC_MANAGER, or VROPS before submitting the rotation request. |
 ---
 
 ## Service Status & Logs
@@ -189,9 +193,11 @@ Jan 17 14:36:01 sddc-mgr-01 sddc-manager[8742]: LCM operation completed with sta
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/vmware/vcf/lcm/lcm-debug.log' for reading: No such file or directory`** — Verify the LCM service is running with `systemctl status lcm` and check the correct log path with `find /var/log/vmware -name "*lcm*"`.
-    **`Unit sddc-manager.service could not be found.`** — Confirm SDDC Manager is installed by running `dpkg -l | grep sddc-manager` or `rpm -qa | grep sddc-manager` and reinstall if missing.
-    **`Permission denied`** — Run the commands with `sudo` or ensure your user is in the appropriate group with `sudo usermod -aG sddc-manager $USER`.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/vmware/vcf/lcm/lcm-debug.log' for reading: No such file or directory` | Verify the LCM service is running with `systemctl status lcm` and check the correct log path with `find /var/log/vmware -name "*lcm*"`. |
+    | `Unit sddc-manager.service could not be found.` | Confirm SDDC Manager is installed by running `dpkg -l | grep sddc-manager` or `rpm -qa | grep sddc-manager` and reinstall if missing. |
+    | `Permission denied` | Run the commands with `sudo` or ensure your user is in the appropriate group with `sudo usermod -aG sddc-manager $USER`. |
 ---
 
 ## See also

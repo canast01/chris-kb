@@ -110,9 +110,11 @@ cluster-01  node02_mgmt            192.168.1.51    mgmt
 ```
 
 !!! warning "Common errors"
-    **`Error: "e0e" is not a valid port on node01`** — Verify the physical port exists on the node using `network port show -node <node01>`.
-    **`Error: Address 10.0.1.101 is already in use`** — Confirm the IP address is not assigned to another LIF or device on the network.
-    **`Error: Intercluster LIF cannot be created on a port already hosting a data LIF`** — Use a dedicated physical port that is not currently assigned to any data or management LIF.
+    | Error | Fix |
+    |---|---|
+    | `Error: "e0e" is not a valid port on node01` | Verify the physical port exists on the node using `network port show -node <node01>`. |
+    | `Error: Address 10.0.1.101 is already in use` | Confirm the IP address is not assigned to another LIF or device on the network. |
+    | `Error: Intercluster LIF cannot be created on a port already hosting a data LIF` | Use a dedicated physical port that is not currently assigned to any data or management LIF. |
 ### Restrict Peer Cluster Access
 
 On the external firewall or network ACL, restrict TCP 11104 and 11105 to the specific intercluster LIF IP pairs only:
@@ -132,8 +134,10 @@ deny tcp any any eq 11105
 ```
 
 !!! warning "Common errors"
-    **`error: invalid syntax near '<src-ic-lif-ip>'`** — Replace angle-bracket placeholders with actual IP addresses (e.g., 192.168.1.10) before applying the rule.
-    **`error: rule conflict detected on ports 11104/11105`** — Ensure deny rules are placed after permit rules, or consolidate overlapping rules to avoid ambiguous evaluation order.
+    | Error | Fix |
+    |---|---|
+    | `error: invalid syntax near '<src-ic-lif-ip>'` | Replace angle-bracket placeholders with actual IP addresses (e.g., 192.168.1.10) before applying the rule. |
+    | `error: rule conflict detected on ports 11104/11105` | Ensure deny rules are placed after permit rules, or consolidate overlapping rules to avoid ambiguous evaluation order. |
 ---
 
 ## RBAC: Restricting Break and Resync Operations
@@ -210,9 +214,11 @@ snapmirror-operator  cluster-prod     snapmirror quiesce            all
 ```
 
 !!! warning "Common errors"
-    **`Error: "dr-admin" already exists.`** — Delete the existing role with `security login role delete -role dr-admin -vserver <cluster-name>` before recreating it.
-    **`Error: Invalid vserver "<cluster-name>"`** — Replace `<cluster-name>` with the actual cluster name from `cluster show` output.
-    **`Error: Unknown command "snapmirror break"`** — Verify the SnapMirror license is installed with `system license show` and the command syntax matches your ONTAP version.
+    | Error | Fix |
+    |---|---|
+    | `Error: "dr-admin" already exists.` | Delete the existing role with `security login role delete -role dr-admin -vserver <cluster-name>` before recreating it. |
+    | `Error: Invalid vserver "<cluster-name>"` | Replace `<cluster-name>` with the actual cluster name from `cluster show` output. |
+    | `Error: Unknown command "snapmirror break"` | Verify the SnapMirror license is installed with `system license show` and the command syntax matches your ONTAP version. |
 ---
 
 ## EMS Alerting for Replication Events
@@ -261,9 +267,11 @@ snapmirror-alerts            mail    storage-team@corp.local
 ```
 
 !!! warning "Common errors"
-    **`Error: Notification destination "snapmirror-alerts" already exists`** — Delete the existing destination with `event notification destination delete -name snapmirror-alerts` before recreating it.
-    **`Error: Invalid email address "storage-team@corp.local"`** — Verify the email address is valid and the mail server is configured with `system services smtp show`.
-    **`Error: Filter "snapmirror-events" already exists`** — Remove the existing filter using `event filter delete -filter-name snapmirror-events` before creating a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: Notification destination "snapmirror-alerts" already exists` | Delete the existing destination with `event notification destination delete -name snapmirror-alerts` before recreating it. |
+    | `Error: Invalid email address "storage-team@corp.local"` | Verify the email address is valid and the mail server is configured with `system services smtp show`. |
+    | `Error: Filter "snapmirror-events" already exists` | Remove the existing filter using `event filter delete -filter-name snapmirror-events` before creating a new one. |
 ---
 
 ## Annual Review Tasks

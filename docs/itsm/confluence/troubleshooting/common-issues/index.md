@@ -45,9 +45,11 @@ CATALINA_OPTS="$CATALINA_OPTS -XX:G1HeapRegionSize=16M -XX:InitiatingHeapOccupan
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory`** — Verify the Confluence data directory path matches your installation; check `confluence.home` in `confluence.cfg.xml` or use `find / -name atlassian-confluence.log 2>/dev/null`.
-    **`pgrep: command not found`** — Install `procps` package (`apt install procps` on Debian/Ubuntu or `yum install procps-ng` on RHEL/CentOS) or replace with `ps aux | grep confluence | grep -v grep | awk '{print $2}'`.
-    **`jstat: command not found`** — Ensure the JDK (not just JR
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory` | Verify the Confluence data directory path matches your installation; check `confluence.home` in `confluence.cfg.xml` or use `find / -name atlassian-confluence.log 2>/dev/null`. |
+    | `pgrep: command not found` | Install `procps` package (`apt install procps` on Debian/Ubuntu or `yum install procps-ng` on RHEL/CentOS) or replace with `ps aux | grep confluence | grep -v grep | awk '{print $2}'`. |
+    | `jstat: command not found` | Ensure the JDK (not just JR |
 ```bash
 # 1. Run VACUUM ANALYZE on the Confluence database
 psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
@@ -70,9 +72,11 @@ VACUUM ANALYZE
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "$DB_HOST" to address: Name or service not known`** — Replace `$DB_HOST` with the actual PostgreSQL hostname or IP address (e.g., `psql -h postgres.internal -U confluence_user -d confluence`).
-    **`psql: error: FATAL: role "confluence_user" does not exist`** — Verify the database user exists and `$DB_USER` is set correctly; check with `psql -h $DB_HOST -U postgres -c "\du"` to list available roles.
-    **`psql: error: FATAL: database "confluence" does not exist`** — Confirm the database name in `$DB_NAME` matches an existing Confluence database; list databases with `psql -h $DB_HOST -U $DB_USER -l`.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "$DB_HOST" to address: Name or service not known` | Replace `$DB_HOST` with the actual PostgreSQL hostname or IP address (e.g., `psql -h postgres.internal -U confluence_user -d confluence`). |
+    | `psql: error: FATAL: role "confluence_user" does not exist` | Verify the database user exists and `$DB_USER` is set correctly; check with `psql -h $DB_HOST -U postgres -c "\du"` to list available roles. |
+    | `psql: error: FATAL: database "confluence" does not exist` | Confirm the database name in `$DB_NAME` matches an existing Confluence database; list databases with `psql -h $DB_HOST -U $DB_USER -l`. |
 ```bash
 # Check index errors
 grep -E "(IndexException|LuceneIndex|index corrupt|Lucene)" \
@@ -104,9 +108,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`IndexException: write.lock held by another process`** — Stop the Confluence service, remove `/mnt/confluence-shared/index/write.lock`, then restart the service.
-    **`Filesystem ... 98% /mnt/confluence-shared`** — Increase the mount point capacity or archive old index segments to free at least 50GB of space.
-    **`Index corruption detected in segment_42`** — Trigger a manual index rebuild via Confluence Administration > Troubleshooting > Rebuild Search Index.
+    | Error | Fix |
+    |---|---|
+    | `IndexException: write.lock held by another process` | Stop the Confluence service, remove `/mnt/confluence-shared/index/write.lock`, then restart the service. |
+    | `Filesystem ... 98% /mnt/confluence-shared` | Increase the mount point capacity or archive old index segments to free at least 50GB of space. |
+    | `Index corruption detected in segment_42` | Trigger a manual index rebuild via Confluence Administration > Troubleshooting > Rebuild Search Index. |
 ```bash
 # Option A: Partial re-index (faster; recovers without full rebuild)
 # Admin > General Configuration > Content Indexing > Re-index
@@ -136,9 +142,11 @@ curl -s -H "Authorization: Bearer $CF_TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to host.example.com port 8090: Connection refused`** — Verify Confluence is running with `systemctl status confluence` and check `CF_URL` environment variable is set correctly.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure `CF_TOKEN` is valid and has search API permissions; test with `curl -s -H "Authorization: Bearer $CF_TOKEN" "${CF_URL}/rest/api/search/index"` without jq first.
-    **`mv: cannot stat '/mnt/confluence-shared/index': No such file or directory`** — Confirm the shared index path matches your Confluence installation; check `confluence.cfg.xml` for the actual `confluence.home` or index location.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to host.example.com port 8090: Connection refused` | Verify Confluence is running with `systemctl status confluence` and check `CF_URL` environment variable is set correctly. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure `CF_TOKEN` is valid and has search API permissions; test with `curl -s -H "Authorization: Bearer $CF_TOKEN" "${CF_URL}/rest/api/search/index"` without jq first. |
+    | `mv: cannot stat '/mnt/confluence-shared/index': No such file or directory` | Confirm the shared index path matches your Confluence installation; check `confluence.cfg.xml` for the actual `confluence.home` or index location. |
 ```bash
 # Enable LDAP debug logging
 # Admin > Logging and Profiling:
@@ -206,8 +214,10 @@ notAfter=Jan 15 10:23:45 2026 GMT
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the LDAP server hostname and port 636 are correct, and that the firewall allows outbound connections to that port.
-    **`verify error:num=20:unable to get local issuer certificate`** — Import the LDAP server's CA certificate into Confluence's truststore or disable certificate verification if using a self-signed cert in a test environment.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the LDAP server hostname and port 636 are correct, and that the firewall allows outbound connections to that port. |
+    | `verify error:num=20:unable to get local issuer certificate` | Import the LDAP server's CA certificate into Confluence's truststore or disable certificate verification if using a self-signed cert in a test environment. |
 ```bash
 # Find plugin errors in the log
 grep -E "(PluginException|BundleException|OSGi)" \
@@ -237,9 +247,11 @@ curl -s -H "Authorization: Bearer $CF_TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the CF_URL environment variable is set correctly and the Confluence instance is running with `systemctl status confluence`.
-    **`jq: parse error: Invalid JSON text at line 1`** — Remove the `-s` flag temporarily to see the actual HTTP response, or check that the Bearer token in CF_TOKEN is valid and has API permissions.
-    **`grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory`** — Verify the Confluence installation path with `find / -name atlassian-confluence.log 2>/dev/null` or check the CONFLUENCE_HOME environment variable.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443: Connection refused` | Verify the CF_URL environment variable is set correctly and the Confluence instance is running with `systemctl status confluence`. |
+    | `jq: parse error: Invalid JSON text at line 1` | Remove the `-s` flag temporarily to see the actual HTTP response, or check that the Bearer token in CF_TOKEN is valid and has API permissions. |
+    | `grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory` | Verify the Confluence installation path with `find / -name atlassian-confluence.log 2>/dev/null` or check the CONFLUENCE_HOME environment variable. |
 ```bash
 # Disable the conflicting plugin via REST
 curl -s -X PUT \
@@ -270,9 +282,11 @@ Confluence started successfully. You can access it at http://localhost:8090/conf
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to host`** — Verify `$CF_URL` is set correctly and the Confluence instance is reachable on the network.
-    **`Permission denied`** — Run the curl command and cache removal as the Confluence service user (typically `confluence`) or with `sudo`.
-    **`{"statusCode":401,"message":"Unauthorized"}`** — Ensure `$CF_TOKEN` is a valid bearer token with admin permissions in Confluence.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to host` | Verify `$CF_URL` is set correctly and the Confluence instance is reachable on the network. |
+    | `Permission denied` | Run the curl command and cache removal as the Confluence service user (typically `confluence`) or with `sudo`. |
+    | `{"statusCode":401,"message":"Unauthorized"}` | Ensure `$CF_TOKEN` is a valid bearer token with admin permissions in Confluence. |
 ```bash
 # Check security log for failed auth events
 tail -50 /var/atlassian/application-data/confluence/logs/atlassian-confluence-security.log
@@ -300,8 +314,10 @@ grep -E "(sessionCookieName|sessionCookiePath|secure)" \
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/atlassian/application-data/confluence/logs/atlassian-confluence-security.log' for reading: No such file or directory`** — Verify the Confluence data directory path with `echo $CONFLUENCE_HOME` and adjust the path accordingly, or check if the security log is in a different location like `/opt/atlassian/confluence/logs/`.
-    **`grep: /opt/atlassian/confluence/conf/server.xml: No such file or directory`** — Confirm the Confluence installation directory by running `find / -name server.xml -path "*/confluence/*" 2>/dev/null` and update the path in the grep command.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/atlassian/application-data/confluence/logs/atlassian-confluence-security.log' for reading: No such file or directory` | Verify the Confluence data directory path with `echo $CONFLUENCE_HOME` and adjust the path accordingly, or check if the security log is in a different location like `/opt/atlassian/confluence/logs/`. |
+    | `grep: /opt/atlassian/confluence/conf/server.xml: No such file or directory` | Confirm the Confluence installation directory by running `find / -name server.xml -path "*/confluence/*" 2>/dev/null` and update the path in the grep command. |
 ```bash
 # Reset admin password via database (emergency access)
 # 1. Generate a bcrypt hash of the new password
@@ -332,9 +348,11 @@ $2a$10$kL9mN2pQrStUvWxYzAbCdeFgHiJkLmNoPqRsTuVwXyZaBcDeFgHiJ
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "db.internal.local" (10.42.1.15), port 5432 failed`** — Verify `$DB_HOST`, `$DB_USER`, and `$DB_NAME` environment variables are set correctly and the database is accessible from this host.
-    **`ERROR: column "credential" does not exist`** — Confirm the Confluence database schema version; use `\d cwd_user` in psql to verify the correct column name (may be `password_hash` in newer versions).
-    **`ERROR: more than one row returned by subquery used as an expression`** — Multiple internal directories exist; specify the exact directory ID in the WHERE clause or filter by `directory_type = 'INTERNAL'`.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "db.internal.local" (10.42.1.15), port 5432 failed` | Verify `$DB_HOST`, `$DB_USER`, and `$DB_NAME` environment variables are set correctly and the database is accessible from this host. |
+    | `ERROR: column "credential" does not exist` | Confirm the Confluence database schema version; use `\d cwd_user` in psql to verify the correct column name (may be `password_hash` in newer versions). |
+    | `ERROR: more than one row returned by subquery used as an expression` | Multiple internal directories exist; specify the exact directory ID in the WHERE clause or filter by `directory_type = 'INTERNAL'`. |
 ```bash
 # Check NFS mount status
 mount | grep confluence
@@ -381,9 +399,11 @@ Write OK
 ```
 
 !!! warning "Common errors"
-    **`mount | grep confluence: command not found`** — Ensure you're running this on the Confluence server itself, not a client machine; if using a container, verify the NFS mount exists in the pod spec.
-    **`Write FAILED`** — Check NFS mount permissions with `ls -ld /mnt/confluence-shared` and verify the Confluence process user (typically `confluence`) has write access via `sudo -u confluence touch /mnt/confluence-shared/test`.
-    **`jq: command not found`** — Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS), or pipe the curl output to `python3 -m json.tool` instead.
+    | Error | Fix |
+    |---|---|
+    | `mount | grep confluence: command not found` | Ensure you're running this on the Confluence server itself, not a client machine; if using a container, verify the NFS mount exists in the pod spec. |
+    | `Write FAILED` | Check NFS mount permissions with `ls -ld /mnt/confluence-shared` and verify the Confluence process user (typically `confluence`) has write access via `sudo -u confluence touch /mnt/confluence-shared/test`. |
+    | `jq: command not found` | Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS), or pipe the curl output to `python3 -m json.tool` instead. |
 ```bash
 # 1. Increase attachment size limit
 # Admin > General Configuration > Further Configuration > Attachment Size
@@ -411,9 +431,11 @@ mount -t nfs nfs-server:/confluence-shared /mnt/confluence-shared
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to host: Name or service not known`** — Verify `$CF_URL` is set correctly and the Confluence server is reachable via `ping` or `curl -v`.
-    **`umount: /mnt/confluence-shared: target is busy`** — Close all open files on the mount point with `lsof /mnt/confluence-shared` and kill processes, or use `umount -l` for lazy unmount.
-    **`mount.nfs: access denied by server while mounting nfs-server:/confluence-shared`** — Check NFS server exports with `showmount -e nfs-server` and verify the client IP is authorized in `/etc/exports`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to host: Name or service not known` | Verify `$CF_URL` is set correctly and the Confluence server is reachable via `ping` or `curl -v`. |
+    | `umount: /mnt/confluence-shared: target is busy` | Close all open files on the mount point with `lsof /mnt/confluence-shared` and kill processes, or use `umount -l` for lazy unmount. |
+    | `mount.nfs: access denied by server while mounting nfs-server:/confluence-shared` | Check NFS server exports with `showmount -e nfs-server` and verify the client IP is authorized in `/etc/exports`. |
 ```bash
 # Current connection count vs maximum
 psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
@@ -445,9 +467,11 @@ used | max_conn
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "db-prod-01.internal" (10.24.8.15), port 5432 failed: Connection refused`** — Verify the PostgreSQL service is running on the target host with `systemctl status postgresql` and confirm `$DB_HOST` is correct.
-    **`psql: error: FATAL: Ident authentication failed for user "confluence_user"`** — Check that the PostgreSQL `pg_hba.conf` allows the connection method for your user and host, or use password authentication with a `.pgpass` file.
-    **`psql: error: FATAL: database "confluence_prod" does not exist`** — Confirm the database name in `$DB_NAME` matches an existing database by running `psql -l` on the target host.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "db-prod-01.internal" (10.24.8.15), port 5432 failed: Connection refused` | Verify the PostgreSQL service is running on the target host with `systemctl status postgresql` and confirm `$DB_HOST` is correct. |
+    | `psql: error: FATAL: Ident authentication failed for user "confluence_user"` | Check that the PostgreSQL `pg_hba.conf` allows the connection method for your user and host, or use password authentication with a `.pgpass` file. |
+    | `psql: error: FATAL: database "confluence_prod" does not exist` | Confirm the database name in `$DB_NAME` matches an existing database by running `psql -l` on the target host. |
 ```bash
 # 1. Kill long-running/stuck queries
 psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
@@ -480,8 +504,10 @@ pg_terminate_backend
 ```
 
 !!! warning "Common errors"
-    **`psql: error: FATAL: Ident authentication failed for user "postgres"`** — Ensure the postgres system user can connect without a password by using `sudo -u postgres psql` or configure `.pgpass` with proper permissions (600).
-    **`ERROR: must be superuser to execute ALTER SYSTEM`** — Connect as the actual postgres superuser account; if using a service account, grant superuser privileges with `ALTER USER "$DB_USER" SUPERUSER;` or use the postgres system user directly.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: FATAL: Ident authentication failed for user "postgres"` | Ensure the postgres system user can connect without a password by using `sudo -u postgres psql` or configure `.pgpass` with proper permissions (600). |
+    | `ERROR: must be superuser to execute ALTER SYSTEM` | Connect as the actual postgres superuser account; if using a service account, grant superuser privileges with `ALTER USER "$DB_USER" SUPERUSER;` or use the postgres system user directly. |
 ```bash
 # Check cluster membership on each node
 curl -s -H "Authorization: Bearer $CF_TOKEN" \
@@ -512,9 +538,11 @@ OK
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify Confluence is running with `systemctl status confluence` and check firewall rules allow port 443 inbound.
-    **`nc: getaddrinfo: Name or service not known`** — Ensure the hostname/IP 10.0.1.12 is correct and resolvable; verify network connectivity with `ping 10.0.1.12`.
-    **`grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory`** — Confirm the Confluence installation path and log location; check with `find / -name atlassian-confluence.log 2>/dev/null`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to confluence.example.com port 443: Connection refused` | Verify Confluence is running with `systemctl status confluence` and check firewall rules allow port 443 inbound. |
+    | `nc: getaddrinfo: Name or service not known` | Ensure the hostname/IP 10.0.1.12 is correct and resolvable; verify network connectivity with `ping 10.0.1.12`. |
+    | `grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory` | Confirm the Confluence installation path and log location; check with `find / -name atlassian-confluence.log 2>/dev/null`. |
 ```bash
 # 1. Confirm firewall rules allow TCP 5801 between all cluster node IPs
 iptables -L -n | grep 5801
@@ -552,9 +580,11 @@ Confluence started successfully. PID: 8742
 ```
 
 !!! warning "Common errors"
-    **`mount: /mnt/confluence-shared: special device /mnt/confluence-shared does not exist`** — Verify the NFS export path exists on the server and check /etc/fstab for correct mount point definition.
-    **`iptables: No chain/target/match by that name`** — Ensure iptables is installed and running; on systems using nftables, convert rules or check with `nft list ruleset | grep 5801` instead.
-    **`Connection refused` (when Confluence fails to start)** — Check that port 5801 is not already in use with `lsof -i :5801` and verify sufficient disk space with `df -h /opt/atlassian`.
+    | Error | Fix |
+    |---|---|
+    | `mount: /mnt/confluence-shared: special device /mnt/confluence-shared does not exist` | Verify the NFS export path exists on the server and check /etc/fstab for correct mount point definition. |
+    | `iptables: No chain/target/match by that name` | Ensure iptables is installed and running; on systems using nftables, convert rules or check with `nft list ruleset | grep 5801` instead. |
+    | `Connection refused` (when Confluence fails to start)` | Check that port 5801 is not already in use with `lsof -i :5801` and verify sufficient disk space with `df -h /opt/atlassian`. |
 ```bash
 # Check mail queue and error queue
 curl -s -H "Authorization: Bearer $CF_TOKEN" \
@@ -615,9 +645,11 @@ SMTP login OK
 ```
 
 !!! warning "Common errors"
-    **`SMTPException: 550 Relay access denied`** — Verify the SMTP server allows relay from the Confluence server IP or check authentication credentials in Confluence mail settings.
-    **`Connection timeout to smtp.example.com:587 after 30000ms`** — Confirm the SMTP server hostname/port is correct and the firewall allows outbound connections on port 587 from the Confluence server.
-    **`curl: (7) Failed to connect to host`** — Ensure `$CF_URL` and `$CF_TOKEN` environment variables are set correctly and the Confluence API is accessible.
+    | Error | Fix |
+    |---|---|
+    | `SMTPException: 550 Relay access denied` | Verify the SMTP server allows relay from the Confluence server IP or check authentication credentials in Confluence mail settings. |
+    | `Connection timeout to smtp.example.com:587 after 30000ms` | Confirm the SMTP server hostname/port is correct and the firewall allows outbound connections on port 587 from the Confluence server. |
+    | `curl: (7) Failed to connect to host` | Ensure `$CF_URL` and `$CF_TOKEN` environment variables are set correctly and the Confluence API is accessible. |
 ```bash
 # 1. Flush the error queue
 # Admin > Mail > Mail Error Queue > Resend All

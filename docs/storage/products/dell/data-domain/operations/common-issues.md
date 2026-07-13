@@ -112,9 +112,11 @@ Estimated time to completion: 4 hours 22 minutes
 ```
 
 !!! warning "Common errors"
-    **`Error: Context context_1 not found`** — Verify the context ID with `replication show all` and use the correct identifier.
-    **`Error: Authentication failed — certificate mismatch detected`** — Run `adminaccess certify <remote-hostname>` on the source system to re-establish trust.
-    **`Error: Replication context is locked by another operation`** — Wait for any in-progress replication jobs to complete or use `replication abort <context_id>` if safe to do so.
+    | Error | Fix |
+    |---|---|
+    | `Error: Context context_1 not found` | Verify the context ID with `replication show all` and use the correct identifier. |
+    | `Error: Authentication failed — certificate mismatch detected` | Run `adminaccess certify <remote-hostname>` on the source system to re-establish trust. |
+    | `Error: Replication context is locked by another operation` | Wait for any in-progress replication jobs to complete or use `replication abort <context_id>` if safe to do so. |
 ---
 
 ## Issue: Replication Lag Growing
@@ -175,9 +177,11 @@ Filesystem Compression Statistics:
 ```
 
 !!! warning "Common errors"
-    **`replication status: command not found`** — Verify you are logged into the Data Domain system with administrative privileges and the replication module is loaded.
-    **`net show stats: permission denied`** — Run the command with `sudo` or ensure your user account has network monitoring permissions in the Data Domain role-based access control.
-    **`filesys show compression: No such file or directory`** — Check the exact filesystem path with `filesys show` first, as the path may differ from `/data/prod` on your system.
+    | Error | Fix |
+    |---|---|
+    | `replication status: command not found` | Verify you are logged into the Data Domain system with administrative privileges and the replication module is loaded. |
+    | `net show stats: permission denied` | Run the command with `sudo` or ensure your user account has network monitoring permissions in the Data Domain role-based access control. |
+    | `filesys show compression: No such file or directory` | Check the exact filesystem path with `filesys show` first, as the path may differ from `/data/prod` on your system. |
 ### Actions
 
 ```bash
@@ -209,9 +213,11 @@ Bytes replicated: 847.3 GB / 1.2 TB
 ```
 
 !!! warning "Common errors"
-    **`Error: Schedule 'daily-backup' not found`** — Verify the schedule name exists with `replication throttle show schedule` before modifying it.
-    **`Error: Invalid bandwidth value '4000000'. Must be 0 or between 1024 and 10485760 kbps`** — Ensure bandwidth is either 0 (unlimited) or within the valid range supported by your Data Domain model.
-    **`Error: Context ID '3e8c5f2a-91b4-4d2e-b7c1-6a2f9d4e1b8c' is not active or does not exist`** — Confirm the replication context is configured and enabled using `replication show context`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Schedule 'daily-backup' not found` | Verify the schedule name exists with `replication throttle show schedule` before modifying it. |
+    | `Error: Invalid bandwidth value '4000000'. Must be 0 or between 1024 and 10485760 kbps` | Ensure bandwidth is either 0 (unlimited) or within the valid range supported by your Data Domain model. |
+    | `Error: Context ID '3e8c5f2a-91b4-4d2e-b7c1-6a2f9d4e1b8c' is not active or does not exist` | Confirm the replication context is configured and enabled using `replication show context`. |
 If the lag is caused by a backup window overlap, work with backup teams to stagger backup windows to create a replication catchup window.
 
 ---
@@ -276,9 +282,11 @@ Connection to 192.168.1.20 2049 (dd-prod-01) succeeded!
 ```
 
 !!! warning "Common errors"
-    **`ddboost: command not found`** — Ensure you are running commands on the Data Domain system itself (via SSH or console), not the backup server.
-    **`Error: Client '<backup-server-name>' not found in active clients`** — Verify the exact client hostname matches the registered name in `ddboost show clients` output and check network connectivity.
-    **`Error: DD Boost service is not running`** — Restart the DD Boost service with `ddboost service restart` or contact Dell support if the service fails to start.
+    | Error | Fix |
+    |---|---|
+    | `ddboost: command not found` | Ensure you are running commands on the Data Domain system itself (via SSH or console), not the backup server. |
+    | `Error: Client '<backup-server-name>' not found in active clients` | Verify the exact client hostname matches the registered name in `ddboost show clients` output and check network connectivity. |
+    | `Error: DD Boost service is not running` | Restart the DD Boost service with `ddboost service restart` or contact Dell support if the service fails to start. |
 After resetting the password, update the credentials in the backup application:
 - **Veeam:** Edit the backup repository → update credentials
 - **NetBackup:** Update the disk pool storage server credentials via `nbdevconfig`
@@ -332,8 +340,10 @@ distributed-segment-processing: enabled
 ```
 
 !!! warning "Common errors"
-    **`mtree show compression: mtree /data/col1/finance-backup not found`** — Verify the MTree name exists with `mtree show` and use the exact path returned.
-    **`ddboost option set: permission denied`** — Run the command with appropriate administrative privileges or ensure your user has DD Boost configuration rights.
+    | Error | Fix |
+    |---|---|
+    | `mtree show compression: mtree /data/col1/finance-backup not found` | Verify the MTree name exists with `mtree show` and use the exact path returned. |
+    | `ddboost option set: permission denied` | Run the command with appropriate administrative privileges or ensure your user has DD Boost configuration rights. |
 **Data types with inherently low dedup ratios (expected behaviour):**
 
 | Data Type | Typical Ratio | Notes |
@@ -413,9 +423,11 @@ Filesystem Space:
 ```
 
 !!! warning "Common errors"
-    **`Error: Cannot enable filesystem - disk 3.2 in DEGRADED state`** — Replace the failing disk (disk 3.2) before re-enabling the filesystem, or contact Dell support if replacement is not immediately available.
-    **`Error: Filesystem enable failed - replication out of sync`** — Wait 5-10 minutes for replication to catch up, then retry `filesys enable`, or check replication status with `replication show state`.
-    **`Error: Access denied - insufficient privileges`** — Run the command with appropriate admin credentials or request elevated permissions from your system administrator.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cannot enable filesystem - disk 3.2 in DEGRADED state` | Replace the failing disk (disk 3.2) before re-enabling the filesystem, or contact Dell support if replacement is not immediately available. |
+    | `Error: Filesystem enable failed - replication out of sync` | Wait 5-10 minutes for replication to catch up, then retry `filesys enable`, or check replication status with `replication show state`. |
+    | `Error: Access denied - insufficient privileges` | Run the command with appropriate admin credentials or request elevated permissions from your system administrator. |
 If the filesystem fails to enable after `filesys enable` and `alerts show current` shows disk or NVRAM errors, do not proceed with manual recovery — open a Dell support case immediately. Forcing a filesystem enable in a degraded state risks data corruption.
 
 ---
@@ -478,9 +490,11 @@ port_name: 50:00:14:40:5a:2b:c1:03
 ```
 
 !!! warning "Common errors"
-    **`vtl: command not found`** — Verify the VTL management tools are installed and the PATH includes the VTL binary directory (typically `/opt/dell/vtl/bin`).
-    **`VTL Status: DISABLED - Enable VTL before proceeding`** — Run `vtl enable` and wait 2-3 minutes for the VTL subsystem to initialize before retrying status checks.
-    **`FC port not visible in fabric`** — Confirm FC HBA drivers are loaded on the backup media server with `lsmod | grep qla2xxx` and verify SAN switch zoning includes the VTL target ports.
+    | Error | Fix |
+    |---|---|
+    | `vtl: command not found` | Verify the VTL management tools are installed and the PATH includes the VTL binary directory (typically `/opt/dell/vtl/bin`). |
+    | `VTL Status: DISABLED - Enable VTL before proceeding` | Run `vtl enable` and wait 2-3 minutes for the VTL subsystem to initialize before retrying status checks. |
+    | `FC port not visible in fabric` | Confirm FC HBA drivers are loaded on the backup media server with `lsmod | grep qla2xxx` and verify SAN switch zoning includes the VTL target ports. |
 Verify FC zoning: the backup media server HBA ports must be zoned to the DD VTL FC target ports. Consult the SAN team to confirm zoning and that the LUN is presented correctly.
 
 ---
@@ -540,9 +554,11 @@ RAID Rebuild Detail:
 ```
 
 !!! warning "Common errors"
-    **`disk show: command not found`** — Verify you are connected to the Data Domain management interface (SSH to the DD system, not a generic Linux host).
-    **`No such slot number`** — Confirm the slot number exists by running `disk show state` first to identify valid slot ranges (typically 0-11 on standard systems).
-    **`RAID Group not found in output`** — Wait for the rebuild process to initialize; newly failed disks may take 30-60 seconds to appear in RAID rebuild status.
+    | Error | Fix |
+    |---|---|
+    | `disk show: command not found` | Verify you are connected to the Data Domain management interface (SSH to the DD system, not a generic Linux host). |
+    | `No such slot number` | Confirm the slot number exists by running `disk show state` first to identify valid slot ranges (typically 0-11 on standard systems). |
+    | `RAID Group not found in output` | Wait for the rebuild process to initialize; newly failed disks may take 30-60 seconds to appear in RAID rebuild status. |
 **Do not remove or reseat a disk without a Dell support case open.** On some DD models, removing an additional disk during a RAID rebuild will cause data loss. Always wait for Dell support guidance before physically replacing a disk.
 
 ```bash
@@ -563,8 +579,10 @@ RAID Group 1: No rebuild in progress
 ```
 
 !!! warning "Common errors"
-    **`disk show state: command not found`** — Verify you are logged into the Data Domain CLI (use `ssh admin@<dd-ip>`) and not a standard Linux shell.
-    **`grep: (standard input) is empty`** — No spares are currently allocated or no rebuild is in progress; check overall RAID status with `raid show` to confirm system health.
+    | Error | Fix |
+    |---|---|
+    | `disk show state: command not found` | Verify you are logged into the Data Domain CLI (use `ssh admin@<dd-ip>`) and not a standard Linux shell. |
+    | `grep: (standard input) is empty` | No spares are currently allocated or no rebuild is in progress; check overall RAID status with `raid show` to confirm system health. |
 ---
 
 ## Issue: CloudIQ Showing Array Offline / No Telemetry
@@ -624,9 +642,11 @@ AutoSupport: Enabled
 ```
 
 !!! warning "Common errors"
-    **`AutoSupport Status: Disabled`** — Run `autosupport enable` to re-enable the service and verify SMTP/HTTPS gateway connectivity.
-    **`PING: No route to host`** — Verify the SCG appliance IP address is correct and that network routing/firewall rules permit DD-to-SCG communication on port 443.
-    **`AutoSupport Test Send: Connection timeout`** — Check that the gateway hostname resolves correctly with `net nslookup <scg-appliance-ip>` and confirm proxy settings if applicable.
+    | Error | Fix |
+    |---|---|
+    | `AutoSupport Status: Disabled` | Run `autosupport enable` to re-enable the service and verify SMTP/HTTPS gateway connectivity. |
+    | `PING: No route to host` | Verify the SCG appliance IP address is correct and that network routing/firewall rules permit DD-to-SCG communication on port 443. |
+    | `AutoSupport Test Send: Connection timeout` | Check that the gateway hostname resolves correctly with `net nslookup <scg-appliance-ip>` and confirm proxy settings if applicable. |
 If `autosupport test` fails with a network error, work with the network team to confirm that outbound HTTPS (port 443) is permitted from the SCG appliance to `esrs3.dell.com` and related Dell support FQDNs.
 
 ---
@@ -697,9 +717,11 @@ Network I/O: RX 1.2 Gbps, TX 1.8 Gbps
 ```
 
 !!! warning "Common errors"
-    **`ddboost: command not found`** — Verify DDBoost is installed and the admin account has CLI access enabled via `ddboost config show`.
-    **`eth2 MTU: 1500`** — Reconfigure eth2 MTU to 9000 to match other interfaces using `net config set -interface eth2 -mtu 9000` to prevent fragmentation during backup.
-    **`RX errors: 12, TX errors: 3`** — Check eth2 physical cable connections and switch port configuration, as persistent errors indicate a network hardware issue degrading backup performance.
+    | Error | Fix |
+    |---|---|
+    | `ddboost: command not found` | Verify DDBoost is installed and the admin account has CLI access enabled via `ddboost config show`. |
+    | `eth2 MTU: 1500` | Reconfigure eth2 MTU to 9000 to match other interfaces using `net config set -interface eth2 -mtu 9000` to prevent fragmentation during backup. |
+    | `RX errors: 12, TX errors: 3` | Check eth2 physical cable connections and switch port configuration, as persistent errors indicate a network hardware issue degrading backup performance. |
 **Recommended configuration for maximum throughput:**
 - Enable DSP: `ddboost option set distributed-segment-processing enabled`
 - Use 10GbE or 25GbE interfaces with LACP bonding for backup traffic

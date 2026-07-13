@@ -71,8 +71,10 @@ NVRAM-2         OK        1B        8GB       78-063456-01
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid command 'purearray'`** — Verify the Pure Storage CLI tools are installed and in your PATH by running `which purearray`.
-    **`Error: Connection refused to array management interface`** — Confirm the array hostname/IP is reachable and you have valid credentials configured in your Pure Storage CLI profile.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid command 'purearray'` | Verify the Pure Storage CLI tools are installed and in your PATH by running `which purearray`. |
+    | `Error: Connection refused to array management interface` | Confirm the array hostname/IP is reachable and you have valid credentials configured in your Pure Storage CLI profile. |
 ```bash
 # Configure KMIP server (Purity//FA 6.x)
 purekms create --address <kmip_server_ip> \
@@ -104,9 +106,11 @@ Test completed in 1.2s
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate file not found: /etc/purity/kmip-client.crt`** — Verify the certificate path is correct and readable by the purity service user.
-    **`Error: Failed to connect to KMIP server at 10.45.120.88:5696 (Connection refused)`** — Confirm the KMIP server is running and accessible on the specified IP and port from the array's management network.
-    **`Error: Certificate validation failed: untrusted certificate authority`** — Ensure the CA certificate file is valid and matches the certificate chain used by the KMIP server.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate file not found: /etc/purity/kmip-client.crt` | Verify the certificate path is correct and readable by the purity service user. |
+    | `Error: Failed to connect to KMIP server at 10.45.120.88:5696 (Connection refused)` | Confirm the KMIP server is running and accessible on the specified IP and port from the array's management network. |
+    | `Error: Certificate validation failed: untrusted certificate authority` | Ensure the CA certificate file is valid and matches the certificate chain used by the KMIP server. |
 ```bash
 # View the current TLS certificate details
 purearray list --ssl-certificate
@@ -134,9 +138,11 @@ Restart required: yes
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate file not found at <path_to_cert_pem>`** — Verify the file path is correct and readable with `ls -la <path_to_cert_pem>`.
-    **`Error: Invalid PEM format - certificate and/or private key malformed`** — Ensure the PEM file contains both the certificate block (-----BEGIN CERTIFICATE-----) and private key block (-----BEGIN PRIVATE KEY-----) with no extra whitespace.
-    **`Error: Private key does not match certificate`** — Regenerate the combined.pem file ensuring the certificate and its corresponding private key are concatenated in the correct order.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate file not found at <path_to_cert_pem>` | Verify the file path is correct and readable with `ls -la <path_to_cert_pem>`. |
+    | `Error: Invalid PEM format - certificate and/or private key malformed` | Ensure the PEM file contains both the certificate block (-----BEGIN CERTIFICATE-----) and private key block (-----BEGIN PRIVATE KEY-----) with no extra whitespace. |
+    | `Error: Private key does not match certificate` | Regenerate the combined.pem file ensuring the certificate and its corresponding private key are concatenated in the correct order. |
 ```bash
 # List connected remote arrays
 purearray list --connection
@@ -164,9 +170,11 @@ pg-file-services             backup-array-vault         disconnected
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused — check array IP/hostname and network connectivity`** — Verify the array address is reachable with `ping` and confirm firewall rules allow port 443.
-    **`Error: Authentication failed — invalid credentials`** — Re-authenticate using `purearray login` with correct management credentials.
-    **`Error: No replication targets configured`** — Ensure protection groups have replication policies defined via the Pure management console or API.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused — check array IP/hostname and network connectivity` | Verify the array address is reachable with `ping` and confirm firewall rules allow port 443. |
+    | `Error: Authentication failed — invalid credentials` | Re-authenticate using `purearray login` with correct management credentials. |
+    | `Error: No replication targets configured` | Ensure protection groups have replication policies defined via the Pure management console or API. |
 ---
 
 ## See also

@@ -161,9 +161,11 @@ Namespace: analytics-prod
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <ecs-node>:4443: Connection refused`** — Replace `<ecs-node>` with the actual ECS management node hostname or IP address.
-    **`{"errorCode":1003,"description":"Invalid authentication token"}`** — Ensure `$TOKEN` is set by running `export TOKEN=$(ecscli login -u <user> -p <password> -m <mgmt-node>)` first.
-    **`error: namespace 'analytics-prod' not found`** — Wait 5-10 seconds for replication across the cluster before running the verify command, or check that the POST request returned HTTP 201 status.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <ecs-node>:4443: Connection refused` | Replace `<ecs-node>` with the actual ECS management node hostname or IP address. |
+    | `{"errorCode":1003,"description":"Invalid authentication token"}` | Ensure `$TOKEN` is set by running `export TOKEN=$(ecscli login -u <user> -p <password> -m <mgmt-node>)` first. |
+    | `error: namespace 'analytics-prod' not found` | Wait 5-10 seconds for replication across the cluster before running the verify command, or check that the POST request returned HTTP 201 status. |
 **Namespace configuration parameters:**
 
 | Parameter | Description | Recommendation |
@@ -251,9 +253,11 @@ Bucket: analytics-prod-raw
 ```
 
 !!! warning "Common errors"
-    **`error: bucket 'analytics-prod-raw' already exists`** — Drop the bucket with `ecscli bucket delete --namespace analytics-prod --name analytics-prod-raw` or choose a unique bucket name.
-    **`Unable to locate credentials for profile 'ecs'`** — Configure AWS CLI credentials with `aws configure --profile ecs` or ensure `~/.aws/credentials` contains the ECS endpoint profile.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is present but not working; verify the endpoint URL is correct and accessible, or use a valid certificate if `--no-verify-ssl` is removed.
+    | Error | Fix |
+    |---|---|
+    | `error: bucket 'analytics-prod-raw' already exists` | Drop the bucket with `ecscli bucket delete --namespace analytics-prod --name analytics-prod-raw` or choose a unique bucket name. |
+    | `Unable to locate credentials for profile 'ecs'` | Configure AWS CLI credentials with `aws configure --profile ecs` or ensure `~/.aws/credentials` contains the ECS endpoint profile. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | The `--no-verify-ssl` flag is present but not working; verify the endpoint URL is correct and accessible, or use a valid certificate if `--no-verify-ssl` is removed. |
 **Bucket configuration parameters:**
 
 | Parameter | Description | Default | Recommendation |
@@ -325,8 +329,10 @@ Secret key 7E6D5C4B3A2Z1Y0X deleted successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: user 'svc-spark-prod' already exists in namespace 'analytics-prod'`** — Use `ecscli user delete` to remove the existing user first, or choose a different username.
-    **`Error: secret key '<old-key-id>' not found for user 'svc-spark-prod'`** — Verify the correct key ID using `ecscli user secret-key list` before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: user 'svc-spark-prod' already exists in namespace 'analytics-prod'` | Use `ecscli user delete` to remove the existing user first, or choose a different username. |
+    | `Error: secret key '<old-key-id>' not found for user 'svc-spark-prod'` | Verify the correct key ID using `ecscli user secret-key list` before attempting deletion. |
 ## Configuring Bucket Lifecycle Policies
 
 Lifecycle policies automate object expiration and version cleanup. Always attach a lifecycle policy to versioned buckets.
@@ -395,9 +401,11 @@ aws s3api get-bucket-lifecycle-configuration \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchBucket) when calling the PutBucketLifecycleConfiguration operation: The specified bucket does not exist`** — Verify the bucket name is correct and exists on the ECS endpoint using `aws s3api list-buckets --endpoint-url https://<ecs-s3-endpoint>:9021 --profile ecs`.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — Ensure `--no-verify-ssl` flag is present in the command, or add the ECS endpoint certificate to your system's CA bundle.
-    **`Unable to locate credentials for profile 'ecs'`** — Verify the `ecs` profile exists in `~/.aws/credentials` and contains valid access key and secret key for the ECS S3 endpoint.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchBucket) when calling the PutBucketLifecycleConfiguration operation: The specified bucket does not exist` | Verify the bucket name is correct and exists on the ECS endpoint using `aws s3api list-buckets --endpoint-url https://<ecs-s3-endpoint>:9021 --profile ecs`. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | Ensure `--no-verify-ssl` flag is present in the command, or add the ECS endpoint certificate to your system's CA bundle. |
+    | `Unable to locate credentials for profile 'ecs'` | Verify the `ecs` profile exists in `~/.aws/credentials` and contains valid access key and secret key for the ECS S3 endpoint. |
 ## Applying Bucket Policies (S3 IAM)
 
 Bucket policies restrict which object users can perform which S3 actions on a bucket.
@@ -452,9 +460,11 @@ aws s3api get-bucket-policy \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchBucket) when calling the PutBucketPolicy operation: The specified bucket does not exist`** — Verify the bucket name matches exactly and exists in the ECS cluster with `aws s3api list-buckets --endpoint-url https://<ecs-s3-endpoint>:9021 --profile ecs`.
-    **`An error occurred (InvalidArgument) when calling the PutBucketPolicy operation: Invalid principal in policy`** — Ensure the Principal ARN format matches your ECS IAM namespace; replace `urn:ecs:iam::analytics-prod:user/svc-spark-prod` with the correct user path from `aws iam list-users --profile ecs`.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — The `--no-verify-ssl` flag is already present; if still failing, verify the endpoint URL is correct and the ECS S3 service is responding on port 9021.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchBucket) when calling the PutBucketPolicy operation: The specified bucket does not exist` | Verify the bucket name matches exactly and exists in the ECS cluster with `aws s3api list-buckets --endpoint-url https://<ecs-s3-endpoint>:9021 --profile ecs`. |
+    | `An error occurred (InvalidArgument) when calling the PutBucketPolicy operation: Invalid principal in policy` | Ensure the Principal ARN format matches your ECS IAM namespace; replace `urn:ecs:iam::analytics-prod:user/svc-spark-prod` with the correct user path from `aws iam list-users --profile ecs`. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | The `--no-verify-ssl` flag is already present; if still failing, verify the endpoint URL is correct and the ECS S3 service is responding on port 9021. |
 ## Cleaning Up Incomplete Multipart Uploads
 
 Incomplete multipart uploads (MPUs) consume capacity without contributing accessible objects. Clean them up regularly on buckets with high-throughput upload workloads.
@@ -558,9 +568,11 @@ An error occurred (ObjectLockConfigurationNotFoundError) when calling the GetObj
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchBucket) when calling the ListBuckets operation: The specified bucket does not exist`** — Verify the bucket name spelling and confirm the ECS endpoint URL and profile credentials are correct.
-    **`An error occurred (BucketNotEmpty) when calling the DeleteBucket operation: The bucket you tried to delete is not empty`** — Use the `--force` flag to delete the bucket and all objects, or manually empty the bucket first with `aws s3 rm s3://<bucket-name> --recursive`.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — Ensure `--no-verify-ssl` flag is included or add the ECS certificate to your system's trusted CA store.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchBucket) when calling the ListBuckets operation: The specified bucket does not exist` | Verify the bucket name spelling and confirm the ECS endpoint URL and profile credentials are correct. |
+    | `An error occurred (BucketNotEmpty) when calling the DeleteBucket operation: The bucket you tried to delete is not empty` | Use the `--force` flag to delete the bucket and all objects, or manually empty the bucket first with `aws s3 rm s3://<bucket-name> --recursive`. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | Ensure `--no-verify-ssl` flag is included or add the ECS certificate to your system's trusted CA store. |
 ### Capacity Monitoring
 
 ![Capacity Monitoring](../../../../../assets/ecs-proc-capacity-monitoring.svg)

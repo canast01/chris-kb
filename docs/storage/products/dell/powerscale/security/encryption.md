@@ -84,9 +84,11 @@ License: SmartEncrypt
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are running commands on the PowerScale cluster management node or install the OneFS CLI tools.
-    **`Error: Invalid node ID '<node_id>'`** — Replace `<node_id>` with an actual node number (e.g., `1`, `2`, `3`) from your cluster.
-    **`Error: License not found or inactive`** — Contact Dell support to activate the SmartEncrypt license or verify the license key is properly installed via System Settings > Licensing.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are running commands on the PowerScale cluster management node or install the OneFS CLI tools. |
+    | `Error: Invalid node ID '<node_id>'` | Replace `<node_id>` with an actual node number (e.g., `1`, `2`, `3`) from your cluster. |
+    | `Error: License not found or inactive` | Contact Dell support to activate the SmartEncrypt license or verify the license key is properly installed via System Settings > Licensing. |
 ### Key Management
 
 OneFS manages SED keys internally (local key management) by default. For regulatory environments requiring external key management, integrate with a KMIP-compliant external key manager (e.g., Dell Key Management Server, HashiCorp Vault, Thales).
@@ -124,9 +126,11 @@ Certificate Valid Until: 2026-03-15
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate file not found at <cert_path>`** — Verify the certificate path is absolute and readable with `ls -la <cert_path>`.
-    **`Error: Unable to connect to kmip.example.com:5696 - Connection refused`** — Confirm the KMIP server is running and firewall rules allow outbound port 5696 from the PowerScale cluster.
-    **`Error: Certificate validation failed - untrusted CA`** — Import the KMIP server's CA certificate to the PowerScale cluster using `isi_kmip ca import`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate file not found at <cert_path>` | Verify the certificate path is absolute and readable with `ls -la <cert_path>`. |
+    | `Error: Unable to connect to kmip.example.com:5696 - Connection refused` | Confirm the KMIP server is running and firewall rules allow outbound port 5696 from the PowerScale cluster. |
+    | `Error: Certificate validation failed - untrusted CA` | Import the KMIP server's CA certificate to the PowerScale cluster using `isi_kmip ca import`. |
 ### SED Operational Notes
 
 | Situation | Action |
@@ -184,8 +188,10 @@ Bandwidth Limit (Mbps):        unlimited
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy '<policy_name>' not found`** — Verify the policy name exists with `isi sync policies list` and use the exact name.
-    **`Error: Access denied. Insufficient privileges for this operation`** — Run the command with appropriate admin credentials or use `sudo isi` if configured for passwordless sudo.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy '<policy_name>' not found` | Verify the policy name exists with `isi sync policies list` and use the exact name. |
+    | `Error: Access denied. Insufficient privileges for this operation` | Run the command with appropriate admin credentials or use `sudo isi` if configured for passwordless sudo. |
 ### SyncIQ Certificate Management
 
 SyncIQ uses certificates to authenticate cluster-to-cluster connections. In older OneFS versions, this was based on shared keys; in OneFS 9.x, TLS certificates are used.
@@ -240,9 +246,11 @@ Certificate ca-cert-2023-005 deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the PATH includes `/usr/local/bin` or the appropriate OneFS installation directory.
-    **`Error: Certificate not found or invalid certificate ID`** — Verify the certificate ID exists by running `isi certificate authority list` and use the exact ID from the output.
-    **`Error: Certificate is in use by active replication policies`** — Delete or update all replication policies using the certificate before attempting to remove it.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the PATH includes `/usr/local/bin` or the appropriate OneFS installation directory. |
+    | `Error: Certificate not found or invalid certificate ID` | Verify the certificate ID exists by running `isi certificate authority list` and use the exact ID from the output. |
+    | `Error: Certificate is in use by active replication policies` | Delete or update all replication policies using the certificate before attempting to remove it. |
 ---
 
 ## SMB Encryption
@@ -281,9 +289,11 @@ Share <share_name> modified successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid share name '<share_name>'`** — Replace `<share_name>` with an actual share name from `isi smb shares list`.
-    **`Error: Access denied. Insufficient privileges to modify SMB settings.`** — Run the command with root or admin credentials, or use `sudo isi` if configured.
-    **`Error: Zone '<zone_name>' does not exist`** — Verify the zone name exists by running `isi zone zones list` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid share name '<share_name>'` | Replace `<share_name>` with an actual share name from `isi smb shares list`. |
+    | `Error: Access denied. Insufficient privileges to modify SMB settings.` | Run the command with root or admin credentials, or use `sudo isi` if configured. |
+    | `Error: Zone '<zone_name>' does not exist` | Verify the zone name exists by running `isi zone zones list` first. |
 ### SMB Signing
 
 SMB signing verifies the integrity of SMB packets and prevents man-in-the-middle attacks. Signing is distinct from encryption — it validates data integrity without encrypting the content.
@@ -313,8 +323,10 @@ Per-zone SMB Settings for zone 'System':
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid zone name '<zone_name>'`** — Replace `<zone_name>` with an actual zone name from your cluster (e.g., `System` or `zone-1`).
-    **`Error: Permission denied`** — Run the command with appropriate admin credentials or use `sudo isi` if your user lacks SMB configuration privileges.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid zone name '<zone_name>'` | Replace `<zone_name>` with an actual zone name from your cluster (e.g., `System` or `zone-1`). |
+    | `Error: Permission denied` | Run the command with appropriate admin credentials or use `sudo isi` if your user lacks SMB configuration privileges. |
 | Setting | Value | Effect |
 |---|---|---|
 | `--server-signing disabled` | Legacy default | Signing only if client requests it |
@@ -359,9 +371,11 @@ Security Flavors: krb5
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid export ID`** — Verify the export ID exists by running `isi nfs exports list` and use the correct numeric or path identifier.
-    **`Error: Security flavor 'krb5p' is not supported on this cluster`** — Ensure Kerberos is configured on the cluster with `isi auth krb5 view` and that the KDC is reachable.
-    **`Error: Cannot modify export while clients are actively connected`** — Disconnect all NFS clients from the export or use the `--force` flag to apply changes immediately.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid export ID` | Verify the export ID exists by running `isi nfs exports list` and use the correct numeric or path identifier. |
+    | `Error: Security flavor 'krb5p' is not supported on this cluster` | Ensure Kerberos is configured on the cluster with `isi auth krb5 view` and that the KDC is reachable. |
+    | `Error: Cannot modify export while clients are actively connected` | Disconnect all NFS clients from the export or use the `--force` flag to apply changes immediately. |
 `krb5p` requires a Kerberos infrastructure (Active Directory or MIT Kerberos KDC). Clients must have valid Kerberos tickets and system time within 5 minutes of the cluster and KDC. See [Authentication](authentication.md) for Kerberos setup.
 
 ---
@@ -419,9 +433,11 @@ Certificate 1f2a3b4c-5d6e-7f8a-9b0c-1d2e3f4a5b6c set as default HTTPS certificat
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate file not found at /ifs/certs/mgmt.crt`** — Verify the certificate file path exists and is readable by the OneFS system user.
-    **`Error: Private key does not match certificate`** — Ensure the private key and certificate were generated as a pair or import them together from the same CA bundle.
-    **`Error: Certificate ID 0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d not found`** — Run `isi certificate server list` to confirm the certificate ID exists before modifying it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate file not found at /ifs/certs/mgmt.crt` | Verify the certificate file path exists and is readable by the OneFS system user. |
+    | `Error: Private key does not match certificate` | Ensure the private key and certificate were generated as a pair or import them together from the same CA bundle. |
+    | `Error: Certificate ID 0a1b2c3d-4e5f-6a7b-8c9d-0e1f2a3b4c5d not found` | Run `isi certificate server list` to confirm the certificate ID exists before modifying it. |
 ### TLS Protocol and Cipher Configuration
 
 ```bash
@@ -451,8 +467,10 @@ TLS Maximum Version: 1.3
 ```
 
 !!! warning "Common errors"
-    **`Error: This operation requires OneFS 9.4 or later`** — Verify your OneFS version with `isi status` and upgrade if necessary before modifying TLS settings.
-    **`Error: Invalid value '1.2' for --tls-min-version`** — Use only supported values (1.0, 1.1, 1.2, or 1.3) and ensure your OneFS version supports the requested minimum version.
+    | Error | Fix |
+    |---|---|
+    | `Error: This operation requires OneFS 9.4 or later` | Verify your OneFS version with `isi status` and upgrade if necessary before modifying TLS settings. |
+    | `Error: Invalid value '1.2' for --tls-min-version` | Use only supported values (1.0, 1.1, 1.2, or 1.3) and ensure your OneFS version supports the requested minimum version. |
 | TLS Setting | Recommended | Notes |
 |---|---|---|
 | Minimum TLS version | 1.2 | TLS 1.0 and 1.1 are deprecated; disable for PCI-DSS and modern security baselines |
@@ -507,8 +525,10 @@ logs-retention-90d            monitoring        2024-01-08T11:45:02Z
 ```
 
 !!! warning "Common errors"
-    **`Error: zone <zone_name> not found`** — Verify the zone exists with `isi zones list` and use the correct zone name.
-    **`Error: HTTPS only mode requires a valid server certificate`** — Ensure a valid SSL certificate is installed via `isi certificate server view` before enabling HTTPS-only mode.
+    | Error | Fix |
+    |---|---|
+    | `Error: zone <zone_name> not found` | Verify the zone exists with `isi zones list` and use the correct zone name. |
+    | `Error: HTTPS only mode requires a valid server certificate` | Ensure a valid SSL certificate is installed via `isi certificate server view` before enabling HTTPS-only mode. |
 ---
 
 ## Certificate Lifecycle Management
@@ -565,8 +585,10 @@ WARNING: Certificate expiring soon — Expiry: 2025-07-18 09:45:00
 ```
 
 !!! warning "Common errors"
-    **`date: invalid date '2025-07-18 09:45:00'`** — Adjust the date parsing format in the awk command to match your system's locale (e.g., use `date -d "2025-07-18" +%s` without the time component).
-    **`isi: command not found`** — Install the OneFS CLI tools or run this script from a management host with the PowerScale SDK installed and configured.
+    | Error | Fix |
+    |---|---|
+    | `date: invalid date '2025-07-18 09:45:00'` | Adjust the date parsing format in the awk command to match your system's locale (e.g., use `date -d "2025-07-18" +%s` without the time component). |
+    | `isi: command not found` | Install the OneFS CLI tools or run this script from a management host with the PowerScale SDK installed and configured. |
 ---
 
 ## Encryption Compliance Reference

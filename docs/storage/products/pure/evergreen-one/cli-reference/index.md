@@ -76,9 +76,11 @@ curl -s "https://api.pure1.purestorage.com/api/1.x/subscriptions?filter=subscrip
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution; check if the Pure1 API endpoint is accessible from your network.
-    **`{"error_code":"401","message":"Invalid or expired token"}`** — Regenerate the API token in Pure1 and ensure `$TOKEN` is set correctly with `export TOKEN="your-api-token"`.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure `python3 -m json.tool` is installed; if the response is HTML (auth error), the token is invalid or the endpoint is wrong.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.pure1.purestorage.com` | Verify network connectivity and DNS resolution; check if the Pure1 API endpoint is accessible from your network. |
+    | `{"error_code":"401","message":"Invalid or expired token"}` | Regenerate the API token in Pure1 and ensure `$TOKEN` is set correctly with `export TOKEN="your-api-token"`. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure `python3 -m json.tool` is installed; if the response is HTML (auth error), the token is invalid or the endpoint is wrong. |
 ### Subscription Assets
 
 Assets are the arrays assigned to an Evergreen//One subscription.
@@ -129,9 +131,11 @@ curl -s "https://api.pure1.purestorage.com/api/1.x/subscription-assets?filter=su
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution; check firewall rules blocking HTTPS egress to Pure1 API endpoints.
-    **`{"error_code":"INVALID_TOKEN","message":"Authorization token expired or invalid"}`** — Regenerate the API token in Pure1 console and update the `$TOKEN` environment variable.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip certificate verification, or update your system's CA certificate bundle.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.pure1.purestorage.com` | Verify network connectivity and DNS resolution; check firewall rules blocking HTTPS egress to Pure1 API endpoints. |
+    | `{"error_code":"INVALID_TOKEN","message":"Authorization token expired or invalid"}` | Regenerate the API token in Pure1 console and update the `$TOKEN` environment variable. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl to skip certificate verification, or update your system's CA certificate bundle. |
 ### Capacity: Reserved vs Consumed vs Burst
 
 ```bash
@@ -182,9 +186,11 @@ burst_capacity: 50.25
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution; check if the API endpoint URL is correct for your region.
-    **`{"error": "invalid_token", "error_description": "The access token provided is invalid"}`** — Regenerate the authentication token using your Pure1 credentials and ensure `$TOKEN` is set correctly.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Confirm the API response is valid JSON by testing the curl command alone; the subscription ID or token may be invalid.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.pure1.purestorage.com` | Verify network connectivity and DNS resolution; check if the API endpoint URL is correct for your region. |
+    | `{"error": "invalid_token", "error_description": "The access token provided is invalid"}` | Regenerate the authentication token using your Pure1 credentials and ensure `$TOKEN` is set correctly. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Confirm the API response is valid JSON by testing the curl command alone; the subscription ID or token may be invalid. |
 ---
 
 ## Burst Usage Tracking
@@ -227,9 +233,11 @@ chmod +x /usr/local/bin/check-pure-burst.py
 ```
 
 !!! warning "Common errors"
-    **`FileNotFoundError: [Errno 2] No such file or directory: '/etc/pure1/token'`** — Create the token file with `echo "your-pure1-api-token" > /etc/pure1/token` and set permissions with `chmod 600 /etc/pure1/token`.
-    **`urllib.error.HTTPError: HTTP Error 401: Unauthorized`** — Verify the Pure1 API token in `/etc/pure1/token` is valid and has not expired by checking Pure1 console credentials.
-    **`KeyError: 'tiers'`** — Confirm the subscription ID `sub-eo-12345` exists and is accessible via the authenticated API token by testing with `curl -H "Authorization: Bearer $TOKEN" https://api.pure1.purestorage.com/api/1.x/subscriptions/sub-eo-12345`.
+    | Error | Fix |
+    |---|---|
+    | `FileNotFoundError: [Errno 2] No such file or directory: '/etc/pure1/token'` | Create the token file with `echo "your-pure1-api-token" > /etc/pure1/token` and set permissions with `chmod 600 /etc/pure1/token`. |
+    | `urllib.error.HTTPError: HTTP Error 401: Unauthorized` | Verify the Pure1 API token in `/etc/pure1/token` is valid and has not expired by checking Pure1 console credentials. |
+    | `KeyError: 'tiers'` | Confirm the subscription ID `sub-eo-12345` exists and is accessible via the authenticated API token by testing with `curl -H "Authorization: Bearer $TOKEN" https://api.pure1.purestorage.com/api/1.x/subscriptions/sub-eo-12345`. |
 ---
 
 ## Per-Array Check (FlashArray CLI)
@@ -272,9 +280,11 @@ System                 8.2TB
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure the Pure Storage CLI is installed and the PATH includes the Pure bin directory (typically `/opt/purearray/bin`).
-    **`Error: Invalid credentials or unable to connect to array`** — Verify the array management IP is reachable and authenticate with `purearray login` using valid credentials.
-    **`Error: Permission denied`** — Confirm your user account has sufficient role-based access control (RBAC) permissions to query array and volume metrics.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure the Pure Storage CLI is installed and the PATH includes the Pure bin directory (typically `/opt/purearray/bin`). |
+    | `Error: Invalid credentials or unable to connect to array` | Verify the array management IP is reachable and authenticate with `purearray login` using valid credentials. |
+    | `Error: Permission denied` | Confirm your user account has sufficient role-based access control (RBAC) permissions to query array and volume metrics. |
 ### Calculate Effective Consumption
 
 ```bash
@@ -290,9 +300,11 @@ Array used: 847.3 TiB
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname flasharray01.example.com: Name or service not known`** — Verify the array hostname is correct and resolvable in DNS, or use the array's IP address instead.
-    **`Permission denied (publickey,password)`** — Ensure the pureuser account exists on the array and your SSH key is authorized, or add `-o PubkeyAuthentication=no` to force password authentication.
-    **`purearray: command not found`** — Confirm you are connected to a Pure Storage array CLI environment; this command only works when SSH'd directly into the array management interface.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname flasharray01.example.com: Name or service not known` | Verify the array hostname is correct and resolvable in DNS, or use the array's IP address instead. |
+    | `Permission denied (publickey,password)` | Ensure the pureuser account exists on the array and your SSH key is authorized, or add `-o PubkeyAuthentication=no` to force password authentication. |
+    | `purearray: command not found` | Confirm you are connected to a Pure Storage array CLI environment; this command only works when SSH'd directly into the array management interface. |
 ---
 
 ## SLA and Tier Information
@@ -326,9 +338,11 @@ End:   2025-01-14T23:59:59Z
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution; check if a corporate proxy or firewall is blocking access to Pure1 API endpoints.
-    **`curl: (401) Unauthorized`** — Ensure the `$TOKEN` variable contains a valid, non-expired Pure1 API token by regenerating it in the Pure1 console.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Confirm the subscription ID in `$SUB_ID` is correct and that your API token has permission to access that subscription's details.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.pure1.purestorage.com` | Verify network connectivity and DNS resolution; check if a corporate proxy or firewall is blocking access to Pure1 API endpoints. |
+    | `curl: (401) Unauthorized` | Ensure the `$TOKEN` variable contains a valid, non-expired Pure1 API token by regenerating it in the Pure1 console. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Confirm the subscription ID in `$SUB_ID` is correct and that your API token has permission to access that subscription's details. |
 ---
 
 ## Alerts and Health
@@ -402,9 +416,11 @@ psu-2     ok        2.4kW     PSU-9M8N5Q
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution; check firewall rules for HTTPS egress to Pure1 API endpoints.
-    **`purealert: command not found`** — Install the Pure Storage CLI tools or ensure the `puretools` package is in your PATH.
-    **`Authorization failed: Invalid or expired token`** — Regenerate the API token in Pure1 console and update the `$TOKEN` environment variable.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.pure1.purestorage.com` | Verify network connectivity and DNS resolution; check firewall rules for HTTPS egress to Pure1 API endpoints. |
+    | `purealert: command not found` | Install the Pure Storage CLI tools or ensure the `puretools` package is in your PATH. |
+    | `Authorization failed: Invalid or expired token` | Regenerate the API token in Pure1 console and update the `$TOKEN` environment variable. |
 ## See also
 
 - [Evergreen//ONE — Overview](../../)

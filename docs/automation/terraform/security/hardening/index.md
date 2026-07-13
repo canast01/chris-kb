@@ -117,8 +117,10 @@ provider "registry.terraform.io/hashicorp/aws" {
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to lock provider versions`** — Run `terraform init` first to download providers before attempting to lock versions.
-    **`fatal: pathspec '.terraform.lock.hcl' did not match any files`** — Execute `terraform init` to generate the lock file before running `git diff`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to lock provider versions` | Run `terraform init` first to download providers before attempting to lock versions. |
+    | `fatal: pathspec '.terraform.lock.hcl' did not match any files` | Execute `terraform init` to generate the lock file before running `git diff`. |
 ## Hardening Checklist
 
 | Area | Practice |

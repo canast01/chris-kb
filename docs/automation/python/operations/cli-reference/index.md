@@ -92,9 +92,11 @@ Successfully installed requests-2.31.0 paramiko-3.4.0 boto3-1.28.85 pyVmomi-8.0.
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Could not find a version that satisfies the requirement netapp-ontap`** — Verify the package name is correct (it may be `netapp-lib` or require a private PyPI index) and check your pip index configuration.
-    **`error: Microsoft Visual C++ 14.0 or greater is required`** — Install the Microsoft C++ Build Tools or use a pre-built wheel; on Linux/macOS this typically indicates a missing development headers package like `python3-dev`.
-    **`ERROR: pip's dependency resolver does not currently take into account all the packages that are installed`** — This is a warning about conflicting transitive dependencies; verify the installation succeeded and test imports to confirm functionality.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Could not find a version that satisfies the requirement netapp-ontap` | Verify the package name is correct (it may be `netapp-lib` or require a private PyPI index) and check your pip index configuration. |
+    | `error: Microsoft Visual C++ 14.0 or greater is required` | Install the Microsoft C++ Build Tools or use a pre-built wheel; on Linux/macOS this typically indicates a missing development headers package like `python3-dev`. |
+    | `ERROR: pip's dependency resolver does not currently take into account all the packages that are installed` | This is a warning about conflicting transitive dependencies; verify the installation succeeded and test imports to confirm functionality. |
 ---
 
 ## Environment Variables
@@ -124,8 +126,10 @@ api_key = os.environ.get("API_KEY")
 ```
 
 !!! warning "Common errors"
-    **`KeyError: 'API_KEY'`** — Use `os.environ.get("API_KEY", "default")` instead of `os.environ["API_KEY"]` to provide a fallback value.
-    **`FileNotFoundError: [Errno 2] No such file or directory: '.env'`** — Ensure the `.env` file exists in the script's working directory or specify the full path in `load_dotenv("/path/to/.env")`.
+    | Error | Fix |
+    |---|---|
+    | `KeyError: 'API_KEY'` | Use `os.environ.get("API_KEY", "default")` instead of `os.environ["API_KEY"]` to provide a fallback value. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: '.env'` | Ensure the `.env` file exists in the script's working directory or specify the full path in `load_dotenv("/path/to/.env")`. |
 ---
 
 ## Running Scripts
@@ -195,9 +199,11 @@ $ curl -s https://api.example.com/status | python3 -m json.tool
 ```
 
 !!! warning "Common errors"
-    **`python3: No such file or directory`** — Use `python` instead if Python 3 is the default, or verify Python 3 is installed with `which python3`.
-    **`ModuleNotFoundError: No module named 'mypackage'`** — Ensure the package is in PYTHONPATH or install it with `pip install -e .` from the package directory.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the API endpoint is returning valid JSON and check the curl response with `curl -s https://api.example.com/status | head -c 200`.
+    | Error | Fix |
+    |---|---|
+    | `python3: No such file or directory` | Use `python` instead if Python 3 is the default, or verify Python 3 is installed with `which python3`. |
+    | `ModuleNotFoundError: No module named 'mypackage'` | Ensure the package is in PYTHONPATH or install it with `pip install -e .` from the package directory. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify the API endpoint is returning valid JSON and check the curl response with `curl -s https://api.example.com/status | head -c 200`. |
 ---
 
 ## Debugging
@@ -269,9 +275,11 @@ OK
 ```
 
 !!! warning "Common errors"
-    **`ModuleNotFoundError: No module named 'netapp_ontap'`** — Install the missing module with `pip3 install netapp-ontap` or verify the correct package name.
-    **`(Pdb) command not found`** — Ensure you are inside the pdb interactive session; type `help` to see available commands or `c` to continue execution.
-    **`SyntaxError: invalid syntax`** — Check that `breakpoint()` is only used in Python 3.7+; for earlier versions, use `import pdb; pdb.set_trace()` instead.
+    | Error | Fix |
+    |---|---|
+    | `ModuleNotFoundError: No module named 'netapp_ontap'` | Install the missing module with `pip3 install netapp-ontap` or verify the correct package name. |
+    | `(Pdb) command not found` | Ensure you are inside the pdb interactive session; type `help` to see available commands or `c` to continue execution. |
+    | `SyntaxError: invalid syntax` | Check that `breakpoint()` is only used in Python 3.7+; for earlier versions, use `import pdb; pdb.set_trace()` instead. |
 ### Logging vs print
 
 ```python
@@ -394,8 +402,10 @@ All imports OK
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Could not find a version that satisfies the requirement netapp-ontap==22.11.0`** — Verify the package name and version exist on PyPI, or use a version available in your organization's private repository.
-    **`ModuleNotFoundError: No module named 'requests'`** — Ensure pip install completed successfully and the virtual environment is activated before running the import test.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Could not find a version that satisfies the requirement netapp-ontap==22.11.0` | Verify the package name and version exist on PyPI, or use a version available in your organization's private repository. |
+    | `ModuleNotFoundError: No module named 'requests'` | Ensure pip install completed successfully and the virtual environment is activated before running the import test. |
 ---
 
 ## Verify

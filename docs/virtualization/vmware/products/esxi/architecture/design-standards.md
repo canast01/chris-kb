@@ -43,8 +43,10 @@ Poll Interval: 1024
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option --server`** — Use `--servers` (plural) instead: `esxcli system ntp set --servers=ntp1.example.com,ntp2.example.com --enabled=true`
-    **`Error: Name or service not known`** — Verify NTP server hostnames are resolvable by running `esxcli network ip dns server list` and confirm DNS is configured on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option --server` | Use `--servers` (plural) instead: `esxcli system ntp set --servers=ntp1.example.com,ntp2.example.com --enabled=true` |
+    | `Error: Name or service not known` | Verify NTP server hostnames are resolvable by running `esxcli network ip dns server list` and confirm DNS is configured on the ESXi host. |
 ---
 
 ## VIB Acceptance Levels
@@ -73,8 +75,10 @@ Current Acceptance Level: PartnerSupported
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or flag '--level=VMwareAccepted'`** — Use the correct flag syntax `--level VMwareAccepted` (space instead of equals) or check your ESXi version supports this acceptance level.
-    **`Error: Permission denied`** — Run the command as root or with appropriate sudo privileges; acceptance level changes require administrative access.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or flag '--level=VMwareAccepted'` | Use the correct flag syntax `--level VMwareAccepted` (space instead of equals) or check your ESXi version supports this acceptance level. |
+    | `Error: Permission denied` | Run the command as root or with appropriate sudo privileges; acceptance level changes require administrative access. |
 ---
 
 ## Storage Path Configuration
@@ -98,8 +102,10 @@ esxcli storage nmp psp roundrobin deviceconfig set -d <device-naa> --type=iops -
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option --iops`** — Use `--iopslimit` instead of `--iops` for the parameter name.
-    **`Error: Device <device-naa> not found`** — Replace `<device-naa>` with an actual device identifier like `naa.60014056a6e5c3e5a5d4b8c9f0e1a2b3` (verify with `esxcli storage core device list`).
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option --iops` | Use `--iopslimit` instead of `--iops` for the parameter name. |
+    | `Error: Device <device-naa> not found` | Replace `<device-naa>` with an actual device identifier like `naa.60014056a6e5c3e5a5d4b8c9f0e1a2b3` (verify with `esxcli storage core device list`). |
 ---
 
 ## Host Profile Baseline
@@ -141,8 +147,10 @@ esxcli system settings advanced set -o /UserVars/ESXiShellInteractiveTimeOut -i 
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or setting '/UserVars/ESXiShellTimeOut'`** — Verify the exact parameter name matches your ESXi version (some versions use different paths like `/UserVars/ESXiShellTimeout` without the "Out" suffix).
-    **`Error: Could not connect to the host`** — Ensure you are connected to the ESXi host via `esxcli` with proper credentials or SSH access before running configuration commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or setting '/UserVars/ESXiShellTimeOut'` | Verify the exact parameter name matches your ESXi version (some versions use different paths like `/UserVars/ESXiShellTimeout` without the "Out" suffix). |
+    | `Error: Could not connect to the host` | Ensure you are connected to the ESXi host via `esxcli` with proper credentials or SSH access before running configuration commands. |
 ---
 
 ## Cluster Sizing Reference

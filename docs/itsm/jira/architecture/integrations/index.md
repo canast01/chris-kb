@@ -35,8 +35,10 @@ PROJ-123 #done: Implement user authentication
 ```
 
 !!! warning "Common errors"
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Initialize a git repository with `git init` or clone an existing repository before committing.
-    **`error: pathspec '<issue-key>' did not match any files`** — Replace `<issue-key>` with an actual Jira issue key (e.g., `PROJ-123`) in your commit message.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not a git repository (or any of the parent directories): .git` | Initialize a git repository with `git init` or clone an existing repository before committing. |
+    | `error: pathspec '<issue-key>' did not match any files` | Replace `<issue-key>` with an actual Jira issue key (e.g., `PROJ-123`) in your commit message. |
 Supported smart commit commands (requires **Smart Commits** enabled in DVCS):
 
 | Command | Effect |
@@ -273,9 +275,11 @@ curl -u admin:token -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or configure your CA bundle with `--cacert /path/to/ca-bundle.crt`.
-    **`{"errorMessages":["User admin does not have permission to perform this operation"],"errors":{}}`** — Ensure the admin user has the global "Administer Jira" permission or use a service account with migration privileges.
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify the Jira instance is running and accessible at the specified hostname and port.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or configure your CA bundle with `--cacert /path/to/ca-bundle.crt`. |
+    | `{"errorMessages":["User admin does not have permission to perform this operation"],"errors":{}}` | Ensure the admin user has the global "Administer Jira" permission or use a service account with migration privileges. |
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify the Jira instance is running and accessible at the specified hostname and port. |
 ---
 
 ## SAML / SSO Integration
@@ -362,9 +366,11 @@ curl -u svc-jira:token -X POST \
 ```
 
 !!! warning "Common errors"
-    **`401 Unauthorized`** — Verify the svc-jira credentials are correct and the API token hasn't expired; regenerate the token in Jira if needed.
-    **`400 Bad Request: 'project' is required`** — Ensure the project key "OPS" exists in your Jira instance and the service account has permission to create issues in it.
-    **`403 Forbidden: User does not have permission to create issues`** — Grant the svc-jira service account the "Create Issues" permission in the OPS project's permission scheme.
+    | Error | Fix |
+    |---|---|
+    | `401 Unauthorized` | Verify the svc-jira credentials are correct and the API token hasn't expired; regenerate the token in Jira if needed. |
+    | `400 Bad Request: 'project' is required` | Ensure the project key "OPS" exists in your Jira instance and the service account has permission to create issues in it. |
+    | `403 Forbidden: User does not have permission to create issues` | Grant the svc-jira service account the "Create Issues" permission in the OPS project's permission scheme. |
 ---
 
 ## See also

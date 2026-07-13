@@ -180,9 +180,11 @@ ESXTOP(1)                                                           ESXTOP(1)
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Ensure you are running this command directly on an ESXi host via SSH or local console, not from a vCenter server or external machine.
-    **`Error: Unable to open /proc/uptime: Permission denied`** — Run esxtop with elevated privileges using `sudo esxtop -b -n 3` or log in as root.
-    **`Batch mode failed: Invalid sample count`** — Verify the `-n` parameter is a positive integer (e.g., `-n 3` not `-n 0` or `-n abc`).
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Ensure you are running this command directly on an ESXi host via SSH or local console, not from a vCenter server or external machine. |
+    | `Error: Unable to open /proc/uptime: Permission denied` | Run esxtop with elevated privileges using `sudo esxtop -b -n 3` or log in as root. |
+    | `Batch mode failed: Invalid sample count` | Verify the `-n` parameter is a positive integer (e.g., `-n 3` not `-n 0` or `-n abc`). |
 Key esxtop views and what to look for:
 
 ```text
@@ -222,9 +224,11 @@ UUID                 Display Name              File                             
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Verify you are running this command directly on an ESXi host (not a vCenter server) with SSH access enabled.
-    **`grep: (standard input) is empty`** — Run `esxtop -b -n 1` without piping to check if esxtop is producing output; if blank, the host may be under extreme load or esxtop may need a moment to initialize.
-    **`Error: The object has already been deleted or has not been completely created.`** — Wait a few seconds before running `esxcli vm process list` as the VM list may be refreshing; retry the command.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Verify you are running this command directly on an ESXi host (not a vCenter server) with SSH access enabled. |
+    | `grep: (standard input) is empty` | Run `esxtop -b -n 1` without piping to check if esxtop is producing output; if blank, the host may be under extreme load or esxtop may need a moment to initialize. |
+    | `Error: The object has already been deleted or has not been completely created.` | Wait a few seconds before running `esxcli vm process list` as the VM list may be refreshing; retry the command. |
 Look for: `%RDY` high across many VMs = host overcommitted; `%RDY` high on one VM only = check resource pool limits.
 
 ---
@@ -266,8 +270,10 @@ VMDK UUID                            VM Name          Read(IOPS)  Write(IOPS)  L
 ```
 
 !!! warning "Common errors"
-    **`Unknown command at token esxcli`** — Verify you are running the command on an ESXi host with vSAN enabled, not a vCenter server.
-    **`vSAN performance service is not enabled`** — Enable the vSAN performance service in vSAN cluster settings or use `esxcli vsan cluster get` to verify vSAN is operational.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command at token esxcli` | Verify you are running the command on an ESXi host with vSAN enabled, not a vCenter server. |
+    | `vSAN performance service is not enabled` | Enable the vSAN performance service in vSAN cluster settings or use `esxcli vsan cluster get` to verify vSAN is operational. |
 Look for:
 
 ```text
@@ -317,9 +323,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example, but ensure it's not removed).
-    **`curl: (7) Failed to connect to <nsx-manager>: Name or service not known`** — Verify the NSX Manager hostname or IP address is correct and reachable from your network.
-    **`jq: parse error: Invalid JSON at line 1`** — Confirm the API endpoint and rule ID are valid; an invalid rule ID may return HTML error pages instead of JSON.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example, but ensure it's not removed). |
+    | `curl: (7) Failed to connect to <nsx-manager>: Name or service not known` | Verify the NSX Manager hostname or IP address is correct and reachable from your network. |
+    | `jq: parse error: Invalid JSON at line 1` | Confirm the API endpoint and rule ID are valid; an invalid rule ID may return HTML error pages instead of JSON. |
 Look for: high hit-count rules on east-west flows. Reduce overhead by consolidating rules with the same action and groups, adding a service exception for high-throughput backup VMs, or disabling packet logging on stateful rules.
 
 ---

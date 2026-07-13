@@ -39,9 +39,11 @@ YAML OK
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command (already present) or import the vRA server's CA certificate into your system trust store.
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API response is valid JSON by testing the endpoint directly with `curl -sk ... | head -c 500` to check for HTML error pages or authentication failures.
-    **`FileNotFoundError: [Errno 2] No such file or directory: 'blueprint.yaml'`** — Ensure you are in the correct working directory and the blueprint.yaml file exists with `ls -la blueprint.yaml`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command (already present) or import the vRA server's CA certificate into your system trust store. |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the API response is valid JSON by testing the endpoint directly with `curl -sk ... | head -c 500` to check for HTML error pages or authentication failures. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: 'blueprint.yaml'` | Ensure you are in the correct working directory and the blueprint.yaml file exists with `ls -la blueprint.yaml`. |
 ```bash
 # View ABX action execution logs via UI
 # Extensibility → Actions → select action → Last Runs → view details
@@ -81,9 +83,11 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vRA certificate into your system's trusted store.
-    **`jq: parse error: Unexpected end of JSON input`** — Verify the `$TOKEN` variable is set correctly with `echo $TOKEN` and ensure the vRA API endpoint is responding with valid JSON.
-    **`"error": "Unauthorized"`** — Regenerate the API token in vRA under Administration → API tokens and ensure it has the appropriate ABX action read permissions.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the vRA certificate into your system's trusted store. |
+    | `jq: parse error: Unexpected end of JSON input` | Verify the `$TOKEN` variable is set correctly with `echo $TOKEN` and ensure the vRA API endpoint is responding with valid JSON. |
+    | `"error": "Unauthorized"` | Regenerate the API token in vRA under Administration → API tokens and ensure it has the appropriate ABX action read permissions. |
 ```bash
 # Verify VIDM health from Aria Automation appliance
 curl -sk https://vidm.example.local/SAAS/API/1.0/REST/system/health
@@ -98,9 +102,11 @@ curl -sk https://vidm.example.local/SAAS/API/1.0/REST/system/health
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the VIDM certificate into your system's trusted store.
-    **`curl: (7) Failed to connect to vidm.example.local port 443: Connection refused`** — Verify VIDM is running and accessible on the network; check firewall rules and DNS resolution with `nslookup vidm.example.local`.
-    **`{"status":"DOWN","components":{"database":"DOWN"}}`** — Restart the VIDM database service or check VIDM logs at `/var/log/vidm/` for underlying service failures.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the VIDM certificate into your system's trusted store. |
+    | `curl: (7) Failed to connect to vidm.example.local port 443: Connection refused` | Verify VIDM is running and accessible on the network; check firewall rules and DNS resolution with `nslookup vidm.example.local`. |
+    | `{"status":"DOWN","components":{"database":"DOWN"}}` | Restart the VIDM database service or check VIDM logs at `/var/log/vidm/` for underlying service failures. |
 ```bash
 # Identify failing pods
 kubectl get pods --all-namespaces | grep -v "Running\|Completed"

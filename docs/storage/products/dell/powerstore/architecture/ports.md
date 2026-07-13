@@ -189,9 +189,11 @@ traddr:  10.45.120.71
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self-signed certificate`** — Add `-k` flag to curl command to skip certificate verification, or import the PowerStore CA certificate into your system trust store.
-    **`iscsiadm: No records found!`** — Verify the iSCSI portal IP is correct and reachable; check that iSCSI service is running on PowerStore with `systemctl status iscsid` on the initiator.
-    **`showmount: clnt_create: RPC: Program not registered`** — Confirm NFS service is enabled on PowerStore and the NFS IP is accessible; test connectivity with `ping <powerstore-nfs-ip>` first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self-signed certificate` | Add `-k` flag to curl command to skip certificate verification, or import the PowerStore CA certificate into your system trust store. |
+    | `iscsiadm: No records found!` | Verify the iSCSI portal IP is correct and reachable; check that iSCSI service is running on PowerStore with `systemctl status iscsid` on the initiator. |
+    | `showmount: clnt_create: RPC: Program not registered` | Confirm NFS service is enabled on PowerStore and the NFS IP is accessible; test connectivity with `ping <powerstore-nfs-ip>` first. |
 ---
 
 ## See also

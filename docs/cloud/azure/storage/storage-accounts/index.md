@@ -189,9 +189,11 @@ az storage account show \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Storage/storageAccounts/stproddata01' under resource group 'rg-storage-prod' was not found.`** — Verify the storage account name and resource group name are correct with `az storage account list --resource-group rg-storage-prod`.
-    **`(InvalidParameterValue) The provided subnet 'snet-app' does not exist in virtual network 'vnet-prod-eastus'.`** — Confirm the subnet exists and use the full subnet resource ID format: `/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Network/virtualNetworks/{vnetName}/subnets/{subnetName}`.
-    **`(AuthorizationFailed) The client 'user@example.com' with object id 'a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stproddata01'.`** — Ensure your user account has the Storage Account Contributor role assigned to the resource group or storage account.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Storage/storageAccounts/stproddata01' under resource group 'rg-storage-prod' was not found.` | Verify the storage account name and resource group name are correct with `az storage account list --resource-group rg-storage-prod`. |
+    | `(InvalidParameterValue) The provided subnet 'snet-app' does not exist in virtual network 'vnet-prod-eastus'.` | Confirm the subnet exists and use the full subnet resource ID format: `/subscriptions/{subscriptionId}/resourceGroups/{rgName}/providers/Microsoft.Network/virtualNetworks/{vnetName}/subnets/{subnetName}`. |
+    | `(AuthorizationFailed) The client 'user@example.com' with object id 'a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stproddata01'.` | Ensure your user account has the Storage Account Contributor role assigned to the resource group or storage account. |
 ## Access Keys and Key Management
 
 ```bash
@@ -248,8 +250,10 @@ key2       DefaultEndpointsProtocol=https;AccountName=stproddata01;Accoun…  Fu
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/stproddata01' under resource group 'rg-storage-prod' was not found.`** — Verify the resource group name and storage account name are correct using `az storage account list --resource-group rg-storage-prod`.
-    **`AuthorizationFailed: The client 'user@contoso.com' with object id '...' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/listKeys/action' over scope '/subscriptions/...'.`** — Ensure your user account has the Storage Account Key Operator Service Role or higher on the storage account or resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/stproddata01' under resource group 'rg-storage-prod' was not found.` | Verify the resource group name and storage account name are correct using `az storage account list --resource-group rg-storage-prod`. |
+    | `AuthorizationFailed: The client 'user@contoso.com' with object id '...' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/listKeys/action' over scope '/subscriptions/...'.` | Ensure your user account has the Storage Account Key Operator Service Role or higher on the storage account or resource group. |
 ## Listing and Auditing
 
 ```bash
@@ -298,6 +302,8 @@ storageacct003
 ```
 
 !!! warning "Common errors"
-    **`ERROR: unrecognized arguments: --query`** — Ensure you are using Azure CLI version 2.0.24 or later with `az --version`, and update if needed.
-    **`ERROR: The subscription of 'None' could not be found.`** — Set the active subscription with `az account set --subscription <subscription-id>` before running the commands.
-    **`ERROR: (InvalidResourceGroup) Resource group 'None' could not be found.`** — Verify you have Reader or higher permissions on the subscription with `az role assignment list --assignee <your-user-id>`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: unrecognized arguments: --query` | Ensure you are using Azure CLI version 2.0.24 or later with `az --version`, and update if needed. |
+    | `ERROR: The subscription of 'None' could not be found.` | Set the active subscription with `az account set --subscription <subscription-id>` before running the commands. |
+    | `ERROR: (InvalidResourceGroup) Resource group 'None' could not be found.` | Verify you have Reader or higher permissions on the subscription with `az role assignment list --assignee <your-user-id>`. |

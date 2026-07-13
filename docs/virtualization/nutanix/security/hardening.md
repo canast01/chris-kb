@@ -74,9 +74,11 @@ Account Lockout Policy:
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid value for failed-login-attempts. Must be between 1 and 10.`** — Reduce the failed-login-attempts value to a maximum of 10 or check your Nutanix version's supported range.
-    **`Error: ncli: command not found`** — Ensure you are running this command on a Nutanix cluster node with ncli installed, not a remote management workstation.
-    **`Error: Permission denied. User does not have cluster admin privileges.`** — Execute the command as a cluster administrator or use an account with full cluster permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid value for failed-login-attempts. Must be between 1 and 10.` | Reduce the failed-login-attempts value to a maximum of 10 or check your Nutanix version's supported range. |
+    | `Error: ncli: command not found` | Ensure you are running this command on a Nutanix cluster node with ncli installed, not a remote management workstation. |
+    | `Error: Permission denied. User does not have cluster admin privileges.` | Execute the command as a cluster administrator or use an account with full cluster permissions. |
 ---
 
 ## SSH Hardening
@@ -105,8 +107,10 @@ Lockdown Mode Last Modified      : 2024-01-15 14:32:18
 ```
 
 !!! warning "Common errors"
-    **`ncli: command not found`** — Ensure you are logged into a Nutanix cluster node or have the Nutanix CLI tools installed and in your PATH.
-    **`Error: Unable to connect to cluster`** — Verify cluster connectivity and that your user account has appropriate permissions to query security configuration.
+    | Error | Fix |
+    |---|---|
+    | `ncli: command not found` | Ensure you are logged into a Nutanix cluster node or have the Nutanix CLI tools installed and in your PATH. |
+    | `Error: Unable to connect to cluster` | Verify cluster connectivity and that your user account has appropriate permissions to query security configuration. |
 ### CVM SSH Key Management
 
 ```bash
@@ -133,9 +137,11 @@ node-4-cvm: ssh-rsa AAAA...K7M2 admin@bastion
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the CVM SSH service is running with `allssh "systemctl status sshd"` and that your current SSH key is already in authorized_keys.
-    **`sed: can't read ~/.ssh/authorized_keys: No such file or directory`** — Create the ~/.ssh directory and authorized_keys file first with `allssh "mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"`.
-    **`allssh: command not found`** — Ensure you are running this from a Nutanix cluster node or Prism Element host where allssh is available in the PATH.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the CVM SSH service is running with `allssh "systemctl status sshd"` and that your current SSH key is already in authorized_keys. |
+    | `sed: can't read ~/.ssh/authorized_keys: No such file or directory` | Create the ~/.ssh directory and authorized_keys file first with `allssh "mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"`. |
+    | `allssh: command not found` | Ensure you are running this from a Nutanix cluster node or Prism Element host where allssh is available in the PATH. |
 ### SSH Server Config (AHV Hypervisor)
 
 Apply on each AHV host (requires root access — only via Prism Element → Hardware → host console):
@@ -157,9 +163,11 @@ AllowUsers nutanix
 ```
 
 !!! warning "Common errors"
-    **`sshd[12345]: error: /etc/ssh/sshd_config line 1: unsupported option "PermitRootLogin no"`** — Ensure you are editing the actual sshd_config file with a text editor (e.g., `sudo nano /etc/ssh/sshd_config`) rather than pasting into the shell directly.
-    **`sshd: no hostkeys available -- exiting.`** — Verify SSH host keys exist in `/etc/ssh/` with `ls -la /etc/ssh/ssh_host_*` and regenerate them if missing using `ssh-keygen -A`.
-    **`Permission denied (publickey).`** — Confirm the nutanix user has a valid public key in `~nutanix/.ssh/authorized_keys` and restart sshd with `sudo systemctl restart sshd` after making config changes.
+    | Error | Fix |
+    |---|---|
+    | `sshd[12345]: error: /etc/ssh/sshd_config line 1: unsupported option "PermitRootLogin no"` | Ensure you are editing the actual sshd_config file with a text editor (e.g., `sudo nano /etc/ssh/sshd_config`) rather than pasting into the shell directly. |
+    | `sshd: no hostkeys available -- exiting.` | Verify SSH host keys exist in `/etc/ssh/` with `ls -la /etc/ssh/ssh_host_*` and regenerate them if missing using `ssh-keygen -A`. |
+    | `Permission denied (publickey).` | Confirm the nutanix user has a valid public key in `~nutanix/.ssh/authorized_keys` and restart sshd with `sudo systemctl restart sshd` after making config changes. |
 ---
 
 ## TLS / SSL Configuration
@@ -196,9 +204,11 @@ Status: SUCCEEDED
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid key-type value. Supported types: RSA_2048, RSA_4096`** — Verify the key-type parameter matches one of the supported values exactly.
-    **`Error: Certificate chain validation failed: Intermediate certificate not in PEM format`** — Ensure the intermediate certificate is PEM-encoded (-----BEGIN CERTIFICATE-----) and concatenated in the correct order (leaf → intermediate → root).
-    **`Error: Private key does not match certificate: Key mismatch detected`** — Confirm the private key file corresponds to the certificate being imported by comparing their modulus values.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid key-type value. Supported types: RSA_2048, RSA_4096` | Verify the key-type parameter matches one of the supported values exactly. |
+    | `Error: Certificate chain validation failed: Intermediate certificate not in PEM format` | Ensure the intermediate certificate is PEM-encoded (-----BEGIN CERTIFICATE-----) and concatenated in the correct order (leaf → intermediate → root). |
+    | `Error: Private key does not match certificate: Key mismatch detected` | Confirm the private key file corresponds to the certificate being imported by comparing their modulus values. |
 ---
 
 ## Port Exposure Lockdown
@@ -250,8 +260,10 @@ target     prot opt source               destination
 ```
 
 !!! warning "Common errors"
-    **`sudo: iptables: command not found`** — Install iptables with `sudo yum install iptables-services` or verify the CVM is running a supported OS.
-    **`allssh: command not found`** — Run this command from a Nutanix cluster node where allssh is available in the PATH, or source the Nutanix environment setup script.
+    | Error | Fix |
+    |---|---|
+    | `sudo: iptables: command not found` | Install iptables with `sudo yum install iptables-services` or verify the CVM is running a supported OS. |
+    | `allssh: command not found` | Run this command from a Nutanix cluster node where allssh is available in the PATH, or source the Nutanix environment setup script. |
 ---
 
 ## Prism Element Security Settings

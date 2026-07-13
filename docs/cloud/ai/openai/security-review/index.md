@@ -66,9 +66,11 @@ curl https://api.openai.com/v1/organization/usage_limits \
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.openai.com`** — Verify network connectivity and DNS resolution; check if a corporate proxy or firewall is blocking the request.
-    **`{"error": {"message": "Unauthorized", "type": "invalid_request_error", "param": null, "code": "invalid_api_key"}}`** — Ensure `$OPENAI_API_KEY` is set correctly with `echo $OPENAI_API_KEY` and regenerate the key in your OpenAI dashboard if expired.
-    **`jq: parse error: Invalid JSON text at line 1`** — Remove `| jq` temporarily to see the raw response; the API may be returning an error message instead of JSON.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.openai.com` | Verify network connectivity and DNS resolution; check if a corporate proxy or firewall is blocking the request. |
+    | `{"error": {"message": "Unauthorized", "type": "invalid_request_error", "param": null, "code": "invalid_api_key"}}` | Ensure `$OPENAI_API_KEY` is set correctly with `echo $OPENAI_API_KEY` and regenerate the key in your OpenAI dashboard if expired. |
+    | `jq: parse error: Invalid JSON text at line 1` | Remove `| jq` temporarily to see the raw response; the API may be returning an error message instead of JSON. |
 ## Prompt Injection Risks
 
 Prompt injection occurs when untrusted input manipulates the model's behaviour beyond its intended scope.
@@ -167,9 +169,10 @@ def get_openai_key() -> str:
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceExistsException) when calling the CreateSecret operation: The secret openai/api-key already exists.`** — Use `aws secretsmanager update-secret` instead, or delete the existing secret first with `aws secretsmanager delete-secret --secret-id openai/api-key --force-delete-without-recovery`.
-    
-    **`botocore.exceptions.ClientError: An error occurred (AccessDenied) when calling the GetSecretValue operation: User is not authorized to perform: secretsmanager:GetSecretValue`** — Ensure the IAM role/user has the `secretsmanager:GetSecretValue` permission attached to their policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceExistsException) when calling the CreateSecret operation: The secret openai/api-key already exists.` | Use `aws secretsmanager update-secret` instead, or delete the existing secret first with `aws secretsmanager delete-secret --secret-id openai/api-key --force-delete-without-recovery`. |
+    | `botocore.exceptions.ClientError: An error occurred (AccessDenied) when calling the GetSecretValue operation: User is not authorized to perform: secretsmanager:GetSecretValue` | Ensure the IAM role/user has the `secretsmanager:GetSecretValue` permission attached to their policy. |
 ## Output Validation
 
 Do not trust model output unconditionally — validate and sanitise before downstream use.

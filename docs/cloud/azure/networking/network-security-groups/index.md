@@ -95,8 +95,10 @@ myNSG   eastus      myRG             Succeeded
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound : Resource group 'myRG' could not be found.`** — Create the resource group first with `az group create --name myRG --location eastus`.
-    **`ResourceNotFound : The Resource 'Microsoft.Network/networkSecurityGroups/myNSG' under resource group 'myRG' was not found.`** — Verify the NSG name and resource group are correct, or create the NSG before querying it.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound : Resource group 'myRG' could not be found.` | Create the resource group first with `az group create --name myRG --location eastus`. |
+    | `ResourceNotFound : The Resource 'Microsoft.Network/networkSecurityGroups/myNSG' under resource group 'myRG' was not found.` | Verify the NSG name and resource group are correct, or create the NSG before querying it. |
 ## Inbound and Outbound Rules
 
 ```bash
@@ -304,9 +306,11 @@ az network nsg rule create \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Network/networkSecurityGroups/myNSG' under resource group 'myRG' was not found.`** — Verify the NSG name matches an existing NSG in the resource group using `az network nsg list --resource-group myRG`.
-    **`(InvalidResourceReference) The referenced application security group '/subscriptions/.../web-servers-asg' does not exist.`** — Ensure the ASG was created successfully in the same resource group before creating the NSG rule.
-    **`(BadRequest) The NIC 'myVM-nic' does not exist in resource group 'myRG'.`** — Confirm the NIC name is correct by listing NICs with `az network nic list --resource-group myRG`.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Network/networkSecurityGroups/myNSG' under resource group 'myRG' was not found.` | Verify the NSG name matches an existing NSG in the resource group using `az network nsg list --resource-group myRG`. |
+    | `(InvalidResourceReference) The referenced application security group '/subscriptions/.../web-servers-asg' does not exist.` | Ensure the ASG was created successfully in the same resource group before creating the NSG rule. |
+    | `(BadRequest) The NIC 'myVM-nic' does not exist in resource group 'myRG'.` | Confirm the NIC name is correct by listing NICs with `az network nic list --resource-group myRG`. |
 ## NSG Flow Logs
 
 NSG Flow Logs record accepted and denied traffic for compliance analysis and troubleshooting.
@@ -353,9 +357,11 @@ az network watcher flow-log create \
 ```
 
 !!! warning "Common errors"
-    **`The resource with name 'myNSG' and type 'networkSecurityGroups' could not be found in resource group 'myRG'.`** — Verify the NSG name and resource group are correct using `az network nsg list --resource-group myRG`.
-    **`The specified storage account does not exist or you do not have permission to access it.`** — Ensure the storage account exists in the same region and subscription, and the user has Storage Blob Data Contributor role on it.
-    **`The workspace resource ID is invalid or the workspace does not exist.`** — Confirm the Log Analytics workspace exists and use `az monitor log-analytics workspace list --resource-group myRG` to get the correct resource ID.
+    | Error | Fix |
+    |---|---|
+    | `The resource with name 'myNSG' and type 'networkSecurityGroups' could not be found in resource group 'myRG'.` | Verify the NSG name and resource group are correct using `az network nsg list --resource-group myRG`. |
+    | `The specified storage account does not exist or you do not have permission to access it.` | Ensure the storage account exists in the same region and subscription, and the user has Storage Blob Data Contributor role on it. |
+    | `The workspace resource ID is invalid or the workspace does not exist.` | Confirm the Log Analytics workspace exists and use `az monitor log-analytics workspace list --resource-group myRG` to get the correct resource ID. |
 ## Associating NSGs
 
 ```bash
@@ -405,6 +411,8 @@ az network nic update \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Network/networkSecurityGroups/myNSG' under resource group 'myRG' was not found.`** — Verify the NSG exists in the correct resource group using `az network nsg list --resource-group myRG`.
-    **`(InvalidResourceReference) The resource '/subscriptions/.../subnets/mySubnet' does not exist.`** — Confirm the subnet name and virtual network name are correct and exist in the specified resource group.
-    **`(AuthorizationFailed) The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have permission to perform action 'Microsoft.Network/networkSecurityGroups/join/action'.`** — Ensure your Azure account has Network Contributor or higher role assigned to the resource group.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Network/networkSecurityGroups/myNSG' under resource group 'myRG' was not found.` | Verify the NSG exists in the correct resource group using `az network nsg list --resource-group myRG`. |
+    | `(InvalidResourceReference) The resource '/subscriptions/.../subnets/mySubnet' does not exist.` | Confirm the subnet name and virtual network name are correct and exist in the specified resource group. |
+    | `(AuthorizationFailed) The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have permission to perform action 'Microsoft.Network/networkSecurityGroups/join/action'.` | Ensure your Azure account has Network Contributor or higher role assigned to the resource group. |

@@ -97,9 +97,11 @@ digraph {
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid or unsupported characters in filename`** — Remove special characters from .tf file names; Terraform only accepts alphanumeric, hyphens, and underscores.
-    **`Error: Module not found`** — Verify the module source path in your configuration and run `terraform get` to download missing modules before validating.
-    **`Error: dot: command not found`** — Install graphviz with `apt-get install graphviz` (Ubuntu/Debian) or `brew install graphviz` (macOS) before piping terraform graph output to dot.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid or unsupported characters in filename` | Remove special characters from .tf file names; Terraform only accepts alphanumeric, hyphens, and underscores. |
+    | `Error: Module not found` | Verify the module source path in your configuration and run `terraform get` to download missing modules before validating. |
+    | `Error: dot: command not found` | Install graphviz with `apt-get install graphviz` (Ubuntu/Debian) or `brew install graphviz` (macOS) before piping terraform graph output to dot. |
 ---
 
 ## State & Output
@@ -187,9 +189,11 @@ postgresql://prod-db.c9akciq32.us-east-1.rds.amazonaws.com:5432/maindb
 ```
 
 !!! warning "Common errors"
-    **`Error: resource resource_type.name not found in state`** — Verify the resource exists in state with `terraform state list` and use the exact name including module paths.
-    **`Error: Error acquiring the state lock: ConflictException: Resource of type 'LockID' with identifier '<lock_id>' does not exist`** — Confirm the lock ID is correct by checking the error message in your logs or cloud provider console before attempting force-unlock.
-    **`Error: resource_type.name: resource already exists in state`** — Use `terraform state rm` to remove the conflicting resource from state before importing, or choose a different resource address.
+    | Error | Fix |
+    |---|---|
+    | `Error: resource resource_type.name not found in state` | Verify the resource exists in state with `terraform state list` and use the exact name including module paths. |
+    | `Error: Error acquiring the state lock: ConflictException: Resource of type 'LockID' with identifier '<lock_id>' does not exist` | Confirm the lock ID is correct by checking the error message in your logs or cloud provider console before attempting force-unlock. |
+    | `Error: resource_type.name: resource already exists in state` | Use `terraform state rm` to remove the conflicting resource from state before importing, or choose a different resource address. |
 ---
 
 ## Workspaces
@@ -227,8 +231,10 @@ staging
 ```
 
 !!! warning "Common errors"
-    **`Error: workspace "production" does not exist`** — Verify the workspace name with `terraform workspace list` before selecting.
-    **`Error: workspace cannot be deleted while it is the current workspace`** — Switch to a different workspace with `terraform workspace select <other-name>` before deleting.
+    | Error | Fix |
+    |---|---|
+    | `Error: workspace "production" does not exist` | Verify the workspace name with `terraform workspace list` before selecting. |
+    | `Error: workspace cannot be deleted while it is the current workspace` | Switch to a different workspace with `terraform workspace select <other-name>` before deleting. |
 ---
 
 ## Console, Debug & Patterns
@@ -299,9 +305,11 @@ Apply complete! Resources: 0 added, 0 destroyed, 0 modified.
 ```
 
 !!! warning "Common errors"
-    **`Error: No configuration files`** — Run `terraform init` first to initialize the working directory and download provider plugins.
-    **`Error: Failed to read state file: stat .terraform/terraform.tfstate: no such file or directory`** — Ensure the backend is properly configured and initialized with `terraform init`, or check that the state file path is correct.
-    **`Error: resource_type.name: resource not found`** — Verify the resource address syntax matches your configuration (e.g., `aws_instance.example`) and that the resource exists in your Terraform code before importing.
+    | Error | Fix |
+    |---|---|
+    | `Error: No configuration files` | Run `terraform init` first to initialize the working directory and download provider plugins. |
+    | `Error: Failed to read state file: stat .terraform/terraform.tfstate: no such file or directory` | Ensure the backend is properly configured and initialized with `terraform init`, or check that the state file path is correct. |
+    | `Error: resource_type.name: resource not found` | Verify the resource address syntax matches your configuration (e.g., `aws_instance.example`) and that the resource exists in your Terraform code before importing. |
 ---
 
 ## Verify

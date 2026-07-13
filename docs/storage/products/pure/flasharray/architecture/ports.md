@@ -189,9 +189,11 @@ purity-fa-m70-01        connected
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self-signed certificate`** — Add `-k` flag to skip certificate verification, or import the array's CA certificate into your system trust store.
-    **`ssh: connect to host 10.20.30.40 port 22: Connection refused`** — Verify the management IP is correct and that SSH is enabled on the array (check `purearray list --connection` from Purity CLI).
-    **`iscsiadm: No records found`** — Confirm the iSCSI portal IP and port are correct, and that iSCSI is enabled on the array with `puretarget list` in Purity CLI.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self-signed certificate` | Add `-k` flag to skip certificate verification, or import the array's CA certificate into your system trust store. |
+    | `ssh: connect to host 10.20.30.40 port 22: Connection refused` | Verify the management IP is correct and that SSH is enabled on the array (check `purearray list --connection` from Purity CLI). |
+    | `iscsiadm: No records found` | Confirm the iSCSI portal IP and port are correct, and that iSCSI is enabled on the array with `puretarget list` in Purity CLI. |
 ---
 
 ## See also

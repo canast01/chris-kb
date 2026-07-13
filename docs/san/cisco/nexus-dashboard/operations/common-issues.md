@@ -56,9 +56,11 @@ mso           mso-app-deployment-5d8c9f7b2-xq9r4    1/3     ImagePullBackOff   0
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password)`** — Verify SSH key is loaded with `ssh-add` or use `-i` flag to specify the correct private key file.
-    **`kubectl: command not found`** — Ensure kubectl is installed on the Nexus Dashboard node or SSH to a node where it's available in the PATH.
-    **`spec.nodeName=<node-hostname>: No such file or directory`** — Replace `<node-hostname>` with an actual node name from the `kubectl get nodes` output (e.g., `nd-dc1-2`).
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password)` | Verify SSH key is loaded with `ssh-add` or use `-i` flag to specify the correct private key file. |
+    | `kubectl: command not found` | Ensure kubectl is installed on the Nexus Dashboard node or SSH to a node where it's available in the PATH. |
+    | `spec.nodeName=<node-hostname>: No such file or directory` | Replace `<node-hostname>` with an actual node name from the `kubectl get nodes` output (e.g., `nd-dc1-2`). |
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -101,9 +103,11 @@ nd-dc1-1# acs backup system logs --component backup --tail 50
 ```
 
 !!! warning "Common errors"
-    **`Remote backup test failed: Connection refused to backup.corp.example.com:22`** — Verify the backup server hostname/IP is reachable and SSH service is running with `ssh -v backup.corp.example.com`.
-    **`Permission denied: Cannot write to /mnt/backups`** — Ensure the ndadmin user has write permissions on the NFS mount point with `sudo chmod 755 /mnt/backups` on the backup server.
-    **`acs: command not found`** — SSH into the Nexus Dashboard appliance using the correct admin account or verify you are in the correct CLI context with `show version`.
+    | Error | Fix |
+    |---|---|
+    | `Remote backup test failed: Connection refused to backup.corp.example.com:22` | Verify the backup server hostname/IP is reachable and SSH service is running with `ssh -v backup.corp.example.com`. |
+    | `Permission denied: Cannot write to /mnt/backups` | Ensure the ndadmin user has write permissions on the NFS mount point with `sudo chmod 755 /mnt/backups` on the backup server. |
+    | `acs: command not found` | SSH into the Nexus Dashboard appliance using the correct admin account or verify you are in the correct CLI context with `show version`. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

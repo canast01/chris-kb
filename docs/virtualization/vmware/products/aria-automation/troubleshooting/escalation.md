@@ -101,9 +101,11 @@ Database Version: PostgreSQL 13.8
 ```
 
 !!! warning "Common errors"
-    **`vracli: command not found`** — Ensure you are logged in as root and the Aria Automation service is running; if not, source the environment with `source /etc/profile.d/vra-env.sh` or restart the appliance.
-    **`Permission denied (publickey,password)`** — Verify the root SSH credentials are correct and SSH is enabled on the appliance by checking `/etc/ssh/sshd_config` for `PermitRootLogin yes`.
-    **`Connection refused`** — Confirm the appliance hostname resolves correctly with `nslookup <vra-fqdn>` and that port 22 is accessible from your client using `telnet <vra-fqdn> 22`.
+    | Error | Fix |
+    |---|---|
+    | `vracli: command not found` | Ensure you are logged in as root and the Aria Automation service is running; if not, source the environment with `source /etc/profile.d/vra-env.sh` or restart the appliance. |
+    | `Permission denied (publickey,password)` | Verify the root SSH credentials are correct and SSH is enabled on the appliance by checking `/etc/ssh/sshd_config` for `PermitRootLogin yes`. |
+    | `Connection refused` | Confirm the appliance hostname resolves correctly with `nslookup <vra-fqdn>` and that port 22 is accessible from your client using `telnet <vra-fqdn> 22`. |
 ### 2. Check pod health (all vRA microservices run as pods)
 
 ```bash
@@ -141,9 +143,11 @@ lcm                   lcm-upgrade-job-8h2k9-5x7q2             0/1     Pending   
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): pods "<pod-name>" not found`** — Replace `<pod-name>` with the actual pod name from the first kubectl get output (e.g., `prelude-controller-8f2c1a9d-lm3k9`).
-    **`error: you must specify a body with the request body`** — Ensure the pod name is specified correctly and the namespace flag `-n prelude` is included in the kubectl logs command.
-    **`The connection to the server localhost:8080 was refused`** — Verify kubectl is configured correctly by running `kubectl cluster-info` and check that your kubeconfig points to the correct cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): pods "<pod-name>" not found` | Replace `<pod-name>` with the actual pod name from the first kubectl get output (e.g., `prelude-controller-8f2c1a9d-lm3k9`). |
+    | `error: you must specify a body with the request body` | Ensure the pod name is specified correctly and the namespace flag `-n prelude` is included in the kubectl logs command. |
+    | `The connection to the server localhost:8080 was refused` | Verify kubectl is configured correctly by running `kubectl cluster-info` and check that your kubeconfig points to the correct cluster. |
 ### 3. Generate the vracli support bundle
 
 ```bash
@@ -171,9 +175,11 @@ Bundle location: /tmp/vracli-support-bundle-aria-automation-2024-01-15-14-32-45.
 ```
 
 !!! warning "Common errors"
-    **`vracli: command not found`** — Ensure vracli is installed and in the system PATH, or run `/opt/vmware/vra/bin/vracli support-bundle` with the full path.
-    **`Permission denied`** — Run the command with sudo or as the root user, as support bundle generation requires elevated privileges.
-    **`No space left on device`** — Free up disk space on /tmp (typically need 3–5 GB available) or specify an alternate location with `vracli support-bundle --output-dir /var/tmp`.
+    | Error | Fix |
+    |---|---|
+    | `vracli: command not found` | Ensure vracli is installed and in the system PATH, or run `/opt/vmware/vra/bin/vracli support-bundle` with the full path. |
+    | `Permission denied` | Run the command with sudo or as the root user, as support bundle generation requires elevated privileges. |
+    | `No space left on device` | Free up disk space on /tmp (typically need 3–5 GB available) or specify an alternate location with `vracli support-bundle --output-dir /var/tmp`. |
 This bundle contains pod logs, Postgres state, configuration, and the last 72h of service logs.
 
 ### 4. Collect VAMI cluster status (for upgrade failures)
@@ -327,9 +333,11 @@ Database Status: CONNECTED
 ```
 
 !!! warning "Common errors"
-    **`kubectl: command not found`** — Ensure you are SSH'd directly to the vRA appliance as root, not a separate management node; kubectl is only available on the appliance itself.
-    **`Error: Unable to connect to vIDM. Check network connectivity and vIDM certificate.`** — Verify vIDM hostname resolution with `nslookup` and confirm the vRA appliance can reach vIDM on port 443; check certificate expiration with `openssl s_client -connect <vIDM-IP>:443`.
-    **`Filesystem /dev/sda1: 95% used — Disk space critically low`** — Delete old pod logs with `kubectl delete pods --all-namespaces --field-selector status.phase=Failed` and clear package cache with `apt-get clean`, then monitor with `df -h` again.
+    | Error | Fix |
+    |---|---|
+    | `kubectl: command not found` | Ensure you are SSH'd directly to the vRA appliance as root, not a separate management node; kubectl is only available on the appliance itself. |
+    | `Error: Unable to connect to vIDM. Check network connectivity and vIDM certificate.` | Verify vIDM hostname resolution with `nslookup` and confirm the vRA appliance can reach vIDM on port 443; check certificate expiration with `openssl s_client -connect <vIDM-IP>:443`. |
+    | `Filesystem /dev/sda1: 95% used — Disk space critically low` | Delete old pod logs with `kubectl delete pods --all-namespaces --field-selector status.phase=Failed` and clear package cache with `apt-get clean`, then monitor with `df -h` again. |
 ---
 
 ## Support SLA Reference

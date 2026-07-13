@@ -81,9 +81,11 @@ curl -s --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`{"message":"401 Unauthorized"}`** — Verify the `GITLAB_TOKEN` environment variable is set and contains a valid personal access token with `api` scope.
-    **`{"message":"404 Project Not Found"}`** — Replace `:id` with the actual numeric project ID or URL-encoded project path (e.g., `group%2Fproject`).
-    **`curl: (6) Could not resolve host: gitlab.example.com`** — Confirm network connectivity to the GitLab instance and update the hostname to match your actual GitLab URL.
+    | Error | Fix |
+    |---|---|
+    | `{"message":"401 Unauthorized"}` | Verify the `GITLAB_TOKEN` environment variable is set and contains a valid personal access token with `api` scope. |
+    | `{"message":"404 Project Not Found"}` | Replace `:id` with the actual numeric project ID or URL-encoded project path (e.g., `group%2Fproject`). |
+    | `curl: (6) Could not resolve host: gitlab.example.com` | Confirm network connectivity to the GitLab instance and update the hostname to match your actual GitLab URL. |
 ```bash
 # Create webhook via API
 curl -X POST \
@@ -128,9 +130,11 @@ curl -X POST \
 ```
 
 !!! warning "Common errors"
-    **`"message": "Bad credentials", "documentation_url": "https://docs.github.com/rest"`** — Verify `$GITHUB_TOKEN` is set, valid, and has `admin:repo_hook` permissions.
-    **`"message": "Validation Failed", "errors": [{"message": "Webhook URL is not reachable"}]`** — Ensure the endpoint `https://hooks.example.com/github` is publicly accessible and returns HTTP 200 on a GET request.
-    **`"message": "Not Found", "documentation_url": "https://docs.github.com/rest/reference/repos"`** — Confirm `ORG/REPO` exists and the token has access to that repository.
+    | Error | Fix |
+    |---|---|
+    | `"message": "Bad credentials", "documentation_url": "https://docs.github.com/rest"` | Verify `$GITHUB_TOKEN` is set, valid, and has `admin:repo_hook` permissions. |
+    | `"message": "Validation Failed", "errors": [{"message": "Webhook URL is not reachable"}]` | Ensure the endpoint `https://hooks.example.com/github` is publicly accessible and returns HTTP 200 on a GET request. |
+    | `"message": "Not Found", "documentation_url": "https://docs.github.com/rest/reference/repos"` | Confirm `ORG/REPO` exists and the token has access to that repository. |
 ```bash
 # Create project webhook via API
 curl -X POST \
@@ -170,9 +174,11 @@ curl -X POST \
 ```
 
 !!! warning "Common errors"
-    **`{"message":"401 Unauthorized"}`** — Verify `$GITLAB_TOKEN` is set and valid with `echo $GITLAB_TOKEN` and check token permissions include `api` scope.
-    **`{"message":"404 Project Not Found"}`** — Replace `:id` with the actual numeric project ID (e.g., `8`) or use URL-encoded project path like `group%2Fproject`.
-    **`{"message":"422 Unprocessable Entity","errors":["Url is invalid"]}`** — Ensure the webhook URL is publicly accessible and uses HTTPS; test connectivity with `curl -I https://hooks.example.com/gitlab`.
+    | Error | Fix |
+    |---|---|
+    | `{"message":"401 Unauthorized"}` | Verify `$GITLAB_TOKEN` is set and valid with `echo $GITLAB_TOKEN` and check token permissions include `api` scope. |
+    | `{"message":"404 Project Not Found"}` | Replace `:id` with the actual numeric project ID (e.g., `8`) or use URL-encoded project path like `group%2Fproject`. |
+    | `{"message":"422 Unprocessable Entity","errors":["Url is invalid"]}` | Ensure the webhook URL is publicly accessible and uses HTTPS; test connectivity with `curl -I https://hooks.example.com/gitlab`. |
 ```bash
 # Bash — verify GitHub webhook signature
 verify_signature() {
@@ -284,9 +290,11 @@ latest: digest sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b78
 ```
 
 !!! warning "Common errors"
-    **`Error response from daemon: Get "https://registry.gitlab.example.com/v2/": unauthorized: HTTP Basic: Access Denied`** — Verify `$GITLAB_TOKEN` is set correctly and has `api` and `read_registry` scopes.
-    **`denied: requested access to the resource is denied`** — Ensure the GitLab project ID in the API endpoint matches your actual project and the token has `api` scope.
-    **`jq: parse error: Unexpected end of JSON input`** — Check that the API endpoint URL contains the correct numeric project ID (not a slug) and the token is valid.
+    | Error | Fix |
+    |---|---|
+    | `Error response from daemon: Get "https://registry.gitlab.example.com/v2/": unauthorized: HTTP Basic: Access Denied` | Verify `$GITLAB_TOKEN` is set correctly and has `api` and `read_registry` scopes. |
+    | `denied: requested access to the resource is denied` | Ensure the GitLab project ID in the API endpoint matches your actual project and the token has `api` scope. |
+    | `jq: parse error: Unexpected end of JSON input` | Check that the API endpoint URL contains the correct numeric project ID (not a slug) and the token is valid. |
 ```bash
 # Authenticate
 echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin

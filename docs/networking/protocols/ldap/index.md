@@ -117,9 +117,11 @@ result: 0 Success
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account has not been locked out; check with `net user svc-ldap /domain` on a domain controller.
-    **`ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)`** — Confirm the DC hostname resolves and port 389 is reachable; test with `nc -zv <dc-host> 389`.
-    **`No such object (32)`** — Verify the base DN matches your Active Directory structure; run `ldapsearch -x -H ldap://<dc-host> -b "" -s base "(objectclass=*)" namingContexts` to confirm the correct DN.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account has not been locked out; check with `net user svc-ldap /domain` on a domain controller. |
+    | `ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)` | Confirm the DC hostname resolves and port 389 is reachable; test with `nc -zv <dc-host> 389`. |
+    | `No such object (32)` | Verify the base DN matches your Active Directory structure; run `ldapsearch -x -H ldap://<dc-host> -b "" -s base "(objectclass=*)" namingContexts` to confirm the correct DN. |
 ## LDAPS Verification
 
 ```bash
@@ -191,9 +193,11 @@ result: 0 Success
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account has not been locked out on the domain controller.
-    **`Can't contact LDAP server (-1)`** — Confirm the DC hostname resolves correctly with `nslookup <dc-host>` and port 636/389 is accessible via `telnet <dc-host> 636`.
-    **`TLS: peer certificate cannot be authenticated with known CA certificates`** — Add the DC's CA certificate to your system's trusted store or use `ldapsearch -H ldaps://<dc-host>:636 -o LDTLS_CACERTDIR=/etc/ssl/certs` to specify the certificate path.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account has not been locked out on the domain controller. |
+    | `Can't contact LDAP server (-1)` | Confirm the DC hostname resolves correctly with `nslookup <dc-host>` and port 636/389 is accessible via `telnet <dc-host> 636`. |
+    | `TLS: peer certificate cannot be authenticated with known CA certificates` | Add the DC's CA certificate to your system's trusted store or use `ldapsearch -H ldaps://<dc-host>:636 -o LDTLS_CACERTDIR=/etc/ssl/certs` to specify the certificate path. |
 ## Application LDAP Integration (Linux PAM/SSSD)
 
 ```bash
@@ -237,9 +241,11 @@ Cache cleared successfully.
 ```
 
 !!! warning "Common errors"
-    **`systemctl: command not found`** — Install systemd or use `service sssd status` on systems without systemd.
-    **`sssctl: command not found`** — Install sssd-tools package with `apt install sssd-tools` or `yum install sssd-tools`.
-    **`tail: cannot open '/var/log/sssd/sssd_<domain>.log' for reading: No such file or directory`** — Replace `<domain>` with your actual SSSD domain name (e.g., `sssd_ldap.log`) or check `/etc/sssd/sssd.conf` for the configured domain.
+    | Error | Fix |
+    |---|---|
+    | `systemctl: command not found` | Install systemd or use `service sssd status` on systems without systemd. |
+    | `sssctl: command not found` | Install sssd-tools package with `apt install sssd-tools` or `yum install sssd-tools`. |
+    | `tail: cannot open '/var/log/sssd/sssd_<domain>.log' for reading: No such file or directory` | Replace `<domain>` with your actual SSSD domain name (e.g., `sssd_ldap.log`) or check `/etc/sssd/sssd.conf` for the configured domain. |
 ## Troubleshooting
 
 | Symptom | Check | Action |

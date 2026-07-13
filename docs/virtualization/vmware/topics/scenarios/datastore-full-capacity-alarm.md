@@ -133,9 +133,11 @@ find /vmfs/volumes/<datastore-name>/ -name "*-delta.vmdk" -size +10G
 ```
 
 !!! warning "Common errors"
-    **`find: '/vmfs/volumes/datastore-name/': No such file or directory`** — Replace `<datastore-name>` with the actual datastore name (e.g., `datastore1`) or run `ls /vmfs/volumes/` to list available datastores.
-    **`Permission denied`** — SSH to the ESXi host with root credentials or an account with datastore read permissions; standard user accounts cannot access `/vmfs/volumes/`.
-    **`find: paths must begin with "/" or "."`** — Ensure the datastore path is absolute (starts with `/vmfs/volumes/`) and contains no trailing spaces or special characters.
+    | Error | Fix |
+    |---|---|
+    | `find: '/vmfs/volumes/datastore-name/': No such file or directory` | Replace `<datastore-name>` with the actual datastore name (e.g., `datastore1`) or run `ls /vmfs/volumes/` to list available datastores. |
+    | `Permission denied` | SSH to the ESXi host with root credentials or an account with datastore read permissions; standard user accounts cannot access `/vmfs/volumes/`. |
+    | `find: paths must begin with "/" or "."` | Ensure the datastore path is absolute (starts with `/vmfs/volumes/`) and contains no trailing spaces or special characters. |
 Look for: VMDKs absent from every VM's **Edit Settings** → **Hard Disk** list and not a system snapshot = orphan candidate.
 
 **Never delete a VMDK directly without confirming it has no vCenter registration.** If in doubt, move it to a holding folder and monitor for 72 hours before deletion.
@@ -202,9 +204,11 @@ curl -sk -X GET \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify the hostname matches the certificate CN).
-    **`jq: error (at <stdin>:1): Cannot index array with string "statList"`** — The API response structure differs from expected; run the curl command without the jq pipe to inspect the actual JSON structure first.
-    **`401 Unauthorized`** — Verify the Bearer token is valid and not expired by requesting a fresh token from the Aria Ops authentication endpoint.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify the hostname matches the certificate CN). |
+    | `jq: error (at <stdin>:1): Cannot index array with string "statList"` | The API response structure differs from expected; run the curl command without the jq pipe to inspect the actual JSON structure first. |
+    | `401 Unauthorized` | Verify the Bearer token is valid and not expired by requesting a fresh token from the Aria Ops authentication endpoint. |
 Set proactive thresholds: vCenter → **Cluster** → **Monitor** → **vSAN** → **Configure** → **Advanced Options** — set warning to 60% and error to 70% for production clusters, giving lead time before the 80% write-stop.
 
 ---

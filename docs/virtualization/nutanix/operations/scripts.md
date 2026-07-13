@@ -118,9 +118,11 @@ Snapshot saved to: /tmp/nutanix-health-2024-01-15_1430.txt
 ```
 
 !!! warning "Common errors"
-    **`ncli: command not found`** — Ensure you are running this script on a Nutanix CVM with ncli in the PATH, or source the Nutanix environment first with `source /etc/profile.d/nutanix_env.sh`.
-    **`allssh: command not found`** — Run the script directly on a CVM where allssh is available; it is not available on remote hosts and requires local cluster context.
-    **`Permission denied`** — Verify the nutanix user has passwordless SSH configured to all cluster nodes or run with appropriate sudo privileges if required by your cluster configuration.
+    | Error | Fix |
+    |---|---|
+    | `ncli: command not found` | Ensure you are running this script on a Nutanix CVM with ncli in the PATH, or source the Nutanix environment first with `source /etc/profile.d/nutanix_env.sh`. |
+    | `allssh: command not found` | Run the script directly on a CVM where allssh is available; it is not available on remote hosts and requires local cluster context. |
+    | `Permission denied` | Verify the nutanix user has passwordless SSH configured to all cluster nodes or run with appropriate sudo privileges if required by your cluster configuration. |
 ---
 
 ## NCC Health Check Automation
@@ -155,9 +157,11 @@ NCC completed: 0 failures, 3 warnings
 ```
 
 !!! warning "Common errors"
-    **`ncc: command not found`** — Ensure the NCC utility is installed on the Nutanix cluster node and the PATH includes its binary directory, or use the full path `/opt/nutanix/bin/ncc`.
-    **`mail: command not found`** — Install the `mailutils` package (`apt-get install mailutils` on Debian/Ubuntu or `yum install mailx` on RHEL) or configure an alternative mail transport.
-    **`cannot open mail file /tmp/ncc-20240115.txt: Permission denied`** — Run the script with sufficient privileges (sudo) or ensure the user has write permissions to `/tmp`.
+    | Error | Fix |
+    |---|---|
+    | `ncc: command not found` | Ensure the NCC utility is installed on the Nutanix cluster node and the PATH includes its binary directory, or use the full path `/opt/nutanix/bin/ncc`. |
+    | `mail: command not found` | Install the `mailutils` package (`apt-get install mailutils` on Debian/Ubuntu or `yum install mailx` on RHEL) or configure an alternative mail transport. |
+    | `cannot open mail file /tmp/ncc-20240115.txt: Permission denied` | Run the script with sufficient privileges (sudo) or ensure the user has write permissions to `/tmp`. |
 ---
 
 ## Storage Utilisation Report
@@ -208,9 +212,11 @@ dr-replica-pool                156GB     250GB   62.4% OK
 ```
 
 !!! warning "Common errors"
-    **`command not found: ncli`** — Ensure the Nutanix CLI is installed and the PATH includes the Nutanix bin directory (typically `/opt/nutanix/bin`).
-    **`json.decoder.JSONDecodeError: Expecting value`** — The `ncli ctr list --json` output is malformed; verify cluster connectivity with `ncli cluster status` and retry.
-    **`PermissionError: [Errno 13] Permission denied`** — Run the script with appropriate privileges using `sudo` or as a user with Nutanix admin credentials.
+    | Error | Fix |
+    |---|---|
+    | `command not found: ncli` | Ensure the Nutanix CLI is installed and the PATH includes the Nutanix bin directory (typically `/opt/nutanix/bin`). |
+    | `json.decoder.JSONDecodeError: Expecting value` | The `ncli ctr list --json` output is malformed; verify cluster connectivity with `ncli cluster status` and retry. |
+    | `PermissionError: [Errno 13] Permission denied` | Run the script with appropriate privileges using `sudo` or as a user with Nutanix admin credentials. |
 ---
 
 ## VM Inventory Export
@@ -256,8 +262,10 @@ app-cache-03,6,24,ON,ahv-node-01.nutanix.local,10.20.1.88
 ```
 
 !!! warning "Common errors"
-    **`acli: command not found`** — Ensure you are running this script on a Nutanix cluster node or install the Nutanix CLI tools in your PATH.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify that `acli vm.list --json` returns valid JSON output; check cluster connectivity and acli authentication with `acli -h`.
+    | Error | Fix |
+    |---|---|
+    | `acli: command not found` | Ensure you are running this script on a Nutanix cluster node or install the Nutanix CLI tools in your PATH. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify that `acli vm.list --json` returns valid JSON output; check cluster connectivity and acli authentication with `acli -h`. |
 ---
 
 ## Maintenance Mode Helper
@@ -335,9 +343,11 @@ PASS: VM Placement Healthy
 ```
 
 !!! warning "Common errors"
-    **`acli: command not found`** — Ensure the Nutanix CLI tools are installed and the PATH includes the acli binary location (typically `/opt/nutanix/bin`).
-    **`NCC check timed out or failed to connect to cluster`** — Verify cluster connectivity with `acli cluster info` and confirm the Prism Element service is responding.
-    **`Host state did not reach MAINTENANCE_MODE after 600 seconds`** — Check for stuck VMs with `acli vm.list` and manually migrate or force-stop blocking workloads before retrying.
+    | Error | Fix |
+    |---|---|
+    | `acli: command not found` | Ensure the Nutanix CLI tools are installed and the PATH includes the acli binary location (typically `/opt/nutanix/bin`). |
+    | `NCC check timed out or failed to connect to cluster` | Verify cluster connectivity with `acli cluster info` and confirm the Prism Element service is responding. |
+    | `Host state did not reach MAINTENANCE_MODE after 600 seconds` | Check for stuck VMs with `acli vm.list` and manually migrate or force-stop blocking workloads before retrying. |
 ---
 
 ## REST API — VM Power Operations
@@ -422,9 +432,11 @@ CRITICAL at Mon Dec 18 14:42:15 UTC 2023 — resilience=0
 ```
 
 !!! warning "Common errors"
-    **`command not found: ncli`** — Ensure the Nutanix CLI is installed and in PATH, or run the script from a Nutanix node where ncli is available.
-    **`command not found: mail`** — Install postfix or mailutils (`apt-get install mailutils` on Debian/Ubuntu or `yum install mailx` on RHEL) to enable email alerts.
-    **`grep: (standard input): Permission denied`** — Run the script with appropriate credentials (typically root or a user in the Nutanix admin group) to access cluster fault-tolerance status.
+    | Error | Fix |
+    |---|---|
+    | `command not found: ncli` | Ensure the Nutanix CLI is installed and in PATH, or run the script from a Nutanix node where ncli is available. |
+    | `command not found: mail` | Install postfix or mailutils (`apt-get install mailutils` on Debian/Ubuntu or `yum install mailx` on RHEL) to enable email alerts. |
+    | `grep: (standard input): Permission denied` | Run the script with appropriate credentials (typically root or a user in the Nutanix admin group) to access cluster fault-tolerance status. |
 ---
 
 ---

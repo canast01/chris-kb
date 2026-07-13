@@ -228,9 +228,11 @@ Archive:  agent.zip
 ```
 
 !!! warning "Common errors"
-    **`unzip: command not found`** — Install unzip with `apt-get install unzip` (Debian/Ubuntu) or `yum install unzip` (RHEL/CentOS).
-    **`cannot open /opt/servicenow/mid/agent/config.xml: No such file or directory`** — Verify the extraction completed successfully and the directory path matches your ServiceNow installation structure.
-    **`Permission denied`** — Run the commands with `sudo` or ensure your user has write permissions to `/opt/servicenow/`.
+    | Error | Fix |
+    |---|---|
+    | `unzip: command not found` | Install unzip with `apt-get install unzip` (Debian/Ubuntu) or `yum install unzip` (RHEL/CentOS). |
+    | `cannot open /opt/servicenow/mid/agent/config.xml: No such file or directory` | Verify the extraction completed successfully and the directory path matches your ServiceNow installation structure. |
+    | `Permission denied` | Run the commands with `sudo` or ensure your user has write permissions to `/opt/servicenow/`. |
 Edit `config.xml` with the instance details:
 
 ```xml
@@ -268,9 +270,11 @@ Connection Status: CONNECTED
 ```
 
 !!! warning "Common errors"
-    **`sudo: /opt/servicenow/mid/agent/bin/mid.sh: command not found`** — Verify the MID Server installation path is correct and the agent directory exists at `/opt/servicenow/mid/agent/`.
-    **`Permission denied`** — Ensure the mid.sh script has execute permissions by running `chmod +x /opt/servicenow/mid/agent/bin/mid.sh`.
-    **`MID Server startup failed: Unable to bind to port 8080`** — Check that port 8080 is not already in use with `sudo netstat -tlnp | grep 8080` and stop any conflicting services.
+    | Error | Fix |
+    |---|---|
+    | `sudo: /opt/servicenow/mid/agent/bin/mid.sh: command not found` | Verify the MID Server installation path is correct and the agent directory exists at `/opt/servicenow/mid/agent/`. |
+    | `Permission denied` | Ensure the mid.sh script has execute permissions by running `chmod +x /opt/servicenow/mid/agent/bin/mid.sh`. |
+    | `MID Server startup failed: Unable to bind to port 8080` | Check that port 8080 is not already in use with `sudo netstat -tlnp | grep 8080` and stop any conflicting services. |
 4. In the ServiceNow instance, navigate to **MID Server → Servers**.
 5. The new MID Server appears with status **Validating**.
 6. Click the MID Server record and click **Validate** to approve it.

@@ -53,9 +53,11 @@ origin  https://git.company.com/infra/repo-name.git (push)
 ```
 
 !!! warning "Common errors"
-    **`fatal: not a git repository (or any of the parent directories): .git`** — Run `git init` in the target directory or `git clone` to create a repository first.
-    **`fatal: repository not found`** — Verify the repository URL is correct and you have network access; check SSH keys or HTTPS credentials if authentication is required.
-    **`error: could not lock config file /home/user/.gitconfig: Permission denied`** — Run the command with appropriate permissions or check file ownership with `ls -la ~/.gitconfig`.
+    | Error | Fix |
+    |---|---|
+    | `fatal: not a git repository (or any of the parent directories): .git` | Run `git init` in the target directory or `git clone` to create a repository first. |
+    | `fatal: repository not found` | Verify the repository URL is correct and you have network access; check SSH keys or HTTPS credentials if authentication is required. |
+    | `error: could not lock config file /home/user/.gitconfig: Permission denied` | Run the command with appropriate permissions or check file ownership with `ls -la ~/.gitconfig`. |
 ```bash
 # List
 git branch
@@ -109,9 +111,11 @@ Branch 'develop' set up to track remote branch 'develop' from 'origin'.
 ```
 
 !!! warning "Common errors"
-    **`error: The branch 'old-feature' is not fully merged.`** — Use `git branch -D <name>` to force delete, or merge the branch first with `git merge <name>`.
-    **`error: pathspec 'feature-name' did not match any file(s) known to git`** — Verify the branch exists with `git branch -a` and check for typos or whitespace in the branch name.
-    **`error: refname refs/heads/main not found`** — Ensure you're in a valid git repository with `git status` and that the branch name is correct.
+    | Error | Fix |
+    |---|---|
+    | `error: The branch 'old-feature' is not fully merged.` | Use `git branch -D <name>` to force delete, or merge the branch first with `git merge <name>`. |
+    | `error: pathspec 'feature-name' did not match any file(s) known to git` | Verify the branch exists with `git branch -a` and check for typos or whitespace in the branch name. |
+    | `error: refname refs/heads/main not found` | Ensure you're in a valid git repository with `git status` and that the branch name is correct. |
 ```bash
 # Merge
 git merge <branch>
@@ -160,9 +164,11 @@ Successfully rebased and updated refs/heads/feature/api.
 ```
 
 !!! warning "Common errors"
-    **`error: Your local changes to the following files would be overwritten by merge: src/config.js`** — Commit or stash your changes before merging with `git stash` or `git add && git commit`.
-    **`CONFLICT (content): Merge conflict in src/utils.js`** — Resolve conflicts manually in the editor, then run `git add <file>` and `git merge --continue`.
-    **`fatal: No rebase in progress`** — You attempted `git rebase --continue` without an active rebase; check status with `git status` first.
+    | Error | Fix |
+    |---|---|
+    | `error: Your local changes to the following files would be overwritten by merge: src/config.js` | Commit or stash your changes before merging with `git stash` or `git add && git commit`. |
+    | `CONFLICT (content): Merge conflict in src/utils.js` | Resolve conflicts manually in the editor, then run `git add <file>` and `git merge --continue`. |
+    | `fatal: No rebase in progress` | You attempted `git rebase --continue` without an active rebase; check status with `git status` first. |
 ```bash
 git fetch
 git fetch --all                 # fetch all remotes
@@ -200,9 +206,11 @@ To github.com:company/infrastructure
 ```
 
 !!! warning "Common errors"
-    **`fatal: The current branch main has no upstream branch.`** — Run `git push -u origin main` to set the upstream tracking branch before pushing.
-    **`error: failed to push some refs to 'github.com:company/infrastructure'`** — Pull the latest changes with `git pull --rebase` and resolve any conflicts before pushing again.
-    **`fatal: refusing to merge unrelated histories`** — Add the `--allow-unrelated-histories` flag to your pull command if intentionally merging divergent branches.
+    | Error | Fix |
+    |---|---|
+    | `fatal: The current branch main has no upstream branch.` | Run `git push -u origin main` to set the upstream tracking branch before pushing. |
+    | `error: failed to push some refs to 'github.com:company/infrastructure'` | Pull the latest changes with `git pull --rebase` and resolve any conflicts before pushing again. |
+    | `fatal: refusing to merge unrelated histories` | Add the `--allow-unrelated-histories` flag to your pull command if intentionally merging divergent branches. |
 ```bash
 git stash
 git stash push -m "description"  # stash with a label
@@ -236,8 +244,10 @@ index 4e8c9d1..2f3a4c6 100644
 ```
 
 !!! warning "Common errors"
-    **`No stash entries found.`** — Verify stashes exist with `git stash list` before attempting `pop`, `apply`, or `drop`.
-    **`error: pathspec 'stash@{0}' did not match any file(s) known to git`** — Use the correct stash reference from `git stash list` output (e.g., `stash@{1}` if `stash@{0}` doesn't exist).
+    | Error | Fix |
+    |---|---|
+    | `No stash entries found.` | Verify stashes exist with `git stash list` before attempting `pop`, `apply`, or `drop`. |
+    | `error: pathspec 'stash@{0}' did not match any file(s) known to git` | Use the correct stash reference from `git stash list` output (e.g., `stash@{1}` if `stash@{0}` doesn't exist). |
 ```bash
 git tag                          # list all tags
 git tag <name>                   # create lightweight tag at HEAD
@@ -269,9 +279,11 @@ To github.com:company/repo.git
 ```
 
 !!! warning "Common errors"
-    **`error: tag 'v2.0.0' already exists`** — Use `git tag -d v2.0.0` to delete the local tag first, or choose a different tag name.
-    **`error: pathspec 'v1.5.0' did not match any files`** — Verify the tag exists with `git tag` and check the exact spelling.
-    **`[rejected] v2.0.0 -> v2.0.0 (already exists)`** — Delete the remote tag with `git push origin --delete v2.0.0` before pushing a new one with the same name.
+    | Error | Fix |
+    |---|---|
+    | `error: tag 'v2.0.0' already exists` | Use `git tag -d v2.0.0` to delete the local tag first, or choose a different tag name. |
+    | `error: pathspec 'v1.5.0' did not match any files` | Verify the tag exists with `git tag` and check the exact spelling. |
+    | `[rejected] v2.0.0 -> v2.0.0 (already exists)` | Delete the remote tag with `git push origin --delete v2.0.0` before pushing a new one with the same name. |
 ```bash
 # Unstage a file (keep the changes in working directory)
 git restore --staged <file>
@@ -300,9 +312,11 @@ HEAD is now at 7f3a2c9 Update deployment config for prod-us-east-1
 ```
 
 !!! warning "Common errors"
-    **`error: pathspec '<file>' did not match any files`** — Verify the file path is correct and exists in the repository with `git status`.
-    **`fatal: Not a git repository (or any of the parent directories): .git`** — Ensure you are in the root directory of a git repository or navigate to the correct project folder.
-    **`error: Your local changes to the following files would be overwritten by merge: <file>`** — Stash uncommitted changes with `git stash` before running `git reset --hard origin/<branch>`.
+    | Error | Fix |
+    |---|---|
+    | `error: pathspec '<file>' did not match any files` | Verify the file path is correct and exists in the repository with `git status`. |
+    | `fatal: Not a git repository (or any of the parent directories): .git` | Ensure you are in the root directory of a git repository or navigate to the correct project folder. |
+    | `error: Your local changes to the following files would be overwritten by merge: <file>` | Stash uncommitted changes with `git stash` before running `git reset --hard origin/<branch>`. |
 ```bash
 git cherry-pick <commit>
 git cherry-pick <commit1>..<commit2>   # range (exclusive start)
@@ -323,9 +337,11 @@ git cherry-pick --abort
 ```
 
 !!! warning "Common errors"
-    **`error: could not apply <commit>... hint: after resolving the conflicts, mark the resolved files with "git add <paths>" or "git rm <paths>" then run "git cherry-pick --continue"`** — Resolve merge conflicts in the affected files, stage them with `git add`, then run `git cherry-pick --continue`.
-    **`fatal: <commit> is not a commit`** — Verify the commit hash or reference exists in the repository using `git log` and ensure you're using the correct commit identifier.
-    **`error: your local changes to the following files would be overwritten by merge`** — Commit or stash your current working directory changes with `git stash` before attempting the cherry-pick.
+    | Error | Fix |
+    |---|---|
+    | `error: could not apply <commit>... hint: after resolving the conflicts, mark the resolved files with "git add <paths>" or "git rm <paths>" then run "git cherry-pick --continue"` | Resolve merge conflicts in the affected files, stage them with `git add`, then run `git cherry-pick --continue`. |
+    | `fatal: <commit> is not a commit` | Verify the commit hash or reference exists in the repository using `git log` and ensure you're using the correct commit identifier. |
+    | `error: your local changes to the following files would be overwritten by merge` | Commit or stash your current working directory changes with `git stash` before attempting the cherry-pick. |
 ```bash
 git bisect start
 git bisect bad                   # mark current commit as broken
@@ -350,9 +366,11 @@ Switched to branch 'main'
 ```
 
 !!! warning "Common errors"
-    **`fatal: Not a valid object name`** — Verify the commit hash or tag exists with `git log --oneline` before passing it to `git bisect good`.
-    **`fatal: You need to have at least one bad and one good commit.`** — Mark at least one commit as bad and one as good before Git can bisect; run `git bisect bad` and `git bisect good <commit>` in sequence.
-    **`fatal: cannot bisect with only one old and one new`** — Ensure the "good" commit is actually an ancestor of the "bad" commit; if reversed, start over with `git bisect reset` and swap them.
+    | Error | Fix |
+    |---|---|
+    | `fatal: Not a valid object name` | Verify the commit hash or tag exists with `git log --oneline` before passing it to `git bisect good`. |
+    | `fatal: You need to have at least one bad and one good commit.` | Mark at least one commit as bad and one as good before Git can bisect; run `git bisect bad` and `git bisect good <commit>` in sequence. |
+    | `fatal: cannot bisect with only one old and one new` | Ensure the "good" commit is actually an ancestor of the "bad" commit; if reversed, start over with `git bisect reset` and swap them. |
 ```bash
 git submodule add <url> <path>
 git submodule update --init --recursive   # after cloning a repo with submodules
@@ -374,8 +392,10 @@ Already up to date.
 ```
 
 !!! warning "Common errors"
-    **`fatal: destination path '<path>' already exists and is not an empty directory`** — Remove the existing directory or choose a different path for the submodule.
-    **`fatal: No url found for submodule path '<path>' in .gitmodules`** — Ensure the submodule entry exists in `.gitmodules` and run `git submodule sync` before updating.
+    | Error | Fix |
+    |---|---|
+    | `fatal: destination path '<path>' already exists and is not an empty directory` | Remove the existing directory or choose a different path for the submodule. |
+    | `fatal: No url found for submodule path '<path>' in .gitmodules` | Ensure the submodule entry exists in `.gitmodules` and run `git submodule sync` before updating. |
 ```bash
 git config --global alias.lg "log --oneline --graph --all --decorate"
 git config --global alias.undo "reset --soft HEAD~1"

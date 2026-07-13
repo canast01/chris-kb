@@ -73,9 +73,11 @@ Access available for: 7 days
 ```
 
 !!! warning "Common errors"
-    **`bprestore: Client 'prod-web-01' not found in policy`** — Verify the client name matches exactly in the NetBackup policy configuration using `bppllist -l`.
-    **`bpimmedia: No images found for client within retention period`** — Confirm backups exist for the specified client and check retention policies haven't expired the required image.
-    **`bprestore: Permission denied writing to /tmp/restore.log`** — Ensure the NetBackup daemon user has write permissions to the log directory or specify an alternate writable path.
+    | Error | Fix |
+    |---|---|
+    | `bprestore: Client 'prod-web-01' not found in policy` | Verify the client name matches exactly in the NetBackup policy configuration using `bppllist -l`. |
+    | `bpimmedia: No images found for client within retention period` | Confirm backups exist for the specified client and check retention policies haven't expired the required image. |
+    | `bprestore: Permission denied writing to /tmp/restore.log` | Ensure the NetBackup daemon user has write permissions to the log directory or specify an alternate writable path. |
 ---
 
 ## Catalog & Media
@@ -136,9 +138,11 @@ Check completed: 2024-01-15 15:47:18
 ```
 
 !!! warning "Common errors"
-    **`bpstulist: command not found`** — Ensure NetBackup bin directory is in PATH: `export PATH=$PATH:/usr/openv/netbackup/bin`
-    **`vmquery: Media ID not found`** — Verify the media ID exists and is not expired by running `vmquery -b` without the `-m` flag first.
-    **`bpdbm: Consistency check FAILED - 3 errors detected`** — Run `bpdbm -rebuild_catalog` to repair the database, then re-run the consistency check.
+    | Error | Fix |
+    |---|---|
+    | `bpstulist: command not found` | Ensure NetBackup bin directory is in PATH: `export PATH=$PATH:/usr/openv/netbackup/bin` |
+    | `vmquery: Media ID not found` | Verify the media ID exists and is not expired by running `vmquery -b` without the `-m` flag first. |
+    | `bpdbm: Consistency check FAILED - 3 errors detected` | Run `bpdbm -rebuild_catalog` to repair the database, then re-run the consistency check. |
 ---
 
 ## Client & Policy Management
@@ -198,9 +202,11 @@ apollo-media-03 (192.168.50.12)
 ```
 
 !!! warning "Common errors"
-    **`bpclient: client not found`** — Verify the client hostname matches exactly in NetBackup Admin Console and check DNS resolution with `nslookup <hostname>`.
-    **`bptestbpcd: connection refused on port 13782`** — Ensure the BPCD daemon is running on the client with `ps aux | grep bpcd` and firewall rules allow port 13782 from the master server.
-    **`nbemmcmd: invalid option or command not found`** — Confirm you are running this command on the NetBackup master server and that the NetBackup binaries are in your PATH with `which nbemmcmd`.
+    | Error | Fix |
+    |---|---|
+    | `bpclient: client not found` | Verify the client hostname matches exactly in NetBackup Admin Console and check DNS resolution with `nslookup <hostname>`. |
+    | `bptestbpcd: connection refused on port 13782` | Ensure the BPCD daemon is running on the client with `ps aux | grep bpcd` and firewall rules allow port 13782 from the master server. |
+    | `nbemmcmd: invalid option or command not found` | Confirm you are running this command on the NetBackup master server and that the NetBackup binaries are in your PATH with `which nbemmcmd`. |
 ---
 
 ## Error & Log Analysis
@@ -253,8 +259,10 @@ tail -f /usr/openv/netbackup/logs/bprd/log.20240115
 ```
 
 !!! warning "Common errors"
-    **`vxlogview: invalid instance ID 51216`** — Verify the correct instance ID with `vxlogview -l` and use a valid ID from the output.
-    **`tail: cannot open '/usr/openv/netbackup/logs/bprd/log.20240115' for reading: No such file or directory`** — Replace `<today>` with the actual date in YYYYMMDD format (e.g., `log.20240115`) or use `ls /usr/openv/netbackup/logs/bprd/` to find available log files.
+    | Error | Fix |
+    |---|---|
+    | `vxlogview: invalid instance ID 51216` | Verify the correct instance ID with `vxlogview -l` and use a valid ID from the output. |
+    | `tail: cannot open '/usr/openv/netbackup/logs/bprd/log.20240115' for reading: No such file or directory` | Replace `<today>` with the actual date in YYYYMMDD format (e.g., `log.20240115`) or use `ls /usr/openv/netbackup/logs/bprd/` to find available log files. |
 ---
 
 ## Verify

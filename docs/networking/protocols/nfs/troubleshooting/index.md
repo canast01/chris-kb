@@ -140,9 +140,11 @@ Server nfs v4:
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 192.168.1.50 port 2049 (tcp) failed: Connection refused`** — Verify the NFS server is running with `systemctl status nfs-server` and firewall allows port 2049.
-    **`clnt_create: RPC: Program not registered`** — Ensure the NFS service is started on the server with `systemctl start nfs-server` and wait for RPC registration.
-    **`mount.nfs: access denied by server while mounting 192.168.1.50:/export/data`** — Check client IP is in the export list on the server and verify `/etc/exports` permissions with `exportfs -ra`.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 192.168.1.50 port 2049 (tcp) failed: Connection refused` | Verify the NFS server is running with `systemctl status nfs-server` and firewall allows port 2049. |
+    | `clnt_create: RPC: Program not registered` | Ensure the NFS service is started on the server with `systemctl start nfs-server` and wait for RPC registration. |
+    | `mount.nfs: access denied by server while mounting 192.168.1.50:/export/data` | Check client IP is in the export list on the server and verify `/etc/exports` permissions with `exportfs -ra`. |
 ## Common Issues
 
 | Symptom | Probable cause | Resolution |
@@ -182,9 +184,11 @@ Server.nfs.local:/export on /mnt type nfs4 (rw,relatime,vers=4.1,rsize=1048576,w
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: access denied by server while mounting <server>:/export`** — Verify the NFS server's /etc/exports includes the client IP and check firewall rules allow NFS ports (111, 2049, and ephemeral ports).
-    **`mount.nfs: No such file or directory`** — Ensure the export path exists on the server and the mount point directory exists locally with `mkdir -p /mnt`.
-    **`nfsstat: command not found`** — Install nfs-utils package with `apt-get install nfs-utils` (Debian/Ubuntu) or `yum install nfs-utils` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: access denied by server while mounting <server>:/export` | Verify the NFS server's /etc/exports includes the client IP and check firewall rules allow NFS ports (111, 2049, and ephemeral ports). |
+    | `mount.nfs: No such file or directory` | Ensure the export path exists on the server and the mount point directory exists locally with `mkdir -p /mnt`. |
+    | `nfsstat: command not found` | Install nfs-utils package with `apt-get install nfs-utils` (Debian/Ubuntu) or `yum install nfs-utils` (RHEL/CentOS). |
 ## Export Configuration Reference
 
 ```bash
@@ -215,9 +219,11 @@ exporting *:/data/readonly
 ```
 
 !!! warning "Common errors"
-    **`exportfs: /etc/exports:1: syntax error - unexpected characters after export path`** — Check for trailing whitespace or missing parentheses in /etc/exports; use `cat -A /etc/exports` to reveal hidden characters.
-    **`exportfs: /data/exports does not exist`** — Ensure the export directories exist and are accessible before running exportfs; create them with `mkdir -p /data/exports /data/readonly`.
-    **`exportfs: /etc/exports:1: unknown export option 'rw'`** — Verify NFS server is installed (`systemctl status nfs-server`) and use valid options like `rw` only within parentheses without spaces before the opening paren.
+    | Error | Fix |
+    |---|---|
+    | `exportfs: /etc/exports:1: syntax error - unexpected characters after export path` | Check for trailing whitespace or missing parentheses in /etc/exports; use `cat -A /etc/exports` to reveal hidden characters. |
+    | `exportfs: /data/exports does not exist` | Ensure the export directories exist and are accessible before running exportfs; create them with `mkdir -p /data/exports /data/readonly`. |
+    | `exportfs: /etc/exports:1: unknown export option 'rw'` | Verify NFS server is installed (`systemctl status nfs-server`) and use valid options like `rw` only within parentheses without spaces before the opening paren. |
 ## Stale File Handle Recovery
 
 ```bash
@@ -247,9 +253,11 @@ umount: /mnt/data: mounted by another namespace
 ```
 
 !!! warning "Common errors"
-    **`umount: /mnt/data: not mounted`** — Verify the mountpoint is actually mounted with `mount | grep /mnt/data` before attempting unmount.
-    **`mount.nfs: mounting 192.168.1.42:/export failed, timed out`** — Check NFS server connectivity with `showmount -e <server>` and verify firewall rules allow port 2049/111.
-    **`umount: /mnt/data: mounted by another namespace`** — Use `mount -l` to identify the namespace and either switch to it or use `umount -l` for lazy unmount instead of `-f`.
+    | Error | Fix |
+    |---|---|
+    | `umount: /mnt/data: not mounted` | Verify the mountpoint is actually mounted with `mount | grep /mnt/data` before attempting unmount. |
+    | `mount.nfs: mounting 192.168.1.42:/export failed, timed out` | Check NFS server connectivity with `showmount -e <server>` and verify firewall rules allow port 2049/111. |
+    | `umount: /mnt/data: mounted by another namespace` | Use `mount -l` to identify the namespace and either switch to it or use `umount -l` for lazy unmount instead of `-f`. |
 ## Log Locations
 
 | Platform | Log |

@@ -65,8 +65,10 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/user/local?select=name,role_name" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to the curl command to skip SSL certificate verification, or import the PowerStore certificate into your system's CA bundle.
-    **`{"error":"Invalid token or token expired","error_code":"UNAUTHENTICATED"}`** — Regenerate the DELL-EMC-TOKEN by authenticating first with valid credentials, or verify the token has not exceeded its session timeout.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to the curl command to skip SSL certificate verification, or import the PowerStore certificate into your system's CA bundle. |
+    | `{"error":"Invalid token or token expired","error_code":"UNAUTHENTICATED"}` | Regenerate the DELL-EMC-TOKEN by authenticating first with valid credentials, or verify the token has not exceeded its session timeout. |
 ### TLS Hardening
 
 ```bash
@@ -111,9 +113,11 @@ Nmap done at 2024-01-15 14:32:19 UTC (1 IP address scanned)
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the management IP is correct and the array's HTTPS port 443 is accessible from your client (check firewall rules and network connectivity).
-    **`Name or service not known`** — Replace `<mgmt-ip>` with the actual PowerStore management IP address (e.g., 192.168.1.45).
-    **`Nmap: command not found`** — Install nmap using your package manager (e.g., `apt-get install nmap` on Ubuntu or `yum install nmap` on RHEL).
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the management IP is correct and the array's HTTPS port 443 is accessible from your client (check firewall rules and network connectivity). |
+    | `Name or service not known` | Replace `<mgmt-ip>` with the actual PowerStore management IP address (e.g., 192.168.1.45). |
+    | `Nmap: command not found` | Install nmap using your package manager (e.g., `apt-get install nmap` on Ubuntu or `yum install nmap` on RHEL). |
 PowerStore Manager → **Settings → Security → TLS Configuration**:
 
 | Setting | Required Value |
@@ -175,9 +179,11 @@ notAfter=Jan 15 10:22:33 2026 GMT
 ```
 
 !!! warning "Common errors"
-    **`error:0900006e:PEM routines:PEM_read_bio:no start line`** — Ensure the base64-encoded certificate and key are properly formatted without line breaks; use `cat cert.pem | base64 -w 0` to encode without wrapping.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag only after certificate import completes; the flag bypasses verification during the import process itself.
-    **`unable to load Private Key`** — Verify the private key is in PKCS#8 format and matches the certificate; convert with `openssl pkey -in powerstore.key -out powerstore_pkcs8.key` if needed.
+    | Error | Fix |
+    |---|---|
+    | `error:0900006e:PEM routines:PEM_read_bio:no start line` | Ensure the base64-encoded certificate and key are properly formatted without line breaks; use `cat cert.pem | base64 -w 0` to encode without wrapping. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag only after certificate import completes; the flag bypasses verification during the import process itself. |
+    | `unable to load Private Key` | Verify the private key is in PKCS#8 format and matches the certificate; convert with `openssl pkey -in powerstore.key -out powerstore_pkcs8.key` if needed. |
 Set a calendar reminder to renew the certificate 30 days before expiry. A monitoring script checking certificate expiry should be part of the daily health check.
 
 ### Network Access Hardening
@@ -208,8 +214,10 @@ nc: connect to 10.45.200.18 port 443 (tcp) failed: Connection refused
 ```
 
 !!! warning "Common errors"
-    **`Error: INVALID_RULE`** — Verify the rich rule syntax matches firewalld format (check for mismatched quotes or missing family attribute).
-    **`nc: getaddrinfo failed`** — Ensure the hostname or IP address is resolvable and reachable from the jump host; check DNS or network connectivity.
+    | Error | Fix |
+    |---|---|
+    | `Error: INVALID_RULE` | Verify the rich rule syntax matches firewalld format (check for mismatched quotes or missing family attribute). |
+    | `nc: getaddrinfo failed` | Ensure the hostname or IP address is resolvable and reachable from the jump host; check DNS or network connectivity. |
 The PowerStore management IP should only be reachable from:
 
 - Storage administrator workstations or jump hosts
@@ -282,9 +290,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/fc_port?select=name,wwn,node_id" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip certificate verification (already present in the example).
-    **`401 Unauthorized`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating to the PowerStore management API.
-    **`404 Not Found`** — Confirm the management IP address is correct and the PowerStore REST API endpoint is accessible on port 443.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to the curl command to skip certificate verification (already present in the example). |
+    | `401 Unauthorized` | Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating to the PowerStore management API. |
+    | `404 Not Found` | Confirm the management IP address is correct and the PowerStore REST API endpoint is accessible on port 443. |
 ### iSCSI Security
 
 ```bash
@@ -319,9 +329,11 @@ curl -k -X PATCH "https://<mgmt-ip>/api/rest/host_initiator/<initiator-id>" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed in production deployments).
-    **`{"error_code": "INVALID_CHAP_PASSWORD", "message": "CHAP password must be at least 12 characters"}`** — Ensure the `<chap-password-min-12>` placeholder is replaced with a password of minimum 12 characters.
-    **`curl: (401) Unauthorized`** — Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating to the PowerStore management API.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed in production deployments). |
+    | `{"error_code": "INVALID_CHAP_PASSWORD", "message": "CHAP password must be at least 12 characters"}` | Ensure the `<chap-password-min-12>` placeholder is replaced with a password of minimum 12 characters. |
+    | `curl: (401) Unauthorized` | Verify the DELL-EMC-TOKEN is valid and not expired by re-authenticating to the PowerStore management API. |
 ### NFS Security
 
 ```bash
@@ -364,9 +376,11 @@ WARNING: Export shared_data has broad RW access: 0.0.0.0/0
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the PowerStore management certificate into your CA bundle.
-    **`{"error":"Unauthorized","error_code":"401"}`** — Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint.
-    **`jq: command not found`** — Install `jq` package or use the inline Python JSON parser shown in the example instead of piping to jq.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the PowerStore management certificate into your CA bundle. |
+    | `{"error":"Unauthorized","error_code":"401"}` | Verify the DELL-EMC-TOKEN is valid and not expired by requesting a fresh token from the authentication endpoint. |
+    | `jq: command not found` | Install `jq` package or use the inline Python JSON parser shown in the example instead of piping to jq. |
 ## SupportAssist Hardening
 
 SupportAssist enables Dell to proactively monitor the array and create automated service requests.
@@ -429,9 +443,11 @@ curl -k -X GET "https://<mgmt-ip>/api/rest/remote_syslog" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the PowerStore certificate into your system's CA bundle.
-    **`{"error": "Unauthorized", "code": 401}`** — Verify the DELL-EMC-TOKEN is valid and not expired by regenerating it in the PowerStore management console.
-    **`curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused`** — Confirm the management IP is correct and the PowerStore API service is running with `systemctl status powerstore-api`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the PowerStore certificate into your system's CA bundle. |
+    | `{"error": "Unauthorized", "code": 401}` | Verify the DELL-EMC-TOKEN is valid and not expired by regenerating it in the PowerStore management console. |
+    | `curl: (7) Failed to connect to <mgmt-ip> port 443: Connection refused` | Confirm the management IP is correct and the PowerStore API service is running with `systemctl status powerstore-api`. |
 Audit events to monitor in the SIEM:
 
 | Event | Alert Threshold | Priority |

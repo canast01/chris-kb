@@ -87,9 +87,11 @@ svm_dr  default     2          cifs     0.0.0.0/0    ntlm    ntlm
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: SnapMirror transfer is in progress. Quiesce the relationship first.`** — Wait for the snapmirror update to complete fully before attempting to quiesce.
-    **`Error: command failed: Volume "vol_data" is already mounted at junction path "/vol_data".`** — Remove the mount command if the volume is already mounted, or verify the junction-path is not already in use.
-    **`Error: command failed: Policy "<policy>" does not exist on Vserver "svm_dr".`** — Replace `<policy>` with an actual export policy name or create the policy first using `export-policy create`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: SnapMirror transfer is in progress. Quiesce the relationship first.` | Wait for the snapmirror update to complete fully before attempting to quiesce. |
+    | `Error: command failed: Volume "vol_data" is already mounted at junction path "/vol_data".` | Remove the mount command if the volume is already mounted, or verify the junction-path is not already in use. |
+    | `Error: command failed: Policy "<policy>" does not exist on Vserver "svm_dr".` | Replace `<policy>` with an actual export policy name or create the policy first using `export-policy create`. |
 ### Unplanned Failover (Source Down)
 
 ```bash
@@ -125,8 +127,10 @@ svm_dr      data_lif_02     192.168.10.46   255.255.255.0   up
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: SnapMirror relationship does not exist for destination "svm_dr:vol_data"`** — Verify the destination path is correct and the relationship exists using `snapmirror show -all`.
-    **`Error: Cannot mount volume vol_data: volume is already mounted`** — Check if the volume is already mounted on the DR SVM with `volume show -vserver svm_dr -volume vol_data -fields junction-path`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: SnapMirror relationship does not exist for destination "svm_dr:vol_data"` | Verify the destination path is correct and the relationship exists using `snapmirror show -all`. |
+    | `Error: Cannot mount volume vol_data: volume is already mounted` | Check if the volume is already mounted on the DR SVM with `volume show -vserver svm_dr -volume vol_data -fields junction-path`. |
 ---
 
 ## Restore from a Snapshot on the Destination Volume (Point-in-Time Recovery)
@@ -164,8 +168,10 @@ hourly.2024-01-15_1400                   892MB  Jan 15 14:00:22 +0000
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: no snapshots found for volume vol_data`** — Verify the volume name and SVM name are correct using `volume show -vserver svm_dr`.
-    **`Error: invalid vserver name "svm_dr"`** — Confirm the SVM exists and is accessible with `vserver show -vserver svm_dr`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: no snapshots found for volume vol_data` | Verify the volume name and SVM name are correct using `volume show -vserver svm_dr`. |
+    | `Error: invalid vserver name "svm_dr"` | Confirm the SVM exists and is accessible with `vserver show -vserver svm_dr`. |
 ### Mount a Specific Snapshot for File-Level Recovery
 
 ```bash
@@ -204,9 +210,11 @@ Volume "vol_data_recovery" deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Cannot unmount volume vol_data_recovery: volume is in use`** — Ensure all NFS/CIFS clients have disconnected from the mount point and no processes hold open file handles before unmounting.
-    **`Error: command failed: Cannot create clone: parent snapshot <snapshot-name> does not exist on volume vol_data`** — Verify the snapshot name exists by running `snapshot show -vserver svm_dr -volume vol_data` and use the exact snapshot name in the parent-snapshot parameter.
-    **`Error: command failed: Cannot mount volume: junction path /vol_data_recovery already exists`** — Remove the conflicting junction path with `volume unmount -vserver svm_dr -volume <existing-volume>` or choose a different junction path for the clone.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Cannot unmount volume vol_data_recovery: volume is in use` | Ensure all NFS/CIFS clients have disconnected from the mount point and no processes hold open file handles before unmounting. |
+    | `Error: command failed: Cannot create clone: parent snapshot <snapshot-name> does not exist on volume vol_data` | Verify the snapshot name exists by running `snapshot show -vserver svm_dr -volume vol_data` and use the exact snapshot name in the parent-snapshot parameter. |
+    | `Error: command failed: Cannot mount volume: junction path /vol_data_recovery already exists` | Remove the conflicting junction path with `volume unmount -vserver svm_dr -volume <existing-volume>` or choose a different junction path for the clone. |
 ### Revert a Destination Volume to a Specific Snapshot
 
 This is destructive — it discards all data newer than the selected snapshot on the destination. Only use when breaking the mirror and restoring from a specific point-in-time.
@@ -239,9 +247,11 @@ svm_dr vol_data vol_data.20240116_1800 2.6GB valid
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: SnapMirror relationship is not in a state that allows this operation.`** — Ensure the mirror is fully synchronized and not in a transfer state before attempting to break it.
-    **`Error: snapshot "vol_data.20240115_0200" does not exist.`** — Verify the exact snapshot name using `snapshot show -vserver svm_dr -volume vol_data` and correct the spelling or date format.
-    **`Error: cannot restore snapshot while volume has active SnapMirror relationship.`** — Break the SnapMirror relationship completely before attempting the restore operation.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: SnapMirror relationship is not in a state that allows this operation.` | Ensure the mirror is fully synchronized and not in a transfer state before attempting to break it. |
+    | `Error: snapshot "vol_data.20240115_0200" does not exist.` | Verify the exact snapshot name using `snapshot show -vserver svm_dr -volume vol_data` and correct the spelling or date format. |
+    | `Error: cannot restore snapshot while volume has active SnapMirror relationship.` | Break the SnapMirror relationship completely before attempting the restore operation. |
 ---
 
 ## Restore from a SnapVault (XDP Vault) Relationship
@@ -290,9 +300,11 @@ Volume "vol_data_clone" deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Parent snapshot does not exist.`** — Verify the snapshot name exists by running `snapshot show -vserver svm_vault -volume vol_data_vault` and use the exact snapshot identifier from the output.
-    **`Error: command failed: Volume vol_data_clone already exists.`** — Delete the existing clone volume first with `volume delete -vserver svm_vault -volume vol_data_clone -force true` or use a different clone name.
-    **`Error: command failed: Cannot unmount volume with active CIFS/NFS connections.`** — Ensure all client connections are closed by running `cifs session show` or `nfs connected-clients` to identify and disconnect active sessions before unmounting.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Parent snapshot does not exist.` | Verify the snapshot name exists by running `snapshot show -vserver svm_vault -volume vol_data_vault` and use the exact snapshot identifier from the output. |
+    | `Error: command failed: Volume vol_data_clone already exists.` | Delete the existing clone volume first with `volume delete -vserver svm_vault -volume vol_data_clone -force true` or use a different clone name. |
+    | `Error: command failed: Cannot unmount volume with active CIFS/NFS connections.` | Ensure all client connections are closed by running `cifs session show` or `nfs connected-clients` to identify and disconnect active sessions before unmounting. |
 ### Restore from Vault to Source (Full Volume Restore)
 
 This procedure restores a full volume from the XDP vault back to the source — for example, after an accidental deletion or corruption on the source.
@@ -341,9 +353,11 @@ Lag-time: 1m 30s
 ```
 
 !!! warning "Common errors"
-    **`Error: SnapMirror relationship is not idle`** — Run `snapmirror quiesce -destination-path svm_vault:vol_data_vault` and wait 60 seconds before attempting the break operation.
-    **`Error: Cannot resync relationship in broken state without source-path`** — Verify the source and destination paths are correctly specified and the relationship type matches (use `snapmirror show -all` to confirm current state).
-    **`Error: Transfer aborted. Insufficient space on destination volume`** — Expand the destination volume with `volume size -vserver svm_prod -volume vol_data -size +10GB` before retrying the resync.
+    | Error | Fix |
+    |---|---|
+    | `Error: SnapMirror relationship is not idle` | Run `snapmirror quiesce -destination-path svm_vault:vol_data_vault` and wait 60 seconds before attempting the break operation. |
+    | `Error: Cannot resync relationship in broken state without source-path` | Verify the source and destination paths are correctly specified and the relationship type matches (use `snapmirror show -all` to confirm current state). |
+    | `Error: Transfer aborted. Insufficient space on destination volume` | Expand the destination volume with `volume size -vserver svm_prod -volume vol_data -size +10GB` before retrying the resync. |
 ---
 
 ## SVM-DR Failover and Failback
@@ -392,9 +406,11 @@ svm_dr   svm_dr_data_lif_02    192.168.10.46   255.255.255.0   up
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Snapmirror relationship is not in a quiesced state`** — Run `snapmirror quiesce -destination-path svm_dr:` before attempting to break the relationship.
-    **`Error: Vserver svm_dr is not in a stopped state and cannot be started`** — The destination SVM is already running; verify with `vserver show -vserver svm_dr` before issuing the start command.
-    **`Error: Cannot resolve hostname svm_dr in DNS`** — Update your DNS server or /etc/hosts file to map the SVM hostname to the new DR LIF IP address (192.168.10.45 in this example).
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Snapmirror relationship is not in a quiesced state` | Run `snapmirror quiesce -destination-path svm_dr:` before attempting to break the relationship. |
+    | `Error: Vserver svm_dr is not in a stopped state and cannot be started` | The destination SVM is already running; verify with `vserver show -vserver svm_dr` before issuing the start command. |
+    | `Error: Cannot resolve hostname svm_dr in DNS` | Update your DNS server or /etc/hosts file to map the SVM hostname to the new DR LIF IP address (192.168.10.45 in this example). |
 ### SVM-DR Failback
 
 ```bash
@@ -437,9 +453,11 @@ svm_prod: svm_dr:              true    00:00:08
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Snapmirror relationship is not idle`** — Wait for the previous transfer to complete using `snapmirror show -destination-path svm_prod:` before attempting resync.
-    **`Error: command failed: Snapmirror relationship does not exist`** — Verify the source and destination SVM names match the original SnapMirror configuration using `snapmirror show -all`.
-    **`Error: command failed: Snapmirror relationship is not in a valid state for break`** — Ensure the resync operation has completed and the relationship is idle before breaking it.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Snapmirror relationship is not idle` | Wait for the previous transfer to complete using `snapmirror show -destination-path svm_prod:` before attempting resync. |
+    | `Error: command failed: Snapmirror relationship does not exist` | Verify the source and destination SVM names match the original SnapMirror configuration using `snapmirror show -all`. |
+    | `Error: command failed: Snapmirror relationship is not in a valid state for break` | Ensure the resync operation has completed and the relationship is idle before breaking it. |
 ---
 
 ## Post-Restore Validation
@@ -473,8 +491,10 @@ svm-prod:vol_logs => svm-dr:vol_logs_mirror     true     00:00:22
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: no matching volumes found`** — Verify the SVM name and volume name are correct using `vserver show` and `volume show` commands.
-    **`Relationship is not healthy: false, Lag Time: 00:45:30`** — Wait for the SnapMirror resynchronization to complete or manually trigger `snapmirror resync` if the lag exceeds your RPO threshold.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: no matching volumes found` | Verify the SVM name and volume name are correct using `vserver show` and `volume show` commands. |
+    | `Relationship is not healthy: false, Lag Time: 00:45:30` | Wait for the SnapMirror resynchronization to complete or manually trigger `snapmirror resync` if the lag exceeds your RPO threshold. |
 ---
 
 ## Verify

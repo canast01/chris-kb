@@ -122,9 +122,11 @@ Job ID    | Subclient            | Type    | Status      | Start Time          |
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid subclient name '<name>'`** — Replace `<name>` with the actual subclient name from your backup policy (use `qlist subclients` to list available subclients).
-    **`Error: Restore path '/restore/destination' does not exist or is not writable`** — Ensure the destination directory exists and the Commvault service account has write permissions to it.
-    **`Error: No restore points available for the specified time '2024-01-01 12:00:00'`** — Verify the restore point exists within your backup retention period using `qlist backupsets -subclient <name>` to check available recovery points.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid subclient name '<name>'` | Replace `<name>` with the actual subclient name from your backup policy (use `qlist subclients` to list available subclients). |
+    | `Error: Restore path '/restore/destination' does not exist or is not writable` | Ensure the destination directory exists and the Commvault service account has write permissions to it. |
+    | `Error: No restore points available for the specified time '2024-01-01 12:00:00'` | Verify the restore point exists within your backup retention period using `qlist backupsets -subclient <name>` to check available recovery points. |
 ---
 
 ## Clients & Policies
@@ -191,9 +193,11 @@ Exchange_Mailbox                     Exchange                 Active
 ```
 
 !!! warning "Common errors"
-    **`qlist: command not found`** — Ensure the CommVault command line tools are installed and the PATH includes the CommVault bin directory (typically `/opt/commvault/Base/bin` on Linux or `C:\Program Files\CommVault\Base\bin` on Windows).
-    **`Error: Client '<client_name>' not found`** — Verify the exact client name using `qlist client` first, as client names are case-sensitive and must match the registered hostname exactly.
-    **`Error: Access denied - insufficient privileges`** — Run the command with appropriate CommVault admin credentials or ensure your user account has the necessary CommVault administrator role permissions.
+    | Error | Fix |
+    |---|---|
+    | `qlist: command not found` | Ensure the CommVault command line tools are installed and the PATH includes the CommVault bin directory (typically `/opt/commvault/Base/bin` on Linux or `C:\Program Files\CommVault\Base\bin` on Windows). |
+    | `Error: Client '<client_name>' not found` | Verify the exact client name using `qlist client` first, as client names are case-sensitive and must match the registered hostname exactly. |
+    | `Error: Access denied - insufficient privileges` | Run the command with appropriate CommVault admin credentials or ensure your user account has the necessary CommVault administrator role permissions. |
 ---
 
 ## CommServe Maintenance
@@ -240,9 +244,11 @@ Backup Exec               25            12            2025-03-15
 ```
 
 !!! warning "Common errors"
-    **`qsystem: command not found`** — Ensure the CommVault installation directory is in your PATH or source the environment setup script (typically `. /opt/commvault/base/setenv.sh`).
-    **`Error: Cannot commit changes - pending validation errors detected`** — Review pending configuration changes with `qlist pendingchanges` and resolve validation issues before running `qcommit`.
-    **`License limit exceeded for MediaAgent`** — Purchase additional MediaAgent licenses or deactivate unused agents to free up license seats.
+    | Error | Fix |
+    |---|---|
+    | `qsystem: command not found` | Ensure the CommVault installation directory is in your PATH or source the environment setup script (typically `. /opt/commvault/base/setenv.sh`). |
+    | `Error: Cannot commit changes - pending validation errors detected` | Review pending configuration changes with `qlist pendingchanges` and resolve validation issues before running `qcommit`. |
+    | `License limit exceeded for MediaAgent` | Purchase additional MediaAgent licenses or deactivate unused agents to free up license seats. |
 ---
 
 ## REST API
@@ -272,9 +278,11 @@ curl -X GET "https://<CommServe>/webconsole/api/Job?jobFilter=Active" \
 ```
 
 !!! warning "Common errors"
-    **`{"error":{"errorCode":401,"errorMessage":"Invalid credentials"}}`** — Verify the username, password, and domain are correct in the login request.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip SSL verification, or configure proper CA certificates for the CommServe HTTPS endpoint.
-    **`{"error":{"errorCode":403,"errorMessage":"Invalid or expired token"}}`** — Re-authenticate to obtain a fresh token, as the previous token has expired or is malformed.
+    | Error | Fix |
+    |---|---|
+    | `{"error":{"errorCode":401,"errorMessage":"Invalid credentials"}}` | Verify the username, password, and domain are correct in the login request. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl to skip SSL verification, or configure proper CA certificates for the CommServe HTTPS endpoint. |
+    | `{"error":{"errorCode":403,"errorMessage":"Invalid or expired token"}}` | Re-authenticate to obtain a fresh token, as the previous token has expired or is malformed. |
 ---
 
 ## Verify

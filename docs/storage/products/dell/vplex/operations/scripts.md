@@ -167,9 +167,11 @@ STATUS: OK — All VPLEX health checks passed.
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH key is loaded with `ssh-add` or configure password authentication; ensure VPLEX_USER has SSH access to VPLEX_HOST.
-    **`vplexcli: command not found`** — Confirm vplexcli is installed and in PATH on the VPLEX management console, or use the full path to the binary in the vplex_cmd function.
-    **`ERROR: VPLEX_HOST is not set.`** — Export VPLEX_HOST environment variable before running the script: `export VPLEX_HOST=vplex-mgmt.example.com`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH key is loaded with `ssh-add` or configure password authentication; ensure VPLEX_USER has SSH access to VPLEX_HOST. |
+    | `vplexcli: command not found` | Confirm vplexcli is installed and in PATH on the VPLEX management console, or use the full path to the binary in the vplex_cmd function. |
+    | `ERROR: VPLEX_HOST is not set.` | Export VPLEX_HOST environment variable before running the script: `export VPLEX_HOST=vplex-mgmt.example.com`. |
 **Usage:**
 ```text
 VPLEX_HOST=192.168.1.20 VPLEX_USER=service ./vplex_device_health.sh
@@ -343,9 +345,11 @@ cg-dr-replica (in-sync)
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host vplex-mgmt.example.com port 22: Connection timed out`** — Verify VPLEX_HOST is reachable and SSH_USER has network access; check firewall rules and host DNS resolution.
-    **`Permission denied (publickey,gssapi-keyexchange).`** — Ensure the service account has SSH key-based authentication configured on the VPLEX management console and BatchMode=yes is compatible with your auth method.
-    **`vplexcli: command not found`** — Confirm vplexcli is installed and in the PATH on the VPLEX management node, or use the full path to the binary in the vplex() function.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host vplex-mgmt.example.com port 22: Connection timed out` | Verify VPLEX_HOST is reachable and SSH_USER has network access; check firewall rules and host DNS resolution. |
+    | `Permission denied (publickey,gssapi-keyexchange).` | Ensure the service account has SSH key-based authentication configured on the VPLEX management console and BatchMode=yes is compatible with your auth method. |
+    | `vplexcli: command not found` | Confirm vplexcli is installed and in the PATH on the VPLEX management node, or use the full path to the binary in the vplex() function. |
 ---
 
 ## Pre-Change Validation Script
@@ -418,11 +422,11 @@ exit 0
 ```
 
 !!! warning "Common errors"
-    **`ERROR: VPLEX_HOST is not set.`** — Export the VPLEX_HOST environment variable before running the script: `export VPLEX_HOST=vplex-mgmt.example.com`.
-    
-    **`Permission denied (publickey).`** — Ensure the SSH_USER account has passwordless key-based authentication configured and the public key is in the VPLEX management node's authorized_keys file.
-    
-    **`FAIL: health-check reports errors`** — Run `vplexcli -e "health-check"` directly on the VPLEX management node to identify and resolve the underlying fault before proceeding with changes.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: VPLEX_HOST is not set.` | Export the VPLEX_HOST environment variable before running the script: `export VPLEX_HOST=vplex-mgmt.example.com`. |
+    | `Permission denied (publickey).` | Ensure the SSH_USER account has passwordless key-based authentication configured and the public key is in the VPLEX management node's authorized_keys file. |
+    | `FAIL: health-check reports errors` | Run `vplexcli -e "health-check"` directly on the VPLEX management node to identify and resolve the underlying fault before proceeding with changes. |
 ---
 
 ## Verify

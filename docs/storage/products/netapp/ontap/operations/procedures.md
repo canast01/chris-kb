@@ -176,8 +176,10 @@ svm-nfs-01  data       running  up
 ```
 
 !!! warning "Common errors"
-    **`Error: "vserver show" is not a recognized command.`** — Ensure you are connected to the ONTAP cluster management interface via SSH or console, not the node shell.
-    **`Error: This operation is not permitted: Insufficient privileges to run command "vserver show".`** — Verify your user role has the "admin" or equivalent privilege level assigned in ONTAP.
+    | Error | Fix |
+    |---|---|
+    | `Error: "vserver show" is not a recognized command.` | Ensure you are connected to the ONTAP cluster management interface via SSH or console, not the node shell. |
+    | `Error: This operation is not permitted: Insufficient privileges to run command "vserver show".` | Verify your user role has the "admin" or equivalent privilege level assigned in ONTAP. |
 ### SVM Health
 
 ![SVM Health](../../../../../assets/ontap-proc-svm-health.svg)
@@ -202,8 +204,10 @@ prod-svm-01   prod-svm-01_root             online     healthy
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: vserver`** — Ensure you are connected to the ONTAP cluster management interface via SSH or the ONTAP CLI, not a local shell.
-    **`Error: invalid vserver name "prod-svm-01"`** — Replace `<svm_name>` with an actual SVM name from your cluster; use `vserver show` to list all available SVMs.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: vserver` | Ensure you are connected to the ONTAP cluster management interface via SSH or the ONTAP CLI, not a local shell. |
+    | `Error: invalid vserver name "prod-svm-01"` | Replace `<svm_name>` with an actual SVM name from your cluster; use `vserver show` to list all available SVMs. |
 ### Create an SVM
 
 ![Create an SVM](../../../../../assets/ontap-proc-create-an-svm.svg)
@@ -222,9 +226,11 @@ vserver create \
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Aggregate "<aggr_name>" does not exist.`** — Verify the aggregate name with `storage aggregate show` and use the correct name in the `-aggregate` parameter.
-    **`Error: command failed: Vserver "<svm_name>" already exists.`** — Choose a unique SVM name or delete the existing SVM with `vserver delete` before recreating it.
-    **`Error: command failed: Security style "unix" is not valid for root volume.`** — Use `mixed`, `ntfs`, or `unix` (ensure UNIX is capitalized); verify ONTAP version supports the chosen style for root volumes.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Aggregate "<aggr_name>" does not exist.` | Verify the aggregate name with `storage aggregate show` and use the correct name in the `-aggregate` parameter. |
+    | `Error: command failed: Vserver "<svm_name>" already exists.` | Choose a unique SVM name or delete the existing SVM with `vserver delete` before recreating it. |
+    | `Error: command failed: Security style "unix" is not valid for root volume.` | Use `mixed`, `ntfs`, or `unix` (ensure UNIX is capitalized); verify ONTAP version supports the chosen style for root volumes. |
 ### LIF Management
 
 ![LIF Management](../../../../../assets/ontap-proc-lif-management.svg)
@@ -263,8 +269,10 @@ prod-svm         iscsi_lif_01   192.168.1.60    up       node2/e0e         node2
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: The specified home-port "e0c" does not exist on node "node1".`** — Verify the port exists on the target node using `network port show -node <node_name>`.
-    **`Error: command failed: Cannot migrate LIF "nfs_lif_01" because it is currently hosting an active connection.`** — Migrate during a maintenance window or use `network interface migrate -force-administrative-vlan true` if necessary.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: The specified home-port "e0c" does not exist on node "node1".` | Verify the port exists on the target node using `network port show -node <node_name>`. |
+    | `Error: command failed: Cannot migrate LIF "nfs_lif_01" because it is currently hosting an active connection.` | Migrate during a maintenance window or use `network interface migrate -force-administrative-vlan true` if necessary. |
 ### DNS Configuration per SVM
 
 ![DNS Configuration per SVM](../../../../../assets/ontap-proc-dns-configuration-per-svm.svg)
@@ -290,8 +298,10 @@ Attempts: 1
 ```
 
 !!! warning "Common errors"
-    **`Error: "svm-prod-01" is not a valid vserver name`** — Verify the SVM name exists with `vserver show` and use the exact name from the Vserver column.
-    **`Error: DNS create failed: Name servers already configured`** — Delete the existing DNS configuration first using `vserver services name-service dns delete -vserver <svm_name>` before creating a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: "svm-prod-01" is not a valid vserver name` | Verify the SVM name exists with `vserver show` and use the exact name from the Vserver column. |
+    | `Error: DNS create failed: Name servers already configured` | Delete the existing DNS configuration first using `vserver services name-service dns delete -vserver <svm_name>` before creating a new one. |
 ### NIS / LDAP Lookup
 
 ![NIS / LDAP Lookup](../../../../../assets/ontap-proc-nis-ldap-lookup.svg)
@@ -327,8 +337,10 @@ Group Member Filter: memberUid=*
 ```
 
 !!! warning "Common errors"
-    **`Error: "vserver services name-service ns-switch show" is not a recognized command.`** — Verify you are connected to the ONTAP cluster management interface and have appropriate admin privileges; this command requires ONTAP 9.2 or later.
-    **`Error: Vserver "<svm_name>" does not exist.`** — Replace `<svm_name>` with an actual SVM name from your cluster (run `vserver show` to list available SVMs).
+    | Error | Fix |
+    |---|---|
+    | `Error: "vserver services name-service ns-switch show" is not a recognized command.` | Verify you are connected to the ONTAP cluster management interface and have appropriate admin privileges; this command requires ONTAP 9.2 or later. |
+    | `Error: Vserver "<svm_name>" does not exist.` | Replace `<svm_name>` with an actual SVM name from your cluster (run `vserver show` to list available SVMs). |
 ### Stop / Start an SVM
 
 ![Stop / Start an SVM](../../../../../assets/ontap-proc-stop-start-an-svm.svg)
@@ -352,9 +364,11 @@ Vserver "svm_prod_01" has been started.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Vserver "svm_prod_01" is not in a state that allows this operation`** — Verify the SVM is not already stopped or in a transitional state by running `vserver show -vserver svm_prod_01` before attempting the operation.
-    **`Error: command failed: Vserver "svm_prod_01" does not exist`** — Confirm the SVM name is correct and exists in the cluster by running `vserver show` to list all available SVMs.
-    **`Error: command failed: This operation is not permitted: Vserver is in Disaster Recovery relationship`** — If the SVM is part of a SnapMirror DR setup, break or quiesce the relationship first using `snapmirror quiesce` or `snapmirror break`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Vserver "svm_prod_01" is not in a state that allows this operation` | Verify the SVM is not already stopped or in a transitional state by running `vserver show -vserver svm_prod_01` before attempting the operation. |
+    | `Error: command failed: Vserver "svm_prod_01" does not exist` | Confirm the SVM name is correct and exists in the cluster by running `vserver show` to list all available SVMs. |
+    | `Error: command failed: This operation is not permitted: Vserver is in Disaster Recovery relationship` | If the SVM is part of a SnapMirror DR setup, break or quiesce the relationship first using `snapmirror quiesce` or `snapmirror break`. |
 ### Delete an SVM
 
 ![Delete an SVM](../../../../../assets/ontap-proc-delete-an-svm.svg)
@@ -381,8 +395,10 @@ Delete all data volumes first, then retry the vserver delete command.
 ```
 
 !!! warning "Common errors"
-    **`Warning: Vserver "svm-prod" cannot be deleted while it contains non-root volumes.`** — Delete all non-root volumes using `volume delete -vserver <svm_name> -volume <volume_name>` before attempting vserver deletion.
-    **`Error: Vserver "svm-prod" is in use by one or more clients or protocols.`** — Stop all active NFS/CIFS/iSCSI services and disconnect clients before retrying vserver deletion.
+    | Error | Fix |
+    |---|---|
+    | `Warning: Vserver "svm-prod" cannot be deleted while it contains non-root volumes.` | Delete all non-root volumes using `volume delete -vserver <svm_name> -volume <volume_name>` before attempting vserver deletion. |
+    | `Error: Vserver "svm-prod" is in use by one or more clients or protocols.` | Stop all active NFS/CIFS/iSCSI services and disconnect clients before retrying vserver deletion. |
 ### SVM Common Issues
 
 ![SVM Common Issues](../../../../../assets/ontap-proc-svm-common-issues.svg)
@@ -435,8 +451,10 @@ Size       Used       Available Percent-Used State
 ```
 
 !!! warning "Common errors"
-    **`Error: "svm_prod" is not a valid Vserver`** — Verify the SVM name with `vserver show` and ensure you are connected to the correct cluster.
-    **`Error: invalid field name "percent-used"`** — Use the correct field name `percent_used` (underscore instead of hyphen) in the `-fields` parameter.
+    | Error | Fix |
+    |---|---|
+    | `Error: "svm_prod" is not a valid Vserver` | Verify the SVM name with `vserver show` and ensure you are connected to the correct cluster. |
+    | `Error: invalid field name "percent-used"` | Use the correct field name `percent_used` (underscore instead of hyphen) in the `-fields` parameter. |
 ### Volume Health
 
 ![Volume Health](../../../../../assets/ontap-proc-volume-health.svg)
@@ -465,8 +483,10 @@ svm-prod  vol_archive_old   81%
 ```
 
 !!! warning "Common errors"
-    **`Error: invalid query operator "!online"`** — Use `offline|restricted` instead of `!online` in the volume show filter.
-    **`Error: no matching rows`** — Ensure the cluster is reachable with `cluster show` and that volumes exist in the Vserver with `volume show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: invalid query operator "!online"` | Use `offline|restricted` instead of `!online` in the volume show filter. |
+    | `Error: no matching rows` | Ensure the cluster is reachable with `cluster show` and that volumes exist in the Vserver with `volume show`. |
 ### Create a Volume
 
 ![Create a Volume](../../../../../assets/ontap-proc-create-a-volume.svg)
@@ -491,9 +511,11 @@ Volume is online and ready for use.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No space left on device`** — Verify the aggregate has sufficient free space with `storage aggregate show -aggregate <aggr_name>` and increase the aggregate capacity or reduce the volume size.
-    **`Error: command failed: Invalid vserver name`** — Confirm the SVM name exists and is spelled correctly by running `vserver show` to list all available SVMs.
-    **`Error: command failed: Junction path already exists`** — Remove the conflicting junction path with `volume unmount -vserver <svm_name> -volume <existing_vol>` or choose a different junction path name.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No space left on device` | Verify the aggregate has sufficient free space with `storage aggregate show -aggregate <aggr_name>` and increase the aggregate capacity or reduce the volume size. |
+    | `Error: command failed: Invalid vserver name` | Confirm the SVM name exists and is spelled correctly by running `vserver show` to list all available SVMs. |
+    | `Error: command failed: Junction path already exists` | Remove the conflicting junction path with `volume unmount -vserver <svm_name> -volume <existing_vol>` or choose a different junction path name. |
 ### Resize a Volume
 
 ![Resize a Volume](../../../../../assets/ontap-proc-resize-a-volume.svg)
@@ -508,8 +530,10 @@ Volume modify successful: Volume "vol_name" size set to 1.00TB on Vserver "svm_n
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No such volume`** — Verify the volume name and SVM name are correct using `volume show -vserver <svm_name>`.
-    **`Error: command failed: Insufficient space in aggregate`** — Check available space in the aggregate with `storage aggregate show -fields availsize` and reduce the new size or add capacity to the aggregate.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No such volume` | Verify the volume name and SVM name are correct using `volume show -vserver <svm_name>`. |
+    | `Error: command failed: Insufficient space in aggregate` | Check available space in the aggregate with `storage aggregate show -fields availsize` and reduce the new size or add capacity to the aggregate. |
 ### Volume Autosize
 
 ![Volume Autosize](../../../../../assets/ontap-proc-volume-autosize.svg)
@@ -533,9 +557,11 @@ Shrink Threshold: 50%
 ```
 
 !!! warning "Common errors"
-    **`Error: "svm_name" is not a valid Vserver name`** — Replace `<svm_name>` with an actual SVM name from your cluster (e.g., `svm-prod-01`).
-    **`Error: Volume vol_name does not exist`** — Verify the volume exists on the specified SVM using `volume show -vserver <svm_name>`.
-    **`Error: Invalid maximum size value`** — Ensure the maximum size is specified in valid units (T, G, M) and does not exceed the aggregate's available space.
+    | Error | Fix |
+    |---|---|
+    | `Error: "svm_name" is not a valid Vserver name` | Replace `<svm_name>` with an actual SVM name from your cluster (e.g., `svm-prod-01`). |
+    | `Error: Volume vol_name does not exist` | Verify the volume exists on the specified SVM using `volume show -vserver <svm_name>`. |
+    | `Error: Invalid maximum size value` | Ensure the maximum size is specified in valid units (T, G, M) and does not exceed the aggregate's available space. |
 ### Volume Efficiency (Deduplication / Compression)
 
 ![Volume Efficiency (Deduplication / Compression)](../../../../../assets/ontap-proc-volume-efficiency-deduplication-compression.svg)
@@ -564,8 +590,10 @@ Efficiency operation started successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No such volume`** — Verify the volume name with `volume show -vserver <svm_name>` and ensure it exists on the specified SVM.
-    **`Error: Efficiency is already enabled on this volume`** — Skip the enable step if efficiency is already active; check status with the first command before enabling.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No such volume` | Verify the volume name with `volume show -vserver <svm_name>` and ensure it exists on the specified SVM. |
+    | `Error: Efficiency is already enabled on this volume` | Skip the enable step if efficiency is already active; check status with the first command before enabling. |
 ### Move a Volume (Between Aggregates)
 
 ![Move a Volume (Between Aggregates)](../../../../../assets/ontap-proc-move-a-volume-between-aggregates.svg)
@@ -592,9 +620,11 @@ prod_svm            vol_logs         cutover_phase   87%
 ```
 
 !!! warning "Common errors"
-    **`Error: volume move start: Destination aggregate <dest_aggr> does not exist`** — Verify the destination aggregate name with `storage aggregate show` and ensure it has sufficient free space.
-    **`Error: volume move start: Volume <vol_name> is currently involved in another move operation`** — Wait for the existing move to complete using `volume move show` or abort it with `volume move abort -vserver <svm_name> -volume <vol_name>`.
-    **`Error: volume move start: Insufficient space in destination aggregate`** — Check available space with `storage aggregate show -aggregate <dest_aggr> -fields availsize` and choose an aggregate with at least 110% of the source volume size.
+    | Error | Fix |
+    |---|---|
+    | `Error: volume move start: Destination aggregate <dest_aggr> does not exist` | Verify the destination aggregate name with `storage aggregate show` and ensure it has sufficient free space. |
+    | `Error: volume move start: Volume <vol_name> is currently involved in another move operation` | Wait for the existing move to complete using `volume move show` or abort it with `volume move abort -vserver <svm_name> -volume <vol_name>`. |
+    | `Error: volume move start: Insufficient space in destination aggregate` | Check available space with `storage aggregate show -aggregate <dest_aggr> -fields availsize` and choose an aggregate with at least 110% of the source volume size. |
 ### Take a Volume Offline / Online
 
 ![Take a Volume Offline / Online](../../../../../assets/ontap-proc-take-a-volume-offline-online.svg)
@@ -611,9 +641,11 @@ volume online -vserver <svm_name> -volume <vol_name>
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: volume`** — Use the ONTAP CLI directly via SSH to the cluster management IP or execute within the ONTAP shell context, not from a standard bash shell.
-    **`Error: Invalid vserver name "<svm_name>"`** — Replace `<svm_name>` with an actual SVM name from your cluster (verify with `vserver show`).
-    **`Error: Volume <vol_name> is not in a state that allows this operation`** — Ensure the volume is not already offline/online and check for active operations with `volume show -vserver <svm_name> -volume <vol_name> -fields state`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: volume` | Use the ONTAP CLI directly via SSH to the cluster management IP or execute within the ONTAP shell context, not from a standard bash shell. |
+    | `Error: Invalid vserver name "<svm_name>"` | Replace `<svm_name>` with an actual SVM name from your cluster (verify with `vserver show`). |
+    | `Error: Volume <vol_name> is not in a state that allows this operation` | Ensure the volume is not already offline/online and check for active operations with `volume show -vserver <svm_name> -volume <vol_name> -fields state`. |
 ### Delete a Volume
 
 ![Delete a Volume](../../../../../assets/ontap-proc-delete-a-volume.svg)
@@ -633,8 +665,10 @@ volume delete -vserver <svm_name> -volume <vol_name>
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: There are mounted LUNs in the volume.`** — Unmount all LUNs and delete snapshots before attempting to offline the volume.
-    **`Error: command failed: Volume is not in a state that allows this operation.`** — Ensure the volume is online and not currently in use by checking `volume show -vserver <svm_name> -volume <vol_name>` before running offline.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: There are mounted LUNs in the volume.` | Unmount all LUNs and delete snapshots before attempting to offline the volume. |
+    | `Error: command failed: Volume is not in a state that allows this operation.` | Ensure the volume is online and not currently in use by checking `volume show -vserver <svm_name> -volume <vol_name>` before running offline. |
 ### Volume Common Issues
 
 ![Volume Common Issues](../../../../../assets/ontap-proc-volume-common-issues.svg)
@@ -701,8 +735,10 @@ Idle Time: 45 seconds
 ```
 
 !!! warning "Common errors"
-    **`Error: "prod-svm-01" is not a valid vserver name`** — Verify the SVM name exists with `vserver show` and use the exact name from the Vserver column.
-    **`Error: command not found: nfs`** — Ensure you are connected to the ONTAP cluster CLI (not the node shell); use `system node run -node <nodename> -command "nfs show"` if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: "prod-svm-01" is not a valid vserver name` | Verify the SVM name exists with `vserver show` and use the exact name from the Vserver column. |
+    | `Error: command not found: nfs` | Ensure you are connected to the ONTAP cluster CLI (not the node shell); use `system node run -node <nodename> -command "nfs show"` if needed. |
 ### SMB/CIFS
 
 ![SMB/CIFS](../../../../../assets/ontap-proc-smb-cifs.svg)
@@ -743,9 +779,11 @@ cluster-01      prod-svm-01     3               192.168.1.89    CORP\agarcia    
 ```
 
 !!! warning "Common errors"
-    **`Error: "prod-svm-01" is not a valid vserver name`** — Verify the SVM name with `vserver show` and ensure you have cluster admin privileges.
-    **`Error: CIFS server is not running on Vserver "prod-svm-01"`** — Start the CIFS server with `vserver cifs start -vserver <svm_name>` before querying sessions.
-    **`Error: command not found: cifs`** — Use the full command path `vserver cifs show -vserver <svm_name>` instead of the shorthand `cifs show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: "prod-svm-01" is not a valid vserver name` | Verify the SVM name with `vserver show` and ensure you have cluster admin privileges. |
+    | `Error: CIFS server is not running on Vserver "prod-svm-01"` | Start the CIFS server with `vserver cifs start -vserver <svm_name>` before querying sessions. |
+    | `Error: command not found: cifs` | Use the full command path `vserver cifs show -vserver <svm_name>` instead of the shorthand `cifs show`. |
 ### iSCSI
 
 ![iSCSI](../../../../../assets/ontap-proc-iscsi.svg)
@@ -790,8 +828,10 @@ svm-prod-01  iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6:svr...    1     10.20.30.42:
 ```
 
 !!! warning "Common errors"
-    **`Error: "svm_name" is not a valid Vserver name`** — Replace `<svm_name>` with the actual SVM name (e.g., `svm-prod-01`) or list available SVMs with `vserver show`.
-    **`Error: There are no records matching your query`** — Verify the SVM exists and iSCSI service is enabled on it with `vserver iscsi show -vserver <svm_name>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: "svm_name" is not a valid Vserver name` | Replace `<svm_name>` with the actual SVM name (e.g., `svm-prod-01`) or list available SVMs with `vserver show`. |
+    | `Error: There are no records matching your query` | Verify the SVM exists and iSCSI service is enabled on it with `vserver iscsi show -vserver <svm_name>`. |
 ### FCP (Fibre Channel)
 
 ![FCP (Fibre Channel)](../../../../../assets/ontap-proc-fcp-fibre-channel.svg)
@@ -836,9 +876,11 @@ cluster-02      0b      2       enabled 16Gb   target
 ```
 
 !!! warning "Common errors"
-    **`Error: "prod-svm" is not a valid Vserver name`** — Verify the SVM name exists with `vserver show` and use the correct name in the command.
-    **`Error: FCP service is not enabled on Vserver "prod-svm"`** — Enable FCP on the SVM using `vserver fcp create -vserver <svm_name>`.
-    **`Error: No FC target adapters found`** — Confirm FC adapters are installed and licensed with `system license show` and `storage port show -type FC`.
+    | Error | Fix |
+    |---|---|
+    | `Error: "prod-svm" is not a valid Vserver name` | Verify the SVM name exists with `vserver show` and use the correct name in the command. |
+    | `Error: FCP service is not enabled on Vserver "prod-svm"` | Enable FCP on the SVM using `vserver fcp create -vserver <svm_name>`. |
+    | `Error: No FC target adapters found` | Confirm FC adapters are installed and licensed with `system license show` and `storage port show -type FC`. |
 ### Protocol on LIF Verification
 
 ![Protocol on LIF Verification](../../../../../assets/ontap-proc-protocol-on-lif-verification.svg)
@@ -862,8 +904,10 @@ svm-analytics data_lif_06      172.16.5.100     nfs
 ```
 
 !!! warning "Common errors"
-    **`Error: unknown field "data-protocol"`** — Use `network interface show -fields protocols` instead, as `data-protocol` is not a valid ONTAP field name.
-    **`Error: command not found`** — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI; this command runs only in cluster or admin SVM context.
+    | Error | Fix |
+    |---|---|
+    | `Error: unknown field "data-protocol"` | Use `network interface show -fields protocols` instead, as `data-protocol` is not a valid ONTAP field name. |
+    | `Error: command not found` | Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI; this command runs only in cluster or admin SVM context. |
 ### Enable/Disable a Protocol on an SVM
 
 ![Enable/Disable a Protocol on an SVM](../../../../../assets/ontap-proc-enable-disable-a-protocol-on-an-svm.svg)
@@ -895,8 +939,10 @@ iscsi create -vserver prod_svm
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: CIFS setup requires Active Directory domain to be configured`** — Configure DNS and domain settings on the SVM with `dns create` and `active-directory create` before running CIFS setup.
-    **`Error: command failed: iSCSI cannot be created on a vserver with no data aggregates`** — Assign at least one data aggregate to the SVM using `vserver modify -vserver <svm_name> -aggr-list <aggr_name>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: CIFS setup requires Active Directory domain to be configured` | Configure DNS and domain settings on the SVM with `dns create` and `active-directory create` before running CIFS setup. |
+    | `Error: command failed: iSCSI cannot be created on a vserver with no data aggregates` | Assign at least one data aggregate to the SVM using `vserver modify -vserver <svm_name> -aggr-list <aggr_name>`. |
 ### Protocol Common Issues
 
 ![Protocol Common Issues](../../../../../assets/ontap-proc-protocol-common-issues.svg)

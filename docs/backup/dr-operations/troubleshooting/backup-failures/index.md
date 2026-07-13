@@ -146,9 +146,11 @@ JOBID  TYPE    STATUS     CLIENT          SUBCLIENT   START              END
 ```
 
 !!! warning "Common errors"
-    **`qlist: command not found`** — Ensure the CommServe client is installed and the PATH includes the Commvault bin directory (typically `/opt/commvault/Base/bin`).
-    **`Error Code: 31:4 - Failed to connect to the client`** — Verify network connectivity between CommServe and the client, check firewall rules, and confirm the client service is running with `systemctl status cvd`.
-    **`qoperation execscript: Invalid script name 'QS_GetJobFailureReason'`** — Verify the exact script name and job ID syntax; use `qoperation execscript -sn QS_GetJobFailureReason -si <jobid>` with a valid numeric job ID.
+    | Error | Fix |
+    |---|---|
+    | `qlist: command not found` | Ensure the CommServe client is installed and the PATH includes the Commvault bin directory (typically `/opt/commvault/Base/bin`). |
+    | `Error Code: 31:4 - Failed to connect to the client` | Verify network connectivity between CommServe and the client, check firewall rules, and confirm the client service is running with `systemctl status cvd`. |
+    | `qoperation execscript: Invalid script name 'QS_GetJobFailureReason'` | Verify the exact script name and job ID syntax; use `qoperation execscript -sn QS_GetJobFailureReason -si <jobid>` with a valid numeric job ID. |
 ### Log Locations and Analysis
 
 | Component | Log File |
@@ -181,9 +183,11 @@ telnet: Unable to connect to remote host: Connection timed out
 ```
 
 !!! warning "Common errors"
-    **`telnet: Unable to connect to remote host: Connection timed out`** — Verify MediaAgent is running (`systemctl status commvault-ma`), check firewall rules allow port 8400, and confirm DNS resolution with `nslookup mediaagent01.corp.example.com`.
-    **`Socket error: Connection refused on port 8400`** — Restart the MediaAgent service with `systemctl restart commvault-ma` and verify the cvfwd daemon is listening on port 8400 using `netstat -tlnp | grep 8400`.
-    **`Backup job failed: Unable to reach MediaAgent within timeout window`** — Increase the network timeout in CommServe backup policy settings or check for network congestion/packet loss using `ping -c 10 mediaagent01.corp.example.com`.
+    | Error | Fix |
+    |---|---|
+    | `telnet: Unable to connect to remote host: Connection timed out` | Verify MediaAgent is running (`systemctl status commvault-ma`), check firewall rules allow port 8400, and confirm DNS resolution with `nslookup mediaagent01.corp.example.com`. |
+    | `Socket error: Connection refused on port 8400` | Restart the MediaAgent service with `systemctl restart commvault-ma` and verify the cvfwd daemon is listening on port 8400 using `netstat -tlnp | grep 8400`. |
+    | `Backup job failed: Unable to reach MediaAgent within timeout window` | Increase the network timeout in CommServe backup policy settings or check for network congestion/packet loss using `ping -c 10 mediaagent01.corp.example.com`. |
 ### Commvault Job Failure Reason Codes
 
 | Code | Meaning | Fix |
@@ -248,9 +252,11 @@ Time: 2024-01-16 01:15:42
 ```
 
 !!! warning "Common errors"
-    **`bpdbjobs: command not found`** — Ensure the NetBackup client or admin console is installed and the PATH includes the NetBackup bin directory (typically `/usr/openv/netbackup/bin`).
-    **`Error: Cannot connect to master01.corp.example.com`** — Verify the master server hostname is correct, the NetBackup services are running on the master, and network connectivity exists from your current host.
-    **`bperror: invalid jobid 123456`** — Confirm the job ID exists by running `bpdbjobs -report` first and use a valid job ID from the output.
+    | Error | Fix |
+    |---|---|
+    | `bpdbjobs: command not found` | Ensure the NetBackup client or admin console is installed and the PATH includes the NetBackup bin directory (typically `/usr/openv/netbackup/bin`). |
+    | `Error: Cannot connect to master01.corp.example.com` | Verify the master server hostname is correct, the NetBackup services are running on the master, and network connectivity exists from your current host. |
+    | `bperror: invalid jobid 123456` | Confirm the job ID exists by running `bpdbjobs -report` first and use a valid job ID from the output. |
 ### NetBackup Status Code Reference
 
 | Status Code | Meaning | Fix |
@@ -296,9 +302,11 @@ Catalog consistency check on master01:
 ```
 
 !!! warning "Common errors"
-    **`bptestbpcd: command not found`** — Ensure NetBackup client is installed and `/usr/openv/netbackup/bin` is in your PATH, or use the full path `/usr/openv/netbackup/bin/bptestbpcd`.
-    **`Connection refused on client01.corp.example.com port 13782`** — Verify the NetBackup daemon (bpcd) is running on the client with `/usr/openv/netbackup/bin/bpps -a` and check firewall rules allow port 13782 between master and client.
-    **`bpdbm: Catalog database locked by another process`** — Wait for any running backup or restore jobs to complete, or check for hung processes with `bpps -a` and kill stale processes if necessary.
+    | Error | Fix |
+    |---|---|
+    | `bptestbpcd: command not found` | Ensure NetBackup client is installed and `/usr/openv/netbackup/bin` is in your PATH, or use the full path `/usr/openv/netbackup/bin/bptestbpcd`. |
+    | `Connection refused on client01.corp.example.com port 13782` | Verify the NetBackup daemon (bpcd) is running on the client with `/usr/openv/netbackup/bin/bpps -a` and check firewall rules allow port 13782 between master and client. |
+    | `bpdbm: Catalog database locked by another process` | Wait for any running backup or restore jobs to complete, or check for hung processes with `bpps -a` and kill stale processes if necessary. |
 ---
 
 ## Repository Capacity Checks
@@ -346,8 +354,10 @@ Drive UsedGB FreeGB UsedPct
 ```
 
 !!! warning "Common errors"
-    **`du: cannot access '/backup/daily-2024-01-15': Permission denied`** — Run the command with `sudo` or ensure the user has read permissions on the backup directory.
-    **`Get-PSDrive : Cannot find drive. Does the drive 'D' exist?`** — Verify the backup drive letter with `Get-PSDrive` and replace 'D' with the correct drive letter.
+    | Error | Fix |
+    |---|---|
+    | `du: cannot access '/backup/daily-2024-01-15': Permission denied` | Run the command with `sudo` or ensure the user has read permissions on the backup directory. |
+    | `Get-PSDrive : Cannot find drive. Does the drive 'D' exist?` | Verify the backup drive letter with `Get-PSDrive` and replace 'D' with the correct drive letter. |
 ---
 
 ## Network Path Validation to Backup Target

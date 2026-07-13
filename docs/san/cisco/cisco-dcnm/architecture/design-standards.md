@@ -32,8 +32,10 @@ mds-switch-01#
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch is in config mode with `config t` before entering zone commands.
-    **`% VSAN 10 does not exist`** — Create the VSAN first using `vsan 10` command before configuring zone policies.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch is in config mode with `config t` before entering zone commands. |
+    | `% VSAN 10 does not exist` | Create the VSAN first using `vsan 10` command before configuring zone policies. |
 ---
 
 ## See also

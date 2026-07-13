@@ -71,9 +71,11 @@ Custom-Baseline      7.0.3-20206671   Internal patch depot
 ```
 
 !!! warning "Common errors"
-    **`Connect-VIServer : Cannot find a certificate or crmf request for the specified credentials.`** — Ensure vCenter certificate is trusted or use `-SkipCertificateCheck` parameter in PowerCLI 12.0+.
-    **`esxcli software sources vib list : Unknown command or namespace`** — Verify SSH is enabled on the ESXi host and you are running the command directly on the host, not remotely.
-    **`Get-LcmImageDepot : The object 'HostSystem' cannot be found on 'vcenter.corp.local'.`** — Connect to vCenter first with `Connect-VIServer` before running vLCM cmdlets, or ensure vLCM is enabled on the cluster.
+    | Error | Fix |
+    |---|---|
+    | `Connect-VIServer : Cannot find a certificate or crmf request for the specified credentials.` | Ensure vCenter certificate is trusted or use `-SkipCertificateCheck` parameter in PowerCLI 12.0+. |
+    | `esxcli software sources vib list : Unknown command or namespace` | Verify SSH is enabled on the ESXi host and you are running the command directly on the host, not remotely. |
+    | `Get-LcmImageDepot : The object 'HostSystem' cannot be found on 'vcenter.corp.local'.` | Connect to vCenter first with `Connect-VIServer` before running vLCM cmdlets, or ensure vLCM is enabled on the cluster. |
 ---
 
 ## Cluster Images
@@ -125,8 +127,10 @@ Remediation completed: 8 of 12 hosts updated successfully
 ```
 
 !!! warning "Common errors"
-    **`Get-LcmRecommendation : The term 'Get-LcmRecommendation' is not recognized`** — Import the VMware.VimAutomation.Lifecycle module with `Import-Module VMware.VimAutomation.Lifecycle`.
-    **`Invoke-LcmRemediation : Cluster Production-Cluster is not in maintenance mode`** — Place all hosts in the cluster into maintenance mode before invoking remediation, or use `-SkipMaintenanceMode` if supported by your vSphere version.
+    | Error | Fix |
+    |---|---|
+    | `Get-LcmRecommendation : The term 'Get-LcmRecommendation' is not recognized` | Import the VMware.VimAutomation.Lifecycle module with `Import-Module VMware.VimAutomation.Lifecycle`. |
+    | `Invoke-LcmRemediation : Cluster Production-Cluster is not in maintenance mode` | Place all hosts in the cluster into maintenance mode before invoking remediation, or use `-SkipMaintenanceMode` if supported by your vSphere version. |
 ---
 
 ## Update Planner
@@ -172,9 +176,11 @@ curl -X POST https://vcenter.corp.local/api/vcenter/lcm/update/pending \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the vCenter certificate into your system trust store.
-    **`{"error":{"messages":[{"default_message":"Invalid session token"}]}}`** — Obtain a valid session token by authenticating first with `curl -X POST https://vcenter.corp.local/api/com/vmware/cis/session -u administrator@vsphere.local:<password>`.
-    **`curl: (7) Failed to connect to vcenter.corp.local port 443: Connection refused`** — Verify vCenter hostname/IP is correct and the HTTPS service is running with `systemctl status vmware-vpxd` on the VCSA appliance.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the vCenter certificate into your system trust store. |
+    | `{"error":{"messages":[{"default_message":"Invalid session token"}]}}` | Obtain a valid session token by authenticating first with `curl -X POST https://vcenter.corp.local/api/com/vmware/cis/session -u administrator@vsphere.local:<password>`. |
+    | `curl: (7) Failed to connect to vcenter.corp.local port 443: Connection refused` | Verify vCenter hostname/IP is correct and the HTTPS service is running with `systemctl status vmware-vpxd` on the VCSA appliance. |
 **Pre-check results are categorized as:**
 - **Error** — must be resolved before upgrade can proceed
 - **Warning** — recommended to resolve, but upgrade can proceed
@@ -230,9 +236,11 @@ Incompatible Drivers: 4
 ```
 
 !!! warning "Common errors"
-    **`/bin/checkQuickBoot.sh: command not found`** — Verify the script exists at that path or use the full path `/opt/vmware/bin/checkQuickBoot.sh` if installed in a different location.
-    **`Permission denied`** — Run the script with appropriate privileges using `sudo /bin/checkQuickBoot.sh` or as root.
-    **`Quick Boot Support: NOT SUPPORTED`** — Update the host's BIOS/firmware to a version that supports Quick Boot, or use traditional full reboots via Lifecycle Manager.
+    | Error | Fix |
+    |---|---|
+    | `/bin/checkQuickBoot.sh: command not found` | Verify the script exists at that path or use the full path `/opt/vmware/bin/checkQuickBoot.sh` if installed in a different location. |
+    | `Permission denied` | Run the script with appropriate privileges using `sudo /bin/checkQuickBoot.sh` or as root. |
+    | `Quick Boot Support: NOT SUPPORTED` | Update the host's BIOS/firmware to a version that supports Quick Boot, or use traditional full reboots via Lifecycle Manager. |
 > **VCP-DCV Exam Note:** **Quick Boot requires UEFI** — hosts using legacy BIOS firmware are not eligible. Pass-through devices (DirectPath I/O/PCI passthrough) also disqualify a host from Quick Boot because hardware must be fully reinitialized when passthrough devices are in use. Know these two disqualifying conditions for the exam.
 
 ---
@@ -284,9 +292,11 @@ Secure Boot has been enabled. Reboot the host to apply changes.
 ```
 
 !!! warning "Common errors"
-    **`Secure Boot is not supported on this host.`** — Verify the ESXi host hardware supports UEFI and Secure Boot in the BIOS/firmware settings.
-    **`Cannot enable Secure Boot: Host is in maintenance mode.`** — Exit maintenance mode using `esxcli system maintenanceMode set --enable false` before enabling Secure Boot.
-    **`Secure Boot keys are invalid or corrupted.`** — Reset Secure Boot keys in the host's UEFI firmware settings or contact VMware support for key restoration.
+    | Error | Fix |
+    |---|---|
+    | `Secure Boot is not supported on this host.` | Verify the ESXi host hardware supports UEFI and Secure Boot in the BIOS/firmware settings. |
+    | `Cannot enable Secure Boot: Host is in maintenance mode.` | Exit maintenance mode using `esxcli system maintenanceMode set --enable false` before enabling Secure Boot. |
+    | `Secure Boot keys are invalid or corrupted.` | Reset Secure Boot keys in the host's UEFI firmware settings or contact VMware support for key restoration. |
 **Requirements:**
 - UEFI firmware with Secure Boot support
 - All installed VIBs must be VMware-signed or from a trusted vendor
@@ -348,9 +358,11 @@ esxi02.corp.local              Corp-Standard-Profile      True      2024-01-15 1
 ```
 
 !!! warning "Common errors"
-    **`Get-VMHost : The term 'Get-VMHost' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Import the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running PowerCLI commands.
-    **`Apply-VMHostProfile : The host is not in maintenance mode. Profiles can only be applied when the host is in maintenance mode.`** — Place the target host in maintenance mode using `Set-VMHost -VMHost $targetHost -State Maintenance` before applying the profile.
-    **`New-VMHostProfile : Reference host esxi01.corp.local is not in a valid state for profile creation.`** — Ensure the reference host is connected and in a healthy state by running `Get-VMHost esxi01.corp.local | Select-Object Name, ConnectionState, PowerState`.
+    | Error | Fix |
+    |---|---|
+    | `Get-VMHost : The term 'Get-VMHost' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Import the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running PowerCLI commands. |
+    | `Apply-VMHostProfile : The host is not in maintenance mode. Profiles can only be applied when the host is in maintenance mode.` | Place the target host in maintenance mode using `Set-VMHost -VMHost $targetHost -State Maintenance` before applying the profile. |
+    | `New-VMHostProfile : Reference host esxi01.corp.local is not in a valid state for profile creation.` | Ensure the reference host is connected and in a healthy state by running `Get-VMHost esxi01.corp.local | Select-Object Name, ConnectionState, PowerState`. |
 ### Answer Files
 
 Some host profile settings are **host-specific** — for example, the management VMkernel IP address, which is different on every host. These values are stored in an **Answer File** associated with each host.
@@ -414,11 +426,11 @@ web-server-01        PoweredOff  4        8
 ```
 
 !!! warning "Common errors"
-    **`Get-ContentLibraryItem : The term 'Get-ContentLibraryItem' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Import the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running the script.
-    
-    **`New-VM : The object 'vSAN-Datastore' cannot be found.`** — Verify the datastore name matches exactly with `Get-Datastore | Select-Object Name` and ensure you are connected to the correct vCenter server.
-    
-    **`New-VM : Cannot bind argument to parameter 'ResourcePool' because it is an invalid ResourcePool object.`** — Replace `-ResourcePool $cluster` with `-ResourcePool (Get-ResourcePool -Name "Resources" -Location $cluster)` to pass a valid resource pool instead of a cluster object.
+    | Error | Fix |
+    |---|---|
+    | `Get-ContentLibraryItem : The term 'Get-ContentLibraryItem' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Import the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running the script. |
+    | `New-VM : The object 'vSAN-Datastore' cannot be found.` | Verify the datastore name matches exactly with `Get-Datastore | Select-Object Name` and ensure you are connected to the correct vCenter server. |
+    | `New-VM : Cannot bind argument to parameter 'ResourcePool' because it is an invalid ResourcePool object.` | Replace `-ResourcePool $cluster` with `-ResourcePool (Get-ResourcePool -Name "Resources" -Location $cluster)` to pass a valid resource pool instead of a cluster object. |
 ### Version Management
 
 VM templates in Content Library support versioning. When you update a template (e.g., apply OS patches), a new version is created. Subscribed libraries sync the latest version automatically (if configured for immediate sync) or on demand.

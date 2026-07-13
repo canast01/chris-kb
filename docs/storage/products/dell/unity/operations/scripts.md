@@ -155,9 +155,11 @@ STATUS: OK — All health checks passed.
 ```
 
 !!! warning "Common errors"
-    **`ERROR: UNITY_HOST and UNITY_PASS must be set.`** — Export both variables before running the script: `export UNITY_HOST=unity01.example.com UNITY_PASS=yourpassword`.
-    **`Connection refused` or `Host unreachable`** — Verify the Unity array hostname/IP is reachable and uemcli is installed: `ping $UNITY_HOST && which uemcli`.
-    **`Authentication failed` or `Invalid credentials`** — Confirm the UNITY_USER and UNITY_PASS match the array's configured credentials, checking for special characters that may need escaping.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: UNITY_HOST and UNITY_PASS must be set.` | Export both variables before running the script: `export UNITY_HOST=unity01.example.com UNITY_PASS=yourpassword`. |
+    | `Connection refused` or `Host unreachable` | Verify the Unity array hostname/IP is reachable and uemcli is installed: `ping $UNITY_HOST && which uemcli`. |
+    | `Authentication failed` or `Invalid credentials` | Confirm the UNITY_USER and UNITY_PASS match the array's configured credentials, checking for special characters that may need escaping. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -213,9 +215,11 @@ Health Check Complete - All systems nominal
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed: Invalid credentials`** — Verify UNITY_USER and UNITY_PASS environment variables match the array credentials.
-    **`Connection timeout: Unable to reach 192.168.1.10:443`** — Confirm the UNITY_HOST IP is correct and the management interface is reachable via `ping` or `nc -zv`.
-    **`./unity_health_check.sh: Permission denied`** — Run `chmod +x ./unity_health_check.sh` to make the script executable.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed: Invalid credentials` | Verify UNITY_USER and UNITY_PASS environment variables match the array credentials. |
+    | `Connection timeout: Unable to reach 192.168.1.10:443` | Confirm the UNITY_HOST IP is correct and the management interface is reachable via `ping` or `nc -zv`. |
+    | `./unity_health_check.sh: Permission denied` | Run `chmod +x ./unity_health_check.sh` to make the script executable. |
 **What you should see**
 
 Five labelled sections in your terminal: component health (lists any non-OK components, or confirms all healthy), pool capacity details, LUN list, active alerts, and storage processor status. The final SUMMARY line shows STATUS: OK or STATUS: DEGRADED with a count of problem categories. The script exits 0 on success or 1 if issues were found.
@@ -347,9 +351,11 @@ Last updated: 2024-01-15 14:32:47 UTC
 ```
 
 !!! warning "Common errors"
-    **`Can't connect to host 192.168.1.10 on port 443: Connection refused`** — Verify the Unity array is reachable and the management IP is correct with `ping 192.168.1.10`.
-    **`Authentication failed: Invalid credentials`** — Confirm the UNITY_USER and UNITY_PASS environment variables match the configured Unity admin account.
-    **`Can't locate LWP/UserAgent.pm in @INC`** — Install the required Perl module with `cpan install libwww-perl` or your system package manager.
+    | Error | Fix |
+    |---|---|
+    | `Can't connect to host 192.168.1.10 on port 443: Connection refused` | Verify the Unity array is reachable and the management IP is correct with `ping 192.168.1.10`. |
+    | `Authentication failed: Invalid credentials` | Confirm the UNITY_USER and UNITY_PASS environment variables match the configured Unity admin account. |
+    | `Can't locate LWP/UserAgent.pm in @INC` | Install the required Perl module with `cpan install libwww-perl` or your system package manager. |
 **What you should see**
 
 Two sections: the storage processor health output (SP A and SP B with their current health states) and the network interface list. Any faulted SP will print a CRITICAL line; any down interface will print a WARNING line. The final STATUS line shows PASS, WARNING, or CRITICAL. The script exits with code 0, 1, or 2.
@@ -482,9 +488,11 @@ STATUS: DEGRADED — 1 replication session(s) in Error state.
 ```
 
 !!! warning "Common errors"
-    **`ERROR: UNITY_HOST and UNITY_PASS must be set.`** — Export both UNITY_HOST and UNITY_PASS environment variables before running the script.
-    **`uemcli: Connection refused (111)`** — Verify the UNITY_HOST is reachable and uemcli is installed; check firewall rules on port 443 to the Unity array.
-    **`uemcli: Authentication failed`** — Confirm UNITY_USER and UNITY_PASS credentials are correct and the account has CLI access permissions on the Unity system.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: UNITY_HOST and UNITY_PASS must be set.` | Export both UNITY_HOST and UNITY_PASS environment variables before running the script. |
+    | `uemcli: Connection refused (111)` | Verify the UNITY_HOST is reachable and uemcli is installed; check firewall rules on port 443 to the Unity array. |
+    | `uemcli: Authentication failed` | Confirm UNITY_USER and UNITY_PASS credentials are correct and the account has CLI access permissions on the Unity system. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -541,9 +549,11 @@ Overall Status: HEALTHY
 ```
 
 !!! warning "Common errors"
-    **`Connection refused on 192.168.1.10:443`** — Verify the Unity array is reachable and the management interface is running with `ping 192.168.1.10` and check firewall rules.
-    **`Authentication failed for user 'admin'`** — Confirm the UNITY_USER and UNITY_PASS credentials are correct and the account has not been locked or disabled on the array.
-    **`./unity_repl_check.sh: Permission denied`** — Make the script executable with `chmod +x ./unity_repl_check.sh`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused on 192.168.1.10:443` | Verify the Unity array is reachable and the management interface is running with `ping 192.168.1.10` and check firewall rules. |
+    | `Authentication failed for user 'admin'` | Confirm the UNITY_USER and UNITY_PASS credentials are correct and the account has not been locked or disabled on the array. |
+    | `./unity_repl_check.sh: Permission denied` | Make the script executable with `chmod +x ./unity_repl_check.sh`. |
 **What you should see**
 
 First the raw `uemcli` output for all replication sessions, then a formatted summary table with columns SESSION, SOURCE, DESTINATION, STATE, and LAST-SYNC. Any session in an Error state is flagged with `<<< ERROR` at the end of its row. The final STATUS line confirms OK or DEGRADED with a count of error sessions. Exits 0 or 1.
@@ -710,11 +720,11 @@ unity-01.dc1.local         : ok=4    changed=0    unreachable=0    failed=0
 ```
 
 !!! warning "Common errors"
-    **`fatal: [unity-01.dc1.local]: FAILED! => {"msg": "Unable to locate credentials. Provide credentials via username/password or API token."}`** — Add valid Unity credentials to the inventory file or set `UNITY_USERNAME` and `UNITY_PASSWORD` environment variables before running the playbook.
-    
-    **`[Errno -2] Name or service not known`** — Verify the Unity array hostname/IP in the inventory file is resolvable and reachable from the Ansible control node.
-    
-    **`fatal: [unity-01.dc1.local]: FAILED! => {"msg": "Connection refused"}`** — Ensure the Unity REST API service is running on port 443 and the array is not in maintenance mode.
+    | Error | Fix |
+    |---|---|
+    | `fatal: [unity-01.dc1.local]: FAILED! => {"msg": "Unable to locate credentials. Provide credentials via username/password or API token."}` | Add valid Unity credentials to the inventory file or set `UNITY_USERNAME` and `UNITY_PASSWORD` environment variables before running the playbook. |
+    | `[Errno -2] Name or service not known` | Verify the Unity array hostname/IP in the inventory file is resolvable and reachable from the Ansible control node. |
+    | `fatal: [unity-01.dc1.local]: FAILED! => {"msg": "Connection refused"}` | Ensure the Unity REST API service is running on port 443 and the array is not in maintenance mode. |
 **What you should see**
 
 Ansible prints a task log. You will see the pool health, LUN status, active alerts, and replication session details. If non-OK health or error sessions are detected, the play fails with a descriptive message. Otherwise the final task prints a success message.
@@ -924,9 +934,11 @@ Check completed successfully in 12.4 seconds
 ```
 
 !!! warning "Common errors"
-    **`Cannot find path 'C:\Users\YourName\Desktop\unity_health_check.ps1' because it does not exist.`** — Replace `YourName` with your actual Windows username or verify the script exists at that path.
-    **`File C:\Users\YourName\Desktop\unity_health_check.ps1 cannot be loaded because running scripts is disabled on this system.`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` in PowerShell as Administrator.
-    **`Unable to connect to Unity array: Connection timeout after 30 seconds`** — Verify the Unity management IP is reachable with `ping 192.168.1.45` and confirm firewall rules allow port 443.
+    | Error | Fix |
+    |---|---|
+    | `Cannot find path 'C:\Users\YourName\Desktop\unity_health_check.ps1' because it does not exist.` | Replace `YourName` with your actual Windows username or verify the script exists at that path. |
+    | `File C:\Users\YourName\Desktop\unity_health_check.ps1 cannot be loaded because running scripts is disabled on this system.` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` in PowerShell as Administrator. |
+    | `Unable to connect to Unity array: Connection timeout after 30 seconds` | Verify the Unity management IP is reachable with `ping 192.168.1.45` and confirm firewall rules allow port 443. |
 **What you should see**
 
 Three sections: (1) authentication confirmation; (2) system info including name, model, software version, and colour-coded health status (green = OK, yellow = degraded, red = critical); (3) a list of active alerts with severity, component, and message — or a green "No active alerts" confirmation. The script exits after printing the summary.
@@ -1059,9 +1071,11 @@ Saved to: C:\Users\YourName\Desktop\unity_capacity_report_20240115.csv
 ```
 
 !!! warning "Common errors"
-    **`'unity_capacity_check.bat' is not recognized as an internal or external command`** — Verify the script exists in the current directory or provide the full path (e.g., `.\unity_capacity_check.bat`).
-    **`Unable to connect to Unity array: Connection timeout after 30 seconds`** — Check network connectivity to the Unity management IP and ensure firewall rules allow port 443 outbound.
-    **`Authentication failed: Invalid credentials for admin@corp.local`** — Verify the stored credentials in the script configuration file are current and the service account password hasn't expired.
+    | Error | Fix |
+    |---|---|
+    | `'unity_capacity_check.bat' is not recognized as an internal or external command` | Verify the script exists in the current directory or provide the full path (e.g., `.\unity_capacity_check.bat`). |
+    | `Unable to connect to Unity array: Connection timeout after 30 seconds` | Check network connectivity to the Unity management IP and ensure firewall rules allow port 443 outbound. |
+    | `Authentication failed: Invalid credentials for admin@corp.local` | Verify the stored credentials in the script configuration file are current and the service account password hasn't expired. |
 **What you should see**
 
 Two sections of output printed in your Command Prompt window: (1) the overall system capacity summary showing total, used, and free space; (2) detailed storage pool information for each pool including name, RAID type, total size, used size, free size, and health state. If the connection fails, a plain-English error message appears with troubleshooting tips.
@@ -1190,9 +1204,11 @@ SP-B            OK              Normal
 ```
 
 !!! warning "Common errors"
-    **`uemcli: error: Cannot connect to array at unity01:443`** — Verify UNITY_HOST is correct and the array is reachable on the network; check firewall rules and array IP configuration.
-    **`uemcli: error: Authentication failed for user 'admin'`** — Confirm UNITY_USER and UNITY_PASS environment variables are set correctly and the user account exists on the array.
-    **`command not found: uemcli`** — Install the Dell EMC Unity CLI package or add its installation directory to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `uemcli: error: Cannot connect to array at unity01:443` | Verify UNITY_HOST is correct and the array is reachable on the network; check firewall rules and array IP configuration. |
+    | `uemcli: error: Authentication failed for user 'admin'` | Confirm UNITY_USER and UNITY_PASS environment variables are set correctly and the user account exists on the array. |
+    | `command not found: uemcli` | Install the Dell EMC Unity CLI package or add its installation directory to your PATH environment variable. |
 ---
 
 ## Incident Triage Script (Bash)
@@ -1486,9 +1502,11 @@ PRE-CHECK PASSED — safe to proceed with maintenance.
 ```
 
 !!! warning "Common errors"
-    **`uemcli: command not found`** — Install the Dell EMC CLI tools package or ensure the uemcli binary is in your PATH.
-    **`Error: Authentication failed for user 'admin' on unity01`** — Verify UNITY_USER and UNITY_PASS environment variables match the array credentials and that the user has sufficient privileges.
-    **`Error: Cannot reach array — check credentials and network`** — Confirm UNITY_HOST is resolvable/reachable, firewall allows port 443 to the array, and network connectivity is active.
+    | Error | Fix |
+    |---|---|
+    | `uemcli: command not found` | Install the Dell EMC CLI tools package or ensure the uemcli binary is in your PATH. |
+    | `Error: Authentication failed for user 'admin' on unity01` | Verify UNITY_USER and UNITY_PASS environment variables match the array credentials and that the user has sufficient privileges. |
+    | `Error: Cannot reach array — check credentials and network` | Confirm UNITY_HOST is resolvable/reachable, firewall allows port 443 to the array, and network connectivity is active. |
 ---
 
 ## Post-Change Validation Script (Bash)
@@ -1622,9 +1640,11 @@ repl_to_dr_site_02        Idle           600        2024-03-14 09:44:52
 ```
 
 !!! warning "Common errors"
-    **`uemcli: error: Connection refused (111)`** — Verify UNITY_HOST is correct and reachable on the network, and that the management interface is responding.
-    **`uemcli: error: Authentication failed`** — Confirm UNITY_USER and UNITY_PASS environment variables are set correctly and the account has not been locked.
-    **`POST-CHECK FAILED: 1 issue(s) — investigate before closing change.`** — Review the [FAIL] messages above for specific component failures (pools, SPs, replication) and resolve before closing the change ticket.
+    | Error | Fix |
+    |---|---|
+    | `uemcli: error: Connection refused (111)` | Verify UNITY_HOST is correct and reachable on the network, and that the management interface is responding. |
+    | `uemcli: error: Authentication failed` | Confirm UNITY_USER and UNITY_PASS environment variables are set correctly and the account has not been locked. |
+    | `POST-CHECK FAILED: 1 issue(s) — investigate before closing change.` | Review the [FAIL] messages above for specific component failures (pools, SPs, replication) and resolve before closing the change ticket. |
 ---
 
 ## Health Check Script (Python via REST API)

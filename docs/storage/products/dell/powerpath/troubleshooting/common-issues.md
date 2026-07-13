@@ -160,9 +160,11 @@ Restore operation completed. 3 path(s) queued for retry.
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep EMCpower` and ensure `/opt/emc/powerpath/bin` is in your PATH.
-    **`powermt display: Insufficient privilege`** — Run the command with `sudo` or as root, as PowerPath requires elevated permissions to query device status.
-    **`Restore operation failed: No dead paths detected`** — This is informational output when all paths are already healthy; confirm actual path status with `powermt display dev=all` to verify.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Verify PowerPath is installed with `rpm -qa | grep EMCpower` and ensure `/opt/emc/powerpath/bin` is in your PATH. |
+    | `powermt display: Insufficient privilege` | Run the command with `sudo` or as root, as PowerPath requires elevated permissions to query device status. |
+    | `Restore operation failed: No dead paths detected` | This is informational output when all paths are already healthy; confirm actual path status with `powermt display dev=all` to verify. |
 If paths remain dead after `powermt restore`:
 
 1. Check HBA port state on the host:
@@ -244,9 +246,11 @@ Updating PowerPath configuration...
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Verify PowerPath is installed with `rpm -qa | grep EMCpower` and ensure `/opt/emc/powerpath/bin` is in your PATH.
-    **`Cannot open /sys/class/fc_host/host0/issue_lip: No such file or directory`** — Confirm the HBA driver is loaded with `lsmod | grep qla2xxx` and verify the correct host number using `ls /sys/class/fc_host/`.
-    **`powermt restore: No devices to restore`** — Check that devices are actually in a failed state with `powermt display` and verify array-side LUN masking is still active before attempting restore.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Verify PowerPath is installed with `rpm -qa | grep EMCpower` and ensure `/opt/emc/powerpath/bin` is in your PATH. |
+    | `Cannot open /sys/class/fc_host/host0/issue_lip: No such file or directory` | Confirm the HBA driver is loaded with `lsmod | grep qla2xxx` and verify the correct host number using `ls /sys/class/fc_host/`. |
+    | `powermt restore: No devices to restore` | Check that devices are actually in a failed state with `powermt display` and verify array-side LUN masking is still active before attempting restore. |
 Check these causes in order:
 - **Array-side**: LUN masking removed, or storage view/masking view deleted accidentally
 - **Fabric-side**: Zoning change removed this initiator from the zone set; switch port offline
@@ -317,9 +321,11 @@ Configuration saved successfully.
 ```
 
 !!! warning "Common errors"
-    **`bash: /usr/bin/rescan-scsi-bus.sh: No such file or directory`** — Install the sg3_utils package with `yum install sg3_utils` or skip this step if using native SCSI rescan.
-    **`powermt: command not found`** — Verify PowerPath is installed and the EMC PowerPath daemon is running with `systemctl status PowerPath` or `/etc/init.d/PowerPath status`.
-    **`Device not found in powermt display dev=all output`** — Increase the rescan delay or manually trigger `powermt config` again after 10–15 seconds to allow the storage array to present the LUN.
+    | Error | Fix |
+    |---|---|
+    | `bash: /usr/bin/rescan-scsi-bus.sh: No such file or directory` | Install the sg3_utils package with `yum install sg3_utils` or skip this step if using native SCSI rescan. |
+    | `powermt: command not found` | Verify PowerPath is installed and the EMC PowerPath daemon is running with `systemctl status PowerPath` or `/etc/init.d/PowerPath status`. |
+    | `Device not found in powermt display dev=all output` | Increase the rescan delay or manually trigger `powermt config` again after 10–15 seconds to allow the storage array to present the LUN. |
 If the device still does not appear after HBA rescan and `powermt config`:
 - Confirm at the array that the LUN is in a ready/online state (not provisioning or in error)
 - Confirm the host HBA WWN or iSCSI IQN is registered in the correct host group
@@ -385,9 +391,11 @@ HBA 2 (emulex 1100) -> SP A, Port 1 -> LUN 0 (Active/Optimized)
 ```
 
 !!! warning "Common errors"
-    **`cat: cannot open file '<hostname>-powermt-baseline-<date>.txt' (No such file or directory)`** — Verify the baseline filename matches the actual saved file in the current directory using `ls -la *powermt-baseline*`.
-    **`powermt: Command not found`** — Install or load the EMC PowerPath software package and ensure `/opt/powerpath/bin` is in your PATH environment variable.
-    **`Symmetrix ID not found or device offline`** — Confirm the device name is correct and the storage array is accessible by running `powermt check` to validate all paths.
+    | Error | Fix |
+    |---|---|
+    | `cat: cannot open file '<hostname>-powermt-baseline-<date>.txt' (No such file or directory)` | Verify the baseline filename matches the actual saved file in the current directory using `ls -la *powermt-baseline*`. |
+    | `powermt: Command not found` | Install or load the EMC PowerPath software package and ensure `/opt/powerpath/bin` is in your PATH environment variable. |
+    | `Symmetrix ID not found or device offline` | Confirm the device name is correct and the storage array is accessible by running `powermt check` to validate all paths. |
 **Causes of low path count:**
 
 - One SAN fabric is unavailable (switch power failure, ISL failure)
@@ -447,9 +455,11 @@ Saved PowerPath configuration to /etc/powerpath/powerpath.conf
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Verify PowerPath is installed with `rpm -qa | grep EMCpower` and ensure `/opt/emc/powerpath/bin` is in your PATH.
-    **`powermt: You must be root to run this command`** — Re-run all powermt commands with `sudo` or as the root user.
-    **`powermt save: Configuration not saved`** — Ensure `/etc/powerpath/` directory is writable with `ls -ld /etc/powerpath/` and check disk space with `df /etc`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Verify PowerPath is installed with `rpm -qa | grep EMCpower` and ensure `/opt/emc/powerpath/bin` is in your PATH. |
+    | `powermt: You must be root to run this command` | Re-run all powermt commands with `sudo` or as the root user. |
+    | `powermt save: Configuration not saved` | Ensure `/etc/powerpath/` directory is writable with `ls -ld /etc/powerpath/` and check disk space with `df /etc`. |
 **Why policy matters:** `RoundRobin` sends I/O over non-optimised (standby storage processor) paths on active/passive arrays like Unity and older CLARiiON. The array must trespass those I/Os to the owning SP, adding latency. CLAROpt is ALUA-aware and only uses optimised paths under normal conditions.
 
 ---
@@ -509,9 +519,11 @@ emcp, 6.1.0, 5.15.0-91-generic, x86_64: installed
 ```
 
 !!! warning "Common errors"
-    **`modprobe: FATAL: Module emcp not found in directory /lib/modules/5.15.0-91-generic`** — Rebuild the module with `dkms autoinstall` or reinstall PowerPath package matching your kernel version from Dell support portal.
-    **`● PowerPath.service - EMC PowerPath Storage Multipathing ... Active: inactive (dead)`** — Start the service with `systemctl start PowerPath` and check for licensing or hardware detection issues in `/var/log/PowerPath/powerpath.log`.
-    **`dkms autoinstall: Error! Could not find module source directory.`** — Reinstall PowerPath package with `rpm -i` or `dpkg -i` to restore DKMS source files in `/usr/src/`.
+    | Error | Fix |
+    |---|---|
+    | `modprobe: FATAL: Module emcp not found in directory /lib/modules/5.15.0-91-generic` | Rebuild the module with `dkms autoinstall` or reinstall PowerPath package matching your kernel version from Dell support portal. |
+    | `● PowerPath.service - EMC PowerPath Storage Multipathing ... Active: inactive (dead)` | Start the service with `systemctl start PowerPath` and check for licensing or hardware detection issues in `/var/log/PowerPath/powerpath.log`. |
+    | `dkms autoinstall: Error! Could not find module source directory.` | Reinstall PowerPath package with `rpm -i` or `dpkg -i` to restore DKMS source files in `/usr/src/`. |
 **After resolving the module issue:**
 
 ```bash
@@ -555,9 +567,11 @@ Alua Optimization: Disabled
 ```
 
 !!! warning "Common errors"
-    **`powermt: error: daemon not running`** — Run `systemctl start PowerPath` and wait 10-15 seconds for the daemon to fully initialize before running powermt commands.
-    **`powermt: error: no devices found`** — Verify SAN connectivity and zoning with `powermt check_registration`, then rescan with `powermt config` before running restore.
-    **`systemctl start PowerPath: Job for PowerPath.service failed`** — Check service logs with `journalctl -u PowerPath -n 50` to identify initialization failures or missing dependencies.
+    | Error | Fix |
+    |---|---|
+    | `powermt: error: daemon not running` | Run `systemctl start PowerPath` and wait 10-15 seconds for the daemon to fully initialize before running powermt commands. |
+    | `powermt: error: no devices found` | Verify SAN connectivity and zoning with `powermt check_registration`, then rescan with `powermt config` before running restore. |
+    | `systemctl start PowerPath: Job for PowerPath.service failed` | Check service logs with `journalctl -u PowerPath -n 50` to identify initialization failures or missing dependencies. |
 ---
 
 ## Configuration Not Persisting Across Reboots
@@ -599,9 +613,11 @@ CLAROpt
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and load the module with `modprobe emc_powerpath`.
-    **`Permission denied`** — Run the powermt commands with sudo or as root user.
-    **`CLAROpt: Invalid policy name`** — Check available policies with `powermt display policies` and use the exact policy name matching your storage array configuration.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and load the module with `modprobe emc_powerpath`. |
+    | `Permission denied` | Run the powermt commands with sudo or as root user. |
+    | `CLAROpt: Invalid policy name` | Check available policies with `powermt display policies` and use the exact policy name matching your storage array configuration. |
 **Prevention:** After every `powermt config`, `powermt set policy`, or `powermt remove` operation, always run `powermt save` as the final step.
 
 ---
@@ -662,9 +678,11 @@ Port_ID: 050601
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/messages: No such file or directory`** — Check the correct syslog location with `ls /var/log/syslog* /var/log/messages*` as it varies by distribution.
-    **`cat: /sys/class/fc_host/host0/statistics/link_failure_count: No such file or directory`** — Verify the HBA is present with `ls /sys/class/fc_host/` and adjust the host number accordingly.
-    **`powermt: command not found`** — Install EMC PowerPath with `rpm -ivh PowerPath*.rpm` or verify the installation path with `which powermt`.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/messages: No such file or directory` | Check the correct syslog location with `ls /var/log/syslog* /var/log/messages*` as it varies by distribution. |
+    | `cat: /sys/class/fc_host/host0/statistics/link_failure_count: No such file or directory` | Verify the HBA is present with `ls /sys/class/fc_host/` and adjust the host number accordingly. |
+    | `powermt: command not found` | Install EMC PowerPath with `rpm -ivh PowerPath*.rpm` or verify the installation path with `which powermt`. |
 **Root cause and resolution:** Path flapping is a physical layer symptom. Common causes:
 - Marginal SFP (transmit power below threshold intermittently)
 - Damaged or contaminated FC cable or connector
@@ -740,9 +758,11 @@ Removed /etc/systemd/system/multi-user.target.wants/multipathd.service.
 ```
 
 !!! warning "Common errors"
-    **`multipath: command not found`** — Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt install multipath-tools`.
-    **`sed: can't read /etc/multipath.conf: No such file or directory`** — Create the base multipath.conf file with `touch /etc/multipath.conf` or copy from `/usr/share/doc/device-mapper-multipath/multipath.conf.example`.
-    **`Failed to reload multipathd: Unit multipathd.service not found.`** — Ensure multipathd is installed and the service file exists; reinstall with `yum reinstall device-mapper-multipath` or `apt reinstall multipath-tools`.
+    | Error | Fix |
+    |---|---|
+    | `multipath: command not found` | Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt install multipath-tools`. |
+    | `sed: can't read /etc/multipath.conf: No such file or directory` | Create the base multipath.conf file with `touch /etc/multipath.conf` or copy from `/usr/share/doc/device-mapper-multipath/multipath.conf.example`. |
+    | `Failed to reload multipathd: Unit multipathd.service not found.` | Ensure multipathd is installed and the service file exists; reinstall with `yum reinstall device-mapper-multipath` or `apt reinstall multipath-tools`. |
 ---
 
 ## Common Issues Reference

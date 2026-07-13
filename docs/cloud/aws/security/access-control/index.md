@@ -54,9 +54,11 @@ aws s3control put-public-access-block \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchBucket) when calling the PutBucketPolicy operation: The specified bucket does not exist`** — Verify the bucket name is correct and exists in the current AWS region with `aws s3 ls`.
-    **`An error occurred (InvalidPrincipal) when calling the PutBucketPolicy operation: Invalid principal in policy`** — Ensure the cross-account role ARN is correctly formatted and the role actually exists in the target account.
-    **`An error occurred (AccessDenied) when calling the PutPublicAccessBlock operation: User: arn:aws:iam::<account-id>:user/<user> is not authorized to perform: s3:PutAccountPublicAccessBlock`** — Add `s3:PutAccountPublicAccessBlock` permission to your IAM user or role policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchBucket) when calling the PutBucketPolicy operation: The specified bucket does not exist` | Verify the bucket name is correct and exists in the current AWS region with `aws s3 ls`. |
+    | `An error occurred (InvalidPrincipal) when calling the PutBucketPolicy operation: Invalid principal in policy` | Ensure the cross-account role ARN is correctly formatted and the role actually exists in the target account. |
+    | `An error occurred (AccessDenied) when calling the PutPublicAccessBlock operation: User: arn:aws:iam::<account-id>:user/<user> is not authorized to perform: s3:PutAccountPublicAccessBlock` | Add `s3:PutAccountPublicAccessBlock` permission to your IAM user or role policy. |
 ```bash
 # Create boundary policy (max permissions this role can have)
 aws iam create-policy \
@@ -118,9 +120,11 @@ aws iam create-role \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchEntity) when calling the CreateRole operation: The trust.json file does not exist`** — Ensure the trust.json file exists in the current directory with valid assume-role-policy-document JSON.
-    **`An error occurred (InvalidInput) when calling the CreateRole operation: Invalid ARN specified in the request`** — Replace `<account>` with your actual AWS account ID (12-digit number).
-    **`An error occurred (EntityAlreadyExists) when calling the CreatePolicy operation: Policy DeveloperBoundary already exists`** — Use a unique policy name or delete the existing policy with `aws iam delete-policy --policy-arn arn:aws:iam::ACCOUNT:policy/DeveloperBoundary` first.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchEntity) when calling the CreateRole operation: The trust.json file does not exist` | Ensure the trust.json file exists in the current directory with valid assume-role-policy-document JSON. |
+    | `An error occurred (InvalidInput) when calling the CreateRole operation: Invalid ARN specified in the request` | Replace `<account>` with your actual AWS account ID (12-digit number). |
+    | `An error occurred (EntityAlreadyExists) when calling the CreatePolicy operation: Policy DeveloperBoundary already exists` | Use a unique policy name or delete the existing policy with `aws iam delete-policy --policy-arn arn:aws:iam::ACCOUNT:policy/DeveloperBoundary` first. |
 ```bash
 # Test whether a role can perform specific actions
 aws iam simulate-principal-policy \
@@ -143,9 +147,10 @@ aws iam simulate-principal-policy \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchEntity) when calling the SimulatePrincipalPolicy operation: The role with name DeveloperRole cannot be found.`** — Verify the role name exists in your AWS account and the ARN is correctly formatted with the correct account ID.
-    
-    **`An error occurred (InvalidInput) when calling the SimulatePrincipalPolicy operation: 1 validation error detected: Value 'arn:aws:s3:::my-bucket/*' at 'resourceArns' failed to satisfy constraint`** — Ensure all resource ARNs are valid; S3 bucket ARNs must use the format `arn:aws:s3:::bucket-name` or `arn:aws:s3:::bucket-name/*` for objects.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchEntity) when calling the SimulatePrincipalPolicy operation: The role with name DeveloperRole cannot be found.` | Verify the role name exists in your AWS account and the ARN is correctly formatted with the correct account ID. |
+    | `An error occurred (InvalidInput) when calling the SimulatePrincipalPolicy operation: 1 validation error detected: Value 'arn:aws:s3:::my-bucket/*' at 'resourceArns' failed to satisfy constraint` | Ensure all resource ARNs are valid; S3 bucket ARNs must use the format `arn:aws:s3:::bucket-name` or `arn:aws:s3:::bucket-name/*` for objects. |
 ```bash
 # Generate access advisor report for a role
 JOB_ID=$(aws iam generate-service-last-accessed-details \
@@ -173,9 +178,11 @@ Amazon Kinesis                        kinesis
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchEntity) when calling the GenerateServiceLastAccessedDetails operation: The role with name DeveloperRole cannot be found.`** — Verify the role name exists in your AWS account and use the correct ARN format.
-    **`An error occurred (AccessDenied) when calling the GenerateServiceLastAccessedDetails operation: User: arn:aws:iam::<account>:user/admin is not authorized to perform: iam:GenerateServiceLastAccessedDetails`** — Add `iam:GenerateServiceLastAccessedDetails` and `iam:GetServiceLastAccessedDetails` permissions to your IAM user or role.
-    **`InvalidInput`** — Increase the sleep duration to 10-15 seconds if the job hasn't completed; the report generation is asynchronous and may not be ready immediately.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchEntity) when calling the GenerateServiceLastAccessedDetails operation: The role with name DeveloperRole cannot be found.` | Verify the role name exists in your AWS account and use the correct ARN format. |
+    | `An error occurred (AccessDenied) when calling the GenerateServiceLastAccessedDetails operation: User: arn:aws:iam::<account>:user/admin is not authorized to perform: iam:GenerateServiceLastAccessedDetails` | Add `iam:GenerateServiceLastAccessedDetails` and `iam:GetServiceLastAccessedDetails` permissions to your IAM user or role. |
+    | `InvalidInput` | Increase the sleep duration to 10-15 seconds if the job hasn't completed; the report generation is asynchronous and may not be ready immediately. |
 ```bash
 # List SCPs attached to an OU
 aws organizations list-policies-for-target \
@@ -205,11 +212,11 @@ aws organizations list-policies-for-target \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (TargetNotFoundException) when calling the ListPoliciesForTarget operation: You provided an invalid target id.`** — Verify the OU ID format matches `ou-xxxx-yyyyyyyy` and exists in your organization with `aws organizations list-organizational-units-for-parent --parent-id r-xxxx`.
-    
-    **`An error occurred (AccessDeniedException) when calling the ListPoliciesForTarget operation: User is not authorized to perform: organizations:ListPolicies`** — Ensure your IAM user or role has the `organizations:ListPolicies` permission attached in the management account.
-    
-    **`An error occurred (PolicyTypeNotEnabledException) when calling the ListPoliciesForTarget operation: SERVICE_CONTROL_POLICY is not enabled in this organization.`** — Enable SCPs by running `aws organizations enable-policy-type --root-id r-xxxx --policy-type SERVICE_CONTROL_POLICY` in the management account.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (TargetNotFoundException) when calling the ListPoliciesForTarget operation: You provided an invalid target id.` | Verify the OU ID format matches `ou-xxxx-yyyyyyyy` and exists in your organization with `aws organizations list-organizational-units-for-parent --parent-id r-xxxx`. |
+    | `An error occurred (AccessDeniedException) when calling the ListPoliciesForTarget operation: User is not authorized to perform: organizations:ListPolicies` | Ensure your IAM user or role has the `organizations:ListPolicies` permission attached in the management account. |
+    | `An error occurred (PolicyTypeNotEnabledException) when calling the ListPoliciesForTarget operation: SERVICE_CONTROL_POLICY is not enabled in this organization.` | Enable SCPs by running `aws organizations enable-policy-type --root-id r-xxxx --policy-type SERVICE_CONTROL_POLICY` in the management account. |
 ```bash
 # Users with AdministratorAccess
 aws iam list-entities-for-policy \

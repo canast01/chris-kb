@@ -134,9 +134,11 @@ echo "=== Summary: PASS=$PASS WARN=$WARN FAIL=$FAIL ==="
 ```
 
 !!! warning "Common errors"
-    **`command not found: ceph`** — Ensure the Ceph CLI tools are installed and the `ceph` command is in your PATH, or run the script on a Ceph admin node.
-    **`Error: error connecting to the cluster`** — Verify your Ceph cluster is running and `/etc/ceph/ceph.conf` exists with correct permissions, or set `CEPH_ARGS` environment variable.
-    **`grep: (standard input) is empty`** — Some `ceph` commands may return empty output if the cluster is severely degraded; add error handling with `|| true` to prevent script failure on edge cases.
+    | Error | Fix |
+    |---|---|
+    | `command not found: ceph` | Ensure the Ceph CLI tools are installed and the `ceph` command is in your PATH, or run the script on a Ceph admin node. |
+    | `Error: error connecting to the cluster` | Verify your Ceph cluster is running and `/etc/ceph/ceph.conf` exists with correct permissions, or set `CEPH_ARGS` environment variable. |
+    | `grep: (standard input) is empty` | Some `ceph` commands may return empty output if the cluster is severely degraded; add error handling with `|| true` to prevent script failure on edge cases. |
 ## Comprehensive Manual Checks
 
 ```bash
@@ -300,9 +302,11 @@ purged osd.5
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: osd.<id> does not exist`** — Verify the OSD ID exists with `ceph osd tree` before running daemon commands.
-    **`Error: unable to get device health metrics: (22) Invalid argument`** — Ensure smartmontools is installed on the OSD host and the device ID matches output from `ceph device ls`.
-    **`Error EBUSY: osd.<id> is still in use`** — Wait for the rebalance to fully complete after `ceph osd out` using `ceph -w` before attempting `ceph osd purge`.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: osd.<id> does not exist` | Verify the OSD ID exists with `ceph osd tree` before running daemon commands. |
+    | `Error: unable to get device health metrics: (22) Invalid argument` | Ensure smartmontools is installed on the OSD host and the device ID matches output from `ceph device ls`. |
+    | `Error EBUSY: osd.<id> is still in use` | Wait for the rebalance to fully complete after `ceph osd out` using `ceph -w` before attempting `ceph osd purge`. |
 ## Recovery Monitoring
 
 ```bash
@@ -358,9 +362,11 @@ Every 10.0s: ceph -s | grep -E 'misplaced|degraded|recovering'                  
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: pg dump_stuck: unknown command`** — Verify Ceph version supports `pg dump_stuck` (added in Luminous); use `ceph pg stat` as fallback on older versions.
-    **`Error: HEALTH_ERR: 1 pg stuck degraded; recovery blocked`** — Check for full OSDs with `ceph df` and delete non-essential data, or add capacity before recovery can proceed.
-    **`Error: osd.X: injectargs: unknown option 'osd-max-backfills'`** — Confirm the OSD daemon version matches your Ceph cluster version, as option names vary between releases.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: pg dump_stuck: unknown command` | Verify Ceph version supports `pg dump_stuck` (added in Luminous); use `ceph pg stat` as fallback on older versions. |
+    | `Error: HEALTH_ERR: 1 pg stuck degraded; recovery blocked` | Check for full OSDs with `ceph df` and delete non-essential data, or add capacity before recovery can proceed. |
+    | `Error: osd.X: injectargs: unknown option 'osd-max-backfills'` | Confirm the OSD daemon version matches your Ceph cluster version, as option names vary between releases. |
 ## Capacity Thresholds
 
 | Threshold | Default % | Flag Name | Effect |
@@ -401,8 +407,10 @@ ID  CLASS WEIGHT  REWEIGHT SIZE    RAW USE %USE  %AVAIL PG_NUM STATUS
 ```
 
 !!! warning "Common errors"
-    **`Error EACCES: insufficient capabilities to set osd options`** — Run the command with appropriate admin privileges or ensure your keyring has `osd` capability.
-    **`Error: invalid value '0.80': must be between 0.0 and 1.0`** — Use decimal ratios between 0 and 1 (e.g., 0.80 for 80%), not percentages.
+    | Error | Fix |
+    |---|---|
+    | `Error EACCES: insufficient capabilities to set osd options` | Run the command with appropriate admin privileges or ensure your keyring has `osd` capability. |
+    | `Error: invalid value '0.80': must be between 0.0 and 1.0` | Use decimal ratios between 0 and 1 (e.g., 0.80 for 80%), not percentages. |
 ## Manual Spot Checks
 
 ```bash
@@ -444,8 +452,10 @@ PG_STAT OBJECTS MISSING_ON_PRIMARY DEGRADED MISPLACED UNDERSIZE PEERING STATE
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: error calling ceph_mon_command`** — Ensure the Ceph cluster is running and the admin keyring is properly configured in `/etc/ceph/ceph.client.admin.keyring`.
-    **`HEALTH_ERR: [WRN] SLOW_OSD_REQUESTS`** — Investigate slow OSDs with `ceph osd perf` and check network latency, disk I/O, or CPU contention on affected nodes.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: error calling ceph_mon_command` | Ensure the Ceph cluster is running and the admin keyring is properly configured in `/etc/ceph/ceph.client.admin.keyring`. |
+    | `HEALTH_ERR: [WRN] SLOW_OSD_REQUESTS` | Investigate slow OSDs with `ceph osd perf` and check network latency, disk I/O, or CPU contention on affected nodes. |
 ---
 
 ## See also

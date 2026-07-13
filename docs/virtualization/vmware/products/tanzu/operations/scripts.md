@@ -54,9 +54,11 @@ management         mgmt-cluster-primary    Running     True
 ```
 
 !!! warning "Common errors"
-    **`error: Unable to connect to the server: dial tcp: lookup supervisor.example.local: no such host`** — Verify the SUPERVISOR hostname is correct and resolvable in your DNS or /etc/hosts.
-    **`error: invalid credentials provided`** — Confirm the username and password are correct; use `--password` flag or enter interactively when prompted.
-    **`error: the server has asked for the client to provide credentials`** — Add `--insecure-skip-tls-verify` flag or ensure your vSphere certificate is trusted in your system's CA store.
+    | Error | Fix |
+    |---|---|
+    | `error: Unable to connect to the server: dial tcp: lookup supervisor.example.local: no such host` | Verify the SUPERVISOR hostname is correct and resolvable in your DNS or /etc/hosts. |
+    | `error: invalid credentials provided` | Confirm the username and password are correct; use `--password` flag or enter interactively when prompted. |
+    | `error: the server has asked for the client to provide credentials` | Add `--insecure-skip-tls-verify` flag or ensure your vSphere certificate is trusted in your system's CA store. |
 ---
 
 ## Get All PVCs Across All Namespaces (Identify Unbound)
@@ -88,8 +90,10 @@ workload-ns   temp-cache-pvc          Lost      vsphere-storage    20Gi
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "pvc"`** — Ensure kubectl is connected to a valid Kubernetes cluster with `kubectl cluster-info`.
-    **`Error from server (Forbidden): persistentvolumeclaims is forbidden: User "system:serviceaccount:default:default" cannot list resource "persistentvolumeclaims"`** — Bind appropriate RBAC permissions or use a service account with cluster-admin role via `kubectl auth can-i list pvc --as=system:serviceaccount:default:default`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "pvc"` | Ensure kubectl is connected to a valid Kubernetes cluster with `kubectl cluster-info`. |
+    | `Error from server (Forbidden): persistentvolumeclaims is forbidden: User "system:serviceaccount:default:default" cannot list resource "persistentvolumeclaims"` | Bind appropriate RBAC permissions or use a service account with cluster-admin role via `kubectl auth can-i list pvc --as=system:serviceaccount:default:default`. |
 ---
 
 ## Check All Node Resource Usage
@@ -138,9 +142,11 @@ kube-system          coredns-558bd4d5db-7x9kl                156      512
 ```
 
 !!! warning "Common errors"
-    **`error: Metrics API not available`** — Install metrics-server with `kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml` and wait 30 seconds for it to initialize.
-    **`error: the server doesn't have a resource type "pods"`** — Verify cluster connectivity with `kubectl cluster-info` and ensure your kubeconfig points to the correct Tanzu cluster.
-    **`error: unable to compute resource metrics`** — Wait 1-2 minutes after metrics-server deployment for the kubelet to begin reporting metrics to the API server.
+    | Error | Fix |
+    |---|---|
+    | `error: Metrics API not available` | Install metrics-server with `kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml` and wait 30 seconds for it to initialize. |
+    | `error: the server doesn't have a resource type "pods"` | Verify cluster connectivity with `kubectl cluster-info` and ensure your kubeconfig points to the correct Tanzu cluster. |
+    | `error: unable to compute resource metrics` | Wait 1-2 minutes after metrics-server deployment for the kubelet to begin reporting metrics to the API server. |
 ---
 
 ## Export All Deployments and Services from Namespace
@@ -171,9 +177,11 @@ Export complete: ./k8s-export-20240115
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "persistentvolumeclaims"`** — Use the correct short form `pvc` instead of `persistentvolumeclaims`, or verify the API group is available on your cluster.
-    **`error: Unable to connect to the server: dial tcp: lookup kubernetes.default on [IP]: no such host`** — Ensure your kubeconfig is properly configured and points to an accessible Tanzu cluster; run `kubectl cluster-info` to verify connectivity.
-    **`Error from server (Forbidden): deployments.apps is forbidden: User "[user]" cannot get resource "deployments" in API group "apps" in the namespace "production"`** — Grant the service account or user appropriate RBAC permissions for the production namespace using a ClusterRoleBinding or RoleBinding.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "persistentvolumeclaims"` | Use the correct short form `pvc` instead of `persistentvolumeclaims`, or verify the API group is available on your cluster. |
+    | `error: Unable to connect to the server: dial tcp: lookup kubernetes.default on [IP]: no such host` | Ensure your kubeconfig is properly configured and points to an accessible Tanzu cluster; run `kubectl cluster-info` to verify connectivity. |
+    | `Error from server (Forbidden): deployments.apps is forbidden: User "[user]" cannot get resource "deployments" in API group "apps" in the namespace "production"` | Grant the service account or user appropriate RBAC permissions for the production namespace using a ClusterRoleBinding or RoleBinding. |
 ---
 
 ## See also
@@ -248,9 +256,11 @@ tkc-backup-us-west: Jan 19 22:31:18 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to connect to the server: dial tcp: lookup <hostname>: no such host`** — Verify the cluster endpoint is reachable and DNS resolution is working; check kubeconfig with `kubectl config view`.
-    **`error in x509 certificate verify: certificate verify failed`** — Add the cluster's CA certificate to your system trust store or use `openssl s_client -connect <host>:<port> -showcerts` to inspect the certificate chain.
-    **`timeout: sending signal TERM to command 'openssl'`** — Increase the timeout value from 3 to 5 or 10 seconds if the cluster API is responding slowly due to network latency.
+    | Error | Fix |
+    |---|---|
+    | `unable to connect to the server: dial tcp: lookup <hostname>: no such host` | Verify the cluster endpoint is reachable and DNS resolution is working; check kubeconfig with `kubectl config view`. |
+    | `error in x509 certificate verify: certificate verify failed` | Add the cluster's CA certificate to your system trust store or use `openssl s_client -connect <host>:<port> -showcerts` to inspect the certificate chain. |
+    | `timeout: sending signal TERM to command 'openssl'` | Increase the timeout value from 3 to 5 or 10 seconds if the cluster API is responding slowly due to network latency. |
 ---
 
 ## List Harbor Images with Critical CVEs

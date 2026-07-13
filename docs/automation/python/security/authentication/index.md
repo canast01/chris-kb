@@ -93,8 +93,10 @@ DB_PASSWORD=s3cr3t
 ```
 
 !!! warning "Common errors"
-    **`fatal: pathspec '.env' did not match any files`** — Create the `.env` file first with `touch .env` before adding it to `.gitignore`.
-    **`warning: adding embedded git credentials`** — Remove the `.env` file from git history with `git rm --cached .env` after adding it to `.gitignore`, then commit.
+    | Error | Fix |
+    |---|---|
+    | `fatal: pathspec '.env' did not match any files` | Create the `.env` file first with `touch .env` before adding it to `.gitignore`. |
+    | `warning: adding embedded git credentials` | Remove the `.env` file from git history with `git rm --cached .env` after adding it to `.gitignore`, then commit. |
 ## OAuth 2.0 (Client Credentials)
 
 Used for machine-to-machine authentication where no user interaction is needed.

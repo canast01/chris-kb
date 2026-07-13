@@ -57,9 +57,11 @@ Last Update: 2024-01-15 15:24:03
 ```
 
 !!! warning "Common errors"
-    **`SRDF pair is not in a valid state for this operation`** — Verify the pair state with `symrdf -g <dgname> -sid <r1_sid> query` and ensure it is in Suspended state before resuming.
-    **`Device group <dgname> not found`** — Confirm the correct device group name with `symrdf list -g` and verify it exists on the specified array.
-    **`Symmetrix ID <r1_sid> is not responding`** — Check network connectivity to the array and verify the SID is correct with `symcfg list -v`.
+    | Error | Fix |
+    |---|---|
+    | `SRDF pair is not in a valid state for this operation` | Verify the pair state with `symrdf -g <dgname> -sid <r1_sid> query` and ensure it is in Suspended state before resuming. |
+    | `Device group <dgname> not found` | Confirm the correct device group name with `symrdf list -g` and verify it exists on the specified array. |
+    | `Symmetrix ID <r1_sid> is not responding` | Check network connectivity to the array and verify the SID is correct with `symcfg list -v`. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

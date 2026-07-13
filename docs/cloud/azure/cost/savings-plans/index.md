@@ -95,8 +95,10 @@ sp-sql-prod-002                  SQL Database Savings     Active    P3Y     Shar
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The resource 'Microsoft.BillingBenefits/savingsPlanOrders/<order-id>' does not exist.`** — Verify the savings plan order ID is correct and exists in your subscription using `az billing savings-plan-order list`.
-    **`(AuthorizationFailed) The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.BillingBenefits/savingsPlanOrders/read'.`** — Ensure your Azure account has Billing Reader or Owner role assigned at the subscription or billing account scope.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The resource 'Microsoft.BillingBenefits/savingsPlanOrders/<order-id>' does not exist.` | Verify the savings plan order ID is correct and exists in your subscription using `az billing savings-plan-order list`. |
+    | `(AuthorizationFailed) The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.BillingBenefits/savingsPlanOrders/read'.` | Ensure your Azure account has Billing Reader or Owner role assigned at the subscription or billing account scope. |
 ### Choosing the Right Hourly Commitment
 
 ```bash
@@ -132,9 +134,11 @@ SQL Database               $423.67
 ```
 
 !!! warning "Common errors"
-    **`The subscription '<subscription-id>' could not be found.`** — Replace `<subscription-id>` with your actual subscription ID from `az account show --query id -o tsv`.
-    **`InvalidApiVersionForOperation: The api-version '2021-10-01' does not support operations for this resource.`** — Update the Azure CLI to the latest version with `az upgrade`.
-    **`No recommendations found matching the specified criteria.`** — Ensure your subscription has been enrolled in Azure Advisor for at least 24 hours and has active compute resources.
+    | Error | Fix |
+    |---|---|
+    | `The subscription '<subscription-id>' could not be found.` | Replace `<subscription-id>` with your actual subscription ID from `az account show --query id -o tsv`. |
+    | `InvalidApiVersionForOperation: The api-version '2021-10-01' does not support operations for this resource.` | Update the Azure CLI to the latest version with `az upgrade`. |
+    | `No recommendations found matching the specified criteria.` | Ensure your subscription has been enrolled in Azure Advisor for at least 24 hours and has active compute resources. |
 ## Flexibility Scope
 
 Savings plans apply across the breadth of Azure compute. The scope determines which subscriptions benefit.
@@ -179,9 +183,11 @@ az billing savings-plan-order savings-plan update \
 ```
 
 !!! warning "Common errors"
-    **`The savings plan order ID '<order-id>' does not exist or you do not have access to it.`** — Verify the order ID is correct and you have appropriate permissions on the subscription using `az billing savings-plan-order list`.
-    **`Invalid appliedScopeType 'Shared'. Valid values are: 'Single', 'Shared', 'ManagementGroup'.`** — Ensure the `--applied-scope-type` parameter uses one of the three valid scope types.
-    **`The savings plan cannot be updated because it is in 'Expired' status.`** — Only active or pending savings plans can be updated; check the plan status with `az billing savings-plan-order savings-plan show`.
+    | Error | Fix |
+    |---|---|
+    | `The savings plan order ID '<order-id>' does not exist or you do not have access to it.` | Verify the order ID is correct and you have appropriate permissions on the subscription using `az billing savings-plan-order list`. |
+    | `Invalid appliedScopeType 'Shared'. Valid values are: 'Single', 'Shared', 'ManagementGroup'.` | Ensure the `--applied-scope-type` parameter uses one of the three valid scope types. |
+    | `The savings plan cannot be updated because it is in 'Expired' status.` | Only active or pending savings plans can be updated; check the plan status with `az billing savings-plan-order savings-plan show`. |
 ## Utilisation Monitoring
 
 Monitor savings plan utilisation to ensure the committed hourly spend is being consumed.
@@ -207,9 +213,11 @@ Daily    2024-01-20T00:00:00Z  81.2                    24           19.49
 ```
 
 !!! warning "Common errors"
-    **`The provided savings plan order ID is invalid or does not exist.`** — Verify the order ID format and confirm it exists in your subscription using `az consumption savings-plan-order list`.
-    **`AuthorizationFailed: The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Consumption/savingsPlanOrders/read'.`** — Ensure your Azure account has the Reader or Contributor role assigned on the subscription or savings plan resource.
-    **`--savings-plan-order-id: expected one argument`** — Replace `<order-id>` with an actual savings plan order ID value (e.g., `spplan-12345678-1234-1234-1234-123456789012`).
+    | Error | Fix |
+    |---|---|
+    | `The provided savings plan order ID is invalid or does not exist.` | Verify the order ID format and confirm it exists in your subscription using `az consumption savings-plan-order list`. |
+    | `AuthorizationFailed: The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Consumption/savingsPlanOrders/read'.` | Ensure your Azure account has the Reader or Contributor role assigned on the subscription or savings plan resource. |
+    | `--savings-plan-order-id: expected one argument` | Replace `<order-id>` with an actual savings plan order ID value (e.g., `spplan-12345678-1234-1234-1234-123456789012`). |
 ### Utilisation Benchmarks
 
 | Utilisation % | Status | Action |

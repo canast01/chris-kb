@@ -41,8 +41,10 @@ ansible [core 2.15.8]
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to find a match: ansible-core`** — Run `dnf install -y epel-release` first to enable the EPEL repository.
-    **`Error: Package dnf-plugins-core-4.0.21-1.el9.noarch requires python3-dnf(x86-64) = 4.0.21-1.el9, but none of the providers can be installed`** — Run `dnf update -y` to resolve dependency conflicts before installing packages.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to find a match: ansible-core` | Run `dnf install -y epel-release` first to enable the EPEL repository. |
+    | `Error: Package dnf-plugins-core-4.0.21-1.el9.noarch requires python3-dnf(x86-64) = 4.0.21-1.el9, but none of the providers can be installed` | Run `dnf update -y` to resolve dependency conflicts before installing packages. |
 ```bash
 ansible-galaxy collection install -r requirements.yml
 ansible-galaxy role install -r requirements.yml
@@ -108,9 +110,11 @@ winhost | SUCCESS => {
 ```
 
 !!! warning "Common errors"
-    **`ERROR! Unexpected failure during module execution.`** — Ensure WinRM is enabled on the target Windows host with `Enable-PSRemoting -Force` and verify the firewall allows port 5985 (HTTP) or 5986 (HTTPS).
-    **`fatal: [winhost]: UNREACHABLE! => {"msg": "ntlm: HTTPSConnectionPool(host='winhost', port=5986): Max retries exceeded"}`** — Verify DNS resolution for the hostname, check network connectivity to the Windows host, and confirm the correct `ansible_host` IP address in your inventory file.
-    **`ERROR! the playbook: inventory/ does not exist`** — Ensure the inventory directory path is correct and contains valid inventory files (e.g., `hosts.ini` or `hosts.yml`).
+    | Error | Fix |
+    |---|---|
+    | `ERROR! Unexpected failure during module execution.` | Ensure WinRM is enabled on the target Windows host with `Enable-PSRemoting -Force` and verify the firewall allows port 5985 (HTTP) or 5986 (HTTPS). |
+    | `fatal: [winhost]: UNREACHABLE! => {"msg": "ntlm: HTTPSConnectionPool(host='winhost', port=5986): Max retries exceeded"}` | Verify DNS resolution for the hostname, check network connectivity to the Windows host, and confirm the correct `ansible_host` IP address in your inventory file. |
+    | `ERROR! the playbook: inventory/ does not exist` | Ensure the inventory directory path is correct and contains valid inventory files (e.g., `hosts.ini` or `hosts.yml`). |
 ```bash
 # Review release notes first
 # https://github.com/ansible/ansible/blob/devel/changelogs/
@@ -189,9 +193,11 @@ web-staging-02             : ok=8 changed=3 unreachable=0 failed=0
 ```
 
 !!! warning "Common errors"
-    **`ERROR! Unexpected Exception: No module named 'jinja2'`** — Run `pip install jinja2` in the venv before upgrading ansible-core.
-    **`[WARNING]: Skipping unknown variable 'ansible_python_interpreter'`** — Update deprecated variable names in inventory or group_vars to use `ansible_python_executable` instead.
-    **`fatal: [web-staging-01]: FAILED! => {"msg": "Timeout waiting for privilege escalation prompt."}`** — Ensure staging inventory has correct `ansible_become_pass` or SSH key permissions for the staging user.
+    | Error | Fix |
+    |---|---|
+    | `ERROR! Unexpected Exception: No module named 'jinja2'` | Run `pip install jinja2` in the venv before upgrading ansible-core. |
+    | `[WARNING]: Skipping unknown variable 'ansible_python_interpreter'` | Update deprecated variable names in inventory or group_vars to use `ansible_python_executable` instead. |
+    | `fatal: [web-staging-01]: FAILED! => {"msg": "Timeout waiting for privilege escalation prompt."}` | Ensure staging inventory has correct `ansible_become_pass` or SSH key permissions for the staging user. |
 ```bash
 grep -r "include:"          playbooks/ roles/   # → include_tasks
 grep -r "always_run:"       playbooks/ roles/   # → check_mode: false
@@ -216,8 +222,10 @@ roles/monitoring/tasks/check.yml:15:      command: |
 ```
 
 !!! warning "Common errors"
-    **`grep: roles/: No such file or directory`** — Ensure you run this command from the Ansible project root directory where both `playbooks/` and `roles/` directories exist.
-    **`No matches found`** — If the grep returns no output, your playbooks may already be using Ansible 2.3+ syntax (include_tasks, check_mode, become); verify by checking a sample playbook manually.
+    | Error | Fix |
+    |---|---|
+    | `grep: roles/: No such file or directory` | Ensure you run this command from the Ansible project root directory where both `playbooks/` and `roles/` directories exist. |
+    | `No matches found` | If the grep returns no output, your playbooks may already be using Ansible 2.3+ syntax (include_tasks, check_mode, become); verify by checking a sample playbook manually. |
 ```bash
 # Install AWX Operator
 kubectl apply -k github.com/ansible/awx-operator/config/default?ref=2.19.1
@@ -254,9 +262,11 @@ ansible-admin-p4s9w2k1x7
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "awx" in group "awx.ansible.com"`** — Ensure the AWX Operator CRD is fully deployed by waiting for the operator pod to be ready with `kubectl wait --for=condition=ready pod -l control-plane=controller-manager -n awx-operator-system --timeout=300s`.
-    **`Error from server (NotFound): secrets "awx-prod-admin-password" not found`** — Wait for the AWX instance to finish initializing (typically 2-3 minutes) before retrieving the secret; check status with `kubectl get awx -n awx`.
-    **`error: unable to recognize "STDIN": no matches for kind "AWX" in version "awx.ansible.com/v1beta1"`** — Verify the operator deployment completed successfully and the CRD is registered with `kubectl get crd | grep awx`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "awx" in group "awx.ansible.com"` | Ensure the AWX Operator CRD is fully deployed by waiting for the operator pod to be ready with `kubectl wait --for=condition=ready pod -l control-plane=controller-manager -n awx-operator-system --timeout=300s`. |
+    | `Error from server (NotFound): secrets "awx-prod-admin-password" not found` | Wait for the AWX instance to finish initializing (typically 2-3 minutes) before retrieving the secret; check status with `kubectl get awx -n awx`. |
+    | `error: unable to recognize "STDIN": no matches for kind "AWX" in version "awx.ansible.com/v1beta1"` | Verify the operator deployment completed successfully and the CRD is registered with `kubectl get crd | grep awx`. |
 ```bash
 # Update operator version — instance CR stays unchanged
 kubectl apply -k github.com/ansible/awx-operator/config/default?ref=<new_version>
@@ -278,8 +288,10 @@ deployment "awx-prod" successfully rolled out
 ```
 
 !!! warning "Common errors"
-    **`error: unable to recognize "github.com/awx-operator/config/default?ref=<new_version>": no matches for kind "Kustomization" in version "kustomize.config.k8s.io/v1beta1"`** — Ensure the kustomization.yaml file exists in the remote repository and the ref parameter points to a valid git tag or branch.
-    **`error: timed out waiting for the condition`** — Check pod events with `kubectl describe pod -n awx` and verify sufficient cluster resources; the rollout may be blocked by image pull errors or resource constraints.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to recognize "github.com/awx-operator/config/default?ref=<new_version>": no matches for kind "Kustomization" in version "kustomize.config.k8s.io/v1beta1"` | Ensure the kustomization.yaml file exists in the remote repository and the ref parameter points to a valid git tag or branch. |
+    | `error: timed out waiting for the condition` | Check pod events with `kubectl describe pod -n awx` and verify sufficient cluster resources; the rollout may be blocked by image pull errors or resource constraints. |
 ```bash
 # Create service account
 useradd -r -s /bin/bash -m -d /home/ansible ansible

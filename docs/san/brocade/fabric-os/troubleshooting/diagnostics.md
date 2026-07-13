@@ -168,9 +168,11 @@ License Expiration: 2025-06-30
 ```
 
 !!! warning "Common errors"
-    **`switchstatusshow: command not found`** — Verify you are logged into the Brocade switch directly (SSH to the switch IP, not a management station) and have admin privileges.
-    **`errshow: Permission denied`** — Run commands with appropriate admin credentials; if using a service account, confirm it has diagnostic command privileges in the switch role configuration.
-    **`raslog: invalid option '--show'`** — Use `raslog --dump` or `raslog` without flags; check firmware version as RAS command syntax varies between FOS versions.
+    | Error | Fix |
+    |---|---|
+    | `switchstatusshow: command not found` | Verify you are logged into the Brocade switch directly (SSH to the switch IP, not a management station) and have admin privileges. |
+    | `errshow: Permission denied` | Run commands with appropriate admin credentials; if using a service account, confirm it has diagnostic command privileges in the switch role configuration. |
+    | `raslog: invalid option '--show'` | Use `raslog --dump` or `raslog` without flags; check firmware version as RAS command syntax varies between FOS versions. |
 All sensors should report `OK`. A sensor in `FAILED`, `ABSENT`, or `OUT_OF_RANGE` state requires immediate attention. Temperature thresholds vary by platform — refer to the hardware installation guide for the specific chassis.
 
 ### MAPS dashboard
@@ -240,9 +242,11 @@ Status:               MONITORED
 ```
 
 !!! warning "Common errors"
-    **`mapsdashboard: command not found`** — Verify MAPS is installed and enabled with `switchstatusshow` and ensure your user role has MAPS permissions.
-    **`Error: Invalid port format <slot/port>`** — Use the correct slot/port syntax (e.g., `mapsrule --show -ports 0/12`) and verify the port exists with `portshow`.
-    **`MAPS database locked or unavailable`** — Wait 30 seconds for the database lock to clear, or restart the MAPS service with `mapsstatusshow` followed by `mapsstatusset --enable`.
+    | Error | Fix |
+    |---|---|
+    | `mapsdashboard: command not found` | Verify MAPS is installed and enabled with `switchstatusshow` and ensure your user role has MAPS permissions. |
+    | `Error: Invalid port format <slot/port>` | Use the correct slot/port syntax (e.g., `mapsrule --show -ports 0/12`) and verify the port exists with `portshow`. |
+    | `MAPS database locked or unavailable` | Wait 30 seconds for the database lock to clear, or restart the MAPS service with `mapsstatusshow` followed by `mapsstatusset --enable`. |
 MAPS categories:
 
 | Category | What it monitors |
@@ -343,9 +347,11 @@ sfpshow
 ```
 
 !!! warning "Common errors"
-    **`Invalid slot/port number`** — Verify the port exists with `portshow` and use the correct slot/port format (e.g., 0/0, not 0-0).
-    **`SFP not present`** — Confirm the SFP module is fully seated in the port; reseat if necessary and retry `sfpshow`.
-    **`Permission denied`** — Run
+    | Error | Fix |
+    |---|---|
+    | `Invalid slot/port number` | Verify the port exists with `portshow` and use the correct slot/port format (e.g., 0/0, not 0-0). |
+    | `SFP not present` | Confirm the SFP module is fully seated in the port; reseat if necessary and retry `sfpshow`. |
+    | `Permission denied` | Run |
 ### SFP optical levels
 
 `sfpshow` output shows each SFP's measured Tx power, Rx power, temperature, and voltage.
@@ -397,8 +403,10 @@ Total entries: 247
 ```
 
 !!! warning "Common errors"
-    **`portlogshow: Invalid slot/port format`** — Use the correct format `<slot>/<port>` (e.g., `0/1` or `1/3`).
-    **`portlogdump: Port not found or offline`** — Verify the port exists and is online with `portshow` before dumping logs.
+    | Error | Fix |
+    |---|---|
+    | `portlogshow: Invalid slot/port format` | Use the correct format `<slot>/<port>` (e.g., `0/1` or `1/3`). |
+    | `portlogdump: Port not found or offline` | Verify the port exists and is online with `portshow` before dumping logs. |
 Common events in `portlogshow`:
 
 | Event | Meaning |
@@ -432,8 +440,10 @@ Port 0/1 has been enabled.
 ```
 
 !!! warning "Common errors"
-    **`porttest: Port 0/1 is not disabled`** — Run `portdisable <slot/port>` before executing the loopback test.
-    **`porttest: SFP not detected on port 0/1`** — Remove and reseat the SFP transceiver, or consult platform documentation to confirm if the SFP must be physically removed for internal loopback testing.
+    | Error | Fix |
+    |---|---|
+    | `porttest: Port 0/1 is not disabled` | Run `portdisable <slot/port>` before executing the loopback test. |
+    | `porttest: SFP not detected on port 0/1` | Remove and reseat the SFP transceiver, or consult platform documentation to confirm if the SFP must be physically removed for internal loopback testing. |
 `porttest PASS` confirms switch port ASIC is functioning. `porttest FAIL` indicates switch hardware damage — escalate to Broadcom TAC.
 
 ### Fabric diagnostic (spinFab)
@@ -457,9 +467,11 @@ Test completed successfully
 ```
 
 !!! warning "Common errors"
-    **`spinfab: Invalid port specification`** — Verify port format is `slot/port` (e.g., `0/0`) and both ports exist on the fabric.
-    **`spinfab: Port not online`** — Confirm both ports are in an online state using `portshow` before running the test.
-    **`spinfab: Connection timeout`** — Check that the two ports have an active fabric link and no ISL issues are blocking traffic.
+    | Error | Fix |
+    |---|---|
+    | `spinfab: Invalid port specification` | Verify port format is `slot/port` (e.g., `0/0`) and both ports exist on the fabric. |
+    | `spinfab: Port not online` | Confirm both ports are in an online state using `portshow` before running the test. |
+    | `spinfab: Connection timeout` | Check that the two ports have an active fabric link and no ISL issues are blocking traffic. |
 ---
 
 ## Step 3 — Fabric-level diagnostics
@@ -520,8 +532,10 @@ FLOGI Sessions:
 ```
 
 !!! warning "Common errors"
-    **`nslookup: WWN not found in fabric name server`** — Verify the WWPN is correct and the device has completed FLOGI; use `nsallshow` to confirm the device is registered across the fabric.
-    **`fabricshow: Fabric not stable — reconfiguration in progress`** — Wait 30–60 seconds for fabric reconfiguration to complete, then retry the command.
+    | Error | Fix |
+    |---|---|
+    | `nslookup: WWN not found in fabric name server` | Verify the WWPN is correct and the device has completed FLOGI; use `nsallshow` to confirm the device is registered across the fabric. |
+    | `fabricshow: Fabric not stable — reconfiguration in progress` | Wait 30–60 seconds for fabric reconfiguration to complete, then retry the command. |
 ### ISL diagnostics
 
 ```bash
@@ -566,9 +580,11 @@ ISL Statistics for Port 0/0
 ```
 
 !!! warning "Common errors"
-    **`portstatsshow: Invalid port specification`** — Verify the ISL port exists using `islshow` and use correct slot/port format (e.g., `portstatsshow 0/0`).
-    **`Command not found: portperfshow`** — Ensure you are logged into the Brocade switch directly via SSH/telnet; these commands only work on the switch CLI, not remote management interfaces.
-    **`Access denied: Insufficient user role`** — Confirm your user account has admin or fabric-admin privileges using `userconfig --show`.
+    | Error | Fix |
+    |---|---|
+    | `portstatsshow: Invalid port specification` | Verify the ISL port exists using `islshow` and use correct slot/port format (e.g., `portstatsshow 0/0`). |
+    | `Command not found: portperfshow` | Ensure you are logged into the Brocade switch directly via SSH/telnet; these commands only work on the switch CLI, not remote management interfaces. |
+    | `Access denied: Insufficient user role` | Confirm your user account has admin or fabric-admin privileges using `userconfig --show`. |
 ### Routing and path
 
 ```bash
@@ -610,8 +626,10 @@ Domain  NextHop  Cost  State
 ```
 
 !!! warning "Common errors"
-    **`fspfshow: command not found`** — Verify you are logged into the Brocade switch CLI (not the Linux shell) by checking the prompt shows `switch>` or `switch#`.
-    **`pathinfo: Invalid WWN format`** — Ensure the target WWN is in colon-separated hexadecimal format (e.g., `50:00:14:40:5b:2a:3c:d1`) with exactly 16 hex pairs.
+    | Error | Fix |
+    |---|---|
+    | `fspfshow: command not found` | Verify you are logged into the Brocade switch CLI (not the Linux shell) by checking the prompt shows `switch>` or `switch#`. |
+    | `pathinfo: Invalid WWN format` | Ensure the target WWN is in colon-separated hexadecimal format (e.g., `50:00:14:40:5b:2a:3c:d1`) with exactly 16 hex pairs. |
 ---
 
 ## Step 4 — Buffer credit diagnostics
@@ -662,9 +680,11 @@ bottleneckmon --enable
 ```
 
 !!! warning "Common errors"
-    **`portbufshow: Invalid port specification`** — Verify the slot/port format matches your switch model (e.g., 0/5 for slot 0, port 5).
-    **`mapsdb: Database not initialized`** — Run `mapsdb --init` to initialize the MAPS database before querying rules.
-    **`bottleneckmon: Feature not supported on this platform`** — Confirm your Brocade switch model supports bottleneck monitoring (typically SAN switches with firmware 8.0+).
+    | Error | Fix |
+    |---|---|
+    | `portbufshow: Invalid port specification` | Verify the slot/port format matches your switch model (e.g., 0/5 for slot 0, port 5). |
+    | `mapsdb: Database not initialized` | Run `mapsdb --init` to initialize the MAPS database before querying rules. |
+    | `bottleneckmon: Feature not supported on this platform` | Confirm your Brocade switch model supports bottleneck monitoring (typically SAN switches with firmware 8.0+). |
 When a port shows persistent zero BB credits, the connected device is not returning credits fast enough — it is the slow-drain device. Identify it, disable the port temporarily, and work with the host or storage team to resolve the queue depth or driver issue.
 
 ---
@@ -698,9 +718,11 @@ supportsave: Diagnostic bundle successfully transferred.
 ```
 
 !!! warning "Common errors"
-    **`supportsave: Unable to connect to SCP server 192.168.1.50:22 - Connection refused`** — Verify the SCP server IP address is correct and the SSH/SCP service is running on port 22.
-    **`supportsave: Authentication failed for user 'backup_admin' - Permission denied (publickey,password)`** — Confirm the username and password are correct, or configure SSH key-based authentication on the SCP server.
-    **`supportsave: Insufficient disk space on destination - /backups/supportsave/ has only 50 MB free`** — Ensure the destination directory has at least 500 MB of free space available.
+    | Error | Fix |
+    |---|---|
+    | `supportsave: Unable to connect to SCP server 192.168.1.50:22 - Connection refused` | Verify the SCP server IP address is correct and the SSH/SCP service is running on port 22. |
+    | `supportsave: Authentication failed for user 'backup_admin' - Permission denied (publickey,password)` | Confirm the username and password are correct, or configure SSH key-based authentication on the SCP server. |
+    | `supportsave: Insufficient disk space on destination - /backups/supportsave/ has only 50 MB free` | Ensure the destination directory has at least 500 MB of free space available. |
 `supportsave` takes 3–8 minutes on a director and produces a `.tar.gz` archive. Upload it to the TAC SR immediately. It contains:
 
 - Running configuration, zone database, name server state
@@ -753,8 +775,10 @@ Zoning Information
 ```
 
 !!! warning "Common errors"
-    **`supportshow: command not found`** — Verify you are logged into the Brocade switch CLI directly (not a management interface) and have administrative privileges.
-    **`Error: Unable to write to /tmp — disk full`** — Free up space on the switch filesystem using `eraseflash` or contact Brocade support to offload diagnostics via SFTP instead.
+    | Error | Fix |
+    |---|---|
+    | `supportshow: command not found` | Verify you are logged into the Brocade switch CLI directly (not a management interface) and have administrative privileges. |
+    | `Error: Unable to write to /tmp — disk full` | Free up space on the switch filesystem using `eraseflash` or contact Brocade support to offload diagnostics via SFTP instead. |
 Capture the output by enabling logging in your SSH client (PuTTY: Session → Logging; SecureCRT: File → Log Session) before running `supportshow`.
 
 ### Targeted data collection
@@ -832,9 +856,11 @@ Port Performance (0/0):
 ```
 
 !!! warning "Common errors"
-    **`portshow: Invalid slot/port specification`** — Verify the slot and port numbers are valid for your switch model (e.g., 0/0 through 0/47 for most Brocade switches).
-    **`fabricshow: Fabric offline or not initialized`** — Ensure the switch is fully initialized and has completed fabric discovery; check `switchstatusshow` to confirm operational status.
-    **`zoneshow: Zone database locked or being updated`** — Wait 30 seconds and retry, as zone changes may be in progress; use `cfgactivate` to commit pending changes if needed.
+    | Error | Fix |
+    |---|---|
+    | `portshow: Invalid slot/port specification` | Verify the slot and port numbers are valid for your switch model (e.g., 0/0 through 0/47 for most Brocade switches). |
+    | `fabricshow: Fabric offline or not initialized` | Ensure the switch is fully initialized and has completed fabric discovery; check `switchstatusshow` to confirm operational status. |
+    | `zoneshow: Zone database locked or being updated` | Wait 30 seconds and retry, as zone changes may be in progress; use `cfgactivate` to commit pending changes if needed. |
 ---
 
 ## Log locations

@@ -144,9 +144,11 @@ server promoted
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: the database system is not ready`** — Wait 10-15 seconds after promotion completes before running verification queries, as PostgreSQL needs time to finish recovery.
-    **`pg_ctl: could not open PID file "/var/lib/postgresql/data/postmaster.pid": No such file or directory`** — Ensure PostgreSQL is running on the standby with `systemctl start postgresql` before attempting promotion.
-    **`permission denied`** — Run all `pg_ctl` and file operations as the `postgres` user with `sudo -u postgres` or switch to that user first.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: the database system is not ready` | Wait 10-15 seconds after promotion completes before running verification queries, as PostgreSQL needs time to finish recovery. |
+    | `pg_ctl: could not open PID file "/var/lib/postgresql/data/postmaster.pid": No such file or directory` | Ensure PostgreSQL is running on the standby with `systemctl start postgresql` before attempting promotion. |
+    | `permission denied` | Run all `pg_ctl` and file operations as the `postgres` user with `sudo -u postgres` or switch to that user first. |
 ```bash
 # Automatic failover — check MHA status
 masterha_check_repl --conf=/etc/mha/app.conf
@@ -206,9 +208,11 @@ OK
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "<new-primary>" to address: Name or service not known`** — Replace `<new-primary>` with the actual hostname or IP address of the new primary server.
-    **`ERROR 1045 (28000): Access denied for user 'appuser'@'<new-primary>'`** — Verify the MySQL user credentials and that the host is listed in the user's allowed hosts (check `mysql.user` table or use `GRANT` to add the host).
-    **`curl: (7) Failed to connect to <app-endpoint> port 443: Connection refused`** — Confirm the application endpoint is running and accessible; check firewall rules and application service status with `systemctl status`.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "<new-primary>" to address: Name or service not known` | Replace `<new-primary>` with the actual hostname or IP address of the new primary server. |
+    | `ERROR 1045 (28000): Access denied for user 'appuser'@'<new-primary>'` | Verify the MySQL user credentials and that the host is listed in the user's allowed hosts (check `mysql.user` table or use `GRANT` to add the host). |
+    | `curl: (7) Failed to connect to <app-endpoint> port 443: Connection refused` | Confirm the application endpoint is running and accessible; check firewall rules and application service status with `systemctl status`. |
 ---
 
 ## Verify

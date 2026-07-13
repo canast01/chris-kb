@@ -83,9 +83,11 @@ User "svc-snapcenter" created successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Role "sc-backup-role" already exists`** — Delete the existing role with `security login role delete -role sc-backup-role -vserver <admin-svm>` before recreating it.
-    **`Error: command failed: User "svc-snapcenter" already exists`** — Use `security login modify` instead of `create`, or delete the user first with `security login delete -username svc-snapcenter -vserver <admin-svm>`.
-    **`Error: command failed: Invalid vserver name "<admin-svm>"`** — Replace `<admin-svm>` with the actual admin SVM name (typically the cluster name or use `-vserver *` for cluster scope).
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Role "sc-backup-role" already exists` | Delete the existing role with `security login role delete -role sc-backup-role -vserver <admin-svm>` before recreating it. |
+    | `Error: command failed: User "svc-snapcenter" already exists` | Use `security login modify` instead of `create`, or delete the user first with `security login delete -username svc-snapcenter -vserver <admin-svm>`. |
+    | `Error: command failed: Invalid vserver name "<admin-svm>"` | Replace `<admin-svm>` with the actual admin SVM name (typically the cluster name or use `-vserver *` for cluster scope). |
 ## Audit Logging
 
 - All SnapCenter user operations (login, job trigger, policy change, restore, clone) are written to the audit log

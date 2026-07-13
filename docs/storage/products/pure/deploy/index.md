@@ -185,8 +185,10 @@ Configuration complete. System ready for use.
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the pureuser account exists on the FlashBlade and the password is correct.
-    **`ssh: Could not resolve hostname <flashblade_ip>: Name or service not known`** — Replace `<flashblade_ip>` with the actual management IP address of the FlashBlade system.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the pureuser account exists on the FlashBlade and the password is correct. |
+    | `ssh: Could not resolve hostname <flashblade_ip>: Name or service not known` | Replace `<flashblade_ip>` with the actual management IP address of the FlashBlade system. |
 The setup wizard prompts for:
 
 - Array name
@@ -213,9 +215,11 @@ blade-05                      OK        FlashArray//X70    PUREARRAY001E
 ```
 
 !!! warning "Common errors"
-    **`purehw: command not found`** — Ensure the Pure Hardware CLI tools are installed and the PATH includes the Pure installation directory.
-    **`Error: Unable to connect to management interface`** — Verify network connectivity to the array management IP and that SSH credentials are properly configured.
-    **`Status: DEGRADED`** — Check blade logs with `purehw logs <blade-name>` and contact Pure support if hardware failure is indicated.
+    | Error | Fix |
+    |---|---|
+    | `purehw: command not found` | Ensure the Pure Hardware CLI tools are installed and the PATH includes the Pure installation directory. |
+    | `Error: Unable to connect to management interface` | Verify network connectivity to the array management IP and that SSH credentials are properly configured. |
+    | `Status: DEGRADED` | Check blade logs with `purehw logs <blade-name>` and contact Pure support if hardware failure is indicated. |
 **Configure data network:**
 
 ```bash
@@ -236,8 +240,10 @@ ID: vif-a7f2c9e1-4b8d-11ed-9c42-0242ac120002
 ```
 
 !!! warning "Common errors"
-    **`Error: Address 192.168.20.100 already in use`** — Verify the IP is not assigned to another interface using `purenetwork list vip` and choose an unused address.
-    **`Error: Invalid service type 'data-eth'`** — Replace `data-eth` with a valid service name such as `data`, `nfs`, or `s3` (check available services with `purenetwork list services`).
+    | Error | Fix |
+    |---|---|
+    | `Error: Address 192.168.20.100 already in use` | Verify the IP is not assigned to another interface using `purenetwork list vip` and choose an unused address. |
+    | `Error: Invalid service type 'data-eth'` | Replace `data-eth` with a valid service name such as `data`, `nfs`, or `s3` (check available services with `purenetwork list services`). |
 For a complete FlashBlade deployment walkthrough see [FlashBlade — Initial Deployment](../flashblade/deploy/index.md).
 
 ---

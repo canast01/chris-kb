@@ -217,9 +217,11 @@ Last Snapshot: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`ModuleNotFoundError: No module named 'py_pure_client'`** — Ensure pip installed the package correctly and your Python environment matches the one in your PATH.
-    **`ConnectionError: Failed to connect to 192.168.1.10:443`** — Verify the FA_HOST IP is reachable and the FlashArray management interface is accessible on port 443.
-    **`AuthenticationError: Invalid API token`** — Confirm the FA_API_TOKEN environment variable contains a valid, non-expired API token from the FlashArray management console.
+    | Error | Fix |
+    |---|---|
+    | `ModuleNotFoundError: No module named 'py_pure_client'` | Ensure pip installed the package correctly and your Python environment matches the one in your PATH. |
+    | `ConnectionError: Failed to connect to 192.168.1.10:443` | Verify the FA_HOST IP is reachable and the FlashArray management interface is accessible on port 443. |
+    | `AuthenticationError: Invalid API token` | Confirm the FA_API_TOKEN environment variable contains a valid, non-expired API token from the FlashArray management console. |
 ---
 
 ## ActiveCluster Pod Status Monitor (Python)
@@ -351,9 +353,11 @@ Last sync: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to 192.168.1.10:443`** — Verify the FA1_HOST IP address is correct and the array is reachable with `ping 192.168.1.10`.
-    **`Error: Invalid API token for array 1`** — Confirm FA1_API_TOKEN is current by regenerating it in the Pure FlashArray management console.
-    **`Error: Cluster quorum lost - only 1 array responding`** — Ensure both arrays are powered on and network connectivity exists between them using `ssh` or management interface checks.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to 192.168.1.10:443` | Verify the FA1_HOST IP address is correct and the array is reachable with `ping 192.168.1.10`. |
+    | `Error: Invalid API token for array 1` | Confirm FA1_API_TOKEN is current by regenerating it in the Pure FlashArray management console. |
+    | `Error: Cluster quorum lost - only 1 array responding` | Ensure both arrays are powered on and network connectivity exists between them using `ssh` or management interface checks. |
 ---
 
 ## Volume and Snapshot Report (Bash)
@@ -450,9 +454,11 @@ Note: Snapshots older than 30 days flagged for capacity review.
 ```
 
 !!! warning "Common errors"
-    **`FA_HOST: unset variable`** — Set the FA_HOST environment variable before running the script: `export FA_HOST=flasharray01`.
-    **`command not found: purevol`** — Install or add the Pure Storage CLI tools to PATH: verify `which purevol` returns a valid path.
-    **`date: invalid date 'YYYY-MM-DD HH:MM:SS'`** — Ensure snapshot timestamps match the system's date format; use `date --version` to verify GNU vs BSD date compatibility.
+    | Error | Fix |
+    |---|---|
+    | `FA_HOST: unset variable` | Set the FA_HOST environment variable before running the script: `export FA_HOST=flasharray01`. |
+    | `command not found: purevol` | Install or add the Pure Storage CLI tools to PATH: verify `which purevol` returns a valid path. |
+    | `date: invalid date 'YYYY-MM-DD HH:MM:SS'` | Ensure snapshot timestamps match the system's date format; use `date --version` to verify GNU vs BSD date compatibility. |
 ---
 
 ## Drive Failure Alert (Bash)
@@ -534,9 +540,11 @@ Open a Pure Storage support case immediately.
 ```
 
 !!! warning "Common errors"
-    **`FA_HOST: unbound variable`** — Export FA_HOST and FA_API_TOKEN as environment variables before running the script: `export FA_HOST=flasharray01 FA_API_TOKEN=token_value`.
-    **`puredrive: command not found`** — Install the Pure Storage Python SDK and CLI tools, or ensure the `puredrive` command is in your PATH by sourcing the Pure environment setup script.
-    **`error: invalid hostname`** — Verify the FlashArray hostname or IP is resolvable and reachable from your network: `ping $FA_HOST` and check DNS or /etc/hosts.
+    | Error | Fix |
+    |---|---|
+    | `FA_HOST: unbound variable` | Export FA_HOST and FA_API_TOKEN as environment variables before running the script: `export FA_HOST=flasharray01 FA_API_TOKEN=token_value`. |
+    | `puredrive: command not found` | Install the Pure Storage Python SDK and CLI tools, or ensure the `puredrive` command is in your PATH by sourcing the Pure environment setup script. |
+    | `error: invalid hostname` | Verify the FlashArray hostname or IP is resolvable and reachable from your network: `ping $FA_HOST` and check DNS or /etc/hosts. |
 ---
 
 ## Ansible FlashArray Health Playbook
@@ -888,9 +896,11 @@ pod-dr-01       online          flasharray01,flasharray02
 ```
 
 !!! warning "Common errors"
-    **`FA_HOST: unbound variable`** — Set the FA_HOST environment variable before running the script: `export FA_HOST=flasharray01`.
-    **`purearray: command not found`** — Install the Pure Storage Python SDK and CLI tools, or ensure they are in your PATH: `pip install purestorage && export PATH=$PATH:/opt/purearray/bin`.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — Disable SSL verification for self-signed certificates by setting `export PURENETWORK_VERIFY_SSL=false` before running the script.
+    | Error | Fix |
+    |---|---|
+    | `FA_HOST: unbound variable` | Set the FA_HOST environment variable before running the script: `export FA_HOST=flasharray01`. |
+    | `purearray: command not found` | Install the Pure Storage Python SDK and CLI tools, or ensure they are in your PATH: `pip install purestorage && export PATH=$PATH:/opt/purearray/bin`. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | Disable SSL verification for self-signed certificates by setting `export PURENETWORK_VERIFY_SSL=false` before running the script. |
 ---
 
 ## Pre-Change Validation Script (Bash)
@@ -969,9 +979,11 @@ PRE-CHECK PASSED — safe to proceed with maintenance.
 ```
 
 !!! warning "Common errors"
-    **`FA_HOST: parameter null or not set`** — Export FA_HOST and FA_API_TOKEN environment variables before running the script: `export FA_HOST=flasharray01 FA_API_TOKEN=<token>`.
-    **`purearray: command not found`** — Install the Pure Storage Python SDK and CLI tools on the system: `pip install purestorage && apt-get install pure-storage-cli` (or equivalent for your OS).
-    **`[FAIL] Array unreachable`** — Verify network connectivity to the FlashArray management IP and confirm FA_HOST resolves correctly: `ping $FA_HOST && nslookup $FA_HOST`.
+    | Error | Fix |
+    |---|---|
+    | `FA_HOST: parameter null or not set` | Export FA_HOST and FA_API_TOKEN environment variables before running the script: `export FA_HOST=flasharray01 FA_API_TOKEN=<token>`. |
+    | `purearray: command not found` | Install the Pure Storage Python SDK and CLI tools on the system: `pip install purestorage && apt-get install pure-storage-cli` (or equivalent for your OS). |
+    | `[FAIL] Array unreachable` | Verify network connectivity to the FlashArray management IP and confirm FA_HOST resolves correctly: `ping $FA_HOST && nslookup $FA_HOST`. |
 ---
 
 ## Post-Change Validation Script (Bash)
@@ -1056,9 +1068,11 @@ POST-CHECK PASSED — change completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`FA_HOST: parameter null or not set`** — Export FA_HOST and FA_API_TOKEN environment variables before running the script: `export FA_HOST=flasharray01 FA_API_TOKEN=<token>`.
-    **`purearray: command not found`** — Install the Pure Storage Python SDK and CLI tools on the host running this script.
-    **`Connection refused` or `Unable to reach array`** — Verify network connectivity to the FlashArray management interface and confirm FA_HOST resolves correctly with `ping $FA_HOST`.
+    | Error | Fix |
+    |---|---|
+    | `FA_HOST: parameter null or not set` | Export FA_HOST and FA_API_TOKEN environment variables before running the script: `export FA_HOST=flasharray01 FA_API_TOKEN=<token>`. |
+    | `purearray: command not found` | Install the Pure Storage Python SDK and CLI tools on the host running this script. |
+    | `Connection refused` or `Unable to reach array` | Verify network connectivity to the FlashArray management interface and confirm FA_HOST resolves correctly with `ping $FA_HOST`. |
 ---
 
 ## Incident Triage Script (Bash)

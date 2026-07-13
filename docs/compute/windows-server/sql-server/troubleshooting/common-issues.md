@@ -164,8 +164,10 @@ count | state
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "localhost" to address: Name or service not known`** — Verify PostgreSQL is running and accessible; use `-h 127.0.0.1` or check `/etc/postgresql/postgresql.conf` for listen_addresses setting.
-    **`ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`** — Ensure MySQL service is running with `systemctl start mysql` and the socket path matches your installation.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "localhost" to address: Name or service not known` | Verify PostgreSQL is running and accessible; use `-h 127.0.0.1` or check `/etc/postgresql/postgresql.conf` for listen_addresses setting. |
+    | `ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'` | Ensure MySQL service is running with `systemctl start mysql` and the socket path matches your installation. |
 ![SQL Server — Common Issues — Diagram](../../../../assets/compute-windows-server-sql-server-troubleshooting-common-issues-diagram.svg)
 
 ---

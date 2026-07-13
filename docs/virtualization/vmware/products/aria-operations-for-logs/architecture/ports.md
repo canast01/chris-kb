@@ -134,9 +134,11 @@ TCP 514 open
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the Aria Logs CA certificate into your system trust store.
-    **`logger: unknown host <aria-logs-vip>`** — Verify the Aria Logs VIP is resolvable and reachable from the application server; check DNS or use the IP address directly.
-    **`Connection refused`** — Confirm TCP port 514 is open on the Aria Logs appliance and the syslog listener service is running; check firewall rules and `systemctl status loginsight-syslog`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the Aria Logs CA certificate into your system trust store. |
+    | `logger: unknown host <aria-logs-vip>` | Verify the Aria Logs VIP is resolvable and reachable from the application server; check DNS or use the IP address directly. |
+    | `Connection refused` | Confirm TCP port 514 is open on the Aria Logs appliance and the syslog listener service is running; check firewall rules and `systemctl status loginsight-syslog`. |
 ---
 
 ## See also

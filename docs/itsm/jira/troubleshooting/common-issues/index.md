@@ -40,9 +40,11 @@ jcmd "${JIRA_PID}" GC.heap_info
 ```
 
 !!! warning "Common errors"
-    **`pgrep: command not found`** — Install procps-ng package with `apt-get install procps-ng` or `yum install procps-ng`.
-    **`jcmd: command not found`** — Ensure JAVA_HOME is set correctly and jcmd is in PATH; typically found in `$JAVA_HOME/bin/jcmd`.
-    **`Permission denied`** — Run the commands as the jira user or with sudo: `sudo -u jira jcmd <PID> GC.heap_info`.
+    | Error | Fix |
+    |---|---|
+    | `pgrep: command not found` | Install procps-ng package with `apt-get install procps-ng` or `yum install procps-ng`. |
+    | `jcmd: command not found` | Ensure JAVA_HOME is set correctly and jcmd is in PATH; typically found in `$JAVA_HOME/bin/jcmd`. |
+    | `Permission denied` | Run the commands as the jira user or with sudo: `sudo -u jira jcmd <PID> GC.heap_info`. |
 ```bash
 # Add to setenv.sh JVM_SUPPORT_RECOMMENDED_ARGS
 -XX:+UseG1GC
@@ -57,9 +59,11 @@ jcmd "${JIRA_PID}" GC.heap_info
 ```
 
 !!! warning "Common errors"
-    **`setenv.sh: No such file or directory`** — Verify the JIRA installation path and ensure you're editing the correct setenv.sh file in `$JIRA_HOME/bin/` or `$CATALINA_HOME/bin/`.
-    **`Permission denied`** — Run the editor with appropriate permissions (sudo or as the jira service user) to modify setenv.sh.
-    **`JVM_SUPPORT_RECOMMENDED_ARGS: command not found`** — Ensure you're appending these values to the existing variable using `JVM_SUPPORT_RECOMMENDED_ARGS="$JVM_SUPPORT_RECOMMENDED_ARGS -XX:+UseG1GC ..."` rather than treating it as a shell command.
+    | Error | Fix |
+    |---|---|
+    | `setenv.sh: No such file or directory` | Verify the JIRA installation path and ensure you're editing the correct setenv.sh file in `$JIRA_HOME/bin/` or `$CATALINA_HOME/bin/`. |
+    | `Permission denied` | Run the editor with appropriate permissions (sudo or as the jira service user) to modify setenv.sh. |
+    | `JVM_SUPPORT_RECOMMENDED_ARGS: command not found` | Ensure you're appending these values to the existing variable using `JVM_SUPPORT_RECOMMENDED_ARGS="$JVM_SUPPORT_RECOMMENDED_ARGS -XX:+UseG1GC ..."` rather than treating it as a shell command. |
 ```bash
 # Check DB slow queries during board load (enable slow query log first)
 psql -h "${JIRA_DB_HOST}" -U jira -d jiradb -c "
@@ -112,9 +116,11 @@ mail: testuser@example.com
 ```
 
 !!! warning "Common errors"
-    **`ldapsearch: No such file or directory`** — Install ldap-utils package with `apt-get install ldap-utils` (Debian/Ubuntu) or `yum install openldap-clients` (RHEL/CentOS).
-    **`ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839 ref`** — Verify the service account password in `${LDAP_PASSWORD}` is correct and the account is not locked in Active Directory.
-    **`javax.naming.CommunicationException: ad.example.com:636`** — Check network connectivity to the LDAP server with `telnet ad.example.com 636` and verify firewall rules allow port 636 from the Jira app server.
+    | Error | Fix |
+    |---|---|
+    | `ldapsearch: No such file or directory` | Install ldap-utils package with `apt-get install ldap-utils` (Debian/Ubuntu) or `yum install openldap-clients` (RHEL/CentOS). |
+    | `ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839 ref` | Verify the service account password in `${LDAP_PASSWORD}` is correct and the account is not locked in Active Directory. |
+    | `javax.naming.CommunicationException: ad.example.com:636` | Check network connectivity to the LDAP server with `telnet ad.example.com 636` and verify firewall rules allow port 636 from the Jira app server. |
 ```bash
 keytool -importcert \
   -alias ldap-server \
@@ -128,9 +134,11 @@ keytool -importcert \
 ```
 
 !!! warning "Common errors"
-    **`keytool error: java.lang.Exception: Input not an X.509 certificate`** — Verify the certificate file is in PEM or DER format and not corrupted by running `openssl x509 -in /tmp/ldap-server.crt -text -noout`.
-    **`keytool error: java.io.FileNotFoundException: /usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts (No such file or directory)`** — Confirm `$JAVA_HOME` is set correctly with `echo $JAVA_HOME` and points to a valid JDK installation.
-    **`Certificate already exists with alias <ldap-server>`** — Remove the existing certificate first with `keytool -delete -alias ldap-server -keystore "${JAVA_HOME}/lib/security/cacerts" -storepass changeit`, or use a different alias name.
+    | Error | Fix |
+    |---|---|
+    | `keytool error: java.lang.Exception: Input not an X.509 certificate` | Verify the certificate file is in PEM or DER format and not corrupted by running `openssl x509 -in /tmp/ldap-server.crt -text -noout`. |
+    | `keytool error: java.io.FileNotFoundException: /usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts (No such file or directory)` | Confirm `$JAVA_HOME` is set correctly with `echo $JAVA_HOME` and points to a valid JDK installation. |
+    | `Certificate already exists with alias <ldap-server>` | Remove the existing certificate first with `keytool -delete -alias ldap-server -keystore "${JAVA_HOME}/lib/security/cacerts" -storepass changeit`, or use a different alias name. |
 ```bash
 # Check workflow for issue type
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
@@ -175,9 +183,11 @@ grep -A5 "WorkflowException\|transition.*fail\|validator" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify the JIRA_URL environment variable is correct and the Jira server is running and accessible from this host.
-    **`jq: command not found`** — Install jq (`apt-get install jq` or `yum install jq`) or use `python3 -m json.tool` as shown in the example.
-    **`grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory`** — Confirm the Jira installation path and check the actual log location with `find /opt/atlassian -name "atlassian-jira.log"`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify the JIRA_URL environment variable is correct and the Jira server is running and accessible from this host. |
+    | `jq: command not found` | Install jq (`apt-get install jq` or `yum install jq`) or use `python3 -m json.tool` as shown in the example. |
+    | `grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory` | Confirm the Jira installation path and check the actual log location with `find /opt/atlassian -name "atlassian-jira.log"`. |
 ```bash
 # Check outgoing mail configuration
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
@@ -220,9 +230,11 @@ quit
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify `${JIRA_URL}` is correct and Jira service is running with `systemctl status jira`.
-    **`telnet: Unable to connect to remote host: Connection timed out`** — Check firewall rules allow outbound traffic on port 587 and SMTP server hostname is resolvable with `nslookup smtp.example.com`.
-    **`grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory`** — Confirm Jira installation path and check actual log location with `find /opt/atlassian -name "atlassian-jira.log" 2>/dev/null`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify `${JIRA_URL}` is correct and Jira service is running with `systemctl status jira`. |
+    | `telnet: Unable to connect to remote host: Connection timed out` | Check firewall rules allow outbound traffic on port 587 and SMTP server hostname is resolvable with `nslookup smtp.example.com`. |
+    | `grep: /opt/atlassian/jira/logs/atlassian-jira.log: No such file or directory` | Confirm Jira installation path and check actual log location with `find /opt/atlassian -name "atlassian-jira.log" 2>/dev/null`. |
 ```bash
 # Check index errors in log
 grep -i "IndexException\|CorruptIndexException\|LockObtainFailedException" \
@@ -252,9 +264,11 @@ drwxr-xr-x  2 jira jira  4096 Jan 15 14:28 change_history
 ```
 
 !!! warning "Common errors"
-    **`LockObtainFailedException: Lock held by another process`** — Stop the JIRA service, remove `/var/atlassian/application-data/jira/caches/indexes/write.lock`, then restart the service.
-    **`CorruptIndexException: _0.cfs (No such file or directory)`** — Delete the corrupted index directory and trigger a full re-index via JIRA Administration > System > Indexing > Re-Index All Issues.
-    **`Permission denied` when listing indexes directory** — Ensure the jira user owns the indexes directory with `sudo chown -R jira:jira /var/atlassian/application-data/jira/caches/indexes/`.
+    | Error | Fix |
+    |---|---|
+    | `LockObtainFailedException: Lock held by another process` | Stop the JIRA service, remove `/var/atlassian/application-data/jira/caches/indexes/write.lock`, then restart the service. |
+    | `CorruptIndexException: _0.cfs (No such file or directory)` | Delete the corrupted index directory and trigger a full re-index via JIRA Administration > System > Indexing > Re-Index All Issues. |
+    | `Permission denied` when listing indexes directory` | Ensure the jira user owns the indexes directory with `sudo chown -R jira:jira /var/atlassian/application-data/jira/caches/indexes/`. |
 ```bash
 # 1. Stop Jira
 systemctl stop jira
@@ -300,9 +314,11 @@ Every 30.0s: curl -s -u admin:****** http://jira.internal:8080/rest/api/2/reinde
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.internal port 8080: Connection refused`** — Wait 30–60 seconds for Jira to fully start before triggering reindex; check `systemctl status jira` to confirm the service is running.
-    **`error: JIRA_USER or JIRA_TOKEN not set`** — Export the environment variables before running the curl commands: `export JIRA_USER="admin" JIRA_TOKEN="your-api-token"`.
-    **`"errorMessages": ["You do not have permission to administer Jira"]`** — Ensure the JIRA_USER account has Jira System Administrator permissions in the user directory.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.internal port 8080: Connection refused` | Wait 30–60 seconds for Jira to fully start before triggering reindex; check `systemctl status jira` to confirm the service is running. |
+    | `error: JIRA_USER or JIRA_TOKEN not set` | Export the environment variables before running the curl commands: `export JIRA_USER="admin" JIRA_TOKEN="your-api-token"`. |
+    | `"errorMessages": ["You do not have permission to administer Jira"]` | Ensure the JIRA_USER account has Jira System Administrator permissions in the user directory. |
 ```bash
 # Check plugin-related errors
 grep -i "plugin\|app\|addon\|atlassian" \

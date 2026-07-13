@@ -268,8 +268,10 @@ Updated: 2024-01-15T10:23:45+00:00
 ```
 
 !!! warning "Common errors"
-    **`The specified vault <vault-name> does not exist or you do not have permission to access it.`** — Verify the vault name is correct and you have `Microsoft.KeyVault/vaults/read` permissions on the Key Vault resource.
-    **`The specified key version <version-id> does not exist.`** — Run `az keyvault key list-versions` to confirm the version ID exists before referencing it.
+    | Error | Fix |
+    |---|---|
+    | `The specified vault <vault-name> does not exist or you do not have permission to access it.` | Verify the vault name is correct and you have `Microsoft.KeyVault/vaults/read` permissions on the Key Vault resource. |
+    | `The specified key version <version-id> does not exist.` | Run `az keyvault key list-versions` to confirm the version ID exists before referencing it. |
 ## BYOK — Bring Your Own Key
 
 Import externally generated key material into Key Vault (HSM-backed vaults only for HSM-protected keys).
@@ -309,9 +311,11 @@ Key ID: https://prod-vault-001.vault.azure.net/keys/imported-key/7f3a9c2d1e5b4a8
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The key 'byok-kek' does not exist in vault 'prod-vault-001'.`** — Verify the KEK key name matches exactly and exists in the specified vault using `az keyvault key list --vault-name <vault-name>`.
-    **`InvalidKeyFormat: The BYOK file format is invalid or corrupted.`** — Ensure the wrapped-key.byok file was generated correctly by your HSM vendor's BYOK tool and has not been modified or truncated during transfer.
-    **`Forbidden: The user does not have permission to import keys.`** — Grant the user the "Key Vault Crypto Officer" or "Key Vault Administrator" role on the vault using `az role assignment create`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The key 'byok-kek' does not exist in vault 'prod-vault-001'.` | Verify the KEK key name matches exactly and exists in the specified vault using `az keyvault key list --vault-name <vault-name>`. |
+    | `InvalidKeyFormat: The BYOK file format is invalid or corrupted.` | Ensure the wrapped-key.byok file was generated correctly by your HSM vendor's BYOK tool and has not been modified or truncated during transfer. |
+    | `Forbidden: The user does not have permission to import keys.` | Grant the user the "Key Vault Crypto Officer" or "Key Vault Administrator" role on the vault using `az role assignment create`. |
 ## Using Keys for Crypto Operations
 
 ```bash
@@ -401,9 +405,11 @@ az storage account update \
 ```
 
 !!! warning "Common errors"
-    **`KeyVault key 'cmk-storage' not found in vault 'prod-vault'`** — Verify the key exists in the Key Vault using `az keyvault key list --vault-name <vault-name>` and confirm the name matches exactly.
-    **`The user, group or application does not have the 'get', 'wrapKey', 'unwrapKey' permission(s) on the key`** — Grant the storage account's managed identity Key Vault permissions using `az keyvault set-policy --name <vault-name> --object-id <storage-mi-object-id> --key-permissions get wrapKey unwrapKey`.
-    **`Storage account '<storage-account>' not found in resource group '<rg>'`** — Confirm the storage account name and resource group are correct with `az storage account list --resource-group <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `KeyVault key 'cmk-storage' not found in vault 'prod-vault'` | Verify the key exists in the Key Vault using `az keyvault key list --vault-name <vault-name>` and confirm the name matches exactly. |
+    | `The user, group or application does not have the 'get', 'wrapKey', 'unwrapKey' permission(s) on the key` | Grant the storage account's managed identity Key Vault permissions using `az keyvault set-policy --name <vault-name> --object-id <storage-mi-object-id> --key-permissions get wrapKey unwrapKey`. |
+    | `Storage account '<storage-account>' not found in resource group '<rg>'` | Confirm the storage account name and resource group are correct with `az storage account list --resource-group <rg>`. |
 ## Common Issues
 
 | Symptom | Cause | Resolution |

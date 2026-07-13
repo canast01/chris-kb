@@ -42,8 +42,10 @@ security login role create -role snapmirror-monitor -cmddirname "snapmirror show
 ```
 
 !!! warning "Common errors"
-    **`Error: "snapmirror-monitor" already exists.`** — Delete the existing role with `security login role delete -role snapmirror-monitor` before recreating it, or use a different role name.
-    **`Error: Invalid command directory name "snapmirror show"`** — Use the correct command directory name `snapmirror` instead of `snapmirror show`, then assign specific command restrictions via `security login role create -role snapmirror-monitor -cmddirname "snapmirror" -access readonly`.
+    | Error | Fix |
+    |---|---|
+    | `Error: "snapmirror-monitor" already exists.` | Delete the existing role with `security login role delete -role snapmirror-monitor` before recreating it, or use a different role name. |
+    | `Error: Invalid command directory name "snapmirror show"` | Use the correct command directory name `snapmirror` instead of `snapmirror show`, then assign specific command restrictions via `security login role create -role snapmirror-monitor -cmddirname "snapmirror" -access readonly`. |
 ## Destination Volume Protection
 
 Destination (DP) volumes are read-only by design — the replication engine enforces this at the WAFL layer. No client or user can write to a destination volume while a SnapMirror relationship is active. This eliminates the risk of accidental data modification on the replication target. Access to the destination volume is restricted to the replication engine and cluster admin operations; no data LIFs serve the destination volume until a `snapmirror break` is explicitly run.
@@ -83,8 +85,10 @@ cluster1    admin             2024-01-15 13:41:33 -05:00 snapmirror_schedule_cha
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: event`** — Ensure you are connected to the ONTAP cluster with `cluster show` and have appropriate admin privileges.
-    **`Error: No matching events found`** — Expand the search pattern or check event log retention settings with `event log show -fields message-name | grep snapmirror`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: event` | Ensure you are connected to the ONTAP cluster with `cluster show` and have appropriate admin privileges. |
+    | `Error: No matching events found` | Expand the search pattern or check event log retention settings with `event log show -fields message-name | grep snapmirror`. |
 ---
 
 ## See also

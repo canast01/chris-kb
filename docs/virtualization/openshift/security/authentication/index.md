@@ -110,8 +110,10 @@ oauth.config.openshift.io/cluster configured
 ```
 
 !!! warning "Common errors"
-    **`htpasswd: cannot open file htpasswd.file for read`** — Remove the `-c` flag from the second htpasswd command, as `-c` creates a new file and overwrites existing entries.
-    **`error: unable to recognize "STDIN": no matches for kind "OAuth" in version "config.openshift.io/v1"`** — Verify the OpenShift cluster version supports the OAuth API; use `oc api-resources | grep oauth` to confirm availability.
+    | Error | Fix |
+    |---|---|
+    | `htpasswd: cannot open file htpasswd.file for read` | Remove the `-c` flag from the second htpasswd command, as `-c` creates a new file and overwrites existing entries. |
+    | `error: unable to recognize "STDIN": no matches for kind "OAuth" in version "config.openshift.io/v1"` | Verify the OpenShift cluster version supports the OAuth API; use `oc api-resources | grep oauth` to confirm availability. |
 ### HTPasswd Update Procedure
 
 Adding or removing users requires updating the Secret in-place — the OAuth server watches for changes.
@@ -147,9 +149,11 @@ deployment "oauth-openshift" successfully rolled out
 ```
 
 !!! warning "Common errors"
-    **`htpasswd: cannot open file /tmp/users.htpasswd for read`** — Ensure the base64 decode step completed successfully and the file exists before running htpasswd commands.
-    **`error: the server doesn't have a resource type "secret"`** — Verify you are connected to the correct cluster with `oc cluster-info` and that the htpass-secret exists in openshift-config namespace.
-    **`error: deployment.apps "oauth-openshift" not found`** — Check that the OAuth deployment exists with `oc get deployment -n openshift-authentication` and wait for the pods to stabilize after the secret update.
+    | Error | Fix |
+    |---|---|
+    | `htpasswd: cannot open file /tmp/users.htpasswd for read` | Ensure the base64 decode step completed successfully and the file exists before running htpasswd commands. |
+    | `error: the server doesn't have a resource type "secret"` | Verify you are connected to the correct cluster with `oc cluster-info` and that the htpass-secret exists in openshift-config namespace. |
+    | `error: deployment.apps "oauth-openshift" not found` | Check that the OAuth deployment exists with `oc get deployment -n openshift-authentication` and wait for the pods to stabilize after the secret update. |
 ## LDAP Identity Provider
 
 ```bash
@@ -197,9 +201,11 @@ oauth.config.openshift.io/cluster configured
 ```
 
 !!! warning "Common errors"
-    **`error: unable to read ca.crt: no such file or directory`** — Ensure the ldap-ca.crt file exists in your current working directory before running the configmap creation command.
-    **`error: unable to authenticate to LDAP server at ldaps://ad.example.com: x509: certificate signed by unknown authority`** — Verify the CA certificate in ldap-ca.crt matches the LDAP server's certificate chain, or set `insecure: true` temporarily for testing only.
-    **`error: the server doesn't have a resource type "oauth" in group "config.openshift.io"`** — Confirm you are connected to an OpenShift 4.x cluster with sufficient permissions (cluster-admin role required) to modify OAuth configuration.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to read ca.crt: no such file or directory` | Ensure the ldap-ca.crt file exists in your current working directory before running the configmap creation command. |
+    | `error: unable to authenticate to LDAP server at ldaps://ad.example.com: x509: certificate signed by unknown authority` | Verify the CA certificate in ldap-ca.crt matches the LDAP server's certificate chain, or set `insecure: true` temporarily for testing only. |
+    | `error: the server doesn't have a resource type "oauth" in group "config.openshift.io"` | Confirm you are connected to an OpenShift 4.x cluster with sufficient permissions (cluster-admin role required) to modify OAuth configuration. |
 ## OpenID Connect (OIDC)
 
 OIDC providers (Okta, Azure AD, Keycloak, Dex) issue JWTs verified by the OAuth server. MFA is handled entirely by the external IdP.
@@ -239,9 +245,11 @@ oauth.config.openshift.io/cluster configured
 ```
 
 !!! warning "Common errors"
-    **`error: failed to create secret: secrets "oidc-client-secret" already exists`** — Delete the existing secret with `oc delete secret oidc-client-secret -n openshift-config` before recreating it, or use `oc patch` to update it instead.
-    **`error: unable to recognize "": no matches for kind "OAuth" in version "config.openshift.io/v1"`** — Verify the OpenShift cluster version supports this OAuth API by running `oc api-resources | grep oauth` and check cluster compatibility documentation.
-    **`The OAuth server is not available`** — Wait 2-3 minutes for the OAuth operator to reconcile the configuration, then verify with `oc get oauth cluster -o yaml` to check the status conditions.
+    | Error | Fix |
+    |---|---|
+    | `error: failed to create secret: secrets "oidc-client-secret" already exists` | Delete the existing secret with `oc delete secret oidc-client-secret -n openshift-config` before recreating it, or use `oc patch` to update it instead. |
+    | `error: unable to recognize "": no matches for kind "OAuth" in version "config.openshift.io/v1"` | Verify the OpenShift cluster version supports this OAuth API by running `oc api-resources | grep oauth` and check cluster compatibility documentation. |
+    | `The OAuth server is not available` | Wait 2-3 minutes for the OAuth operator to reconcile the configuration, then verify with `oc get oauth cluster -o yaml` to check the status conditions. |
 ### OIDC Token Refresh Behavior
 
 OCP issues its own OAuth tokens (not the OIDC JWT). The OAuth token defaults to 24 h TTL. The OIDC session at the external IdP is separate — on token expiry, the user must re-authenticate through the OIDC flow. Refresh tokens are issued by OCP with a 30-day TTL (configurable via `tokenConfig`).
@@ -266,8 +274,10 @@ oauth.oauth.openshift.io/cluster patched
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "oauth" in group "oauth.openshift.io"`** — Verify you are connected to an OpenShift cluster with `oc cluster-info` and have the correct API group installed.
-    **`Error from server (Forbidden): oauths.oauth.openshift.io "cluster" is forbidden: User "system:serviceaccount:default:deployer" cannot patch resource "oauths" in API group "oauth.openshift.io" at the cluster scope`** — Use a cluster-admin account or bind the necessary RBAC role with `oc adm policy add-cluster-role-to-user cluster-admin <username>`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "oauth" in group "oauth.openshift.io"` | Verify you are connected to an OpenShift cluster with `oc cluster-info` and have the correct API group installed. |
+    | `Error from server (Forbidden): oauths.oauth.openshift.io "cluster" is forbidden: User "system:serviceaccount:default:deployer" cannot patch resource "oauths" in API group "oauth.openshift.io" at the cluster scope` | Use a cluster-admin account or bind the necessary RBAC role with `oc adm policy add-cluster-role-to-user cluster-admin <username>`. |
 ## Certificate-Based Authentication
 
 Client certificates signed by the cluster CA are used by system components (scheduler, controller-manager, kubelets). Also useful for scripted automation that cannot interactively authenticate.
@@ -314,9 +324,11 @@ data:
 ```
 
 !!! warning "Common errors"
-    **`error: certificate authority file "/etc/kubernetes/pki/ca.crt" does not exist`** — Verify the CA certificate path matches your cluster's PKI directory (often `/etc/kubernetes/pki` on control planes or mounted in containers).
-    **`error: unable to read certificate authority file: permission denied`** — Run the command with appropriate privileges (sudo or as a user with read access to the PKI directory).
-    **`error: the server doesn't have a resource type "secret" in group ""`** — Ensure you are connected to a valid OpenShift cluster and the kube-controller-manager namespace exists; check your KUBECONFIG context.
+    | Error | Fix |
+    |---|---|
+    | `error: certificate authority file "/etc/kubernetes/pki/ca.crt" does not exist` | Verify the CA certificate path matches your cluster's PKI directory (often `/etc/kubernetes/pki` on control planes or mounted in containers). |
+    | `error: unable to read certificate authority file: permission denied` | Run the command with appropriate privileges (sudo or as a user with read access to the PKI directory). |
+    | `error: the server doesn't have a resource type "secret" in group ""` | Ensure you are connected to a valid OpenShift cluster and the kube-controller-manager namespace exists; check your KUBECONFIG context. |
 ## Token Management
 
 ### Checking and Rotating Tokens
@@ -399,8 +411,10 @@ Logged out.
 ```
 
 !!! warning "Common errors"
-    **`Error from server (Forbidden): oauthaccesstokens.oauth.openshift.io is forbidden: User "alice" cannot list resource "oauthaccesstokens"`** — Run the command with cluster-admin credentials or request a cluster administrator to execute the token revocation.
-    **`error: the server doesn't have a resource type "oauthaccesstoken"`** — Verify the OpenShift API version supports OAuth token management (requires OpenShift 4.x) and check that the OAuth API server is running with `oc get clusteroperators | grep oauth`.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (Forbidden): oauthaccesstokens.oauth.openshift.io is forbidden: User "alice" cannot list resource "oauthaccesstokens"` | Run the command with cluster-admin credentials or request a cluster administrator to execute the token revocation. |
+    | `error: the server doesn't have a resource type "oauthaccesstoken"` | Verify the OpenShift API version supports OAuth token management (requires OpenShift 4.x) and check that the OAuth API server is running with `oc get clusteroperators | grep oauth`. |
 ## Post-Setup: Disable kubeadmin
 
 ```bash
@@ -441,9 +455,11 @@ secret "kubeadmin" deleted
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to the server: dial tcp: lookup api.cluster.local on 8.8.8.8:53: no such host`** — Verify the cluster API endpoint is reachable and your KUBECONFIG points to the correct cluster context.
-    **`Error from server (Forbidden): clusterrolebindings.rbac.authorization.k8s.io "cluster-admin" is forbidden: User "system:serviceaccount:kube-system:default" cannot create resource "clusterrolebindings"`** — Ensure you are logged in as an existing cluster-admin user before attempting to grant cluster-admin to the new IDP user.
-    **`error: secrets "kubeadmin" not found`** — The kubeadmin secret may have already been deleted in a previous operation; verify with `oc get secret -n kube-system | grep kubeadmin` before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to the server: dial tcp: lookup api.cluster.local on 8.8.8.8:53: no such host` | Verify the cluster API endpoint is reachable and your KUBECONFIG points to the correct cluster context. |
+    | `Error from server (Forbidden): clusterrolebindings.rbac.authorization.k8s.io "cluster-admin" is forbidden: User "system:serviceaccount:kube-system:default" cannot create resource "clusterrolebindings"` | Ensure you are logged in as an existing cluster-admin user before attempting to grant cluster-admin to the new IDP user. |
+    | `error: secrets "kubeadmin" not found` | The kubeadmin secret may have already been deleted in a previous operation; verify with `oc get secret -n kube-system | grep kubeadmin` before attempting deletion. |
 ## OAuth Configuration Reference
 
 | Field | Description |
@@ -503,8 +519,10 @@ kubeadmin       aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee   2023-12-01T06:00:00Z
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "oauth"`** — Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc cluster-info`.
-    **`No resources found in openshift-authentication namespace.`** — Check that the openshift-authentication namespace exists and the OAuth operator is running with `oc get ns openshift-authentication` and `oc get clusteroperator authentication`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "oauth"` | Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc cluster-info`. |
+    | `No resources found in openshift-authentication namespace.` | Check that the openshift-authentication namespace exists and the OAuth operator is running with `oc get ns openshift-authentication` and `oc get clusteroperator authentication`. |
 ## See also
 
 - [OpenShift — Access Control](../access-control/)

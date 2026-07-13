@@ -173,9 +173,11 @@ Replication Config:
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.50.42 port 443: Connection refused`** — Verify the DD management IP is correct and the web service is running with `systemctl status ddsmc-web` on the Data Domain.
-    **`nc: getaddrinfo for name/port failed: Name or service not known`** — Replace `<dd-data-ip>` with the actual IP address; verify DNS resolution or use the IP directly instead of a hostname.
-    **`mount.nfs: access denied by server while mounting 192.168.50.40:/data/col1/rep1`** — Confirm the backup server IP is in the NFS export ACL on the Data Domain and check firewall rules allowing port 2049/2050.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.50.42 port 443: Connection refused` | Verify the DD management IP is correct and the web service is running with `systemctl status ddsmc-web` on the Data Domain. |
+    | `nc: getaddrinfo for name/port failed: Name or service not known` | Replace `<dd-data-ip>` with the actual IP address; verify DNS resolution or use the IP directly instead of a hostname. |
+    | `mount.nfs: access denied by server while mounting 192.168.50.40:/data/col1/rep1` | Confirm the backup server IP is in the NFS export ACL on the Data Domain and check firewall rules allowing port 2049/2050. |
 ---
 
 ## See also

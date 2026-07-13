@@ -150,9 +150,11 @@ VMware Cloud Foundation backup protects the management plane components: SDDC Ma
     ```
 
     !!! warning "Common errors"
-        **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification or import the NSX Manager's CA certificate into your system trust store.
-        **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify NSX_USER and NSX_PASS variables are correct and the admin account has not been locked after failed login attempts.
-        **`{"error_code":400,"error_message":"Connection to remote file server failed"** — Confirm the backup server hostname resolves, port 22 is open, and the nsx-backup user credentials have write permissions on the /vcf/nsx/ directory.
+        | Error | Fix |
+        |---|---|
+        | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification or import the NSX Manager's CA certificate into your system trust store. |
+        | `{"error_code":401,"error_message":"Invalid credentials"}` | Verify NSX_USER and NSX_PASS variables are correct and the admin account has not been locked after failed login attempts. |
+        | `{"error_code":400,"error_message":"Connection to remote file server failed"` | Confirm the backup server hostname resolves, port 22 is open, and the nsx-backup user credentials have write permissions on the /vcf/nsx/ directory. |
 
 ---
 
@@ -214,9 +216,11 @@ VMware Cloud Foundation backup protects the management plane components: SDDC Ma
     ```
 
     !!! warning "Common errors"
-        **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify if using different curl version).
-        **`{"type":"com.vmware.vapi.std.errors.unauthenticated"...}`** — Verify credentials are correct and VCSA is reachable; re-authenticate and capture SESSION variable before running backup job command.
-        **`jq: parse error: Cannot index string with string "value"`** — Ensure the backup job creation succeeded by checking the full response without piping to jq first; the API may have returned an error object instead of the expected job response.
+        | Error | Fix |
+        |---|---|
+        | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but verify if using different curl version). |
+        | `{"type":"com.vmware.vapi.std.errors.unauthenticated"...}` | Verify credentials are correct and VCSA is reachable; re-authenticate and capture SESSION variable before running backup job command. |
+        | `jq: parse error: Cannot index string with string "value"` | Ensure the backup job creation succeeded by checking the full response without piping to jq first; the API may have returned an error object instead of the expected job response. |
 
 ---
 
@@ -335,9 +339,11 @@ curl -sk -u "admin:NSXAdminPassword" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present; if error persists, verify NSX Manager certificate is valid and hostname matches).
-    **`{"error_code": 400, "error_message": "Invalid backup_timestamp format or timestamp not found"}`** — Retrieve the correct timestamp from the `/api/v1/cluster/backups/timestamps` endpoint and ensure it matches exactly.
-    **`{"error_code": 401, "error_message": "Authentication failed"}`** — Verify the NSX Manager admin credentials and SFTP authentication password are correct, and that the backup file exists at the specified directory path.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present; if error persists, verify NSX Manager certificate is valid and hostname matches). |
+    | `{"error_code": 400, "error_message": "Invalid backup_timestamp format or timestamp not found"}` | Retrieve the correct timestamp from the `/api/v1/cluster/backups/timestamps` endpoint and ensure it matches exactly. |
+    | `{"error_code": 401, "error_message": "Authentication failed"}` | Verify the NSX Manager admin credentials and SFTP authentication password are correct, and that the backup file exists at the specified directory path. |
 ### Step 3 — Restore vCenter Server
 
 Use the **vCenter Server Installer** (ISO mounted on a management workstation):
@@ -400,9 +406,11 @@ curl -sk -u "admin:NSXAdminPassword" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the NSX Manager certificate into your system trust store.
-    **`jq: parse error: Cannot index number with string "up_count"`** — Verify the API endpoint is returning valid JSON and the NSX Manager service is fully initialized; check `curl -sk -u "admin:NSXAdminPassword" "https://nsx-manager.corp.example.com/api/v1/transport-nodes/status-summary"` without piping to jq first.
-    **`curl: (7) Failed to connect to nsx-manager.corp.example.com port 443: Connection refused`** — Confirm NSX Manager is running and accessible on the network; verify DNS resolution and firewall rules allow connectivity to the management IP on port 443.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the NSX Manager certificate into your system trust store. |
+    | `jq: parse error: Cannot index number with string "up_count"` | Verify the API endpoint is returning valid JSON and the NSX Manager service is fully initialized; check `curl -sk -u "admin:NSXAdminPassword" "https://nsx-manager.corp.example.com/api/v1/transport-nodes/status-summary"` without piping to jq first. |
+    | `curl: (7) Failed to connect to nsx-manager.corp.example.com port 443: Connection refused` | Confirm NSX Manager is running and accessible on the network; verify DNS resolution and firewall rules allow connectivity to the management IP on port 443. |
 ```bash
 # SDDC Manager — validate domain health
 curl -sk -H "Authorization: Bearer $TOKEN" \
@@ -449,9 +457,11 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the SDDC Manager's CA certificate into your system trust store.
-    **`jq: parse error: Invalid JSON`** — Verify the API endpoint is correct and the Bearer token is valid; check `echo $TOKEN` to confirm it's set.
-    **`curl: (401) Unauthorized`** — Regenerate or refresh the API token using SDDC Manager's authentication endpoint and re-export it as `$TOKEN`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the SDDC Manager's CA certificate into your system trust store. |
+    | `jq: parse error: Invalid JSON` | Verify the API endpoint is correct and the Bearer token is valid; check `echo $TOKEN` to confirm it's set. |
+    | `curl: (401) Unauthorized` | Regenerate or refresh the API token using SDDC Manager's authentication endpoint and re-export it as `$TOKEN`. |
 ---
 
 ## Backup Schedule Reference

@@ -76,9 +76,11 @@ Service router is running (PID: 2851, uptime: 18d 4h 21m)
 ```
 
 !!! warning "Common errors"
-    **`Command 'get interfaces' not found`** — Ensure you are logged into the NSX Edge node CLI (not the host shell); use `ssh admin@<edge-ip>` and verify the prompt shows the Edge device name.
-    **`Service dataplane is stopped`** — Restart the dataplane service with `restart service dataplane` and verify routing connectivity is restored.
-    **`Service router is stopped`** — Restart the router service with `restart service router` and check for configuration errors in the routing table with `get route`.
+    | Error | Fix |
+    |---|---|
+    | `Command 'get interfaces' not found` | Ensure you are logged into the NSX Edge node CLI (not the host shell); use `ssh admin@<edge-ip>` and verify the prompt shows the Edge device name. |
+    | `Service dataplane is stopped` | Restart the dataplane service with `restart service dataplane` and verify routing connectivity is restored. |
+    | `Service router is stopped` | Restart the router service with `restart service router` and check for configuration errors in the routing table with `get route`. |
 ---
 
 ## Geneve Encapsulation
@@ -126,8 +128,10 @@ Tunnel Status for Remote TEP 192.168.100.48:
 ```
 
 !!! warning "Common errors"
-    **`command not found: nsxcli`** — Ensure you are logged into an NSX Manager appliance via SSH and that the NSX CLI is available in the PATH.
-    **`Error: Invalid remote TEP IP format`** — Verify the remote TEP IP address is valid and reachable; use `get tunnel status` without arguments first to list all tunnel endpoints.
+    | Error | Fix |
+    |---|---|
+    | `command not found: nsxcli` | Ensure you are logged into an NSX Manager appliance via SSH and that the NSX CLI is available in the PATH. |
+    | `Error: Invalid remote TEP IP format` | Verify the remote TEP IP address is valid and reachable; use `get tunnel status` without arguments first to list all tunnel endpoints. |
 ---
 
 ## Transport Zones
@@ -196,9 +200,11 @@ Standby Node: esg-edge-01.lab.local (192.168.1.45)
 ```
 
 !!! warning "Common errors"
-    **`Error: edge-cluster-01 not found in inventory`** — Verify the edge cluster name matches your NSX deployment with `list edge-clusters`.
-    **`Error: Cannot failover - standby node is UNHEALTHY`** — Check standby node connectivity and NSX agent status before attempting failover.
-    **`Error: Failover already in progress`** — Wait for the current failover operation to complete before issuing another failover command.
+    | Error | Fix |
+    |---|---|
+    | `Error: edge-cluster-01 not found in inventory` | Verify the edge cluster name matches your NSX deployment with `list edge-clusters`. |
+    | `Error: Cannot failover - standby node is UNHEALTHY` | Check standby node connectivity and NSX agent status before attempting failover. |
+    | `Error: Failover already in progress` | Wait for the current failover operation to complete before issuing another failover command. |
 ### Routing Flow — VM to External
 
 ```text
@@ -280,9 +286,11 @@ Address Sets for nic-12345-eth0-vmware-sfw.2:
 ```
 
 !!! warning "Common errors"
-    **`vsipioctl: command not found`** — Ensure you are running this command on an NSX Manager or ESXi host with NSX Agent installed, not a standard Linux VM.
-    **`Error: filter nic-12345-eth0-vmware-sfw.2 not found`** — Verify the vNIC filter name matches exactly using `summarize-dvfilter` first, as filter names are case-sensitive and include the full suffix.
-    **`Permission denied`** — Run the commands with `sudo` or as root, as DFW filter inspection requires elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `vsipioctl: command not found` | Ensure you are running this command on an NSX Manager or ESXi host with NSX Agent installed, not a standard Linux VM. |
+    | `Error: filter nic-12345-eth0-vmware-sfw.2 not found` | Verify the vNIC filter name matches exactly using `summarize-dvfilter` first, as filter names are case-sensitive and include the full suffix. |
+    | `Permission denied` | Run the commands with `sudo` or as root, as DFW filter inspection requires elevated privileges. |
 ---
 
 ## Segments
@@ -314,8 +322,10 @@ segment-id: segment-web-prod
 ```
 
 !!! warning "Common errors"
-    **`segment <segment-id> not found`** — Verify the segment ID exists with `get logical-switch list` and use the correct identifier from the output.
-    **`error: not authenticated`** — Ensure you have logged into NSX Manager with valid credentials before running nsxcli commands.
+    | Error | Fix |
+    |---|---|
+    | `segment <segment-id> not found` | Verify the segment ID exists with `get logical-switch list` and use the correct identifier from the output. |
+    | `error: not authenticated` | Ensure you have logged into NSX Manager with valid credentials before running nsxcli commands. |
 ---
 
 ## IPAM and DHCP
@@ -395,9 +405,11 @@ curl -sk -u 'admin:password' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if error persists, verify NSX Manager hostname resolves correctly).
-    **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify the admin username and password are correct and the user has API access permissions in NSX Manager.
-    **`curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused`** — Confirm NSX Manager is running and reachable at the specified hostname/IP on port 443.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if error persists, verify NSX Manager hostname resolves correctly). |
+    | `{"error_code":401,"error_message":"Invalid credentials"}` | Verify the admin username and password are correct and the user has API access permissions in NSX Manager. |
+    | `curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused` | Confirm NSX Manager is running and reachable at the specified hostname/IP on port 443. |
 ---
 
 ## VPN Services
@@ -445,8 +457,10 @@ Uptime: 23 days 08:15:22
 ```
 
 !!! warning "Common errors"
-    **`error: vpn command not found`** — Verify you are connected to the NSX Edge CLI with proper administrative credentials and that VPN services are enabled on the edge device.
-    **`error: session list unavailable - vpn service not running`** — Restart the VPN service on the NSX Edge using `restart vpn` or check edge device connectivity and licensing.
+    | Error | Fix |
+    |---|---|
+    | `error: vpn command not found` | Verify you are connected to the NSX Edge CLI with proper administrative credentials and that VPN services are enabled on the edge device. |
+    | `error: session list unavailable - vpn service not running` | Restart the VPN service on the NSX Edge using `restart vpn` or check edge device connectivity and licensing. |
 | IKE Setting | Recommended Value |
 |---|---|
 | IKE Version | IKEv2 |
@@ -511,8 +525,10 @@ Jan 15 14:32:27 nsx-manager-01 sshd[4525]: Accepted publickey for root from 192.
 ```
 
 !!! warning "Common errors"
-    **`Error: log file not found or insufficient permissions`** — Verify the user has admin/root privileges and the log file path exists with `ls -la /var/log/syslog`.
-    **`Error: follow mode not supported on this platform`** — Remove the `follow` keyword and use `get log-file syslog | tail -f` instead for live tailing.
+    | Error | Fix |
+    |---|---|
+    | `Error: log file not found or insufficient permissions` | Verify the user has admin/root privileges and the log file path exists with `ls -la /var/log/syslog`. |
+    | `Error: follow mode not supported on this platform` | Remove the `follow` keyword and use `get log-file syslog | tail -f` instead for live tailing. |
 ## See also
 
 - [NSX — Design Standards](../design-standards/)

@@ -105,8 +105,10 @@ Nexus Dashboard Data Broker          1.4.3            Running          Healthy
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the ndadmin SSH key is loaded in your SSH agent or specify the key explicitly with `ssh -i /path/to/key ndadmin@<nd-node-ip>`.
-    **`acs: command not found`** — Ensure you are logged in as the ndadmin user and the ND platform is fully initialized; if recently deployed, wait 5-10 minutes for services to start.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the ndadmin SSH key is loaded in your SSH agent or specify the key explicitly with `ssh -i /path/to/key ndadmin@<nd-node-ip>`. |
+    | `acs: command not found` | Ensure you are logged in as the ndadmin user and the ND platform is fully initialized; if recently deployed, wait 5-10 minutes for services to start. |
 ### 2. Capture cluster health and node states
 
 ```bash
@@ -146,9 +148,11 @@ Network I/O: RX 2.3 Mbps, TX 1.8 Mbps
 ```
 
 !!! warning "Common errors"
-    **`command not found: acs`** — Ensure the Nexus Dashboard CLI tools are installed and the PATH includes the acs binary location (typically `/opt/cisco/acs/bin`).
-    **`Permission denied`** — Run the commands with appropriate privileges using `sudo` or ensure your user account has read access to the Nexus Dashboard management interface.
-    **`Connection refused`** — Verify the Nexus Dashboard cluster is running and accessible; check network connectivity to the cluster nodes and confirm the management IP is reachable.
+    | Error | Fix |
+    |---|---|
+    | `command not found: acs` | Ensure the Nexus Dashboard CLI tools are installed and the PATH includes the acs binary location (typically `/opt/cisco/acs/bin`). |
+    | `Permission denied` | Run the commands with appropriate privileges using `sudo` or ensure your user account has read access to the Nexus Dashboard management interface. |
+    | `Connection refused` | Verify the Nexus Dashboard cluster is running and accessible; check network connectivity to the cluster nodes and confirm the management IP is reachable. |
 ### 3. Capture etcd and Kubernetes state
 
 ```bash
@@ -203,9 +207,11 @@ kube-system              calico-node-nd-worker-02                            0/1
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to the server: dial tcp: lookup nd-master-01: no such host`** — Verify DNS resolution for node hostnames or use IP addresses directly in the loop instead of node names.
-    **`ssh: connect to host 10.48.12.15 port 22: Connection refused`** — Ensure SSH is running on the target node and the ndadmin user has key-based authentication configured; check firewall rules blocking port 22.
-    **`Error: x509: certificate signed by unknown authority`** — Verify the etcd CA certificate path is correct and readable; confirm the certificate files exist at `/etc/kubernetes/pki/etcd/` on the remote node.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to the server: dial tcp: lookup nd-master-01: no such host` | Verify DNS resolution for node hostnames or use IP addresses directly in the loop instead of node names. |
+    | `ssh: connect to host 10.48.12.15 port 22: Connection refused` | Ensure SSH is running on the target node and the ndadmin user has key-based authentication configured; check firewall rules blocking port 22. |
+    | `Error: x509: certificate signed by unknown authority` | Verify the etcd CA certificate path is correct and readable; confirm the certificate files exist at `/etc/kubernetes/pki/etcd/` on the remote node. |
 ### 4. Collect the ND tech-support bundle
 
 ```bash
@@ -234,9 +240,11 @@ nd-support-20241115143215.tar.gz                          2.3GB  45.2MB/s   00:5
 ```
 
 !!! warning "Common errors"
-    **`acs: command not found`** — SSH into the Nexus Dashboard node directly (not your local workstation) and run the command from the appliance shell.
-    **`Permission denied (publickey,password)`** — Ensure the ndadmin account exists on the ND node and your SSH key or password is correct; verify with `ssh -v ndadmin@<nd-node-ip>`.
-    **`No such file or directory`** — The techsupport bundle failed to generate; check disk space with `df -h` and ensure `/tmp` has at least 5GB free, then retry the `acs techsupport` command.
+    | Error | Fix |
+    |---|---|
+    | `acs: command not found` | SSH into the Nexus Dashboard node directly (not your local workstation) and run the command from the appliance shell. |
+    | `Permission denied (publickey,password)` | Ensure the ndadmin account exists on the ND node and your SSH key or password is correct; verify with `ssh -v ndadmin@<nd-node-ip>`. |
+    | `No such file or directory` | The techsupport bundle failed to generate; check disk space with `df -h` and ensure `/tmp` has at least 5GB free, then retry the `acs techsupport` command. |
 ### 5. Collect the NDFC tech-support bundle (if NDFC is affected)
 
 ```bash
@@ -263,9 +271,11 @@ ndfc-support-202401151430.tar.gz                100%  487.2MB   8.5MB/s   00:57
 ```
 
 !!! warning "Common errors"
-    **`scp: /tmp/ndfc-support-*.tar.gz: No such file or directory`** — Ensure the date command in the acs command and scp command use identical formatting, or capture the filename to a variable instead of relying on separate date invocations.
-    **`Permission denied (publickey,password).`** — Verify ndadmin credentials and SSH key access to the ND node; confirm the user has permission to read /tmp files with `ssh ndadmin@<nd-node-ip> ls -l /tmp/ndfc-support*.tar.gz`.
-    **`acs: command not found`** — Confirm you are logged into the Nexus Dashboard CLI (via SSH to the ND management IP) rather than a local shell; the acs command is only available within the ND appliance.
+    | Error | Fix |
+    |---|---|
+    | `scp: /tmp/ndfc-support-*.tar.gz: No such file or directory` | Ensure the date command in the acs command and scp command use identical formatting, or capture the filename to a variable instead of relying on separate date invocations. |
+    | `Permission denied (publickey,password).` | Verify ndadmin credentials and SSH key access to the ND node; confirm the user has permission to read /tmp files with `ssh ndadmin@<nd-node-ip> ls -l /tmp/ndfc-support*.tar.gz`. |
+    | `acs: command not found` | Confirm you are logged into the Nexus Dashboard CLI (via SSH to the ND management IP) rather than a local shell; the acs command is only available within the ND appliance. |
 ### 6. Capture upgrade history (if upgrade-related)
 
 ```bash
@@ -293,9 +303,11 @@ Upgrade Log Report Generated: /tmp/nd-upgrade-log-20240115.txt
 ```
 
 !!! warning "Common errors"
-    **`acs: command not found`** — Ensure you are logged into the Nexus Dashboard CLI or source the ACS environment setup script before running acs commands.
-    **`Permission denied`** — Run the commands with appropriate privileges (sudo or as the admin user configured for Nexus Dashboard access).
-    **`/tmp: Read-only file system`** — Redirect output to a writable directory such as /var/log or the user's home directory instead.
+    | Error | Fix |
+    |---|---|
+    | `acs: command not found` | Ensure you are logged into the Nexus Dashboard CLI or source the ACS environment setup script before running acs commands. |
+    | `Permission denied` | Run the commands with appropriate privileges (sudo or as the admin user configured for Nexus Dashboard access). |
+    | `/tmp: Read-only file system` | Redirect output to a writable directory such as /var/log or the user's home directory instead. |
 ### 7. Write the timeline
 
 ```text
@@ -434,9 +446,11 @@ kube-system       12m         Warning   NodeNotReady            node/nd-node-02.
 ```
 
 !!! warning "Common errors"
-    **`ImagePullBackOff`** — Verify image registry credentials with `kubectl get secrets -n <namespace>` and confirm the image URI is correct in the deployment manifest.
-    **`CrashLoopBackOff`** — Check pod logs with `kubectl logs -n <namespace> <pod-name> --previous` to identify the root cause, then restart the pod or redeploy the application.
-    **`FailedScheduling`** — Verify node resources with `kubectl describe nodes` and ensure sufficient CPU/memory is available, or add additional nodes to the cluster.
+    | Error | Fix |
+    |---|---|
+    | `ImagePullBackOff` | Verify image registry credentials with `kubectl get secrets -n <namespace>` and confirm the image URI is correct in the deployment manifest. |
+    | `CrashLoopBackOff` | Check pod logs with `kubectl logs -n <namespace> <pod-name> --previous` to identify the root cause, then restart the pod or redeploy the application. |
+    | `FailedScheduling` | Verify node resources with `kubectl describe nodes` and ensure sufficient CPU/memory is available, or add additional nodes to the cluster. |
 ---
 
 ## Support SLA Reference

@@ -154,9 +154,11 @@ Daemon: powerpathmgr (running)
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep PowerPath` and ensure `/opt/emc/powerpath/bin` is in your PATH.
-    **`powermt display dev=all: Permission denied`** — Run the command with `sudo` or ensure your user is in the powerpath group with `sudo usermod -a -G powerpath $USER`.
-    **`No devices found`** — Confirm SAN connectivity and that storage arrays are visible to the host with `lsscsi` or `multipath -ll`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Verify PowerPath is installed with `rpm -qa | grep PowerPath` and ensure `/opt/emc/powerpath/bin` is in your PATH. |
+    | `powermt display dev=all: Permission denied` | Run the command with `sudo` or ensure your user is in the powerpath group with `sudo usermod -a -G powerpath $USER`. |
+    | `No devices found` | Confirm SAN connectivity and that storage arrays are visible to the host with `lsscsi` or `multipath -ll`. |
 Save the output of all commands before making any changes:
 
 ```bash
@@ -207,9 +209,11 @@ Diagnostic saved to: storage-dell-01_powerpath_diag_20241114_102347.txt
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Install PowerPath EMC client package or verify the binary is in $PATH with `which powermt`.
-    **`Permission denied`** — Run the diagnostic script with sudo or as root user since powermt requires elevated privileges.
-    **`powermt: error: unable to connect to the PowerPath daemon`** — Restart the PowerPath daemon with `sudo systemctl restart powerpath` or verify it is running with `sudo systemctl status powerpath`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Install PowerPath EMC client package or verify the binary is in $PATH with `which powermt`. |
+    | `Permission denied` | Run the diagnostic script with sudo or as root user since powermt requires elevated privileges. |
+    | `powermt: error: unable to connect to the PowerPath daemon` | Restart the PowerPath daemon with `sudo systemctl restart powerpath` or verify it is running with `sudo systemctl status powerpath`. |
 ---
 
 ## Step 2 — Linux-specific diagnostics
@@ -250,9 +254,11 @@ description: EMC PowerPath Driver
 ```
 
 !!! warning "Common errors"
-    **`emcp: module verification failed: signature and/or required key missing`** — This is a warning on secure boot systems; verify the module is from Dell/EMC and proceed if trusted, or disable secure boot if required by your environment.
-    **`modinfo: ERROR: Module alias emcp not found.`** — The module is not loaded; run `modprobe emcp` to load it, or check that PowerPath is installed with `rpm -qa | grep PowerPath`.
-    **`find: '/lib/modules/5.15.0-91-generic': No such file or directory`** — The kernel version in `uname -r` does not match installed kernel modules; rebuild the module for the current kernel with `powerpath-build` or reboot to the correct kernel.
+    | Error | Fix |
+    |---|---|
+    | `emcp: module verification failed: signature and/or required key missing` | This is a warning on secure boot systems; verify the module is from Dell/EMC and proceed if trusted, or disable secure boot if required by your environment. |
+    | `modinfo: ERROR: Module alias emcp not found.` | The module is not loaded; run `modprobe emcp` to load it, or check that PowerPath is installed with `rpm -qa | grep PowerPath`. |
+    | `find: '/lib/modules/5.15.0-91-generic': No such file or directory` | The kernel version in `uname -r` does not match installed kernel modules; rebuild the module for the current kernel with `powerpath-build` or reboot to the correct kernel. |
 ### PowerPath service
 
 ```bash
@@ -291,9 +297,11 @@ ActiveEnterTimestamp=Wed 2024-01-17 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Unit PowerPath.service could not be found.`** — Install the PowerPath package with `apt-get install powerpath` or `yum install powerpath` depending on your distribution.
-    **`Failed to get properties: Unit PowerPath.service is not loaded.`** — Enable and start the service with `systemctl enable PowerPath && systemctl start PowerPath`.
-    **`Permission denied`** — Run the commands with `sudo` or as the root user.
+    | Error | Fix |
+    |---|---|
+    | `Unit PowerPath.service could not be found.` | Install the PowerPath package with `apt-get install powerpath` or `yum install powerpath` depending on your distribution. |
+    | `Failed to get properties: Unit PowerPath.service is not loaded.` | Enable and start the service with `systemctl enable PowerPath && systemctl start PowerPath`. |
+    | `Permission denied` | Run the commands with `sudo` or as the root user. |
 ### HBA port state
 
 ```bash
@@ -379,8 +387,10 @@ cat: /sys/class/fc_host/host3/statistics/link_failure_count: No such file or dir
 ```
 
 !!! warning "Common errors"
-    **`command not found: systool`** — Install sysfsutils package with `apt-get install sysfsutils` or `yum install sysfsutils`.
-    **`cat: /sys/class/fc_host/host3/statistics/link_failure_count: No such file or directory`** — This is expected for offline HBAs; the statistics directory may not exist until the port comes online.
+    | Error | Fix |
+    |---|---|
+    | `command not found: systool` | Install sysfsutils package with `apt-get install sysfsutils` or `yum install sysfsutils`. |
+    | `cat: /sys/class/fc_host/host3/statistics/link_failure_count: No such file or directory` | This is expected for offline HBAs; the statistics directory may not exist until the port comes online. |
 ### Kernel messages
 
 ```bash
@@ -413,8 +423,10 @@ journalctl -k --since "2 hours ago" --no-pager | grep -iE "emcp|powerpath|scsi"
 ```
 
 !!! warning "Common errors"
-    **`dmesg: read kernel buffer failed: Operation not permitted`** — Run the command with `sudo` or as root user.
-    **`grep: /var/log/messages: No such file or directory`** — Use `/var/log/syslog` on Debian/Ubuntu systems or check your distribution's log location with `ls /var/log/`.
+    | Error | Fix |
+    |---|---|
+    | `dmesg: read kernel buffer failed: Operation not permitted` | Run the command with `sudo` or as root user. |
+    | `grep: /var/log/messages: No such file or directory` | Use `/var/log/syslog` on Debian/Ubuntu systems or check your distribution's log location with `ls /var/log/`. |
 ### SCSI device layer
 
 ```bash
@@ -448,8 +460,10 @@ running
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/dev/emcpower*': No such file or directory`** — Verify PowerPath is installed and the daemon is running with `systemctl status powerpath` or `powermt display dev=all`.
-    **`cat: /sys/block/sda/device/state: No such file or directory`** — Confirm the device exists and is recognized by the kernel; check `dmesg` for SCSI discovery errors and rescan with `echo "- - -" > /sys/class/scsi_host/host0/scan`.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/dev/emcpower*': No such file or directory` | Verify PowerPath is installed and the daemon is running with `systemctl status powerpath` or `powermt display dev=all`. |
+    | `cat: /sys/block/sda/device/state: No such file or directory` | Confirm the device exists and is recognized by the kernel; check `dmesg` for SCSI discovery errors and rescan with `echo "- - -" > /sys/class/scsi_host/host0/scan`. |
 ### iSCSI-specific (if using iSCSI)
 
 ```bash
@@ -504,9 +518,11 @@ InitiatorName=iqn.1993-08.org.linux-iscsi:a1b2c3d4e5f6
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: No active sessions.`** — Run `iscsiadm -m discovery -t st -p <target_ip>` to discover targets, then `iscsiadm -m node --login` to establish sessions.
-    **`cat: /etc/iscsi/initiatorname.iscsi: No such file or directory`** — Install open-iscsi package with `apt-get install open-iscsi` or `yum install iscsi-initiator-utils` depending on your distribution.
-    **`iscsiadm: command not found`** — Install the open-iscsi utilities package for your Linux distribution.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: No active sessions.` | Run `iscsiadm -m discovery -t st -p <target_ip>` to discover targets, then `iscsiadm -m node --login` to establish sessions. |
+    | `cat: /etc/iscsi/initiatorname.iscsi: No such file or directory` | Install open-iscsi package with `apt-get install open-iscsi` or `yum install iscsi-initiator-utils` depending on your distribution. |
+    | `iscsiadm: command not found` | Install the open-iscsi utilities package for your Linux distribution. |
 ---
 
 ## Step 3 — Windows-specific diagnostics
@@ -608,9 +624,11 @@ memberIndex: 1, zoneName: zone_dev_esx
 ```
 
 !!! warning "Common errors"
-    **`portshow: Invalid port number`** — Verify the port number exists on your switch using `switchshow` and use the correct numeric identifier.
-    **`nsshow: No initiators found`** — Confirm the HBA is properly zoned and logged into the fabric; check physical cable connections and HBA driver status on the host.
-    **`zoneshow: Zone not found`** — Verify the zone name is spelled correctly and that the initiator and target WWNs are actually members of an active zone configuration.
+    | Error | Fix |
+    |---|---|
+    | `portshow: Invalid port number` | Verify the port number exists on your switch using `switchshow` and use the correct numeric identifier. |
+    | `nsshow: No initiators found` | Confirm the HBA is properly zoned and logged into the fabric; check physical cable connections and HBA driver status on the host. |
+    | `zoneshow: Zone not found` | Verify the zone name is spelled correctly and that the initiator and target WWNs are actually members of an active zone configuration. |
 ### Cisco MDS
 
 ```bash
@@ -662,9 +680,11 @@ zone name PROD_ZONE_ESX01 vsan 1
 ```
 
 !!! warning "Common errors"
-    **`fc1/4 is down (Administratively down)`** — Enable the port with `config terminal` → `interface fc1/4` → `no shutdown`.
-    **`FCNS Database: No entries found`** — Verify the HBA is logged in to the fabric and check `show flogi database` to confirm FLOGI completion.
-    **`zone name <zone_name> vsan <vsan_id>: Zone does not exist`** — Confirm the zone name spelling and VSAN ID match the active zoneset with `show zoneset active`.
+    | Error | Fix |
+    |---|---|
+    | `fc1/4 is down (Administratively down)` | Enable the port with `config terminal` → `interface fc1/4` → `no shutdown`. |
+    | `FCNS Database: No entries found` | Verify the HBA is logged in to the fabric and check `show flogi database` to confirm FLOGI completion. |
+    | `zone name <zone_name> vsan <vsan_id>: Zone does not exist` | Confirm the zone name spelling and VSAN ID match the active zoneset with `show zoneset active`. |
 ---
 
 ## Step 5 — Array-side diagnostics
@@ -755,9 +775,11 @@ Attach this file to your Dell support case.
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep PowerPath` and add its bin directory to PATH or use full path `/opt/emc/PowerPath/bin/powermt`.
-    **`Permission denied`** — Run the script with `sudo bash powerpath_support_collect.sh` or as root user; PowerPath commands require elevated privileges.
-    **`systemctl status PowerPath` returned exit code 3** — The PowerPath service may not be installed or the unit name differs; check available services with `systemctl list-units | grep -i power`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Verify PowerPath is installed with `rpm -qa | grep PowerPath` and add its bin directory to PATH or use full path `/opt/emc/PowerPath/bin/powermt`. |
+    | `Permission denied` | Run the script with `sudo bash powerpath_support_collect.sh` or as root user; PowerPath commands require elevated privileges. |
+    | `systemctl status PowerPath` returned exit code 3` | The PowerPath service may not be installed or the unit name differs; check available services with `systemctl list-units | grep -i power`. |
 ---
 
 ## Log locations

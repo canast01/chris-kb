@@ -143,11 +143,11 @@ server promoted
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory`** — Ensure PostgreSQL is running on the standby with `systemctl start postgresql` before executing promotion commands.
-    
-    **`FATAL: the database system is in recovery mode`** — Wait for replication to catch up (lag near zero) and ensure the standby is fully synchronized before promoting.
-    
-    **`could not open file "/var/lib/postgresql/data/promote_standby": Permission denied`** — Run the touch command as the postgres user with `sudo -u postgres touch /var/lib/postgresql/data/promote_standby`.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory` | Ensure PostgreSQL is running on the standby with `systemctl start postgresql` before executing promotion commands. |
+    | `FATAL: the database system is in recovery mode` | Wait for replication to catch up (lag near zero) and ensure the standby is fully synchronized before promoting. |
+    | `could not open file "/var/lib/postgresql/data/promote_standby": Permission denied` | Run the touch command as the postgres user with `sudo -u postgres touch /var/lib/postgresql/data/promote_standby`. |
 ```bash
 # Automatic failover — check MHA status
 masterha_check_repl --conf=/etc/mha/app.conf
@@ -212,9 +212,11 @@ session_id | blocking_session_id | wait_type | wait_time
 ```
 
 !!! warning "Common errors"
-    **`psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections`** — Increase `max_connections` in postgresql.conf or wait for idle connections to close.
-    **`ERROR 1040 (HY000): Too many connections`** — Verify MySQL `max_connections` setting and close idle application connections.
-    **`curl: (7) Failed to connect to <app-endpoint> port 443: Connection refused`** — Confirm the application service is running on the new primary and network routing is correct.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections` | Increase `max_connections` in postgresql.conf or wait for idle connections to close. |
+    | `ERROR 1040 (HY000): Too many connections` | Verify MySQL `max_connections` setting and close idle application connections. |
+    | `curl: (7) Failed to connect to <app-endpoint> port 443: Connection refused` | Confirm the application service is running on the new primary and network routing is correct. |
 ---
 
 ## Verify

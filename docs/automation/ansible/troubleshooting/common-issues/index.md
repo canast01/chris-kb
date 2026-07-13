@@ -190,9 +190,11 @@ ok: [webserver01] => {
 ```
 
 !!! warning "Common errors"
-    **`ERROR! couldn't resolve module/action 'community.general.xxx'. This often means this role or collection does not support this ansible_version`** — Run `ansible-galaxy collection install community.general --upgrade` to ensure the latest compatible version is installed.
-    **`fatal: [webserver01]: FAILED! => {"msg": "Temporary failure in name resolution"}`** — Verify DNS resolution on the managed host with `ansible webservers -m shell -a "cat /etc/resolv.conf"` and ensure nameservers are correctly configured.
-    **`fatal: [webserver01]: FAILED! => {"msg": "Unable to start action, could not load plugin"}`** — Verify the collection is installed in the correct location with `ansible-galaxy collection list | grep community.general` and reinstall if missing.
+    | Error | Fix |
+    |---|---|
+    | `ERROR! couldn't resolve module/action 'community.general.xxx'. This often means this role or collection does not support this ansible_version` | Run `ansible-galaxy collection install community.general --upgrade` to ensure the latest compatible version is installed. |
+    | `fatal: [webserver01]: FAILED! => {"msg": "Temporary failure in name resolution"}` | Verify DNS resolution on the managed host with `ansible webservers -m shell -a "cat /etc/resolv.conf"` and ensure nameservers are correctly configured. |
+    | `fatal: [webserver01]: FAILED! => {"msg": "Unable to start action, could not load plugin"}` | Verify the collection is installed in the correct location with `ansible-galaxy collection list | grep community.general` and reinstall if missing. |
 ## Fact Gathering Issues
 
 ```bash
@@ -247,9 +249,11 @@ web01 | SUCCESS => {
 ```
 
 !!! warning "Common errors"
-    **`fatal: [web01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Verify SSH key permissions (chmod 600 on private key) and that the key is added to the remote host's authorized_keys.
-    **`[WARNING]: Unable to parse /etc/ansible/inventory as an inventory source`** — Check that the inventory/ directory exists and contains valid inventory files (hosts, hosts.yml, or hosts.yaml).
-    **`fatal: [web01]: FAILED! => {"msg": "The following modules failed to load: ansible.builtin.setup"}`** — Ensure Python is installed on the target host and the ansible_python_interpreter variable is correctly configured if using a non-standard Python path.
+    | Error | Fix |
+    |---|---|
+    | `fatal: [web01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Verify SSH key permissions (chmod 600 on private key) and that the key is added to the remote host's authorized_keys. |
+    | `[WARNING]: Unable to parse /etc/ansible/inventory as an inventory source` | Check that the inventory/ directory exists and contains valid inventory files (hosts, hosts.yml, or hosts.yaml). |
+    | `fatal: [web01]: FAILED! => {"msg": "The following modules failed to load: ansible.builtin.setup"}` | Ensure Python is installed on the target host and the ansible_python_interpreter variable is correctly configured if using a non-standard Python path. |
 ---
 
 ## Verify resolution

@@ -97,9 +97,11 @@ _ldap._tcp.example.local	service = 0 100 389 ldap02.example.local.
 ```
 
 !!! warning "Common errors"
-    **`** server can't find www.example.com: NXDOMAIN`** — Verify the domain name is correct and the DNS server is reachable with `ping 10.0.0.53`.
-    **`** Timed out`** — Check network connectivity to the DNS server and ensure port 53 is not blocked by a firewall.
-    **`** connection timed out; try again`** — Increase the timeout or switch to a working DNS server; verify the IP address with `nslookup 10.0.0.53`.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find www.example.com: NXDOMAIN` | Verify the domain name is correct and the DNS server is reachable with `ping 10.0.0.53`. |
+    | `** Timed out` | Check network connectivity to the DNS server and ensure port 53 is not blocked by a firewall. |
+    | `** connection timed out; try again` | Increase the timeout or switch to a working DNS server; verify the IP address with `nslookup 10.0.0.53`. |
 ## dig
 
 ```bash
@@ -159,9 +161,11 @@ www.example.com.	3600	IN	A	93.184.216.34
 ```
 
 !!! warning "Common errors"
-    **`dig: couldn't get address for '@10.0.0.53': not known`** — Verify the DNS server IP is reachable and correct; check network connectivity with `ping 10.0.0.53`.
-    **`; <<>> DiG 9.16.1-Ubuntu <<>> www.example.com ; (SERVFAIL)`** — The DNS server returned SERVFAIL, indicating it cannot resolve the query; verify the domain exists and the DNS server has proper zone configuration or forwarders.
-    **`; <<>> DiG 9.16.1-Ubuntu <<>> www.example.com ; (NXDOMAIN)`** — The domain does not exist in the DNS system; confirm the correct domain name and check if it is registered and properly configured.
+    | Error | Fix |
+    |---|---|
+    | `dig: couldn't get address for '@10.0.0.53': not known` | Verify the DNS server IP is reachable and correct; check network connectivity with `ping 10.0.0.53`. |
+    | `; <<>> DiG 9.16.1-Ubuntu <<>> www.example.com ; (SERVFAIL)` | The DNS server returned SERVFAIL, indicating it cannot resolve the query; verify the domain exists and the DNS server has proper zone configuration or forwarders. |
+    | `; <<>> DiG 9.16.1-Ubuntu <<>> www.example.com ; (NXDOMAIN)` | The domain does not exist in the DNS system; confirm the correct domain name and check if it is registered and properly configured. |
 ## Resolve-DnsName (PowerShell)
 
 ```powershell
@@ -234,9 +238,11 @@ www.example.com.		3599	IN	A	93.184.216.34
 ```
 
 !!! warning "Common errors"
-    **`command not found: resolvectl`** — Install systemd-resolved with `sudo apt install systemd-resolved` or use `sudo systemctl restart systemd-resolved` if already installed.
-    **`The term 'Clear-DnsServerCache' is not recognized`** — Run PowerShell as Administrator and ensure you are on a Windows DNS server with the DnsServer module installed via `Import-Module DnsServer`.
-    **`connection timed out; no servers could be reached`** — Verify network connectivity and that the DNS server 8.8.8.8 is reachable with `ping 8.8.8.8` before retrying the dig command.
+    | Error | Fix |
+    |---|---|
+    | `command not found: resolvectl` | Install systemd-resolved with `sudo apt install systemd-resolved` or use `sudo systemctl restart systemd-resolved` if already installed. |
+    | `The term 'Clear-DnsServerCache' is not recognized` | Run PowerShell as Administrator and ensure you are on a Windows DNS server with the DnsServer module installed via `Import-Module DnsServer`. |
+    | `connection timed out; no servers could be reached` | Verify network connectivity and that the DNS server 8.8.8.8 is reachable with `ping 8.8.8.8` before retrying the dig command. |
 ## Known Issues
 
 - `nslookup` and `Resolve-DnsName` may return different results because `Resolve-DnsName` uses the Windows DNS client cache while `nslookup` queries the resolver directly. Always specify `-Server` to rule out cache differences.

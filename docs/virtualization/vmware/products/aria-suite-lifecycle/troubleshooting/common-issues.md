@@ -139,9 +139,11 @@ Dec 12 14:28:01 aria-lcm-01 kernel: NFS: Server 192.168.1.10 OK
 ```
 
 !!! warning "Common errors"
-    **`mount: mount point /data does not exist`** — Create the mount point with `mkdir -p /data` before attempting to mount.
-    **`mount.nfs: access denied by server while mounting nfs-server:/lcm-repo`** — Verify NFS export permissions on the server and ensure the client IP is listed in `/etc/exports` with appropriate read-write flags.
-    **`touch: cannot touch '/data/.write-test': Read-only file system`** — Remount with write permissions using `mount -o remount,rw /data` or check NFS server export settings for `ro` restrictions.
+    | Error | Fix |
+    |---|---|
+    | `mount: mount point /data does not exist` | Create the mount point with `mkdir -p /data` before attempting to mount. |
+    | `mount.nfs: access denied by server while mounting nfs-server:/lcm-repo` | Verify NFS export permissions on the server and ensure the client IP is listed in `/etc/exports` with appropriate read-write flags. |
+    | `touch: cannot touch '/data/.write-test': Read-only file system` | Remount with write permissions using `mount -o remount,rw /data` or check NFS server export settings for `ro` restrictions. |
 After restoring the NFS mount, any in-progress upgrade will need to be resumed or retried via LCM. If the upgrade failed due to missing binaries, re-map the product binaries in **Lifecycle Operations → Settings → Binary Mapping** before retrying.
 
 ---
@@ -177,9 +179,11 @@ RSA key ok
 ```
 
 !!! warning "Common errors"
-    **`leaf.pem: CN = aria-lcm.internal.corp, error 20 at 0 depth lookup: unable to get local issuer certificate`** — Ensure the intermediate CA certificate is included in chain.pem in the correct order (root last).
-    **`8f7c2d9e1a4b5c6f3e2d1a9b8c7f6e5d  - (certificate hash)` does not match private key hash** — Regenerate the certificate and private key pair together, or verify you are using the correct matching files.
-    **`Enter PEM pass phrase:`** — Remove the passphrase from the private key using `openssl rsa -in private.key -out private.key.nopass` before importing into LCM.
+    | Error | Fix |
+    |---|---|
+    | `leaf.pem: CN = aria-lcm.internal.corp, error 20 at 0 depth lookup: unable to get local issuer certificate` | Ensure the intermediate CA certificate is included in chain.pem in the correct order (root last). |
+    | `8f7c2d9e1a4b5c6f3e2d1a9b8c7f6e5d  - (certificate hash)` does not match private key hash` | Regenerate the certificate and private key pair together, or verify you are using the correct matching files. |
+    | `Enter PEM pass phrase:` | Remove the passphrase from the private key using `openssl rsa -in private.key -out private.key.nopass` before importing into LCM. |
 ---
 
 ## VIDM Authentication Failure After Password Change
@@ -209,9 +213,11 @@ curl -sk https://vidm.example.local/SAAS/API/1.0/REST/system/health
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's lowercase `-sk` not `-Sk`).
-    **`curl: (7) Failed to connect to vidm.example.local port 443: Connection refused`** — Verify VIDM appliance is running and network connectivity exists; check firewall rules and DNS resolution with `nslookup vidm.example.local`.
-    **`{"error":"Unauthorized","code":401}`** — Ensure the LCM appliance service account has valid credentials and VIDM trust relationship is intact; re-register VIDM in LCM as indicated in the documentation.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure it's lowercase `-sk` not `-Sk`). |
+    | `curl: (7) Failed to connect to vidm.example.local port 443: Connection refused` | Verify VIDM appliance is running and network connectivity exists; check firewall rules and DNS resolution with `nslookup vidm.example.local`. |
+    | `{"error":"Unauthorized","code":401}` | Ensure the LCM appliance service account has valid credentials and VIDM trust relationship is intact; re-register VIDM in LCM as indicated in the documentation. |
 Re-register VIDM: **LCM → Settings → Identity Manager → Edit → update credentials → Save**.
 
 After re-registration, verify that all AD-backed users can still log into LCM via the VIDM login button.
@@ -262,8 +268,10 @@ Jan 15 13:47:23 aria-lcm-prod-01 systemd[1]: vra-dsc-service.service: Failed wit
 ```
 
 !!! warning "Common errors"
-    **`Connection timeout after 30 seconds`** — Verify database connectivity from the Aria appliance with `telnet db-cluster-01.corp.local 5432` and confirm the PostgreSQL service is running on the database host.
-    **`vra-dsc-service.service: Main process exited, code=exited, status=1/FAILURE`** — Check the service configuration file at `/etc/systemd/system/vra-dsc-service.service` for correct environment variables and restart with `systemctl restart vra-dsc-service`.
+    | Error | Fix |
+    |---|---|
+    | `Connection timeout after 30 seconds` | Verify database connectivity from the Aria appliance with `telnet db-cluster-01.corp.local 5432` and confirm the PostgreSQL service is running on the database host. |
+    | `vra-dsc-service.service: Main process exited, code=exited, status=1/FAILURE` | Check the service configuration file at `/etc/systemd/system/vra-dsc-service.service` for correct environment variables and restart with `systemctl restart vra-dsc-service`. |
 3. Common causes: disk full on the product appliance, internal service crash, or expired certificate
 4. If the product health does not self-recover after the root cause is resolved: **LCM → Environments → product card → Run Health Check** to force a re-evaluation
 
@@ -317,9 +325,11 @@ FAILED	ProductPatch	req-2024-01-12-065	2024-01-12T08:19:51.012Z
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`jq: parse error: Cannot index string with string "token"`** — Verify the login credentials are correct and the LCM service is responding with valid JSON; check the password doesn't contain special characters that need escaping.
-    **`curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Connection refused`** — Confirm the LCM appliance hostname/IP is correct and the service is running with `systemctl status lcm` on the LCM host.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `jq: parse error: Cannot index string with string "token"` | Verify the login credentials are correct and the LCM service is responding with valid JSON; check the password doesn't contain special characters that need escaping. |
+    | `curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Connection refused` | Confirm the LCM appliance hostname/IP is correct and the service is running with `systemctl status lcm` on the LCM host. |
 ---
 
 ## See also

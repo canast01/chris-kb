@@ -113,8 +113,10 @@ az monitor workbook update \
 ```
 
 !!! warning "Common errors"
-    **`The provided information does not map to a valid role.`** — Verify the role name is correct (e.g., "Reader", "Contributor") using `az role definition list --query "[].name"`.
-    **`ResourceNotFound: The Resource 'Microsoft.Insights/workbooks/<workbook-resource-id>' under resource group 'myRG' was not found.`** — Confirm the workbook name/resource ID exists in the specified resource group using `az monitor workbook list --resource-group myRG`.
+    | Error | Fix |
+    |---|---|
+    | `The provided information does not map to a valid role.` | Verify the role name is correct (e.g., "Reader", "Contributor") using `az role definition list --query "[].name"`. |
+    | `ResourceNotFound: The Resource 'Microsoft.Insights/workbooks/<workbook-resource-id>' under resource group 'myRG' was not found.` | Confirm the workbook name/resource ID exists in the specified resource group using `az monitor workbook list --resource-group myRG`. |
 ## Exporting and Version Control
 
 ```bash
@@ -172,9 +174,11 @@ Deployment in progress..
 ```
 
 !!! warning "Common errors"
-    **`The workbook resource '<workbook-resource-id>' could not be found in resource group 'myRG'.`** — Verify the workbook exists with `az monitor workbook list --resource-group myRG` and use the correct resource ID or name.
-    **`Template validation failed: 'workbookDisplayName' is not a recognized parameter in workbook-deploy.bicep.`** — Check the Bicep template file for the exact parameter name and ensure it matches the `@param` declaration.
-    **`jq: parse error: Cannot index string with string "properties"`** — Ensure the `az monitor workbook show` command succeeds and returns valid JSON before piping to jq; add `--debug` to diagnose the API response.
+    | Error | Fix |
+    |---|---|
+    | `The workbook resource '<workbook-resource-id>' could not be found in resource group 'myRG'.` | Verify the workbook exists with `az monitor workbook list --resource-group myRG` and use the correct resource ID or name. |
+    | `Template validation failed: 'workbookDisplayName' is not a recognized parameter in workbook-deploy.bicep.` | Check the Bicep template file for the exact parameter name and ensure it matches the `@param` declaration. |
+    | `jq: parse error: Cannot index string with string "properties"` | Ensure the `az monitor workbook show` command succeeds and returns valid JSON before piping to jq; add `--debug` to diagnose the API response. |
 ## Built-in Workbook Gallery
 
 | Category          | Notable Templates                                     |

@@ -51,9 +51,11 @@ Nmap done at 2024-01-15 14:32:21 UTC; 1 IP address (1 host up) scanned in 3.12 s
 ```
 
 !!! warning "Common errors"
-    **`unable to load client cert`** — Verify the Nexus Dashboard certificate is valid and the hostname resolves correctly with `nslookup nd-dc1.corp.example.com`.
-    **`nmap: command not found`** — Install nmap with `apt-get install nmap` (Ubuntu/Debian) or `yum install nmap` (RHEL/CentOS).
-    **`Connection refused`** — Confirm the Nexus Dashboard is running and port 443 is accessible from your host using `telnet nd-dc1.corp.example.com 443`.
+    | Error | Fix |
+    |---|---|
+    | `unable to load client cert` | Verify the Nexus Dashboard certificate is valid and the hostname resolves correctly with `nslookup nd-dc1.corp.example.com`. |
+    | `nmap: command not found` | Install nmap with `apt-get install nmap` (Ubuntu/Debian) or `yum install nmap` (RHEL/CentOS). |
+    | `Connection refused` | Confirm the Nexus Dashboard is running and port 443 is accessible from your host using `telnet nd-dc1.corp.example.com 443`. |
 ```bash
 # The passphrase can also be set via CLI
 acs backup settings --encryption-passphrase-file /home/ndadmin/.nd-backup-pass
@@ -68,9 +70,11 @@ Last modified: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Passphrase file not found: /home/ndadmin/.nd-backup-pass`** — Verify the file path exists and run `ls -la /home/ndadmin/.nd-backup-pass` to confirm permissions and location.
-    **`Error: Permission denied reading passphrase file`** — Ensure the ndadmin user has read permissions on the file with `chmod 600 /home/ndadmin/.nd-backup-pass` and verify ownership.
-    **`Error: Passphrase file is empty or invalid format`** — Confirm the passphrase file contains at least 8 characters and no trailing newlines by running `cat /home/ndadmin/.nd-backup-pass | wc -c`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Passphrase file not found: /home/ndadmin/.nd-backup-pass` | Verify the file path exists and run `ls -la /home/ndadmin/.nd-backup-pass` to confirm permissions and location. |
+    | `Error: Permission denied reading passphrase file` | Ensure the ndadmin user has read permissions on the file with `chmod 600 /home/ndadmin/.nd-backup-pass` and verify ownership. |
+    | `Error: Passphrase file is empty or invalid format` | Confirm the passphrase file contains at least 8 characters and no trailing newlines by running `cat /home/ndadmin/.nd-backup-pass | wc -c`. |
 ```bash
 # Check certificate expiry
 openssl s_client -connect nd-dc1.corp.example.com:443 \
@@ -100,9 +104,11 @@ Certificate expires in 287 days (2025-09-14)
 ```
 
 !!! warning "Common errors"
-    **`unable to connect to nd-dc1.corp.example.com:443`** — Verify the hostname resolves and the Nexus Dashboard is reachable on port 443 using `ping` or `nc -zv`.
-    **`error:0900006e:PEM routines:PEM_read_bio:no start line`** — Ensure the openssl s_client connection succeeded; add `2>&1` to stderr capture to diagnose TLS handshake failures.
-    **`ValueError: time data does not match format`** — The certificate date format may differ on your system; run the openssl command standalone first to verify the exact date string format.
+    | Error | Fix |
+    |---|---|
+    | `unable to connect to nd-dc1.corp.example.com:443` | Verify the hostname resolves and the Nexus Dashboard is reachable on port 443 using `ping` or `nc -zv`. |
+    | `error:0900006e:PEM routines:PEM_read_bio:no start line` | Ensure the openssl s_client connection succeeded; add `2>&1` to stderr capture to diagnose TLS handshake failures. |
+    | `ValueError: time data does not match format` | The certificate date format may differ on your system; run the openssl command standalone first to verify the exact date string format. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

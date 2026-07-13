@@ -113,9 +113,11 @@ Vserver Name: svm_prod
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: permission denied`** — Ensure your ONTAP user account has the "admin" role or appropriate cluster/vserver permissions assigned.
-    **`Error: Cluster peer relationship does not exist`** — Verify cluster peering was established with `cluster peer create` and that both cluster names are correctly configured.
-    **`Error: Network interface is down`** — Check physical port connectivity and VLAN configuration, then bring the intercluster LIF online with `network interface modify -vserver <vserver> -lif <lif_name> -status-admin up`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: permission denied` | Ensure your ONTAP user account has the "admin" role or appropriate cluster/vserver permissions assigned. |
+    | `Error: Cluster peer relationship does not exist` | Verify cluster peering was established with `cluster peer create` and that both cluster names are correctly configured. |
+    | `Error: Network interface is down` | Check physical port connectivity and VLAN configuration, then bring the intercluster LIF online with `network interface modify -vserver <vserver> -lif <lif_name> -status-admin up`. |
 ---
 
 ## Phase 1: ONTAP SnapVault Configuration
@@ -154,11 +156,11 @@ State: online
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Cannot create Vserver "svm_vault": Vserver with name "svm_vault" already exists.`** — Verify the SVM name is unique or use an existing SVM with `vserver show` before creation.
-    
-    **`Error: command failed: Cannot create volume "vol_vault_vmware": Insufficient space in aggregate "aggr1_vault_node01".`** — Check available aggregate space with `storage aggregate show -aggregate aggr1_vault_node01` and increase size or use a different aggregate.
-    
-    **`Error: command failed: Cannot create volume "vol_vault_vmware": Vserver "svm_vault" does not exist.`** — Ensure the destination SVM creation completed successfully before attempting to create the volume.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Cannot create Vserver "svm_vault": Vserver with name "svm_vault" already exists.` | Verify the SVM name is unique or use an existing SVM with `vserver show` before creation. |
+    | `Error: command failed: Cannot create volume "vol_vault_vmware": Insufficient space in aggregate "aggr1_vault_node01".` | Check available aggregate space with `storage aggregate show -aggregate aggr1_vault_node01` and increase size or use a different aggregate. |
+    | `Error: command failed: Cannot create volume "vol_vault_vmware": Vserver "svm_vault" does not exist.` | Ensure the destination SVM creation completed successfully before attempting to create the volume. |
 ### 1.2 Create SnapVault Policy and Schedule
 
 ```bash
@@ -218,9 +220,11 @@ Volume modify successful: "vol_nfs_ds01" snapshot policy set to "vault_snap_poli
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Vserver "svm_vmware" does not exist.`** — Verify the SVM name with `vserver show` and correct the vserver parameter in all commands.
-    **`Error: command failed: Snapshot policy "vault_snap_policy" does not exist on Vserver "svm_vmware".`** — Ensure the snapshot policy creation command completes successfully before applying it to the volume.
-    **`Error: command failed: Job schedule "daily_vault_snap" does not exist.`** — Create the job schedule before referencing it in the snapshot policy; verify with `job schedule cron show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Vserver "svm_vmware" does not exist.` | Verify the SVM name with `vserver show` and correct the vserver parameter in all commands. |
+    | `Error: command failed: Snapshot policy "vault_snap_policy" does not exist on Vserver "svm_vmware".` | Ensure the snapshot policy creation command completes successfully before applying it to the volume. |
+    | `Error: command failed: Job schedule "daily_vault_snap" does not exist.` | Create the job schedule before referencing it in the snapshot policy; verify with `job schedule cron show`. |
 ### 1.3 Initialise SnapVault Relationship
 
 ```bash
@@ -257,9 +261,11 @@ svm_vault:vol_vault_vmware      snapmirrored      0h2m            vault.1@202401
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Relationship does not exist`** — Verify the source volume path is correct and the SnapVault policy exists on the source cluster using `snapmirror policy show`.
-    **`Error: transfer failed: Insufficient space on destination volume`** — Increase the destination volume size using `volume modify -vserver svm_vault -volume vol_vault_vmware -size +500GB` or reduce source data.
-    **`Error: Snapmirror relationship is in unhealthy state`** — Check network connectivity between clusters and review SnapMirror logs with `event log show -severity error | grep snapmirror` to identify the root cause.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Relationship does not exist` | Verify the source volume path is correct and the SnapVault policy exists on the source cluster using `snapmirror policy show`. |
+    | `Error: transfer failed: Insufficient space on destination volume` | Increase the destination volume size using `volume modify -vserver svm_vault -volume vol_vault_vmware -size +500GB` or reduce source data. |
+    | `Error: Snapmirror relationship is in unhealthy state` | Check network connectivity between clusters and review SnapMirror logs with `event log show -severity error | grep snapmirror` to identify the root cause. |
 ---
 
 ## Phase 2: Veeam Configuration
@@ -424,8 +430,10 @@ Operation succeeded: SnapMirror initialize started on destination "svm_vault:vol
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Relationship does not exist`** — Verify the source and destination paths are correct and the relationship exists before attempting deletion with `snapmirror show`.
-    **`Error: command failed: Cannot release SnapMirror relationship, transfer in progress`** — Wait for the current transfer to complete using `snapmirror show -fields transfer-state` before releasing the relationship.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Relationship does not exist` | Verify the source and destination paths are correct and the relationship exists before attempting deletion with `snapmirror show`. |
+    | `Error: command failed: Cannot release SnapMirror relationship, transfer in progress` | Wait for the current transfer to complete using `snapmirror show -fields transfer-state` before releasing the relationship. |
 **If Veeam job fails due to storage snapshot errors:**
 
 ```powershell

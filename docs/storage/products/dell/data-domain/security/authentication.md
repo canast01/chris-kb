@@ -56,9 +56,11 @@ Role Mappings:
 ```
 
 !!! warning "Common errors"
-    **`Error: Group ldap-group-storage-admins not found in LDAP directory`** — Verify the LDAP group name matches exactly in your directory server and that LDAP connectivity is configured.
-    **`Error: Role admin does not exist`** — Use `authentication roles list` to confirm available roles on this Data Domain system.
-    **`Error: Authentication service not initialized`** — Configure LDAP server settings with `authentication ldap config` before assigning role mappings.
+    | Error | Fix |
+    |---|---|
+    | `Error: Group ldap-group-storage-admins not found in LDAP directory` | Verify the LDAP group name matches exactly in your directory server and that LDAP connectivity is configured. |
+    | `Error: Role admin does not exist` | Use `authentication roles list` to confirm available roles on this Data Domain system. |
+    | `Error: Authentication service not initialized` | Configure LDAP server settings with `authentication ldap config` before assigning role mappings. |
 ---
 
 ## Active Directory Integration
@@ -98,9 +100,11 @@ Authentication test completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid domain format 'domain.example.com' — domain must be specified as FQDN with valid DNS resolution`** — Verify the domain name is correct and resolvable with `nslookup domain.example.com`.
-    **`Error: Connection refused to AD server 192.168.1.100:389 — LDAP port is blocked or AD server is unreachable`** — Confirm network connectivity and firewall rules allow port 389/636 from the Data Domain appliance to the AD server.
-    **`Error: LDAP bind failed: Invalid credentials for test user — authentication service account permissions insufficient`** — Ensure the service account has proper permissions in Active Directory and verify credentials in the auth configuration.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid domain format 'domain.example.com' — domain must be specified as FQDN with valid DNS resolution` | Verify the domain name is correct and resolvable with `nslookup domain.example.com`. |
+    | `Error: Connection refused to AD server 192.168.1.100:389 — LDAP port is blocked or AD server is unreachable` | Confirm network connectivity and firewall rules allow port 389/636 from the Data Domain appliance to the AD server. |
+    | `Error: LDAP bind failed: Invalid credentials for test user — authentication service account permissions insufficient` | Ensure the service account has proper permissions in Active Directory and verify credentials in the auth configuration. |
 When joined to AD:
 - Users log in with `DOMAIN\username` or `username@domain.example.com`
 - Group membership drives DDOS role assignment, same as LDAP
@@ -132,8 +136,10 @@ NTP Timeserver Added:
 ```
 
 !!! warning "Common errors"
-    **`NTP Status: Synchronized: No`** — Run `ntp sync` to force synchronization, or verify network connectivity to existing timeservers with `ntp show timeservers`.
-    **`Error: Timeserver 10.45.12.8 already exists`** — Remove the duplicate entry with `ntp remove timeserver 10.45.12.8` before re-adding it.
+    | Error | Fix |
+    |---|---|
+    | `NTP Status: Synchronized: No` | Run `ntp sync` to force synchronization, or verify network connectivity to existing timeservers with `ntp show timeservers`. |
+    | `Error: Timeserver 10.45.12.8 already exists` | Remove the duplicate entry with `ntp remove timeserver 10.45.12.8` before re-adding it. |
 ---
 
 ## Disable Local Admin When LDAP/AD Is Operational
@@ -157,8 +163,10 @@ auth-method: ldap
 ```
 
 !!! warning "Common errors"
-    **`adminaccess: command not found`** — Ensure you are logged into the Data Domain management interface (SSH to the DD appliance IP) rather than a local workstation shell.
-    **`Error: LDAP server not configured`** — Configure LDAP/AD connectivity first using `adminaccess set ldap-server <server-ip>` and verify network connectivity to your directory server.
+    | Error | Fix |
+    |---|---|
+    | `adminaccess: command not found` | Ensure you are logged into the Data Domain management interface (SSH to the DD appliance IP) rather than a local workstation shell. |
+    | `Error: LDAP server not configured` | Configure LDAP/AD connectivity first using `adminaccess set ldap-server <server-ip>` and verify network connectivity to your directory server. |
 **Break-glass procedure:** if LDAP/AD is unavailable and the sysadmin account is needed, use the local console (iDRAC / physical serial) to authenticate with the local sysadmin credentials. Do not store sysadmin credentials on shared workstations.
 
 ---
@@ -220,9 +228,11 @@ User 'monitor_user' disabled successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: User '<username>' does not exist`** — Verify the username spelling and run `user list` to confirm the account exists before attempting modifications.
-    **`Error: Cannot delete user with active sessions`** — Log out the user or wait for their session to expire before attempting deletion.
-    **`Error: Role '<role>' is not valid`** — Use only valid roles (admin, backup, read-only, audit) when creating or modifying users.
+    | Error | Fix |
+    |---|---|
+    | `Error: User '<username>' does not exist` | Verify the username spelling and run `user list` to confirm the account exists before attempting modifications. |
+    | `Error: Cannot delete user with active sessions` | Log out the user or wait for their session to expire before attempting deletion. |
+    | `Error: Role '<role>' is not valid` | Use only valid roles (admin, backup, read-only, audit) when creating or modifying users. |
 ### DDOS User Roles
 
 | Role | Access Level | Typical Assignment |
@@ -290,9 +300,11 @@ Account lockout enabled:  Yes
 ```
 
 !!! warning "Common errors"
-    **`Error: Cannot set min-length to 12. Maximum allowed value is 10.`** — Reduce min-length to a value ≤10 or contact Dell support to verify system limits.
-    **`Error: max-age must be greater than or equal to min-age.`** — Ensure max-age (90) is not less than min-age (1), or adjust min-age first.
-    **`Error: User does not have permission to modify password policy.`** — Verify you are logged in with administrative or root privileges using `whoami` or `id`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cannot set min-length to 12. Maximum allowed value is 10.` | Reduce min-length to a value ≤10 or contact Dell support to verify system limits. |
+    | `Error: max-age must be greater than or equal to min-age.` | Ensure max-age (90) is not less than min-age (1), or adjust min-age first. |
+    | `Error: User does not have permission to modify password policy.` | Verify you are logged in with administrative or root privileges using `whoami` or `id`. |
 **Recommended policy settings:**
 
 | Setting | Recommended Value |
@@ -349,9 +361,11 @@ SSH key 2 removed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid key format`** — Ensure the full public key string is pasted exactly as generated (starting with `ssh-ed25519` or `ssh-rsa`) with no line breaks or extra whitespace.
-    **`Error: User not found`** — Verify the username exists on the Data Domain system using `user show <username>` before adding or removing keys.
-    **`Error: Key ID does not exist for this user`** — Confirm the key ID is correct by running `user ssh-keys show <username>` to list all valid key IDs for that user.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid key format` | Ensure the full public key string is pasted exactly as generated (starting with `ssh-ed25519` or `ssh-rsa`) with no line breaks or extra whitespace. |
+    | `Error: User not found` | Verify the username exists on the Data Domain system using `user show <username>` before adding or removing keys. |
+    | `Error: Key ID does not exist for this user` | Confirm the key ID is correct by running `user ssh-keys show <username>` to list all valid key IDs for that user. |
 **Key type guidance:**
 
 | Key Type | Recommended? | Notes |
@@ -390,8 +404,10 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC8k9vL2pQxVwN8jK3hB5cD7eF1gA4sT6uY9zX2wV3b
 ```
 
 !!! warning "Common errors"
-    **`Permissions 0644 for '/home/jsmith/.ssh/dd01_ed25519' are too open.`** — Run `chmod 600 ~/.ssh/dd01_ed25519` to restrict key file permissions.
-    **`No such file or directory`** — Create the `.ssh` directory first with `mkdir -p ~/.ssh` if it does not exist.
+    | Error | Fix |
+    |---|---|
+    | `Permissions 0644 for '/home/jsmith/.ssh/dd01_ed25519' are too open.` | Run `chmod 600 ~/.ssh/dd01_ed25519` to restrict key file permissions. |
+    | `No such file or directory` | Create the `.ssh` directory first with `mkdir -p ~/.ssh` if it does not exist. |
 ---
 
 ## Session Management
@@ -413,8 +429,10 @@ sysadmin           192.168.1.45    2024-01-15 06:32:51 sess-a7f2c9d1
 ```
 
 !!! warning "Common errors"
-    **`Error: Access denied - insufficient privileges`** — Run the command with admin credentials or ensure your user account has the required security permissions.
-    **`Error: Command not found`** — Verify you are connected to the Data Domain system via SSH/CLI and not a standard Linux shell; use the correct DD management interface.
+    | Error | Fix |
+    |---|---|
+    | `Error: Access denied - insufficient privileges` | Run the command with admin credentials or ensure your user account has the required security permissions. |
+    | `Error: Command not found` | Verify you are connected to the Data Domain system via SSH/CLI and not a standard Linux shell; use the correct DD management interface. |
 ### Terminate a Session
 
 ```bash
@@ -431,8 +449,10 @@ Session Duration: 2h 14m 32s
 ```
 
 !!! warning "Common errors"
-    **`Error: Session ID 1234567890 not found or already terminated`** — Verify the session ID is correct and active by running `user login show` first.
-    **`Error: Permission denied - insufficient privileges to terminate session`** — Ensure your user account has administrative or session management privileges on the Data Domain system.
+    | Error | Fix |
+    |---|---|
+    | `Error: Session ID 1234567890 not found or already terminated` | Verify the session ID is correct and active by running `user login show` first. |
+    | `Error: Permission denied - insufficient privileges to terminate session` | Ensure your user account has administrative or session management privileges on the Data Domain system. |
 ### Idle Session Timeout
 
 ```bash
@@ -450,8 +470,10 @@ idle-timeout: 15
 ```
 
 !!! warning "Common errors"
-    **`adminaccess: command not found`** — Ensure you are logged into the Data Domain management console (SSH to the DD system directly, not a jump host).
-    **`Error: Permission denied`** — Verify your user account has administrative privileges by running `adminaccess show` without arguments to check your current role.
+    | Error | Fix |
+    |---|---|
+    | `adminaccess: command not found` | Ensure you are logged into the Data Domain management console (SSH to the DD system directly, not a jump host). |
+    | `Error: Permission denied` | Verify your user account has administrative privileges by running `adminaccess show` without arguments to check your current role. |
 ---
 
 ## DD Boost Authentication
@@ -503,8 +525,10 @@ archive-tier-2     restore-user-01      750           89.2
 ```
 
 !!! warning "Common errors"
-    **`Error: User 'backup-user-03' already exists`** — Choose a unique username or delete the existing user first with `ddboost user del backup-user-03`.
-    **`Error: Invalid role 'admin' specified; role must be 'backup-operator'`** — Replace the role parameter with `backup-operator` as DD Boost only supports this role for security.
+    | Error | Fix |
+    |---|---|
+    | `Error: User 'backup-user-03' already exists` | Choose a unique username or delete the existing user first with `ddboost user del backup-user-03`. |
+    | `Error: Invalid role 'admin' specified; role must be 'backup-operator'` | Replace the role parameter with `backup-operator` as DD Boost only supports this role for security. |
 **DD Boost user naming convention:** `ddboost-<backup-tool>` — e.g., `ddboost-veeam`, `ddboost-netbackup`. One user per backup application, never shared across tools.
 
 ---
@@ -554,9 +578,11 @@ Configured Syslog Hosts:
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid syslog server IP address`** — Verify the IP address format is valid (e.g., 192.168.1.100) and the server is reachable on port 514.
-    **`Error: Syslog host already exists`** — Remove the duplicate entry with `log host remove <syslog-server-ip>` before re-adding it.
-    **`Error: Cannot connect to syslog server`** — Confirm network connectivity to the syslog server and that it is listening on UDP port 514.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid syslog server IP address` | Verify the IP address format is valid (e.g., 192.168.1.100) and the server is reachable on port 514. |
+    | `Error: Syslog host already exists` | Remove the duplicate entry with `log host remove <syslog-server-ip>` before re-adding it. |
+    | `Error: Cannot connect to syslog server` | Confirm network connectivity to the syslog server and that it is listening on UDP port 514. |
 Forward the audit log to a SIEM with at minimum 12 months of retention. Authentication log analysis should include:
 - Failed login patterns (potential brute force)
 - Login from unexpected source IPs

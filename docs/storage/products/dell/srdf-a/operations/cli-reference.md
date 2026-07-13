@@ -134,8 +134,10 @@ Device Count: 12
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_ERROR: Device 00B5 not found in RDF group 10`** — Verify the RDF group number with `symrdf -sid 000123456789 list` and confirm the device is enrolled in that group.
-    **`SYMCLI_ERROR: Verify failed — State mismatch detected on device 00B5`** — Check remote array connectivity with `symrdf -sid 000123456789 -rdfg 10 query dev 00B5` and resynchronize if needed using `symrdf -sid 000123456789 -rdfg 10 set -dev 00B5 -state synchronized`.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_ERROR: Device 00B5 not found in RDF group 10` | Verify the RDF group number with `symrdf -sid 000123456789 list` and confirm the device is enrolled in that group. |
+    | `SYMCLI_ERROR: Verify failed — State mismatch detected on device 00B5` | Check remote array connectivity with `symrdf -sid 000123456789 -rdfg 10 query dev 00B5` and resynchronize if needed using `symrdf -sid 000123456789 -rdfg 10 set -dev 00B5 -state synchronized`. |
 ---
 
 ## SRDF/A Consistency Protection
@@ -165,8 +167,10 @@ Device: 000123456789_000F_00005 State: SyncInProg (85%)
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI Error: Could not connect to the Symmetrix`** — Verify the Symmetrix SID is correct and the SYMAPI daemon is running on the local host.
-    **`Error: RDF Group 10 not found`** — Confirm the RDF group number exists on the array using `symrdf -sid 000123456789 list`.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI Error: Could not connect to the Symmetrix` | Verify the Symmetrix SID is correct and the SYMAPI daemon is running on the local host. |
+    | `Error: RDF Group 10 not found` | Confirm the RDF group number exists on the array using `symrdf -sid 000123456789 list`. |
 ---
 
 ## Unisphere REST API
@@ -297,9 +301,11 @@ Label:        SRDF-A-Primary
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `--insecure` flag only if using a valid CA-signed certificate, or ensure the Unisphere server certificate is trusted by the system.
-    **`HTTP/1.1 401 Unauthorized`** — Verify the SMC credentials in the `AUTH` variable are correct and the user has REST API permissions in Unisphere.
-    **`jq: command not found` or `ModuleNotFoundError: No module named 'json'`** — Install Python 3 with the json module (standard library) or use `jq` instead of `python3 -m json.tool` for JSON formatting.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `--insecure` flag only if using a valid CA-signed certificate, or ensure the Unisphere server certificate is trusted by the system. |
+    | `HTTP/1.1 401 Unauthorized` | Verify the SMC credentials in the `AUTH` variable are correct and the user has REST API permissions in Unisphere. |
+    | `jq: command not found` or `ModuleNotFoundError: No module named 'json'` | Install Python 3 with the json module (standard library) or use `jq` instead of `python3 -m json.tool` for JSON formatting. |
 ---
 
 ## Verify

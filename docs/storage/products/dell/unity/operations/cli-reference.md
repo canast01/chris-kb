@@ -62,9 +62,11 @@ Release Date                : 2023-11-20
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused on <ip>:443`** — Verify the Unity array IP is reachable and the management interface is online with `ping <ip>`.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the admin password is correct and the user account is not locked; reset credentials via the Unity web UI if needed.
-    **`Error: uemcli: command not found`** — Install the EMC UEMCLI package or add its installation directory to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused on <ip>:443` | Verify the Unity array IP is reachable and the management interface is online with `ping <ip>`. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin password is correct and the user account is not locked; reset credentials via the Unity web UI if needed. |
+    | `Error: uemcli: command not found` | Install the EMC UEMCLI package or add its installation directory to your PATH environment variable. |
 ### Alerts and Events
 
 ```bash
@@ -108,9 +110,11 @@ audit_890          admin                  Changed pool settings     pool_tier1  
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused — Verify the Unity array IP address is correct and the management interface is reachable (ping <ip>)`**
-    **`Error: Authentication failed for user 'admin' — Confirm the admin password is correct and the user account is not locked`**
-    **`Error: Command not found: uemcli — Install the EMC Unity CLI package or verify the installation path is in $PATH`**
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused` | Verify the Unity array IP address is correct and the management interface is reachable (ping <ip>) |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin password is correct and the user account is not locked |
+    | `Error: Command not found: uemcli` | Install the EMC Unity CLI package or verify the installation path is in $PATH |
 ### Alert Severity Levels
 
 | Severity | Meaning | Action |
@@ -165,9 +169,11 @@ Status: Success
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed: Invalid credentials`** — Verify the admin password and ensure the user account has not been locked after failed login attempts.
-    **`Connection timeout: Unable to reach <ip>`** — Confirm the management IP address is correct, the array is reachable on the network, and firewall rules allow port 443 access to the Unity system.
-    **`License feature not available`** — Check that the required license is installed and not expired using the `show -detail` option to view expiration dates.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed: Invalid credentials` | Verify the admin password and ensure the user account has not been locked after failed login attempts. |
+    | `Connection timeout: Unable to reach <ip>` | Confirm the management IP address is correct, the array is reachable on the network, and firewall rules allow port 443 access to the Unity system. |
+    | `License feature not available` | Check that the required license is installed and not expired using the `show -detail` option to view expiration dates. |
 ### NTP and DNS
 
 ```bash
@@ -193,9 +199,11 @@ DNS Resolver Retries:                    3
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (10.20.30.100:443)`** — Verify the Unity array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is online.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the admin password is correct and the user account is not locked by running `uemcli -d <ip> -u admin /user show`.
-    **`Error: Command not found: uemcli`** — Install the EMC CLI tools package or ensure the uemcli binary is in your PATH by checking `which uemcli`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (10.20.30.100:443)` | Verify the Unity array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is online. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin password is correct and the user account is not locked by running `uemcli -d <ip> -u admin /user show`. |
+    | `Error: Command not found: uemcli` | Install the EMC CLI tools package or ensure the uemcli binary is in your PATH by checking `which uemcli`. |
 ### SP Failover and Upgrade Status
 
 ```bash
@@ -225,9 +233,11 @@ Upgrade Duration: 18 minutes
 ```
 
 !!! warning "Common errors"
-    **`Error: The resource is already owned by the target SP`** — Verify the resource is currently owned by the opposite SP using `uemcli -d <ip> -u admin /sys/res/lun show -id <resource_id>` before attempting trespass.
-    **`Error: Authentication failed`** — Ensure the admin credentials are correct and the user account has sufficient privileges; use `-p` flag to provide password interactively if needed.
-    **`Error: Connection timeout to <ip>`** — Verify network connectivity to the array management IP and confirm the IP address is correct with `ping <ip>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: The resource is already owned by the target SP` | Verify the resource is currently owned by the opposite SP using `uemcli -d <ip> -u admin /sys/res/lun show -id <resource_id>` before attempting trespass. |
+    | `Error: Authentication failed` | Ensure the admin credentials are correct and the user account has sufficient privileges; use `-p` flag to provide password interactively if needed. |
+    | `Error: Connection timeout to <ip>` | Verify network connectivity to the array management IP and confirm the IP address is correct with `ping <ip>`. |
 ### Hardware Health Summary
 
 ```bash
@@ -260,9 +270,11 @@ DG dg_1 Health: OK
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the Unity array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is accessible.
-    **`Authentication failed`** — Confirm the admin credentials are correct and the user account has not been locked; reset the password via the Unisphere GUI if needed.
-    **`uemcli: command not found`** — Install the EMC CLI tools package or add the uemcli binary path to your system PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the Unity array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is accessible. |
+    | `Authentication failed` | Confirm the admin credentials are correct and the user account has not been locked; reset the password via the Unisphere GUI if needed. |
+    | `uemcli: command not found` | Install the EMC CLI tools package or add the uemcli binary path to your system PATH environment variable. |
 ---
 
 ## Storage Pools
@@ -312,9 +324,11 @@ Snap Reserve: 10%
 ```
 
 !!! warning "Common errors"
-    **`Error: The system is unreachable`** — Verify the Unity array IP address is correct and reachable with `ping <ip>`, and confirm network connectivity from the management host.
-    **`Error: Authentication failed`** — Confirm the admin credentials are correct and the user account has not been locked; reset the password via the Unity web UI if needed.
-    **`Error: Pool <pool_id> not found`** — Verify the pool ID exists by running the summary command first to list all available pool IDs.
+    | Error | Fix |
+    |---|---|
+    | `Error: The system is unreachable` | Verify the Unity array IP address is correct and reachable with `ping <ip>`, and confirm network connectivity from the management host. |
+    | `Error: Authentication failed` | Confirm the admin credentials are correct and the user account has not been locked; reset the password via the Unity web UI if needed. |
+    | `Error: Pool <pool_id> not found` | Verify the pool ID exists by running the summary command first to list all available pool IDs. |
 ### Capacity Monitoring
 
 ```bash
@@ -343,8 +357,10 @@ Health: Degraded
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the Unity array IP address is correct and reachable with `ping <ip>`, and confirm the management interface is accessible.
-    **`Authentication failed`** — Ensure the admin credentials are correct and the user account has sufficient privileges; try `uemcli -d <ip> -u admin /sys/general show` to test connectivity first.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the Unity array IP address is correct and reachable with `ping <ip>`, and confirm the management interface is accessible. |
+    | `Authentication failed` | Ensure the admin credentials are correct and the user account has sufficient privileges; try `uemcli -d <ip> -u admin /sys/general show` to test connectivity first. |
 ### Capacity Thresholds
 
 | Free Space | Action |
@@ -381,9 +397,11 @@ Description: Primary production pool - SAS SSD
 ```
 
 !!! warning "Common errors"
-    **`Error Code: 0x7d000001 - Disk group does not exist or is not available`** — Verify the disk group name with `uemcli -d <ip> -u admin /disk/group list` and confirm dg_1 is in Ready state.
-    **`Error Code: 0x7d000009 - RAID type not supported for this disk group`** — Check disk group specifications with `uemcli -d <ip> -u admin /disk/group show -id dg_1` to confirm it supports RAID5 with the requested stripe width.
-    **`Authentication failed: Invalid credentials or insufficient privileges`** — Ensure the admin user has storage pool creation permissions and verify connectivity to the array with `uemcli -d <ip> -u admin /sys show`.
+    | Error | Fix |
+    |---|---|
+    | `Error Code: 0x7d000001 - Disk group does not exist or is not available` | Verify the disk group name with `uemcli -d <ip> -u admin /disk/group list` and confirm dg_1 is in Ready state. |
+    | `Error Code: 0x7d000009 - RAID type not supported for this disk group` | Check disk group specifications with `uemcli -d <ip> -u admin /disk/group show -id dg_1` to confirm it supports RAID5 with the requested stripe width. |
+    | `Authentication failed: Invalid credentials or insufficient privileges` | Ensure the admin user has storage pool creation permissions and verify connectivity to the array with `uemcli -d <ip> -u admin /sys show`. |
 ### Expand a Pool
 
 ```bash
@@ -405,9 +423,11 @@ Free: 26.5 TB
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid pool ID <pool_id>`** — Verify the pool ID exists by running `uemcli -d <ip> -u admin /stor/config/pool show` and use the correct pool identifier.
-    **`Error: Disk group <dg_id> is already assigned to another pool`** — Check available unassigned disk groups with `uemcli -d <ip> -u admin /stor/config/diskgroup show` and select one with status "Unassigned".
-    **`Connection refused on <ip>:443`** — Ensure the Unity array IP is reachable and the management interface is online by pinging the IP and verifying network connectivity.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid pool ID <pool_id>` | Verify the pool ID exists by running `uemcli -d <ip> -u admin /stor/config/pool show` and use the correct pool identifier. |
+    | `Error: Disk group <dg_id> is already assigned to another pool` | Check available unassigned disk groups with `uemcli -d <ip> -u admin /stor/config/diskgroup show` and select one with status "Unassigned". |
+    | `Connection refused on <ip>:443` | Ensure the Unity array IP is reachable and the management interface is online by pinging the IP and verifying network connectivity. |
 ### Modify and Delete
 
 ```bash
@@ -425,8 +445,10 @@ Pool "archive_pool" deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Pool is not empty. Cannot delete pool with active LUNs or file systems.`** — Migrate or delete all LUNs and file systems in the pool before attempting deletion.
-    **`Error: Authentication failed for user 'admin' on <ip>.`** — Verify the admin credentials and ensure the management IP is reachable with `ping <ip>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Pool is not empty. Cannot delete pool with active LUNs or file systems.` | Migrate or delete all LUNs and file systems in the pool before attempting deletion. |
+    | `Error: Authentication failed for user 'admin' on <ip>.` | Verify the admin credentials and ensure the management IP is reachable with `ping <ip>`. |
 ### RAID Types
 
 | RAID Type | Overhead | Protection | Use Case |
@@ -517,9 +539,11 @@ LUN 1
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the Unity array IP address is correct and reachable with `ping <ip>`, and confirm uemcli credentials are configured via `uemcli -d <ip> /sys/general show`.
-    **`Authentication failed`** — Ensure your uemcli credentials are set in `~/.uemcli/config` or pass credentials explicitly with `-u <username>` flag.
-    **`Command not found: uemcli`** — Install the Dell EMC uemcli package or add its installation directory to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the Unity array IP address is correct and reachable with `ping <ip>`, and confirm uemcli credentials are configured via `uemcli -d <ip> /sys/general show`. |
+    | `Authentication failed` | Ensure your uemcli credentials are set in `~/.uemcli/config` or pass credentials explicitly with `-u <username>` flag. |
+    | `Command not found: uemcli` | Install the Dell EMC uemcli package or add its installation directory to your PATH environment variable. |
 ### Create / Expand / Rename / Delete
 
 ```bash
@@ -555,9 +579,11 @@ The operation completed successfully. LUN lun_1 has been deleted.
 ```
 
 !!! warning "Common errors"
-    **`Error: LUN name already exists`** — Choose a unique LUN name that doesn't conflict with existing LUNs in the pool.
-    **`Error: Insufficient space in pool <pool_id>`** — Verify the pool has enough free capacity using `uemcli -d <ip> /stor/config/pool -id <pool_id> show` before expanding.
-    **`Error: LUN is currently mapped to one or more hosts`** — Unmask the LUN from all hosts using `uemcli -d <ip> /stor/config/lun -id <lun_id> unmask` before deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: LUN name already exists` | Choose a unique LUN name that doesn't conflict with existing LUNs in the pool. |
+    | `Error: Insufficient space in pool <pool_id>` | Verify the pool has enough free capacity using `uemcli -d <ip> /stor/config/pool -id <pool_id> show` before expanding. |
+    | `Error: LUN is currently mapped to one or more hosts` | Unmask the LUN from all hosts using `uemcli -d <ip> /stor/config/lun -id <lun_id> unmask` before deletion. |
 ### LUN Host Access (Masking)
 
 ```bash
@@ -611,9 +637,11 @@ Health State: OK
 ```
 
 !!! warning "Common errors"
-    **`Error: The specified LUN was not found.`** — Verify the LUN ID exists using `uemcli -d <ip> /stor/config/lun show` and confirm the correct ID is being referenced.
-    **`Error: Access denied. User 'admin' does not have sufficient privileges.`** — Ensure the credentials are correct and the user account has administrative rights on the Unity array.
-    **`Error: The specified host was not found.`** — Confirm the host ID exists in the system using `uemcli -d <ip> /stor/config/host show` before attempting to grant access.
+    | Error | Fix |
+    |---|---|
+    | `Error: The specified LUN was not found.` | Verify the LUN ID exists using `uemcli -d <ip> /stor/config/lun show` and confirm the correct ID is being referenced. |
+    | `Error: Access denied. User 'admin' does not have sufficient privileges.` | Ensure the credentials are correct and the user account has administrative rights on the Unity array. |
+    | `Error: The specified host was not found.` | Confirm the host ID exists in the system using `uemcli -d <ip> /stor/config/host show` before attempting to grant access. |
 ### LUN Snapshots
 
 ```bash
@@ -669,9 +697,11 @@ Snapshot Deleted Successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid resource ID <lun_id>`** — Verify the LUN ID exists on the array using `uemcli -d <ip> /lun show` and use the correct numeric identifier.
-    **`Error: Snapshot <snap_id> is in use and cannot be deleted`** — Ensure no active restore operations or clones depend on this snapshot before deletion.
-    **`Error: Connection refused to <ip>:443`** — Confirm the Unity array IP is reachable and uemcli credentials are configured with `uemcli -d <ip> /user show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid resource ID <lun_id>` | Verify the LUN ID exists on the array using `uemcli -d <ip> /lun show` and use the correct numeric identifier. |
+    | `Error: Snapshot <snap_id> is in use and cannot be deleted` | Ensure no active restore operations or clones depend on this snapshot before deletion. |
+    | `Error: Connection refused to <ip>:443` | Confirm the Unity array IP is reachable and uemcli credentials are configured with `uemcli -d <ip> /user show`. |
 ### LUN Performance Metrics
 
 ```bash
@@ -700,9 +730,11 @@ lun_456                     2024-01-15 14:32:20  589.4          read_iops
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused on <ip>:443`** — Verify the Unity array IP is reachable and the management interface is running with `ping <ip>` and check firewall rules.
-    **`Error: Invalid filter "lun.throughput.total.read" — filter not found`** — Use `uemcli -d <ip> /metrics/value/rt show -help` to list valid metric filter names for your Unity version.
-    **`Error: Authentication failed for user admin`** — Confirm credentials are correct and the admin account is not locked by attempting login with `uemcli -d <ip> /user show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused on <ip>:443` | Verify the Unity array IP is reachable and the management interface is running with `ping <ip>` and check firewall rules. |
+    | `Error: Invalid filter "lun.throughput.total.read" — filter not found` | Use `uemcli -d <ip> /metrics/value/rt show -help` to list valid metric filter names for your Unity version. |
+    | `Error: Authentication failed for user admin` | Confirm credentials are correct and the admin account is not locked by attempting login with `uemcli -d <ip> /user show`. |
 ### LUN Common Issues
 
 | Issue | Check | Action |
@@ -751,9 +783,11 @@ The operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error Code: 0x7d13d001 - The pool does not exist or is not accessible.`** — Verify the pool ID exists and is in a healthy state using `uemcli -d <ip> /pool show`.
-    **`Error Code: 0x7d13d004 - The specified storage processor is not valid or offline.`** — Confirm the SP ID (SPA or SPB) is online and accessible with `uemcli -d <ip> /sys/sp show`.
-    **`Error Code: 0x7d13d010 - A NAS server with this name already exists.`** — Choose a unique NAS server name or delete the existing server before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `Error Code: 0x7d13d001 - The pool does not exist or is not accessible.` | Verify the pool ID exists and is in a healthy state using `uemcli -d <ip> /pool show`. |
+    | `Error Code: 0x7d13d004 - The specified storage processor is not valid or offline.` | Confirm the SP ID (SPA or SPB) is online and accessible with `uemcli -d <ip> /sys/sp show`. |
+    | `Error Code: 0x7d13d010 - A NAS server with this name already exists.` | Choose a unique NAS server name or delete the existing server before recreating it. |
 ### File Systems
 
 ```bash
@@ -804,9 +838,11 @@ File System fs_4 deleted successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid NAS Server ID '<nas_id>'`** — Verify the NAS server ID exists by running `uemcli -d <ip> /net/nas show` and use a valid ID from the output.
-    **`Error: Pool '<pool_id>' does not have sufficient free space`** — Check available pool capacity with `uemcli -d <ip> /stor/config/pool show -detail` and request a smaller size or add capacity to the pool.
-    **`Error: File System '<fs_id>' is in use and cannot be deleted`** — Unmount or disconnect all clients accessing the file system before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid NAS Server ID '<nas_id>'` | Verify the NAS server ID exists by running `uemcli -d <ip> /net/nas show` and use a valid ID from the output. |
+    | `Error: Pool '<pool_id>' does not have sufficient free space` | Check available pool capacity with `uemcli -d <ip> /stor/config/pool show -detail` and request a smaller size or add capacity to the pool. |
+    | `Error: File System '<fs_id>' is in use and cannot be deleted` | Unmount or disconnect all clients accessing the file system before attempting deletion. |
 ### NFS Shares
 
 ```bash
@@ -843,9 +879,11 @@ NFS share 4 deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid filesystem ID <fs_id>`** — Verify the filesystem exists with `uemcli -d <ip> /stor/config/fs show` and use the correct ID.
-    **`Error: Access denied. Check your credentials and IP address.`** — Ensure the management IP is correct and your user account has sufficient privileges on the Unity array.
-    **`Error: NFS share <nfs_id> is in use and cannot be deleted.`** — Unmount the NFS share from all clients before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid filesystem ID <fs_id>` | Verify the filesystem exists with `uemcli -d <ip> /stor/config/fs show` and use the correct ID. |
+    | `Error: Access denied. Check your credentials and IP address.` | Ensure the management IP is correct and your user account has sufficient privileges on the Unity array. |
+    | `Error: NFS share <nfs_id> is in use and cannot be deleted.` | Unmount the NFS share from all clients before attempting deletion. |
 ### CIFS Shares
 
 ```bash
@@ -879,9 +917,11 @@ The CIFS share with ID 5 was deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid filesystem ID <fs_id>`** — Verify the filesystem exists by running `uemcli -d <ip> /stor/config/fs show` and use a valid fs_id from the output.
-    **`Error: Access denied. Insufficient privileges.`** — Ensure your user account has administrative privileges on the Unity array and authentication credentials are correct.
-    **`Error: CIFS share <cifs_id> is in use and cannot be deleted.`** — Disconnect all active CIFS clients or unmount the share before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid filesystem ID <fs_id>` | Verify the filesystem exists by running `uemcli -d <ip> /stor/config/fs show` and use a valid fs_id from the output. |
+    | `Error: Access denied. Insufficient privileges.` | Ensure your user account has administrative privileges on the Unity array and authentication credentials are correct. |
+    | `Error: CIFS share <cifs_id> is in use and cannot be deleted.` | Disconnect all active CIFS clients or unmount the share before attempting deletion. |
 ### File System Snapshots
 
 ```bash
@@ -912,9 +952,11 @@ Snapshot snap_987654323 has been deleted.
 ```
 
 !!! warning "Common errors"
-    **`Error: The specified resource <fs_id> does not exist`** — Verify the filesystem ID exists by running `uemcli -d <ip> /stor/fs show` and use the correct ID from the output.
-    **`Error: Authentication failed for user admin`** — Ensure you have network connectivity to the Unity array and valid credentials; add `-u <username> -p <password>` to the command if required.
-    **`Error: Snapshot cannot be restored while it is in use by another operation`** — Wait for any active replication or backup jobs to complete before attempting the restore operation.
+    | Error | Fix |
+    |---|---|
+    | `Error: The specified resource <fs_id> does not exist` | Verify the filesystem ID exists by running `uemcli -d <ip> /stor/fs show` and use the correct ID from the output. |
+    | `Error: Authentication failed for user admin` | Ensure you have network connectivity to the Unity array and valid credentials; add `-u <username> -p <password>` to the command if required. |
+    | `Error: Snapshot cannot be restored while it is in use by another operation` | Wait for any active replication or backup jobs to complete before attempting the restore operation. |
 ### File System Common Issues
 
 | Issue | Check | Action |
@@ -991,9 +1033,11 @@ Status: Uninitialized
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid host ID '<host_id>'`** — Verify the host ID exists by running `uemcli -d <ip> -u admin /remote/host show` and use the correct ID from the output.
-    **`Error: Host name '<hostname>' already exists`** — Choose a unique hostname or delete the existing host before creating a new one with the same name.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the admin password is correct and the user account has sufficient privileges on the Unity array.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid host ID '<host_id>'` | Verify the host ID exists by running `uemcli -d <ip> -u admin /remote/host show` and use the correct ID from the output. |
+    | `Error: Host name '<hostname>' already exists` | Choose a unique hostname or delete the existing host before creating a new one with the same name. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin password is correct and the user account has sufficient privileges on the Unity array. |
 ### Host OS Types
 
 | OS Type | Value |
@@ -1053,9 +1097,11 @@ The operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid host ID '<host_id>'`** — Verify the host exists with `uemcli -d <ip> -u admin /remote/host show` and use the correct Host ID value.
-    **`Error: Initiator UID already registered to host '<host_id>'`** — Check for duplicate initiator registration with `uemcli -d <ip> -u admin /remote/initiator show -detail` and delete the duplicate before re-registering.
-    **`Error: Invalid initiator ID '<initiator_id>'`** — Confirm the initiator ID exists by listing all initiators and ensure you are using the correct identifier format.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid host ID '<host_id>'` | Verify the host exists with `uemcli -d <ip> -u admin /remote/host show` and use the correct Host ID value. |
+    | `Error: Initiator UID already registered to host '<host_id>'` | Check for duplicate initiator registration with `uemcli -d <ip> -u admin /remote/initiator show -detail` and delete the duplicate before re-registering. |
+    | `Error: Invalid initiator ID '<initiator_id>'` | Confirm the initiator ID exists by listing all initiators and ensure you are using the correct identifier format. |
 ### End-to-End LUN Presentation
 
 ```bash
@@ -1088,9 +1134,11 @@ scsi 10:0:0:1: Direct-Access-RW DELL VRAID DISK15.0 PQ: 0 ANSI: 5
 ```
 
 !!! warning "Common errors"
-    **`Error: Host 'server01' already exists`** — Use a unique hostname or retrieve the existing host ID with `uemcli -d <ip> -u admin /remote/host list` and proceed to Step 2.
-    **`Error: Invalid WWN format or initiator not found on fabric`** — Verify the WWN is correct and the HBA is logged into the SAN fabric using `uemcli -d <ip> -u admin /remote/initiator list`.
-    **`Error: LUN not found or host does not exist`** — Confirm both the LUN ID and host ID exist by running `uemcli -d <ip> -u admin /stor/lun list` and `uemcli -d <ip> -u admin /remote/host list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host 'server01' already exists` | Use a unique hostname or retrieve the existing host ID with `uemcli -d <ip> -u admin /remote/host list` and proceed to Step 2. |
+    | `Error: Invalid WWN format or initiator not found on fabric` | Verify the WWN is correct and the HBA is logged into the SAN fabric using `uemcli -d <ip> -u admin /remote/initiator list`. |
+    | `Error: LUN not found or host does not exist` | Confirm both the LUN ID and host ID exist by running `uemcli -d <ip> -u admin /stor/lun list` and `uemcli -d <ip> -u admin /remote/host list`. |
 ---
 
 ## Network Interfaces
@@ -1123,8 +1171,10 @@ ID    Name       IPv4Address      IPv6Address        MTU    Speed      Status   
 ```
 
 !!! warning "Common errors"
-    **`The specified management server is not responding.`** — Verify the Unity array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is online.
-    **`Authentication failed`** — Confirm the admin credentials are correct and the user account has CLI access permissions enabled in the Unity management interface.
+    | Error | Fix |
+    |---|---|
+    | `The specified management server is not responding.` | Verify the Unity array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is online. |
+    | `Authentication failed` | Confirm the admin credentials are correct and the user account has CLI access permissions enabled in the Unity management interface. |
 ### Interface Types
 
 | Type | Use |
@@ -1177,9 +1227,11 @@ Interface ID: if_1 has been deleted.
 ```
 
 !!! warning "Common errors"
-    **`Error: The specified interface already exists on this port.`** — Verify the port is not already in use with `uemcli -d <ip> -u admin /net/if list` and delete the existing interface first if needed.
-    **`Error: Invalid IP address or netmask combination.`** — Ensure the IP address and netmask are valid and on the same subnet as your management network.
-    **`Error: Authentication failed. Invalid credentials.`** — Confirm the admin password is correct and the array is reachable at the specified IP address.
+    | Error | Fix |
+    |---|---|
+    | `Error: The specified interface already exists on this port.` | Verify the port is not already in use with `uemcli -d <ip> -u admin /net/if list` and delete the existing interface first if needed. |
+    | `Error: Invalid IP address or netmask combination.` | Ensure the IP address and netmask are valid and on the same subnet as your management network. |
+    | `Error: Authentication failed. Invalid credentials.` | Confirm the admin password is correct and the array is reachable at the specified IP address. |
 ### iSCSI Portals and Ethernet Ports
 
 ```bash
@@ -1251,9 +1303,11 @@ Port:  spb_fc0
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed: Invalid credentials`** — Verify the admin username and password are correct, or use `-p` flag to prompt for password interactively.
-    **`Error: Unable to connect to <ip>:443`** — Confirm the Unity array IP is reachable and uemcli is installed with correct network connectivity to the management interface.
-    **`Error: Command not found: uemcli`** — Install the EMC Unity CLI package or add the uemcli binary directory to your system PATH.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed: Invalid credentials` | Verify the admin username and password are correct, or use `-p` flag to prompt for password interactively. |
+    | `Error: Unable to connect to <ip>:443` | Confirm the Unity array IP is reachable and uemcli is installed with correct network connectivity to the management interface. |
+    | `Error: Command not found: uemcli` | Install the EMC Unity CLI package or add the uemcli binary directory to your system PATH. |
 ### Network Troubleshooting
 
 | Issue | Check | Command |
@@ -1320,9 +1374,11 @@ Bandwidth Limit: 100 MB/s
 ```
 
 !!! warning "Common errors"
-    **`You are not authenticated. Please login first.`** — Run `uemcli -d <ip> -u admin -p <password>` or enter the password when prompted.
-    **`Error: Invalid session ID '<session_id>'`** — Verify the session ID exists by running the list command first and use the exact ID from the output.
-    **`Connection timeout to <ip>:443`** — Confirm the Unity array IP is reachable and the management interface is responding with `ping <ip>`.
+    | Error | Fix |
+    |---|---|
+    | `You are not authenticated. Please login first.` | Run `uemcli -d <ip> -u admin -p <password>` or enter the password when prompted. |
+    | `Error: Invalid session ID '<session_id>'` | Verify the session ID exists by running the list command first and use the exact ID from the output. |
+    | `Connection timeout to <ip>:443` | Confirm the Unity array IP is reachable and the management interface is responding with `ping <ip>`. |
 ### Session States
 
 | State | Meaning |
@@ -1376,9 +1432,11 @@ Previous primary: UNITY-01 (192.168.1.42) is now secondary.
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed for user 'admin' on 192.168.1.42`** — Verify the IP address is correct and the admin credentials are valid using `uemcli -d <ip> -u admin /sys/info`.
-    **`Session ID 'rep_session_001' not found or invalid`** — List active replication sessions with `uemcli -d <ip> -u admin /prot/rep/session -list` to confirm the correct session ID.
-    **`Replication session is in FAILED state and cannot be paused`** — Check session health with `uemcli -d <ip> -u admin /prot/rep/session -id <session_id> -detail` and resolve any link or network issues before retrying.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed for user 'admin' on 192.168.1.42` | Verify the IP address is correct and the admin credentials are valid using `uemcli -d <ip> -u admin /sys/info`. |
+    | `Session ID 'rep_session_001' not found or invalid` | List active replication sessions with `uemcli -d <ip> -u admin /prot/rep/session -list` to confirm the correct session ID. |
+    | `Replication session is in FAILED state and cannot be paused` | Check session health with `uemcli -d <ip> -u admin /prot/rep/session -id <session_id> -detail` and resolve any link or network issues before retrying. |
 ### Failback
 
 ```bash
@@ -1414,9 +1472,11 @@ Current RPO: 5 minutes
 ```
 
 !!! warning "Common errors"
-    **`Error: Session rep_session_001 not found or invalid session state`** — Verify the session ID exists and is in a valid state for the operation using `uemcli -d <ip> -u admin /prot/rep/session list`.
-    **`Error: Connection refused to 192.168.1.52:443`** — Ensure the DR array IP is reachable and the management interface is online; check network connectivity and firewall rules.
-    **`Error: Insufficient permissions for user admin`** — Confirm the admin account has replication management privileges; check user role assignments in Unisphere.
+    | Error | Fix |
+    |---|---|
+    | `Error: Session rep_session_001 not found or invalid session state` | Verify the session ID exists and is in a valid state for the operation using `uemcli -d <ip> -u admin /prot/rep/session list`. |
+    | `Error: Connection refused to 192.168.1.52:443` | Ensure the DR array IP is reachable and the management interface is online; check network connectivity and firewall rules. |
+    | `Error: Insufficient permissions for user admin` | Confirm the admin account has replication management privileges; check user role assignments in Unisphere. |
 ### Replication Connections
 
 ```bash
@@ -1458,9 +1518,11 @@ Status: Initializing
 ```
 
 !!! warning "Common errors"
-    **`Error: Authentication failed for user 'admin' on <ip>`** — Verify the admin password is correct and the user account is not locked on the destination array.
-    **`Error: Connection already exists to destination <destination_sp_ip>`** — Use `uemcli -d <ip> -u admin /prot/rep/connect show` to list existing connections and reuse an existing connection ID instead of creating a duplicate.
-    **`Error: LUN <lun_id> not found or not available for replication`** — Confirm the source LUN ID is correct and the LUN is not already part of an active replication session.
+    | Error | Fix |
+    |---|---|
+    | `Error: Authentication failed for user 'admin' on <ip>` | Verify the admin password is correct and the user account is not locked on the destination array. |
+    | `Error: Connection already exists to destination <destination_sp_ip>` | Use `uemcli -d <ip> -u admin /prot/rep/connect show` to list existing connections and reuse an existing connection ID instead of creating a duplicate. |
+    | `Error: LUN <lun_id> not found or not available for replication` | Confirm the source LUN ID is correct and the LUN is not already part of an active replication session. |
 ---
 
 ## Physical Disks & Hardware
@@ -1497,8 +1559,10 @@ Health: OK
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (111)`** — Verify the storage array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is accessible on port 443.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the admin credentials are correct and the user account has not been locked; reset the password via the Unisphere web interface if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (111)` | Verify the storage array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is accessible on port 443. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin credentials are correct and the user account has not been locked; reset the password via the Unisphere web interface if needed. |
 ### Disk Health States
 
 | State | Meaning | Action |
@@ -1539,9 +1603,11 @@ dg_3  RAID10_NL_SAS_3   RAID 10    Degraded    5.5 TB
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the storage array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is accessible on port 443.
-    **`Authentication failed`** — Confirm admin credentials are correct and the user account has sufficient privileges; try `uemcli -d <ip> -u admin -p` to enter password interactively.
-    **`Command not found: uemcli`** — Install the EMC Unity CLI package or add its installation directory to your system PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the storage array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is accessible on port 443. |
+    | `Authentication failed` | Confirm admin credentials are correct and the user account has sufficient privileges; try `uemcli -d <ip> -u admin -p` to enter password interactively. |
+    | `Command not found: uemcli` | Install the EMC Unity CLI package or add its installation directory to your system PATH environment variable. |
 ### Storage Processors
 
 ```bash
@@ -1586,9 +1652,11 @@ Health State                   OK
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the storage array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is online.
-    **`Authentication failed`** — Confirm admin credentials are correct and the user account has not been locked; reset the password via the Unisphere GUI if needed.
-    **`Command not found: uemcli`** — Install the EMC CLI package or add its installation directory to your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the storage array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is online. |
+    | `Authentication failed` | Confirm admin credentials are correct and the user account has not been locked; reset the password via the Unisphere GUI if needed. |
+    | `Command not found: uemcli` | Install the EMC CLI package or add its installation directory to your PATH environment variable. |
 ### Enclosures, Power, Fans, Batteries
 
 ```bash
@@ -1630,9 +1698,11 @@ Battery Backup Unit (BBU) Information:
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed`** — Verify the IP address is correct and admin credentials are valid with `-u admin -p <password>` flag.
-    **`Connection timeout`** — Confirm the Unity array is reachable on the network and the management IP is correct.
-    **`Command not found: uemcli`** — Install the EMC CLI tools package or add the installation directory to your system PATH.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed` | Verify the IP address is correct and admin credentials are valid with `-u admin -p <password>` flag. |
+    | `Connection timeout` | Confirm the Unity array is reachable on the network and the management IP is correct. |
+    | `Command not found: uemcli` | Install the EMC CLI tools package or add the installation directory to your system PATH. |
 ---
 
 ## Verify

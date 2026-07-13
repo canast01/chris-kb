@@ -167,9 +167,11 @@ Nmap done at 2024-01-15 10:25:02 UTC; 1 IP address (1 host up) scanned in 1.34 s
 ```
 
 !!! warning "Common errors"
-    **`Nmap done at ... ; 0 hosts up scanned`** — Verify network connectivity and that the target subnet is reachable; check firewall rules blocking ICMP or the specified ports.
-    **`grep: ssl-scan.xml: No such file or directory`** — Ensure the first nmap command completed successfully and the XML output file was written before attempting to parse it.
-    **`Host seems down. If it is really up, but blocking all ping probes, try -Pn`** — Add the `-Pn` flag to nmap to skip host discovery and scan ports directly on unresponsive hosts.
+    | Error | Fix |
+    |---|---|
+    | `Nmap done at ... ; 0 hosts up scanned` | Verify network connectivity and that the target subnet is reachable; check firewall rules blocking ICMP or the specified ports. |
+    | `grep: ssl-scan.xml: No such file or directory` | Ensure the first nmap command completed successfully and the XML output file was written before attempting to parse it. |
+    | `Host seems down. If it is really up, but blocking all ping probes, try -Pn` | Add the `-Pn` flag to nmap to skip host discovery and scan ports directly on unresponsive hosts. |
 ### openssl-Based Discovery
 
 ```bash
@@ -204,9 +206,11 @@ MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMSswKQYDVQQDEyJE
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the hostname is correct and the server is listening on port 443 with `nc -zv example.com 443`.
-    **`unable to load certificate`** — Ensure the endpoint is returning a valid certificate; test connectivity with `curl -v https://example.com` first.
-    **`grep: (standard input): No such file or directory`** — The certificate text output may be empty if the connection fails; add error checking with `set -e` or verify the domain resolves with `nslookup example.com`.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the hostname is correct and the server is listening on port 443 with `nc -zv example.com 443`. |
+    | `unable to load certificate` | Ensure the endpoint is returning a valid certificate; test connectivity with `curl -v https://example.com` first. |
+    | `grep: (standard input): No such file or directory` | The certificate text output may be empty if the connection fails; add error checking with `set -e` or verify the domain resolves with `nslookup example.com`. |
 ### Windows Certificate Store Inventory
 
 ```powershell
@@ -280,9 +284,11 @@ curl -s https://tpp.corp.example.com/vedsdk/certificates \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Add the Venafi server's CA certificate to your system trust store or use `curl -k` to skip verification in non-production environments.
-    **`jq: error (at <stdin>:1): Cannot index null with string "APIKey"`** — Verify the service account credentials are correct and the `/vedauth/authorize` endpoint is accessible; check response with `curl -s ... | jq '.'` to see the actual error.
-    **`curl: (7) Failed to connect to tpp.corp.example.com port 443: Connection refused`** — Confirm the Venafi TPP hostname and port are correct and the server is running; test connectivity with `ping tpp.corp.example.com` or `nc -zv tpp.corp.example.com 443`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Add the Venafi server's CA certificate to your system trust store or use `curl -k` to skip verification in non-production environments. |
+    | `jq: error (at <stdin>:1): Cannot index null with string "APIKey"` | Verify the service account credentials are correct and the `/vedauth/authorize` endpoint is accessible; check response with `curl -s ... | jq '.'` to see the actual error. |
+    | `curl: (7) Failed to connect to tpp.corp.example.com port 443: Connection refused` | Confirm the Venafi TPP hostname and port are correct and the server is running; test connectivity with `ping tpp.corp.example.com` or `nc -zv tpp.corp.example.com 443`. |
 ---
 
 ## TLS Validation
@@ -329,9 +335,11 @@ intermediate.pem: OK
 ```
 
 !!! warning "Common errors"
-    **`verify error:num=20:unable to get local issuer certificate`** — Add the issuer's CA certificate to your CA bundle or use the `-untrusted` flag to specify intermediate certificates.
-    **`connect:errno=111 Connection refused`** — Verify the hostname and port are correct, and that the target service is running and accessible from your network.
-    **`error:0906D06C:PEM routines:PEM_read_bio:no start line`** — Ensure the certificate file is in valid PEM format and not corrupted; check the file encoding with `file cert.pem`.
+    | Error | Fix |
+    |---|---|
+    | `verify error:num=20:unable to get local issuer certificate` | Add the issuer's CA certificate to your CA bundle or use the `-untrusted` flag to specify intermediate certificates. |
+    | `connect:errno=111 Connection refused` | Verify the hostname and port are correct, and that the target service is running and accessible from your network. |
+    | `error:0906D06C:PEM routines:PEM_read_bio:no start line` | Ensure the certificate file is in valid PEM format and not corrupted; check the file encoding with `file cert.pem`. |
 ---
 
 ## Request a Certificate via Web Enrollment
@@ -475,8 +483,10 @@ Revoked Certificates:
 ```
 
 !!! warning "Common errors"
-    **`No such file or directory`** — Verify the CRL file path is correct and the file exists in the current directory or provide the full path to crl.pem.
-    **`unable to load CRL`** — Ensure the CRL file is in valid PEM format; convert from DER format using `openssl crl -inform DER -in crl.der -out crl.pem` if needed.
+    | Error | Fix |
+    |---|---|
+    | `No such file or directory` | Verify the CRL file path is correct and the file exists in the current directory or provide the full path to crl.pem. |
+    | `unable to load CRL` | Ensure the CRL file is in valid PEM format; convert from DER format using `openssl crl -inform DER -in crl.der -out crl.pem` if needed. |
 Notify service owners relying on the revoked certificate to install a replacement immediately.
 
 ---

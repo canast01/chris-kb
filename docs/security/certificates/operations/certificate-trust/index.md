@@ -58,8 +58,10 @@ server.crt: OK
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot create regular file '/usr/local/share/ca-certificates/internal-ca.crt': Permission denied`** — Run the command with `sudo` or as root.
-    **`error 18 at 0 depth lookup: self signed certificate`** — The CA certificate itself is self-signed; use `openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt -untrusted internal-ca.crt server.crt` if server.crt is signed by the intermediate CA.
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot create regular file '/usr/local/share/ca-certificates/internal-ca.crt': Permission denied` | Run the command with `sudo` or as root. |
+    | `error 18 at 0 depth lookup: self signed certificate` | The CA certificate itself is self-signed; use `openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt -untrusted internal-ca.crt server.crt` if server.crt is signed by the intermediate CA. |
 ## RHEL / Rocky / AlmaLinux
 
 ```bash
@@ -82,9 +84,11 @@ trust list | grep "internal-ca"
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot stat 'internal-ca.crt': No such file or directory`** — Verify the certificate file exists in the current directory or provide the full path to the source certificate.
-    **`update-ca-trust: command not found`** — Install the ca-certificates package using your distribution's package manager (apt-get install ca-certificates on Debian/Ubuntu, or yum install ca-certificates on RHEL/CentOS).
-    **`trust list | grep "internal-ca"` returns no results** — Confirm the certificate was successfully copied to /etc/pki/ca-trust/source/anchors/ and that update-ca-trust extract completed without errors.
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot stat 'internal-ca.crt': No such file or directory` | Verify the certificate file exists in the current directory or provide the full path to the source certificate. |
+    | `update-ca-trust: command not found` | Install the ca-certificates package using your distribution's package manager (apt-get install ca-certificates on Debian/Ubuntu, or yum install ca-certificates on RHEL/CentOS). |
+    | `trust list | grep "internal-ca"` returns no results` | Confirm the certificate was successfully copied to /etc/pki/ca-trust/source/anchors/ and that update-ca-trust extract completed without errors. |
 ## Windows — Local Machine Store
 
 ```powershell
@@ -128,9 +132,11 @@ internal-ca, Jan 15, 2025, trustedCertEntry, Certificate fingerprint (SHA-256): 
 ```
 
 !!! warning "Common errors"
-    **`keytool error: java.io.FileNotFoundException: /path/to/jdk/lib/security/cacerts (No such file or directory)`** — Verify `$JAVA_HOME` is set correctly with `echo $JAVA_HOME` and points to a valid JDK installation.
-    **`keytool error: java.lang.Exception: Certificate already exists with alias <internal-ca>`** — Delete the existing certificate first using `keytool -delete -alias internal-ca -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit`.
-    **`keytool error: java.lang.Exception: Invalid keystore format`** — Ensure the cacerts file has not been corrupted; restore from backup or verify file permissions with `ls -l $JAVA_HOME/lib/security/cacerts`.
+    | Error | Fix |
+    |---|---|
+    | `keytool error: java.io.FileNotFoundException: /path/to/jdk/lib/security/cacerts (No such file or directory)` | Verify `$JAVA_HOME` is set correctly with `echo $JAVA_HOME` and points to a valid JDK installation. |
+    | `keytool error: java.lang.Exception: Certificate already exists with alias <internal-ca>` | Delete the existing certificate first using `keytool -delete -alias internal-ca -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit`. |
+    | `keytool error: java.lang.Exception: Invalid keystore format` | Ensure the cacerts file has not been corrupted; restore from backup or verify file permissions with `ls -l $JAVA_HOME/lib/security/cacerts`. |
 ---
 
 ## Verification Commands
@@ -170,9 +176,11 @@ Certificate chain
 ```
 
 !!! warning "Common errors"
-    **`verify error:num=20:unable to get local issuer certificate`** — Add the issuing CA certificate to the trust store or use `-untrusted` flag with the intermediate certificate path.
-    **`verify error:num=10:certificate has expired`** — Renew the certificate before its "Not After" date or check system time synchronization with `timedatectl`.
-    **`error:0A000086:SSL routines::certificate verify failed`** — Ensure the CA bundle file path is correct and readable, or verify the certificate chain is complete with all intermediate certificates included.
+    | Error | Fix |
+    |---|---|
+    | `verify error:num=20:unable to get local issuer certificate` | Add the issuing CA certificate to the trust store or use `-untrusted` flag with the intermediate certificate path. |
+    | `verify error:num=10:certificate has expired` | Renew the certificate before its "Not After" date or check system time synchronization with `timedatectl`. |
+    | `error:0A000086:SSL routines::certificate verify failed` | Ensure the CA bundle file path is correct and readable, or verify the certificate chain is complete with all intermediate certificates included. |
 ### TLS Debug
 
 ```bash
@@ -226,9 +234,11 @@ issuer=C = US, O = Internal Intermediate CA, CN = Internal Intermediate CA
 ```
 
 !!! warning "Common errors"
-    **`verify error:num=20:unable to get local issuer certificate`** — Add the intermediate and root CA certificates to your system trust store or specify them explicitly with `--cacert` or `REQUESTS_CA_BUNDLE`.
-    **`curl: (60) SSL certificate problem: self signed certificate in certificate chain`** — Provide the full certificate chain (root + intermediate) in a single PEM file, or use `curl -k` to skip verification for testing only.
-    **`requests.exceptions.SSLError: HTTPSConnectionPool(host='<host>', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationFailed(...)))`** — Ensure the `REQUESTS_CA_BUNDLE` path is correct and readable, or set `REQUESTS_CA_BUNDLE` to the absolute path of your internal CA certificate.
+    | Error | Fix |
+    |---|---|
+    | `verify error:num=20:unable to get local issuer certificate` | Add the intermediate and root CA certificates to your system trust store or specify them explicitly with `--cacert` or `REQUESTS_CA_BUNDLE`. |
+    | `curl: (60) SSL certificate problem: self signed certificate in certificate chain` | Provide the full certificate chain (root + intermediate) in a single PEM file, or use `curl -k` to skip verification for testing only. |
+    | `requests.exceptions.SSLError: HTTPSConnectionPool(host='<host>', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationFailed(...)))` | Ensure the `REQUESTS_CA_BUNDLE` path is correct and readable, or set `REQUESTS_CA_BUNDLE` to the absolute path of your internal CA certificate. |
 ### Bulk Expiry Check
 
 ```bash
@@ -259,9 +269,11 @@ EXPIRING: /etc/ssl/certs/staging.crt — Jan 12 14:50:33 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the certificate file exists and is readable with `ls -la` and check the file path is correct.
-    **`unable to connect to <host>:443`** — Ensure the host is reachable, the port is correct, and no firewall is blocking the connection with `nc -zv <host> 443`.
-    **`Certificate will expire`** — Renew the certificate immediately using your CA or certificate management tool before the expiry date passes.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the certificate file exists and is readable with `ls -la` and check the file path is correct. |
+    | `unable to connect to <host>:443` | Ensure the host is reachable, the port is correct, and no firewall is blocking the connection with `nc -zv <host> 443`. |
+    | `Certificate will expire` | Renew the certificate immediately using your CA or certificate management tool before the expiry date passes. |
 ---
 
 ## Verify

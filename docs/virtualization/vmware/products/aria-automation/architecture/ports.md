@@ -158,9 +158,11 @@ Connection to 192.168.1.50 port 636 [tcp/ldapssl] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <aria-automation-fqdn> port 443: Connection refused`** — Verify the Aria Automation appliance is running and the FQDN resolves correctly with `nslookup` or `dig`.
-    **`nc: getaddrinfo: Name or service not known`** — Confirm the DC IP address is correct and reachable from the Aria Automation appliance network.
-    **`jq: command not found`** — Install `jq` with `apt-get install jq` or use `python3 -m json.tool` as shown in the example for JSON parsing.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <aria-automation-fqdn> port 443: Connection refused` | Verify the Aria Automation appliance is running and the FQDN resolves correctly with `nslookup` or `dig`. |
+    | `nc: getaddrinfo: Name or service not known` | Confirm the DC IP address is correct and reachable from the Aria Automation appliance network. |
+    | `jq: command not found` | Install `jq` with `apt-get install jq` or use `python3 -m json.tool` as shown in the example for JSON parsing. |
 ---
 
 ## See also

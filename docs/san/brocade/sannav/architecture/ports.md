@@ -123,9 +123,11 @@ SANnav Dashboard — Switches Discovered:
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification in lab environments.
-    **`ssh: connect to host 192.168.100.10 port 22: Connection timed out`** — Verify switch management IP is reachable and SSH is enabled on the switch with `sshconfig --enable`.
-    **`snmpconfig: command not found`** — Run the command from the switch CLI (via SSH or console), not from the SANnav host.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification in lab environments. |
+    | `ssh: connect to host 192.168.100.10 port 22: Connection timed out` | Verify switch management IP is reachable and SSH is enabled on the switch with `sshconfig --enable`. |
+    | `snmpconfig: command not found` | Run the command from the switch CLI (via SSH or console), not from the SANnav host. |
 ---
 
 ## See also

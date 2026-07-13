@@ -68,9 +68,11 @@ Filesystem backup complete: /backup/jira/filesystem/20240315-143022
 ```
 
 !!! warning "Common errors"
-    **`rsync: change_dir "/var/atlassian/application-data/jira/shared" failed: Permission denied (13)`** — Run the script with sudo or ensure the user has read permissions on SHARED_HOME.
-    **`tar: /backup/jira/filesystem/20240315-143022: Cannot open: No such file or directory`** — Verify that rsync completed successfully and the timestamp directory exists before tar attempts to compress it.
-    **`ln: failed to create symbolic link '/backup/jira/filesystem/latest': File exists`** — The `-n` flag in `ln -snf` should force removal; if this persists, manually remove the existing symlink with `rm -f "${BACKUP_DIR}/latest"` before running the script.
+    | Error | Fix |
+    |---|---|
+    | `rsync: change_dir "/var/atlassian/application-data/jira/shared" failed: Permission denied (13)` | Run the script with sudo or ensure the user has read permissions on SHARED_HOME. |
+    | `tar: /backup/jira/filesystem/20240315-143022: Cannot open: No such file or directory` | Verify that rsync completed successfully and the timestamp directory exists before tar attempts to compress it. |
+    | `ln: failed to create symbolic link '/backup/jira/filesystem/latest': File exists` | The `-n` flag in `ln -snf` should force removal; if this persists, manually remove the existing symlink with `rm -f "${BACKUP_DIR}/latest"` before running the script. |
 ![Jira — Backup and Restore — Diagram](../../../../assets/itsm-jira-operations-backup-restore-diagram.svg)
 ```bash
 #!/bin/bash
@@ -117,9 +119,11 @@ Backup completed: jira_20240115.pgdump (2.1 GB), jira_fs_20240115.tar.gz (12.4 G
 ```
 
 !!! warning "Common errors"
-    **`mount: /mnt/jira-snap: mount point does not exist`** — Create the mount point directory before mounting: `mkdir -p /mnt/jira-snap`.
-    **`Logical volume "vg_jira/lv_shared_snap" not found`** — Ensure the variable `VG` is set to the correct volume group name (e.g., `VG="vg_jira"`) before running the script.
-    **`pg_dump: error: connection to server at "db.example.com" (10.50.12.8), port 5432 failed`** — Verify database connectivity and credentials; check that `JIRA_DB_PASSWORD` is set and the PostgreSQL server is accessible from this host.
+    | Error | Fix |
+    |---|---|
+    | `mount: /mnt/jira-snap: mount point does not exist` | Create the mount point directory before mounting: `mkdir -p /mnt/jira-snap`. |
+    | `Logical volume "vg_jira/lv_shared_snap" not found` | Ensure the variable `VG` is set to the correct volume group name (e.g., `VG="vg_jira"`) before running the script. |
+    | `pg_dump: error: connection to server at "db.example.com" (10.50.12.8), port 5432 failed` | Verify database connectivity and credentials; check that `JIRA_DB_PASSWORD` is set and the PostgreSQL server is accessible from this host. |
 ```bash
 # All nodes
 systemctl stop jira
@@ -133,8 +137,10 @@ ps aux | grep -i jira | grep -v grep
 ```
 
 !!! warning "Common errors"
-    **`Unit jira.service not found.`** — Verify the correct systemd service name with `systemctl list-units --type=service | grep jira`.
-    **`Failed to stop jira.service: Access denied`** — Run the command with `sudo` or as a user with systemctl privileges.
+    | Error | Fix |
+    |---|---|
+    | `Unit jira.service not found.` | Verify the correct systemd service name with `systemctl list-units --type=service | grep jira`. |
+    | `Failed to stop jira.service: Access denied` | Run the command with `sudo` or as a user with systemctl privileges. |
 ```bash
 # Drop and recreate the database
 psql -h db.example.com -U postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'jiradb';"
@@ -166,9 +172,11 @@ pg_restore: error: could not connect to database "jiradb": FATAL: database "jira
 ```
 
 !!! warning "Common errors"
-    **`psql: error: role "jira" does not exist`** — Create the jira role first with `psql -h db.example.com -U postgres -c "CREATE ROLE jira WITH LOGIN;"`
-    **`pg_restore: error: could not connect to database "jiradb": FATAL: database "jiradb" does not exist`** — Verify the CREATE DATABASE command succeeded and the database is accessible before running pg_restore.
-    **`pg_restore: error: input file appears to be a text format dump. Use psql.`** — Use `psql` instead of `pg_restore` if the dump file is in plain SQL format (not custom format).
+    | Error | Fix |
+    |---|---|
+    | `psql: error: role "jira" does not exist` | Create the jira role first with `psql -h db.example.com -U postgres -c "CREATE ROLE jira WITH LOGIN;"` |
+    | `pg_restore: error: could not connect to database "jiradb": FATAL: database "jiradb" does not exist` | Verify the CREATE DATABASE command succeeded and the database is accessible before running pg_restore. |
+    | `pg_restore: error: input file appears to be a text format dump. Use psql.` | Use `psql` instead of `pg_restore` if the dump file is in plain SQL format (not custom format). |
 ```bash
 # Clear existing shared home
 rm -rf /var/atlassian/application-data/jira/shared/*
@@ -188,9 +196,11 @@ chown -R jira:jira /var/atlassian/application-data/jira/shared/
 ```
 
 !!! warning "Common errors"
-    **`tar: /backup/jira/fs/jira_fs_20260101.tar.gz: Cannot open: No such file or directory`** — Verify the backup file path exists and the filename matches exactly with `ls -lh /backup/jira/fs/`.
-    **`chown: changing ownership of '/var/atlassian/application-data/jira/shared/': Operation not permitted`** — Run the script with `sudo` or as root, since chown requires elevated privileges.
-    **`rm: remove write-protected regular file in '/var/atlassian/application-data/jira/shared/'?`** — Add the `-f` flag to `rm -rf` to force removal without prompts, or stop the JIRA service before clearing the directory.
+    | Error | Fix |
+    |---|---|
+    | `tar: /backup/jira/fs/jira_fs_20260101.tar.gz: Cannot open: No such file or directory` | Verify the backup file path exists and the filename matches exactly with `ls -lh /backup/jira/fs/`. |
+    | `chown: changing ownership of '/var/atlassian/application-data/jira/shared/': Operation not permitted` | Run the script with `sudo` or as root, since chown requires elevated privileges. |
+    | `rm: remove write-protected regular file in '/var/atlassian/application-data/jira/shared/'?` | Add the `-f` flag to `rm -rf` to force removal without prompts, or stop the JIRA service before clearing the directory. |
 ```bash
 # Start first node only
 systemctl start jira
@@ -219,9 +229,11 @@ curl -u admin:token -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or configure proper certificates on the Jira server.
-    **`{"errorMessages":["User does not have permission to perform this operation"]}`** — Ensure the admin user has the JIRA Administrators global permission and the API token is valid and not expired.
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify the Jira server is running and accessible at the specified hostname and port, and check firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or configure proper certificates on the Jira server. |
+    | `{"errorMessages":["User does not have permission to perform this operation"]}` | Ensure the admin user has the JIRA Administrators global permission and the API token is valid and not expired. |
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify the Jira server is running and accessible at the specified hostname and port, and check firewall rules. |
 ```bash
 # Check cluster node registration
 psql -h db.example.com -U jira -d jiradb \
@@ -257,9 +269,11 @@ node_id | node_name | status | last_heartbeat
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "db.example.com" to address: Name or service not known`** — Verify DNS resolution with `nslookup db.example.com` and confirm the hostname matches your actual database server.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip certificate verification, or import the self-signed cert into your system trust store.
-    **`psql: FATAL: password authentication failed for user "jira"`** — Ensure the PGPASSWORD environment variable is set or use a `.pgpass` file with correct credentials for the jira database user.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "db.example.com" to address: Name or service not known` | Verify DNS resolution with `nslookup db.example.com` and confirm the hostname matches your actual database server. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip certificate verification, or import the self-signed cert into your system trust store. |
+    | `psql: FATAL: password authentication failed for user "jira"` | Ensure the PGPASSWORD environment variable is set or use a `.pgpass` file with correct credentials for the jira database user. |
 ```bash
 # Start additional nodes after primary is healthy
 systemctl start jira   # on jira-app-02, jira-app-03

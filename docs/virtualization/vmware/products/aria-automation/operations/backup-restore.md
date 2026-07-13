@@ -114,9 +114,11 @@ Current Phase: Restoring database schemas
 ```
 
 !!! warning "Common errors"
-    **`Error: Backup ID not found`** — Verify the backup ID exists by running `vracli restore list` and use the exact ID from the Backup ID column.
-    **`Error: Restore operation already in progress`** — Wait for the current restore to complete by monitoring `vracli restore status`, or contact support to cancel the existing operation.
-    **`Error: Insufficient disk space for restore operation`** — Check available disk space with `df -h` and ensure at least 5 GB free space is available on the VRA appliance.
+    | Error | Fix |
+    |---|---|
+    | `Error: Backup ID not found` | Verify the backup ID exists by running `vracli restore list` and use the exact ID from the Backup ID column. |
+    | `Error: Restore operation already in progress` | Wait for the current restore to complete by monitoring `vracli restore status`, or contact support to cancel the existing operation. |
+    | `Error: Insufficient disk space for restore operation` | Check available disk space with `df -h` and ensure at least 5 GB free space is available on the VRA appliance. |
 ---
 
 ## Post-Restore Validation

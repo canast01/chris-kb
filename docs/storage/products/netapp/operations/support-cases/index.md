@@ -90,9 +90,11 @@ node-01  844       11/13/2024 10:43:55 UTC  DAILY AUTOSUPPORT
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: system`** — Ensure you are logged into the NetApp cluster management interface (SSH to the cluster IP), not a Linux host.
-    **`Error: AutoSupport is not enabled`** — Enable AutoSupport with `system node autosupport modify -node * -state enable` before invoking.
-    **`Error: Invalid node name "*"`** — Replace `*` with specific node names (e.g., `node-01 node-02`) if wildcard expansion fails in your shell context.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: system` | Ensure you are logged into the NetApp cluster management interface (SSH to the cluster IP), not a Linux host. |
+    | `Error: AutoSupport is not enabled` | Enable AutoSupport with `system node autosupport modify -node * -state enable` before invoking. |
+    | `Error: Invalid node name "*"` | Replace `*` with specific node names (e.g., `node-01 node-02`) if wildcard expansion fails in your shell context. |
 ## Information to Include in a Case
 
 - Array serial number and system name

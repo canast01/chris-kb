@@ -152,8 +152,10 @@ Archived and volatile journals take up 1.2G on disk.
 ```
 
 !!! warning "Common errors"
-    **`journalctl: command not found`** — Install systemd-journal or verify systemd is running with `systemctl status systemd-journald`.
-    **`Failed to get realtime timestamp: Cannot assign requested address`** — Ensure system time is synchronized with `timedatectl set-ntp true` or manually set the date.
+    | Error | Fix |
+    |---|---|
+    | `journalctl: command not found` | Install systemd-journal or verify systemd is running with `systemctl status systemd-journald`. |
+    | `Failed to get realtime timestamp: Cannot assign requested address` | Ensure system time is synchronized with `timedatectl set-ntp true` or manually set the date. |
     **`Vacuuming journal files... Deleted archived
 ---
 
@@ -201,7 +203,9 @@ dmesg -T | grep -i "MCE\|DIMM\|memory controller"
 ```
 
 !!! warning "Common errors"
-    **`dmesg: read kernel buffer failed: Operation not permitted`** — Run the command with `sudo` or as root user
+    | Error | Fix |
+    |---|---|
+    | `dmesg: read kernel buffer failed: Operation not permitted` | Run the command with `sudo` or as root user |
 ---
 
 ## Step 3 — Search audit log for SELinux denials and auth events
@@ -260,9 +264,11 @@ Failed Logins Report
 ```
 
 !!! warning "Common errors"
-    **`No events found in logs.`** — Ensure auditd daemon is running with `systemctl start auditd` and audit rules are loaded with `auditctl -l`.
-    **`ausearch: command not found`** — Install audit tools with `yum install audit` or `apt-get install auditd audispd-plugins`.
-    **`Error: invalid start time`** — Use valid time formats like `--start today`, `--start recent`, or `--start 12/19/2024` instead of custom formats.
+    | Error | Fix |
+    |---|---|
+    | `No events found in logs.` | Ensure auditd daemon is running with `systemctl start auditd` and audit rules are loaded with `auditctl -l`. |
+    | `ausearch: command not found` | Install audit tools with `yum install audit` or `apt-get install auditd audispd-plugins`. |
+    | `Error: invalid start time` | Use valid time formats like `--start today`, `--start recent`, or `--start 12/19/2024` instead of custom formats. |
 ---
 
 ## Step 4 — Diagnose authentication and SSH events
@@ -390,8 +396,10 @@ $ ps -eo pid,comm,stat,wchan | grep " D "
 ```
 
 !!! warning "Common errors"
-    **`strace: attach: ptrace(PTRACE_SEIZE, <PID>): Operation not permitted`** — Run strace with `sudo` or ensure the user has CAP_SYS_PTRACE capability.
-    **`lsof: command not found`** — Install lsof with `apt-get install lsof` (Debian/Ubuntu) or `yum install lsof` (
+    | Error | Fix |
+    |---|---|
+    | `strace: attach: ptrace(PTRACE_SEIZE, <PID>): Operation not permitted` | Run strace with `sudo` or ensure the user has CAP_SYS_PTRACE capability. |
+    | `lsof: command not found` | Install lsof with `apt-get install lsof` (Debian/Ubuntu) or `yum install lsof` ( |
 ---
 
 ## Step 6 — Profile performance
@@ -522,9 +530,11 @@ Filesystem      Size  Used Avail Use%
 ```
 
 !!! warning "Common errors"
-    **`sosreport: command not found`** — Install sos package with `sudo yum install sos` on RHEL or `sudo apt install sosreport` on Ubuntu.
-    **`tar: /var/log/messages: No such file or directory`** — Remove non-existent log paths from the tar command or add `2>/dev/null` to suppress warnings; the archive will still be created with available files.
-    **`Permission denied`** — Run the entire diagnostic collection with `sudo` since many log files and /proc entries require root access.
+    | Error | Fix |
+    |---|---|
+    | `sosreport: command not found` | Install sos package with `sudo yum install sos` on RHEL or `sudo apt install sosreport` on Ubuntu. |
+    | `tar: /var/log/messages: No such file or directory` | Remove non-existent log paths from the tar command or add `2>/dev/null` to suppress warnings; the archive will still be created with available files. |
+    | `Permission denied` | Run the entire diagnostic collection with `sudo` since many log files and /proc entries require root access. |
 ---
 
 ## Log locations

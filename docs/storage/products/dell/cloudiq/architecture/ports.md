@@ -62,9 +62,11 @@ curl -sk -o /dev/null -w "%{http_code}" https://cloudiq.dell.com/
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection timed out`** — Verify the array management network has outbound HTTPS access to cloudiq.dell.com; check firewall rules and proxy settings.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example), or update the system CA bundle if using an internal proxy.
-    **`curl: (35) OpenSSL SSL_connect: Connection reset by peer`** — Confirm the array's NTP is synchronized and the system clock is within acceptable range of CloudIQ servers.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection timed out` | Verify the array management network has outbound HTTPS access to cloudiq.dell.com; check firewall rules and proxy settings. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example), or update the system CA bundle if using an internal proxy. |
+    | `curl: (35) OpenSSL SSL_connect: Connection reset by peer` | Confirm the array's NTP is synchronized and the system clock is within acceptable range of CloudIQ servers. |
 ## See also
 
 - [Dell CloudIQ — Architecture](../how-it-works/)

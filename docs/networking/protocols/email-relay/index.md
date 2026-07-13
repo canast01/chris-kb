@@ -73,9 +73,11 @@ Dec 18 14:25:36 mail-relay postfix/smtp[12347]: 4A2B1C3D: to=<admin@example.com>
 ```
 
 !!! warning "Common errors"
-    **`postfix: fatal: file /etc/postfix/main.cf not found`** — Verify postfix is installed with `postman -v` and reinstall if necessary, or check that `/etc/postfix/main.cf` exists.
-    **`mail: command not found`** — Install the mailutils package with `apt-get install mailutils` (Debian/Ubuntu) or `yum install mailx` (RHEL/CentOS).
-    **`postfix/master: fatal: bind port 25: Permission denied`** — Run postfix commands with `sudo` or ensure the postfix user has appropriate permissions to bind to port 25.
+    | Error | Fix |
+    |---|---|
+    | `postfix: fatal: file /etc/postfix/main.cf not found` | Verify postfix is installed with `postman -v` and reinstall if necessary, or check that `/etc/postfix/main.cf` exists. |
+    | `mail: command not found` | Install the mailutils package with `apt-get install mailutils` (Debian/Ubuntu) or `yum install mailx` (RHEL/CentOS). |
+    | `postfix/master: fatal: bind port 25: Permission denied` | Run postfix commands with `sudo` or ensure the postfix user has appropriate permissions to bind to port 25. |
 ## Key Configuration
 
 ```ini

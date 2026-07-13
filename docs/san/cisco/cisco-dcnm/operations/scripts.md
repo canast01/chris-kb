@@ -48,9 +48,11 @@ Authenticated to https://dcnm-dc1.corp.example.com
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Set DCNM_PASS environment variable`** — Export the DCNM_PASS variable before running the script: `export DCNM_PASS="your_password"`.
-    **`ERROR: Authentication failed`** — Verify the DCNM_USER and DCNM_PASS credentials are correct, and that DCNM_HOST is reachable and running the REST API service.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag is already present to skip SSL verification; if the error persists, check that DCNM_HOST is accessible and not blocked by a firewall.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Set DCNM_PASS environment variable` | Export the DCNM_PASS variable before running the script: `export DCNM_PASS="your_password"`. |
+    | `ERROR: Authentication failed` | Verify the DCNM_USER and DCNM_PASS credentials are correct, and that DCNM_HOST is reachable and running the REST API service. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag is already present to skip SSL verification; if the error persists, check that DCNM_HOST is accessible and not blocked by a firewall. |
 ```bash
 #!/usr/bin/env bash
 # dcnm-zone-export.sh

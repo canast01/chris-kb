@@ -55,9 +55,11 @@ bkp-20250112-022005-5m4n3o2p         2.2 GB    2025-01-12 02:20   COMPLETED
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH key is loaded with `ssh-add` or use password authentication; confirm ndadmin user exists on nd-dc1-1.
-    **`Error: Unable to connect to remote server backup-server.corp.example.com:22`** — Ensure backup-server is reachable from Nexus Dashboard and firewall allows outbound SCP on port 22.
-    **`Error: Passphrase file not found: /home/ndadmin/.nd-backup-pass`** — Create the passphrase file with `echo "your-passphrase" > /home/ndadmin/.nd-backup-pass && chmod 600 /home/ndadmin/.nd-backup-pass`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH key is loaded with `ssh-add` or use password authentication; confirm ndadmin user exists on nd-dc1-1. |
+    | `Error: Unable to connect to remote server backup-server.corp.example.com:22` | Ensure backup-server is reachable from Nexus Dashboard and firewall allows outbound SCP on port 22. |
+    | `Error: Passphrase file not found: /home/ndadmin/.nd-backup-pass` | Create the passphrase file with `echo "your-passphrase" > /home/ndadmin/.nd-backup-pass && chmod 600 /home/ndadmin/.nd-backup-pass`. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

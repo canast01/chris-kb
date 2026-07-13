@@ -99,9 +99,11 @@ version
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "<postgres-host>" to address: Name or service not known`** — Replace `<postgres-host>` with the actual PostgreSQL server hostname or IP address.
-    **`psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections`** — Increase `max_connections` in postgresql.conf or reduce active connections before retrying.
-    **`connection refused`** — Verify pgBouncer is running on port 6432 with `systemctl status pgbouncer` and check firewall rules allow access from the app server.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "<postgres-host>" to address: Name or service not known` | Replace `<postgres-host>` with the actual PostgreSQL server hostname or IP address. |
+    | `psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections` | Increase `max_connections` in postgresql.conf or reduce active connections before retrying. |
+    | `connection refused` | Verify pgBouncer is running on port 6432 with `systemctl status pgbouncer` and check firewall rules allow access from the app server. |
 ## See also
 
 - [PostgreSQL — Architecture](../how-it-works/)

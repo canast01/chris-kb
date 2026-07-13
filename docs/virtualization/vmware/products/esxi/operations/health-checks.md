@@ -244,7 +244,9 @@ running
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — SSH into
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | SSH into |
 ## Hardware Health
 
 ![Hardware Health](../../../../../assets/virtualization-vmware-esxi-hc-hardware-health.svg)
@@ -294,9 +296,11 @@ Predictive Failure Analysis: Not Supported
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace 'hardware ipmi sdr'`** — Verify IPMI is enabled in BIOS and the ESXi host has IPMI hardware support; if not available, use `esxcli hardware sensors list` instead.
-    **`Error: Unknown device '<device-name>'`** — Replace `<device-name>` with the actual device identifier (e.g., `mpx.vmhba0:C0:T0:L0`) found via `esxcli storage core device list`.
-    **`Error: SMART data is not available for this device`** — Confirm the device supports S.M.A.R.T. monitoring; some enterprise SSDs or RAID controllers may not expose this data directly to ESXi.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace 'hardware ipmi sdr'` | Verify IPMI is enabled in BIOS and the ESXi host has IPMI hardware support; if not available, use `esxcli hardware sensors list` instead. |
+    | `Error: Unknown device '<device-name>'` | Replace `<device-name>` with the actual device identifier (e.g., `mpx.vmhba0:C0:T0:L0`) found via `esxcli storage core device list`. |
+    | `Error: SMART data is not available for this device` | Confirm the device supports S.M.A.R.T. monitoring; some enterprise SSDs or RAID controllers may not expose this data directly to ESXi. |
 | Sensor category | Alert threshold | Action |
 |---|---|---|
 | CPU temperature | > 80°C | Check datacenter cooling, BIOS throttling |
@@ -340,9 +344,11 @@ esx-prod-03.lab.local          Connected      PoweredOn
 ```
 
 !!! warning "Common errors"
-    **`hostd is not running`** — Run `/etc/init.d/hostd start` to restart the management daemon.
-    **`vpxa is not running`** — Restart vpxa with `/etc/init.d/vpxa start` and verify vCenter connectivity in the ESXi host summary.
-    **`Get-VMHost : The term 'Get-VMHost' is not recognized`** — Install PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force` or run the command from a Windows machine with PowerCLI installed.
+    | Error | Fix |
+    |---|---|
+    | `hostd is not running` | Run `/etc/init.d/hostd start` to restart the management daemon. |
+    | `vpxa is not running` | Restart vpxa with `/etc/init.d/vpxa start` and verify vCenter connectivity in the ESXi host summary. |
+    | `Get-VMHost : The term 'Get-VMHost' is not recognized` | Install PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force` or run the command from a Windows machine with PowerCLI installed. |
 ## Network Health
 
 ![Network Health](../../../../../assets/virtualization-vmware-esxi-hc-network-health.svg)
@@ -403,9 +409,11 @@ vSwitch0       128       2           1500 256
 ```
 
 !!! warning "Common errors"
-    **`Unable to find a matching nic vmnic0`** — Verify the correct vmnic name with `esxcli network nic list` and use the exact name shown in the output.
-    **`Unable to resolve hostname <vmotion-gateway>`** — Use the IP address directly instead of hostname, or ensure DNS is configured on the VMkernel adapter with `esxcli network ip dns server add --server=<dns-ip>`.
-    **`PING: sendto() failed (No route to host)`** — Verify the VMkernel adapter (vmk1/vmk2) is assigned to the correct port group and has a route to the target gateway using `esxcli network ip route ipv4 list`.
+    | Error | Fix |
+    |---|---|
+    | `Unable to find a matching nic vmnic0` | Verify the correct vmnic name with `esxcli network nic list` and use the exact name shown in the output. |
+    | `Unable to resolve hostname <vmotion-gateway>` | Use the IP address directly instead of hostname, or ensure DNS is configured on the VMkernel adapter with `esxcli network ip dns server add --server=<dns-ip>`. |
+    | `PING: sendto() failed (No route to host)` | Verify the VMkernel adapter (vmk1/vmk2) is assigned to the correct port group and has a route to the target gateway using `esxcli network ip route ipv4 list`. |
 ### MTU Validation
 
 ![MTU Validation](../../../../../assets/virtualization-vmware-esxi-hc-mtu-validation.svg)
@@ -432,9 +440,11 @@ round-trip min/avg/max = 1.156/1.212/1.289 ms
 ```
 
 !!! warning "Common errors"
-    **`PING 172.16.50.42 (172.16.50.42): sendto: Message too long`** — Reduce MTU on the source vmkernel interface or intermediate switch ports to 9000, or verify peer interface MTU with `esxcli network ip interface list`.
-    **`100% packet loss`** — Verify the peer vSAN vmkernel IP is reachable and on the same VLAN; check firewall rules and confirm vmk2 is bound to the correct vSAN portgroup with `esxcli network ip interface list`.
-    **`PING 172.16.50.42 (172.16.50.42): No route to host`** — Ensure vmk2 is properly configured with an IP address and default gateway using `esxcli network ip interface ipv4 get -i vmk2`.
+    | Error | Fix |
+    |---|---|
+    | `PING 172.16.50.42 (172.16.50.42): sendto: Message too long` | Reduce MTU on the source vmkernel interface or intermediate switch ports to 9000, or verify peer interface MTU with `esxcli network ip interface list`. |
+    | `100% packet loss` | Verify the peer vSAN vmkernel IP is reachable and on the same VLAN; check firewall rules and confirm vmk2 is bound to the correct vSAN portgroup with `esxcli network ip interface list`. |
+    | `PING 172.16.50.42 (172.16.50.42): No route to host` | Ensure vmk2 is properly configured with an IP address and default gateway using `esxcli network ip interface ipv4 get -i vmk2`. |
 ## Storage Health
 
 ![Storage Health](../../../../../assets/virtualization-vmware-esxi-hc-storage-health.svg)
@@ -479,9 +489,11 @@ datastore-backup 274877906944 13743895347
 ```
 
 !!! warning "Common errors"
-    **`esxcli: Unknown command or namespace path: storage core path`** — Verify ESXi version supports this command; use `esxcli storage core device list` as alternative on older builds.
-    **`Error: Unable to rescan adapter vmhba0: Device or resource busy`** — Wait 30 seconds for ongoing I/O to complete, then retry the rescan.
-    **`Warning: Datastore datastore-backup has only 5% free space`** — Migrate VMs or delete snapshots immediately to prevent datastore lockout.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: Unknown command or namespace path: storage core path` | Verify ESXi version supports this command; use `esxcli storage core device list` as alternative on older builds. |
+    | `Error: Unable to rescan adapter vmhba0: Device or resource busy` | Wait 30 seconds for ongoing I/O to complete, then retry the rescan. |
+    | `Warning: Datastore datastore-backup has only 5% free space` | Migrate VMs or delete snapshots immediately to prevent datastore lockout. |
 ### APD/PDL Detection
 
 ![APD/PDL Detection](../../../../../assets/virtualization-vmware-esxi-hc-apd-pdl-detection.svg)
@@ -506,7 +518,9 @@ grep -i "H:0x0 D:0x2\|reservation" /var/log/vmkernel.log | tail -20
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vmkernel.log: No such file or directory`** — Verify the ESXi host is running and check the correct log path with `ls -la /var/log/ | grep vmkernel`.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vmkernel.log: No such file or directory` | Verify the ESXi host is running and check the correct log path with `ls -la /var/log/ | grep vmkernel`. |
     **`grep: (standard input): binary file
 ## Capacity and Performance
 
@@ -557,9 +571,11 @@ vm-app-staging-03         mem.balloon.average   128.2
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Run esxtop directly on an ESXi host via SSH or use vSphere Client; it is not available on Windows/Linux management stations.
-    **`The term 'Get-VMHost' is not recognized`** — Import the VMware.VimAutomation.Core PowerCLI module with `Import-Module VMware.VimAutomation.Core` and connect to vCenter using `Connect-VIServer`.
-    **`No matches found for the specified metric`** — Verify the VM has sufficient performance history by waiting 5–10 minutes after VM creation, or check metric availability with `Get-Stat -Stat mem.* -Entity $vm`.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Run esxtop directly on an ESXi host via SSH or use vSphere Client; it is not available on Windows/Linux management stations. |
+    | `The term 'Get-VMHost' is not recognized` | Import the VMware.VimAutomation.Core PowerCLI module with `Import-Module VMware.VimAutomation.Core` and connect to vCenter using `Connect-VIServer`. |
+    | `No matches found for the specified metric` | Verify the VM has sufficient performance history by waiting 5–10 minutes after VM creation, or check metric availability with `Get-Stat -Stat mem.* -Entity $vm`. |
 | Metric | Alert threshold | Action |
 |---|---|---|
 | Host CPU utilization | > 70% sustained (5 min avg) | Migrate VMs via DRS, add capacity |
@@ -605,9 +621,11 @@ PartnerSupported
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace software.vib.list`** — Verify the ESXi version supports esxcli software vib list (7.0+); on older versions use esxcli software vib get instead.
-    **`Error: Unable to connect to the local hostd agent`** — Restart the hostd service with `services.sh restart` or reboot the ESXi host if the management agent is unresponsive.
-    **`grep: command not found`** — This should not occur on ESXi; if it does, the shell environment is corrupted—use the DCUI or SSH directly to the host instead of a remote session.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace software.vib.list` | Verify the ESXi version supports esxcli software vib list (7.0+); on older versions use esxcli software vib get instead. |
+    | `Error: Unable to connect to the local hostd agent` | Restart the hostd service with `services.sh restart` or reboot the ESXi host if the management agent is unresponsive. |
+    | `grep: command not found` | This should not occur on ESXi; if it does, the shell environment is corrupted—use the DCUI or SSH directly to the host instead of a remote session. |
 ## Health Checklist
 
 ![Health Checklist](../../../../../assets/virtualization-vmware-esxi-hc-health-checklist.svg)

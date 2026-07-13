@@ -97,9 +97,11 @@ app_prod=> \q
 ```
 
 !!! warning "Common errors"
-    **`FATAL: certificate verify failed`** — Ensure the sslrootcert path points to the correct CA certificate that signed the server's certificate.
-    **`FATAL: permission denied for file "/etc/ssl/client.key"`** — Change the client key file permissions to 600 with `chmod 600 /etc/ssl/client.key`.
-    **`FATAL: could not open file "/etc/ssl/client.crt": No such file or directory`** — Verify all certificate file paths are correct and the files exist on the system.
+    | Error | Fix |
+    |---|---|
+    | `FATAL: certificate verify failed` | Ensure the sslrootcert path points to the correct CA certificate that signed the server's certificate. |
+    | `FATAL: permission denied for file "/etc/ssl/client.key"` | Change the client key file permissions to 600 with `chmod 600 /etc/ssl/client.key`. |
+    | `FATAL: could not open file "/etc/ssl/client.crt": No such file or directory` | Verify all certificate file paths are correct and the files exist on the system. |
 ## LDAP Authentication
 
 ```text

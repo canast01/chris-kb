@@ -138,9 +138,11 @@ Error: connection refused on localhost:5432 (postgres not running)
 ```
 
 !!! warning "Common errors"
-    **`Error: authentication required`** — Run `gh auth login` to authenticate with GitHub CLI before running workflow commands.
-    **`Error: HTTP 404: Not Found`** — Verify the repository owner/name is correct and you have access; check with `gh repo view <owner>/<repo>`.
-    **`Error: run not found`** — Confirm the run ID exists by listing recent runs with `gh run list --repo <owner>/<repo>` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: authentication required` | Run `gh auth login` to authenticate with GitHub CLI before running workflow commands. |
+    | `Error: HTTP 404: Not Found` | Verify the repository owner/name is correct and you have access; check with `gh repo view <owner>/<repo>`. |
+    | `Error: run not found` | Confirm the run ID exists by listing recent runs with `gh run list --repo <owner>/<repo>` first. |
 ---
 
 ## Step 2 — Enable debug logging
@@ -231,9 +233,11 @@ permissions:
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDenied) when calling the GetCallerIdentity operation: User: arn:aws:iam::123456789012:role/github-actions-role is not authorized to perform: sts:GetCallerIdentity`** — Add `sts:GetCallerIdentity` permission to the IAM role's trust policy or inline policy.
-    **`ERROR: The subscription of account 'example@contoso.com' has been disabled.`** — Verify the Azure subscription is active and the service principal has the correct role assignment in that subscription.
-    **`InvalidParameterValue: Invalid OIDC request provided to STS AssumeRoleWithWebIdentity`** — Ensure the OIDC trust policy's `Subject` claim matches the exact GitHub token `sub` value (e.g., `repo:owner/repo:ref:refs/heads/main`), including branch or environment name.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDenied) when calling the GetCallerIdentity operation: User: arn:aws:iam::123456789012:role/github-actions-role is not authorized to perform: sts:GetCallerIdentity` | Add `sts:GetCallerIdentity` permission to the IAM role's trust policy or inline policy. |
+    | `ERROR: The subscription of account 'example@contoso.com' has been disabled.` | Verify the Azure subscription is active and the service principal has the correct role assignment in that subscription. |
+    | `InvalidParameterValue: Invalid OIDC request provided to STS AssumeRoleWithWebIdentity` | Ensure the OIDC trust policy's `Subject` claim matches the exact GitHub token `sub` value (e.g., `repo:owner/repo:ref:refs/heads/main`), including branch or environment name. |
 **If OIDC fails with "AccessDenied" or "InvalidIdentityToken":**
 1. Verify the workflow has `permissions: id-token: write`
 2. Check the cloud trust policy `Condition` block — the `sub` claim must match the exact branch or environment
@@ -279,9 +283,11 @@ TERRAFORM_CLOUD_TOKEN         2024-01-13T08:19:33Z
 ```
 
 !!! warning "Common errors"
-    **`Error: HTTP 404: Not Found (https://api.github.com/repos/owner/repo/actions/secrets)`** — Verify the repository name is correct and you have push access to the repository.
-    **`Error: authentication required`** — Ensure you are authenticated with `gh auth login` and have the appropriate token scopes (repo or org).
-    **`Error: HTTP 422: Validation Failed`** — Check that the secret name contains only alphanumeric characters and underscores, and does not start with a number.
+    | Error | Fix |
+    |---|---|
+    | `Error: HTTP 404: Not Found (https://api.github.com/repos/owner/repo/actions/secrets)` | Verify the repository name is correct and you have push access to the repository. |
+    | `Error: authentication required` | Ensure you are authenticated with `gh auth login` and have the appropriate token scopes (repo or org). |
+    | `Error: HTTP 422: Validation Failed` | Check that the secret name contains only alphanumeric characters and underscores, and does not start with a number. |
 **Secret scope troubleshooting:**
 - If a secret is set at org level but the job uses it via an environment, confirm the environment has the org secret listed under "Inherited secrets"
 - If the secret is `***` in the log but the step still fails auth, the secret value itself may be wrong — re-set it
@@ -360,9 +366,11 @@ Address: 140.82.113.4
 ```
 
 !!! warning "Common errors"
-    **`sudo: systemctl: command not found`** — Verify the runner is on a systemd-based Linux system; on older systems or non-Linux hosts, use the appropriate service manager (e.g., `launchctl` on macOS, `Get-Service` on Windows).
-    **`curl: (7) Failed to connect to github.com port 443: Connection refused`** — Check that outbound HTTPS traffic is allowed on port 443 and no firewall/proxy is blocking access to GitHub's IP ranges.
-    **`ls: cannot access '_diag/': No such file or directory`** — Ensure you are in the correct runner installation directory (`/path/to/actions-runner`) where the `_diag` folder is created after the runner starts.
+    | Error | Fix |
+    |---|---|
+    | `sudo: systemctl: command not found` | Verify the runner is on a systemd-based Linux system; on older systems or non-Linux hosts, use the appropriate service manager (e.g., `launchctl` on macOS, `Get-Service` on Windows). |
+    | `curl: (7) Failed to connect to github.com port 443: Connection refused` | Check that outbound HTTPS traffic is allowed on port 443 and no firewall/proxy is blocking access to GitHub's IP ranges. |
+    | `ls: cannot access '_diag/': No such file or directory` | Ensure you are in the correct runner installation directory (`/path/to/actions-runner`) where the `_diag` folder is created after the runner starts. |
 **Common self-hosted runner problems:**
 - `Runner is offline` → runner service crashed or host rebooted without auto-start; check systemd service
 - `No runners matching labels` → job `runs-on` label doesn't match any registered runner; check label assignments

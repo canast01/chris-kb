@@ -193,9 +193,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the SDDC Manager's CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to sddc-manager.example.com port 443: Connection refused`** — Verify the SDDC Manager hostname/IP is correct and the appliance is running; check network connectivity with `ping` or `nc -zv`.
-    **`jq: parse error: Invalid JSON at line 1`** — Ensure the API endpoint is correct and the SDDC Manager is responding; test with `curl -sk -u admin:<password> https://sddc-manager.example.com/v1/hosts` without piping to confirm valid JSON output.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the SDDC Manager's CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to sddc-manager.example.com port 443: Connection refused` | Verify the SDDC Manager hostname/IP is correct and the appliance is running; check network connectivity with `ping` or `nc -zv`. |
+    | `jq: parse error: Invalid JSON at line 1` | Ensure the API endpoint is correct and the SDDC Manager is responding; test with `curl -sk -u admin:<password> https://sddc-manager.example.com/v1/hosts` without piping to confirm valid JSON output. |
 UI check: SDDC Manager → **Inventory** → **Hosts** → filter by **Status: FAILED** — any results require immediate attention.
 
 For hosts in FAILED state: check ESXi connectivity (ping FQDN), verify management vmkernel adapter is up, and review SDDC Manager task logs under **Administration → Tasks**.
@@ -284,9 +286,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the NSX manager's CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to nsx-manager.example.com port 443: Connection refused`** — Verify the NSX manager hostname/IP is correct, the management network is reachable, and the NSX manager API service is running (check `systemctl status nsxd` on the manager node).
-    **`"connectivity_status": "DISCONNECTED"`** — Restart the affected NSX manager node or check network connectivity between cluster members; if persistent, reinitialize the node from the NSX manager UI.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the NSX manager's CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to nsx-manager.example.com port 443: Connection refused` | Verify the NSX manager hostname/IP is correct, the management network is reachable, and the NSX manager API service is running (check `systemctl status nsxd` on the manager node). |
+    | `"connectivity_status": "DISCONNECTED"` | Restart the affected NSX manager node or check network connectivity between cluster members; if persistent, reinitialize the node from the NSX manager UI. |
 UI check: NSX Manager → **System** → **Overview** — the cluster health indicator must show green for all three manager nodes and the controller cluster.
 
 ---
@@ -335,9 +339,11 @@ curl -sk -k -u administrator@vsphere.local:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (note: the command already includes `-sk -k`, so remove one `-k` or verify the certificate chain is trusted).
-    **`curl: (7) Failed to connect to vcenter.example.com port 443: Connection refused`** — Verify vCenter hostname/IP is correct and the appliance management API is accessible on port 443 using `curl -sk https://vcenter.example.com/rest/appliance/health/overall`.
-    **`jq: command not found` or `json.tool: No module named json.tool`** — Install python3-json or use `jq` instead: `curl -sk -u administrator@vsphere.local:<password> https://vcenter.example.com/rest/appliance/health/services | jq '.value[] | {name, health}'`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (note: the command already includes `-sk -k`, so remove one `-k` or verify the certificate chain is trusted). |
+    | `curl: (7) Failed to connect to vcenter.example.com port 443: Connection refused` | Verify vCenter hostname/IP is correct and the appliance management API is accessible on port 443 using `curl -sk https://vcenter.example.com/rest/appliance/health/overall`. |
+    | `jq: command not found` or `json.tool: No module named json.tool` | Install python3-json or use `jq` instead: `curl -sk -u administrator@vsphere.local:<password> https://vcenter.example.com/rest/appliance/health/services | jq '.value[] | {name, health}'`. |
 UI check: vCenter → **Administration** → **Appliance** → **Health** — all service health indicators must be green.
 
 If vCenter shows red: SSH to the vCenter appliance → `service-control --status --all` → restart the failing service → re-check health endpoint.

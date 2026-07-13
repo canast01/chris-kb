@@ -58,9 +58,11 @@ interface fc1/2
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the MDS switch is in the correct mode (use `config t` for configuration mode) and that the copy command syntax matches your firmware version.
-    **`% Error opening tftp://192.168.1.45/mds_tftp_backup.cfg (Connection timed out)`** — Confirm the TFTP server is reachable and running on the specified IP, and that network connectivity exists from the switch management interface.
-    **`% Authentication failed for scp://<user>@192.168.1.50`** — Verify the username and password are correct, the remote server has SCP enabled, and the user has write permissions to the destination directory.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the MDS switch is in the correct mode (use `config t` for configuration mode) and that the copy command syntax matches your firmware version. |
+    | `% Error opening tftp://192.168.1.45/mds_tftp_backup.cfg (Connection timed out)` | Confirm the TFTP server is reachable and running on the specified IP, and that network connectivity exists from the switch management interface. |
+    | `% Authentication failed for scp://<user>@192.168.1.50` | Verify the username and password are correct, the remote server has SCP enabled, and the user has write permissions to the destination directory. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

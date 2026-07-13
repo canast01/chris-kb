@@ -210,8 +210,10 @@ aggr_sas_02    450GB      55%
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No such vserver <svm>`** — Verify the SVM name with `vserver show` and use the exact name from the Vserver column.
-    **`Error: command failed: No such volume <vol>`** — Confirm the volume exists on the target SVM using `volume show -vserver <svm>` before running field-specific queries.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No such vserver <svm>` | Verify the SVM name with `vserver show` and use the exact name from the Vserver column. |
+    | `Error: command failed: No such volume <vol>` | Confirm the volume exists on the target SVM using `volume show -vserver <svm>` before running field-specific queries. |
 ### Resolution
 
 ```bash
@@ -266,9 +268,11 @@ Efficiency operation started on volume "vol_data" (UUID: a1b2c3d4-e5f6-7890-abcd
 ```
 
 !!! warning "Common errors"
-    **`Error: entry doesn't have a value for field "snapshot"`** — Specify the exact snapshot name or use `*` with `-force true` to delete all non-busy snapshots.
-    **`Error: volume is currently involved in a SnapMirror transfer`** — Wait for the active SnapMirror operation to complete before modifying volume properties or deleting snapshots.
-    **`Error: cannot set max-autosize to a value smaller than current volume size`** — Set `-max-autosize` to a value larger than the current volume size (e.g., 1T for a 500G volume).
+    | Error | Fix |
+    |---|---|
+    | `Error: entry doesn't have a value for field "snapshot"` | Specify the exact snapshot name or use `*` with `-force true` to delete all non-busy snapshots. |
+    | `Error: volume is currently involved in a SnapMirror transfer` | Wait for the active SnapMirror operation to complete before modifying volume properties or deleting snapshots. |
+    | `Error: cannot set max-autosize to a value smaller than current volume size` | Set `-max-autosize` to a value larger than the current volume size (e.g., 1T for a 500G volume). |
 ### Prevention
 
 - Enable autogrow with an explicit maximum on all production volumes
@@ -337,9 +341,11 @@ vol_backup_01       1TB       920GB     104GB
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: storage aggregate show`** — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a Linux shell.
-    **`Error: There is no entry in the Compat database for command "storage aggregate show-space"`** — Verify your ONTAP version supports this command (available in ONTAP 9.1+); use `version` to check cluster version.
-    **`Error: invalid fieldname "percent-used"`** — Use the correct field name `percent_used` (underscore instead of hyphen) in the -fields parameter.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: storage aggregate show` | Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a Linux shell. |
+    | `Error: There is no entry in the Compat database for command "storage aggregate show-space"` | Verify your ONTAP version supports this command (available in ONTAP 9.1+); use `version` to check cluster version. |
+    | `Error: invalid fieldname "percent-used"` | Use the correct field name `percent_used` (underscore instead of hyphen) in the -fields parameter. |
 ### Resolution
 
 ```bash
@@ -389,9 +395,11 @@ Efficiency operation started on 6 volumes.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No unassigned disks available`** — Verify spare disks exist with `storage disk show -container-type spare` and ensure they are not reserved for RAID reconstruction.
-    **`Error: volume move failed: Destination aggregate does not have sufficient space`** — Check destination aggregate free space with `storage aggregate show -fields usedsize,availsize` and select an aggregate with at least 120% of the source volume size.
-    **`Error: Invalid percent-snapshot-space value: must be between 0 and 90`** — Use a snapshot reserve percentage within the valid range (typically 5–20% for production volumes).
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No unassigned disks available` | Verify spare disks exist with `storage disk show -container-type spare` and ensure they are not reserved for RAID reconstruction. |
+    | `Error: volume move failed: Destination aggregate does not have sufficient space` | Check destination aggregate free space with `storage aggregate show -fields usedsize,availsize` and select an aggregate with at least 120% of the source volume size. |
+    | `Error: Invalid percent-snapshot-space value: must be between 0 and 90` | Use a snapshot reserve percentage within the valid range (typically 5–20% for production volumes). |
 ---
 
 ## SnapMirror Lag / Unhealthy Relationship
@@ -467,9 +475,11 @@ PING 192.168.101.50 (192.168.101.50): 56 data bytes
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No snapmirror relationships found`** — Verify the source and destination paths exist and the snapmirror relationship has been initialized with `snapmirror initialize -source-path <src> -destination-path <dst>`.
-    **`Error: network ping: failed to resolve destination address`** — Confirm the remote intercluster LIF IP address is correct and reachable by checking `cluster peer show` and verifying firewall rules allow ICMP traffic on port 10000-10001.
-    **`Error: command failed: Intercluster LIF is not configured`** — Create an intercluster LIF on both clusters using `network interface create -vserver <admin_svm> -lif <lif_name> -role intercluster -home-node <node> -home-port <port> -address <ip> -netmask
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No snapmirror relationships found` | Verify the source and destination paths exist and the snapmirror relationship has been initialized with `snapmirror initialize -source-path <src> -destination-path <dst>`. |
+    | `Error: network ping: failed to resolve destination address` | Confirm the remote intercluster LIF IP address is correct and reachable by checking `cluster peer show` and verifying firewall rules allow ICMP traffic on port 10000-10001. |
+    | `Error: command failed: Intercluster LIF is not configured` | Create an intercluster LIF on both clusters using `network interface create -vserver <admin_svm> -lif <lif_name> -role intercluster -home-node <node> -home-port <port> -address <ip> -netmask |
 ### Resolution
 
 ```bash
@@ -505,9 +515,11 @@ Operation succeeded: SnapMirror initialize started for destination "dr_svm:dr_vo
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: There is no SnapMirror relationship for destination "dr_svm:dr_vol01"`** — Verify the destination SVM and volume names are correct using `snapmirror show`.
-    **`Error: command failed: SnapMirror relationship is in "broken-off" state and cannot be resumed`** — Use `snapmirror resync` instead of `snapmirror resume` for broken-off relationships.
-    **`Error: command failed: Transfer is already in progress for destination "dr_svm:dr_vol01"`** — Wait for the current transfer to complete or use `snapmirror abort` before issuing a new update command.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: There is no SnapMirror relationship for destination "dr_svm:dr_vol01"` | Verify the destination SVM and volume names are correct using `snapmirror show`. |
+    | `Error: command failed: SnapMirror relationship is in "broken-off" state and cannot be resumed` | Use `snapmirror resync` instead of `snapmirror resume` for broken-off relationships. |
+    | `Error: command failed: Transfer is already in progress for destination "dr_svm:dr_vol01"` | Wait for the current transfer to complete or use `snapmirror abort` before issuing a new update command. |
 ---
 
 ## NFS Mount Hangs / Stale Lock After Failover
@@ -574,9 +586,11 @@ nfs_svm         backup_exports
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Invalid field "status-oper" for "network interface show"`** — Use `status-admin` and `status-oper` as separate queries, or check ONTAP version compatibility for field names.
-    **`Error: There is no data to display`** — Verify the SVM name is correct with `vserver show` and confirm NFS is licensed and enabled on the SVM.
-    **`Error: command failed: Invalid vserver name "nfs_svm"`** — Confirm the SVM exists and you are connected to the correct cluster with `vserver show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Invalid field "status-oper" for "network interface show"` | Use `status-admin` and `status-oper` as separate queries, or check ONTAP version compatibility for field names. |
+    | `Error: There is no data to display` | Verify the SVM name is correct with `vserver show` and confirm NFS is licensed and enabled on the SVM. |
+    | `Error: command failed: Invalid vserver name "nfs_svm"` | Confirm the SVM exists and you are connected to the correct cluster with `vserver show`. |
 ### Resolution
 
 On the storage side:
@@ -603,9 +617,11 @@ PING data_lif01 (192.168.1.45) from 192.168.1.45: 56 data bytes
 ```
 
 !!! warning "Common errors"
-    **`Error: "data_lif01" does not exist`** — Verify the LIF name is correct and exists on the specified Vserver using `network interface show -vserver <svm>`.
-    **`Error: LIF data_lif01 is administratively down`** — Bring the LIF online with `network interface modify -vserver <svm> -lif <lif_name> -status-admin up` before reverting.
-    **`PING: sendto: No route to host`** — Ensure the client IP is reachable and on the same network segment as the LIF, or check firewall rules blocking ICMP traffic.
+    | Error | Fix |
+    |---|---|
+    | `Error: "data_lif01" does not exist` | Verify the LIF name is correct and exists on the specified Vserver using `network interface show -vserver <svm>`. |
+    | `Error: LIF data_lif01 is administratively down` | Bring the LIF online with `network interface modify -vserver <svm> -lif <lif_name> -status-admin up` before reverting. |
+    | `PING: sendto: No route to host` | Ensure the client IP is reachable and on the same network segment as the LIF, or check firewall rules blocking ICMP traffic. |
 On the NFS client side:
 ```bash
 # Force unmount a hung NFS mount (lazy unmount)
@@ -627,9 +643,11 @@ Starting automount service... done.
 ```
 
 !!! warning "Common errors"
-    **`umount: /mnt/data: target is busy`** — Use `lsof /mnt/data` to identify processes holding the mount, kill them, then retry the lazy unmount.
-    **`mount.nfs: Connection timed out`** — Verify the LIF IP is reachable with `ping <lif_ip>` and confirm the NFS export exists on the NetApp array with `ssh admin@<netapp_ip> volume show`.
-    **`Failed to restart autofs.service: Unit autofs.service not found`** — Install autofs with `apt-get install autofs` (Debian/Ubuntu) or `yum install autofs` (RHEL/CentOS), then retry the systemctl restart.
+    | Error | Fix |
+    |---|---|
+    | `umount: /mnt/data: target is busy` | Use `lsof /mnt/data` to identify processes holding the mount, kill them, then retry the lazy unmount. |
+    | `mount.nfs: Connection timed out` | Verify the LIF IP is reachable with `ping <lif_ip>` and confirm the NFS export exists on the NetApp array with `ssh admin@<netapp_ip> volume show`. |
+    | `Failed to restart autofs.service: Unit autofs.service not found` | Install autofs with `apt-get install autofs` (Debian/Ubuntu) or `yum install autofs` (RHEL/CentOS), then retry the systemctl restart. |
 If NFSv4 state is stale, the NFS server grace period (default 45 seconds) must expire before new locks are granted. Do not reboot NFS clients during the grace period — this resets their lock reclaim timer.
 
 ---
@@ -690,9 +708,11 @@ svm-prod   igroup_linux_02     iscsi     linux     iqn.1991-05.com.example:host0
 ```
 
 !!! warning "Common errors"
-    **`Error: "No iSCSI sessions found for Vserver <svm>"`** — Verify the initiator is connected and the target portal group is reachable using `iscsi connection show`.
-    **`Error: "LUN is offline"`** — Check the volume status with `volume show -vserver <svm>` and verify the aggregate is online.
-    **`Error: "Initiator IQN not found in igroup"`** — Add the missing initiator IQN to the igroup using `lun igroup add -vserver <svm> -igroup <igroup_name> -initiator <iqn>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: "No iSCSI sessions found for Vserver <svm>"` | Verify the initiator is connected and the target portal group is reachable using `iscsi connection show`. |
+    | `Error: "LUN is offline"` | Check the volume status with `volume show -vserver <svm>` and verify the aggregate is online. |
+    | `Error: "Initiator IQN not found in igroup"` | Add the missing initiator IQN to the igroup using `lun igroup add -vserver <svm> -igroup <igroup_name> -initiator <iqn>`. |
 ### Resolution
 
 ```bash
@@ -722,9 +742,11 @@ CHAP Inbound Username: initiator_user
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: LUN /vol/data_vol/lun_prod_01 is not found`** — Verify the volume and LUN names exist with `lun show -vserver <svm>` and correct the path syntax.
-    **`Error: command failed: Vserver <svm> does not exist`** — Confirm the SVM name is correct by running `vserver show` to list all available SVMs.
-    **`Error: command failed: LUN /vol/data_vol/lun_prod_01 is already online`** — This is informational; the LUN is already in the desired state and no action is needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: LUN /vol/data_vol/lun_prod_01 is not found` | Verify the volume and LUN names exist with `lun show -vserver <svm>` and correct the path syntax. |
+    | `Error: command failed: Vserver <svm> does not exist` | Confirm the SVM name is correct by running `vserver show` to list all available SVMs. |
+    | `Error: command failed: LUN /vol/data_vol/lun_prod_01 is already online` | This is informational; the LUN is already in the desired state and no action is needed. |
 On the Linux host:
 ```bash
 # Rescan iSCSI targets
@@ -762,9 +784,11 @@ size=250G features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: No records found`** — Verify the target IQN and portal IP are correct, and that the iSCSI daemon is running with `systemctl status iscsid`.
-    **`rescan-scsi-bus.sh: command not found`** — Install the sg3-utils package with `apt-get install sg3-utils` or `yum install sg3-utils`.
-    **`multipathd: error in blacklist section`** — Check `/etc/multipath.conf` for syntax errors and reload the daemon with `systemctl restart multipathd`.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: No records found` | Verify the target IQN and portal IP are correct, and that the iSCSI daemon is running with `systemctl status iscsid`. |
+    | `rescan-scsi-bus.sh: command not found` | Install the sg3-utils package with `apt-get install sg3-utils` or `yum install sg3-utils`. |
+    | `multipathd: error in blacklist section` | Check `/etc/multipath.conf` for syntax errors and reload the daemon with `systemctl restart multipathd`. |
 ---
 
 ## Storage Failover (HA) Not Triggering
@@ -822,8 +846,10 @@ node-02        true    HA
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: storage failover show`** — Verify you are connected to the cluster management interface and have cluster admin privileges.
-    **`Cluster Ping to <node> (<ip>): Sent 5, Received 0, Lost 100%`** — Check network connectivity and HA interconnect cables; verify the target node is online with `cluster show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: storage failover show` | Verify you are connected to the cluster management interface and have cluster admin privileges. |
+    | `Cluster Ping to <node> (<ip>): Sent 5, Received 0, Lost 100%` | Check network connectivity and HA interconnect cables; verify the target node is online with `cluster show`. |
     **`Node           Enabled Mode`** `node-01        false   HA` — Re-enable failover with `storage failover modify -node <node_name> -enabled true` if failover was manually disabled.
 ### Resolution
 
@@ -856,9 +882,11 @@ node-01>
 ```
 
 !!! warning "Common errors"
-    **`Error: node node-02 is not in a halted state`** — Ensure the node has fully shut down before attempting giveback, or use `system node halt -node <node_name>` to force shutdown.
-    **`Error: storage failover is not enabled for node node-01`** — Run `storage failover modify -node <node_name> -enabled true` on both nodes to enable failover before takeover.
-    **`Error: giveback cannot proceed, aggregates are offline`** — Wait for aggregates to come online using `storage aggregate show` to verify state, or manually bring them online with `storage aggregate online -aggregate <name>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: node node-02 is not in a halted state` | Ensure the node has fully shut down before attempting giveback, or use `system node halt -node <node_name>` to force shutdown. |
+    | `Error: storage failover is not enabled for node node-01` | Run `storage failover modify -node <node_name> -enabled true` on both nodes to enable failover before takeover. |
+    | `Error: giveback cannot proceed, aggregates are offline` | Wait for aggregates to come online using `storage aggregate show` to verify state, or manually bring them online with `storage aggregate online -aggregate <name>`. |
 ---
 
 ## SMB/CIFS Share Inaccessible
@@ -921,9 +949,11 @@ svm-prod-01   running
 ```
 
 !!! warning "Common errors"
-    **`CIFS server check for vserver "svm-prod-01": Active Directory: FAILED`** — Verify DNS resolution is working with `dns check -vserver <svm>` and confirm the CIFS server account password is synchronized with Active Directory.
-    **`vserver cifs show: There is no data to display`** — Create a CIFS server configuration on the SVM using `vserver cifs create -vserver <svm> -cifs-server <server-name> -domain <domain-name>`.
-    **`network interface show: There is no data to display`** — Create a CIFS data LIF on the SVM with `network interface create -vserver <svm> -lif <lif-name> -role data -data-protocol cifs -home-node <node> -home-port <port> -address <ip> -netmask <mask>`.
+    | Error | Fix |
+    |---|---|
+    | `CIFS server check for vserver "svm-prod-01": Active Directory: FAILED` | Verify DNS resolution is working with `dns check -vserver <svm>` and confirm the CIFS server account password is synchronized with Active Directory. |
+    | `vserver cifs show: There is no data to display` | Create a CIFS server configuration on the SVM using `vserver cifs create -vserver <svm> -cifs-server <server-name> -domain <domain-name>`. |
+    | `network interface show: There is no data to display` | Create a CIFS data LIF on the SVM with `network interface create -vserver <svm> -lif <lif-name> -role data -data-protocol cifs -home-node <node> -home-port <port> -address <ip> -netmask <mask>`. |
 ### Resolution
 
 ```bash
@@ -963,9 +993,11 @@ SMB1 disabled for CIFS server "NETAPP-SVM01" on SVM "svm_prod_01".
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: CIFS configuration already exists for SVM "svm_prod_01"`** — Delete the existing CIFS configuration with `vserver cifs delete -vserver <svm>` before creating a new one.
-    **`Error: DNS name resolution failed for domain.corp`** — Verify DNS nameservers are configured on the SVM with `vserver services name-service dns modify -vserver <svm> -servers <ip1>,<ip2>` and that the domain controller is reachable.
-    **`Error: Failed to reset CIFS machine account password: Access Denied`** — Ensure the account running the command has Domain Admin privileges and the machine account exists in Active Directory.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: CIFS configuration already exists for SVM "svm_prod_01"` | Delete the existing CIFS configuration with `vserver cifs delete -vserver <svm>` before creating a new one. |
+    | `Error: DNS name resolution failed for domain.corp` | Verify DNS nameservers are configured on the SVM with `vserver services name-service dns modify -vserver <svm> -servers <ip1>,<ip2>` and that the domain controller is reachable. |
+    | `Error: Failed to reset CIFS machine account password: Access Denied` | Ensure the account running the command has Domain Admin privileges and the machine account exists in Active Directory. |
 ---
 
 ## Disk Failure / RAID Degraded
@@ -1035,9 +1067,11 @@ Disk     Serial Number        Bay  Shelf  Node      RPM   Size
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: storage`** — Ensure you are logged into the ONTAP cluster CLI (not the host shell) and have cluster admin privileges.
-    **`Error: There is no entry in the Compat database for the specified aggregate <aggr_name>`** — Verify the aggregate name is correct by running `storage aggregate show` without the `-aggregate` parameter.
-    **`Error: Access denied. You do not have permission to run this command`** — Confirm your user role includes "admin" or equivalent cluster-wide permissions using `security login show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: storage` | Ensure you are logged into the ONTAP cluster CLI (not the host shell) and have cluster admin privileges. |
+    | `Error: There is no entry in the Compat database for the specified aggregate <aggr_name>` | Verify the aggregate name is correct by running `storage aggregate show` without the `-aggregate` parameter. |
+    | `Error: Access denied. You do not have permission to run this command` | Confirm your user role includes "admin" or equivalent cluster-wide permissions using `security login show`. |
 ### Resolution
 
 ONTAP will automatically initiate RAID reconstruction when a spare disk is available. No manual intervention is needed for reconstruction to start.
@@ -1069,8 +1103,10 @@ Disk assignment successful. Disk 1.0.4 assigned to node-01.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: disk <disk_id> is not in a failed state`** — Use `storage disk show` to verify the disk state before attempting to unfail it.
-    **`Error: No spare disks available for assignment`** — Confirm spare disks exist with `storage disk show -container-type spare` and check node ownership constraints.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: disk <disk_id> is not in a failed state` | Use `storage disk show` to verify the disk state before attempting to unfail it. |
+    | `Error: No spare disks available for assignment` | Confirm spare disks exist with `storage disk show -container-type spare` and check node ownership constraints. |
 If no spare disks are available, RAID reconstruction cannot proceed. Escalate immediately — a second disk failure in the same RAID group will cause aggregate loss.
 
 ---

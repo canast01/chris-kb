@@ -118,9 +118,11 @@ RDFG  R1_ST    R2_ST           R2_PAIR_ST  MODE  LINK_ST  R1_CAPACITY  R2_CAPACI
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Error: Invalid SID <SID>`** — Verify the array SID with `symcfg list` and ensure it matches your target array identifier.
-    **`LINK_ST = "Not Ready"`** — Check RF port connectivity and WAN link status with `symrdf -sid <SID> -rdfg <rdfg-number> check` and verify network routing between sites.
-    **`R2_PAIR_ST = "Partitioned"`** — Resume replication with `symrdf -sid <SID> -rdfg <rdfg-number> resume` after confirming R2 data integrity and link restoration.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Error: Invalid SID <SID>` | Verify the array SID with `symcfg list` and ensure it matches your target array identifier. |
+    | `LINK_ST = "Not Ready"` | Check RF port connectivity and WAN link status with `symrdf -sid <SID> -rdfg <rdfg-number> check` and verify network routing between sites. |
+    | `R2_PAIR_ST = "Partitioned"` | Resume replication with `symrdf -sid <SID> -rdfg <rdfg-number> resume` after confirming R2 data integrity and link restoration. |
 **Decision flow:**
 - All fields healthy but lag alert firing → proceed to Step 2 (performance check)
 - `LINK_ST = Not Ready` → proceed to Step 4 (RF link diagnostics)
@@ -165,9 +167,11 @@ Summary: 6 SRDF/A groups monitored. Max RDFG_LAG: 12.45 sec (RDFG 002 R1)
 ```
 
 !!! warning "Common errors"
-    **`symrdf: ERROR - Invalid RDF group number <rdfg-number>`** — Verify the RDF group number exists with `symrdf list -sid <SID>` and use the correct numeric identifier.
-    **`symrdf: ERROR - Symmetrix <SID> not found or not accessible`** — Confirm the SID is correct and the Symmetrix array is online and reachable via `symcfg list -v`.
-    **`No matching SRDF groups found`** — Remove the `-rdfg` filter or specify a valid group; use `symrdf list -sid <SID>` to list all configured SRDF/A groups.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: ERROR - Invalid RDF group number <rdfg-number>` | Verify the RDF group number exists with `symrdf list -sid <SID>` and use the correct numeric identifier. |
+    | `symrdf: ERROR - Symmetrix <SID> not found or not accessible` | Confirm the SID is correct and the Symmetrix array is online and reachable via `symcfg list -v`. |
+    | `No matching SRDF groups found` | Remove the `-rdfg` filter or specify a valid group; use `symrdf list -sid <SID>` to list all configured SRDF/A groups. |
 **Interpreting lag:**
 - `DSE_LAG` consistently above 2× `CYCLE_TIME` → link bandwidth is saturated; verify with Step 4
 - `HOST_MBS` is 2× or more of `LINK_MBS` → production write rate exceeds link capacity; either throttle applications or upgrade link bandwidth
@@ -219,8 +223,10 @@ Replication Rate: 45.2 MB/s
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Error: Invalid RDFG number <rdfg-number> for Symmetrix <SID>`** — Verify the RDFG number exists by running `symrdf list -sid <SID>` without the `-rdfg` parameter.
-    **`symdg: Error: Device group '<group-name>' not found`** — Confirm the device group name is correct and exists on this Symmetrix by running `symdg list`.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Error: Invalid RDFG number <rdfg-number> for Symmetrix <SID>` | Verify the RDFG number exists by running `symrdf list -sid <SID>` without the `-rdfg` parameter. |
+    | `symdg: Error: Device group '<group-name>' not found` | Confirm the device group name is correct and exists on this Symmetrix by running `symdg list`. |
 ---
 
 ## Step 4 — Check RF ports and SRDF link health
@@ -263,9 +269,11 @@ RA Port  State      Utilization  Queue_Depth  Link_Speed  Remote_Port
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Cannot open device driver`** — Verify the Symmetrix CLI is installed and the EMC management agent is running with `sudo /etc/init.d/emc-management start`.
-    **`syminq: SID <SID> not found in configuration`** — Confirm the SID is correct and the array is discovered by running `symcfg list` to display all available arrays.
-    **`LINK_STATUS: Offline`** — Check physical FC cable connections, verify switch zoning includes both array and remote site ports, and confirm the remote array SRDF port is also online.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Cannot open device driver` | Verify the Symmetrix CLI is installed and the EMC management agent is running with `sudo /etc/init.d/emc-management start`. |
+    | `syminq: SID <SID> not found in configuration` | Confirm the SID is correct and the array is discovered by running `symcfg list` to display all available arrays. |
+    | `LINK_STATUS: Offline` | Check physical FC cable connections, verify switch zoning includes both array and remote site ports, and confirm the remote array SRDF port is also online. |
 **If RF port shows "Offline":**
 1. Check the physical FC cable on the back-end RF director
 2. Check the FC switch zone that includes the RF ports from both arrays
@@ -343,9 +351,11 @@ total 2847
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Error: Cannot connect to the Symmetrix`** — Verify the Symmetrix ID is correct and Solutions Enabler daemon (storsrvd) is running with `service storsrvd status`.
-    **`symrdf: Error: RDF Group <rdfg-number> not found`** — Confirm the RDF group number exists on the array using `symcfg -sid <SID> list -rdf` without specifying a group.
-    **`Permission denied` on `/var/symapi/log/`** — Run the diagnostic collection with `sudo` or as root user to access Solutions Enabler log files.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Error: Cannot connect to the Symmetrix` | Verify the Symmetrix ID is correct and Solutions Enabler daemon (storsrvd) is running with `service storsrvd status`. |
+    | `symrdf: Error: RDF Group <rdfg-number> not found` | Confirm the RDF group number exists on the array using `symcfg -sid <SID> list -rdf` without specifying a group. |
+    | `Permission denied` on `/var/symapi/log/` | Run the diagnostic collection with `sudo` or as root user to access Solutions Enabler log files. |
 ---
 
 ## Log locations

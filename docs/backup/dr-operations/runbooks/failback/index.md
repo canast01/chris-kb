@@ -55,9 +55,11 @@ Fabric State: Stable
 ```
 
 !!! warning "Common errors"
-    **`system health status show: command not found`** — Verify you are connected to the ONTAP cluster management IP and have appropriate SSH credentials configured.
-    **`purecli: command not found`** — Install the Pure Storage CLI package or ensure the FlashArray management network is reachable and purecli is in your PATH.
-    **`show interface fc brief: command not found`** — Confirm you are in the correct CLI context (Cisco MDS switch) and not in a different device shell.
+    | Error | Fix |
+    |---|---|
+    | `system health status show: command not found` | Verify you are connected to the ONTAP cluster management IP and have appropriate SSH credentials configured. |
+    | `purecli: command not found` | Install the Pure Storage CLI package or ensure the FlashArray management network is reachable and purecli is in your PATH. |
+    | `show interface fc brief: command not found` | Confirm you are in the correct CLI context (Cisco MDS switch) and not in a different device shell. |
 ```bash
 # ONTAP — confirm lag is zero before breaking
 snapmirror show -destination-path <primary-svm>:<primary-vol> -fields lag-time
@@ -120,9 +122,11 @@ Created symlink /etc/systemd/system/multi-user.target.wants/app-service.service 
 ```
 
 !!! warning "Common errors"
-    **`Unit app-service.service not found.`** — Verify the service file exists at `/etc/systemd/system/app-service.service` and run `systemctl daemon-reload` before starting.
-    **`curl: (7) Failed to connect to primary-app-01.prod.local port 443: Connection refused`** — Confirm the application service is listening on port 443 and firewall rules allow inbound HTTPS traffic to the primary host.
-    **`Device or resource busy`** — Ensure no other processes are accessing the multipath devices and that the failback operation has fully completed before attempting to remount storage.
+    | Error | Fix |
+    |---|---|
+    | `Unit app-service.service not found.` | Verify the service file exists at `/etc/systemd/system/app-service.service` and run `systemctl daemon-reload` before starting. |
+    | `curl: (7) Failed to connect to primary-app-01.prod.local port 443: Connection refused` | Confirm the application service is listening on port 443 and firewall rules allow inbound HTTPS traffic to the primary host. |
+    | `Device or resource busy` | Ensure no other processes are accessing the multipath devices and that the failback operation has fully completed before attempting to remount storage. |
 ```bash
 # PostgreSQL
 psql -U <user> -c "SELECT pg_database_size('<db>');"
@@ -142,9 +146,11 @@ DBCC execution completed. If DBCC printed error messages, review and correct the
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed`** — Verify the PostgreSQL service is running and the hostname/port in your connection string is correct.
-    **`Login failed for user '<user>'. Reason: Could not find a login matching the name provided.`** — Ensure the SQL Server account exists and has appropriate permissions on the target instance.
-    **`DBCC CHECKDB statement not recognized`** — Confirm you are running the Invoke-Sqlcmd command on a Windows system with SQL Server PowerShell module installed (Install-Module SqlServer).
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed` | Verify the PostgreSQL service is running and the hostname/port in your connection string is correct. |
+    | `Login failed for user '<user>'. Reason: Could not find a login matching the name provided.` | Ensure the SQL Server account exists and has appropriate permissions on the target instance. |
+    | `DBCC CHECKDB statement not recognized` | Confirm you are running the Invoke-Sqlcmd command on a Windows system with SQL Server PowerShell module installed (Install-Module SqlServer). |
 ```bash
 # ONTAP — resync back to original direction
 snapmirror resync -source-path <primary-svm>:<primary-vol> -destination-path <dr-svm>:<dr-vol>

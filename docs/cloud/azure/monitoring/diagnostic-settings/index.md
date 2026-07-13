@@ -80,9 +80,11 @@ az monitor diagnostic-settings list \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.KeyVault/vaults/myKeyVault' could not be found.`** — Verify the subscription ID, resource group name, and Key Vault name are correct and exist in your Azure subscription.
-    **`InvalidTemplate: The template is invalid: The JSON is not valid.`** — Ensure the `--logs` and `--metrics` JSON strings are properly formatted with escaped quotes and no trailing commas.
-    **`AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'microsoft.insights/diagnosticSettings/write' over scope '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.KeyVault/vaults/myKeyVault'.`** — Assign the Monitoring Contributor role to your user account on the target resource or subscription.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.KeyVault/vaults/myKeyVault' could not be found.` | Verify the subscription ID, resource group name, and Key Vault name are correct and exist in your Azure subscription. |
+    | `InvalidTemplate: The template is invalid: The JSON is not valid.` | Ensure the `--logs` and `--metrics` JSON strings are properly formatted with escaped quotes and no trailing commas. |
+    | `AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'microsoft.insights/diagnosticSettings/write' over scope '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.KeyVault/vaults/myKeyVault'.` | Assign the Monitoring Contributor role to your user account on the target resource or subscription. |
 ## Log Categories by Resource Type
 
 | Resource Type          | Common Log Categories                                         |
@@ -158,9 +160,11 @@ az monitor diagnostic-settings create \
 ```
 
 !!! warning "Common errors"
-    **`(InvalidResourceId) The resource ID is invalid.`** — Verify the subscription ID, resource group name, and resource name match exactly in the resource ID path.
-    **`(AuthorizationFailed) The client has permission to perform action 'microsoft.insights/diagnosticSettings/write' on scope...`** — Ensure your Azure account has the Monitoring Contributor or Owner role on the target resource.
-    **`(ResourceNotFound) The resource 'Microsoft.Storage/storageAccounts/myStorageAccount' could not be found.`** — Confirm the storage account exists in the specified resource group and subscription before creating the diagnostic setting.
+    | Error | Fix |
+    |---|---|
+    | `(InvalidResourceId) The resource ID is invalid.` | Verify the subscription ID, resource group name, and resource name match exactly in the resource ID path. |
+    | `(AuthorizationFailed) The client has permission to perform action 'microsoft.insights/diagnosticSettings/write' on scope...` | Ensure your Azure account has the Monitoring Contributor or Owner role on the target resource. |
+    | `(ResourceNotFound) The resource 'Microsoft.Storage/storageAccounts/myStorageAccount' could not be found.` | Confirm the storage account exists in the specified resource group and subscription before creating the diagnostic setting. |
 ## Checking Coverage at Scale
 
 Use Azure Policy to audit which resources are missing diagnostic settings.
@@ -197,8 +201,10 @@ KeyVaultEvents                 True       True                       365
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The resource 'microsoft.insights/diagnosticsettings' does not exist in the current subscription.`** — Verify the subscription ID with `az account show` and ensure diagnostic settings have been created for at least one resource.
-    **`ERROR: The provided resource ID is invalid or the resource does not exist.`** — Confirm the subscription ID, resource group name, and resource name are correct by listing resources with `az resource list --resource-group myRG`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The resource 'microsoft.insights/diagnosticsettings' does not exist in the current subscription.` | Verify the subscription ID with `az account show` and ensure diagnostic settings have been created for at least one resource. |
+    | `ERROR: The provided resource ID is invalid or the resource does not exist.` | Confirm the subscription ID, resource group name, and resource name are correct by listing resources with `az resource list --resource-group myRG`. |
 ## Updating and Deleting
 
 ```bash
@@ -270,9 +276,11 @@ az monitor diagnostic-settings delete \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.KeyVault/vaults/myKeyVault' could not be found.`** — Verify the subscription ID, resource group name, and vault name are correct and the resource exists in the specified region.
-    **`InvalidResourceId : The resource ID is invalid or malformed.`** — Ensure the resource ID follows the exact format with correct casing for provider names (e.g., `Microsoft.KeyVault`, `Microsoft.OperationalInsights`).
-    **`WorkspaceNotFound : The Log Analytics workspace '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace' does not exist.`** — Confirm the workspace exists in the same subscription and resource group, or create it before linking to diagnostic settings.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.KeyVault/vaults/myKeyVault' could not be found.` | Verify the subscription ID, resource group name, and vault name are correct and the resource exists in the specified region. |
+    | `InvalidResourceId : The resource ID is invalid or malformed.` | Ensure the resource ID follows the exact format with correct casing for provider names (e.g., `Microsoft.KeyVault`, `Microsoft.OperationalInsights`). |
+    | `WorkspaceNotFound : The Log Analytics workspace '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace' does not exist.` | Confirm the workspace exists in the same subscription and resource group, or create it before linking to diagnostic settings. |
 ## Destination Comparison
 
 | Destination      | Cost Model          | Latency     | Retention Control     |

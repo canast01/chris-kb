@@ -67,9 +67,11 @@ Connection to pure1.purestorage.com 443 port [tcp/https] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or ensure the array's management certificate is trusted by the system CA bundle.
-    **`Connection refused`** — Verify outbound HTTPS (port 443) is not blocked by firewall rules between the array management network and pure1.purestorage.com; check security group or ACL policies.
-    **`puremessage: command not found`** — Ensure you are logged into the FlashArray CLI with administrative credentials and the Pure1 phone-home feature is enabled in array settings.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or ensure the array's management certificate is trusted by the system CA bundle. |
+    | `Connection refused` | Verify outbound HTTPS (port 443) is not blocked by firewall rules between the array management network and pure1.purestorage.com; check security group or ACL policies. |
+    | `puremessage: command not found` | Ensure you are logged into the FlashArray CLI with administrative credentials and the Pure1 phone-home feature is enabled in array settings. |
 ## See also
 
 - [Pure1 — Architecture](../how-it-works/)

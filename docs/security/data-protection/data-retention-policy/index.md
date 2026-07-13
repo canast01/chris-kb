@@ -105,9 +105,11 @@ Windows Event Logs forwarded to SIEM are retained per SIEM policy (1 year online
 ```
 
 !!! warning "Common errors"
-    **`/etc/logrotate.d/syslog: line 2: syntax error near unexpected token '{'`** — Ensure the logrotate configuration file uses proper syntax; this error typically occurs if the file is edited with incorrect line endings or missing newlines—use `dos2unix /etc/logrotate.d/syslog` to fix.
-    **`error: stat of /var/log/syslog failed: No such file or directory`** — Create the syslog file before applying logrotate rules with `touch /var/log/syslog && chown syslog:adm /var/log/syslog && chmod 640 /var/log/syslog`.
-    **`error: error executing postrotate script for /var/log/syslog`** — Verify that `/usr/lib/rsyslog/rsyslog-rotate` exists and is executable with `ls -la /usr/lib/rsyslog/rsyslog-rotate && chmod +x /usr/lib/rsyslog/rsyslog-rotate`.
+    | Error | Fix |
+    |---|---|
+    | `/etc/logrotate.d/syslog: line 2: syntax error near unexpected token '{'` | Ensure the logrotate configuration file uses proper syntax; this error typically occurs if the file is edited with incorrect line endings or missing newlines—use `dos2unix /etc/logrotate.d/syslog` to fix. |
+    | `error: stat of /var/log/syslog failed: No such file or directory` | Create the syslog file before applying logrotate rules with `touch /var/log/syslog && chown syslog:adm /var/log/syslog && chmod 640 /var/log/syslog`. |
+    | `error: error executing postrotate script for /var/log/syslog` | Verify that `/usr/lib/rsyslog/rsyslog-rotate` exists and is executable with `ls -la /usr/lib/rsyslog/rsyslog-rotate && chmod +x /usr/lib/rsyslog/rsyslog-rotate`. |
 Remote forwarding to SIEM is required; local rotation is a buffer for connectivity loss.
 
 ---
@@ -187,8 +189,10 @@ Secure_Erase_Estimated_Time_Remaining: 45 minutes
 ```
 
 !!! warning "Common errors"
-    **`symdev: Error: Device 0A1B not found in array 001`** — Verify the DeviceID exists on the specified array SID using `symdev -sid 001 list`.
-    **`symdev: Error: Insufficient privileges for secure_erase operation`** — Ensure your user account has array admin role; contact your storage administrator to grant permissions.
+    | Error | Fix |
+    |---|---|
+    | `symdev: Error: Device 0A1B not found in array 001` | Verify the DeviceID exists on the specified array SID using `symdev -sid 001 list`. |
+    | `symdev: Error: Insufficient privileges for secure_erase operation` | Ensure your user account has array admin role; contact your storage administrator to grant permissions. |
 ---
 
 ## Retention Compliance Monitoring
@@ -226,9 +230,11 @@ wc -l /tmp/expired_audit_files.txt
 ```
 
 !!! warning "Common errors"
-    **`find: '/mnt/archive/audit_logs': No such file or directory`** — Verify the NFS share is mounted with `mount | grep archive` and mount it if necessary using `mount -t nfs server:/export/audit_logs /mnt/archive/audit_logs`.
-    **`Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the archive directory with `sudo chmod g+rx /mnt/archive/audit_logs`.
-    **`find: paths must begin with "." or "/"`** — Check for typos in the path and ensure `/mnt/archive/audit_logs` is an absolute path starting with `/`.
+    | Error | Fix |
+    |---|---|
+    | `find: '/mnt/archive/audit_logs': No such file or directory` | Verify the NFS share is mounted with `mount | grep archive` and mount it if necessary using `mount -t nfs server:/export/audit_logs /mnt/archive/audit_logs`. |
+    | `Permission denied` | Run the command with `sudo` or ensure your user has read permissions on the archive directory with `sudo chmod g+rx /mnt/archive/audit_logs`. |
+    | `find: paths must begin with "." or "/"` | Check for typos in the path and ensure `/mnt/archive/audit_logs` is an absolute path starting with `/`. |
 ---
 
 ## Exceptions and Escalation

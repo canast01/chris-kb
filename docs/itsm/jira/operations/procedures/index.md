@@ -100,9 +100,11 @@ curl -u user:token -G \
 ```
 
 !!! warning "Common errors"
-    **`"errorMessages":["Field 'customfield_10016' cannot be set. It is not on the appropriate screen, or unknown."]`** — Verify the custom field ID matches your Jira instance by checking Administration > Fields or using `curl -u user:token https://your-instance.atlassian.net/rest/api/2/field | jq '.[] | select(.name=="Story Points")'`.
-    **`curl: (6) Could not resolve host: your-instance.atlassian.net`** — Replace `your-instance` with your actual Jira domain name (e.g., `mycompany.atlassian.net`).
-    **`jq: parse error: Invalid numeric literal at line 1 column 10`** — Ensure the API response is valid JSON by removing any authentication errors; check credentials with `curl -u user:token https://your-instance.atlassian.net/rest/api/2/myself`.
+    | Error | Fix |
+    |---|---|
+    | `"errorMessages":["Field 'customfield_10016' cannot be set. It is not on the appropriate screen, or unknown."]` | Verify the custom field ID matches your Jira instance by checking Administration > Fields or using `curl -u user:token https://your-instance.atlassian.net/rest/api/2/field | jq '.[] | select(.name=="Story Points")'`. |
+    | `curl: (6) Could not resolve host: your-instance.atlassian.net` | Replace `your-instance` with your actual Jira domain name (e.g., `mycompany.atlassian.net`). |
+    | `jq: parse error: Invalid numeric literal at line 1 column 10` | Ensure the API response is valid JSON by removing any authentication errors; check credentials with `curl -u user:token https://your-instance.atlassian.net/rest/api/2/myself`. |
 ## Epics
 
 Epics group related stories under a theme or deliverable.
@@ -141,8 +143,10 @@ curl -u user:token -G \
 ```
 
 !!! warning "Common errors"
-    **`{"errorMessages":["Authentication failed; verify you are logged in"]}`** — Verify your Jira instance URL, username, and API token are correct.
-    **`{"errorMessages":["Field 'customfield_10014' does not exist or you do not have permission to edit it."]}`** — Confirm the custom field ID for "Epic Link" matches your Jira instance by checking Administration > Custom Fields.
+    | Error | Fix |
+    |---|---|
+    | `{"errorMessages":["Authentication failed; verify you are logged in"]}` | Verify your Jira instance URL, username, and API token are correct. |
+    | `{"errorMessages":["Field 'customfield_10014' does not exist or you do not have permission to edit it."]}` | Confirm the custom field ID for "Epic Link" matches your Jira instance by checking Administration > Custom Fields. |
 ## Story Splitting
 
 Split large stories using these patterns:
@@ -235,9 +239,11 @@ curl -u user:token \
 ```
 
 !!! warning "Common errors"
-    **`"errorMessages":["User 'user' does not have permission to create issues in project PLAT"]`** — Verify the API token has project admin or create-issue permissions, or check project visibility settings.
-    **`curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused`** — Replace `your-instance.atlassian.net` with your actual Jira domain and verify the instance is accessible.
-    **`"errorMessages":["Issue Type 'Task' is not valid for project PLAT"]`** — Check the project's available issue types via the project settings or use `curl -u user:token "https://your-instance.atlassian.net/rest/api/2/project/PLAT/issuetypes"` to list valid types.
+    | Error | Fix |
+    |---|---|
+    | `"errorMessages":["User 'user' does not have permission to create issues in project PLAT"]` | Verify the API token has project admin or create-issue permissions, or check project visibility settings. |
+    | `curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused` | Replace `your-instance.atlassian.net` with your actual Jira domain and verify the instance is accessible. |
+    | `"errorMessages":["Issue Type 'Task' is not valid for project PLAT"]` | Check the project's available issue types via the project settings or use `curl -u user:token "https://your-instance.atlassian.net/rest/api/2/project/PLAT/issuetypes"` to list valid types. |
 ## Sub-tasks
 
 Sub-tasks break a parent issue into trackable pieces of work.
@@ -296,9 +302,11 @@ curl -u user:token \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused`** — Replace `your-instance.atlassian.net` with your actual Jira domain name.
-    **`{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}`** — Verify that PLAT-123 exists, is accessible to your user, and that the parent issue type supports sub-tasks.
-    **`jq: parse error: Cannot index number with string "fields"`** — Ensure the curl response is valid JSON; add `-s` flag to curl to suppress progress output and check authentication credentials are correct.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused` | Replace `your-instance.atlassian.net` with your actual Jira domain name. |
+    | `{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}` | Verify that PLAT-123 exists, is accessible to your user, and that the parent issue type supports sub-tasks. |
+    | `jq: parse error: Cannot index number with string "fields"` | Ensure the curl response is valid JSON; add `-s` flag to curl to suppress progress output and check authentication credentials are correct. |
 | Issue Type | Has Parent | Use Case |
 |-----------|-----------|----------|
 | Epic | No | Large theme |
@@ -358,9 +366,11 @@ curl -u user:token -X DELETE \
 ```
 
 !!! warning "Common errors"
-    **`{"errorMessages":["Authentication failed; invalid username, password, token, or CAPTCHA challenge response."]}`** — Verify the username, API token, and instance URL are correct; regenerate the token if expired.
-    **`{"errorMessages":["Issue does not exist or you do not have permission to see it."]}`** — Confirm both PLAT-123 and PLAT-456 exist and the authenticated user has permission to view and link them.
-    **`{"errorMessages":["Link type 'Blocks' does not exist."]}`** — Run the second curl command to list available link types and use a valid name from the response.
+    | Error | Fix |
+    |---|---|
+    | `{"errorMessages":["Authentication failed; invalid username, password, token, or CAPTCHA challenge response."]}` | Verify the username, API token, and instance URL are correct; regenerate the token if expired. |
+    | `{"errorMessages":["Issue does not exist or you do not have permission to see it."]}` | Confirm both PLAT-123 and PLAT-456 exist and the authenticated user has permission to view and link them. |
+    | `{"errorMessages":["Link type 'Blocks' does not exist."]}` | Run the second curl command to list available link types and use a valid name from the response. |
 | Link Type | Direction | Meaning |
 |-----------|----------|---------|
 | Blocks | A blocks B | A must complete before B starts |
@@ -417,9 +427,11 @@ curl -u user:token -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-instance.atlassian.net port 443: Name or service not known`** — Replace `your-instance` with your actual Jira domain name (e.g., `company.atlassian.net`).
-    **`{"errorMessages":["Issue does not exist or you do not have permission to see it."]}`** — Verify the issue key (PLAT-123) exists and your API token has read/write permissions for that project.
-    **`{"errorMessages":["Transition is not available for the current status of the issue."]}`** — Confirm the transition ID is valid for the issue's current status by running the first command to list available transitions.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-instance.atlassian.net port 443: Name or service not known` | Replace `your-instance` with your actual Jira domain name (e.g., `company.atlassian.net`). |
+    | `{"errorMessages":["Issue does not exist or you do not have permission to see it."]}` | Verify the issue key (PLAT-123) exists and your API token has read/write permissions for that project. |
+    | `{"errorMessages":["Transition is not available for the current status of the issue."]}` | Confirm the transition ID is valid for the issue's current status by running the first command to list available transitions. |
 ## Bulk Operations
 
 ```bash
@@ -460,9 +472,11 @@ Successfully updated PLAT-4819
 ```
 
 !!! warning "Common errors"
-    **`curl: (401) Unauthorized`** — Verify the API token is valid and base64-encoded correctly in the `-u user:token` parameter, or use `-H "Authorization: Bearer $TOKEN"` instead.
-    **`jq: parse error: Invalid JSON`** — Check that the Jira instance URL is correct and accessible; the search endpoint may be returning an error page instead of JSON.
-    **`"errorMessages": ["User does not exist"]`** — Confirm that "newuser" exists in your Jira instance and has permission to be assigned issues in the PLAT project.
+    | Error | Fix |
+    |---|---|
+    | `curl: (401) Unauthorized` | Verify the API token is valid and base64-encoded correctly in the `-u user:token` parameter, or use `-H "Authorization: Bearer $TOKEN"` instead. |
+    | `jq: parse error: Invalid JSON` | Check that the Jira instance URL is correct and accessible; the search endpoint may be returning an error page instead of JSON. |
+    | `"errorMessages": ["User does not exist"]` | Confirm that "newuser" exists in your Jira instance and has permission to be assigned issues in the PLAT project. |
 ```bash
 # Add a label to multiple issues
 for ISSUE in PLAT-100 PLAT-101 PLAT-102; do
@@ -481,9 +495,11 @@ done
 ```
 
 !!! warning "Common errors"
-    **`{"errorMessages":["Authentication failed; invalid username, password, token, or CAPTCHA"]}`** — Verify the API token is valid and base64-encoded correctly in the `-u user:token` parameter.
-    **`{"errorMessages":["You do not have permission to edit this issue"]}`** — Confirm the user account has the "Edit Issues" permission in the Jira project.
-    **`curl: (6) Could not resolve host: your-instance.atlassian.net`** — Replace `your-instance` with your actual Jira instance name (e.g., `company.atlassian.net`).
+    | Error | Fix |
+    |---|---|
+    | `{"errorMessages":["Authentication failed; invalid username, password, token, or CAPTCHA"]}` | Verify the API token is valid and base64-encoded correctly in the `-u user:token` parameter. |
+    | `{"errorMessages":["You do not have permission to edit this issue"]}` | Confirm the user account has the "Edit Issues" permission in the Jira project. |
+    | `curl: (6) Could not resolve host: your-instance.atlassian.net` | Replace `your-instance` with your actual Jira instance name (e.g., `company.atlassian.net`). |
 ---
 
 ## Reporting
@@ -546,9 +562,11 @@ curl -u user:token \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused`** — Replace `your-instance` with your actual Jira domain name (e.g., `company.atlassian.net`).
-    **`{"errorMessages":["User is not authenticated"],"errors":{}}`** — Verify the API token is valid and use base64 encoding: `curl -u user:$(echo -n token | base64)` or switch to `-H "Authorization: Bearer $TOKEN"` format.
-    **`{"errorMessages":["The board does not exist or you do not have permission to view it"]}`** — Confirm the `rapidViewId` and `sprintId` values are correct and your user account has access to the board.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused` | Replace `your-instance` with your actual Jira domain name (e.g., `company.atlassian.net`). |
+    | `{"errorMessages":["User is not authenticated"],"errors":{}}` | Verify the API token is valid and use base64 encoding: `curl -u user:$(echo -n token | base64)` or switch to `-H "Authorization: Bearer $TOKEN"` format. |
+    | `{"errorMessages":["The board does not exist or you do not have permission to view it"]}` | Confirm the `rapidViewId` and `sprintId` values are correct and your user account has access to the board. |
 Key sprint metrics to review:
 - Commitment (story points planned at sprint start)
 - Completed points vs committed points
@@ -601,8 +619,10 @@ curl -s -u user:token \
 ```
 
 !!! warning "Common errors"
-    **`curl: (401) Unauthorized`** — Verify the API token is valid and the user account has access to the Jira instance; regenerate the token if expired.
-    **`jq: error (at <stdin>:1): Cannot index null with string "velocityStatEntries"`** — Confirm the rapidViewId=10 exists and the GreenHopper endpoint is enabled; check the board ID with `curl -s -u user:token "https://your-instance.atlassian.net/rest/greenhopper/1.0/rapidviews/list" | jq '.views'`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (401) Unauthorized` | Verify the API token is valid and the user account has access to the Jira instance; regenerate the token if expired. |
+    | `jq: error (at <stdin>:1): Cannot index null with string "velocityStatEntries"` | Confirm the rapidViewId=10 exists and the GreenHopper endpoint is enabled; check the board ID with `curl -s -u user:token "https://your-instance.atlassian.net/rest/greenhopper/1.0/rapidviews/list" | jq '.views'`. |
 | Metric | Formula | Use |
 |--------|---------|-----|
 | Velocity | Avg completed points / sprint | Sprint capacity planning |
@@ -687,8 +707,10 @@ curl -u user:token -G \
 ```
 
 !!! warning "Common errors"
-    **`curl: (401) Unauthorized`** — Verify your Jira API token is valid and base64-encoded correctly in the `-u user:token` parameter.
-    **`jq: error (null) and number cannot be added`** — Ensure the custom field ID `customfield_10016` matches your Jira instance's story points field by checking Administration > Custom Fields.
+    | Error | Fix |
+    |---|---|
+    | `curl: (401) Unauthorized` | Verify your Jira API token is valid and base64-encoded correctly in the `-u user:token` parameter. |
+    | `jq: error (null) and number cannot be added` | Ensure the custom field ID `customfield_10016` matches your Jira instance's story points field by checking Administration > Custom Fields. |
 ## Cumulative Flow Diagram (CFD)
 
 CFD shows how many issues are in each status over time. Widening bands indicate bottlenecks.
@@ -732,9 +754,11 @@ curl -u user:token \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused`** — Replace `your-instance` with your actual Jira domain name (e.g., `mycompany.atlassian.net`).
-    **`{"errorMessages":["User does not have permission to view this board"],"errors":{}}`** — Verify the API token has board access permissions and the `rapidViewId` matches a board the user can access.
-    **`{"errorMessages":["Invalid rapidViewId: 10"],"errors":{}}`** — Confirm the board ID exists by listing available boards with `curl -u user:token "https://your-instance.atlassian.net/rest/greenhopper/1.0/boards"`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-instance.atlassian.net port 443: Connection refused` | Replace `your-instance` with your actual Jira domain name (e.g., `mycompany.atlassian.net`). |
+    | `{"errorMessages":["User does not have permission to view this board"],"errors":{}}` | Verify the API token has board access permissions and the `rapidViewId` matches a board the user can access. |
+    | `{"errorMessages":["Invalid rapidViewId: 10"],"errors":{}}` | Confirm the board ID exists by listing available boards with `curl -u user:token "https://your-instance.atlassian.net/rest/greenhopper/1.0/boards"`. |
 Interpreting the CFD:
 - **Widening "In Progress" band** — WIP is accumulating, throughput is slower than input
 - **Flat "Done" band** — work is not being completed
@@ -787,8 +811,10 @@ PLAT-4516 | david.lee | 3 points | Done
 ```
 
 !!! warning "Common errors"
-    **`The value 'openSprints()' does not exist or you do not have permission to see it.`** — Replace `openSprints()` with the actual sprint name or ID (e.g., `sprint = "Sprint 47"`), or verify the Jira project has active sprints configured.
-    **`Field 'resolution' does not exist or you do not have permission to see it.`** — Use `resolution is EMPTY` instead of `resolution = Unresolved`, as Unresolved is not a valid resolution value in standard Jira configurations.
+    | Error | Fix |
+    |---|---|
+    | `The value 'openSprints()' does not exist or you do not have permission to see it.` | Replace `openSprints()` with the actual sprint name or ID (e.g., `sprint = "Sprint 47"`), or verify the Jira project has active sprints configured. |
+    | `Field 'resolution' does not exist or you do not have permission to see it.` | Use `resolution is EMPTY` instead of `resolution = Unresolved`, as Unresolved is not a valid resolution value in standard Jira configurations. |
 ## Exporting Data
 
 ```bash
@@ -841,9 +867,11 @@ curl -u user:token -G \
 ```
 
 !!! warning "Common errors"
-    **`curl: (401) Unauthorized`** — Verify your Jira username and API token are correct; generate a new token at https://id.atlassian.com/manage-profile/security/api-tokens if expired.
-    **`jq: error (at <stdin>:1): Cannot index number with string "fields"`** — The custom field ID `customfield_10016` may not exist in your instance; run `curl -u user:token "https://your-instance.atlassian.net/rest/api/2/field" | jq '.[] | select(.name=="Story Points")'` to find the correct field ID.
-    **`curl: (400) Bad Request`** — Ensure the JQL syntax is valid by testing it in the Jira UI search bar first, and verify the instance URL matches your Jira domain exactly.
+    | Error | Fix |
+    |---|---|
+    | `curl: (401) Unauthorized` | Verify your Jira username and API token are correct; generate a new token at https://id.atlassian.com/manage-profile/security/api-tokens if expired. |
+    | `jq: error (at <stdin>:1): Cannot index number with string "fields"` | The custom field ID `customfield_10016` may not exist in your instance; run `curl -u user:token "https://your-instance.atlassian.net/rest/api/2/field" | jq '.[] | select(.name=="Story Points")'` to find the correct field ID. |
+    | `curl: (400) Bad Request` | Ensure the JQL syntax is valid by testing it in the Jira UI search bar first, and verify the instance URL matches your Jira domain exactly. |
 | Report | Location in Jira | Frequency |
 |--------|-----------------|-----------|
 | Sprint Report | Board → Reports → Sprint Report | End of each sprint |

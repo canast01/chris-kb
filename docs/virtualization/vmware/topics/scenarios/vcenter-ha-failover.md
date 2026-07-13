@@ -89,9 +89,11 @@ curl -sk -u administrator@vsphere.local:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the vCenter CA certificate into your system trust store.
-    **`401 Unauthorized`** — Verify the administrator@vsphere.local password is correct and the account has API access permissions enabled.
-    **`curl: (7) Failed to connect to <vcenter-fqdn> port 443: Name or service not known`** — Ensure the vCenter FQDN is resolvable and reachable from your network; check DNS and firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the vCenter CA certificate into your system trust store. |
+    | `401 Unauthorized` | Verify the administrator@vsphere.local password is correct and the account has API access permissions enabled. |
+    | `curl: (7) Failed to connect to <vcenter-fqdn> port 443: Name or service not known` | Ensure the vCenter FQDN is resolvable and reachable from your network; check DNS and firewall rules. |
 Response field `state` must be `HEALTHY`; `active_node.ha_ip.ipv4.address` must show the promoted node IP.
 
 ---
@@ -125,8 +127,10 @@ root@vcenter-01.lab.local:~#
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vcha/vcha.log: No such file or directory`** — Verify VCHA is initialized by running `vcha-cli status` and ensure you are connected to the promoted node.
-    **`Permission denied`** — SSH as root or use `sudo` to access VCHA logs, which require elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vcha/vcha.log: No such file or directory` | Verify VCHA is initialized by running `vcha-cli status` and ensure you are connected to the promoted node. |
+    | `Permission denied` | SSH as root or use `sudo` to access VCHA logs, which require elevated privileges. |
 Confirm the `Promotion complete` entry is present. The sync lag lines before failover must show lag was
 below 60 seconds — if lag exceeded 60 s, inspect whether any DB transactions were lost.
 
@@ -159,8 +163,10 @@ grep -i "replication lag" /var/log/vcha/vcha.log | tail -30
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vcha/vcha.log: No such file or directory`** — Verify VCHA is installed and running with `systemctl status vcha` or check the correct log path for your vSphere version.
-    **`Permission denied`** — Run the command with `sudo` or as root to access VCHA log files.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vcha/vcha.log: No such file or directory` | Verify VCHA is installed and running with `systemctl status vcha` or check the correct log path for your vSphere version. |
+    | `Permission denied` | Run the command with `sudo` or as root to access VCHA log files. |
 Lag values below 30 s indicate a clean failover. Values between 30–60 s are acceptable but warrant
 investigation. Values above 60 s indicate the passive may have missed recent transactions; check whether
 any tasks or events appear missing from the vCenter inventory after reconnect.
@@ -191,9 +197,11 @@ rtt min/avg/max/stddev = 2.34/2.38/2.41/0.03 ms
 ```
 
 !!! warning "Common errors"
-    **`ping: -I: unknown host`** — Replace `-I vmk1` with `-I 192.168.100.10` (the actual IP bound to vmk1) or verify vmk1 exists with `esxcli network ip interface list`.
-    **`PING 192.168.100.50 (192.168.100.50) from 192.168.100.10 vmk1 ... 100% packet loss`** — Verify the witness appliance is running and reachable; check firewall rules and vMotion network connectivity with `esxcli network ip neighbor list`.
-    **`ping: sendto: No route to host`** — Confirm vmk1 is on the same subnet as the witness IP or add a static route with `esxcli network ip route ipv4 add`.
+    | Error | Fix |
+    |---|---|
+    | `ping: -I: unknown host` | Replace `-I vmk1` with `-I 192.168.100.10` (the actual IP bound to vmk1) or verify vmk1 exists with `esxcli network ip interface list`. |
+    | `PING 192.168.100.50 (192.168.100.50) from 192.168.100.10 vmk1 ... 100% packet loss` | Verify the witness appliance is running and reachable; check firewall rules and vMotion network connectivity with `esxcli network ip neighbor list`. |
+    | `ping: sendto: No route to host` | Confirm vmk1 is on the same subnet as the witness IP or add a static route with `esxcli network ip route ipv4 add`. |
 Confirm packet loss = 0%. If the witness is unreachable, VCHA cannot perform automatic failover for
 future failures — restore witness connectivity immediately.
 
@@ -229,9 +237,11 @@ curl -sk -u administrator@vsphere.local:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the vCenter certificate into your system's trusted store.
-    **`{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"default_message":"The user is not authenticated.","id":"com.vmware.vapi.std.errors.unauthenticated"}]}}`** — Verify the vCenter FQDN is correct and the administrator@vsphere.local password is URL-encoded if it contains special characters.
-    **`{"type":"com.vmware.vapi.std.errors.error","value":{"messages":[{"default_message":"VCHA cluster is not in a valid state for failover.","id":"com.vmware.vapi.std.errors.error"}]}}`** — Ensure VCHA is configured and healthy by checking cluster status before attempting failover.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the vCenter certificate into your system's trusted store. |
+    | `{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[{"default_message":"The user is not authenticated.","id":"com.vmware.vapi.std.errors.unauthenticated"}]}}` | Verify the vCenter FQDN is correct and the administrator@vsphere.local password is URL-encoded if it contains special characters. |
+    | `{"type":"com.vmware.vapi.std.errors.error","value":{"messages":[{"default_message":"VCHA cluster is not in a valid state for failover.","id":"com.vmware.vapi.std.errors.error"}]}}` | Ensure VCHA is configured and healthy by checking cluster status before attempting failover. |
 If `force` failover is required (witness unreachable, split-brain):
 
 ```bash
@@ -244,8 +254,10 @@ If `force` failover is required (witness unreachable, split-brain):
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host`** — Verify the target API endpoint hostname is correct and resolvable in your network DNS.
-    **`{"error": "Unauthorized", "code": 401}`** — Ensure your API authentication token or credentials are valid and included in the request headers.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host` | Verify the target API endpoint hostname is correct and resolvable in your network DNS. |
+    | `{"error": "Unauthorized", "code": 401}` | Ensure your API authentication token or credentials are valid and included in the request headers. |
 The `force: true` flag bypasses witness quorum — use only when both nodes are healthy and witness
 connectivity cannot be restored within the maintenance window.
 
@@ -271,8 +283,10 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`df: '/storage/db': No such file or directory`** — Verify the mount point exists and is mounted with `mount | grep /storage/db`.
-    **`du: cannot access '/storage/db/vpostgres/*': Permission denied`** — Run the commands with `sudo` or ensure your user has read permissions on the directory with `chmod +rx`.
+    | Error | Fix |
+    |---|---|
+    | `df: '/storage/db': No such file or directory` | Verify the mount point exists and is mounted with `mount | grep /storage/db`. |
+    | `du: cannot access '/storage/db/vpostgres/*': Permission denied` | Run the commands with `sudo` or ensure your user has read permissions on the directory with `chmod +rx`. |
 If near capacity, clear rotated logs:
 
 ```bash
@@ -285,9 +299,11 @@ find /storage/log -name "*.gz" -mtime +7 -delete
 ```
 
 !!! warning "Common errors"
-    **`find: '/storage/log': No such file or directory`** — Verify the log directory path exists with `ls -ld /storage/log` and correct the path if needed.
-    **`find: '/storage/log': Permission denied`** — Run the command with `sudo` or ensure your user has read and execute permissions on the directory with `chmod u+rx /storage/log`.
-    **`find: warning: -delete: cannot delete '/storage/log/archive-2024-01-15.gz': Permission denied`** — Change ownership or permissions of the log files with `sudo chown $USER:$USER /storage/log/*.gz` or run the entire command with `sudo`.
+    | Error | Fix |
+    |---|---|
+    | `find: '/storage/log': No such file or directory` | Verify the log directory path exists with `ls -ld /storage/log` and correct the path if needed. |
+    | `find: '/storage/log': Permission denied` | Run the command with `sudo` or ensure your user has read and execute permissions on the directory with `chmod u+rx /storage/log`. |
+    | `find: warning: -delete: cannot delete '/storage/log/archive-2024-01-15.gz': Permission denied` | Change ownership or permissions of the log files with `sudo chown $USER:$USER /storage/log/*.gz` or run the entire command with `sudo`. |
 ---
 
 ## 6. Verification

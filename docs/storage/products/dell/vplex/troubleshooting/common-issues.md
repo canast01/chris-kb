@@ -188,8 +188,10 @@ vplexcli -q -e "ll /clusters/cluster-1/exports/initiator-ports/"
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid path /clusters/cluster-1/exports/storage-views/<view_name>/`** — Replace `<view_name>` with the actual storage view name (e.g., `sv-prod-db-01`).
-    **`Error: Connection refused to VPLEX management interface`** — Verify vplexcli is installed, the VPLEX cluster IP is reachable, and credentials are configured in `~/.vplexrc` or via environment variables.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid path /clusters/cluster-1/exports/storage-views/<view_name>/` | Replace `<view_name>` with the actual storage view name (e.g., `sv-prod-db-01`). |
+    | `Error: Connection refused to VPLEX management interface` | Verify vplexcli is installed, the VPLEX cluster IP is reachable, and credentials are configured in `~/.vplexrc` or via environment variables. |
 On the host:
 
 ```bash
@@ -243,9 +245,11 @@ Name: vmhba3:C0:T0:L0
 ```
 
 !!! warning "Common errors"
-    **`systool: command not found`** — Install sysfstools package with `apt-get install sysfstools` or `yum install sysfstools`.
-    **`powermt: command not found`** — Verify EMC PowerPath is installed and the powermt binary is in PATH; check `/opt/emc/powerpath/bin/powermt display dev=all`.
-    **`Error: Unknown command or namespace esxcli storage core adapter rescan`** — Verify ESXi version supports the command; use `esxcli storage core adapter list` first to confirm adapter presence.
+    | Error | Fix |
+    |---|---|
+    | `systool: command not found` | Install sysfstools package with `apt-get install sysfstools` or `yum install sysfstools`. |
+    | `powermt: command not found` | Verify EMC PowerPath is installed and the powermt binary is in PATH; check `/opt/emc/powerpath/bin/powermt display dev=all`. |
+    | `Error: Unknown command or namespace esxcli storage core adapter rescan` | Verify ESXi version supports the command; use `esxcli storage core adapter list` first to confirm adapter presence. |
 **Resolution:** Replace failed director hardware (engage Dell Support). Recreate the storage view if it was accidentally deleted. Restore SAN zoning if the fabric was disrupted.
 
 ---
@@ -296,9 +300,11 @@ inter-cluster-links/
 ```
 
 !!! warning "Common errors"
-    **`vplexcli: command not found`** — Ensure vplexcli is installed and in your PATH, or use the full path to the binary (typically `/opt/dell/vplex/bin/vplexcli`).
-    **`Error: Invalid path '/distributed-storage/distributed-devices/<device_name>/'`** — Replace the literal `<device_name>` placeholder with an actual device name from the first command's output (e.g., `device-1`).
-    **`Error: Connection refused on management console`** — Verify the VPLEX management console is reachable and vplexcli credentials are configured (check `/root/.vplexcli/config` or use `-u` and `-p` flags).
+    | Error | Fix |
+    |---|---|
+    | `vplexcli: command not found` | Ensure vplexcli is installed and in your PATH, or use the full path to the binary (typically `/opt/dell/vplex/bin/vplexcli`). |
+    | `Error: Invalid path '/distributed-storage/distributed-devices/<device_name>/'` | Replace the literal `<device_name>` placeholder with an actual device name from the first command's output (e.g., `device-1`). |
+    | `Error: Connection refused on management console` | Verify the VPLEX management console is reachable and vplexcli credentials are configured (check `/root/.vplexcli/config` or use `-u` and `-p` flags). |
 **Resolution:**
 
 1. Restore the ICL if it is still interrupted.
@@ -316,8 +322,10 @@ rebuild-progress                                100%
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to VPLEX management server at localhost:443`** — Verify the VPLEX management IP is reachable and vplexcli is configured with the correct `-h` hostname parameter.
-    **`Error: Invalid device name '<device_name>'`** — Replace `<device_name>` with an actual device name from your VPLEX cluster (e.g., `device-1` or `raid-group-01`).
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to VPLEX management server at localhost:443` | Verify the VPLEX management IP is reachable and vplexcli is configured with the correct `-h` hostname parameter. |
+    | `Error: Invalid device name '<device_name>'` | Replace `<device_name>` with an actual device name from your VPLEX cluster (e.g., `device-1` or `raid-group-01`). |
 3. If resync does not start automatically within 10 minutes of ICL recovery, initiate manually:
 
 ```bash
@@ -337,9 +345,11 @@ Rebuild started at: 2024-01-15 14:23:47 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: device not found: /distributed-storage/distributed-devices/<device_name>`** — Replace `<device_name>` with the actual device name from `vplexcli -e "device list"`.
-    **`Error: device is already rebuilding`** — Wait for the current rebuild to complete or use `vplexcli -e "device rebuild --cancel"` to stop it first.
-    **`Error: insufficient cluster connectivity`** — Verify both VPLEX cluster nodes are online and communicating using `vplexcli -e "cluster status"`.
+    | Error | Fix |
+    |---|---|
+    | `Error: device not found: /distributed-storage/distributed-devices/<device_name>` | Replace `<device_name>` with the actual device name from `vplexcli -e "device list"`. |
+    | `Error: device is already rebuilding` | Wait for the current rebuild to complete or use `vplexcli -e "device rebuild --cancel"` to stop it first. |
+    | `Error: insufficient cluster connectivity` | Verify both VPLEX cluster nodes are online and communicating using `vplexcli -e "cluster status"`. |
 4. Do not perform maintenance on the out-of-sync cluster leg during rebuild.
 
 ---
@@ -387,8 +397,10 @@ icl-redundancy-link            OK        active
 ```
 
 !!! warning "Common errors"
-    **`Error: cluster-witness not found or unreachable`** — Verify witness connectivity and network routing between clusters using `vplexcli -e "ll /clusters/cluster-1/health/"`
-    **`Error: inter-cluster-links communication timeout`** — Check ICL network interfaces are up with `ip link show` and confirm no firewall rules are blocking port 8443 between cluster nodes.
+    | Error | Fix |
+    |---|---|
+    | `Error: cluster-witness not found or unreachable` | Verify witness connectivity and network routing between clusters using `vplexcli -e "ll /clusters/cluster-1/health/"` |
+    | `Error: inter-cluster-links communication timeout` | Check ICL network interfaces are up with `ip link show` and confirm no firewall rules are blocking port 8443 between cluster nodes. |
 **Resolution:**
 
 1. Restore ICL connectivity first.
@@ -412,9 +424,11 @@ Resume operation queued successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Device not found at path /distributed-storage/distributed-devices/<device_name>`** — Replace `<device_name>` with the actual device name from `vplexcli -e "device list"` output.
-    **`Error: Device is already in ONLINE state, resume not applicable`** — Verify the device is actually in PAUSED state using `vplexcli -e "device status --device /distributed-storage/distributed-devices/<device_name>"` before attempting resume.
-    **`Error: Insufficient permissions to resume device`** — Ensure your vplexcli user account has administrative privileges or run the command with appropriate credentials.
+    | Error | Fix |
+    |---|---|
+    | `Error: Device not found at path /distributed-storage/distributed-devices/<device_name>` | Replace `<device_name>` with the actual device name from `vplexcli -e "device list"` output. |
+    | `Error: Device is already in ONLINE state, resume not applicable` | Verify the device is actually in PAUSED state using `vplexcli -e "device status --device /distributed-storage/distributed-devices/<device_name>"` before attempting resume. |
+    | `Error: Insufficient permissions to resume device` | Ensure your vplexcli user account has administrative privileges or run the command with appropriate credentials. |
 **Do not manually resume without understanding which cluster leg holds the most recent data.** Incorrect manual resume risks undetected data divergence.
 
 ---
@@ -458,8 +472,10 @@ vplexcli -q -e "ll /clusters/cluster-1/exports/initiator-ports/<initiator_name>/
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid path /clusters/cluster-1/exports/storage-views/<view_name>/`** — Replace `<view_name>` with the actual storage view name (e.g., `sv-prod-db-01`).
-    **`Error: No such object`** — Verify the initiator or storage view exists by running `vplexcli -q -e "ll /clusters/cluster-1/exports/"` to list available objects.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid path /clusters/cluster-1/exports/storage-views/<view_name>/` | Replace `<view_name>` with the actual storage view name (e.g., `sv-prod-db-01`). |
+    | `Error: No such object` | Verify the initiator or storage view exists by running `vplexcli -q -e "ll /clusters/cluster-1/exports/"` to list available objects. |
 On the host:
 
 ```bash
@@ -548,8 +564,10 @@ port-5                                  health=HEALTHY, speed=8Gb/s, state=ONLIN
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid path /engines/engine-1-1/directors/director-1-1-A/hardware/`** — Verify the correct engine and director names using `vplexcli -q -e "ll /engines/"` and adjust the path accordingly.
-    **`Error: vplexcli: command not found`** — Ensure you are logged into the VPLEX management console or add the vplexcli binary path to your $PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid path /engines/engine-1-1/directors/director-1-1-A/hardware/` | Verify the correct engine and director names using `vplexcli -q -e "ll /engines/"` and adjust the path accordingly. |
+    | `Error: vplexcli: command not found` | Ensure you are logged into the VPLEX management console or add the vplexcli binary path to your $PATH environment variable. |
 **Immediate actions:**
 
 1. Confirm the surviving director in the pair is healthy — I/O continues on the surviving director.
@@ -606,9 +624,11 @@ rtt min/avg/max/stddev = 2.34/2.38/2.41/0.03 ms
 ```
 
 !!! warning "Common errors"
-    **`Witness: UNREACHABLE`** — Verify the Witness VM is powered on and check network connectivity from the management interface to the Witness IP address.
-    **`ping: unknown host <witness_VM_IP>`** — Replace `<witness_VM_IP>` with the actual Witness VM IP address (e.g., 192.168.100.45) or verify DNS resolution is working.
-    **`vplexcli: command not found`** — Ensure you are running this command from a VPLEX management console or node with vplexcli installed in the PATH.
+    | Error | Fix |
+    |---|---|
+    | `Witness: UNREACHABLE` | Verify the Witness VM is powered on and check network connectivity from the management interface to the Witness IP address. |
+    | `ping: unknown host <witness_VM_IP>` | Replace `<witness_VM_IP>` with the actual Witness VM IP address (e.g., 192.168.100.45) or verify DNS resolution is working. |
+    | `vplexcli: command not found` | Ensure you are running this command from a VPLEX management console or node with vplexcli installed in the PATH. |
 **Resolution:**
 
 1. If the Witness VM is powered off, power it on and wait for the Witness service to start.
@@ -646,9 +666,11 @@ Results written to: /tmp/vplex_healthcheck_20240115_1423.txt
 ```
 
 !!! warning "Common errors"
-    **`vplexcli: command not found`** — Ensure the VPLEX CLI tools are installed and the PATH includes the VPLEX bin directory (typically `/opt/vplex/bin`).
-    **`Error: Unable to connect to management server at localhost:443`** — Verify the VPLEX management console is running and accessible; check network connectivity and firewall rules for port 443.
-    **`Permission denied: Cannot write to /tmp/vplex_healthcheck_*.txt`** — Run the command with appropriate privileges (sudo) or redirect output to a directory where the current user has write permissions.
+    | Error | Fix |
+    |---|---|
+    | `vplexcli: command not found` | Ensure the VPLEX CLI tools are installed and the PATH includes the VPLEX bin directory (typically `/opt/vplex/bin`). |
+    | `Error: Unable to connect to management server at localhost:443` | Verify the VPLEX management console is running and accessible; check network connectivity and firewall rules for port 443. |
+    | `Permission denied: Cannot write to /tmp/vplex_healthcheck_*.txt` | Run the command with appropriate privileges (sudo) or redirect output to a directory where the current user has write permissions. |
 For each flagged component, drill into the component path for detail:
 
 ```bash
@@ -687,9 +709,11 @@ distributed-storage/consistency-groups/cg-finance-tier1/
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid path /engines/<engine_name>/directors/<director_name>/hardware/`** — Replace `<engine_name>` and `<director_name>` with actual values from `vplexcli -e "ll /engines/"`.
-    **`Error: Object not found: /distributed-storage/distributed-devices/<device_name>/`** — Verify the device name exists using `vplexcli -e "ll /distributed-storage/distributed-devices/"` and check for typos.
-    **`Error: vplexcli: command not found`** — Ensure you are logged into the VPLEX Management Console or have the VPLEX CLI tools installed and in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid path /engines/<engine_name>/directors/<director_name>/hardware/` | Replace `<engine_name>` and `<director_name>` with actual values from `vplexcli -e "ll /engines/"`. |
+    | `Error: Object not found: /distributed-storage/distributed-devices/<device_name>/` | Verify the device name exists using `vplexcli -e "ll /distributed-storage/distributed-devices/"` and check for typos. |
+    | `Error: vplexcli: command not found` | Ensure you are logged into the VPLEX Management Console or have the VPLEX CLI tools installed and in your PATH. |
 ---
 
 ### RecoverPoint CLI Commands Hang

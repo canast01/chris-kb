@@ -109,9 +109,11 @@ exit $overall
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host 192.168.1.20 port 22: Connection timed out`** — Verify the MDS_HOST IP is correct and reachable, and that SSH port 22 is open on the switch.
-    **`Permission denied (publickey,password).`** — Ensure MDS_USER credentials are correct and the user has SSH access privileges on the MDS switch.
-    **`show: command not found`** — Confirm you are connecting to a Cisco MDS switch (not a Linux host) and that the SSH session properly enters the switch CLI.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host 192.168.1.20 port 22: Connection timed out` | Verify the MDS_HOST IP is correct and reachable, and that SSH port 22 is open on the switch. |
+    | `Permission denied (publickey,password).` | Ensure MDS_USER credentials are correct and the user has SSH access privileges on the MDS switch. |
+    | `show: command not found` | Confirm you are connecting to a Cisco MDS switch (not a Linux host) and that the SSH session properly enters the switch CLI. |
 ```bash
 #!/bin/bash
 # mds_interface_errors.sh
@@ -202,9 +204,11 @@ WARN  fc2/1  discards  delta=156
 ```
 
 !!! warning "Common errors"
-    **`[2024-01-15T14:32:18Z] ERROR: Could not connect to 192.168.1.20`** — Verify SSH connectivity with `ssh -o ConnectTimeout=10 admin@192.168.1.20` and confirm the MDS host is reachable and SSH is enabled.
-    **`Permission denied (publickey,password).`** — Add the script's SSH key to the MDS device's authorized_keys or configure password-based SSH authentication with `sshpass` if BatchMode=yes is causing auth failure.
-    **`/var/tmp/mds_err_baseline_192.168.1.20.dat: Permission denied`** — Ensure the script runs with write permissions to `/var/tmp/` or change `BASELINE_FILE` to a writable directory like `/tmp/` or a dedicated monitoring directory.
+    | Error | Fix |
+    |---|---|
+    | `[2024-01-15T14:32:18Z] ERROR: Could not connect to 192.168.1.20` | Verify SSH connectivity with `ssh -o ConnectTimeout=10 admin@192.168.1.20` and confirm the MDS host is reachable and SSH is enabled. |
+    | `Permission denied (publickey,password).` | Add the script's SSH key to the MDS device's authorized_keys or configure password-based SSH authentication with `sshpass` if BatchMode=yes is causing auth failure. |
+    | `/var/tmp/mds_err_baseline_192.168.1.20.dat: Permission denied` | Ensure the script runs with write permissions to `/var/tmp/` or change `BASELINE_FILE` to a writable directory like `/tmp/` or a dedicated monitoring directory. |
 ```bash
 chmod +x mds_interface_errors.sh
 MDS_HOST=192.168.1.20 MDS_USER=admin ./mds_interface_errors.sh
@@ -474,9 +478,11 @@ Report generated: C:\Users\YourName\Desktop\mds-port-report-20240115-143022.csv
 ```
 
 !!! warning "Common errors"
-    **`plink.exe: unable to open connection to '192.168.1.20' port 22: Network error: Connection refused`** — Verify the MDS switch is reachable and SSH is enabled on port 22 using `ping 192.168.1.20` and check the switch's SSH configuration.
-    **`Permission denied (publickey,password)`** — Confirm the SSH credentials are correct and the admin user has SSH access enabled on the MDS switch.
-    **`The file 'C:\Program Files\PuTTY\plink.exe' cannot be found`** — Install PuTTY or correct the `-PlinkPath` parameter to point to the actual plink.exe location.
+    | Error | Fix |
+    |---|---|
+    | `plink.exe: unable to open connection to '192.168.1.20' port 22: Network error: Connection refused` | Verify the MDS switch is reachable and SSH is enabled on port 22 using `ping 192.168.1.20` and check the switch's SSH configuration. |
+    | `Permission denied (publickey,password)` | Confirm the SSH credentials are correct and the admin user has SSH access enabled on the MDS switch. |
+    | `The file 'C:\Program Files\PuTTY\plink.exe' cannot be found` | Install PuTTY or correct the `-PlinkPath` parameter to point to the actual plink.exe location. |
 ```bash
 #!/bin/bash
 # mds_daily_check.sh
@@ -539,9 +545,11 @@ Daily check: 0 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host 192.168.1.20 port 22 (tcp) timed out`** — Verify the MDS_HOST IP is correct and the switch is reachable with `ping 192.168.1.20`.
-    **`Permission denied (publickey,password)`** — Ensure SSH_USER is set to a valid admin account and key-based authentication is configured, or add `-o PubkeyAuthentication=no` to SSH_OPTS to allow password auth.
-    **`show version: command not found`** — Confirm you are connected to a Cisco MDS switch (not a different device) and that the SSH session is entering the correct CLI mode.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host 192.168.1.20 port 22 (tcp) timed out` | Verify the MDS_HOST IP is correct and the switch is reachable with `ping 192.168.1.20`. |
+    | `Permission denied (publickey,password)` | Ensure SSH_USER is set to a valid admin account and key-based authentication is configured, or add `-o PubkeyAuthentication=no` to SSH_OPTS to allow password auth. |
+    | `show version: command not found` | Confirm you are connected to a Cisco MDS switch (not a different device) and that the SSH session is entering the correct CLI mode. |
 ```bash
 #!/bin/bash
 # mds_triage.sh
@@ -633,9 +641,11 @@ Triage data saved to: /tmp/mds_triage_192.168.1.20_20250115_143247.txt
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host 192.168.1.20 port 22 (tcp): Connection timed out`** — Verify the MDS_HOST IP is correct and reachable; check network connectivity and firewall rules allowing SSH to port 22.
-    **`Permission denied (publickey,password).`** — Ensure SSH_USER is correct and has valid credentials configured; verify the admin account exists and SSH key authentication is properly set up.
-    **`show: command not found`** — The SSH session is not entering the MDS CLI properly; remove `-o BatchMode=yes` or add `terminal length 0` to the ssh_
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host 192.168.1.20 port 22 (tcp): Connection timed out` | Verify the MDS_HOST IP is correct and reachable; check network connectivity and firewall rules allowing SSH to port 22. |
+    | `Permission denied (publickey,password).` | Ensure SSH_USER is correct and has valid credentials configured; verify the admin account exists and SSH key authentication is properly set up. |
+    | `show: command not found` | The SSH session is not entering the MDS CLI properly; remove `-o BatchMode=yes` or add `terminal length 0` to the ssh_ |
 ```bash
 #!/bin/bash
 # mds_precheck.sh
@@ -713,9 +723,11 @@ Pre-check: 0 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH_USER and MDS_HOST are correct, and that the admin account exists with proper SSH key or password authentication enabled on the MDS switch.
-    **`Connection timed out`** — Check network connectivity to the MDS_HOST IP address and confirm the SSH service is running on the switch (verify with `show ssh server status`).
-    **`[FAIL] Active zoneset 'prod_zoneset' does not match expected 'prod_zoneset_v2'`** — Confirm the EXPECTED_ZONESET environment variable matches the actual active zoneset name on the MDS, or activate the correct zoneset with `zoneset activate name <zoneset_name> vsan <vsan_id>`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH_USER and MDS_HOST are correct, and that the admin account exists with proper SSH key or password authentication enabled on the MDS switch. |
+    | `Connection timed out` | Check network connectivity to the MDS_HOST IP address and confirm the SSH service is running on the switch (verify with `show ssh server status`). |
+    | `[FAIL] Active zoneset 'prod_zoneset' does not match expected 'prod_zoneset_v2'` | Confirm the EXPECTED_ZONESET environment variable matches the actual active zoneset name on the MDS, or activate the correct zoneset with `zoneset activate name <zoneset_name> vsan <vsan_id>`. |
 ```bash
 #!/bin/bash
 # mds_postcheck.sh
@@ -778,9 +790,11 @@ Post-change validation: 0 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host 192.168.1.20 port 22 (tcp) timed out`** — Verify the MDS_HOST IP is correct and reachable, and that SSH is enabled on the switch with `ssh server enable`.
-    **`Permission denied (publickey,password).`** — Confirm SSH_USER has valid credentials and key-based auth is configured, or add `-o PubkeyAuthentication=no` to SSH_OPTS to force password auth.
-    **`[FAIL] 3 FC interface(s) still down`** — Check the interface status on the MDS with `show interface fc1/1-3` and verify the post-change configuration was applied correctly.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host 192.168.1.20 port 22 (tcp) timed out` | Verify the MDS_HOST IP is correct and reachable, and that SSH is enabled on the switch with `ssh server enable`. |
+    | `Permission denied (publickey,password).` | Confirm SSH_USER has valid credentials and key-based auth is configured, or add `-o PubkeyAuthentication=no` to SSH_OPTS to force password auth. |
+    | `[FAIL] 3 FC interface(s) still down` | Check the interface status on the MDS with `show interface fc1/1-3` and verify the post-change configuration was applied correctly. |
 ```bash
 #!/bin/bash
 # mds_health_check.sh
@@ -816,9 +830,11 @@ switch=192.168.1.20 firmware=9.1(1) interfaces_up=48 interfaces_down=2 flogi_cou
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Ensure SSH key is installed in `~/.ssh/authorized_keys` on the MDS or add password authentication; verify `SSH_USER` matches a valid admin account.
-    **`ssh: connect to host 192.168.1.20 port 22: Connection timed out`** — Verify the MDS_HOST IP is reachable and SSH is enabled on the switch; check firewall rules and network connectivity with `ping $MDS_HOST`.
-    **`show: command not found`** — Confirm you are connecting to a Cisco MDS switch (not a Linux host); verify the SSH session is entering the MDS CLI correctly by testing `ssh_cmd "show version"` manually.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Ensure SSH key is installed in `~/.ssh/authorized_keys` on the MDS or add password authentication; verify `SSH_USER` matches a valid admin account. |
+    | `ssh: connect to host 192.168.1.20 port 22: Connection timed out` | Verify the MDS_HOST IP is reachable and SSH is enabled on the switch; check firewall rules and network connectivity with `ping $MDS_HOST`. |
+    | `show: command not found` | Confirm you are connecting to a Cisco MDS switch (not a Linux host); verify the SSH session is entering the MDS CLI correctly by testing `ssh_cmd "show version"` manually. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

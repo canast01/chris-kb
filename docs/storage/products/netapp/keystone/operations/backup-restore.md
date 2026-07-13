@@ -48,8 +48,10 @@ certs/keystone-collector.crt
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the Keystone Collector IP address is correct and your SSH key or password is valid for the admin user.
-    **`tar: ks-config-20250115.tar.gz: Cannot open: No such file or directory`** — Ensure the SCP command completed successfully and the file exists in the current directory with the correct date format matching the export command.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the Keystone Collector IP address is correct and your SSH key or password is valid for the admin user. |
+    | `tar: ks-config-20250115.tar.gz: Cannot open: No such file or directory` | Ensure the SCP command completed successfully and the file exists in the current directory with the correct date format matching the export command. |
 ```bash
 # On new or rebuilt Collector VM:
 scp ks-config-<date>.tar.gz admin@<new-collector-ip>:/tmp/
@@ -88,9 +90,11 @@ Keystone Collector Status: RUNNING
 ```
 
 !!! warning "Common errors"
-    **`keystone-config import: error: input file not found: /tmp/ks-config-<date>.tar.gz`** — Verify the SCP command completed successfully and the filename matches exactly, including the date format.
-    **`keystone-config validate: error: Storage system <ip> unreachable (connection timeout)`** — Confirm network connectivity and firewall rules allow the Collector VM to reach the storage system management IP on port 443.
-    **`keystone-collector status: error: service not running`** — Start the collector service with `sudo systemctl start keystone-collector` and check logs via `sudo journalctl -u keystone-collector -n 50`.
+    | Error | Fix |
+    |---|---|
+    | `keystone-config import: error: input file not found: /tmp/ks-config-<date>.tar.gz` | Verify the SCP command completed successfully and the filename matches exactly, including the date format. |
+    | `keystone-config validate: error: Storage system <ip> unreachable (connection timeout)` | Confirm network connectivity and firewall rules allow the Collector VM to reach the storage system management IP on port 443. |
+    | `keystone-collector status: error: service not running` | Start the collector service with `sudo systemctl start keystone-collector` and check logs via `sudo journalctl -u keystone-collector -n 50`. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

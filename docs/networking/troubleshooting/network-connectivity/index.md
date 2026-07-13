@@ -126,8 +126,10 @@ eth0.200         | 200  | eth0
 ```
 
 !!! warning "Common errors"
-    **`cat: /proc/net/vlan/config: No such file or directory`** — Load the 8021q kernel module with `sudo modprobe 8021q`.
-    **`Device "eth0.100" does not exist.`** — Create the VLAN interface first using `sudo ip link add link eth0 name eth0.100 type vlan id 100`.
+    | Error | Fix |
+    |---|---|
+    | `cat: /proc/net/vlan/config: No such file or directory` | Load the 8021q kernel module with `sudo modprobe 8021q`. |
+    | `Device "eth0.100" does not exist.` | Create the VLAN interface first using `sudo ip link add link eth0 name eth0.100 type vlan id 100`. |
 ---
 
 ## Routing Table Verification
@@ -166,9 +168,11 @@ default via 10.10.1.1 dev eth0 proto static metric 100
 ```
 
 !!! warning "Common errors"
-    **`RTNETLINK answers: File exists`** — The route already exists in the routing table; use `ip route replace` instead of `ip route add` to overwrite it.
-    **`RTNETLINK answers: No such device`** — The interface name (e.g., eth0) does not exist; verify the correct interface name with `ip link show`.
-    **`RTNETLINK answers: Network is unreachable`** — The gateway IP (10.10.1.254) is not reachable on the specified interface; confirm the gateway is on the same subnet or check ARP with `arp -n`.
+    | Error | Fix |
+    |---|---|
+    | `RTNETLINK answers: File exists` | The route already exists in the routing table; use `ip route replace` instead of `ip route add` to overwrite it. |
+    | `RTNETLINK answers: No such device` | The interface name (e.g., eth0) does not exist; verify the correct interface name with `ip link show`. |
+    | `RTNETLINK answers: Network is unreachable` | The gateway IP (10.10.1.254) is not reachable on the specified interface; confirm the gateway is on the same subnet or check ARP with `arp -n`. |
 ### Cisco
 
 ```text
@@ -256,9 +260,11 @@ issuer=/CN=Corp Root CA
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 10.10.5.20 port 443 (tcp) failed: Connection refused`** — Verify the target service is running and listening on that port with `netstat -tlnp | grep 443` or `ss -tlnp | grep 443`.
-    **`curl: (7) Failed to connect to app01.corp.example.com port 443: Connection timed out`** — Check network connectivity to the host with `ping app01.corp.example.com` and verify firewall rules allow outbound HTTPS traffic.
-    **`openssl: error:0A000410:SSL routines:ssl3_get_record:sslv3 alert handshake failure`** — Confirm the server certificate is valid and the SNI hostname matches; test with `openssl s_client -connect <ip>:443 -servername <hostname>`.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 10.10.5.20 port 443 (tcp) failed: Connection refused` | Verify the target service is running and listening on that port with `netstat -tlnp | grep 443` or `ss -tlnp | grep 443`. |
+    | `curl: (7) Failed to connect to app01.corp.example.com port 443: Connection timed out` | Check network connectivity to the host with `ping app01.corp.example.com` and verify firewall rules allow outbound HTTPS traffic. |
+    | `openssl: error:0A000410:SSL routines:ssl3_get_record:sslv3 alert handshake failure` | Confirm the server certificate is valid and the SNI hostname matches; test with `openssl s_client -connect <ip>:443 -servername <hostname>`. |
 ---
 
 ## MTU and Jumbo Frame Issues
@@ -312,9 +318,11 @@ vSwitch Name: vSwitch1
 ```
 
 !!! warning "Common errors"
-    **`ping: -M do: unknown option`** — Use `ping -M do` on Linux; on macOS use `ping -D` instead.
-    **`RTNETLINK answers: Operation not permitted`** — Run `ip link set` commands with `sudo` or as root.
-    **`esxcli: command not found`** — SSH into the ESXi host directly; esxcli is not available on vCenter or standard Linux systems.
+    | Error | Fix |
+    |---|---|
+    | `ping: -M do: unknown option` | Use `ping -M do` on Linux; on macOS use `ping -D` instead. |
+    | `RTNETLINK answers: Operation not permitted` | Run `ip link set` commands with `sudo` or as root. |
+    | `esxcli: command not found` | SSH into the ESXi host directly; esxcli is not available on vCenter or standard Linux systems. |
 ---
 
 ## ARP Table and MAC Address Checks
@@ -356,8 +364,10 @@ Received 1 response(s)
 ```
 
 !!! warning "Common errors"
-    **`ARPING: Device eth0 not found`** — Verify the interface name with `ip link show` and replace eth0 with the correct interface.
-    **`RTNETLINK answers: No such process`** — The ARP entry does not exist; remove the `dev eth0` parameter or verify the IP address is in the neighbor table first.
+    | Error | Fix |
+    |---|---|
+    | `ARPING: Device eth0 not found` | Verify the interface name with `ip link show` and replace eth0 with the correct interface. |
+    | `RTNETLINK answers: No such process` | The ARP entry does not exist; remove the `dev eth0` parameter or verify the IP address is in the neighbor table first. |
 ---
 
 ## Common Failure Patterns
@@ -402,8 +412,10 @@ HOST: app01.corp.example.com     Loss%   Snt   Last   Avg  Best  Wrst StDev
 ```
 
 !!! warning "Common errors"
-    **`mtr: command not found`** — Install mtr with `apt-get install mtr` (Debian/Ubuntu) or `yum install mtr` (RHEL/CentOS).
-    **`Cannot open raw socket: Operation not permitted`** — Run the command with `sudo` or as root user.
+    | Error | Fix |
+    |---|---|
+    | `mtr: command not found` | Install mtr with `apt-get install mtr` (Debian/Ubuntu) or `yum install mtr` (RHEL/CentOS). |
+    | `Cannot open raw socket: Operation not permitted` | Run the command with `sudo` or as root user. |
 ---
 
 ## Escalation Criteria

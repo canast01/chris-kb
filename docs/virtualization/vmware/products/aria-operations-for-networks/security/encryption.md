@@ -85,8 +85,10 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```
 
 !!! warning "Common errors"
-    **`nginx: [error] open() "/var/run/nginx.pid" failed (2: No such file or directory)`** — Start nginx with `sudo systemctl start nginx` before attempting to reload.
-    **`[sudo] password for ubuntu: sudo: no password is required, but a password was given`** — Remove the password prompt by configuring passwordless sudo or use `ssh-keygen` for key-based authentication instead.
+    | Error | Fix |
+    |---|---|
+    | `nginx: [error] open() "/var/run/nginx.pid" failed (2: No such file or directory)` | Start nginx with `sudo systemctl start nginx` before attempting to reload. |
+    | `[sudo] password for ubuntu: sudo: no password is required, but a password was given` | Remove the password prompt by configuring passwordless sudo or use `ssh-keygen` for key-based authentication instead. |
 Verify:
 ```bash
 nmap --script ssl-enum-ciphers -p 443 vrni.example.local
@@ -120,9 +122,11 @@ Nmap done at 2024-01-15 14:32:22 UTC; 1 IP address (1 host up) scanned in 4.23 s
 ```
 
 !!! warning "Common errors"
-    **`Nmap done at ... 0 hosts up scanned`** — Verify the hostname resolves correctly with `nslookup vrni.example.local` and confirm the appliance is reachable on port 443 with `telnet vrni.example.local 443`.
-    **`SCRIPT ENGINE ERROR: ... ssl-enum-ciphers.nse not found`** — Install the nmap-scripts package with `apt-get install nmap` or `yum install nmap` to ensure all NSE scripts are available.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — This is informational; the script still enumerates ciphers even with self-signed certificates, but if you need to suppress warnings, add `--script-args ssl.version=all` to the command.
+    | Error | Fix |
+    |---|---|
+    | `Nmap done at ... 0 hosts up scanned` | Verify the hostname resolves correctly with `nslookup vrni.example.local` and confirm the appliance is reachable on port 443 with `telnet vrni.example.local 443`. |
+    | `SCRIPT ENGINE ERROR: ... ssl-enum-ciphers.nse not found` | Install the nmap-scripts package with `apt-get install nmap` or `yum install nmap` to ensure all NSE scripts are available. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | This is informational; the script still enumerates ciphers even with self-signed certificates, but if you need to suppress warnings, add `--script-args ssl.version=all` to the command. |
 ---
 
 ## Credential Storage

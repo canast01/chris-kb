@@ -202,8 +202,10 @@ SRA Discovery Process Started
 ```
 
 !!! warning "Common errors"
-    **`SRA Discovery Failed: Connection timeout to storage array (60s)`** — Verify network connectivity to the storage array and confirm SRA credentials are current in Site Recovery → Storage → Array Pairs settings.
-    **`Array Pair Status: Unhealthy - SRA Plugin Version Mismatch`** — Update the SRA plugin to match the vSphere Replication version by downloading the latest SRA from the storage vendor's support portal.
+    | Error | Fix |
+    |---|---|
+    | `SRA Discovery Failed: Connection timeout to storage array (60s)` | Verify network connectivity to the storage array and confirm SRA credentials are current in Site Recovery → Storage → Array Pairs settings. |
+    | `Array Pair Status: Unhealthy - SRA Plugin Version Mismatch` | Update the SRA plugin to match the vSphere Replication version by downloading the latest SRA from the storage vendor's support portal. |
 ---
 
 ## Placeholder VMs at Recovery Site
@@ -239,8 +241,10 @@ Recovery Point Objective: 5 minutes
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection group not found in Site Recovery Manager`** — Verify the protection group name matches exactly in Site Recovery → Protection and check that SRM is properly licensed on both sites.
-    **`Error: Placeholder VMs missing from recovery site datastore`** — Re-run the protection group reconfiguration wizard via Site Recovery → Protection → [PG] → Configure → Reconfigure to regenerate placeholder VMs.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection group not found in Site Recovery Manager` | Verify the protection group name matches exactly in Site Recovery → Protection and check that SRM is properly licensed on both sites. |
+    | `Error: Placeholder VMs missing from recovery site datastore` | Re-run the protection group reconfiguration wizard via Site Recovery → Protection → [PG] → Configure → Reconfigure to regenerate placeholder VMs. |
 ---
 
 ## Recovery Plan Pre-Check
@@ -286,9 +290,11 @@ notAfter=Mar 22 14:10:12 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the SRM or VRA appliance is running and the hostname resolves correctly with `nslookup` or `ping`.
-    **`connect: Name or service not known`** — Add the appliance hostnames to your DNS or `/etc/hosts` file, or use the IP address instead of the FQDN.
-    **`Verify return code: 20 (unable to verify the first certificate)`** — This is a warning for self-signed certificates; the dates are still valid—add `-showcerts` to inspect the full chain if needed.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the SRM or VRA appliance is running and the hostname resolves correctly with `nslookup` or `ping`. |
+    | `connect: Name or service not known` | Add the appliance hostnames to your DNS or `/etc/hosts` file, or use the IP address instead of the FQDN. |
+    | `Verify return code: 20 (unable to verify the first certificate)` | This is a warning for self-signed certificates; the dates are still valid—add `-showcerts` to inspect the full chain if needed. |
 ---
 
 ## Monthly Test Recovery Verification

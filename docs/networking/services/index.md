@@ -79,9 +79,11 @@ lb-prod-vip.internal.	300	IN	A	10.45.23.15
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <vip_fqdn> port 443: Connection refused`** — Verify the load balancer service is running with `systemctl status` and check firewall rules allow inbound traffic on port 443.
-    **`Ncat: Connection refused.`** — Confirm the backend pool members are healthy and the VIP listener is configured for the specified port using your load balancer admin interface.
-    **`dig: couldn't get address for '<vip_fqdn>': not known`** — Ensure DNS records are created for the VIP FQDN and verify your resolver is configured to query the correct nameserver with `cat /etc/resolv.conf`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <vip_fqdn> port 443: Connection refused` | Verify the load balancer service is running with `systemctl status` and check firewall rules allow inbound traffic on port 443. |
+    | `Ncat: Connection refused.` | Confirm the backend pool members are healthy and the VIP listener is configured for the specified port using your load balancer admin interface. |
+    | `dig: couldn't get address for '<vip_fqdn>': not known` | Ensure DNS records are created for the VIP FQDN and verify your resolver is configured to query the correct nameserver with `cat /etc/resolv.conf`. |
 ## F5 BIG-IP Pool Status
 
 ```bash
@@ -114,8 +116,10 @@ Ltm::Pool Member: 10.45.12.8:8080
 ```
 
 !!! warning "Common errors"
-    **`tmsh: command not found`** — Ensure you are logged into the BIG-IP system directly or use the F5 iControl REST API instead.
-    **`Pool <pool_name> not found`** — Verify the pool name exists by running `tmsh show ltm pool` first and use the exact pool name from the output.
+    | Error | Fix |
+    |---|---|
+    | `tmsh: command not found` | Ensure you are logged into the BIG-IP system directly or use the F5 iControl REST API instead. |
+    | `Pool <pool_name> not found` | Verify the pool name exists by running `tmsh show ltm pool` first and use the exact pool name from the output. |
 ## HAProxy Pool Status
 
 ```bash
@@ -137,8 +141,10 @@ db-pool,BACKEND,UP
 ```
 
 !!! warning "Common errors"
-    **`socat: E_NOACCES error in function openfile() with address "/var/run/haproxy.sock"`** — Run the command with sudo or ensure your user is in the haproxy group.
-    **`socat: E_NOENT error in function openfile() with address "/var/run/haproxy.sock"`** — Verify HAProxy is running with `systemctl status haproxy` and check the socket path in your HAProxy configuration.
+    | Error | Fix |
+    |---|---|
+    | `socat: E_NOACCES error in function openfile() with address "/var/run/haproxy.sock"` | Run the command with sudo or ensure your user is in the haproxy group. |
+    | `socat: E_NOENT error in function openfile() with address "/var/run/haproxy.sock"` | Verify HAProxy is running with `systemctl status haproxy` and check the socket path in your HAProxy configuration. |
 ## TLS Certificate on VIP
 
 ```bash
@@ -155,9 +161,11 @@ notAfter=Jan 15 10:23:45 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`verify error:num=20:unable to get local issuer certificate`** — Add the intermediate CA certificate to your system's trusted store or use `openssl s_client -connect <vip_fqdn>:443 -CAfile /path/to/ca-bundle.crt`.
-    **`connect: Connection refused`** — Verify the VIP is reachable and the service is listening on port 443 with `nc -zv <vip_fqdn> 443`.
-    **`Verify return code: 1 (unable to get local issuer certificate)`** — Install the missing CA certificate chain or use `-showcerts` flag to inspect the full certificate chain being presented.
+    | Error | Fix |
+    |---|---|
+    | `verify error:num=20:unable to get local issuer certificate` | Add the intermediate CA certificate to your system's trusted store or use `openssl s_client -connect <vip_fqdn>:443 -CAfile /path/to/ca-bundle.crt`. |
+    | `connect: Connection refused` | Verify the VIP is reachable and the service is listening on port 443 with `nc -zv <vip_fqdn> 443`. |
+    | `Verify return code: 1 (unable to get local issuer certificate)` | Install the missing CA certificate chain or use `-showcerts` flag to inspect the full certificate chain being presented. |
 ## Test Pool Member Health Check
 
 ```bash
@@ -171,9 +179,11 @@ curl -o /dev/null -s -w "%{http_code}" http://<member_ip>:<port>/health
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 10.45.23.18 port 8080: Connection refused`** — Verify the service is running on the target member with `systemctl status <service>` and check that the port is correct.
-    **`curl: (28) Operation timeout. The timeout was reached`** — Increase the curl timeout with `-m 10` flag or verify network connectivity and firewall rules allow traffic between the LB and member servers.
-    **`000`** — The service returned an invalid HTTP response; check service logs with `journalctl -u <service> -n 50` to identify application errors.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 10.45.23.18 port 8080: Connection refused` | Verify the service is running on the target member with `systemctl status <service>` and check that the port is correct. |
+    | `curl: (28) Operation timeout. The timeout was reached` | Increase the curl timeout with `-m 10` flag or verify network connectivity and firewall rules allow traffic between the LB and member servers. |
+    | `000` | The service returned an invalid HTTP response; check service logs with `journalctl -u <service> -n 50` to identify application errors. |
 ## LB Status at a Glance
 
 ```bash
@@ -208,6 +218,8 @@ tcp6       0      0 :::22                   :::*                    LISTEN      
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to load-balancer port 80: Connection refused`** — Verify the load balancer service is running with `systemctl status nginx` and check firewall rules with `sudo ufw status`.
-    **`curl: (6) Could not resolve host: backend-server`** — Ensure DNS resolution is working by checking `/etc/hosts` or running `nslookup backend-server`, and verify the hostname is correct.
-    **`netstat: command not found`** — Install net-tools with `sudo apt install net-tools` or use the modern alternative `ss -tulnp` instead.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to load-balancer port 80: Connection refused` | Verify the load balancer service is running with `systemctl status nginx` and check firewall rules with `sudo ufw status`. |
+    | `curl: (6) Could not resolve host: backend-server` | Ensure DNS resolution is working by checking `/etc/hosts` or running `nslookup backend-server`, and verify the hostname is correct. |
+    | `netstat: command not found` | Install net-tools with `sudo apt install net-tools` or use the modern alternative `ss -tulnp` instead. |

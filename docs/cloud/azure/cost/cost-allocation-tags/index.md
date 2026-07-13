@@ -82,9 +82,11 @@ Resource
 ```
 
 !!! warning "Common errors"
-    **`Policy definition not found`** — Verify the policy definition ID exists in your subscription or use `az policy definition list` to find the correct built-in policy ID.
-    **`Invalid scope format`** — Ensure the subscription ID is valid and the scope follows the format `/subscriptions/<subscription-id>` without extra slashes or whitespace.
-    **`Authorization failed`** — Confirm your Azure account has `Microsoft.Authorization/policyAssignments/write` permissions at the subscription scope.
+    | Error | Fix |
+    |---|---|
+    | `Policy definition not found` | Verify the policy definition ID exists in your subscription or use `az policy definition list` to find the correct built-in policy ID. |
+    | `Invalid scope format` | Ensure the subscription ID is valid and the scope follows the format `/subscriptions/<subscription-id>` without extra slashes or whitespace. |
+    | `Authorization failed` | Confirm your Azure account has `Microsoft.Authorization/policyAssignments/write` permissions at the subscription scope. |
 ### Policy Effect Options for Tag Enforcement
 
 | Effect | Behaviour |
@@ -127,8 +129,10 @@ infra   virtual-network-hub-eastus2
 ```
 
 !!! warning "Common errors"
-    **`The subscription of type '<SubscriptionType>' is not supported.`** — Ensure your Azure account has an active subscription by running `az account set --subscription <subscription-id>`.
-    **`No registered resource providers found for location 'eastus' in subscription.`** — Register required resource providers with `az provider register --namespace Microsoft.Compute` (or the relevant namespace).
+    | Error | Fix |
+    |---|---|
+    | `The subscription of type '<SubscriptionType>' is not supported.` | Ensure your Azure account has an active subscription by running `az account set --subscription <subscription-id>`. |
+    | `No registered resource providers found for location 'eastus' in subscription.` | Register required resource providers with `az provider register --namespace Microsoft.Compute` (or the relevant namespace). |
 ## Tag Inheritance
 
 Tags do not automatically inherit from resource group to child resources. Use the `Inherit a tag from the resource group` built-in policy to propagate resource group tags.
@@ -160,9 +164,11 @@ az policy assignment create \
 ```
 
 !!! warning "Common errors"
-    **`The policy definition '96670d01-0a4d-4649-9c89-2d3abc0a5025' could not be found.`** — Verify the policy definition ID exists in your subscription or use `az policy definition list` to find the correct ID.
-    **`Invalid scope: /subscriptions/<subscription-id>. Scope must be a valid Azure resource ID.`** — Replace `<subscription-id>` with your actual subscription ID from `az account show --query id`.
-    **`The policy assignment 'inherit-environment-tag' already exists at scope '/subscriptions/...'.`** — Use `--force` flag to overwrite the existing assignment or choose a different assignment name.
+    | Error | Fix |
+    |---|---|
+    | `The policy definition '96670d01-0a4d-4649-9c89-2d3abc0a5025' could not be found.` | Verify the policy definition ID exists in your subscription or use `az policy definition list` to find the correct ID. |
+    | `Invalid scope: /subscriptions/<subscription-id>. Scope must be a valid Azure resource ID.` | Replace `<subscription-id>` with your actual subscription ID from `az account show --query id`. |
+    | `The policy assignment 'inherit-environment-tag' already exists at scope '/subscriptions/...'.` | Use `--force` flag to overwrite the existing assignment or choose a different assignment name. |
 ## Reporting on Tag Coverage
 
 ```bash
@@ -211,5 +217,7 @@ orphaned-nic-eth0       orphaned-rg         Microsoft.Network/networkInterfaces
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --subscription`** — Add `--subscription <subscription-id>` or set the default subscription with `az account set --subscription <id>`.
-    **`ERROR: No registered resource provider found for location 'null'`** — Ensure you are authenticated with `az login` and have permissions to list resources in the target subscription.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --subscription` | Add `--subscription <subscription-id>` or set the default subscription with `az account set --subscription <id>`. |
+    | `ERROR: No registered resource provider found for location 'null'` | Ensure you are authenticated with `az login` and have permissions to list resources in the target subscription. |

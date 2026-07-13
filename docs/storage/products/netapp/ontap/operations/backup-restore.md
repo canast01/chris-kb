@@ -59,9 +59,11 @@ Volume modify successful for volume "data_vol01" in Vserver "svm-prod".
 ```
 
 !!! warning "Common errors"
-    **`Error: "daily-7" already exists.`** — Use a unique policy name or delete the existing policy with `volume snapshot policy delete -policy daily-7` first.
-    **`Error: Invalid vserver "svm-prod".`** — Verify the SVM name with `vserver show` and ensure you are connected to the correct cluster.
-    **`Error: Volume "data_vol01" does not exist in Vserver "svm-prod".`** — Confirm the volume name and SVM with `volume show -vserver <svm>` before assigning the policy.
+    | Error | Fix |
+    |---|---|
+    | `Error: "daily-7" already exists.` | Use a unique policy name or delete the existing policy with `volume snapshot policy delete -policy daily-7` first. |
+    | `Error: Invalid vserver "svm-prod".` | Verify the SVM name with `vserver show` and ensure you are connected to the correct cluster. |
+    | `Error: Volume "data_vol01" does not exist in Vserver "svm-prod".` | Confirm the volume name and SVM with `volume show -vserver <svm>` before assigning the policy. |
 Recommended snapshot schedule for production volumes:
 
 | Schedule | Retention | Use Case |
@@ -117,9 +119,11 @@ dr-xr-xr-x  4 root root  4096 Jan 08 00:00 weekly.2024-01-08
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: invalid vserver name "<svm>"`** — Replace `<svm>` with the actual SVM name (e.g., `prod-svm`) and verify it exists with `vserver show`.
-    **`Error: command failed: invalid volume name "<vol>"`** — Replace `<vol>` with the actual volume name (e.g., `data_vol`) and confirm the volume exists on the specified SVM.
-    **`ls: cannot access '/mnt/vol/.snapshot/': Permission denied`** — Ensure the NFS mount includes the `snapdir=visible` option and the client has read permissions on the volume.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: invalid vserver name "<svm>"` | Replace `<svm>` with the actual SVM name (e.g., `prod-svm`) and verify it exists with `vserver show`. |
+    | `Error: command failed: invalid volume name "<vol>"` | Replace `<vol>` with the actual volume name (e.g., `data_vol`) and confirm the volume exists on the specified SVM. |
+    | `ls: cannot access '/mnt/vol/.snapshot/': Permission denied` | Ensure the NFS mount includes the `snapdir=visible` option and the client has read permissions on the volume. |
 ### Restoring a Single File or Directory
 
 Clients can access snapshots directly and copy files back without storage administrator intervention:
@@ -135,8 +139,10 @@ cp /mnt/vol/.snapshot/daily.2026-05-01_0010/important_file.txt /mnt/vol/importan
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot open '/mnt/vol/.snapshot/daily.2026-05-01_0010/important_file.txt' for reading: No such file or directory`** — Verify the snapshot name and file path exist by listing the snapshot directory with `ls -la /mnt/vol/.snapshot/`.
-    **`cp: cannot create regular file '/mnt/vol/important_file.txt': Permission denied`** — Ensure the NFS mount has write permissions and the user has sufficient privileges; check mount options with `mount | grep /mnt/vol`.
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot open '/mnt/vol/.snapshot/daily.2026-05-01_0010/important_file.txt' for reading: No such file or directory` | Verify the snapshot name and file path exist by listing the snapshot directory with `ls -la /mnt/vol/.snapshot/`. |
+    | `cp: cannot create regular file '/mnt/vol/important_file.txt': Permission denied` | Ensure the NFS mount has write permissions and the user has sufficient privileges; check mount options with `mount | grep /mnt/vol`. |
 For files exposed via SMB, Windows clients can use the Previous Versions tab on any file or folder to restore directly from ONTAP snapshots.
 
 ### Restoring a Full Volume to a Snapshot
@@ -180,9 +186,11 @@ Volume "data_vol" on Vserver "svm01" has been brought online.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Volume "data_vol" is not offline`** — Run `volume offline -vserver <svm> -volume <vol>` before attempting the restore operation.
-    **`Error: command failed: Snapshot "snap_name" does not exist`** — Verify the exact snapshot name using `volume snapshot show` and ensure you are targeting the correct Vserver and volume.
-    **`Error: command failed: Volume has active CIFS/NFS connections`** — Disconnect all clients accessing the volume before taking it offline with `volume offline -vserver <svm> -volume <vol> -force true`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Volume "data_vol" is not offline` | Run `volume offline -vserver <svm> -volume <vol>` before attempting the restore operation. |
+    | `Error: command failed: Snapshot "snap_name" does not exist` | Verify the exact snapshot name using `volume snapshot show` and ensure you are targeting the correct Vserver and volume. |
+    | `Error: command failed: Volume has active CIFS/NFS connections` | Disconnect all clients accessing the volume before taking it offline with `volume offline -vserver <svm> -volume <vol> -force true`. |
 For ONTAP 9.12+ with the SnapRestore license, online restore is supported — the volume remains accessible during restore, which is useful for large volumes where downtime is unacceptable:
 
 ```bash
@@ -198,9 +206,11 @@ Restore completed successfully in 47 seconds.
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found`** — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not your local shell.
-    **`Error: volume does not exist`** — Verify the SVM name and volume name are correct using `volume show -vserver <svm>`.
-    **`Error: snapshot does not exist`** — List available snapshots with `volume snapshot show -vserver <svm> -volume <vol>` and use the exact snapshot name.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found` | Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not your local shell. |
+    | `Error: volume does not exist` | Verify the SVM name and volume name are correct using `volume show -vserver <svm>`. |
+    | `Error: snapshot does not exist` | List available snapshots with `volume snapshot show -vserver <svm> -volume <vol>` and use the exact snapshot name. |
 ### FlexClone for Non-Destructive Test Restore
 
 FlexClone creates an instant writable copy of a volume from a snapshot without consuming additional space. Use this to validate restore content before committing to a production restore:
@@ -234,9 +244,11 @@ Clone deletion completed.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Snapshot "snap_name" does not exist on volume "source_vol"`** — Verify the snapshot exists on the parent volume using `volume snapshot show -vserver <svm> -volume <source_vol>`.
-    **`Error: command failed: Volume "clone_name" already exists`** — Use a unique clone name or delete the existing clone with `volume clone delete -vserver <svm> -flexclone <clone_name>` first.
-    **`Error: command failed: Junction path "/<clone_name>" is already in use`** — Specify a different junction path or remove the existing mount point before creating the clone.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Snapshot "snap_name" does not exist on volume "source_vol"` | Verify the snapshot exists on the parent volume using `volume snapshot show -vserver <svm> -volume <source_vol>`. |
+    | `Error: command failed: Volume "clone_name" already exists` | Use a unique clone name or delete the existing clone with `volume clone delete -vserver <svm> -flexclone <clone_name>` first. |
+    | `Error: command failed: Junction path "/<clone_name>" is already in use` | Specify a different junction path or remove the existing mount point before creating the clone. |
 ---
 
 ## SnapMirror Relationship Types
@@ -313,9 +325,11 @@ Volume cluster2_svm:prod_vol_dr mounted at junction path /prod_vol_dr
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: relationship does not exist`** — Verify the destination path syntax matches exactly (SVM:volume format) and the relationship exists with `snapmirror show`.
-    **`Error: command failed: destination volume is not in a SnapMirror relationship`** — Confirm the SnapMirror relationship is initialized and healthy before attempting to break it.
-    **`Error: command failed: junction path already exists`** — Use a different junction path or remove the existing mount point before mounting the destination volume.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: relationship does not exist` | Verify the destination path syntax matches exactly (SVM:volume format) and the relationship exists with `snapmirror show`. |
+    | `Error: command failed: destination volume is not in a SnapMirror relationship` | Confirm the SnapMirror relationship is initialized and healthy before attempting to break it. |
+    | `Error: command failed: junction path already exists` | Use a different junction path or remove the existing mount point before mounting the destination volume. |
 ### Resync After Primary Recovery
 
 When the primary site is restored, resync re-establishes the replication relationship. The resync operation is incremental — only changed blocks since the failover are transferred.
@@ -351,8 +365,10 @@ Healthy: true
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: relationship does not exist`** — Verify the source and destination paths are correctly formatted as `svm_name:volume_name` and that the SnapMirror relationship exists.
-    **`Error: command failed: destination is not a SnapMirror destination`** — Ensure the break command targets the correct destination path and that the relationship is in a valid state before breaking.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: relationship does not exist` | Verify the source and destination paths are correctly formatted as `svm_name:volume_name` and that the SnapMirror relationship exists. |
+    | `Error: command failed: destination is not a SnapMirror destination` | Ensure the break command targets the correct destination path and that the relationship is in a valid state before breaking. |
 ### SVM DR (Full SVM Failover)
 
 SVM DR replicates the entire SVM configuration — namespace, NFS exports, CIFS shares, LIF configuration, and data volumes — to a destination SVM. This enables full site failover including protocol configuration, not just volume data.
@@ -401,9 +417,11 @@ dest_svm    mgmt_lif        192.168.1.50    up          true
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: SnapMirror relationship is not in a quiesced state`** — Run `snapmirror quiesce -destination-path <dest_svm>:` before attempting to break the relationship.
-    **`Error: There is no data Vserver with name "<dest_svm>"`** — Verify the destination SVM name is correct and exists on the destination cluster using `vserver show`.
-    **`Error: SnapMirror relationship does not exist`** — Confirm the DP relationship is initialized and healthy by checking `snapmirror show -type DP` output before breaking it.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: SnapMirror relationship is not in a quiesced state` | Run `snapmirror quiesce -destination-path <dest_svm>:` before attempting to break the relationship. |
+    | `Error: There is no data Vserver with name "<dest_svm>"` | Verify the destination SVM name is correct and exists on the destination cluster using `vserver show`. |
+    | `Error: SnapMirror relationship does not exist` | Confirm the DP relationship is initialized and healthy by checking `snapmirror show -type DP` output before breaking it. |
 ---
 
 ## SnapVault (Long-Term Retention)
@@ -448,9 +466,11 @@ Last Transfer Duration: 8m15s
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Relationship already exists.`** — Verify the relationship doesn't already exist with `snapmirror show -destination-path <vault_svm>:<vault_vol>` before creating.
-    **`Error: command failed: Source volume <src_svm>:<src_vol> does not exist.`** — Confirm source volume name and SVM are correct and the source cluster is reachable via cluster peering.
-    **`Error: command failed: Destination volume <vault_svm>:<vault_vol> does not exist or is not a DP volume.`** — Create the destination volume first with `volume create -vserver <vault_svm> -volume <vault_vol> -aggregate <aggr> -type DP -size <size>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Relationship already exists.` | Verify the relationship doesn't already exist with `snapmirror show -destination-path <vault_svm>:<vault_vol>` before creating. |
+    | `Error: command failed: Source volume <src_svm>:<src_vol> does not exist.` | Confirm source volume name and SVM are correct and the source cluster is reachable via cluster peering. |
+    | `Error: command failed: Destination volume <vault_svm>:<vault_vol> does not exist or is not a DP volume.` | Create the destination volume first with `volume create -vserver <vault_svm> -volume <vault_vol> -aggregate <aggr> -type DP -size <size>`. |
 ### SnapVault Policy Configuration
 
 ```bash
@@ -492,9 +512,11 @@ Operation succeeded: snapmirror modify for destination "svm-dr:vault_prod".
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Vserver "vault_svm" does not exist.`** — Verify the vault SVM name with `vserver show` and replace `<vault_svm>` with the correct SVM name.
-    **`Error: command failed: Cannot modify policy on an active SnapMirror relationship without quiescing first.`** — Run `snapmirror quiesce -destination-path <vault_svm>:<vault_vol>` before modifying the policy.
-    **`Error: command failed: SnapMirror label "daily" does not exist on source volume.`** — Ensure the source volume has Snapshot copies with the "daily" label created by a matching schedule.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Vserver "vault_svm" does not exist.` | Verify the vault SVM name with `vserver show` and replace `<vault_svm>` with the correct SVM name. |
+    | `Error: command failed: Cannot modify policy on an active SnapMirror relationship without quiescing first.` | Run `snapmirror quiesce -destination-path <vault_svm>:<vault_vol>` before modifying the policy. |
+    | `Error: command failed: SnapMirror label "daily" does not exist on source volume.` | Ensure the source volume has Snapshot copies with the "daily" label created by a matching schedule. |
 ### Manual SnapVault Update
 
 ```bash
@@ -526,8 +548,10 @@ vault_svm vault_vol hourly.2024-11-15_1200 856MB valid SVM
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: snapmirror relationship does not exist`** — Verify the destination path syntax matches an existing SnapMirror relationship using `snapmirror show`.
-    **`Error: command failed: access denied. Insufficient privileges for snapmirror update`** — Ensure your ONTAP user role includes the "snapmirror" capability or request admin credentials.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: snapmirror relationship does not exist` | Verify the destination path syntax matches an existing SnapMirror relationship using `snapmirror show`. |
+    | `Error: command failed: access denied. Insufficient privileges for snapmirror update` | Ensure your ONTAP user role includes the "snapmirror" capability or request admin credentials. |
 ### Restoring from SnapVault
 
 To restore from a SnapVault destination, use `snapmirror restore` to copy a specific snapshot back to the source (or a new recovery volume):
@@ -553,9 +577,11 @@ snapmirror restore \
 ```
 
 !!! warning "Common errors"
-    **`Error: source-path "<vault_svm>:<vault_vol>" does not exist`** — Verify the vault SVM and volume names match the SnapVault destination using `snapmirror show -destination-path`.
-    **`Error: Snapshots with name "<snap_name>" do not exist on source`** — List available snapshots on the vault volume with `snapshot show -vserver <vault_svm> -volume <vault_vol>` and use the correct snapshot name.
-    **`Error: SnapMirror relationship does not exist for destination-path "<src_svm>:<src_vol>"`** — Confirm the SnapVault relationship is initialized and healthy using `snapmirror show -destination-path <src_svm>:<src_vol>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: source-path "<vault_svm>:<vault_vol>" does not exist` | Verify the vault SVM and volume names match the SnapVault destination using `snapmirror show -destination-path`. |
+    | `Error: Snapshots with name "<snap_name>" do not exist on source` | List available snapshots on the vault volume with `snapshot show -vserver <vault_svm> -volume <vault_vol>` and use the correct snapshot name. |
+    | `Error: SnapMirror relationship does not exist for destination-path "<src_svm>:<src_vol>"` | Confirm the SnapVault relationship is initialized and healthy using `snapmirror show -destination-path <src_svm>:<src_vol>`. |
 ---
 
 ## SnapCenter Integration
@@ -637,9 +663,11 @@ Volume clone delete: Command completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Snapshot "snapshot_name" does not exist.`** — Verify the snapshot name matches exactly and exists on the parent volume using `volume snapshot show`.
-    **`Error: command failed: FlexClone "vol-restore-test" already exists.`** — Delete the existing clone with `volume clone delete -vserver <svm> -flexclone <vol>-restore-test` before creating a new one.
-    **`Error: command failed: Cannot delete FlexClone volume while it is mounted or in use.`** — Unmount the clone from all NFS clients and ensure no processes are accessing it before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Snapshot "snapshot_name" does not exist.` | Verify the snapshot name matches exactly and exists on the parent volume using `volume snapshot show`. |
+    | `Error: command failed: FlexClone "vol-restore-test" already exists.` | Delete the existing clone with `volume clone delete -vserver <svm> -flexclone <vol>-restore-test` before creating a new one. |
+    | `Error: command failed: Cannot delete FlexClone volume while it is mounted or in use.` | Unmount the clone from all NFS clients and ensure no processes are accessing it before attempting deletion. |
 ### RPO and RTO Reference
 
 | Recovery Method | RPO | RTO | Scope |

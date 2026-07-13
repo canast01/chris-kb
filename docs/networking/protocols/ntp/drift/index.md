@@ -62,8 +62,10 @@ Skew            :  0.123 ppm
 ```
 
 !!! warning "Common errors"
-    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `systemctl start chronyd` and listening on the local socket.
-    **`No such file or directory`** — Install chrony with `apt-get install chrony` (Debian/Ubuntu) or `yum install chrony` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `506 Cannot talk to daemon` | Ensure chronyd is running with `systemctl start chronyd` and listening on the local socket. |
+    | `No such file or directory` | Install chrony with `apt-get install chrony` (Debian/Ubuntu) or `yum install chrony` (RHEL/CentOS). |
 | Value | Healthy range | Concern |
 |---|---|---|
 | Frequency | ±500 ppm | > ±1000 ppm — hardware issue |
@@ -92,8 +94,10 @@ cat: /var/lib/ntp/drift: No such file or directory
 ```
 
 !!! warning "Common errors"
-    **`cat: /var/lib/ntp/drift: No such file or directory`** — The system is running chronyd instead of ntpd; check which NTP daemon is active with `systemctl status chronyd` or `systemctl status ntpd`.
-    **`Permission denied`** — Run the command with `sudo` since drift files are typically readable only by the ntp/chrony service user.
+    | Error | Fix |
+    |---|---|
+    | `cat: /var/lib/ntp/drift: No such file or directory` | The system is running chronyd instead of ntpd; check which NTP daemon is active with `systemctl status chronyd` or `systemctl status ntpd`. |
+    | `Permission denied` | Run the command with `sudo` since drift files are typically readable only by the ntp/chrony service user. |
 If the drift file is deleted or corrupt, the daemon will start from zero correction and take longer to converge.
 
 ## Interpreting Drift History
@@ -121,8 +125,10 @@ time.google.com    32  32  31m     -0.008ppm  ±0.025ppm  -0.456us   1.567us
 ```
 
 !!! warning "Common errors"
-    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `sudo systemctl start chronyd` and listening on localhost.
-    **`No such file or directory`** — Install chrony with `sudo apt-get install chrony` (Debian/Ubuntu) or `sudo yum install chrony` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `506 Cannot talk to daemon` | Ensure chronyd is running with `sudo systemctl start chronyd` and listening on localhost. |
+    | `No such file or directory` | Install chrony with `sudo apt-get install chrony` (Debian/Ubuntu) or `sudo yum install chrony` (RHEL/CentOS). |
 ## Drift After VM Operations
 
 VMs commonly accumulate clock drift after:
@@ -145,8 +151,10 @@ makestep 1.0 3   # step if offset > 1s on first 3 updates
 ```
 
 !!! warning "Common errors"
-    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `systemctl start chronyd` and listening on the local socket.
-    **`makestep: command not found`** — The `makestep` directive belongs in `/etc/chrony.conf` configuration file, not executed directly; remove it from the command line and add it to the config file instead.
+    | Error | Fix |
+    |---|---|
+    | `506 Cannot talk to daemon` | Ensure chronyd is running with `systemctl start chronyd` and listening on the local socket. |
+    | `makestep: command not found` | The `makestep` directive belongs in `/etc/chrony.conf` configuration file, not executed directly; remove it from the command line and add it to the config file instead. |
 ## Windows Drift
 
 ```powershell

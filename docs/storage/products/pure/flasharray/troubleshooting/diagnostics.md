@@ -182,9 +182,11 @@ Diagnostic bundle created: /tmp/fa_diag_20240115_143022.tgz (2.4GB)
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the bin directory (typically `/opt/purearray/bin`).
-    **`Error: Array unreachable at 192.168.1.10`** — Verify network connectivity to the array management IP and confirm firewall rules allow port 443 (HTTPS) from the admin host.
-    **`purediag: insufficient disk space in /tmp`** — Redirect the diagnostic bundle to a mount point with at least 5GB free space using `--output /var/log/fa
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the bin directory (typically `/opt/purearray/bin`). |
+    | `Error: Array unreachable at 192.168.1.10` | Verify network connectivity to the array management IP and confirm firewall rules allow port 443 (HTTPS) from the admin host. |
+    | `purediag: insufficient disk space in /tmp` | Redirect the diagnostic bundle to a mount point with at least 5GB free space using `--output /var/log/fa |
 ---
 
 ## Step 2 — Alert triage
@@ -316,9 +318,11 @@ CT1           ct        ok        1        Dual 10GbE
 ```
 
 !!! warning "Common errors"
-    **`Error: purearray: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory, or use the full path `/opt/purity/bin/purearray`.
-    **`Error: Unable to connect to array at <ip>: Connection refused`** — Verify the array management IP is reachable and the management service is running with `ping <array-ip>` and check array network connectivity.
-    **`Error: Authentication failed: Invalid credentials`** — Confirm your Pure Storage credentials are correct and your user account has sufficient privileges to run hardware diagnostics commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: purearray: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory, or use the full path `/opt/purity/bin/purearray`. |
+    | `Error: Unable to connect to array at <ip>: Connection refused` | Verify the array management IP is reachable and the management service is running with `ping <array-ip>` and check array network connectivity. |
+    | `Error: Authentication failed: Invalid credentials` | Confirm your Pure Storage credentials are correct and your user account has sufficient privileges to run hardware diagnostics commands. |
 **Interpreting controller states:**
 
 | Controller Status | Meaning | Action |
@@ -377,8 +381,10 @@ Total Capacity: 34.56TB (32 drives × 1.92TB)
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid bay specification 'CH0.BAY99'`** — Verify the bay number exists on your array by running `puredrive list` without filters.
-    **`Error: Command 'puredrive' not found`** — Ensure you are logged into the Pure Storage management interface or have the Pure CLI tools installed and in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid bay specification 'CH0.BAY99'` | Verify the bay number exists on your array by running `puredrive list` without filters. |
+    | `Error: Command 'puredrive' not found` | Ensure you are logged into the Pure Storage management interface or have the Pure CLI tools installed and in your PATH. |
 **Drive state reference:**
 
 | State | Action |
@@ -533,9 +539,11 @@ tcp: [4] 10.20.30.48:3260,1 iqn.2010-06.com.purestorage:flasharray.a1b2c3d4e5f6g
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <array_iscsi_ip>`** — Replace the placeholder with the actual array iSCSI IP address (e.g., `ping -c 4 10.20.30.45`).
-    **`iscsiadm: No active sessions.`** — Run `iscsiadm -m discovery -t st -p <array_ip>` to discover targets, then `iscsiadm -m node --login` to establish sessions.
-    **`iscsiadm: command not found`** — Install open-iscsi package with `apt-get install open-iscsi` (Debian/Ubuntu) or `yum install iscsi-initiator-utils` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <array_iscsi_ip>` | Replace the placeholder with the actual array iSCSI IP address (e.g., `ping -c 4 10.20.30.45`). |
+    | `iscsiadm: No active sessions.` | Run `iscsiadm -m discovery -t st -p <array_ip>` to discover targets, then `iscsiadm -m node --login` to establish sessions. |
+    | `iscsiadm: command not found` | Install open-iscsi package with `apt-get install open-iscsi` (Debian/Ubuntu) or `yum install iscsi-initiator-utils` (RHEL/CentOS). |
 ---
 
 ## Step 6 — Host and volume connectivity
@@ -599,8 +607,10 @@ prod-oracle-01                prod-oracle-data-01            1
 ```
 
 !!! warning "Common errors"
-    **`Error: Host 'prod-oracle-01' not found`** — Verify the exact hostname with `purehost list` and check for typos or case sensitivity.
-    **`Error: Connection to array failed: timeout`** — Ensure the management IP is reachable and the SSH/REST API port (443 or 22) is not blocked by firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host 'prod-oracle-01' not found` | Verify the exact hostname with `purehost list` and check for typos or case sensitivity. |
+    | `Error: Connection to array failed: timeout` | Ensure the management IP is reachable and the SSH/REST API port (443 or 22) is not blocked by firewall rules. |
 **Volume not visible on host — diagnostic flow:**
 
 ```text
@@ -694,9 +704,11 @@ CT1.FC0: 1,024 MB/s | CT1.FC1: 856 MB/s
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`).
-    **`Error: Unable to connect to array at 192.168.1.100:443`** — Verify array IP/hostname is correct and reachable, and that your user account has API credentials configured via `purearray login`.
-    **`Error: Permission denied - insufficient privileges for monitoring`** — Confirm your Pure Storage user role includes "Monitor" or "
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`). |
+    | `Error: Unable to connect to array at 192.168.1.100:443` | Verify array IP/hostname is correct and reachable, and that your user account has API credentials configured via `purearray login`. |
+    | `Error: Permission denied - insufficient privileges for monitoring` | Confirm your Pure Storage user role includes "Monitor" or " |
 **Latency diagnostic targets:**
 
 | Metric | Normal | Elevated | Critical |
@@ -796,9 +808,11 @@ hourly-sync          1h          2024-01-15 15:30:00 Active
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to array management interface`** — Verify array IP connectivity and that the management network is reachable from your current host.
-    **`Error: Mediator unreachable from one or more arrays`** — Check mediator network connectivity and firewall rules; pod cannot achieve quorum without mediator access.
-    **`Error: Pod status is Unhealthy - replication lag exceeds threshold`** — Investigate network bandwidth between arrays and check for storage performance bottlenecks on the replication target.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to array management interface` | Verify array IP connectivity and that the management network is reachable from your current host. |
+    | `Error: Mediator unreachable from one or more arrays` | Check mediator network connectivity and firewall rules; pod cannot achieve quorum without mediator access. |
+    | `Error: Pod status is Unhealthy - replication lag exceeds threshold` | Investigate network bandwidth between arrays and check for storage performance bottlenecks on the replication target. |
 **Pod unhealthy or paused — diagnostic flow:**
 
 ![FlashArray — Diagnostics — Diagram](../../../../../assets/storage-pure-flasharray-troubleshooting-diagnostics-diagram.svg)
@@ -846,9 +860,11 @@ dev-protection-group          3           6            3.5T      2.3:1
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or unable to connect to array`** — Verify the Pure array hostname/IP is reachable and your API token is valid in your Pure credentials file.
-    **`Error: Command 'purearray' not found`** — Install the Pure Python SDK (`pip install purestorage`) or ensure the Pure CLI tools are in your system PATH.
-    **`Error: Permission denied: insufficient privileges for this operation`** — Confirm your Pure user account has at least "Operator" role permissions to view space metrics.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or unable to connect to array` | Verify the Pure array hostname/IP is reachable and your API token is valid in your Pure credentials file. |
+    | `Error: Command 'purearray' not found` | Install the Pure Python SDK (`pip install purestorage`) or ensure the Pure CLI tools are in your system PATH. |
+    | `Error: Permission denied: insufficient privileges for this operation` | Confirm your Pure user account has at least "Operator" role permissions to view space metrics. |
 **Unexpected capacity growth — investigation flow:**
 
 ![FlashArray — Diagnostics — Diagram](../../../../../assets/storage-pure-flasharray-troubleshooting-diagnostics-d2.svg)
@@ -886,9 +902,11 @@ Phone-home connection: Active
 ```
 
 !!! warning "Common errors"
-    **`purediag: command not found`** — Ensure you are running this command on the FlashArray controller (SSH to the array management IP) or install the Pure CLI tools on your local system.
-    **`Error: Phone-home is not active. Cannot send diagnostic bundle.`** — Run `purearray phonehome list` to verify phone-home status, then enable it with `purearray phonehome --enable` before retrying `purediag --send`.
-    **`Permission denied: /tmp/fa_diag_*.tgz`** — Run the command with appropriate privileges (use `sudo` if needed) or verify write permissions on the `/tmp` directory.
+    | Error | Fix |
+    |---|---|
+    | `purediag: command not found` | Ensure you are running this command on the FlashArray controller (SSH to the array management IP) or install the Pure CLI tools on your local system. |
+    | `Error: Phone-home is not active. Cannot send diagnostic bundle.` | Run `purearray phonehome list` to verify phone-home status, then enable it with `purearray phonehome --enable` before retrying `purediag --send`. |
+    | `Permission denied: /tmp/fa_diag_*.tgz` | Run the command with appropriate privileges (use `sudo` if needed) or verify write permissions on the `/tmp` directory. |
 The diagnostic bundle includes controller logs, Purity event logs, drive health data, performance metrics, configuration snapshots, and network interface state. Always collect it before or immediately after opening a support case.
 
 ### Pure1 portal diagnostics

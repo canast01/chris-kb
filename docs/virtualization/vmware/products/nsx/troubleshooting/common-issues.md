@@ -59,9 +59,11 @@ Filter: DVFILTER-FWPOLICY-prod-web-vm-04-eth0
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the NSX Manager CA certificate into your system trust store.
-    **`summarize-dvfilter: command not found`** — Ensure you are SSH'd directly to the ESXi host (not vCenter) and running as root or with appropriate privileges.
-    **`vsipioctl: No such file or directory`** — Verify the filter name matches exactly (case-sensitive) and that the DFW module is loaded on the ESXi host with `esxcli system module list | grep dfwpf`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the NSX Manager CA certificate into your system trust store. |
+    | `summarize-dvfilter: command not found` | Ensure you are SSH'd directly to the ESXi host (not vCenter) and running as root or with appropriate privileges. |
+    | `vsipioctl: No such file or directory` | Verify the filter name matches exactly (case-sensitive) and that the DFW module is loaded on the ESXi host with `esxcli system module list | grep dfwpf`. |
 ```bash
 # From NSX Manager CLI
 nsxcli
@@ -128,8 +130,10 @@ Request timed out.
 ```
 
 !!! warning "Common errors"
-    **`Request timed out.`** — Verify network connectivity between TEP hosts, check firewall rules allow UDP 6081 (VXLAN), and confirm the remote TEP IP is reachable via `ping` from the ESXi management network first.
-    **`vmkping: Unknown option`** — Use correct vmkping syntax with interface flag as `-I vmk<n>` (capital I) and ensure the vmkernel port
+    | Error | Fix |
+    |---|---|
+    | `Request timed out.` | Verify network connectivity between TEP hosts, check firewall rules allow UDP 6081 (VXLAN), and confirm the remote TEP IP is reachable via `ping` from the ESXi management network first. |
+    | `vmkping: Unknown option` | Use correct vmkping syntax with interface flag as `-I vmk<n>` (capital I) and ensure the vmkernel port |
 ```bash
 # Step 1 — Confirm the policy is published (not in draft)
 curl -sk -u 'admin:password' \
@@ -199,9 +203,11 @@ Group membership check:
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the NSX Manager certificate into your trusted store.
-    **`HTTP 404 Not Found`** — Verify the policy-id, group-id, and filter-name are correct and exist in the NSX Manager inventory.
-    **`summarize-dvfilter: command not found`** — SSH directly to the ESXi host (not vCenter) where the VM is running, as this command is only available on ESXi.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the NSX Manager certificate into your trusted store. |
+    | `HTTP 404 Not Found` | Verify the policy-id, group-id, and filter-name are correct and exist in the NSX Manager inventory. |
+    | `summarize-dvfilter: command not found` | SSH directly to the ESXi host (not vCenter) where the VM is running, as this command is only available on ESXi. |
 ```bash
 # From any reachable Manager node
 nsxcli
@@ -257,9 +263,11 @@ service manager:
 ```
 
 !!! warning "Common errors"
-    **`nsxcli: command not found`** — SSH to an NSX Manager node directly (not a vCenter or ESXi host) and ensure you have manager-level credentials.
-    **`Error: Unable to connect to cluster`** — Verify network connectivity to the Manager node on port 5480 and confirm the cluster status is STABLE before retrying.
-    **`Error: Service manager is DOWN`** — Restart the manager service with `restart service manager` and check system logs via `get log-file` if the service fails to come back up.
+    | Error | Fix |
+    |---|---|
+    | `nsxcli: command not found` | SSH to an NSX Manager node directly (not a vCenter or ESXi host) and ensure you have manager-level credentials. |
+    | `Error: Unable to connect to cluster` | Verify network connectivity to the Manager node on port 5480 and confirm the cluster status is STABLE before retrying. |
+    | `Error: Service manager is DOWN` | Restart the manager service with `restart service manager` and check system logs via `get log-file` if the service fails to come back up. |
 ```bash
 # Check transport node state details
 curl -sk -u 'admin:password' \
@@ -316,9 +324,11 @@ nsx-vib-esx-nsx-lldp                 3.2.1.0-20456789       2024-01-10
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the NSX Manager certificate into your trusted store.
-    **`HTTP 401 Unauthorized`** — Verify the admin credentials are correct and the user has API access permissions in NSX Manager.
-    **`"error_message": "NSX VIB installation failed"` with `"failed_step": "VIB_INSTALL"`** — SSH to the ESXi host and check `/var/log/esxupdate.log` for the specific VIB installation error, then re-run host preparation from NSX Manager.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the NSX Manager certificate into your trusted store. |
+    | `HTTP 401 Unauthorized` | Verify the admin credentials are correct and the user has API access permissions in NSX Manager. |
+    | `"error_message": "NSX VIB installation failed"` with `"failed_step": "VIB_INSTALL"` | SSH to the ESXi host and check `/var/log/esxupdate.log` for the specific VIB installation error, then re-run host preparation from NSX Manager. |
 ```bash
 # SSH to Edge node
 get node cpu-usage

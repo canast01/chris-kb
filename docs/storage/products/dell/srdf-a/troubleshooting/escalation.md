@@ -99,8 +99,10 @@ Microcode Version: 5978.221.221
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Verify Solutions Enabler is installed and the symcli binary path is in your $PATH, or source the SE environment setup script.
-    **`Error: Cannot connect to Symmetrix <R1-SID>`** — Confirm the array SID is correct and the SE daemon (symcfg) is running with `sudo /opt/emc/SYMCLI/bin/symcfg -daemon start`.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Verify Solutions Enabler is installed and the symcli binary path is in your $PATH, or source the SE environment setup script. |
+    | `Error: Cannot connect to Symmetrix <R1-SID>` | Confirm the array SID is correct and the SE daemon (symcfg) is running with `sudo /opt/emc/SYMCLI/bin/symcfg -daemon start`. |
 ### 2. Capture SRDF group and pair state
 
 ```bash
@@ -153,9 +155,11 @@ SE-2G  0  OK  SE-1G  0  8 Gbps
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI_C_PROC_FAILURE (29) : Could not connect to the Symmetrix`** — Verify the R1-SID and R2-SID values are correct and the Symmetrix arrays are reachable via the management network.
-    **`No such file or directory`** — Ensure /tmp directory has write permissions and sufficient free space (check with `df -h /tmp`).
-    **`symdf: Command not found`** — Confirm EMC Solutions Enabler (SE) is installed and the symcli binaries are in your PATH (add `/opt/emc/SYMCLI/bin` to PATH if needed).
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI_C_PROC_FAILURE (29) : Could not connect to the Symmetrix` | Verify the R1-SID and R2-SID values are correct and the Symmetrix arrays are reachable via the management network. |
+    | `No such file or directory` | Ensure /tmp directory has write permissions and sufficient free space (check with `df -h /tmp`). |
+    | `symdf: Command not found` | Confirm EMC Solutions Enabler (SE) is installed and the symcli binaries are in your PATH (add `/opt/emc/SYMCLI/bin` to PATH if needed). |
 ### 3. Capture the event log from both arrays
 
 ```bash
@@ -182,8 +186,10 @@ grep -iE "SRDF|RDF|replication|suspend|fault" /tmp/srdf-events-r1-$(date +%Y%m%d
 ```
 
 !!! warning "Common errors"
-    **`symevent: Error: Invalid SID <R1-SID>`** — Replace `<R1-SID>` and `<R2-SID>` with actual 12-character symmetrix IDs (e.g., `000123456789`).
-    **`grep: /tmp/srdf-events-r1-20240115.txt: No such file or directory`** — Ensure the first two symevent commands complete successfully and verify the user has write permissions to `/tmp`.
+    | Error | Fix |
+    |---|---|
+    | `symevent: Error: Invalid SID <R1-SID>` | Replace `<R1-SID>` and `<R2-SID>` with actual 12-character symmetrix IDs (e.g., `000123456789`). |
+    | `grep: /tmp/srdf-events-r1-20240115.txt: No such file or directory` | Ensure the first two symevent commands complete successfully and verify the user has write permissions to `/tmp`. |
 ### 4. Capture SRDF link performance and WAN state
 
 ```bash
@@ -223,9 +229,11 @@ FA-2E   Online      FCIP      192.168.100.46  Active
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid group number <group-number>`** — Replace `<group-number>` with the actual RDF group ID (e.g., `001` or `1`).
-    **`Error: Symmetrix ID <R1-SID> not found`** — Verify the R1 Symmetrix SID is correct by running `symcfg list -v` to confirm the array serial number.
-    **`No matching records found`** — Ensure SRDF/A is configured and the RDF group is in a valid state; check with `symrdf list -v` to confirm group existence.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid group number <group-number>` | Replace `<group-number>` with the actual RDF group ID (e.g., `001` or `1`). |
+    | `Error: Symmetrix ID <R1-SID> not found` | Verify the R1 Symmetrix SID is correct by running `symcfg list -v` to confirm the array serial number. |
+    | `No matching records found` | Ensure SRDF/A is configured and the RDF group is in a valid state; check with `symrdf list -v` to confirm group existence. |
 ### 5. Write the timeline
 
 ```text
@@ -371,9 +379,11 @@ Timestamp            Event Type    Symmetrix ID      Message
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_LIB_CALL_FAILED: Cannot connect to the Solutions Enabler daemon`** — Verify the Solutions Enabler service is running with `sudo /opt/emc/SYMCLI/bin/stordaemon start` and confirm R1 connectivity.
-    **`Invalid Symmetrix ID: <R1-SID>`** — Replace `<R1-SID>` with the actual R1 array SID from `symcfg list` output.
-    **`SRDF group <group-number> not found`** — Confirm the group number exists by running `symdf list -sid <R1-SID>` first to list all valid groups.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_LIB_CALL_FAILED: Cannot connect to the Solutions Enabler daemon` | Verify the Solutions Enabler service is running with `sudo /opt/emc/SYMCLI/bin/stordaemon start` and confirm R1 connectivity. |
+    | `Invalid Symmetrix ID: <R1-SID>` | Replace `<R1-SID>` with the actual R1 array SID from `symcfg list` output. |
+    | `SRDF group <group-number> not found` | Confirm the group number exists by running `symdf list -sid <R1-SID>` first to list all valid groups. |
 ---
 
 ## Support SLA Reference

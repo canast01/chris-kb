@@ -82,8 +82,10 @@ aws route53 get-health-check-status --health-check-id <id> \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidInput) when calling the CreateHealthCheck operation: Invalid health check configuration`** — Ensure the JSON is valid and the FullyQualifiedDomainName is a resolvable hostname without the `<>` brackets.
-    **`An error occurred (InvalidHealthCheckId) when calling the GetHealthCheckStatus operation: The health check ID '<id>' does not exist`** — Replace `<id>` with the actual health check ID returned from the create command output.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidInput) when calling the CreateHealthCheck operation: Invalid health check configuration` | Ensure the JSON is valid and the FullyQualifiedDomainName is a resolvable hostname without the `<>` brackets. |
+    | `An error occurred (InvalidHealthCheckId) when calling the GetHealthCheckStatus operation: The health check ID '<id>' does not exist` | Replace `<id>` with the actual health check ID returned from the create command output. |
 ## Availability Incident Tracking
 
 ```markdown

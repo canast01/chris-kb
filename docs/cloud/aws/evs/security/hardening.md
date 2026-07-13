@@ -58,9 +58,11 @@ Created: 4a6f2c9e-5b3d-41e8-7f1a-8c2e9b5d3f6a
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the NSX certificate into your system CA bundle.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify `$NSX_URL` is correct and NSX API is responding; check credentials with `curl -sk -u "admin:$NSX_PASSWORD" "$NSX_URL/api/v1/ns-groups" | head -20`.
-    **`error: 'NoneType' object is not subscriptable`** — Ensure the API response contains an `id` field; the security group creation may have failed due to invalid tag scope/tag values or duplicate display names.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the NSX certificate into your system CA bundle. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify `$NSX_URL` is correct and NSX API is responding; check credentials with `curl -sk -u "admin:$NSX_PASSWORD" "$NSX_URL/api/v1/ns-groups" | head -20`. |
+    | `error: 'NoneType' object is not subscriptable` | Ensure the API response contains an `id` field; the security group creation may have failed due to invalid tag scope/tag values or duplicate display names. |
 ```bash
 # Create the explicit-allow firewall section ABOVE the default-deny section
 curl -sk -u "admin:$NSX_PASSWORD" \
@@ -171,9 +173,11 @@ curl -sk -u "admin:$NSX_PASSWORD" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to nsx.example.com port 443: Connection refused`** — Verify NSX_URL environment variable is set correctly and NSX Manager is reachable on the network.
-    **`{"error_code": 400, "error_message": "Invalid NSGroup target_id: <sg-web-tier-id>"}`** — Replace placeholder values like `<sg-web-tier-id>` with actual NSGroup IDs from your NSX inventory.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag already ignores SSL verification; if this persists, ensure NSX Manager certificate is valid or use `--cacert` with your CA bundle.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to nsx.example.com port 443: Connection refused` | Verify NSX_URL environment variable is set correctly and NSX Manager is reachable on the network. |
+    | `{"error_code": 400, "error_message": "Invalid NSGroup target_id: <sg-web-tier-id>"}` | Replace placeholder values like `<sg-web-tier-id>` with actual NSGroup IDs from your NSX inventory. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag already ignores SSL verification; if this persists, ensure NSX Manager certificate is valid or use `--cacert` with your CA bundle. |
 Enable logging on all deny hits. Denied traffic logs are essential for identifying misconfigured applications and for security incident investigation. Store DFW logs in a syslog target (CloudWatch or SIEM) with at least 90 days retention.
 
 ## VPC Security Group Hardening
@@ -267,9 +271,11 @@ aws ec2 create-flow-logs \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidGroupId.NotFound) when calling the AuthorizeSecurityGroupIngress operation: The security group 'sg-evs-management' does not exist`** — Verify the security group ID exists in the correct AWS region and account using `aws ec2 describe-security-groups --group-ids sg-evs-management`.
-    **`An error occurred (InvalidParameterValue) when calling the CreateFlowLogs operation: Invalid S3 bucket ARN format`** — Use the correct S3 bucket ARN format `arn:aws:s3:::bucket-name` and ensure the bucket exists and has proper IAM permissions for VPC Flow Logs.
-    **`An error occurred (InvalidVpcID.NotFound) when calling the DescribeInternetGateways operation: The vpc ID 'vpc-xxxxx' does not exist`** — Ensure the `$EVS_VPC_ID` environment variable is set correctly with `export EVS_VPC_ID=vpc-xxxxxxxx` before running the commands.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidGroupId.NotFound) when calling the AuthorizeSecurityGroupIngress operation: The security group 'sg-evs-management' does not exist` | Verify the security group ID exists in the correct AWS region and account using `aws ec2 describe-security-groups --group-ids sg-evs-management`. |
+    | `An error occurred (InvalidParameterValue) when calling the CreateFlowLogs operation: Invalid S3 bucket ARN format` | Use the correct S3 bucket ARN format `arn:aws:s3:::bucket-name` and ensure the bucket exists and has proper IAM permissions for VPC Flow Logs. |
+    | `An error occurred (InvalidVpcID.NotFound) when calling the DescribeInternetGateways operation: The vpc ID 'vpc-xxxxx' does not exist` | Ensure the `$EVS_VPC_ID` environment variable is set correctly with `export EVS_VPC_ID=vpc-xxxxxxxx` before running the commands. |
 ```bash
 # Audit current SG rules for EVS management ENIs
 aws ec2 describe-network-interfaces \
@@ -307,8 +313,10 @@ eni-2c9f4e0d1g3b6f5c2      sg-0g9d3b2e8f1c6a7d
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the DescribeNetworkInterfaces operation: The filter 'subnet-id' is invalid`** — Verify the EVS_MGMT_SUBNET_ID variable is set with `echo $EVS_MGMT_SUBNET_ID` and contains a valid subnet ID like `subnet-0a1b2c3d`.
-    **`An error occurred (InvalidGroupId.NotFound) when calling the DescribeSecurityGroups operation: The security group 'sg-evs-management' does not exist`** — Replace `sg-evs-management` with the actual security group ID (e.g., `sg-0f8c2a1d9e7b4c5a`) or use `--group-names` if the group is in EC2-Classic.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the DescribeNetworkInterfaces operation: The filter 'subnet-id' is invalid` | Verify the EVS_MGMT_SUBNET_ID variable is set with `echo $EVS_MGMT_SUBNET_ID` and contains a valid subnet ID like `subnet-0a1b2c3d`. |
+    | `An error occurred (InvalidGroupId.NotFound) when calling the DescribeSecurityGroups operation: The security group 'sg-evs-management' does not exist` | Replace `sg-evs-management` with the actual security group ID (e.g., `sg-0f8c2a1d9e7b4c5a`) or use `--group-names` if the group is in EC2-Classic. |
 ## ESXi Hardening
 
 CIS benchmark items specific to EVS deployments:
@@ -413,9 +421,11 @@ curl -sk -u "administrator@vsphere.local:$PASS" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the vCenter CA certificate into your system trust store.
-    **`{"error":{"messages":[{"default_message":"Authentication failed","id":"com.vmware.vapi.std.errors.unauthenticated"}]}}`** — Verify the vCenter administrator credentials and ensure `$PASS` environment variable is set correctly.
-    **`curl: (7) Failed to connect to $VCENTER port 443: Connection refused`** — Confirm the vCenter hostname/IP in `$VCENTER` is correct and the REST API service is running on port 443.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the vCenter CA certificate into your system trust store. |
+    | `{"error":{"messages":[{"default_message":"Authentication failed","id":"com.vmware.vapi.std.errors.unauthenticated"}]}}` | Verify the vCenter administrator credentials and ensure `$PASS` environment variable is set correctly. |
+    | `curl: (7) Failed to connect to $VCENTER port 443: Connection refused` | Confirm the vCenter hostname/IP in `$VCENTER` is correct and the REST API service is running on port 443. |
 ## Compliance and Audit
 
 VCF generates audit logs from multiple components. Ship all of these to a centralized location for SIEM correlation and compliance evidence.
@@ -477,9 +487,11 @@ curl -sk -u "admin:$NSX_PASSWORD" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the NSX-T CA certificate into your system trust store.
-    **`{"error_code": 400, "error_message": "Invalid server address"}`** — Verify that `syslog.internal.example.com` is resolvable from the NSX-T manager node and update the server hostname if DNS is misconfigured.
-    **`curl: (7) Failed to connect to $NSX_URL port 443: Connection refused`** — Ensure the `$NSX_URL` environment variable is set correctly (e.g., `https://nsx-manager.example.com:443`) and the NSX-T API is accessible.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the NSX-T CA certificate into your system trust store. |
+    | `{"error_code": 400, "error_message": "Invalid server address"}` | Verify that `syslog.internal.example.com` is resolvable from the NSX-T manager node and update the server hostname if DNS is misconfigured. |
+    | `curl: (7) Failed to connect to $NSX_URL port 443: Connection refused` | Ensure the `$NSX_URL` environment variable is set correctly (e.g., `https://nsx-manager.example.com:443`) and the NSX-T API is accessible. |
 ```bash
 # Set up CloudWatch Logs subscription for EVS-related CloudTrail events
 # Create CloudWatch Logs metric filter for EVS destructive actions
@@ -506,8 +518,10 @@ aws cloudwatch put-metric-alarm \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the PutMetricFilter operation: The specified log group does not exist.`** — Create the CloudTrail log group first with `aws logs create-log-group --log-group-name CloudTrail`.
-    **`An error occurred (InvalidParameterValue) when calling the PutMetricAlarm operation: Invalid SNS topic ARN`** — Verify the SNS topic exists in us-east-1 and replace the ARN with a valid topic ARN from your account.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the PutMetricFilter operation: The specified log group does not exist.` | Create the CloudTrail log group first with `aws logs create-log-group --log-group-name CloudTrail`. |
+    | `An error occurred (InvalidParameterValue) when calling the PutMetricAlarm operation: Invalid SNS topic ARN` | Verify the SNS topic exists in us-east-1 and replace the ARN with a valid topic ARN from your account. |
 ## CIS VCF Hardening Checklist
 
 | Control | Action |

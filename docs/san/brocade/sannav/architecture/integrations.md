@@ -40,9 +40,11 @@ Mar 13 14:23:42 sannav-mgmt sannav-test: Test syslog message from SANnav
 ```
 
 !!! warning "Common errors"
-    **`sudo: vi: command not found`** — Use `sudo nano /etc/rsyslog.d/sannav-forward.conf` or install vim with `sudo apt-get install vim`.
-    **`Job for rsyslog.service failed because the control process exited with error code.`** — Check syntax errors in the config file with `sudo rsyslogd -N1` before restarting.
-    **`Connection refused`** — Verify the syslog server at 10.10.3.50:514 is listening with `nc -zv 10.10.3.50 514` and firewall rules allow outbound traffic.
+    | Error | Fix |
+    |---|---|
+    | `sudo: vi: command not found` | Use `sudo nano /etc/rsyslog.d/sannav-forward.conf` or install vim with `sudo apt-get install vim`. |
+    | `Job for rsyslog.service failed because the control process exited with error code.` | Check syntax errors in the config file with `sudo rsyslogd -N1` before restarting. |
+    | `Connection refused` | Verify the syslog server at 10.10.3.50:514 is listening with `nc -zv 10.10.3.50 514` and firewall rules allow outbound traffic. |
 ---
 
 ## See also

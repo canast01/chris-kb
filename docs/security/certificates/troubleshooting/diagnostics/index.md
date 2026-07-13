@@ -146,9 +146,11 @@ vcenter.corp.example.com: Dec 10 11:18:22 2024 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the certificate file path is correct and readable with `ls -la cert.pem`.
-    **`Temporary failure in name resolution`** — Ensure the hostname resolves with `nslookup <host>` and check network connectivity to port 443.
-    **`date: invalid date`** — The certificate may be malformed; validate it with `openssl x509 -in cert.pem -text -noout` to inspect the enddate field format.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the certificate file path is correct and readable with `ls -la cert.pem`. |
+    | `Temporary failure in name resolution` | Ensure the hostname resolves with `nslookup <host>` and check network connectivity to port 443. |
+    | `date: invalid date` | The certificate may be malformed; validate it with `openssl x509 -in cert.pem -text -noout` to inspect the enddate field format. |
 ---
 
 ## Step 2 — Inspect certificate fields and SAN
@@ -202,9 +204,11 @@ Certificate:
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the certificate file path is correct and the file contains valid PEM-formatted data (check for `-----BEGIN CERTIFICATE-----` header).
-    **`Verify return code: 21 (unable to verify the first certificate)`** — The server certificate chain is incomplete; ensure the full chain including intermediate certificates is installed on the server.
-    **`hostname.corp.example.com not found in Subject Alternative Name list`** — Add the hostname to the certificate's SAN extension or request a new certificate that includes all required hostnames.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the certificate file path is correct and the file contains valid PEM-formatted data (check for `-----BEGIN CERTIFICATE-----` header). |
+    | `Verify return code: 21 (unable to verify the first certificate)` | The server certificate chain is incomplete; ensure the full chain including intermediate certificates is installed on the server. |
+    | `hostname.corp.example.com not found in Subject Alternative Name list` | Add the hostname to the certificate's SAN extension or request a new certificate that includes all required hostnames. |
 ---
 
 ## Step 3 — Verify the certificate chain
@@ -263,9 +267,11 @@ Subject: CN = DigiCert SHA2 Secure Server CA, O = DigiCert Inc, C = US
 ```
 
 !!! warning "Common errors"
-    **`unable to get local issuer certificate`** — Add the missing intermediate certificate to your trust store or use `openssl verify -untrusted intermediate.pem cert.pem`.
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Download the intermediate CA from the AIA URL in the certificate and add it to your fullchain bundle before the root.
-    **`openssl x509: Unable to load certificate`** — Verify the certificate file exists and is in PEM format; convert from DER if needed with `openssl x509 -inform DER -in cert.crt -out cert.pem`.
+    | Error | Fix |
+    |---|---|
+    | `unable to get local issuer certificate` | Add the missing intermediate certificate to your trust store or use `openssl verify -untrusted intermediate.pem cert.pem`. |
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Download the intermediate CA from the AIA URL in the certificate and add it to your fullchain bundle before the root. |
+    | `openssl x509: Unable to load certificate` | Verify the certificate file exists and is in PEM format; convert from DER if needed with `openssl x509 -inform DER -in cert.crt -out cert.pem`. |
 ---
 
 ## Step 4 — Check OCSP and CRL
@@ -326,9 +332,11 @@ OCSP Response Data:
 ```
 
 !!! warning "Common errors"
-    **`OCSP response: no response text in server reply`** — Verify the server supports OCSP stapling with `openssl s_client -connect <host>:443 -status` and check server configuration (nginx/Apache must have stapling enabled).
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Add the `-k` flag to curl or ensure your system CA bundle is current with `update-ca-certificates` on Linux.
-    **`unable to load Issuer certificate`** — Verify the intermediate.pem path is correct and contains the actual issuer certificate, not the end-entity cert, using `openssl x509 -in intermediate.pem -noout -subject`.
+    | Error | Fix |
+    |---|---|
+    | `OCSP response: no response text in server reply` | Verify the server supports OCSP stapling with `openssl s_client -connect <host>:443 -status` and check server configuration (nginx/Apache must have stapling enabled). |
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Add the `-k` flag to curl or ensure your system CA bundle is current with `update-ca-certificates` on Linux. |
+    | `unable to load Issuer certificate` | Verify the intermediate.pem path is correct and contains the actual issuer certificate, not the end-entity cert, using `openssl x509 -in intermediate.pem -noout -subject`. |
 ---
 
 ## Step 5 — Windows certificate store diagnostics
@@ -423,9 +431,11 @@ internal-server.crt: OK
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot stat 'internal-root-ca.crt': No such file or directory`** — Verify the certificate file exists in the current directory or provide the full path to the source file.
-    **`error: certificate verify failed`** — Run `update-ca-certificates` (Debian/Ubuntu) or `update-ca-trust` (RHEL/CentOS) after copying the CA certificate, then retry the verification command.
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Ensure the root CA certificate was copied to the correct system trust store path and the update command completed successfully.
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot stat 'internal-root-ca.crt': No such file or directory` | Verify the certificate file exists in the current directory or provide the full path to the source file. |
+    | `error: certificate verify failed` | Run `update-ca-certificates` (Debian/Ubuntu) or `update-ca-trust` (RHEL/CentOS) after copying the CA certificate, then retry the verification command. |
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Ensure the root CA certificate was copied to the correct system trust store path and the update command completed successfully. |
 ---
 
 ## Step 7 — Collect certificate diagnostic bundle
@@ -493,9 +503,11 @@ CertUtil: -cainfo command completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the cert.pem file exists in the current directory and is readable with `ls -la cert.pem`.
-    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — The certificate chain is incomplete or the CA bundle is missing; add the intermediate CA to the chain or update `/etc/ssl/certs/ca-certificates.crt` with `sudo update-ca-certificates`.
-    **`OCSP response: unauthorized (0x6)`** — The OCSP responder rejected the request, likely due to network filtering; verify outbound HTTPS access to the OCSP responder URL or disable OCSP stapling validation temporarily.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the cert.pem file exists in the current directory and is readable with `ls -la cert.pem`. |
+    | `error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed` | The certificate chain is incomplete or the CA bundle is missing; add the intermediate CA to the chain or update `/etc/ssl/certs/ca-certificates.crt` with `sudo update-ca-certificates`. |
+    | `OCSP response: unauthorized (0x6)` | The OCSP responder rejected the request, likely due to network filtering; verify outbound HTTPS access to the OCSP responder URL or disable OCSP stapling validation temporarily. |
 ---
 
 ## Log locations

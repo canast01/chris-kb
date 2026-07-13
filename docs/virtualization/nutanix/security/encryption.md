@@ -108,8 +108,10 @@ Overall Health: GOOD
 ```
 
 !!! warning "Common errors"
-    **`curator_cli: command not found`** — Verify Nutanix cluster SSH access and ensure you're running the command on a Nutanix node with curator tools in PATH.
-    **`NCC check failed: Unable to connect to cluster`** — Confirm cluster connectivity and that NCC is properly installed; run `ncc --version` to verify installation.
+    | Error | Fix |
+    |---|---|
+    | `curator_cli: command not found` | Verify Nutanix cluster SSH access and ensure you're running the command on a Nutanix node with curator tools in PATH. |
+    | `NCC check failed: Unable to connect to cluster` | Confirm cluster connectivity and that NCC is properly installed; run `ncc --version` to verify installation. |
 ---
 
 ## Enable SED-Based Hardware Encryption
@@ -162,8 +164,10 @@ ncli pd edit name=<pd-name> \
 ```
 
 !!! warning "Common errors"
-    **`Error: PD '<pd-name>' not found`** — Verify the exact protection domain name with `ncli pd list` and use the correct spelling.
-    **`Error: Invalid value for enable-replication-ssl: must be true or false`** — Ensure the parameter value is lowercase `true` or `false`, not `True` or `FALSE`.
+    | Error | Fix |
+    |---|---|
+    | `Error: PD '<pd-name>' not found` | Verify the exact protection domain name with `ncli pd list` and use the correct spelling. |
+    | `Error: Invalid value for enable-replication-ssl: must be true or false` | Ensure the parameter value is lowercase `true` or `false`, not `True` or `FALSE`. |
 For CVM-to-CVM within a cluster, inter-node traffic on the internal network is not encrypted by default (relies on network-level isolation). For cross-cluster or WAN replication, SSL is strongly recommended.
 
 ---
@@ -193,8 +197,10 @@ task-2024-01-14-encrypt-004      | Re-key Operation | Failed    | 45%      | 202
 ```
 
 !!! warning "Common errors"
-    **`curator_cli: command not found`** — Verify curator_cli is installed and in your PATH, or run from the Nutanix cluster node with curator services enabled.
-    **`grep: (standard input) is empty`** — No encryption tasks exist yet; run an encryption or re-key operation first before monitoring.
+    | Error | Fix |
+    |---|---|
+    | `curator_cli: command not found` | Verify curator_cli is installed and in your PATH, or run from the Nutanix cluster node with curator services enabled. |
+    | `grep: (standard input) is empty` | No encryption tasks exist yet; run an encryption or re-key operation first before monitoring. |
 Re-key triggers a background re-encryption of all data with the new key. Same I/O impact as initial encryption — schedule during low-traffic windows.
 
 ---

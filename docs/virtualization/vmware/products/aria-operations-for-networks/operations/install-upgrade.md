@@ -42,9 +42,11 @@ Connected to aon-platform.example.local.
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip certificate verification (already present in the example, but if removed this is the error).
-    **`Connection refused`** — Verify the platform VM is powered on and the hostname resolves correctly with `ndig aon-platform.example.local` or `ping aon-platform.example.local`.
-    **`● vrni-platform.service - VMware Aria Operations for Networks Platform / Active: inactive (dead)`** — Restart the service with `sudo systemctl restart vrni-platform` and check logs with `sudo journalctl -u vrni-platform -n 50`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip certificate verification (already present in the example, but if removed this is the error). |
+    | `Connection refused` | Verify the platform VM is powered on and the hostname resolves correctly with `ndig aon-platform.example.local` or `ping aon-platform.example.local`. |
+    | `● vrni-platform.service - VMware Aria Operations for Networks Platform / Active: inactive (dead)` | Restart the service with `sudo systemctl restart vrni-platform` and check logs with `sudo journalctl -u vrni-platform -n 50`. |
 ```bash
 # 1. Take config backup
 TOKEN=$(curl -sk -X POST "https://aon.example.local/api/ni/auth/token" \
@@ -86,9 +88,11 @@ SnapshotId: snapshot-1847
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands to skip SSL verification for self-signed certificates.
-    **`jq: command not found`** — Install `python3-json` or use `python3 -m json.tool` instead of piping to `jq`.
-    **`Get-VM : The term 'Get-VM' is not recognized`** — Install VMware PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force` on Windows PowerShell.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands to skip SSL verification for self-signed certificates. |
+    | `jq: command not found` | Install `python3-json` or use `python3 -m json.tool` instead of piping to `jq`. |
+    | `Get-VM : The term 'Get-VM' is not recognized` | Install VMware PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force` on Windows PowerShell. |
 ```bash
 ssh ubuntu@aon-platform.example.local
 
@@ -123,9 +127,11 @@ Starting upgrade process for Aria Operations for Networks 6.14.0
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and that the ubuntu user exists on aon-platform.example.local, or use the correct hostname/IP address.
-    **`/opt/vmware/bin/upgrade.sh: No such file or directory`** — Confirm the platform VM has Aria Operations for Networks installed in /opt/vmware and that you are running the upgrade script from the correct path.
-    **`Upgrade bundle signature verification failed`** — Re-download the upgrade PAK file from VMware and verify its checksum matches the official release documentation.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and that the ubuntu user exists on aon-platform.example.local, or use the correct hostname/IP address. |
+    | `/opt/vmware/bin/upgrade.sh: No such file or directory` | Confirm the platform VM has Aria Operations for Networks installed in /opt/vmware and that you are running the upgrade script from the correct path. |
+    | `Upgrade bundle signature verification failed` | Re-download the upgrade PAK file from VMware and verify its checksum matches the official release documentation. |
 ```bash
 # Check version
 curl -sk "https://aon.example.local/api/ni/system/version" \
@@ -176,9 +182,11 @@ edge-collector-01 CONNECTED
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the self-signed certificate into your CA bundle.
-    **`Authorization: NetworkInsight ${TOKEN}: command not found`** — Ensure the TOKEN environment variable is set with `export TOKEN=$(cat /path/to/token.txt)` before running the curl command.
-    **`Connection refused` or `ssh: Could not resolve hostname`** — Verify the hostname `aon-platform.example.local` resolves correctly with `nslookup` or `ping`, and that SSH is accessible on port 22.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the self-signed certificate into your CA bundle. |
+    | `Authorization: NetworkInsight ${TOKEN}: command not found` | Ensure the TOKEN environment variable is set with `export TOKEN=$(cat /path/to/token.txt)` before running the curl command. |
+    | `Connection refused` or `ssh: Could not resolve hostname` | Verify the hostname `aon-platform.example.local` resolves correctly with `nslookup` or `ping`, and that SSH is accessible on port 22. |
 ```bash
 # Revert Platform VM snapshot (this is a destructive operation — confirm before proceeding)
 Get-VM "aon-platform-01" | Get-Snapshot -Name "Pre-Upgrade-6.14.0" | Set-VM -SnapShot $_ -Confirm:$false
@@ -210,9 +218,11 @@ Restarting collector services...
 ```
 
 !!! warning "Common errors"
-    **`Get-VM : The term 'Get-VM' is not recognized`** — Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the command.
-    **`Permission denied (publickey,password).`** — Verify SSH key is configured or use `ssh -u ubuntu@aon-collector-dc1.example.local` with the correct password, and confirm the collector hostname is reachable.
-    **`pairing.sh: command not found`** — Confirm the support directory exists at `/home/ubuntu/support/` and the script has execute permissions with `chmod +x /home/ubuntu/support/pairing.sh`.
+    | Error | Fix |
+    |---|---|
+    | `Get-VM : The term 'Get-VM' is not recognized` | Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the command. |
+    | `Permission denied (publickey,password).` | Verify SSH key is configured or use `ssh -u ubuntu@aon-collector-dc1.example.local` with the correct password, and confirm the collector hostname is reachable. |
+    | `pairing.sh: command not found` | Confirm the support directory exists at `/home/ubuntu/support/` and the script has execute permissions with `chmod +x /home/ubuntu/support/pairing.sh`. |
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

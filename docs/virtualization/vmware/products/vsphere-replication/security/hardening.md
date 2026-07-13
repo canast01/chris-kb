@@ -79,9 +79,11 @@ vra-london:~$
 ```
 
 !!! warning "Common errors"
-    **`sshd: no hostkeys available -- exiting.`** — Restore SSH host keys from backup or regenerate them with `sudo ssh-keygen -A` before restarting sshd.
-    **`Permission denied (publickey).`** — Ensure your public key is added to `~/.ssh/authorized_keys` on the VRA before disabling password authentication.
-    **`sudo: vim: command not found`** — Use `sudo nano /etc/ssh/sshd_config` or install vim with `sudo apt-get install vim` if nano is unavailable.
+    | Error | Fix |
+    |---|---|
+    | `sshd: no hostkeys available -- exiting.` | Restore SSH host keys from backup or regenerate them with `sudo ssh-keygen -A` before restarting sshd. |
+    | `Permission denied (publickey).` | Ensure your public key is added to `~/.ssh/authorized_keys` on the VRA before disabling password authentication. |
+    | `sudo: vim: command not found` | Use `sudo nano /etc/ssh/sshd_config` or install vim with `sudo apt-get install vim` if nano is unavailable. |
 Firewall rule: allow SSH (TCP 22) to VRA only from jump host IPs.
 
 ---
@@ -107,9 +109,11 @@ sudo iptables-save > /etc/iptables/rules.v4
 ```
 
 !!! warning "Common errors"
-    **`iptables: No chain/target/match by that name`** — Ensure iptables is installed and the kernel module is loaded with `sudo modprobe iptable_filter`.
-    **`cannot open /etc/iptables/rules.v4: No such file or directory`** — Create the directory first with `sudo mkdir -p /etc/iptables` before running iptables-save.
-    **`Operation not permitted`** — Run all iptables commands with sudo or as root; standard user accounts cannot modify firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `iptables: No chain/target/match by that name` | Ensure iptables is installed and the kernel module is loaded with `sudo modprobe iptable_filter`. |
+    | `cannot open /etc/iptables/rules.v4: No such file or directory` | Create the directory first with `sudo mkdir -p /etc/iptables` before running iptables-save. |
+    | `Operation not permitted` | Run all iptables commands with sudo or as root; standard user accounts cannot modify firewall rules. |
 Port 31031 (replication data receiver) should only accept connections from source site ESXi management IPs:
 ```bash
 # Allow replication traffic from source ESXi subnet only:
@@ -124,8 +128,10 @@ sudo iptables -A INPUT -p tcp --dport 31031 -j DROP
 ```
 
 !!! warning "Common errors"
-    **`iptables: No chain/target/match by that name`** — Ensure iptables is installed and the kernel module is loaded with `sudo modprobe iptables_filter`.
-    **`iptables: Permission denied (you must be root)`** — Run the commands with `sudo` or switch to root user with `su -`.
+    | Error | Fix |
+    |---|---|
+    | `iptables: No chain/target/match by that name` | Ensure iptables is installed and the kernel module is loaded with `sudo modprobe iptables_filter`. |
+    | `iptables: Permission denied (you must be root)` | Run the commands with `sudo` or switch to root user with `su -`. |
 ---
 
 ## Least-Privilege VR Service Account
@@ -193,8 +199,10 @@ notAfter=Dec 15 09:23:47 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Ensure the VRA hostname resolves correctly and port 443 is accessible; verify DNS or add an entry to `/etc/hosts` if needed.
-    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — This is expected for self-signed certs; the command still extracts the expiry date successfully, so verify the `notAfter` field in the output.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Ensure the VRA hostname resolves correctly and port 443 is accessible; verify DNS or add an entry to `/etc/hosts` if needed. |
+    | `error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed` | This is expected for self-signed certs; the command still extracts the expiry date successfully, so verify the `notAfter` field in the output. |
 After rotating VRA certificate at either site:
 ```text
 Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints

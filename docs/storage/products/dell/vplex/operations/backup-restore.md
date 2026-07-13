@@ -66,9 +66,11 @@ support_bundle.tar.gz                                    100%  487MB   12.4MB/s 
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the service account credentials and ensure SSH key-based authentication is configured, or use `scp -o PubkeyAuthentication=no` to force password prompt.
-    **`No such file or directory`** — Confirm the support bundle was successfully created by running `ls -lh /var/log/support_bundle.tar.gz` on the VPLEX management station before attempting the SCP transfer.
-    **`Connection refused`** — Ensure the jump host SSH daemon is running and accessible on port 22, or specify an alternate port with `scp -P <port_number>`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the service account credentials and ensure SSH key-based authentication is configured, or use `scp -o PubkeyAuthentication=no` to force password prompt. |
+    | `No such file or directory` | Confirm the support bundle was successfully created by running `ls -lh /var/log/support_bundle.tar.gz` on the VPLEX management station before attempting the SCP transfer. |
+    | `Connection refused` | Ensure the jump host SSH daemon is running and accessible on port 22, or specify an alternate port with `scp -P <port_number>`. |
 ## Recovery Scenarios
 
 **VMS loss (management plane only):**

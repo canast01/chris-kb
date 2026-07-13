@@ -72,9 +72,11 @@ aws ds create-ad-connector --name corp.local --password <svc-account-pwd> \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterException) when calling the CreateAdConnector operation: The password does not meet complexity requirements`** — Ensure the service account password meets AWS AD Connector requirements (minimum 8 characters, uppercase, lowercase, number, and special character).
-    **`An error occurred (InvalidParameterException) when calling the CreateAdConnector operation: The specified subnet is not available in the VPC`** — Verify both subnets exist in the specified VPC and are in different availability zones.
-    **`An error occurred (InvalidParameterException) when calling the CreateAdConnector operation: The specified DNS IP is not reachable`** — Confirm the customer DNS IPs are reachable from the specified subnets and that security groups allow DNS traffic (port 53).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterException) when calling the CreateAdConnector operation: The password does not meet complexity requirements` | Ensure the service account password meets AWS AD Connector requirements (minimum 8 characters, uppercase, lowercase, number, and special character). |
+    | `An error occurred (InvalidParameterException) when calling the CreateAdConnector operation: The specified subnet is not available in the VPC` | Verify both subnets exist in the specified VPC and are in different availability zones. |
+    | `An error occurred (InvalidParameterException) when calling the CreateAdConnector operation: The specified DNS IP is not reachable` | Confirm the customer DNS IPs are reachable from the specified subnets and that security groups allow DNS traffic (port 53). |
 ## IAM Identity Center (SSO)
 
 ```bash
@@ -114,9 +116,11 @@ aws sso-admin list-account-assignments --instance-arn <sso-arn> \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ValidationException) when calling the ListPermissionSets operation: 1 validation error detected: Value '<sso-instance-arn>' at 'instanceArn' failed to match pattern`** — Replace `<sso-instance-arn>` with the actual SSO instance ARN (format: `arn:aws:sso:::instance/sso-instance-xxxxxxxx`).
-    **`An error occurred (ResourceNotFoundException) when calling the ListAccountAssignments operation: Permission set arn:aws:sso:::permissionSet/... does not exist`** — Verify the permission set ARN exists by running the first command and copying an ARN from the output.
-    **`An error occurred (AccessDeniedException) when calling the ListPermissionSets operation: User is not authorized to perform: sso:ListPermissionSets`** — Ensure your IAM user/role has `sso:ListPermissionSets` and `sso:ListAccountAssignments` permissions attached.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ValidationException) when calling the ListPermissionSets operation: 1 validation error detected: Value '<sso-instance-arn>' at 'instanceArn' failed to match pattern` | Replace `<sso-instance-arn>` with the actual SSO instance ARN (format: `arn:aws:sso:::instance/sso-instance-xxxxxxxx`). |
+    | `An error occurred (ResourceNotFoundException) when calling the ListAccountAssignments operation: Permission set arn:aws:sso:::permissionSet/... does not exist` | Verify the permission set ARN exists by running the first command and copying an ARN from the output. |
+    | `An error occurred (AccessDeniedException) when calling the ListPermissionSets operation: User is not authorized to perform: sso:ListPermissionSets` | Ensure your IAM user/role has `sso:ListPermissionSets` and `sso:ListAccountAssignments` permissions attached. |
 ## CloudTrail to SIEM
 
 Centralise CloudTrail logs to the log-archive account:
@@ -162,8 +166,10 @@ aws cloudtrail get-trail-status --name <trail-name> | jq '{LatestDeliveryTime, L
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (TrailNotFoundException) when calling the DescribeTrails operation: Unknown trail: <trail-name>`** — Verify the trail name exists in the current region with `aws cloudtrail describe-trails --region <region>`.
-    **`An error occurred (InvalidCloudTrailARNException) when calling the GetTrailStatus operation: Invalid CloudTrail ARN`** — Use the exact trail name (not ARN) with `get-trail-status`, or provide the full ARN with the `--name` parameter.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (TrailNotFoundException) when calling the DescribeTrails operation: Unknown trail: <trail-name>` | Verify the trail name exists in the current region with `aws cloudtrail describe-trails --region <region>`. |
+    | `An error occurred (InvalidCloudTrailARNException) when calling the GetTrailStatus operation: Invalid CloudTrail ARN` | Use the exact trail name (not ARN) with `get-trail-status`, or provide the full ARN with the `--name` parameter. |
 Stream to Splunk/Elastic via Kinesis Firehose:
 1. Create Kinesis Data Firehose delivery stream to SIEM endpoint
 2. Configure CloudWatch Logs subscription filter → Kinesis Firehose
@@ -220,9 +226,11 @@ aws backup put-backup-vault-access-policy --backup-vault-name prod-vault --polic
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterException) when calling the CreateBackupPlan operation: Invalid backup vault name`** — Ensure the target backup vault exists first using `aws backup create-backup-vault --backup-vault-name prod-vault`.
-    **`An error occurred (AccessDenied) when calling the PutBackupVaultAccessPolicy operation: User is not authorized to perform: backup:PutBackupVaultAccessPolicy`** — Add `backup:PutBackupVaultAccessPolicy` permission to your IAM role's backup policy.
-    **`An error occurred (InvalidParameterException) when calling the PutBackupVaultAccessPolicy operation: Invalid policy document`** — Validate the JSON syntax in `vault-policy.json` and ensure it contains a valid principal ARN for the cross-account role.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterException) when calling the CreateBackupPlan operation: Invalid backup vault name` | Ensure the target backup vault exists first using `aws backup create-backup-vault --backup-vault-name prod-vault`. |
+    | `An error occurred (AccessDenied) when calling the PutBackupVaultAccessPolicy operation: User is not authorized to perform: backup:PutBackupVaultAccessPolicy` | Add `backup:PutBackupVaultAccessPolicy` permission to your IAM role's backup policy. |
+    | `An error occurred (InvalidParameterException) when calling the PutBackupVaultAccessPolicy operation: Invalid policy document` | Validate the JSON syntax in `vault-policy.json` and ensure it contains a valid principal ARN for the cross-account role. |
 ## CloudFormation Stack Lifecycle
 
 ```d2

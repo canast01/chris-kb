@@ -61,9 +61,11 @@ nfs-prod-01:/lcm-repo on /data type nfs4 (rw,relatime,vers=4.1,rsize=1048576,wsi
 ```
 
 !!! warning "Common errors"
-    **`mount: /data: special device nfs-prod-01:/lcm-repo does not contain a colon`** — Verify the NFS server hostname and path are correctly formatted as `server:/path` in your mount configuration.
-    **`df: /data: No such file or directory`** — Create the mount point with `mkdir -p /data` and ensure the NFS mount is active before running diagnostics.
-    **`No space left on device`** — Free up space on the NFS server or add additional storage; LCM requires at least 50 GB free per product version.
+    | Error | Fix |
+    |---|---|
+    | `mount: /data: special device nfs-prod-01:/lcm-repo does not contain a colon` | Verify the NFS server hostname and path are correctly formatted as `server:/path` in your mount configuration. |
+    | `df: /data: No such file or directory` | Create the mount point with `mkdir -p /data` and ensure the NFS mount is active before running diagnostics. |
+    | `No space left on device` | Free up space on the NFS server or add additional storage; LCM requires at least 50 GB free per product version. |
 If NFS becomes unavailable: LCM upgrades will fail. Ensure NFS server HA (or VMware datastore-backed NFS).
 
 ## Proxy / Offline Depot

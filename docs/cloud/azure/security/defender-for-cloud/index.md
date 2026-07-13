@@ -76,7 +76,9 @@ Id                                      Name                          Status
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (AuthorizationFailed) The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' does not have authorization to perform action 'Microsoft.Security/autoProvisioningSettings/read' over scope '/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890'.`** — Ensure your user account has the Security
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (AuthorizationFailed) The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' does not have authorization to perform action 'Microsoft.Security/autoProvisioningSettings/read' over scope '/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890'.` | Ensure your user account has the Security |
 ## Defender Plans
 
 Defender for Cloud has free (CSPM) and paid (Defender) plans per resource type. Enabling a plan activates threat detection, just-in-time VM access, file integrity monitoring, and other protections.
@@ -132,8 +134,10 @@ AppServices          Free           0
 ```
 
 !!! warning "Common errors"
-    **`Operation failed with status: 'Forbidden'. Details: AuthorizationFailed`** — Ensure your Azure account has Owner or Security Admin role on the subscription.
-    **`The pricing resource 'VirtualMachines' already exists`** — The plan is already enabled; use `az security pricing update` instead to change tiers.
+    | Error | Fix |
+    |---|---|
+    | `Operation failed with status: 'Forbidden'. Details: AuthorizationFailed` | Ensure your Azure account has Owner or Security Admin role on the subscription. |
+    | `The pricing resource 'VirtualMachines' already exists` | The plan is already enabled; use `az security pricing update` instead to change tiers. |
 ## Defender Plans by Resource Type
 
 | Plan Name               | Protects                                      |
@@ -198,9 +202,11 @@ default    security@example.com   +1-555-0100     On                  On
 ```
 
 !!! warning "Common errors"
-    **`The resource 'Microsoft.Security/securityContacts/default' does not exist.`** — Ensure the subscription has at least one security contact already created before updating; use `az security contact list` to verify.
-    **`Invalid email address format: 'security@example.com'.`** — Provide a valid email address matching standard format (e.g., user@domain.com).
-    **`The provided subscription does not have an active Microsoft Defender for Cloud plan.`** — Enable Defender for Cloud on the subscription via the Azure Portal or `az security auto-provisioning-setting update` before managing security contacts.
+    | Error | Fix |
+    |---|---|
+    | `The resource 'Microsoft.Security/securityContacts/default' does not exist.` | Ensure the subscription has at least one security contact already created before updating; use `az security contact list` to verify. |
+    | `Invalid email address format: 'security@example.com'.` | Provide a valid email address matching standard format (e.g., user@domain.com). |
+    | `The provided subscription does not have an active Microsoft Defender for Cloud plan.` | Enable Defender for Cloud on the subscription via the Azure Portal or `az security auto-provisioning-setting update` before managing security contacts. |
 ## Regulatory Compliance
 
 Defender for Cloud maps recommendations to compliance frameworks (e.g., ISO 27001, PCI DSS, NIST SP 800-53, CIS Azure Benchmark).
@@ -248,8 +254,10 @@ conditional-access-configured        c3d4e5f6-a7b8-9012-cdef-123456789012  Built
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The requested resource 'Azure-CIS-1.1.0' does not exist.`** — Verify the standard name is correct by running `az security regulatory-compliance-standards list` first.
-    **`AuthorizationFailed: The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Security/regulatoryComplianceStandards/read' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'.`** — Ensure your account has the Security Reader or higher role assigned in the target subscription.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The requested resource 'Azure-CIS-1.1.0' does not exist.` | Verify the standard name is correct by running `az security regulatory-compliance-standards list` first. |
+    | `AuthorizationFailed: The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Security/regulatoryComplianceStandards/read' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'.` | Ensure your account has the Security Reader or higher role assigned in the target subscription. |
 ## Alerts and Threat Detection
 
 ```bash
@@ -299,8 +307,10 @@ Suspicious_Network_Connection_056       myRG             eastus      Active     
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The resource 'Microsoft.Security/locations/eastus/alerts/<alert-name>' under resource group 'myRG' was not found.`** — Verify the alert name exists by running `az security alert list` and use the exact name from the output.
-    **`AuthorizationFailed : The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have authorization to perform action 'Microsoft.Security/locations/alerts/read' over scope '/subscriptions/12345678-1234-1234-1234-123456789012'.`** — Ensure your Azure account has the Security Reader or Security Admin role assigned at the subscription level.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The resource 'Microsoft.Security/locations/eastus/alerts/<alert-name>' under resource group 'myRG' was not found.` | Verify the alert name exists by running `az security alert list` and use the exact name from the output. |
+    | `AuthorizationFailed : The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have authorization to perform action 'Microsoft.Security/locations/alerts/read' over scope '/subscriptions/12345678-1234-1234-1234-123456789012'.` | Ensure your Azure account has the Security Reader or Security Admin role assigned at the subscription level. |
 ## Just-in-Time VM Access
 
 JIT access reduces exposure by opening RDP/SSH ports only when requested, for a defined duration, to specific source IPs.
@@ -365,6 +375,8 @@ az security jit-policy initiate \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Compute/virtualMachines/myVM' under resource group 'myRG' was not found.`** — Verify the VM exists in the specified resource group and subscription using `az vm list -g myRG`.
-    **`(InvalidJitPolicyVirtualMachineId) Virtual machine ID format is invalid.`** — Replace `<sub-id>` with your actual subscription ID from `az account show --query id -o tsv`.
-    **`(AuthorizationFailed) The client does not have permission to perform action 'Microsoft.Security/locations/jitNetworkAccessPolicies/write'.`** — Ensure your account has the Security Admin or Contributor role on the subscription using `az role assignment list --assignee <your-email>`.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Compute/virtualMachines/myVM' under resource group 'myRG' was not found.` | Verify the VM exists in the specified resource group and subscription using `az vm list -g myRG`. |
+    | `(InvalidJitPolicyVirtualMachineId) Virtual machine ID format is invalid.` | Replace `<sub-id>` with your actual subscription ID from `az account show --query id -o tsv`. |
+    | `(AuthorizationFailed) The client does not have permission to perform action 'Microsoft.Security/locations/jitNetworkAccessPolicies/write'.` | Ensure your account has the Security Admin or Contributor role on the subscription using `az role assignment list --assignee <your-email>`. |

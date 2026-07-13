@@ -57,9 +57,11 @@ Policy san_mgmt_policy deleted successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Cannot delete active policy san_mgmt_policy`** — Ensure the new policy is activated before attempting to delete the old one; verify with `ipfilter --show` that san_mgmt_policy_new is marked as active.
-    **`Error: Policy san_mgmt_policy_new already exists`** — Use a unique policy name for the clone or delete the existing policy first with `ipfilter --delete san_mgmt_policy_new`.
-    **`Error: Invalid CIDR notation in rule`** — Verify the subnet mask is valid (e.g., /24 for 255.255.255.0) and use `ipfilter --addrule --help` to confirm correct syntax.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cannot delete active policy san_mgmt_policy` | Ensure the new policy is activated before attempting to delete the old one; verify with `ipfilter --show` that san_mgmt_policy_new is marked as active. |
+    | `Error: Policy san_mgmt_policy_new already exists` | Use a unique policy name for the clone or delete the existing policy first with `ipfilter --delete san_mgmt_policy_new`. |
+    | `Error: Invalid CIDR notation in rule` | Verify the subnet mask is valid (e.g., /24 for 255.255.255.0) and use `ipfilter --addrule --help` to confirm correct syntax. |
 ### Show Current IPfilter State
 
 ```bash
@@ -96,9 +98,11 @@ Last Modified: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`ipfilter: command not found`** — Verify you are logged into the Brocade switch CLI (not the Linux host) and have administrative privileges.
-    **`Policy 'san_mgmt_policy' not found`** — Check the exact policy name with `ipfilter --show` first, as policy names are case-sensitive.
-    **`Permission denied: insufficient user role`** — Ensure your user account has the "admin" or "security_admin" role assigned via `userconfig --show`.
+    | Error | Fix |
+    |---|---|
+    | `ipfilter: command not found` | Verify you are logged into the Brocade switch CLI (not the Linux host) and have administrative privileges. |
+    | `Policy 'san_mgmt_policy' not found` | Check the exact policy name with `ipfilter --show` first, as policy names are case-sensitive. |
+    | `Permission denied: insufficient user role` | Ensure your user account has the "admin" or "security_admin" role assigned via `userconfig --show`. |
 ---
 
 ## Secure Fabric OS Policies
@@ -152,9 +156,11 @@ Save completed at 2024-01-15 14:33:45
 ```
 
 !!! warning "Common errors"
-    **`secpolicyadd: Invalid WWN format`** — Verify the switch WWN is in the correct format (50:00:xx:xx:xx:xx:xx:xx) and enclose it in quotes.
-    **`secpolicyactivate: Policy database is locked by another session`** — Wait a few seconds and retry, or use `secpolicyunlock` if the lock is stale.
-    **`secpolicysave: Permission denied`** — Ensure you have admin-level credentials and are not in read-only mode; use `userconfig` to verify your role.
+    | Error | Fix |
+    |---|---|
+    | `secpolicyadd: Invalid WWN format` | Verify the switch WWN is in the correct format (50:00:xx:xx:xx:xx:xx:xx) and enclose it in quotes. |
+    | `secpolicyactivate: Policy database is locked by another session` | Wait a few seconds and retry, or use `secpolicyunlock` if the lock is stale. |
+    | `secpolicysave: Permission denied` | Ensure you have admin-level credentials and are not in read-only mode; use `userconfig` to verify your role. |
 ### DCC Policy (Device Connection Control)
 
 DCC restricts which device WWPNs are permitted to log into specific switch ports. This prevents unauthorised devices from connecting to the SAN fabric even if they have physical access to a switch port.
@@ -191,9 +197,11 @@ Effective immediately on all switches in fabric.
 ```
 
 !!! warning "Common errors"
-    **`secpolicyadd: Policy DCC_POLICY not found`** — Verify the policy name with `secpolicyshow` and ensure it exists before adding entries.
-    **`secpolicyadd: Invalid WWPN format '<device-wwpn>'`** — Use the correct 16-character hexadecimal format (e.g., `50:00:09:73:00:1a:2b:4c`) without angle brackets.
-    **`secpolicyactivate: Changes pending on other switches in fabric`** — Run `secpolicyactivate` on all switches in the fabric or use `--force` flag to override.
+    | Error | Fix |
+    |---|---|
+    | `secpolicyadd: Policy DCC_POLICY not found` | Verify the policy name with `secpolicyshow` and ensure it exists before adding entries. |
+    | `secpolicyadd: Invalid WWPN format '<device-wwpn>'` | Use the correct 16-character hexadecimal format (e.g., `50:00:09:73:00:1a:2b:4c`) without angle brackets. |
+    | `secpolicyactivate: Changes pending on other switches in fabric` | Run `secpolicyactivate` on all switches in the fabric or use `--force` flag to override. |
 DCC is most valuable in high-security environments where physical port access cannot be fully controlled. For most enterprise SANs, zoning provides sufficient fabric-plane access control without the overhead of DCC management.
 
 ---
@@ -243,9 +251,11 @@ Number of Switches in Binding List: 4
 ```
 
 !!! warning "Common errors"
-    **`fabricbinding: command not found`** — Verify you are logged into the Brocade switch directly (via SSH or console) and have administrative privileges.
-    **`Error: Invalid WWN format`** — Ensure the switch WWN is in the correct format (10:00:00:xx:xx:xx:xx:xx) and verify the WWN with `switchshow`.
-    **`Error: Fabric binding is already enabled`** — The binding is already active; use `fabricbinding --disable` first if you need to modify the list.
+    | Error | Fix |
+    |---|---|
+    | `fabricbinding: command not found` | Verify you are logged into the Brocade switch directly (via SSH or console) and have administrative privileges. |
+    | `Error: Invalid WWN format` | Ensure the switch WWN is in the correct format (10:00:00:xx:xx:xx:xx:xx) and verify the WWN with `switchshow`. |
+    | `Error: Fabric binding is already enabled` | The binding is already active; use `fabricbinding --disable` first if you need to modify the list. |
 ---
 
 ## Access Control Standards

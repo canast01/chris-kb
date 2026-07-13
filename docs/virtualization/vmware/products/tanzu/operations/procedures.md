@@ -57,9 +57,11 @@ namespace/team-alpha created
 ```
 
 !!! warning "Common errors"
-    **`error: Unable to connect to the server: dial tcp: lookup supervisor.example.local: no such host`** — Verify the Supervisor Cluster hostname/IP is correct and resolvable from your network, or add it to `/etc/hosts`.
-    **`error: You must be logged in to the server (Unauthorized)`** — Confirm the vSphere credentials are correct and the user has appropriate permissions on the Supervisor Cluster.
-    **`error: namespaces "team-alpha" is forbidden: User "administrator@vsphere.local" cannot create resource "namespaces"`** — Grant the user the required vSphere role (e.g., Namespace Creator) on the Supervisor Cluster via vCenter.
+    | Error | Fix |
+    |---|---|
+    | `error: Unable to connect to the server: dial tcp: lookup supervisor.example.local: no such host` | Verify the Supervisor Cluster hostname/IP is correct and resolvable from your network, or add it to `/etc/hosts`. |
+    | `error: You must be logged in to the server (Unauthorized)` | Confirm the vSphere credentials are correct and the user has appropriate permissions on the Supervisor Cluster. |
+    | `error: namespaces "team-alpha" is forbidden: User "administrator@vsphere.local" cannot create resource "namespaces"` | Grant the user the required vSphere role (e.g., Namespace Creator) on the Supervisor Cluster via vCenter. |
 Configure namespace in vCenter UI:
 - Storage: assign storage policy
 - VM Class: assign allowed VM classes for TKG clusters
@@ -112,9 +114,11 @@ team-alpha-cluster     Running  3/3     3          3         0             2m18s
 ```
 
 !!! warning "Common errors"
-    **`error: context "team-alpha" does not exist`** — Verify the context name with `kubectl config get-contexts` and ensure the Supervisor cluster is configured.
-    **`error: resource mapping not found for name: "team-alpha-cluster" namespace: "team-alpha" with kind TanzuKubernetesCluster`** — Confirm Tanzu Kubernetes Grid is installed on the Supervisor cluster and the CRD is available via `kubectl get crd | grep tanzukubernetescluster`.
-    **`error: namespaces "team-alpha" not found`** — Create the namespace first with `kubectl create namespace team-alpha` before applying the TanzuKubernetesCluster manifest.
+    | Error | Fix |
+    |---|---|
+    | `error: context "team-alpha" does not exist` | Verify the context name with `kubectl config get-contexts` and ensure the Supervisor cluster is configured. |
+    | `error: resource mapping not found for name: "team-alpha-cluster" namespace: "team-alpha" with kind TanzuKubernetesCluster` | Confirm Tanzu Kubernetes Grid is installed on the Supervisor cluster and the CRD is available via `kubectl get crd | grep tanzukubernetescluster`. |
+    | `error: namespaces "team-alpha" not found` | Create the namespace first with `kubectl create namespace team-alpha` before applying the TanzuKubernetesCluster manifest. |
 ---
 
 ## Grant Namespace Access to a Team
@@ -155,9 +159,11 @@ rolebinding.rbac.authorization.k8s.io/team-alpha-developers created
 ```
 
 !!! warning "Common errors"
-    **`error: Unable to connect to the supervisor cluster at https://supervisor.example.local`** — Verify the supervisor endpoint is reachable and the hostname resolves correctly with `nslookup supervisor.example.local`.
-    **`error: invalid credentials provided`** — Confirm the vSphere credentials are correct and the user has permission to access the Tanzu Kubernetes cluster in that namespace.
-    **`error: the server doesn't have a resource type "tanzukubernetesclusters"`** — Ensure the Tanzu Kubernetes Grid extension is installed on the vSphere Supervisor Cluster and the workload cluster exists in the specified namespace.
+    | Error | Fix |
+    |---|---|
+    | `error: Unable to connect to the supervisor cluster at https://supervisor.example.local` | Verify the supervisor endpoint is reachable and the hostname resolves correctly with `nslookup supervisor.example.local`. |
+    | `error: invalid credentials provided` | Confirm the vSphere credentials are correct and the user has permission to access the Tanzu Kubernetes cluster in that namespace. |
+    | `error: the server doesn't have a resource type "tanzukubernetesclusters"` | Ensure the Tanzu Kubernetes Grid extension is installed on the vSphere Supervisor Cluster and the workload cluster exists in the specified namespace. |
 ---
 
 ## Configure Harbor Project with Vulnerability Scanning
@@ -194,9 +200,11 @@ curl -sk -X POST "https://harbor.example.local/api/v2.0/projects/team-alpha/memb
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the Harbor CA certificate into your system trust store.
-    **`{"errors":[{"code":"CONFLICT","message":"project team-alpha already exists"}]}`** — The project name already exists in Harbor; use a different project name or delete the existing project first.
-    **`{"errors":[{"code":"UNAUTHORIZED","message":"user does not have permission to the project"}]}`** — Ensure the admin user credentials are correct and the user has project admin role permissions.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the Harbor CA certificate into your system trust store. |
+    | `{"errors":[{"code":"CONFLICT","message":"project team-alpha already exists"}]}` | The project name already exists in Harbor; use a different project name or delete the existing project first. |
+    | `{"errors":[{"code":"UNAUTHORIZED","message":"user does not have permission to the project"}]}` | Ensure the admin user credentials are correct and the user has project admin role permissions. |
 ---
 
 ## Configure Pull-Through Cache in Harbor
@@ -255,9 +263,11 @@ my-postgres-read-0                       1/1     Running   0          2m8s
 ```
 
 !!! warning "Common errors"
-    **`Error: release name "my-postgres" already exists`** — Use `helm upgrade` instead of `helm install`, or delete the existing release with `helm uninstall my-postgres -n production` first.
-    **`Error: namespace "production" not found`** — Remove the `--create-namespace` flag if the namespace must be pre-created, or ensure your RBAC permissions allow namespace creation.
-    **`Error: failed to create resource: storageclass.storage.k8s.io "vsan-default" not found`** — Verify the storage class exists with `kubectl get storageclass` and update the `--set primary.persistence.storageClass` value accordingly.
+    | Error | Fix |
+    |---|---|
+    | `Error: release name "my-postgres" already exists` | Use `helm upgrade` instead of `helm install`, or delete the existing release with `helm uninstall my-postgres -n production` first. |
+    | `Error: namespace "production" not found` | Remove the `--create-namespace` flag if the namespace must be pre-created, or ensure your RBAC permissions allow namespace creation. |
+    | `Error: failed to create resource: storageclass.storage.k8s.io "vsan-default" not found` | Verify the storage class exists with `kubectl get storageclass` and update the `--set primary.persistence.storageClass` value accordingly. |
 ---
 
 ## Configure Ingress (Contour / HTTPProxy)
@@ -288,9 +298,11 @@ httpproxy.projectcontour.io/myapp created
 ```
 
 !!! warning "Common errors"
-    **`error: resource mapping not found for kind "HTTPProxy"... ensure CRDs are installed first`** — Install Contour CRDs with `kubectl apply -f https://projectcontour.io/quickstart/contour.yaml` or verify the projectcontour.io API group is registered via `kubectl api-resources | grep httpproxy`.
-    **`The HTTPProxy "myapp" is invalid: spec.virtualhost.tls.secretName: Invalid value: "myapp-tls": secret not found`** — Create the TLS secret in the production namespace using `kubectl create secret tls myapp-tls --cert=cert.pem --key=key.pem -n production` or verify cert-manager has issued the certificate.
-    **`error: unable to recognize stdin: no matches for kind "HTTPProxy" in version "projectcontour.io/v1"`** — Confirm Contour is installed in the cluster with `kubectl get deployment -n projectcontour` and that the API version matches your Contour version via `kubectl api-versions | grep projectcontour`.
+    | Error | Fix |
+    |---|---|
+    | `error: resource mapping not found for kind "HTTPProxy"... ensure CRDs are installed first` | Install Contour CRDs with `kubectl apply -f https://projectcontour.io/quickstart/contour.yaml` or verify the projectcontour.io API group is registered via `kubectl api-resources | grep httpproxy`. |
+    | `The HTTPProxy "myapp" is invalid: spec.virtualhost.tls.secretName: Invalid value: "myapp-tls": secret not found` | Create the TLS secret in the production namespace using `kubectl create secret tls myapp-tls --cert=cert.pem --key=key.pem -n production` or verify cert-manager has issued the certificate. |
+    | `error: unable to recognize stdin: no matches for kind "HTTPProxy" in version "projectcontour.io/v1"` | Confirm Contour is installed in the cluster with `kubectl get deployment -n projectcontour` and that the API version matches your Contour version via `kubectl api-versions | grep projectcontour`. |
 ---
 
 ## Scale Worker Nodes
@@ -318,8 +330,10 @@ Monitor progress with: tanzu cluster get team-alpha-cluster
 ```
 
 !!! warning "Common errors"
-    **`error: tanzukubernetescluster.run.tanzu.vmware.com "team-alpha-cluster" not found`** — Verify the cluster name and namespace with `kubectl get tanzukubernetescluster -A`.
-    **`Error: cluster 'team-alpha-cluster' not found in current management cluster context`** — Ensure you are logged into the correct management cluster context with `tanzu context list` and `tanzu context use <context-name>`.
+    | Error | Fix |
+    |---|---|
+    | `error: tanzukubernetescluster.run.tanzu.vmware.com "team-alpha-cluster" not found` | Verify the cluster name and namespace with `kubectl get tanzukubernetescluster -A`. |
+    | `Error: cluster 'team-alpha-cluster' not found in current management cluster context` | Ensure you are logged into the correct management cluster context with `tanzu context list` and `tanzu context use <context-name>`. |
 ---
 
 ## Rotate Cluster Kubeconfig
@@ -351,9 +365,11 @@ To view your current context, run: kubectl config current-context
 ```
 
 !!! warning "Common errors"
-    **`Error: cluster 'my-cluster' not found`** — Verify the cluster name matches output from `tanzu cluster list` and you have permissions to access it.
-    **`Error: invalid credentials provided`** — Ensure your vSphere SSO credentials are correct and your user account has cluster admin role assigned in the Supervisor namespace.
-    **`Unable to connect to supervisor.example.local`** — Confirm the Supervisor hostname/IP is correct, network connectivity exists, and the Supervisor cluster API is accessible on port 443.
+    | Error | Fix |
+    |---|---|
+    | `Error: cluster 'my-cluster' not found` | Verify the cluster name matches output from `tanzu cluster list` and you have permissions to access it. |
+    | `Error: invalid credentials provided` | Ensure your vSphere SSO credentials are correct and your user account has cluster admin role assigned in the Supervisor namespace. |
+    | `Unable to connect to supervisor.example.local` | Confirm the Supervisor hostname/IP is correct, network connectivity exists, and the Supervisor cluster API is accessible on port 443. |
 Kubeconfigs embed a token with a limited TTL — users need to re-login after expiry.
 
 ## Upgrade a TKG Workload Cluster
@@ -412,9 +428,11 @@ vmware-system-csi   vsphere-csi-node-5d4c2                    3/3     Running   
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "tanzukubernetesrelease"`** — Verify the Supervisor cluster is properly initialized and the Tanzu Kubernetes Grid extension is installed with `kubectl get crd | grep tanzukubernetesrelease`.
-    **`error: the server doesn't have a resource type "tkc"`** — Ensure you are connected to the Supervisor cluster (not a workload cluster) and the TKC CRD is available with `kubectl api-resources | grep tanzukubernetescluster`.
-    **`error: timed out waiting for the condition`** — Check node resource availability and vSphere storage capacity; monitor upgrade progress with `kubectl describe tkc my-cluster -n my-namespace` to identify stuck phases.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "tanzukubernetesrelease"` | Verify the Supervisor cluster is properly initialized and the Tanzu Kubernetes Grid extension is installed with `kubectl get crd | grep tanzukubernetesrelease`. |
+    | `error: the server doesn't have a resource type "tkc"` | Ensure you are connected to the Supervisor cluster (not a workload cluster) and the TKC CRD is available with `kubectl api-resources | grep tanzukubernetescluster`. |
+    | `error: timed out waiting for the condition` | Check node resource availability and vSphere storage capacity; monitor upgrade progress with `kubectl describe tkc my-cluster -n my-namespace` to identify stuck phases. |
 !!! warning "Do not skip Kubernetes minor versions"
     TKG upgrade validation enforces sequential minor version upgrades. Skipping a version (e.g., 1.26 → 1.28) is unsupported and will leave the cluster in a broken state that requires VMware GSS to recover. If you are multiple versions behind, plan multiple sequential upgrade windows.
 
@@ -455,8 +473,10 @@ namespace "my-namespace" deleted
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "tkc"`** — Verify the Tanzu Kubernetes Grid extension is installed on the Supervisor cluster with `kubectl get crds | grep tanzu`.
-    **`Error from server (Conflict): Operation cannot be fulfilled on namespace "my-namespace": namespace has a finalizer [kubernetes]`** — Wait for all workloads and PVCs to fully drain before deleting the namespace, or manually remove the finalizer with `kubectl patch namespace my-namespace -p '{"metadata":{"finalizers":null}}'`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "tkc"` | Verify the Tanzu Kubernetes Grid extension is installed on the Supervisor cluster with `kubectl get crds | grep tanzu`. |
+    | `Error from server (Conflict): Operation cannot be fulfilled on namespace "my-namespace": namespace has a finalizer [kubernetes]` | Wait for all workloads and PVCs to fully drain before deleting the namespace, or manually remove the finalizer with `kubectl patch namespace my-namespace -p '{"metadata":{"finalizers":null}}'`. |
 Deletion is irreversible — confirm data backup and workload migration before deleting.
 
 ## Configure Resource Quotas on a Namespace
@@ -514,9 +534,11 @@ StoragePolicies:
 ```
 
 !!! warning "Common errors"
-    **`error: unable to recognize "": no matches for kind "ResourceQuota" in version "v1"`** — Ensure you're patching the namespace object directly with `spec.resourceQuotas` syntax supported by your Tanzu version; verify with `kubectl api-resources | grep quota`.
-    **`Error from server (Forbidden): namespaces "my-namespace" is forbidden: User "user@example.com" does not have permission to patch namespaces`** — Request Supervisor cluster admin privileges or have an admin apply the patch on your behalf.
-    **`error: the server doesn't have a resource type "storagePolicies"`** — Storage policy limits are managed through the vSphere UI under Workload Management → Namespaces, not via kubectl patch; remove the `storagePolicies` section from the patch command.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to recognize "": no matches for kind "ResourceQuota" in version "v1"` | Ensure you're patching the namespace object directly with `spec.resourceQuotas` syntax supported by your Tanzu version; verify with `kubectl api-resources | grep quota`. |
+    | `Error from server (Forbidden): namespaces "my-namespace" is forbidden: User "user@example.com" does not have permission to patch namespaces` | Request Supervisor cluster admin privileges or have an admin apply the patch on your behalf. |
+    | `error: the server doesn't have a resource type "storagePolicies"` | Storage policy limits are managed through the vSphere UI under Workload Management → Namespaces, not via kubectl patch; remove the `storagePolicies` section from the patch command. |
 ## Backup and Restore a TKG Cluster with Velero
 
 Velero backs up Kubernetes resources and persistent volumes to object storage.
@@ -589,9 +611,11 @@ backup-pvc              Bound    pvc-x9y8z7w6-v5u4-43t2-s1r0-q9p8o7n6m5l4   100G
 ```
 
 !!! warning "Common errors"
-    **`Error: error getting backup location: BackupStorageLocation default is not available`** — Verify the S3/MinIO credentials in the secret file and ensure the backup location is accessible with `velero backup-location get`.
-    **`error: timed out waiting for backup to complete`** — Check cluster resources with `kubectl top nodes` and increase the wait timeout, or review Velero logs with `kubectl logs -n velero deployment/velero` for plugin failures.
-    **`Error: error restoring PersistentVolumeClaim: error creating PersistentVolumeClaim: PersistentVolumeClaim "app-data-pvc" is invalid: spec.storageClassName: Invalid value`** — Ensure the storage class referenced in the backup exists on the target cluster, or use `velero restore create --modify-namespace-mappings` to remap storage classes.
+    | Error | Fix |
+    |---|---|
+    | `Error: error getting backup location: BackupStorageLocation default is not available` | Verify the S3/MinIO credentials in the secret file and ensure the backup location is accessible with `velero backup-location get`. |
+    | `error: timed out waiting for backup to complete` | Check cluster resources with `kubectl top nodes` and increase the wait timeout, or review Velero logs with `kubectl logs -n velero deployment/velero` for plugin failures. |
+    | `Error: error restoring PersistentVolumeClaim: error creating PersistentVolumeClaim: PersistentVolumeClaim "app-data-pvc" is invalid: spec.storageClassName: Invalid value` | Ensure the storage class referenced in the backup exists on the target cluster, or use `velero restore create --modify-namespace-mappings` to remap storage classes. |
 ## Troubleshoot Node NotReady
 
 ```bash
@@ -654,9 +678,11 @@ tanzu-worker-node-01    True     poweredOn    12d
 ```
 
 !!! warning "Common errors"
-    **`Failed to load kubelet config file: open /etc/kubernetes/kubelet/kubelet-config.yaml: no such file or directory`** — Restore the kubelet config from a backup or redeploy the node using the Tanzu CLI with `tanzu machine delete` and `tanzu machine create`.
-    **`disk pressure detected: 98% used`** — Run `crictl rmi --prune` to remove unused images, or expand the root volume in vSphere and resize the filesystem with `growpart /dev/sda 1 && resize2fs /dev/sda1`.
-    **`Unable to connect to the server: dial tcp: lookup supervisor-control-plane-1: no such host`** — Verify DNS resolution on the node with `nslookup supervisor-control-plane-1` and check `/etc/resolv.conf` points to the correct cluster DNS server.
+    | Error | Fix |
+    |---|---|
+    | `Failed to load kubelet config file: open /etc/kubernetes/kubelet/kubelet-config.yaml: no such file or directory` | Restore the kubelet config from a backup or redeploy the node using the Tanzu CLI with `tanzu machine delete` and `tanzu machine create`. |
+    | `disk pressure detected: 98% used` | Run `crictl rmi --prune` to remove unused images, or expand the root volume in vSphere and resize the filesystem with `growpart /dev/sda 1 && resize2fs /dev/sda1`. |
+    | `Unable to connect to the server: dial tcp: lookup supervisor-control-plane-1: no such host` | Verify DNS resolution on the node with `nslookup supervisor-control-plane-1` and check `/etc/resolv.conf` points to the correct cluster DNS server. |
 !!! warning "--delete-emptydir-data causes data loss for pods using emptyDir volumes"
     The `--delete-emptydir-data` flag silently deletes any data stored in emptyDir volumes on this node — including caches, temporary files, or any workload that incorrectly uses emptyDir for persistent state. Confirm no running pods rely on emptyDir before draining. This flag is only safe to use when you have confirmed all pods are stateless or all stateful pods have been rescheduled.
 
@@ -681,9 +707,11 @@ INFO: New node worker-node-03-replacement provisioned with UUID: 550e8400-e29b-4
 ```
 
 !!! warning "Common errors"
-    **`error: unable to drain node "worker-node-03", aborting command [DaemonSet-managed Pods (use --ignore-daemonsets to ignore)`** — Add the `--ignore-daemonsets` flag to the drain command to skip system pods.
-    **`error: node "worker-node-03" not found`** — Verify the exact node name with `kubectl get nodes` before attempting deletion.
-    **`error: timed out waiting for pod eviction after 5m0s`** — Increase the timeout with `--timeout=10m` or use `--force` to forcefully terminate stubborn pods.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to drain node "worker-node-03", aborting command [DaemonSet-managed Pods (use --ignore-daemonsets to ignore)` | Add the `--ignore-daemonsets` flag to the drain command to skip system pods. |
+    | `error: node "worker-node-03" not found` | Verify the exact node name with `kubectl get nodes` before attempting deletion. |
+    | `error: timed out waiting for pod eviction after 5m0s` | Increase the timeout with `--timeout=10m` or use `--force` to forcefully terminate stubborn pods. |
 ## Configure Persistent Storage (vSAN CNS/CSI)
 
 TKG uses the vSphere CSI driver to provision persistent volumes backed by vSAN datastores.
@@ -739,9 +767,11 @@ app-data   Bound    pvc-a7f2e1c9-3b44-11ed-9c4a-005056a12345   50Gi       RWO   
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "storageclass"`** — Verify you are connected to a Tanzu Supervisor cluster (not a guest cluster) with `kubectl cluster-info`.
-    **`PersistentVolumeClaim does not exist`** — Ensure the namespace `app-namespace` exists by running `kubectl create namespace app-namespace` before applying the PVC.
-    **`ProvisioningFailed: error getting credentials`** — Confirm the vSAN cluster has network connectivity to the Supervisor control plane and CSI driver credentials are valid in the `vmware-system-csi` namespace.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "storageclass"` | Verify you are connected to a Tanzu Supervisor cluster (not a guest cluster) with `kubectl cluster-info`. |
+    | `PersistentVolumeClaim does not exist` | Ensure the namespace `app-namespace` exists by running `kubectl create namespace app-namespace` before applying the PVC. |
+    | `ProvisioningFailed: error getting credentials` | Confirm the vSAN cluster has network connectivity to the Supervisor control plane and CSI driver credentials are valid in the `vmware-system-csi` namespace. |
 ---
 
 ## Enable vSphere with Tanzu on a Cluster (Supervisor)
@@ -798,9 +828,11 @@ wcp-webhook-service                 ClusterIP      10.96.2.75       <none>      
 ```
 
 !!! warning "Common errors"
-    **`Unable to connect to the server: dial tcp 192.168.1.200:6443: i/o timeout`** — Verify the supervisor cluster IP is reachable and the kubeconfig points to the correct supervisor endpoint; check network connectivity and firewall rules.
-    **`error: the server doesn't have a resource type "svc"`** — Ensure you are using a valid kubeconfig for the supervisor cluster, not a guest cluster kubeconfig.
-    **`error: open <supervisor-kubeconfig>: no such file or directory`** — Replace `<supervisor-kubeconfig>` with the actual path to your downloaded supervisor kubeconfig file from vCenter.
+    | Error | Fix |
+    |---|---|
+    | `Unable to connect to the server: dial tcp 192.168.1.200:6443: i/o timeout` | Verify the supervisor cluster IP is reachable and the kubeconfig points to the correct supervisor endpoint; check network connectivity and firewall rules. |
+    | `error: the server doesn't have a resource type "svc"` | Ensure you are using a valid kubeconfig for the supervisor cluster, not a guest cluster kubeconfig. |
+    | `error: open <supervisor-kubeconfig>: no such file or directory` | Replace `<supervisor-kubeconfig>` with the actual path to your downloaded supervisor kubeconfig file from vCenter. |
 ### Step 3 — Download the Supervisor kubeconfig
 
 ![Step 3 — Download the Supervisor kubeconfig](../../../../../assets/tanzu-proc-step-3-download-the-supervisor-kubeconfig.svg)
@@ -822,9 +854,11 @@ supervisor-node-03.vmware.local         Ready    control-plane,master   45d   v1
 ```
 
 !!! warning "Common errors"
-    **`error: unable to access the server: dial tcp: lookup supervisor-node-01.vmware.local: no such host`** — Verify the kubeconfig file points to a valid Supervisor Cluster endpoint and DNS resolution is working from your admin machine.
-    **`error: You must be logged in to the server (Unauthorized)`** — Re-authenticate to the Supervisor Cluster using `kubectl vsphere login` with valid vSphere credentials.
-    **`NotReady`** — Check node health with `kubectl describe node <node-name>` and review kubelet logs on the affected Supervisor node for resource or networking issues.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to access the server: dial tcp: lookup supervisor-node-01.vmware.local: no such host` | Verify the kubeconfig file points to a valid Supervisor Cluster endpoint and DNS resolution is working from your admin machine. |
+    | `error: You must be logged in to the server (Unauthorized)` | Re-authenticate to the Supervisor Cluster using `kubectl vsphere login` with valid vSphere credentials. |
+    | `NotReady` | Check node health with `kubectl describe node <node-name>` and review kubelet logs on the affected Supervisor node for resource or networking issues. |
 ### Step 4 — Post-Enablement Validation
 
 ![Step 4 — Post-Enablement Validation](../../../../../assets/tanzu-proc-step-4-post-enablement-validation.svg)
@@ -885,8 +919,10 @@ restrict-traffic  tier=backend       5m
 ```
 
 !!! warning "Common errors"
-    **`error: error validating "network-policy.yaml": error validating data: ValidationError(NetworkPolicy.spec.ingress[0].from[0]): invalid type for io.k8s.api.networking.v1.NetworkPolicyPeer: got "string", expected "object"`** — Verify the YAML indentation and structure of the `from` field, ensuring it contains objects not strings.
-    **`Error from server (Forbidden): networkpolicies.networking.k8s.io is forbidden: User "system:serviceaccount:default:deployer" cannot create resource "networkpolicies" in API group "networking.k8s.io" in the namespace "prod"`** — Grant the service account or user the `create` permission for networkpolicies using a ClusterRole or Role binding.
+    | Error | Fix |
+    |---|---|
+    | `error: error validating "network-policy.yaml": error validating data: ValidationError(NetworkPolicy.spec.ingress[0].from[0]): invalid type for io.k8s.api.networking.v1.NetworkPolicyPeer: got "string", expected "object"` | Verify the YAML indentation and structure of the `from` field, ensuring it contains objects not strings. |
+    | `Error from server (Forbidden): networkpolicies.networking.k8s.io is forbidden: User "system:serviceaccount:default:deployer" cannot create resource "networkpolicies" in API group "networking.k8s.io" in the namespace "prod"` | Grant the service account or user the `create` permission for networkpolicies using a ClusterRole or Role binding. |
 ### Antrea ClusterNetworkPolicy (Cluster-Wide, Higher Priority)
 
 ![Antrea ClusterNetworkPolicy (Cluster-Wide, Higher Priority)](../../../../../assets/tanzu-proc-antrea-clusternetworkpolicy-cluster-wide-higher-priority.svg)
@@ -927,8 +963,10 @@ default-deny   2s
 ```
 
 !!! warning "Common errors"
-    **`error: resource mapping not found for name: "clusternetworkpolicy" namespace: "" from "cluster-network-policy.yaml": no matches for kind "ClusterNetworkPolicy" in version "networking.tanzu.vmware.com/v1alpha1"`** — Ensure the Tanzu networking extension is installed on the cluster with `kubectl apply -f https://...tanzu-networking-extension.yaml`.
-    **`The ClusterNetworkPolicy "default-deny" is invalid: spec.rules: Invalid value: []uint8(nil): rules must be specified`** — Add at least one ingress or egress rule to the spec.rules field in your YAML manifest.
+    | Error | Fix |
+    |---|---|
+    | `error: resource mapping not found for name: "clusternetworkpolicy" namespace: "" from "cluster-network-policy.yaml": no matches for kind "ClusterNetworkPolicy" in version "networking.tanzu.vmware.com/v1alpha1"` | Ensure the Tanzu networking extension is installed on the cluster with `kubectl apply -f https://...tanzu-networking-extension.yaml`. |
+    | `The ClusterNetworkPolicy "default-deny" is invalid: spec.rules: Invalid value: []uint8(nil): rules must be specified` | Add at least one ingress or egress rule to the spec.rules field in your YAML manifest. |
 ### Test Policy Enforcement
 
 ![Test Policy Enforcement](../../../../../assets/tanzu-proc-test-policy-enforcement.svg)
@@ -966,8 +1004,10 @@ Traceflow for frontend-pod -> backend-pod (prod namespace):
 ```
 
 !!! warning "Common errors"
-    **`error: unable to upgrade connection: container not found ("frontend-app")`** — Specify the correct container name with `-c <container-name>` flag or verify the pod exists with `kubectl get pods -n prod`.
-    **`error: unable to find "frontend-pod" in namespace "prod"`** — Use the full pod name from `kubectl get pods -n prod` instead of a partial name; traceflow requires exact pod identifiers.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to upgrade connection: container not found ("frontend-app")` | Specify the correct container name with `-c <container-name>` flag or verify the pod exists with `kubectl get pods -n prod`. |
+    | `error: unable to find "frontend-pod" in namespace "prod"` | Use the full pod name from `kubectl get pods -n prod` instead of a partial name; traceflow requires exact pod identifiers. |
 ---
 
 ## Decommission a vSphere Namespace
@@ -1013,9 +1053,11 @@ No resources found in default namespace.
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "tanzukubernetescluster"`** — Verify the Tanzu operator is installed with `kubectl get deployment -n tanzu-system` and check your cluster has the correct API extensions.
-    **`Error from server (NotFound): namespaces "<namespace>" not found`** — Confirm the namespace exists with `kubectl get ns` and use the correct namespace name in the `-n` flag.
-    **`error: timed out waiting for the condition`** — If deletion hangs beyond 5 minutes, check vCenter for orphaned VMs and manually remove them, then retry the delete command.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "tanzukubernetescluster"` | Verify the Tanzu operator is installed with `kubectl get deployment -n tanzu-system` and check your cluster has the correct API extensions. |
+    | `Error from server (NotFound): namespaces "<namespace>" not found` | Confirm the namespace exists with `kubectl get ns` and use the correct namespace name in the `-n` flag. |
+    | `error: timed out waiting for the condition` | If deletion hangs beyond 5 minutes, check vCenter for orphaned VMs and manually remove them, then retry the delete command. |
 ### Step 2 — Release Persistent Volumes
 
 ![Step 2 — Release Persistent Volumes](../../../../../assets/tanzu-proc-step-2-release-persistent-volumes.svg)
@@ -1040,8 +1082,10 @@ persistentvolumeclaim "tanzu-logging-pvc" deleted
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "pvc" in API group ""`** — Verify the cluster is running and `kubectl` is configured correctly with `kubectl cluster-info`.
-    **`Error from server (Forbidden): persistentvolumeclaims is forbidden: User "system:serviceaccount:default:default" cannot delete resource "persistentvolumeclaims"`** — Ensure your service account or user has RBAC permissions to delete PVCs in the target namespace.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "pvc" in API group ""` | Verify the cluster is running and `kubectl` is configured correctly with `kubectl cluster-info`. |
+    | `Error from server (Forbidden): persistentvolumeclaims is forbidden: User "system:serviceaccount:default:default" cannot delete resource "persistentvolumeclaims"` | Ensure your service account or user has RBAC permissions to delete PVCs in the target namespace. |
 ### Step 3 — Delete the Namespace via vCenter
 
 ![Step 3 — Delete the Namespace via vCenter](../../../../../assets/tanzu-proc-step-3-delete-the-namespace-via-vcenter.svg)
@@ -1061,9 +1105,11 @@ namespace "workload-prod" deleted
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "namespace"`** — Verify the kubeconfig points to a valid Supervisor cluster and that your user has API server access.
-    **`Error from server (NotFound): namespaces "<namespace>" not found`** — Confirm the namespace name is spelled correctly and exists before attempting deletion.
-    **`error: unable to read client certificate ... (no such file or directory)`** — Ensure the supervisor.kubeconfig file path is correct and the certificate files it references are accessible.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "namespace"` | Verify the kubeconfig points to a valid Supervisor cluster and that your user has API server access. |
+    | `Error from server (NotFound): namespaces "<namespace>" not found` | Confirm the namespace name is spelled correctly and exists before attempting deletion. |
+    | `error: unable to read client certificate ... (no such file or directory)` | Ensure the supervisor.kubeconfig file path is correct and the certificate files it references are accessible. |
 ### Step 4 — Post-Deletion Validation
 
 ![Step 4 — Post-Deletion Validation](../../../../../assets/tanzu-proc-step-4-post-deletion-validation.svg)

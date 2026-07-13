@@ -123,9 +123,11 @@ curl -k -X POST "https://<srm_fqdn>/api/plans/<plan_id>/actions/test"   -H "Auth
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the SRM server's CA certificate into your system trust store.
-    **`{"error":"Invalid token","code":401}`** — Re-authenticate with the POST /api/sessions endpoint and use the returned sessionId in the Authorization header as `Authorization: <sessionId>`.
-    **`{"error":"Plan not found","code":404}`** — Verify the plan_id exists by listing all plans with GET /api/plans and confirm the ID matches exactly.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the SRM server's CA certificate into your system trust store. |
+    | `{"error":"Invalid token","code":401}` | Re-authenticate with the POST /api/sessions endpoint and use the returned sessionId in the Authorization header as `Authorization: <sessionId>`. |
+    | `{"error":"Plan not found","code":404}` | Verify the plan_id exists by listing all plans with GET /api/plans and confirm the ID matches exactly. |
 ---
 
 ## See also

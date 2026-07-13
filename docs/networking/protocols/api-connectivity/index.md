@@ -62,9 +62,11 @@ curl -s -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Add `-k` flag to skip verification in dev environments, or update your CA bundle with `update-ca-certificates` on Linux.
-    **`curl: (7) Failed to connect to api.example.com port 443: Connection refused`** — Verify the API endpoint is accessible and not blocked by firewall rules; check with `telnet api.example.com 443` or `nc -zv api.example.com 443`.
-    **`{"error":"Unauthorized","code":"INVALID_TOKEN"}`** — Replace `<token>` with a valid Bearer token from your authentication provider and ensure it hasn't expired.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Add `-k` flag to skip verification in dev environments, or update your CA bundle with `update-ca-certificates` on Linux. |
+    | `curl: (7) Failed to connect to api.example.com port 443: Connection refused` | Verify the API endpoint is accessible and not blocked by firewall rules; check with `telnet api.example.com 443` or `nc -zv api.example.com 443`. |
+    | `{"error":"Unauthorized","code":"INVALID_TOKEN"}` | Replace `<token>` with a valid Bearer token from your authentication provider and ensure it hasn't expired. |
 ```bash
 # OAuth2 — obtain token via client credentials flow
 curl -s -X POST https://auth.example.com/oauth/token \
@@ -93,9 +95,11 @@ Thu Oct 12 14:33:09 UTC 2023
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Add `-k` flag to skip certificate validation in dev environments, or ensure your CA bundle is current with `update-ca-certificates`.
-    **`jq: parse error: Invalid numeric literal at line 1 column 7`** — Verify the API endpoint returned valid JSON by testing with `curl -s <url> | head -c 200` before piping to jq.
-    **`command not found: jq`** — Install jq with `apt-get install jq` (Debian/Ubuntu) or `brew install jq` (macOS).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Add `-k` flag to skip certificate validation in dev environments, or ensure your CA bundle is current with `update-ca-certificates`. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 7` | Verify the API endpoint returned valid JSON by testing with `curl -s <url> | head -c 200` before piping to jq. |
+    | `command not found: jq` | Install jq with `apt-get install jq` (Debian/Ubuntu) or `brew install jq` (macOS). |
 ```bash
 # Azure Resource Manager API
 az rest --method get --url "https://management.azure.com/subscriptions?api-version=2022-12-01" | jq '.value | length'
@@ -127,9 +131,11 @@ ok
 ```
 
 !!! warning "Common errors"
-    **`ERROR: AUTHENTICATION_FAILED`** — Ensure your Azure CLI credentials are current by running `az login` and verify the subscription ID is correct.
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
-    **`Connection refused`** — Verify the Vault service is running and accessible at the specified address with `curl -v http://vault:8200/v1/sys/health`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: AUTHENTICATION_FAILED` | Ensure your Azure CLI credentials are current by running `az login` and verify the subscription ID is correct. |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
+    | `Connection refused` | Verify the Vault service is running and accessible at the specified address with `curl -v http://vault:8200/v1/sys/health`. |
 ```bash
 # Check rate limit headers in response
 curl -v https://api.example.com/endpoint 2>&1 | grep -i "x-rate-limit\|retry-after\|x-ratelimit"
@@ -156,9 +162,11 @@ curl --retry 5 --retry-delay 10 --retry-max-time 120 https://api.example.com/end
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host name`** — Verify the API endpoint hostname is correct and DNS resolution is working with `nslookup api.example.com`.
-    **`curl: (35) OpenSSL SSL_connect: SSL: CERTIFICATE_VERIFY_FAILED`** — Add `--insecure` flag to bypass certificate verification in development environments, or ensure your CA bundle is up-to-date with `update-ca-certificates`.
-    **`curl: (28) Operation timeout. The timeout specified has expired.`** — Increase the timeout with `--max-time 30` or check if the API endpoint is responding by testing with a simpler health check endpoint first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host name` | Verify the API endpoint hostname is correct and DNS resolution is working with `nslookup api.example.com`. |
+    | `curl: (35) OpenSSL SSL_connect: SSL: CERTIFICATE_VERIFY_FAILED` | Add `--insecure` flag to bypass certificate verification in development environments, or ensure your CA bundle is up-to-date with `update-ca-certificates`. |
+    | `curl: (28) Operation timeout. The timeout specified has expired.` | Increase the timeout with `--max-time 30` or check if the API endpoint is responding by testing with a simpler health check endpoint first. |
 ```bash
 #!/bin/bash
 # Quick health check across multiple endpoints

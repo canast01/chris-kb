@@ -85,9 +85,11 @@ Connection to 10.50.12.8 443 port [tcp/*] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 192.168.100.45 port 31031 (tcp) failed: Connection refused`** — Verify the VRA is fully deployed and the vSphere Replication service is running on the target host.
-    **`nc: connect to 192.168.100.45 port 31031 (tcp) failed: Connection timed out`** — Check that firewall rules allow port 31031 between source and target ESXi hosts, and that the target IP is reachable.
-    **`command not found: nc`** — Install netcat using `esxcli software vib install -v /tmp/netcat.vib` or use `telnet <IP> <port>` as an alternative connectivity test.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 192.168.100.45 port 31031 (tcp) failed: Connection refused` | Verify the VRA is fully deployed and the vSphere Replication service is running on the target host. |
+    | `nc: connect to 192.168.100.45 port 31031 (tcp) failed: Connection timed out` | Check that firewall rules allow port 31031 between source and target ESXi hosts, and that the target IP is reachable. |
+    | `command not found: nc` | Install netcat using `esxcli software vib install -v /tmp/netcat.vib` or use `telnet <IP> <port>` as an alternative connectivity test. |
 ### DNS Validation
 
 ```bash
@@ -128,9 +130,11 @@ Address: 192.168.20.48
 ```
 
 !!! warning "Common errors"
-    **`** server can't find vra-siteA.example.local: NXDOMAIN`** — Add the VRA FQDNs to your DNS zone file or create A records in your DNS server before proceeding.
-    **`** server can't find 192.168.10.45.in-addr.arpa: NXDOMAIN`** — Configure reverse DNS (PTR) records for both VRA IP addresses in your DNS reverse zone.
-    **`connection timed out; try again`** — Verify DNS server 10.0.1.10 is reachable and responding; check firewall rules blocking UDP port 53.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find vra-siteA.example.local: NXDOMAIN` | Add the VRA FQDNs to your DNS zone file or create A records in your DNS server before proceeding. |
+    | `** server can't find 192.168.10.45.in-addr.arpa: NXDOMAIN` | Configure reverse DNS (PTR) records for both VRA IP addresses in your DNS reverse zone. |
+    | `connection timed out; try again` | Verify DNS server 10.0.1.10 is reachable and responding; check firewall rules blocking UDP port 53. |
 ### Inter-Site Latency Check
 
 ```bash
@@ -160,9 +164,11 @@ rtt min/avg/max/stddev = 45.2/46.8/49.1/1.2 ms
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <target-site-gateway-or-host-IP>`** — Replace the placeholder with an actual IP address or resolvable hostname (e.g., `10.50.12.1` or `dr-gateway.corp.local`).
-    **`100% packet loss`** — Verify network connectivity between sites, check firewall rules allow ICMP, and confirm the target IP is reachable from the source ESXi host.
-    **`rtt min/avg/max/stddev = .../250.5/...`** — Average RTT exceeds 200 ms threshold; investigate WAN link congestion, increase bandwidth, or optimize routing before deploying replication.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <target-site-gateway-or-host-IP>` | Replace the placeholder with an actual IP address or resolvable hostname (e.g., `10.50.12.1` or `dr-gateway.corp.local`). |
+    | `100% packet loss` | Verify network connectivity between sites, check firewall rules allow ICMP, and confirm the target IP is reachable from the source ESXi host. |
+    | `rtt min/avg/max/stddev = .../250.5/...` | Average RTT exceeds 200 ms threshold; investigate WAN link congestion, increase bandwidth, or optimize routing before deploying replication. |
 ### Target Datastore Capacity Estimate
 
 Estimate target storage required:
@@ -273,9 +279,11 @@ admin@vra-siteA.example.local's password:
 ```
 
 !!! warning "Common errors"
-    **`Unit hms.service could not be found.`** — Verify VRA was deployed correctly by checking `/opt/vmware/hms/` exists; if missing, redeploy the VRA OVA.
-    **`Connection refused`** — Ensure SSH is enabled on the VRA and the hostname/IP is reachable; verify network connectivity with `ping vra-siteA.example.local` first.
-    **`Active: inactive (dead)`** — Restart the service with `systemctl restart hms` and check logs via `journalctl -u hms -n 50` to identify the root cause.
+    | Error | Fix |
+    |---|---|
+    | `Unit hms.service could not be found.` | Verify VRA was deployed correctly by checking `/opt/vmware/hms/` exists; if missing, redeploy the VRA OVA. |
+    | `Connection refused` | Ensure SSH is enabled on the VRA and the hostname/IP is reachable; verify network connectivity with `ping vra-siteA.example.local` first. |
+    | `Active: inactive (dead)` | Restart the service with `systemctl restart hms` and check logs via `journalctl -u hms -n 50` to identify the root cause. |
 ---
 
 ## Phase 3 — VRA Deployment: Target Site and Site Pairing
@@ -328,9 +336,11 @@ admin@vra-siteB.example.local's password:
 ```
 
 !!! warning "Common errors"
-    **`Unit hms.service could not be found.`** — Verify VRA is installed on this host by checking `/opt/vmware/hms/` exists, or confirm you are connecting to the correct VRA appliance.
-    **`Connection refused`** — Ensure SSH is enabled on the VRA appliance and the admin account credentials are correct; check network connectivity to vra-siteB.example.local.
-    **`● hms.service - vSphere Replication Management Service ... Active: inactive (dead)`** — Restart the service with `sudo systemctl restart hms` and check logs via `sudo journalctl -u hms -n 50` for startup errors.
+    | Error | Fix |
+    |---|---|
+    | `Unit hms.service could not be found.` | Verify VRA is installed on this host by checking `/opt/vmware/hms/` exists, or confirm you are connecting to the correct VRA appliance. |
+    | `Connection refused` | Ensure SSH is enabled on the VRA appliance and the admin account credentials are correct; check network connectivity to vra-siteB.example.local. |
+    | `● hms.service - vSphere Replication Management Service ... Active: inactive (dead)` | Restart the service with `sudo systemctl restart hms` and check logs via `sudo journalctl -u hms -n 50` for startup errors. |
 ### Pair the Sites
 
 ```text
@@ -377,8 +387,10 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the VRA's CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to vra-siteA.example.local port 8043: Connection refused`** — Verify the VRA appliance is running, the hostname resolves correctly, and port 8043 is accessible from your client (check firewall rules and VRA service status).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the VRA's CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to vra-siteA.example.local port 8043: Connection refused` | Verify the VRA appliance is running, the hostname resolves correctly, and port 8043 is accessible from your client (check firewall rules and VRA service status). |
 ---
 
 ## Phase 4 — Configure VM Replication
@@ -452,8 +464,10 @@ Estimated Time Remaining: 21h 15m
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to hbrsvc`** — Verify the vSphere Replication appliance is running and network connectivity exists between source and target sites.
-    **`Error: No replication found for VM`** — Confirm the replication was successfully configured in vSphere Client under Site Recovery and the VM is powered on.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to hbrsvc` | Verify the vSphere Replication appliance is running and network connectivity exists between source and target sites. |
+    | `Error: No replication found for VM` | Confirm the replication was successfully configured in vSphere Client under Site Recovery and the VM is powered on. |
 ### Configure Multiple VMs (Batch)
 
 ```powershell
@@ -507,9 +521,11 @@ admin@vra-siteB.example.local's password:
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and ensure the vRA appliance user account is enabled; check `/etc/ssh/sshd_config` for PasswordAuthentication setting.
-    **`tail: cannot open '/var/log/vmware/vrms/vrms.log' for reading: No such file or directory`** — Confirm the vSphere Replication Management Server is running with `systemctl status vmware-vrms` and check actual log path with `find /var/log -name '*vrms*'`.
-    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or ensure the admin user has read permissions on `/var/log/vmware/*/` directories via `sudo usermod -aG adm admin`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and ensure the vRA appliance user account is enabled; check `/etc/ssh/sshd_config` for PasswordAuthentication setting. |
+    | `tail: cannot open '/var/log/vmware/vrms/vrms.log' for reading: No such file or directory` | Confirm the vSphere Replication Management Server is running with `systemctl status vmware-vrms` and check actual log path with `find /var/log -name '*vrms*'`. |
+    | `grep: (standard input): Permission denied` | Run the command with `sudo` or ensure the admin user has read permissions on `/var/log/vmware/*/` directories via `sudo usermod -aG adm admin`. |
 ### Verify hbrsvc on Source ESXi Hosts
 
 ```bash
@@ -557,9 +573,11 @@ tail -50 /var/log/hbr.log | grep -i "error\|warn"
 ```
 
 !!! warning "Common errors"
-    **`esxcli hbr replication list: Unknown command or namespace hbr`** — Verify vSphere Replication is installed on the ESXi host by checking `/etc/vmware/vpx/vpxa.cfg` or reinstall the VR agent.
-    **`vmkload_mod: Command not found`** — Use the correct command `vmkload_mod -l` or check the ESXi version; on some versions use `esxcli system module list | grep hbr` instead.
-    **`tail: /var/log/hbr.log: No such file or directory`** — Confirm vSphere Replication services are running with `service hbrsrv status` and check `/var/log/vmkernel.log` for initialization errors.
+    | Error | Fix |
+    |---|---|
+    | `esxcli hbr replication list: Unknown command or namespace hbr` | Verify vSphere Replication is installed on the ESXi host by checking `/etc/vmware/vpx/vpxa.cfg` or reinstall the VR agent. |
+    | `vmkload_mod: Command not found` | Use the correct command `vmkload_mod -l` or check the ESXi version; on some versions use `esxcli system module list | grep hbr` instead. |
+    | `tail: /var/log/hbr.log: No such file or directory` | Confirm vSphere Replication services are running with `service hbrsrv status` and check `/var/log/vmkernel.log` for initialization errors. |
 ### Configure Replication Alerts
 
 ```text
@@ -611,9 +629,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if error persists, verify VRA hostname matches certificate CN).
-    **`curl: (7) Failed to connect to vra-siteA.example.local port 8043: Name or service not known`** — Confirm VRA hostname is resolvable and port 8043 is accessible from your network location using `nslookup vra-siteA.example.local` and `telnet vra-siteA.example.local 8043`.
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify API authentication credentials are correct and the VRA service is running; test with `curl -sk -u admin:<password> https://vra-siteA.example.local:8043/api/health` first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if error persists, verify VRA hostname matches certificate CN). |
+    | `curl: (7) Failed to connect to vra-siteA.example.local port 8043: Name or service not known` | Confirm VRA hostname is resolvable and port 8043 is accessible from your network location using `nslookup vra-siteA.example.local` and `telnet vra-siteA.example.local 8043`. |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify API authentication credentials are correct and the VRA service is running; test with `curl -sk -u admin:<password> https://vra-siteA.example.local:8043/api/health` first. |
 ### Verify MPIT Recovery Points
 
 ```bash
@@ -699,9 +719,11 @@ curl -sk https://vra-siteB.example.local/api/rest/vr/health
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-    **`Connection refused`** — Verify the VRA API service is listening on port 443 by running `netstat -tlnp | grep 443` and restart vrms if needed with `systemctl restart vrms`.
-    **`Active: inactive (dead)`** — Start the service with `systemctl start hms vrms` and check logs with `journalctl -u hms -n 50` to diagnose startup failures.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed). |
+    | `Connection refused` | Verify the VRA API service is listening on port 443 by running `netstat -tlnp | grep 443` and restart vrms if needed with `systemctl restart vrms`. |
+    | `Active: inactive (dead)` | Start the service with `systemctl start hms vrms` and check logs with `journalctl -u hms -n 50` to diagnose startup failures. |
 ### Post-Deployment Checklist
 
 | Item | Check |

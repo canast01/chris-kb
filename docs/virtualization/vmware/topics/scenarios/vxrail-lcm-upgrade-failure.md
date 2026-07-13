@@ -85,8 +85,10 @@ Last login: Wed Mar 15 14:22:18 2024 from 10.45.32.18
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,gssapi-keyexchange)`** — Verify SSH key is loaded with `ssh-add` or use password authentication with `ssh -o PubkeyAuthentication=no mystic@<vxm-ip>`.
-    **`tail: cannot open '/var/log/mystic/lcm.log' for reading: No such file or directory`** — Confirm the VXM appliance is fully initialized and check the correct log path with `find /var/log -name "*lcm*" -type f`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,gssapi-keyexchange)` | Verify SSH key is loaded with `ssh-add` or use password authentication with `ssh -o PubkeyAuthentication=no mystic@<vxm-ip>`. |
+    | `tail: cannot open '/var/log/mystic/lcm.log' for reading: No such file or directory` | Confirm the VXM appliance is fully initialized and check the correct log path with `find /var/log -name "*lcm*" -type f`. |
 Look for: the specific pre-check name that failed. Common failures and fixes:
 
 **vSAN health not green:** Navigate to **Cluster → Monitor → vSAN → Skyline Health** and resolve all
@@ -109,8 +111,10 @@ scsi-megaraid-sas                         7.714.06.00-1OEM.700.1.0.15160174  VMw
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or as root: `sudo esxcli software vib list | grep -v "VMware\|Dell\|Broadcom\|QLogic"`
-    **`esxcli: command not found`** — Ensure you are running this command on an ESXi host directly (SSH session) or via vSphere CLI; this command does not work on vCenter Server.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input): Permission denied` | Run the command with `sudo` or as root: `sudo esxcli software vib list | grep -v "VMware\|Dell\|Broadcom\|QLogic"` |
+    | `esxcli: command not found` | Ensure you are running this command on an ESXi host directly (SSH session) or via vSphere CLI; this command does not work on vCenter Server. |
 Remove any VIBs not in the VxRail approved list before retrying.
 
 **NTP skew:** Check and fix NTP on all nodes — see the
@@ -162,8 +166,10 @@ cat /var/log/esxi_install.log | tail -50
 ```
 
 !!! warning "Common errors"
-    **`cat: /var/log/esxi_install.log: No such file or directory`** — The log file only exists during active installation; check `/var/log/vmkernel.log` or `/var/log/hostd.log` on a running ESXi host instead.
-    **`tail: cannot open '/var/log/esxi_install.log' for reading: Permission denied`** — Run the command with `ssh root@<esxi-host>` or execute it directly on the ESXi console with appropriate root privileges.
+    | Error | Fix |
+    |---|---|
+    | `cat: /var/log/esxi_install.log: No such file or directory` | The log file only exists during active installation; check `/var/log/vmkernel.log` or `/var/log/hostd.log` on a running ESXi host instead. |
+    | `tail: cannot open '/var/log/esxi_install.log' for reading: Permission denied` | Run the command with `ssh root@<esxi-host>` or execute it directly on the ESXi console with appropriate root privileges. |
 Look for:
 
 ```text
@@ -210,9 +216,11 @@ curl -k -u mystic:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the VXM's certificate into your system's CA bundle.
-    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Verify the VXM IP address is correct and the management interface is reachable on port 443 using `ping` or `nc -zv`.
-    **`{"error":"Unauthorized","code":401}`** — Confirm the username and password are correct; use `curl -k -u mystic:$PASSWORD` with proper credential escaping if special characters are present.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the VXM's certificate into your system's CA bundle. |
+    | `curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused` | Verify the VXM IP address is correct and the management interface is reachable on port 443 using `ping` or `nc -zv`. |
+    | `{"error":"Unauthorized","code":401}` | Confirm the username and password are correct; use `curl -k -u mystic:$PASSWORD` with proper credential escaping if special characters are present. |
 ```bash
 curl -k -u mystic:<password> \
   -X POST \
@@ -233,9 +241,11 @@ curl -k -u mystic:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the VXM's CA certificate into your system trust store.
-    **`curl: (401) Unauthorized`** — Verify the username and password are correct; use `curl -u mystic:password` with the actual password or store credentials in `~/.netrc`.
-    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Confirm the VXM IP address is correct and the management interface is running; check network connectivity with `ping <vxm-ip>`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the VXM's CA certificate into your system trust store. |
+    | `curl: (401) Unauthorized` | Verify the username and password are correct; use `curl -u mystic:password` with the actual password or store credentials in `~/.netrc`. |
+    | `curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused` | Confirm the VXM IP address is correct and the management interface is running; check network connectivity with `ping <vxm-ip>`. |
 Check current cluster and node versions:
 
 ```bash
@@ -280,9 +290,11 @@ curl -k -u mystic:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Verify the VXM appliance is running and the IP address is correct with `ping <vxm-ip>`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should bypass this; if persisting, ensure you're using HTTPS and not HTTP.
-    **`jq: parse error: Invalid JSON at line 1`** — Verify the API endpoint is correct and the VXM service is responding; check VXM logs with `ssh <vxm-ip> tail -f /var/log/vmware/vxm/vxm.log`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused` | Verify the VXM appliance is running and the IP address is correct with `ping <vxm-ip>`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag should bypass this; if persisting, ensure you're using HTTPS and not HTTP. |
+    | `jq: parse error: Invalid JSON at line 1` | Verify the API endpoint is correct and the VXM service is responding; check VXM logs with `ssh <vxm-ip> tail -f /var/log/vmware/vxm/vxm.log`. |
 Look for: bundle status showing `FAILED` with a phase name; support bundle creation returning a bundle ID that you can download and attach to a Dell support case.
 
 ---

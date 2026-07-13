@@ -147,8 +147,10 @@ Status: HEALTHY
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Command not found`** — Install EMC Solutions Enabler package or add the SymCLI bin directory to your PATH.
-    **`boxmgmt: Unable to connect to RecoverPoint appliance at <IP>`** — Verify network connectivity to the RecoverPoint management IP and confirm credentials are set in the environment or config file.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Command not found` | Install EMC Solutions Enabler package or add the SymCLI bin directory to your PATH. |
+    | `boxmgmt: Unable to connect to RecoverPoint appliance at <IP>` | Verify network connectivity to the RecoverPoint management IP and confirm credentials are set in the environment or config file. |
 ---
 
 ## Reprotect
@@ -397,8 +399,10 @@ Link State: OK
 ```
 
 !!! warning "Common errors"
-    **`boxmgmt: command not found`** — Ensure you are running this command directly on the RecoverPoint appliance via SSH, not on a remote management host.
-    **`symrdf: Invalid SYMID or RDFG specified`** — Verify the SYMID and RDFG values match your environment by running `symcfg list -v` and `symrdf -sid <SYMID> list` to confirm valid identifiers.
+    | Error | Fix |
+    |---|---|
+    | `boxmgmt: command not found` | Ensure you are running this command directly on the RecoverPoint appliance via SSH, not on a remote management host. |
+    | `symrdf: Invalid SYMID or RDFG specified` | Verify the SYMID and RDFG values match your environment by running `symcfg list -v` and `symrdf -sid <SYMID> list` to confirm valid identifiers. |
 ---
 
 ## Add a VM to an Existing Protection Group

@@ -105,8 +105,10 @@ Physical Memory: 256 GB
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the host`** — Verify SSH is enabled on the ESXi host and your network connectivity is correct.
-    **`Unknown command or namespace`** — Ensure you are running this command directly on the ESXi host console or via SSH; esxcli is not available remotely without proper configuration.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the host` | Verify SSH is enabled on the ESXi host and your network connectivity is correct. |
+    | `Unknown command or namespace` | Ensure you are running this command directly on the ESXi host console or via SSH; esxcli is not available remotely without proper configuration. |
 ### 2. Run the vm-support diagnostic bundle (takes 5–15 minutes)
 
 ```bash
@@ -138,8 +140,10 @@ total 2847652
 ```
 
 !!! warning "Common errors"
-    **`vm-support: /var/core/ filesystem is full`** — Specify an alternate writable datastore path using the `-w` flag with sufficient free space.
-    **`vm-support: cannot access /vmfs/volumes/<datastore>/support-bundle/: No such file or directory`** — Create the target directory first with `mkdir -p /vmfs/volumes/<datastore>/support-bundle/` before running vm-support.
+    | Error | Fix |
+    |---|---|
+    | `vm-support: /var/core/ filesystem is full` | Specify an alternate writable datastore path using the `-w` flag with sufficient free space. |
+    | `vm-support: cannot access /vmfs/volumes/<datastore>/support-bundle/: No such file or directory` | Create the target directory first with `mkdir -p /vmfs/volumes/<datastore>/support-bundle/` before running vm-support. |
 Upload this tar.gz file to the Broadcom case. It contains all ESXi logs, configuration, and hardware info.
 
 ### 3. Capture PSOD information (if host has crashed)
@@ -178,8 +182,10 @@ total 2.8G
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vmkernel.log: No such file or directory`** — SSH into the ESXi host directly (not vCenter); the vmkernel log is local to each host at that path.
-    **`date: invalid date 'yesterday'`** — Use `date -d '1 day ago' '+%Y-%m-%d'` or replace with a specific date like `2024-11-13` for better compatibility.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vmkernel.log: No such file or directory` | SSH into the ESXi host directly (not vCenter); the vmkernel log is local to each host at that path. |
+    | `date: invalid date 'yesterday'` | Use `date -d '1 day ago' '+%Y-%m-%d'` or replace with a specific date like `2024-11-13` for better compatibility. |
 Include the dump file path in your SR description. Broadcom will provide SFTP transfer instructions to upload it.
 
 ### 4. Capture esxtop performance data (for performance or APD issues)
@@ -207,9 +213,11 @@ CPU MEMORY DISK NETWORK POWER
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Verify esxtop is available in PATH or use the full path `/usr/lib/vmware/esxtop/esxtop`; it may require the ESXi host shell to be enabled.
-    **`Permission denied`** — Run the command as root or with appropriate sudo privileges; esxtop requires elevated permissions to access performance metrics.
-    **`No space left on device`** — Check available disk space on /tmp with `df -h` and either clean up old logs or redirect output to a partition with more free space.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Verify esxtop is available in PATH or use the full path `/usr/lib/vmware/esxtop/esxtop`; it may require the ESXi host shell to be enabled. |
+    | `Permission denied` | Run the command as root or with appropriate sudo privileges; esxtop requires elevated permissions to access performance metrics. |
+    | `No space left on device` | Check available disk space on /tmp with `df -h` and either clean up old logs or redirect output to a partition with more free space. |
 ### 5. Collect storage path state (for APD or PDL issues)
 
 ```bash
@@ -267,9 +275,11 @@ Free: 549755813888
 ```
 
 !!! warning "Common errors"
-    **`State: dead`** — Run `esxcli storage nmp path set --state=active --path=vmhba2:C0:T2:L0` to reactivate the path, or verify SAN connectivity and zoning.
-    **`error: Unknown command or namespace`** — Ensure you are running these commands directly on the ESXi host via SSH or local console, not through vCenter.
-    **`TransportState: error`** — Check HBA driver logs with `esxcli system syslog config get` and verify Fibre Channel switch port status and SFP transceiver health.
+    | Error | Fix |
+    |---|---|
+    | `State: dead` | Run `esxcli storage nmp path set --state=active --path=vmhba2:C0:T2:L0` to reactivate the path, or verify SAN connectivity and zoning. |
+    | `error: Unknown command or namespace` | Ensure you are running these commands directly on the ESXi host via SSH or local console, not through vCenter. |
+    | `TransportState: error` | Check HBA driver logs with `esxcli system syslog config get` and verify Fibre Channel switch port status and SFP transceiver health. |
 ### 6. Write the timeline
 
 Create a plain text file with this structure and paste it into the SR description:
@@ -428,9 +438,11 @@ World ID    Name                                   File                         
 ```
 
 !!! warning "Common errors"
-    **`hostd is stopped.`** — Run `services.sh restart` or reboot the ESXi host to restart the hostd service.
-    **`Error: Unknown command or namespace vsan`** — The vSAN module is not installed or enabled; skip this check if vSAN is not deployed on this cluster.
-    **`tail: cannot open '/var/log/hostd.log' for reading: No such file or directory`** — Restart hostd service with `/etc/init.d/hostd restart` to regenerate the log file.
+    | Error | Fix |
+    |---|---|
+    | `hostd is stopped.` | Run `services.sh restart` or reboot the ESXi host to restart the hostd service. |
+    | `Error: Unknown command or namespace vsan` | The vSAN module is not installed or enabled; skip this check if vSAN is not deployed on this cluster. |
+    | `tail: cannot open '/var/log/hostd.log' for reading: No such file or directory` | Restart hostd service with `/etc/init.d/hostd restart` to regenerate the log file. |
 ---
 
 ## Support Portal and SLA Reference

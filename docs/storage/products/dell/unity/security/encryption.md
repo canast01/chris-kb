@@ -85,9 +85,11 @@ Encryption Status: Active
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to <ip>. Connection refused.`** — Verify the storage array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is responding.
-    **`Error: Authentication failed for user 'admin'.`** — Confirm the admin credentials are correct and the user account has not been locked; reset the password via the Unisphere web interface if needed.
-    **`Error: Command not found: uemcli`** — Install the UEMCLI package on your management host or add the installation directory to your system PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to <ip>. Connection refused.` | Verify the storage array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is responding. |
+    | `Error: Authentication failed for user 'admin'.` | Confirm the admin credentials are correct and the user account has not been locked; reset the password via the Unisphere web interface if needed. |
+    | `Error: Command not found: uemcli` | Install the UEMCLI package on your management host or add the installation directory to your system PATH environment variable. |
 In Unisphere: **Settings > Encryption** displays D@RE status and key management configuration.
 
 ### Enabling D@RE
@@ -124,9 +126,11 @@ Available Capacity: 10.95 TB
 ```
 
 !!! warning "Common errors"
-    **`Error Code: 0x7d000009 - Insufficient SED drives in disk group`** — Verify the disk group contains only Self-Encrypting Drives (SEDs) by running `uemcli -d <ip> -u admin /disk/list` and check the "Encryption Capable" field.
-    **`Error Code: 0x7d000015 - Authentication failed`** — Confirm the admin credentials are correct and the user has pool creation privileges by testing connectivity with `uemcli -d <ip> -u admin /system/info`.
-    **`Error Code: 0x7d000021 - Disk group does not exist`** — List available disk groups with `uemcli -d <ip> -u admin /diskgroup/list` and replace `<dg_id>` with a valid disk group ID.
+    | Error | Fix |
+    |---|---|
+    | `Error Code: 0x7d000009 - Insufficient SED drives in disk group` | Verify the disk group contains only Self-Encrypting Drives (SEDs) by running `uemcli -d <ip> -u admin /disk/list` and check the "Encryption Capable" field. |
+    | `Error Code: 0x7d000015 - Authentication failed` | Confirm the admin credentials are correct and the user has pool creation privileges by testing connectivity with `uemcli -d <ip> -u admin /system/info`. |
+    | `Error Code: 0x7d000021 - Disk group does not exist` | List available disk groups with `uemcli -d <ip> -u admin /diskgroup/list` and replace `<dg_id>` with a valid disk group ID. |
 4. Verify the pool is marked as encrypted after creation:
 
 ```bash
@@ -146,9 +150,11 @@ Encryption Algorithm:         AES
 ```
 
 !!! warning "Common errors"
-    **`The system cannot find the path specified.`** — Verify the pool ID exists by running `uemcli -d <ip> -u admin /stor/config/pool show` without the `-id` filter first.
-    **`Authentication failed`** — Confirm admin credentials and network connectivity to the Unity array with `ping <ip>` and verify the `-u` username has appropriate permissions.
-    **`grep: (standard input) is empty`** — The command executed successfully but returned no encryption data; check if the pool exists or if encryption is not configured on this pool.
+    | Error | Fix |
+    |---|---|
+    | `The system cannot find the path specified.` | Verify the pool ID exists by running `uemcli -d <ip> -u admin /stor/config/pool show` without the `-id` filter first. |
+    | `Authentication failed` | Confirm admin credentials and network connectivity to the Unity array with `ping <ip>` and verify the `-u` username has appropriate permissions. |
+    | `grep: (standard input) is empty` | The command executed successfully but returned no encryption data; check if the pool exists or if encryption is not configured on this pool. |
 ### Key Management
 
 By default, D@RE encryption keys are managed internally by Unity OE. For environments requiring separation of key management from the storage array (FIPS compliance, PCI DSS, or DoD requirements), configure an external KMIP-compatible key management server.
@@ -188,9 +194,11 @@ Key Management Server Configuration:
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused on <ip>:443`** — Verify the Unity array IP is reachable and the management interface is responding with `ping <ip>` and `telnet <ip> 443`.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the admin credentials are correct and the user account has not been locked due to failed login attempts.
-    **`Error: KMIP server certificate validation failed`** — Import the KMIP server's CA certificate into the Unity array's trusted certificate store via Unisphere before attempting connection.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused on <ip>:443` | Verify the Unity array IP is reachable and the management interface is responding with `ping <ip>` and `telnet <ip> 443`. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the admin credentials are correct and the user account has not been locked due to failed login attempts. |
+    | `Error: KMIP server certificate validation failed` | Import the KMIP server's CA certificate into the Unity array's trusted certificate store via Unisphere before attempting connection. |
 Steps to configure KMIP:
 
 1. Generate a Certificate Signing Request (CSR) from Unity in Unisphere > **Settings > Encryption > Key Management**.
@@ -229,9 +237,11 @@ The operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: The object specified does not exist`** — Verify the array IP address is correct and the management interface is reachable with `ping <ip>`.
-    **`Error: Authentication failed`** — Confirm admin credentials are correct and the user account has not been locked after failed login attempts.
-    **`Error: The parameter 'tlsMinVersion' is not supported on this OE version`** — Check the array's operating environment version with `uemcli -d <ip> -u admin /sys/about show` and consult Dell EMC documentation for the correct TLS configuration syntax for your OE version.
+    | Error | Fix |
+    |---|---|
+    | `Error: The object specified does not exist` | Verify the array IP address is correct and the management interface is reachable with `ping <ip>`. |
+    | `Error: Authentication failed` | Confirm admin credentials are correct and the user account has not been locked after failed login attempts. |
+    | `Error: The parameter 'tlsMinVersion' is not supported on this OE version` | Check the array's operating environment version with `uemcli -d <ip> -u admin /sys/about show` and consult Dell EMC documentation for the correct TLS configuration syntax for your OE version. |
 ### Verifying TLS Version from Outside the Array
 
 ```bash
@@ -304,7 +314,9 @@ Nmap done at Thu Jan 16 14:32:18 2024; 1 IP address (1 host up) scanned in 2.34s
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the SP IP address is correct and port 443 is reachable with `ping` and `telnet <sp-ip> 443`.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the SP IP address is correct and port 443 is reachable with `ping` and `telnet <sp-ip> 443`. |
     **`error:1409442E:SSL routines:ssl3
 Expected result after hardening: TLS 1.0 and 1.1 connections refused; TLS 1.2 and 1.3 accepted; no weak ciphers (RC4, 3DES, NULL) in the cipher list.
 
@@ -353,9 +365,11 @@ Host ID: host_003
 ```
 
 !!! warning "Common errors"
-    **`Error: The specified host was not found.`** — Verify the host_id exists on the array using `uemcli -d <ip> -u admin /remote/host show` and correct the `-id` parameter.
-    **`Error: Authentication failed. Invalid credentials.`** — Confirm the admin username and password are correct, or use `-p` flag to prompt for password interactively.
-    **`Error: Connection refused. Unable to reach management interface.`** — Verify the array IP address is reachable and the management interface is online using `ping <ip>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: The specified host was not found.` | Verify the host_id exists on the array using `uemcli -d <ip> -u admin /remote/host show` and correct the `-id` parameter. |
+    | `Error: Authentication failed. Invalid credentials.` | Confirm the admin username and password are correct, or use `-p` flag to prompt for password interactively. |
+    | `Error: Connection refused. Unable to reach management interface.` | Verify the array IP address is reachable and the management interface is online using `ping <ip>`. |
 CHAP secrets must be 12–16 characters. Use unique secrets per host — do not reuse the same CHAP secret across multiple hosts.
 
 ## NFS Kerberos Encryption
@@ -407,9 +421,11 @@ Kerberos Encryption         AES-256-CTS-HMAC-SHA1-96
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid NAS server ID <nas_id>`** — Verify the NAS server ID exists with `uemcli -d <ip> -u admin /nas show` and use the correct ID value.
-    **`Error: Security flavor krb5i is not supported on this system`** — Confirm Kerberos licensing is enabled on the Unity array and NFS service supports krb5i with `uemcli -d <ip> -u admin /prot/nfs show`.
-    **`Error: Access denied. User admin does not have permission to modify NFS exports`** — Ensure the admin user has Storage Administrator or equivalent role assigned in the Unity management interface.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid NAS server ID <nas_id>` | Verify the NAS server ID exists with `uemcli -d <ip> -u admin /nas show` and use the correct ID value. |
+    | `Error: Security flavor krb5i is not supported on this system` | Confirm Kerberos licensing is enabled on the Unity array and NFS service supports krb5i with `uemcli -d <ip> -u admin /prot/nfs show`. |
+    | `Error: Access denied. User admin does not have permission to modify NFS exports` | Ensure the admin user has Storage Administrator or equivalent role assigned in the Unity management interface. |
 ## SMB Encryption
 
 SMB 3.0 supports per-share or per-server encryption for SMB traffic in transit. When enabled, data is encrypted between the SMB client and the Unity NAS server using AES-128-CCM or AES-128-GCM.
@@ -429,8 +445,10 @@ The operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed`** — Verify the admin credentials and ensure the management IP is reachable with `ping <ip>`.
-    **`Error: NAS server not found or invalid <nas_id>`** — Confirm the NAS server ID exists by running `uemcli -d <ip> -u admin /prot/smb/server list` to retrieve valid server identifiers.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed` | Verify the admin credentials and ensure the management IP is reachable with `ping <ip>`. |
+    | `Error: NAS server not found or invalid <nas_id>` | Confirm the NAS server ID exists by running `uemcli -d <ip> -u admin /prot/smb/server list` to retrieve valid server identifiers. |
 SMB encryption requires Windows 8/Windows Server 2012 or later on the client side. Older clients connecting to an encryption-required server will be denied access.
 
 ## FIPS 140-2 Mode
@@ -452,9 +470,11 @@ FIPS Compliance Status:                       Compliant
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused`** — Verify the Dell Unity array IP address is correct and the management interface is reachable with `ping <ip>`.
-    **`Error: Authentication failed`** — Confirm the admin credentials are correct and the user account has sufficient privileges to query security settings.
-    **`Error: Command not found: uemcli`** — Install the Dell EMC Unity CLI package or ensure it is in your system PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused` | Verify the Dell Unity array IP address is correct and the management interface is reachable with `ping <ip>`. |
+    | `Error: Authentication failed` | Confirm the admin credentials are correct and the user account has sufficient privileges to query security settings. |
+    | `Error: Command not found: uemcli` | Install the Dell EMC Unity CLI package or ensure it is in your system PATH. |
 In Unisphere: **Settings > Security** — FIPS mode is shown and can be toggled. Enabling FIPS mode may disable some legacy cipher suites and require clients to support FIPS-approved TLS ciphers.
 
 **Impact of enabling FIPS mode:**

@@ -81,8 +81,10 @@ portal.port = 3260
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: No records found`** — Run `iscsiadm -m discovery -t st -p <portal_ip>` to discover targets before querying nodes.
-    **`iscsiadm: Invalid IQN format`** — Verify the target IQN syntax matches `iqn.YYYY-MM.reverse.domain:identifier` and use quotes if it contains special characters.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: No records found` | Run `iscsiadm -m discovery -t st -p <portal_ip>` to discover targets before querying nodes. |
+    | `iscsiadm: Invalid IQN format` | Verify the target IQN syntax matches `iqn.YYYY-MM.reverse.domain:identifier` and use quotes if it contains special characters. |
 ## Discovery Methods
 
 | Method | How it works | Use case |
@@ -121,9 +123,11 @@ iscsiadm -m node -o delete -T iqn.2019-05.com.example:storage.disk3 -p 192.168.1
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: cannot connect to discovery address 192.168.1.50:3260`** — Verify the target IP is reachable and the iSCSI daemon (iscsid) is running with `systemctl status iscsid`.
-    **`iscsiadm: No records found`** — Run discovery first with the sendtargets command before attempting to list or delete nodes.
-    **`iscsiadm: Error: cannot find record for node`** — Ensure the IQN and IP:port combination exactly match an existing record; verify with `iscsiadm -m node` first.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: cannot connect to discovery address 192.168.1.50:3260` | Verify the target IP is reachable and the iSCSI daemon (iscsid) is running with `systemctl status iscsid`. |
+    | `iscsiadm: No records found` | Run discovery first with the sendtargets command before attempting to list or delete nodes. |
+    | `iscsiadm: Error: cannot find record for node` | Ensure the IQN and IP:port combination exactly match an existing record; verify with `iscsiadm -m node` first. |
 ## Host / Initiator Group Mapping
 
 All storage arrays require the initiator IQN to be registered in a host or initiator group before a LUN is visible:
@@ -166,9 +170,11 @@ Initiator Alias: debian-host-01
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 192.168.1.50 port 3260 (tcp) failed: Connection refused`** — Verify the iSCSI target service is running on the target server with `systemctl status iscsid` and check firewall rules allow port 3260.
-    **`iscsiadm: No records found`** — Ensure the target IP is correct, the target portal is listening, and run `iscsiadm -m discovery -t sendtargets -p <target-ip>` to refresh discovery records.
-    **`iscsiadm: No active sessions`** — Log in to the target first using `iscsiadm -m node -T <IQN> -p <target-ip> --login` before querying session details.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 192.168.1.50 port 3260 (tcp) failed: Connection refused` | Verify the iSCSI target service is running on the target server with `systemctl status iscsid` and check firewall rules allow port 3260. |
+    | `iscsiadm: No records found` | Ensure the target IP is correct, the target portal is listening, and run `iscsiadm -m discovery -t sendtargets -p <target-ip>` to refresh discovery records. |
+    | `iscsiadm: No active sessions` | Log in to the target first using `iscsiadm -m node -T <IQN> -p <target-ip> --login` before querying session details. |
 ## Common Issues
 
 | Symptom | Cause | Action |

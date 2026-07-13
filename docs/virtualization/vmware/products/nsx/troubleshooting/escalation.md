@@ -115,9 +115,11 @@ $ curl -sk -u admin:MyP@ssw0rd https://nsx-manager-01.lab.local/api/v1/node/vers
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH is enabled on the NSX Manager node.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if using a trusted certificate, or ensure the NSX Manager hostname matches the certificate CN.
-    **`NSX Manager> get version: command not found`** — Exit the NSX CLI shell first with `exit`, then use the API call instead, or verify you are connected to an NSX Manager node (not a controller).
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the admin account credentials and ensure SSH is enabled on the NSX Manager node. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag if using a trusted certificate, or ensure the NSX Manager hostname matches the certificate CN. |
+    | `NSX Manager> get version: command not found` | Exit the NSX CLI shell first with `exit`, then use the API call instead, or verify you are connected to an NSX Manager node (not a controller). |
 ### 2. Capture the Manager cluster status
 
 ```bash
@@ -255,9 +257,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already included in the example, but ensure it's present if you remove it).
-    **`{"error":"Invalid credentials","status":401}`** — Verify the NSX Manager admin password is correct and URL is reachable with `ping <nsx-manager>`.
-    **`{"error":"Bundle generation failed","status":"FAILED","reason":"Insufficient disk space"}`** — Free up disk space on the NSX Manager node or reduce log_age parameter to collect fewer days of logs.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already included in the example, but ensure it's present if you remove it). |
+    | `{"error":"Invalid credentials","status":401}` | Verify the NSX Manager admin password is correct and URL is reachable with `ping <nsx-manager>`. |
+    | `{"error":"Bundle generation failed","status":"FAILED","reason":"Insufficient disk space"}` | Free up disk space on the NSX Manager node or reduce log_age parameter to collect fewer days of logs. |
 ### 4. Run Traceflow (for traffic drop or DFW issues)
 
 In NSX Manager UI:

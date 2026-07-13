@@ -139,7 +139,9 @@ az keyvault network-rule list --name <kv-name>
 ```
 
 !!! warning "Common errors"
-    **`The operation failed because the Key Vault name 'kv-name' is not globally unique.`** — Replace `<kv-name>` with a globally unique name (e.g., `kv-prod-sec-001-$(date +%s)`).
+    | Error | Fix |
+    |---|---|
+    | `The operation failed because the Key Vault name 'kv-name' is not globally unique.` | Replace `<kv-name>` with a globally unique name (e.g., `kv-prod-sec-001-$(date +%s)`). |
     **`Principal object ID not
 ### Key Vault Operations
 
@@ -194,9 +196,11 @@ Key rotated successfully. New version: a7f2c9e1b4d6f8h2j5k3l9m1n4o7p2q6
 ```
 
 !!! warning "Common errors"
-    **`The user, group or application 'appid=<id>;oid=<oid>' does not have secrets get permission on key vault '<kv-name>'.`** — Add the required permissions using `az keyvault set-policy --vault-name <kv-name> --object-id <oid> --secret-permissions get list`.
-    **`Vault '<kv-name>' not found.`** — Verify the vault name is correct and exists in your subscription with `az keyvault list --output table`.
-    **`The operation 'wrapKey' is not allowed by the key policy.`** — Update the key operations when creating it or use `az keyvault key update` to add the missing operations to the key's policy.
+    | Error | Fix |
+    |---|---|
+    | `The user, group or application 'appid=<id>;oid=<oid>' does not have secrets get permission on key vault '<kv-name>'.` | Add the required permissions using `az keyvault set-policy --vault-name <kv-name> --object-id <oid> --secret-permissions get list`. |
+    | `Vault '<kv-name>' not found.` | Verify the vault name is correct and exists in your subscription with `az keyvault list --output table`. |
+    | `The operation 'wrapKey' is not allowed by the key policy.` | Update the key operations when creating it or use `az keyvault key update` to add the missing operations to the key's policy. |
 ---
 
 ## Customer-Managed Keys for Storage
@@ -256,9 +260,11 @@ az storage account show \
 ```
 
 !!! warning "Common errors"
-    **`The client does not have permission to perform action 'Microsoft.KeyVault/vaults/keys/write' over scope`** — Ensure your Azure user or service principal has Key Vault Crypto Officer or equivalent role assigned on the key vault.
-    **`The Key Vault URI provided is invalid or the key does not exist`** — Verify the key vault name is correct, the key exists with `az keyvault key list --vault-name <kv-name>`, and the storage account has network access to the key vault.
-    **`Storage account does not support customer-managed keys in this region`** — Confirm the storage account region supports CMK (most standard regions do) and use a supported account kind like StorageV2 or BlobStorage.
+    | Error | Fix |
+    |---|---|
+    | `The client does not have permission to perform action 'Microsoft.KeyVault/vaults/keys/write' over scope` | Ensure your Azure user or service principal has Key Vault Crypto Officer or equivalent role assigned on the key vault. |
+    | `The Key Vault URI provided is invalid or the key does not exist` | Verify the key vault name is correct, the key exists with `az keyvault key list --vault-name <kv-name>`, and the storage account has network access to the key vault. |
+    | `Storage account does not support customer-managed keys in this region` | Confirm the storage account region supports CMK (most standard regions do) and use a supported account kind like StorageV2 or BlobStorage. |
 ---
 
 ## Customer-Managed Keys for Managed Disks
@@ -403,9 +409,11 @@ az vm encryption show \
 ```
 
 !!! warning "Common errors"
-    **`The Key Vault 'kv-name' is not enabled for disk encryption.`** — Enable the Key Vault for Azure Disk Encryption by running `az keyvault update --name <kv-name> --enabled-for-disk-encryption true`.
-    **`The user does not have permission to perform action 'Microsoft.KeyVault/vaults/keys/read' on resource.`** — Ensure the VM's managed identity or service principal has Key Vault Crypto Officer or equivalent RBAC role assigned.
-    **`VM must be deallocated before encryption can be enabled.`** — Stop the VM first with `az vm deallocate --name <vm-name> --resource-group <rg-name>`, then retry the encryption command.
+    | Error | Fix |
+    |---|---|
+    | `The Key Vault 'kv-name' is not enabled for disk encryption.` | Enable the Key Vault for Azure Disk Encryption by running `az keyvault update --name <kv-name> --enabled-for-disk-encryption true`. |
+    | `The user does not have permission to perform action 'Microsoft.KeyVault/vaults/keys/read' on resource.` | Ensure the VM's managed identity or service principal has Key Vault Crypto Officer or equivalent RBAC role assigned. |
+    | `VM must be deallocated before encryption can be enabled.` | Stop the VM first with `az vm deallocate --name <vm-name> --resource-group <rg-name>`, then retry the encryption command. |
 > **ADE vs Server-Side Encryption (SSE):** SSE with CMK (Disk Encryption Set) encrypts at the storage layer — simpler to manage and works for all disk types. ADE encrypts at the OS layer — required for some compliance standards (FIPS 140-2). Do not apply both; pick one per workload.
 
 ---
@@ -453,8 +461,10 @@ az storage account update \
 ```
 
 !!! warning "Common errors"
-    **`The resource 'Microsoft.Storage/storageAccounts/<storage-account>' under resource group '<rg-name>' was not found.`** — Verify the storage account name and resource group name are correct and exist in your subscription.
-    **`The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/<sub-id>/resourceGroups/<rg-name>/providers/Microsoft.Storage/storageAccounts/<storage-account>'.`** — Ensure your Azure account has Storage Account Contributor or Owner role on the target resource group.
+    | Error | Fix |
+    |---|---|
+    | `The resource 'Microsoft.Storage/storageAccounts/<storage-account>' under resource group '<rg-name>' was not found.` | Verify the storage account name and resource group name are correct and exist in your subscription. |
+    | `The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/<sub-id>/resourceGroups/<rg-name>/providers/Microsoft.Storage/storageAccounts/<storage-account>'.` | Ensure your Azure account has Storage Account Contributor or Owner role on the target resource group. |
 ### App Service / API Management
 
 ```bash
@@ -490,9 +500,11 @@ az webapp update \
 ```
 
 !!! warning "Common errors"
-    **`The specified resource group '<rg-name>' could not be found.`** — Verify the resource group name with `az group list` and ensure you are in the correct subscription.
-    **`The specified App Service '<app-name>' does not exist in the specified resource group.`** — Confirm the app name matches exactly with `az webapp list --resource-group <rg-name>` and check for typos.
-    **`AuthorizationFailed: The client 'user@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.Web/sites/write' over scope '/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Web/sites/xxx'.`** — Ensure your Azure account has Contributor or Web Plan Contributor role on the resource group.
+    | Error | Fix |
+    |---|---|
+    | `The specified resource group '<rg-name>' could not be found.` | Verify the resource group name with `az group list` and ensure you are in the correct subscription. |
+    | `The specified App Service '<app-name>' does not exist in the specified resource group.` | Confirm the app name matches exactly with `az webapp list --resource-group <rg-name>` and check for typos. |
+    | `AuthorizationFailed: The client 'user@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.Web/sites/write' over scope '/subscriptions/xxx/resourceGroups/xxx/providers/Microsoft.Web/sites/xxx'.` | Ensure your Azure account has Contributor or Web Plan Contributor role on the resource group. |
 ---
 
 ## Private Endpoints for Key Vault
@@ -580,8 +592,10 @@ az network private-endpoint dns-zone-group create \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/<kv-name>' under resource group '<rg-name>' was not found.`** — Verify the Key Vault name and resource group name are correct and exist in your subscription.
-    **`(InvalidResourceId) The provided resource ID is invalid or does not exist.`** — Ensure the `<kv-
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/<kv-name>' under resource group '<rg-name>' was not found.` | Verify the Key Vault name and resource group name are correct and exist in your subscription. |
+    | `(InvalidResourceId) The provided resource ID is invalid or does not exist.` | Ensure the `<kv- |
 ---
 
 ## Key Vault Diagnostics
@@ -640,8 +654,10 @@ az monitor diagnostic-settings create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The resource '/subscriptions/.../providers/Microsoft.KeyVault/vaults/kv-prod' could not be found.`** — Verify the Key Vault resource ID is correct and exists in the specified subscription using `az keyvault show --name <vault-name> --query id`.
-    **`AuthorizationFailed : The client 'user@contoso.com' with object id '...' does not have authorization to perform action 'microsoft.insights/diagnosticsettings/write' on resource '...'.`** — Grant the user or service principal the "Monitoring Contributor" role on the Key Vault resource using `az role assignment create --role "Monitoring Contributor" --assignee <principal-id> --scope <kv-resource-id>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The resource '/subscriptions/.../providers/Microsoft.KeyVault/vaults/kv-prod' could not be found.` | Verify the Key Vault resource ID is correct and exists in the specified subscription using `az keyvault show --name <vault-name> --query id`. |
+    | `AuthorizationFailed : The client 'user@contoso.com' with object id '...' does not have authorization to perform action 'microsoft.insights/diagnosticsettings/write' on resource '...'.` | Grant the user or service principal the "Monitoring Contributor" role on the Key Vault resource using `az role assignment create --role "Monitoring Contributor" --assignee <principal-id> --scope <kv-resource-id>`. |
 ---
 
 ## See also

@@ -156,8 +156,10 @@ Description: Just-in-time VM access reduces exposure to attacks by limiting acce
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The resource '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>' could not be found.`** — Verify the subscription ID, resource group name, and VM name are correct and exist in your current Azure context.
-    **`InvalidParameter : The value of parameter 'virtual-machines' is invalid.`** — Ensure the
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The resource '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>' could not be found.` | Verify the subscription ID, resource group name, and VM name are correct and exist in your current Azure context. |
+    | `InvalidParameter : The value of parameter 'virtual-machines' is invalid.` | Ensure the |
 ## Exemptions
 
 Mark a resource as exempt when a recommendation doesn't apply (e.g., a VM has a third-party endpoint agent that satisfies the requirement).
@@ -191,9 +193,11 @@ az security assessment create \
 ```
 
 !!! warning "Common errors"
-    **`The provided resource ID is invalid or the resource does not exist.`** — Verify the subscription ID, resource group name, and VM name are correct and the VM exists in that resource group.
-    **`The user does not have permission to perform action 'Microsoft.Security/assessments/write' on resource.`** — Ensure your Azure account has the Security Admin or Contributor role assigned at the subscription or resource group scope.
-    **`Invalid value 'NotApplicable' for status-code. Allowed values are: Healthy, Unhealthy, NotApplicable.`** — Use one of the three valid status codes: Healthy, Unhealthy, or NotApplicable (check exact casing).
+    | Error | Fix |
+    |---|---|
+    | `The provided resource ID is invalid or the resource does not exist.` | Verify the subscription ID, resource group name, and VM name are correct and the VM exists in that resource group. |
+    | `The user does not have permission to perform action 'Microsoft.Security/assessments/write' on resource.` | Ensure your Azure account has the Security Admin or Contributor role assigned at the subscription or resource group scope. |
+    | `Invalid value 'NotApplicable' for status-code. Allowed values are: Healthy, Unhealthy, NotApplicable.` | Use one of the three valid status codes: Healthy, Unhealthy, or NotApplicable (check exact casing). |
 ## Regulatory Compliance
 
 Defender for Cloud maps recommendations to compliance standards (CIS, NIST SP 800-53, ISO 27001, PCI DSS).

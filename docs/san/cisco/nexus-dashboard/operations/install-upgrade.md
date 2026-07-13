@@ -47,9 +47,11 @@ Overall Status: Healthy
 ```
 
 !!! warning "Common errors"
-    **`error: Primary IP 10.10.5.21 is not reachable from this node`** — Verify network connectivity and ensure the primary IP is assigned to node 1's management interface.
-    **`error: Node 10.10.5.22 failed to join cluster: authentication failed`** — Confirm ndadmin credentials are synchronized across all nodes and SSH key-based auth is configured.
-    **`error: Application VIP 192.168.100.1 overlaps with existing subnet`** — Choose application VIPs from an unused IP range that doesn't conflict with existing network subnets.
+    | Error | Fix |
+    |---|---|
+    | `error: Primary IP 10.10.5.21 is not reachable from this node` | Verify network connectivity and ensure the primary IP is assigned to node 1's management interface. |
+    | `error: Node 10.10.5.22 failed to join cluster: authentication failed` | Confirm ndadmin credentials are synchronized across all nodes and SSH key-based auth is configured. |
+    | `error: Application VIP 192.168.100.1 overlaps with existing subnet` | Choose application VIPs from an unused IP range that doesn't conflict with existing network subnets. |
 ```bash
 # Deploy two additional OVA nodes as per Step 1 above
 # Configure their IPs but do not initialize them
@@ -90,8 +92,10 @@ UUID                                  Hostname           IP            Status   
 ```
 
 !!! warning "Common errors"
-    **`Error: Node 10.10.5.24 unreachable — verify network connectivity and that the OVA node has completed boot and has the correct IP address configured.`** — Verify network connectivity and that the OVA node has completed boot and has the correct IP address configured.
-    **`Error: App IP 192.168.100.4 already in use — choose an unused IP address from the app network pool and retry the add-node command.`** — Choose an unused IP address from the app network pool and retry the add-node command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Node 10.10.5.24 unreachable — verify network connectivity and that the OVA node has completed boot and has the correct IP address configured.` | Verify network connectivity and that the OVA node has completed boot and has the correct IP address configured. |
+    | `Error: App IP 192.168.100.4 already in use — choose an unused IP address from the app network pool and retry the add-node command.` | Choose an unused IP address from the app network pool and retry the add-node command. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

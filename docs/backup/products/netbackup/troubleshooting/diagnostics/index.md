@@ -143,9 +143,11 @@ JobId,Type,State,Status,Policy,Schedule,Client,StartTime,EndTime
 ```
 
 !!! warning "Common errors"
-    **`bpdbjobs: command not found`** — Verify NetBackup is installed and add `/usr/openv/netbackup/bin/admincmd` to your PATH or use the full path.
-    **`Error: Cannot connect to database`** — Ensure the NetBackup database service is running with `bpdbm status` and check connectivity to the master server.
-    **`Error: Invalid job ID <job-id>`** — Use `bpdbjobs -report` without filters first to list valid job IDs, then substitute the actual numeric ID.
+    | Error | Fix |
+    |---|---|
+    | `bpdbjobs: command not found` | Verify NetBackup is installed and add `/usr/openv/netbackup/bin/admincmd` to your PATH or use the full path. |
+    | `Error: Cannot connect to database` | Ensure the NetBackup database service is running with `bpdbm status` and check connectivity to the master server. |
+    | `Error: Invalid job ID <job-id>` | Use `bpdbjobs -report` without filters first to list valid job IDs, then substitute the actual numeric ID. |
 ---
 
 ## Step 2 — Check storage unit and pool capacity
@@ -215,9 +217,11 @@ TLD3              SN-LTO9-0051     Up        LTO-9
 ```
 
 !!! warning "Common errors"
-    **`bpstulist: command not found`** — Verify NetBackup is installed and `/usr/openv/netbackup/bin/admincmd/` is in PATH or use the full path.
-    **`cacontrol: error accessing /msdp/data/dp1: No such file or directory`** — Confirm the MSDP pool mount point exists and is mounted; check `/etc/fstab` or `mount | grep msdp`.
-    **`vmquery: Media pool <volume-pool-name> not found`** — Replace `<volume-pool-name>` with an actual pool name from `bpstulist` output (e.g., `backup-monthly`).
+    | Error | Fix |
+    |---|---|
+    | `bpstulist: command not found` | Verify NetBackup is installed and `/usr/openv/netbackup/bin/admincmd/` is in PATH or use the full path. |
+    | `cacontrol: error accessing /msdp/data/dp1: No such file or directory` | Confirm the MSDP pool mount point exists and is mounted; check `/etc/fstab` or `mount | grep msdp`. |
+    | `vmquery: Media pool <volume-pool-name> not found` | Replace `<volume-pool-name>` with an actual pool name from `bpstulist` output (e.g., `backup-monthly`). |
 ---
 
 ## Step 3 — Check policy and client configuration
@@ -282,9 +286,11 @@ SCHED: weekday-incremental
 ```
 
 !!! warning "Common errors"
-    **`bppllist: policy 'prod-daily-backup' not found`** — Verify the policy name spelling and that it exists in the NetBackup master server configuration.
-    **`bplist: client 'web-server-01.corp.local' is not registered`** — Register the client in the NetBackup admin console or use `bpplclients` to add it to the policy.
-    **`Error: NetBackup master server is not running`** — Start the NetBackup services on the master server with `/usr/openv/netbackup/bin/bpup -start`.
+    | Error | Fix |
+    |---|---|
+    | `bppllist: policy 'prod-daily-backup' not found` | Verify the policy name spelling and that it exists in the NetBackup master server configuration. |
+    | `bplist: client 'web-server-01.corp.local' is not registered` | Register the client in the NetBackup admin console or use `bpplclients` to add it to the policy. |
+    | `Error: NetBackup master server is not running` | Start the NetBackup services on the master server with `/usr/openv/netbackup/bin/bpup -start`. |
 ---
 
 ## Step 4 — Check media server status and catalog
@@ -347,9 +353,11 @@ tcp6       0      0 :::1556                 :::*                    LISTEN      
 ```
 
 !!! warning "Common errors"
-    **`nbemmcmd: command not found`** — Verify NetBackup is installed and add `/usr/openv/netbackup/bin/admincmd` to PATH, or use the full path to the binary.
-    **`Host <media-server> is not registered in EMM`** — Run `nbemmcmd -updatehost -machinename <media-server> -machinetype mediaserver` to register the missing media server.
-    **`netstat: command not found`** — Use `ss -tulnp | grep 1556` instead, as netstat is deprecated on modern Linux systems.
+    | Error | Fix |
+    |---|---|
+    | `nbemmcmd: command not found` | Verify NetBackup is installed and add `/usr/openv/netbackup/bin/admincmd` to PATH, or use the full path to the binary. |
+    | `Host <media-server> is not registered in EMM` | Run `nbemmcmd -updatehost -machinename <media-server> -machinetype mediaserver` to register the missing media server. |
+    | `netstat: command not found` | Use `ss -tulnp | grep 1556` instead, as netstat is deprecated on modern Linux systems. |
 ---
 
 ## Step 5 — Read VxUL logs
@@ -408,9 +416,11 @@ mkdir: created directory '/usr/openv/netbackup/logs/bpdm'
 ```
 
 !!! warning "Common errors"
-    **`vxlogview: command not found`** — Verify VxUL is installed with `rpm -qa | grep VRTSvxul` and install the VxUL package if missing.
-    **`Permission denied`** — Run the vxlogview and mkdir commands with `sudo` or as root user.
-    **`No such file or directory: /usr/openv/logs/`** — Confirm NetBackup is installed in the default location or adjust the path to match your installation directory (check `echo $NB_INSTALL_DIR`).
+    | Error | Fix |
+    |---|---|
+    | `vxlogview: command not found` | Verify VxUL is installed with `rpm -qa | grep VRTSvxul` and install the VxUL package if missing. |
+    | `Permission denied` | Run the vxlogview and mkdir commands with `sudo` or as root user. |
+    | `No such file or directory: /usr/openv/logs/` | Confirm NetBackup is installed in the default location or adjust the path to match your installation directory (check `echo $NB_INSTALL_DIR`). |
 ---
 
 ## Step 6 — Increase verbose logging temporarily
@@ -444,9 +454,11 @@ VERBOSE set to 3
 ```
 
 !!! warning "Common errors"
-    **`bpsetconfig: invalid host <master-server>`** — Replace `<master-server>` with the actual FQDN or IP address of your NetBackup master server (e.g., `nbmaster.corp.local`).
-    **`bpsetconfig: permission denied`** — Run the command as root or with sudo, as NetBackup configuration changes require elevated privileges.
-    **`bpsetconfig: connection timeout to <media-server>`** — Verify the media server is reachable and the NetBackup daemons are running with `bpps -a` on the target host.
+    | Error | Fix |
+    |---|---|
+    | `bpsetconfig: invalid host <master-server>` | Replace `<master-server>` with the actual FQDN or IP address of your NetBackup master server (e.g., `nbmaster.corp.local`). |
+    | `bpsetconfig: permission denied` | Run the command as root or with sudo, as NetBackup configuration changes require elevated privileges. |
+    | `bpsetconfig: connection timeout to <media-server>` | Verify the media server is reachable and the NetBackup daemons are running with `bpps -a` on the target host. |
 ---
 
 ## Step 7 — Generate nbsupport bundle for Veritas SR
@@ -503,9 +515,11 @@ Disk_Archive_02            Disk          DEGRADED      156 GB / 1.0 TB
 ```
 
 !!! warning "Common errors"
-    **`bpdbjobs: Job ID <job-id> not found`** — Replace `<job-id>` with the actual numeric job ID from the failed backup job.
-    **`Permission denied: /tmp/nbsupport_*.tar.gz`** — Run the nbsupport command as root or the netbackup service user (typically `netbackup`).
-    **`bpstulist: command not found`** — Ensure you are running these commands on the NetBackup master server and the PATH includes `/usr/openv/netbackup/bin/admincmd/`.
+    | Error | Fix |
+    |---|---|
+    | `bpdbjobs: Job ID <job-id> not found` | Replace `<job-id>` with the actual numeric job ID from the failed backup job. |
+    | `Permission denied: /tmp/nbsupport_*.tar.gz` | Run the nbsupport command as root or the netbackup service user (typically `netbackup`). |
+    | `bpstulist: command not found` | Ensure you are running these commands on the NetBackup master server and the PATH includes `/usr/openv/netbackup/bin/admincmd/`. |
 ---
 
 ## Log locations

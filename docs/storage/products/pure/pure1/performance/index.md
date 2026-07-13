@@ -88,7 +88,9 @@ randread_lat: (groupid=0, jobs=1): io=10240MiB, aggrb=170.7MiB/s, minb=170.7MiB/
 ```
 
 !!! warning "Common errors"
-    **`fio: filename=/dev/sdX: No such file or directory`** — Replace `/dev/sdX` with the actual device path (e.g., `/dev/sda`, `/dev/nvme0n1`, or
+    | Error | Fix |
+    |---|---|
+    | `fio: filename=/dev/sdX: No such file or directory` | Replace `/dev/sdX` with the actual device path (e.g., `/dev/sda`, `/dev/nvme0n1`, or |
 ## Common Performance Issues
 
 | Symptom | Probable cause | Investigation |

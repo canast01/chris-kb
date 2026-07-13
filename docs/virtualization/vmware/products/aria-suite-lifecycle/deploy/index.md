@@ -86,8 +86,10 @@ Address:	10.10.10.1#53
 ```
 
 !!! warning "Common errors"
-    **`** server can't find lcm.example.local: NXDOMAIN`** — Verify the DNS A record exists in your DNS server and check that your resolver is configured to query the correct nameserver.
-    **`** server can't find 10.10.10.40.in-addr.arpa: NXDOMAIN`** — Ensure reverse DNS (PTR record) is configured for 10.10.10.40 on your DNS server.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find lcm.example.local: NXDOMAIN` | Verify the DNS A record exists in your DNS server and check that your resolver is configured to query the correct nameserver. |
+    | `** server can't find 10.10.10.40.in-addr.arpa: NXDOMAIN` | Ensure reverse DNS (PTR record) is configured for 10.10.10.40 on your DNS server. |
 ### vCenter Service Account
 
 The LCM infrastructure account requires the following vCenter privileges:
@@ -164,9 +166,11 @@ root@lcm.example.local's password:
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip certificate verification, or import the LCM certificate into your system CA bundle.
-    **`ssh: connect to host lcm.example.local port 22 (Connection refused)`** — Verify the LCM appliance is powered on and SSH is enabled; check network connectivity with `ping lcm.example.local`.
-    **`Unit lcm-vmon.service could not be found.`** — SSH into the appliance and verify the LCM service name with `systemctl list-units --all | grep lcm`, then use the correct service name.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip certificate verification, or import the LCM certificate into your system CA bundle. |
+    | `ssh: connect to host lcm.example.local port 22 (Connection refused)` | Verify the LCM appliance is powered on and SSH is enabled; check network connectivity with `ping lcm.example.local`. |
+    | `Unit lcm-vmon.service could not be found.` | SSH into the appliance and verify the LCM service name with `systemctl list-units --all | grep lcm`, then use the correct service name. |
 ### Accept EULA and Enter Licence
 
 1. Browse to `https://lcm.example.local`.
@@ -230,9 +234,11 @@ notAfter=Jan 15 10:22:33 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`unable to get local issuer certificate`** — The internal CA certificate is not in the system trust store; add it to `/etc/pki/ca-trust/source/anchors/` and run `update-ca-trust`.
-    **`Verify return code: 21 (unable to verify the first certificate)`** — The certificate chain is incomplete; ensure the intermediate CA certificate is installed on the LCM appliance in the certificate chain file.
-    **`subject=CN = lcm.example.local` does not match expected hostname** — Update the certificate with the correct FQDN or add a Subject Alternative Name (SAN) entry for the actual hostname and redeploy.
+    | Error | Fix |
+    |---|---|
+    | `unable to get local issuer certificate` | The internal CA certificate is not in the system trust store; add it to `/etc/pki/ca-trust/source/anchors/` and run `update-ca-trust`. |
+    | `Verify return code: 21 (unable to verify the first certificate)` | The certificate chain is incomplete; ensure the intermediate CA certificate is installed on the LCM appliance in the certificate chain file. |
+    | `subject=CN = lcm.example.local` does not match expected hostname` | Update the certificate with the correct FQDN or add a Subject Alternative Name (SAN) entry for the actual hostname and redeploy. |
 ### Configure Locker Passwords
 
 LCM → Locker → Passwords → Add Password
@@ -308,9 +314,11 @@ drwxr-xr-x  2 root root 4.0K Nov 15 10:15 checksums
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and that root login is enabled in /etc/ssh/sshd_config on the LCM appliance.
-    **`ls: cannot access '/data/lcm/binary-store/': No such file or directory`** — Confirm the LCM appliance is fully deployed and the binary-store directory exists; check mount points with `df -h`.
-    **`Connection refused`** — Ensure the LCM appliance is powered on and SSH service is running; verify network connectivity with `ping lcm.example.local`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and that root login is enabled in /etc/ssh/sshd_config on the LCM appliance. |
+    | `ls: cannot access '/data/lcm/binary-store/': No such file or directory` | Confirm the LCM appliance is fully deployed and the binary-store directory exists; check mount points with `df -h`. |
+    | `Connection refused` | Ensure the LCM appliance is powered on and SSH service is running; verify network connectivity with `ping lcm.example.local`. |
 ### Add vCenter Infrastructure Account
 
 LCM → Lifecycle Operations → Settings → My VMware vCenter Servers → Add vCenter
@@ -398,8 +406,10 @@ Last login: Wed Mar 15 14:32:18 2024 from 10.45.120.88
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH key is loaded with `ssh-add` or use password authentication; confirm root account is enabled on LCM appliance.
-    **`tail: cannot open '/var/log/vmware/lcm/lcm-install.log' for reading: No such file or directory`** — Confirm LCM deployment has started and the log directory exists; check actual log path with `find /var/log -name "*lcm*" -type f`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH key is loaded with `ssh-add` or use password authentication; confirm root account is enabled on LCM appliance. |
+    | `tail: cannot open '/var/log/vmware/lcm/lcm-install.log' for reading: No such file or directory` | Confirm LCM deployment has started and the log directory exists; check actual log path with `find /var/log -name "*lcm*" -type f`. |
 ---
 
 ## Phase 6 — Post-Deployment Validation
@@ -433,9 +443,11 @@ HTTP 200
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to vrops.example.local port 443: Connection refused`** — Verify the Aria Operations appliance is powered on and network connectivity exists using `ping vrops.example.local`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should suppress this, but if it appears, ensure you're using curl version 7.10 or later with `curl --version`.
-    **`HTTP 000`** — The appliance is reachable but the service hasn't fully initialized; wait 2-3 minutes after deployment and retry the health check.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to vrops.example.local port 443: Connection refused` | Verify the Aria Operations appliance is powered on and network connectivity exists using `ping vrops.example.local`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag should suppress this, but if it appears, ensure you're using curl version 7.10 or later with `curl --version`. |
+    | `HTTP 000` | The appliance is reachable but the service hasn't fully initialized; wait 2-3 minutes after deployment and retry the health check. |
 All should return HTTP 200 or 302.
 
 ### Verify Locker Certificate Expiry
@@ -460,8 +472,10 @@ notAfter=Dec 15 09:23:47 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify LCM is running and listening on port 443 with `netstat -tlnp | grep 443` or check firewall rules blocking the connection.
-    **`unable to load certificate`** — The SSL handshake failed or the certificate chain is incomplete; try adding `-showcerts` to `openssl s_client` to diagnose the full chain.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify LCM is running and listening on port 443 with `netstat -tlnp | grep 443` or check firewall rules blocking the connection. |
+    | `unable to load certificate` | The SSL handshake failed or the certificate chain is incomplete; try adding `-showcerts` to `openssl s_client` to diagnose the full chain. |
 ### Post-Deployment Checklist
 
 | Check | Expected Result |

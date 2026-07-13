@@ -85,9 +85,11 @@ SSL-Session:
 ```
 
 !!! warning "Common errors"
-    **`verify error:num=20:unable to get local issuer certificate`** — Add the missing intermediate CA certificate to your system's CA bundle or use `openssl s_client -CAfile /path/to/ca-bundle.crt`.
-    **`connect: Connection refused`** — Verify the hostname and port are correct, and that the service is listening on that port with `netstat -tlnp | grep :443`.
-    **`Verify return code: 21 (unable to verify the first certificate)`** — Check that the server certificate chain is complete; the server may be missing the intermediate certificate in its configuration.
+    | Error | Fix |
+    |---|---|
+    | `verify error:num=20:unable to get local issuer certificate` | Add the missing intermediate CA certificate to your system's CA bundle or use `openssl s_client -CAfile /path/to/ca-bundle.crt`. |
+    | `connect: Connection refused` | Verify the hostname and port are correct, and that the service is listening on that port with `netstat -tlnp | grep :443`. |
+    | `Verify return code: 21 (unable to verify the first certificate)` | Check that the server certificate chain is complete; the server may be missing the intermediate certificate in its configuration. |
 ## Certificate Validity Checks
 
 ```bash
@@ -130,9 +132,11 @@ Certificate:
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the hostname is correct and the service is listening on port 443 with `netstat -tlnp | grep 443`.
-    **`unable to get local issuer certificate`** — This is expected output from s_client; the issuer information is still extracted correctly by the piped openssl x509 command.
-    **`error in x509 parsing`** — Ensure the certificate chain is complete by testing with `openssl s_client -connect <hostname>:443 -showcerts` to diagnose intermediate certificate issues.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the hostname is correct and the service is listening on port 443 with `netstat -tlnp | grep 443`. |
+    | `unable to get local issuer certificate` | This is expected output from s_client; the issuer information is still extracted correctly by the piped openssl x509 command. |
+    | `error in x509 parsing` | Ensure the certificate chain is complete by testing with `openssl s_client -connect <hostname>:443 -showcerts` to diagnose intermediate certificate issues. |
 ## Chain Validation
 
 ```bash
@@ -156,8 +160,10 @@ Verify return code: 0 (ok)
 ```
 
 !!! warning "Common errors"
-    **`verify error:num=20:unable to get local issuer certificate`** — Add the missing intermediate CA certificate to your CA bundle or use `-partial_chain` flag to accept partial chains.
-    **`s_client: No such file or directory`** — Verify the CA bundle path exists with `ls -la /etc/ssl/certs/ca-certificates.crt` and update the path if using a different distribution (e.g., `/etc/pki/tls/certs/ca-bundle.crt` on RHEL).
+    | Error | Fix |
+    |---|---|
+    | `verify error:num=20:unable to get local issuer certificate` | Add the missing intermediate CA certificate to your CA bundle or use `-partial_chain` flag to accept partial chains. |
+    | `s_client: No such file or directory` | Verify the CA bundle path exists with `ls -la /etc/ssl/certs/ca-certificates.crt` and update the path if using a different distribution (e.g., `/etc/pki/tls/certs/ca-bundle.crt` on RHEL). |
 ## Protocol and Cipher Checks
 
 ```bash
@@ -280,9 +286,11 @@ curl -k https://<hostname>/
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the self-signed CA to your system trust store or use `--cacert /path/to/ca.pem` to specify the certificate bundle.
-    **`curl: (51) Unable to communicate securely with peer: requested domain name does not match the server's certificate`** — Verify the hostname matches the certificate CN/SAN, or use `-k` flag only for testing (never in production).
-    **`curl: (77) error setting certificate verify locations`** — Ensure the CA bundle path is correct and readable with `ls -la /path/to/internal-ca.pem`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the self-signed CA to your system trust store or use `--cacert /path/to/ca.pem` to specify the certificate bundle. |
+    | `curl: (51) Unable to communicate securely with peer: requested domain name does not match the server's certificate` | Verify the hostname matches the certificate CN/SAN, or use `-k` flag only for testing (never in production). |
+    | `curl: (77) error setting certificate verify locations` | Ensure the CA bundle path is correct and readable with `ls -la /path/to/internal-ca.pem`. |
 ## Validating a Certificate File
 
 ```bash
@@ -326,9 +334,11 @@ cert.pem: OK
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the cert.pem file exists and is a valid PEM-formatted certificate, not DER or another format.
-    **`unable to load Private Key`** — Check that key.pem is readable and contains a valid RSA private key; convert from PKCS#8 if needed with `openssl pkey -in key.pem -traditional -out key.pem`.
-    **`error 20 at 0 depth lookup: unable to get local issuer certificate`** — Add the root CA certificate to the trust store or provide it with `-CAfile`, and ensure the certificate chain is complete with `-untrusted intermediate.crt`.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the cert.pem file exists and is a valid PEM-formatted certificate, not DER or another format. |
+    | `unable to load Private Key` | Check that key.pem is readable and contains a valid RSA private key; convert from PKCS#8 if needed with `openssl pkey -in key.pem -traditional -out key.pem`. |
+    | `error 20 at 0 depth lookup: unable to get local issuer certificate` | Add the root CA certificate to the trust store or provide it with `-CAfile`, and ensure the certificate chain is complete with `-untrusted intermediate.crt`. |
 ## OCSP / Revocation Check
 
 ```bash
@@ -355,9 +365,11 @@ cert.pem: good
 ```
 
 !!! warning "Common errors"
-    **`Error querying OCSP responder`** — Verify the OCSP URL is correct and accessible by testing with `curl -I <ocsp-url>` first.
-    **`issuer certificate does not have OCSP signing capability`** — Use the correct intermediate CA certificate that signed the end-entity certificate, or obtain the OCSP signing certificate from your CA.
-    **`socket: Connection refused`** — Ensure your firewall allows outbound HTTPS to the OCSP responder URL and check network connectivity with `ping` or `nc`.
+    | Error | Fix |
+    |---|---|
+    | `Error querying OCSP responder` | Verify the OCSP URL is correct and accessible by testing with `curl -I <ocsp-url>` first. |
+    | `issuer certificate does not have OCSP signing capability` | Use the correct intermediate CA certificate that signed the end-entity certificate, or obtain the OCSP signing certificate from your CA. |
+    | `socket: Connection refused` | Ensure your firewall allows outbound HTTPS to the OCSP responder URL and check network connectivity with `ping` or `nc`. |
 ## Comprehensive Scan — testssl.sh
 
 ```bash
@@ -416,9 +428,11 @@ Resolving deltas: 100% (8934/8934), done.
 ```
 
 !!! warning "Common errors"
-    **`./testssl.sh: command not found`** — Ensure the script has execute permissions with `chmod +x testssl.sh` and run from the correct directory.
-    **`ERROR: couldn't connect to host:port <hostname>:443`** — Verify the hostname is resolvable and port 443 is accessible; check firewall rules and DNS with `nslookup <hostname>`.
-    **`bash: git: command not found`** — Install git using your package manager (`apt install git` on Debian/Ubuntu or `brew install git` on macOS).
+    | Error | Fix |
+    |---|---|
+    | `./testssl.sh: command not found` | Ensure the script has execute permissions with `chmod +x testssl.sh` and run from the correct directory. |
+    | `ERROR: couldn't connect to host:port <hostname>:443` | Verify the hostname is resolvable and port 443 is accessible; check firewall rules and DNS with `nslookup <hostname>`. |
+    | `bash: git: command not found` | Install git using your package manager (`apt install git` on Debian/Ubuntu or `brew install git` on macOS). |
 ## Validation Checklist
 
 | Check | Command | Pass |

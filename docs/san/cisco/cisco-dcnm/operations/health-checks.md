@@ -77,8 +77,10 @@ zoneset name: production_zones vsan: 100
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the VSAN ID exists on the switch with `show vsan` and confirm you are on an MDS or supported Cisco switch model.
-    **`zoneset name: (null) vsan: <vsan-id>`** — The active zoneset has not been committed; activate a zoneset using `zoneset activate name <zoneset-name> vsan <vsan-id>` before verification.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the VSAN ID exists on the switch with `show vsan` and confirm you are on an MDS or supported Cisco switch model. |
+    | `zoneset name: (null) vsan: <vsan-id>` | The active zoneset has not been committed; activate a zoneset using `zoneset activate name <zoneset-name> vsan <vsan-id>` before verification. |
 ---
 
 ## Verify

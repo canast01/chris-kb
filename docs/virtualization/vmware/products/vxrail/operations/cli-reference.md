@@ -53,9 +53,11 @@ vxm-prod-01:~>
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname <vxm-ip>: Name or service not known`** — Replace `<vxm-ip>` with the actual VxRail Manager IP address (e.g., 192.168.1.45) or verify DNS resolution.
-    **`Permission denied (publickey,password).`** — Verify the username is correct (default is `mystic`) and that the password is entered correctly or SSH key is properly configured.
-    **`Connection refused`** — Confirm the VxRail Manager is powered on, the SSH service is running, and the IP address is reachable on your network.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname <vxm-ip>: Name or service not known` | Replace `<vxm-ip>` with the actual VxRail Manager IP address (e.g., 192.168.1.45) or verify DNS resolution. |
+    | `Permission denied (publickey,password).` | Verify the username is correct (default is `mystic`) and that the password is entered correctly or SSH key is properly configured. |
+    | `Connection refused` | Confirm the VxRail Manager is powered on, the SSH service is running, and the IP address is reachable on your network. |
 **Authentication:** HTTP Basic auth. Use the `mystic` account (or a dedicated service account created in VxRail Manager). Base64-encode credentials for `curl`:
 
 ```bash
@@ -83,9 +85,11 @@ curl -sk -H "Authorization: Basic $AUTH" "https://<vxm-ip>/rest/vxm/v1/cluster"
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example; ensure it's included if removed).
-    **`curl: (401) Unauthorized`** — Verify credentials are correct and base64-encoded properly with `echo -n 'username:password' | base64`.
-    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Confirm the VxM IP address is correct and the management cluster is reachable on port 443.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example; ensure it's included if removed). |
+    | `curl: (401) Unauthorized` | Verify credentials are correct and base64-encoded properly with `echo -n 'username:password' | base64`. |
+    | `curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused` | Confirm the VxM IP address is correct and the management cluster is reachable on port 443. |
 ---
 
 ## VxRail Manager REST API
@@ -175,9 +179,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; ensure it's not removed).
-    **`curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused`** — Verify the VxRail Manager IP address is correct and the management network is reachable with `ping <vxm-ip>`.
-    **`Authorization header missing or invalid`** — Ensure credentials are base64-encoded correctly by testing `echo -n 'mystic:password' | base64` separately before using in the curl command.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; ensure it's not removed). |
+    | `curl: (7) Failed to connect to <vxm-ip> port 443: Connection refused` | Verify the VxRail Manager IP address is correct and the management network is reachable with `ping <vxm-ip>`. |
+    | `Authorization header missing or invalid` | Ensure credentials are base64-encoded correctly by testing `echo -n 'mystic:password' | base64` separately before using in the curl command. |
 ### LCM Endpoints
 
 ```bash
@@ -258,9 +264,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify VxM hostname matches certificate CN).
-    **`{"error": "Invalid credentials", "code": 401}`** — Verify base64-encoded credentials are correct by running `echo -n 'mystic:password' | base64` and confirm the VxM user has API permissions.
-    **`{"error": "Bundle not found", "code": 404}`** — Ensure the bundle file path `/tmp/VxRail-7.0.401-bundle.bin` exists and is readable with `ls -lh /tmp/VxRail-*.bin`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify VxM hostname matches certificate CN). |
+    | `{"error": "Invalid credentials", "code": 401}` | Verify base64-encoded credentials are correct by running `echo -n 'mystic:password' | base64` and confirm the VxM user has API permissions. |
+    | `{"error": "Bundle not found", "code": 404}` | Ensure the bundle file path `/tmp/VxRail-7.0.401-bundle.bin` exists and is readable with `ls -lh /tmp/VxRail-*.bin`. |
 ### Support Bundle
 
 ```bash
@@ -296,9 +304,11 @@ curl -sk \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`{"error": "Unauthorized", "code": 401}`** — Verify the base64-encoded credentials are correct by running `echo -n 'mystic:password' | base64` and confirming the output matches your VxRail Manager credentials.
-    **`{"error": "Bundle collection already in progress", "code": 409}`** — Wait for the previous bundle to complete by polling the status endpoint before triggering a new collection.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `{"error": "Unauthorized", "code": 401}` | Verify the base64-encoded credentials are correct by running `echo -n 'mystic:password' | base64` and confirming the output matches your VxRail Manager credentials. |
+    | `{"error": "Bundle collection already in progress", "code": 409}` | Wait for the previous bundle to complete by polling the status endpoint before triggering a new collection. |
 ---
 
 ## esxcli — vSAN Commands
@@ -346,8 +356,10 @@ Cluster Configuration:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to the vSAN health service`** — Verify vSAN is enabled on the cluster and all ESXi hosts are in a healthy state with network connectivity.
-    **`Error: Permission denied`** — Run the command with appropriate vSAN administrator privileges or use `sudo` if executing from a non-root account.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to the vSAN health service` | Verify vSAN is enabled on the cluster and all ESXi hosts are in a healthy state with network connectivity. |
+    | `Error: Permission denied` | Run the command with appropriate vSAN administrator privileges or use `sudo` if executing from a non-root account. |
 ### vSAN Storage
 
 ```bash
@@ -376,8 +388,10 @@ Device: naa.5001405a1b2c3d53
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan storage list`** — Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm VSAN status.
-    **`Error: Permission denied`** — Execute the command with root privileges or ensure your vSphere user account has the required VSAN administration role.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan storage list` | Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm VSAN status. |
+    | `Error: Permission denied` | Execute the command with root privileges or ensure your vSphere user account has the required VSAN administration role. |
 ### vSAN Resync and Rebuild
 
 ```bash
@@ -402,8 +416,10 @@ Remaining Bytes: 0
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the local vSAN cluster`** — Verify vSAN is enabled on the cluster and the host is part of a vSAN-enabled cluster with `esxcli vsan cluster get`.
-    **`Unknown command or namespace vsan debug resync`** — Confirm you are running this on an ESXi host with vSAN enabled; this command is not available on non-vSAN hosts.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the local vSAN cluster` | Verify vSAN is enabled on the cluster and the host is part of a vSAN-enabled cluster with `esxcli vsan cluster get`. |
+    | `Unknown command or namespace vsan debug resync` | Confirm you are running this on an ESXi host with vSAN enabled; this command is not available on non-vSAN hosts. |
 ### vSAN Network Test
 
 ```bash
@@ -437,8 +453,10 @@ vmk3 (vsan-mgmt): 192.168.12.101/24 - Active
 ```
 
 !!! warning "Common errors"
-    **`vSAN network connectivity test: Unable to contact node esx-vxrail-02`** — Verify network connectivity and VMkernel port configuration on the affected node, then re-run the test.
-    **`esxcli: Unknown command or namespace vsan debug network`** — Ensure vSAN is licensed and enabled on the cluster; this command requires vSAN to be active.
+    | Error | Fix |
+    |---|---|
+    | `vSAN network connectivity test: Unable to contact node esx-vxrail-02` | Verify network connectivity and VMkernel port configuration on the affected node, then re-run the test. |
+    | `esxcli: Unknown command or namespace vsan debug network` | Ensure vSAN is licensed and enabled on the cluster; this command requires vSAN to be active. |
 ---
 
 ## esxcli — Network Commands
@@ -511,8 +529,10 @@ MTU     : 1500
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace network ip interface tag get.`** — Verify ESXi version supports tag commands; use `esxcli network ip interface list` and parse output for tag information instead.
-    **`Error: Could not resolve host name vmnic0: Name or service not known`** — Ensure the physical NIC name is correct by running `esxcli network nic list` first to confirm vmnic naming.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace network ip interface tag get.` | Verify ESXi version supports tag commands; use `esxcli network ip interface list` and parse output for tag information instead. |
+    | `Error: Could not resolve host name vmnic0: Name or service not known` | Ensure the physical NIC name is correct by running `esxcli network nic list` first to confirm vmnic naming. |
 ---
 
 ## esxcli — Hardware Sensors
@@ -569,8 +589,10 @@ SEL Records (last 20):
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or keyword: --type`** — Verify ESXi version supports the `--type` parameter; use `esxcli hardware sensor list` without filtering on older builds.
-    **`Error: Could not connect to IPMI device`** — Ensure IPMI is enabled in BIOS and the management network interface is properly configured on the VxRail node.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or keyword: --type` | Verify ESXi version supports the `--type` parameter; use `esxcli hardware sensor list` without filtering on older builds. |
+    | `Error: Could not connect to IPMI device` | Ensure IPMI is enabled in BIOS and the management network interface is properly configured on the VxRail node. |
 ---
 
 ## iDRAC RACADM Commands
@@ -597,9 +619,11 @@ System Model: PowerEdge R750
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname <idrac-ip>: Name or service not known`** — Replace `<idrac-ip>` with the actual iDRAC IP address (e.g., `192.168.1.45`).
-    **`Permission denied (publickey,password).`** — Verify the root password is correct and the iDRAC user account has SSH access enabled in the iDRAC web interface.
-    **`ssh: connect to host 192.168.1.45 port 22: Connection refused`** — Ensure the iDRAC is powered on and SSH service is enabled; check iDRAC network connectivity and firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname <idrac-ip>: Name or service not known` | Replace `<idrac-ip>` with the actual iDRAC IP address (e.g., `192.168.1.45`). |
+    | `Permission denied (publickey,password).` | Verify the root password is correct and the iDRAC user account has SSH access enabled in the iDRAC web interface. |
+    | `ssh: connect to host 192.168.1.45 port 22: Connection refused` | Ensure the iDRAC is powered on and SSH service is enabled; check iDRAC network connectivity and firewall rules. |
 ### System Information
 
 ```bash
@@ -637,8 +661,10 @@ NIC Firmware Version: 20.12.17
 ```
 
 !!! warning "Common errors"
-    **`DRAC_E_INVALID_IPADDRESS: IPMI session failed`** — Verify iDRAC IP connectivity and ensure the iDRAC service is running with `systemctl status idrac` or check network connectivity to the iDRAC IP address.
-    **`Error: Unable to perform requested operation. IPMI command failed.`** — Confirm you have root/administrator privileges and the iDRAC firmware is fully initialized (may require waiting 2-3 minutes after system boot).
+    | Error | Fix |
+    |---|---|
+    | `DRAC_E_INVALID_IPADDRESS: IPMI session failed` | Verify iDRAC IP connectivity and ensure the iDRAC service is running with `systemctl status idrac` or check network connectivity to the iDRAC IP address. |
+    | `Error: Unable to perform requested operation. IPMI command failed.` | Confirm you have root/administrator privileges and the iDRAC firmware is fully initialized (may require waiting 2-3 minutes after system boot). |
 ### Event Log
 
 ```bash
@@ -668,8 +694,10 @@ SEL cleared successfully.
 ```
 
 !!! warning "Common errors"
-    **`RACADM.1.0.0 : IPMI command failed with error : Permission denied`** — Run the command with sudo or ensure the user has iDRAC administrative privileges.
-    **`RACADM.1.0.0 : Unable to connect to iDRAC at IP address <IP>`** — Verify iDRAC network connectivity and that the correct IP address is configured in your DRAC_IP environment variable or connection settings.
+    | Error | Fix |
+    |---|---|
+    | `RACADM.1.0.0 : IPMI command failed with error : Permission denied` | Run the command with sudo or ensure the user has iDRAC administrative privileges. |
+    | `RACADM.1.0.0 : Unable to connect to iDRAC at IP address <IP>` | Verify iDRAC network connectivity and that the correct IP address is configured in your DRAC_IP environment variable or connection settings. |
 ### NIC Statistics
 
 ```bash
@@ -719,8 +747,10 @@ NIC.Integrated.1-2
 ```
 
 !!! warning "Common errors"
-    **`RACADM001: Unable to perform requested operation. iDRAC is not ready.`** — Wait 30-60 seconds after iDRAC boot and retry the command.
-    **`RACADM002: NIC.Integrated.1-1 does not exist or is not supported on this system.`** — Verify the NIC identifier matches your hardware configuration using `racadm getnic -c` first.
+    | Error | Fix |
+    |---|---|
+    | `RACADM001: Unable to perform requested operation. iDRAC is not ready.` | Wait 30-60 seconds after iDRAC boot and retry the command. |
+    | `RACADM002: NIC.Integrated.1-1 does not exist or is not supported on this system.` | Verify the NIC identifier matches your hardware configuration using `racadm getnic -c` first. |
 ### Storage Controller
 
 ```bash
@@ -769,9 +799,11 @@ Physical Disks: 3
 ```
 
 !!! warning "Common errors"
-    **`RACADM0001: Unable to connect to iDRAC`** — Verify iDRAC IP connectivity and ensure the iDRAC service is running with `systemctl status idrac`.
-    **`RACADM0007: RAID controller not detected`** — Confirm the storage controller is properly seated and run `racadm storagecontroller list` to verify controller presence.
-    **`RACADM0012: Access denied`** — Run the command with appropriate privileges using `sudo` or ensure your user account has iDRAC administrator permissions.
+    | Error | Fix |
+    |---|---|
+    | `RACADM0001: Unable to connect to iDRAC` | Verify iDRAC IP connectivity and ensure the iDRAC service is running with `systemctl status idrac`. |
+    | `RACADM0007: RAID controller not detected` | Confirm the storage controller is properly seated and run `racadm storagecontroller list` to verify controller presence. |
+    | `RACADM0012: Access denied` | Run the command with appropriate privileges using `sudo` or ensure your user account has iDRAC administrator permissions. |
 ### Power Actions
 
 ```bash
@@ -797,8 +829,10 @@ Server power action initiated successfully.
 ```
 
 !!! warning "Common errors"
-    **`RACADM.1.0.GEN1413: Unable to perform the requested operation because the system is not ready.`** — Wait 30-60 seconds for the iDRAC to finish its current operation, then retry the command.
-    **`Error: Access Denied`** — Verify your iDRAC credentials are correct and your user account has Administrator privileges on the iDRAC.
+    | Error | Fix |
+    |---|---|
+    | `RACADM.1.0.GEN1413: Unable to perform the requested operation because the system is not ready.` | Wait 30-60 seconds for the iDRAC to finish its current operation, then retry the command. |
+    | `Error: Access Denied` | Verify your iDRAC credentials are correct and your user account has Administrator privileges on the iDRAC. |
 ---
 
 ## PowerCLI — vSAN Commands

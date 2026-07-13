@@ -172,9 +172,11 @@ svm1:vol_logs svm2:vol_logs_backup    Uninitialized 00:00:00 false   Broken-off
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found`** — Verify you are connected to the ONTAP cluster CLI (ssh admin@<cluster-mgmt-ip>) and not the local shell.
-    **`Error: Access denied for command "event log show"`** — Ensure your ONTAP user role has "admin" or equivalent privileges; check with `security login show -user-or-group-name <username>`.
-    **`Error: No SnapMirror relationships found`** — This is expected if no replication is configured; verify relationships exist with `snapmirror list-destinations` before troubleshooting lag-time issues.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found` | Verify you are connected to the ONTAP cluster CLI (ssh admin@<cluster-mgmt-ip>) and not the local shell. |
+    | `Error: Access denied for command "event log show"` | Ensure your ONTAP user role has "admin" or equivalent privileges; check with `security login show -user-or-group-name <username>`. |
+    | `Error: No SnapMirror relationships found` | This is expected if no replication is configured; verify relationships exist with `snapmirror list-destinations` before troubleshooting lag-time issues. |
 ### 6. Write the timeline
 
 ```text

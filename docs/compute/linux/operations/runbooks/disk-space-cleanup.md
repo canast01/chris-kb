@@ -76,8 +76,10 @@ apt-get autoremove --purge
 ```
 
 !!! warning "Common errors"
-    **`command not found: dnf`** — Verify the system is RHEL 8+, CentOS 8+, or Rocky Linux; older versions use `yum` instead.
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the commands with `sudo` or as the root user.
+    | Error | Fix |
+    |---|---|
+    | `command not found: dnf` | Verify the system is RHEL 8+, CentOS 8+, or Rocky Linux; older versions use `yum` instead. |
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the commands with `sudo` or as the root user. |
 ## Step 4 — Old Kernels (Linux)
 
 ```bash
@@ -103,8 +105,10 @@ Complete!
 ```
 
 !!! warning "Common errors"
-    **`error: package kernel is not installed`** — Verify the system is RHEL/CentOS by checking `/etc/os-release` and use `apt` commands for Debian-based systems instead.
-    **`Error: Transaction test error: file /boot/vmlinuz-5.14.0-162.6.1.el9_1.x86_64 conflicts between attempted installs of kernel-5.14.0-162.6.1.el9_1.x86_64 and kernel-core-5.14.0-162.6.1.el9_1.x86_64`** — Reboot the system to complete the previous kernel removal before attempting another removal operation.
+    | Error | Fix |
+    |---|---|
+    | `error: package kernel is not installed` | Verify the system is RHEL/CentOS by checking `/etc/os-release` and use `apt` commands for Debian-based systems instead. |
+    | `Error: Transaction test error: file /boot/vmlinuz-5.14.0-162.6.1.el9_1.x86_64 conflicts between attempted installs of kernel-5.14.0-162.6.1.el9_1.x86_64 and kernel-core-5.14.0-162.6.1.el9_1.x86_64` | Reboot the system to complete the previous kernel removal before attempting another removal operation. |
 ## Step 5 — Temp Files and Core Dumps
 
 ```bash
@@ -132,9 +136,11 @@ find /var/crash -type f -mtime +7 -delete
 ```
 
 !!! warning "Common errors"
-    **`find: '/var/crash': No such file or directory`** — Create the directory with `mkdir -p /var/crash` or remove that find command if crash dumps are not collected on this system.
-    **`find: Filesystem loop detected; '/proc' is part of the cycle detected.`** — Add `-xdev` flag to the root filesystem search to prevent crossing mount points: `find / -xdev -name "core" -type f -mtime +7 -ls 2>/dev/null`.
-    **`Permission denied`** — Run the delete operations with `sudo` or as root, since `/tmp` and `/var/crash` typically require elevated privileges to delete files owned by other users.
+    | Error | Fix |
+    |---|---|
+    | `find: '/var/crash': No such file or directory` | Create the directory with `mkdir -p /var/crash` or remove that find command if crash dumps are not collected on this system. |
+    | `find: Filesystem loop detected; '/proc' is part of the cycle detected.` | Add `-xdev` flag to the root filesystem search to prevent crossing mount points: `find / -xdev -name "core" -type f -mtime +7 -ls 2>/dev/null`. |
+    | `Permission denied` | Run the delete operations with `sudo` or as root, since `/tmp` and `/var/crash` typically require elevated privileges to delete files owned by other users. |
 ## Windows Disk Cleanup
 
 ```powershell
@@ -188,8 +194,10 @@ total 2847
 ```
 
 !!! warning "Common errors"
-    **`df: Permission denied`** — Run the command with `sudo` or as the root user.
-    **`ls: cannot open directory '/var/log/': Permission denied`** — Ensure you have read permissions on `/var/log/` or use `sudo ls -lt /var/log/ | head -20`.
+    | Error | Fix |
+    |---|---|
+    | `df: Permission denied` | Run the command with `sudo` or as the root user. |
+    | `ls: cannot open directory '/var/log/': Permission denied` | Ensure you have read permissions on `/var/log/` or use `sudo ls -lt /var/log/ | head -20`. |
 ## Safety Rules
 
 | Rule | Reason |

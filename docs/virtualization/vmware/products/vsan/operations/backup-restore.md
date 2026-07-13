@@ -45,8 +45,10 @@ Snapshot removed successfully.
 ```
 
 !!! warning "Common errors"
-    **`You cannot call a method on a null-valued expression.`** — Ensure the VM name is correct and the vCenter session is active with `Connect-VIServer`.
-    **`The operation is not allowed in the current state.`** — Power off the VM or disable vSAN data protection policies before attempting CBT reconfiguration.
+    | Error | Fix |
+    |---|---|
+    | `You cannot call a method on a null-valued expression.` | Ensure the VM name is correct and the vCenter session is active with `Connect-VIServer`. |
+    | `The operation is not allowed in the current state.` | Power off the VM or disable vSAN data protection policies before attempting CBT reconfiguration. |
 ### Veeam Backup & Replication
 
 Veeam is the most widely deployed backup tool for vSAN environments. It uses VADP and supports vSAN-specific transport modes.
@@ -149,9 +151,11 @@ Backup ID: a7f3c9e2-1b4d-4e8f-9d2a-5c6b8e1f3a4d
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed for user 'backupuser' on sftp://backup-server`** — Verify the SFTP credentials are correct and the backup user account exists on the target server.
-    **`Connection timeout connecting to backup-server:22`** — Confirm the SFTP server is reachable and listening on port 22, and check firewall rules between VCSA and the backup target.
-    **`Insufficient disk space on sftp://backup-server/vcsa-backups`** — Ensure the SFTP target has at least 15 GB of free space available for the backup.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed for user 'backupuser' on sftp://backup-server` | Verify the SFTP credentials are correct and the backup user account exists on the target server. |
+    | `Connection timeout connecting to backup-server:22` | Confirm the SFTP server is reachable and listening on port 22, and check firewall rules between VCSA and the backup target. |
+    | `Insufficient disk space on sftp://backup-server/vcsa-backups` | Ensure the SFTP target has at least 15 GB of free space available for the backup. |
 Or configure the backup schedule via vSphere Client: **vCenter → Administration → Backup → Schedule**
 
 ---
@@ -258,9 +262,11 @@ Estimated time remaining: 2h 34m
 ```
 
 !!! warning "Common errors"
-    **`Error: The disk group cannot be removed while objects are still present`** — Wait for all vSAN objects to migrate off the disk group or reduce FTT before removal.
-    **`Error: Device naa.5001405a1b2c3d4e not found`** — Verify the replacement disk is physically installed, rescanned with `esxcli storage core adapter rescan -A vmhba0`, and visible in `esxcli storage core device list`.
-    **`Error: Insufficient capacity to add disk group with specified disks`** — Ensure at least one SSD and one capacity disk are specified, and that the disks are not already claimed by another disk group.
+    | Error | Fix |
+    |---|---|
+    | `Error: The disk group cannot be removed while objects are still present` | Wait for all vSAN objects to migrate off the disk group or reduce FTT before removal. |
+    | `Error: Device naa.5001405a1b2c3d4e not found` | Verify the replacement disk is physically installed, rescanned with `esxcli storage core adapter rescan -A vmhba0`, and visible in `esxcli storage core device list`. |
+    | `Error: Insufficient capacity to add disk group with specified disks` | Ensure at least one SSD and one capacity disk are specified, and that the disks are not already claimed by another disk group. |
 ---
 
 ## Backup Validation and Testing

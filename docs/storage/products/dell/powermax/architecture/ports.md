@@ -126,8 +126,10 @@ iscsiadm -m discovery -t sendtargets -p <powermax-iscsi-ip>:3260
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if still failing, verify Unisphere is running with `systemctl status unisphere` on the array).
-    **`iscsiadm: No records found`** — Verify the iSCSI portal IP is correct and reachable with `ping <powermax-iscsi-ip>`, and confirm iSCSI service is enabled on the PowerMax array.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if still failing, verify Unisphere is running with `systemctl status unisphere` on the array). |
+    | `iscsiadm: No records found` | Verify the iSCSI portal IP is correct and reachable with `ping <powermax-iscsi-ip>`, and confirm iSCSI service is enabled on the PowerMax array. |
 ## See also
 
 - [Dell PowerMax — Architecture](../how-it-works/)

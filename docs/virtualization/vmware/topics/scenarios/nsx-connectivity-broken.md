@@ -116,9 +116,11 @@ Rule ID: 1006 | Direction: IN | Protocol: TCP | Port: 22 | Action: DENY | Source
 ```
 
 !!! warning "Common errors"
-    **`vsipioctl: command not found`** — Verify you are running this command directly on the ESXi host (not vCenter) and that DFW is enabled on the cluster.
-    **`No such file or directory: /<world-id>/0`** — Replace `<world-id>` with the actual numeric World ID from the `esxcli vm process list` output (e.g., `/2147483648/0`).
-    **`Permission denied`** — Run the command as root or with appropriate ESXi host privileges; use `su -` to elevate if needed.
+    | Error | Fix |
+    |---|---|
+    | `vsipioctl: command not found` | Verify you are running this command directly on the ESXi host (not vCenter) and that DFW is enabled on the cluster. |
+    | `No such file or directory: /<world-id>/0` | Replace `<world-id>` with the actual numeric World ID from the `esxcli vm process list` output (e.g., `/2147483648/0`). |
+    | `Permission denied` | Run the command as root or with appropriate ESXi host privileges; use `su -` to elevate if needed. |
 ```bash
 # Get hit count for a specific DFW rule — confirms if rule is actively matching traffic
 curl -sk -u admin:<password> \
@@ -146,9 +148,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify NSX Manager hostname matches certificate CN).
-    **`curl: (7) Failed to connect to <nsx-manager>: Name or service not known`** — Confirm NSX Manager hostname/IP is correct and resolvable from your network location.
-    **`{"error_code": 401, "error_message": "Unauthorized"}`** — Verify admin credentials are correct and the user has API access permissions in NSX Manager.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify NSX Manager hostname matches certificate CN). |
+    | `curl: (7) Failed to connect to <nsx-manager>: Name or service not known` | Confirm NSX Manager hostname/IP is correct and resolvable from your network location. |
+    | `{"error_code": 401, "error_message": "Unauthorized"}` | Verify admin credentials are correct and the user has API access permissions in NSX Manager. |
 Look for: a high-hit-count deny rule in a higher category (Emergency/Infrastructure) that matches the source or destination — this shadows any allow rule lower in the list.
 
 ---
@@ -188,9 +192,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already in the command above) or import the NSX Manager CA certificate into your system trust store.
-    **`curl: (401) Unauthorized`** — Verify the admin password is correct and the user has API access permissions in NSX Manager.
-    **`jq: command not found`** — Replace `python3 -m json.tool` with `jq '.'` if jq is installed, or ensure python3 is available on your system.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already in the command above) or import the NSX Manager CA certificate into your system trust store. |
+    | `curl: (401) Unauthorized` | Verify the admin password is correct and the user has API access permissions in NSX Manager. |
+    | `jq: command not found` | Replace `python3 -m json.tool` with `jq '.'` if jq is installed, or ensure python3 is available on your system. |
 From vCenter, go to **NSX → System → Fabric → Nodes → Host Transport Nodes** and check configuration state. If the host shows "Failed" or "Pending":
 
 ```bash
@@ -209,8 +215,10 @@ nsx-vsipfe                     4.1.0.0-21589934       2024-01-15
 ```
 
 !!! warning "Common errors"
-    **`Connect to localhost failed. Error: Unable to connect to the local hostd agent.`** — Ensure the ESXi host is in maintenance mode or restart the hostd service with `services.sh restart`.
-    **`grep: (standard input): Permission denied`** — Run the command with root privileges using `sudo` or execute it directly in an ESXi SSH session where you already have elevated permissions.
+    | Error | Fix |
+    |---|---|
+    | `Connect to localhost failed. Error: Unable to connect to the local hostd agent.` | Ensure the ESXi host is in maintenance mode or restart the hostd service with `services.sh restart`. |
+    | `grep: (standard input): Permission denied` | Run the command with root privileges using `sudo` or execute it directly in an ESXi SSH session where you already have elevated permissions. |
 Look for: any NSX VIB at a different version than the rest indicates a partial upgrade or failed re-apply — re-apply the transport node profile from NSX Manager.
 
 ---
@@ -262,8 +270,10 @@ Destination          Next Hop         Metric  Type
 ```
 
 !!! warning "Common errors"
-    **`vrf: invalid VRF ID`** — Verify the VRF ID from `get logical-routers` output matches your T1 router and use the correct numeric ID.
-    **`get route: command not found`** — Ensure you are in the correct VRF context using `vrf <id>` before running route commands.
+    | Error | Fix |
+    |---|---|
+    | `vrf: invalid VRF ID` | Verify the VRF ID from `get logical-routers` output matches your T1 router and use the correct numeric ID. |
+    | `get route: command not found` | Ensure you are in the correct VRF context using `vrf <id>` before running route commands. |
 Check the T1 → T0 uplink and BGP state:
 
 ```bash
@@ -304,9 +314,11 @@ round-trip min/avg/max/stddev = 2.287/2.311/2.341/0.022 ms
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the correct VRF ID syntax for your NSX-T or vSphere environment (use `show vrf` to list available VRFs).
-    **`Neighbor 10.200.1.5: connect to peer failed (Connection refused)`** — Check that BGP is enabled on the upstream router and that the neighbor relationship is configured with matching AS numbers and timers.
-    **`PING: sendto: No route to host`** — Verify the source IP address is assigned to an active interface on the T0 uplink and that a route exists to the upstream router IP.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the correct VRF ID syntax for your NSX-T or vSphere environment (use `show vrf` to list available VRFs). |
+    | `Neighbor 10.200.1.5: connect to peer failed (Connection refused)` | Check that BGP is enabled on the upstream router and that the neighbor relationship is configured with matching AS numbers and timers. |
+    | `PING: sendto: No route to host` | Verify the source IP address is assigned to an active interface on the T0 uplink and that a route exists to the upstream router IP. |
 Look for: `State = Active` or `Connect` on any BGP neighbor means the session is down — check IP reachability and AS/password configuration on both sides.
 
 ---
@@ -359,9 +371,11 @@ PING 10.50.1.88 from 10.50.1.45: 56 data bytes
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to resolve TEP interface — tunnel port not configured`** — Configure the tunnel endpoint (TEP) on the edge node using the appropriate network configuration command before attempting connectivity checks.
-    **`PING: sendto: No route to host`** — Verify that the ESXi host TEP IP is reachable and that routing/firewall rules permit traffic between the edge TEP subnet and ESXi TEP subnet.
-    **`Error: Command 'get tunnel-port interface' not found`** — Ensure you are running this command from the NSX edge node CLI context, not a standard ESXi or Linux shell.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to resolve TEP interface — tunnel port not configured` | Configure the tunnel endpoint (TEP) on the edge node using the appropriate network configuration command before attempting connectivity checks. |
+    | `PING: sendto: No route to host` | Verify that the ESXi host TEP IP is reachable and that routing/firewall rules permit traffic between the edge TEP subnet and ESXi TEP subnet. |
+    | `Error: Command 'get tunnel-port interface' not found` | Ensure you are running this command from the NSX edge node CLI context, not a standard ESXi or Linux shell. |
 ```bash
 # If edge TEP has a stale ARP entry after a recent migration or network event:
 clear arp
@@ -387,9 +401,11 @@ All connectivity checks passed.
 ```
 
 !!! warning "Common errors"
-    **`command not found: clear arp`** — Use `ip neigh flush all` or `arp -d -a` depending on your OS, or consult your hypervisor's CLI documentation for the correct ARP flush command.
-    **`RTNETLINK answers: Operation not permitted`** — Run the command with sudo or as root, since ARP cache manipulation requires elevated privileges.
-    **`BGP session down: Neighbor 10.240.1.1 not responding`** — Verify network connectivity to the BGP neighbor and check that the BGP daemon is running with `systemctl status bgpd` or equivalent.
+    | Error | Fix |
+    |---|---|
+    | `command not found: clear arp` | Use `ip neigh flush all` or `arp -d -a` depending on your OS, or consult your hypervisor's CLI documentation for the correct ARP flush command. |
+    | `RTNETLINK answers: Operation not permitted` | Run the command with sudo or as root, since ARP cache manipulation requires elevated privileges. |
+    | `BGP session down: Neighbor 10.240.1.1 not responding` | Verify network connectivity to the BGP neighbor and check that the BGP daemon is running with `systemctl status bgpd` or equivalent. |
 ---
 
 ## 7. TEP (Tunnel Endpoint) Connectivity from ESXi
@@ -432,8 +448,10 @@ geneveClient            true
 ```
 
 !!! warning "Common errors"
-    **`vmkping: Unknown host 192.168.100.67`** — Verify the remote TEP IP address is correct and reachable on the underlay network.
-    **`100% packet loss`** — Check that MTU is set to at least 1600 on vmk10 and the physical switch allows UDP 6081; verify GENEVE firewall rule is enabled with `esxcli network firewall ruleset set -r geneveClient -e true`.
+    | Error | Fix |
+    |---|---|
+    | `vmkping: Unknown host 192.168.100.67` | Verify the remote TEP IP address is correct and reachable on the underlay network. |
+    | `100% packet loss` | Check that MTU is set to at least 1600 on vmk10 and the physical switch allows UDP 6081; verify GENEVE firewall rule is enabled with `esxcli network firewall ruleset set -r geneveClient -e true`. |
 Look for: `vmkping -I vmk10 -d -s 1572` success to all remote TEPs confirms the GENEVE underlay is healthy; failure points to VLAN, MTU, or routing issues in the physical network.
 
 ---

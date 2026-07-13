@@ -141,9 +141,11 @@ INFO      VXRAIL_ALERT_042      Scheduled maintenance window approaching
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove `--insecure` flag only if you have a valid CA certificate, or keep it for self-signed lab environments.
-    **`jq: command not found`** — Install `python3-json` or use `python3 -m json.tool` as shown in the examples (already included in the script).
-    **`curl: (7) Failed to connect to vxrail-mgr.example.com port 443: Connection refused`** — Verify the VXM hostname/IP is correct and the management interface is reachable with `ping vxrail-mgr.example.com` and `telnet vxrail-mgr.example.com 443`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove `--insecure` flag only if you have a valid CA certificate, or keep it for self-signed lab environments. |
+    | `jq: command not found` | Install `python3-json` or use `python3 -m json.tool` as shown in the examples (already included in the script). |
+    | `curl: (7) Failed to connect to vxrail-mgr.example.com port 443: Connection refused` | Verify the VXM hostname/IP is correct and the management interface is reachable with `ping vxrail-mgr.example.com` and `telnet vxrail-mgr.example.com 443`. |
 ### LCM (Lifecycle Manager) Upgrades
 
 ```bash
@@ -213,9 +215,11 @@ Step:  UPGRADING_VXRAIL_MANAGER
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused`** — Verify the VXM hostname/IP in the $VXM variable and ensure the management interface is reachable and the API service is running.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Confirm the $AUTH variable contains valid credentials (e.g., `-H "Authorization: Bearer $TOKEN"`) and the API endpoint is correct.
-    **`"error": "Bundle file not found at /tmp/VxRail-7.0.xxx-bundle.zip"`** — Download the correct VxRail bundle to the specified path or update the bundle_file_locator path to match the actual file location.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused` | Verify the VXM hostname/IP in the $VXM variable and ensure the management interface is reachable and the API service is running. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Confirm the $AUTH variable contains valid credentials (e.g., `-H "Authorization: Bearer $TOKEN"`) and the API endpoint is correct. |
+    | `"error": "Bundle file not found at /tmp/VxRail-7.0.xxx-bundle.zip"` | Download the correct VxRail bundle to the specified path or update the bundle_file_locator path to match the actual file location. |
 ---
 
 ## VxRail Manager SSH CLI
@@ -239,9 +243,11 @@ mystic@vxrail-mgr:~$
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname vxrail-mgr.example.com: Name or service not known`** — Verify the VxRail Manager hostname or IP address is correct and resolvable from your network.
-    **`Permission denied (publickey,password).`** — Confirm the username and password are correct, and that the user account exists on the VxRail Manager.
-    **`ssh: connect to host vxrail-mgr.example.com port 22: Connection refused`** — Ensure the VxRail Manager is powered on and SSH service is enabled; check network connectivity to the management interface.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname vxrail-mgr.example.com: Name or service not known` | Verify the VxRail Manager hostname or IP address is correct and resolvable from your network. |
+    | `Permission denied (publickey,password).` | Confirm the username and password are correct, and that the user account exists on the VxRail Manager. |
+    | `ssh: connect to host vxrail-mgr.example.com port 22: Connection refused` | Ensure the VxRail Manager is powered on and SSH service is enabled; check network connectivity to the management interface. |
 Once logged in, run `vxm-cli` commands:
 
 ```bash
@@ -291,9 +297,11 @@ Jan 15 14:23:47 vxrail-mgr marvin[2847]: [INFO] vSAN capacity: 89.2% utilized
 ```
 
 !!! warning "Common errors"
-    **`/opt/vmware/marvin/bin/vxm-cli: command not found`** — Verify the VxRail Manager package is installed with `rpm -qa | grep marvin` and check the installation path.
-    **`Error: Unable to connect to VxRail Manager API (Connection refused)`** — Restart the marvin service with `sudo systemctl restart marvin` and wait 30 seconds for it to fully initialize.
-    **`sudo: systemctl: command not found`** — Run the restart command without `sudo` if your user already has systemctl permissions, or check your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `/opt/vmware/marvin/bin/vxm-cli: command not found` | Verify the VxRail Manager package is installed with `rpm -qa | grep marvin` and check the installation path. |
+    | `Error: Unable to connect to VxRail Manager API (Connection refused)` | Restart the marvin service with `sudo systemctl restart marvin` and wait 30 seconds for it to fully initialize. |
+    | `sudo: systemctl: command not found` | Run the restart command without `sudo` if your user already has systemctl permissions, or check your PATH environment variable. |
 ---
 
 ## PowerCLI + VxRail Module
@@ -511,9 +519,11 @@ dell_openmanage
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to iDRAC at idrac-node01.example.com`** — Verify the iDRAC hostname/IP is correct and reachable via `ping idrac-node01.example.com`, and confirm SSH is enabled in iDRAC settings.
-    **`racadm: ERROR: DRAC_E_INVALID_PARAMETER`** — Ensure you are running the command with correct syntax; use `racadm help <command>` to verify the exact parameter format for your iDRAC firmware version.
-    **`command not found: esxcli`** — Run the in-band command directly from an ESXi host (SSH to the host first), not from iDRAC, and verify Dell OpenManage Agent is installed with `rpm -qa | grep dell`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to iDRAC at idrac-node01.example.com` | Verify the iDRAC hostname/IP is correct and reachable via `ping idrac-node01.example.com`, and confirm SSH is enabled in iDRAC settings. |
+    | `racadm: ERROR: DRAC_E_INVALID_PARAMETER` | Ensure you are running the command with correct syntax; use `racadm help <command>` to verify the exact parameter format for your iDRAC firmware version. |
+    | `command not found: esxcli` | Run the in-band command directly from an ESXi host (SSH to the host first), not from iDRAC, and verify Dell OpenManage Agent is installed with `rpm -qa | grep dell`. |
 ## See also
 
 - [VxRail — Overview](../../../)

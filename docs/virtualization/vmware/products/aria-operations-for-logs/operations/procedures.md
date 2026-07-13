@@ -48,8 +48,10 @@ logger -n <vrli-ip> -P 514 -d "Test message from $(hostname)"
 ```
 
 !!! warning "Common errors"
-    **`logger: unknown host <vrli-ip>`** — Verify the vRLI IP address is correct and reachable from the source device using `ping <vrli-ip>`.
-    **`logger: socket: Permission denied`** — Run the command with `sudo` or ensure the user has permission to send UDP packets to port 514.
+    | Error | Fix |
+    |---|---|
+    | `logger: unknown host <vrli-ip>` | Verify the vRLI IP address is correct and reachable from the source device using `ping <vrli-ip>`. |
+    | `logger: socket: Permission denied` | Run the command with `sudo` or ensure the user has permission to send UDP packets to port 514. |
 ---
 
 ## Install a Content Pack
@@ -104,9 +106,11 @@ root@vrli-prod-01.datacenter.local:~#
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and that root login is enabled in `/etc/ssh/sshd_config`, or use the vRLI admin account instead.
-    **`No route to host`** — Confirm the vRLI FQDN resolves correctly with `nslookup <vrli-fqdn>` and that the appliance is reachable on port 22.
-    **`Filesystem /storage not found in df output`** — Check that the appliance storage is mounted by running `mount | grep storage` or verify the correct mount point in vRLI's configuration.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and that root login is enabled in `/etc/ssh/sshd_config`, or use the vRLI admin account instead. |
+    | `No route to host` | Confirm the vRLI FQDN resolves correctly with `nslookup <vrli-fqdn>` and that the appliance is reachable on port 22. |
+    | `Filesystem /storage not found in df output` | Check that the appliance storage is mounted by running `mount | grep storage` or verify the correct mount point in vRLI's configuration. |
 ---
 
 ## Archive Log Data to NFS
@@ -203,9 +207,11 @@ curl -sk -X POST -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the vRLI certificate into your system's CA bundle.
-    **`{"error":"Invalid credentials","statusCode":401}`** — Verify the admin password is correct and URL-encoded if it contains special characters; use `-u admin:$(echo -n 'password' | jq -sRr @uri)` for special chars.
-    **`{"error":"Channel not found","statusCode":404}`** — Replace `<channel-id>` with the actual channel ID returned from the creation response (e.g., `channel-webhook-8f4a2c1b`).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the vRLI certificate into your system's CA bundle. |
+    | `{"error":"Invalid credentials","statusCode":401}` | Verify the admin password is correct and URL-encoded if it contains special characters; use `-u admin:$(echo -n 'password' | jq -sRr @uri)` for special chars. |
+    | `{"error":"Channel not found","statusCode":404}` | Replace `<channel-id>` with the actual channel ID returned from the creation response (e.g., `channel-webhook-8f4a2c1b`). |
 Payload variables: `${alertName}`, `${hitCount}`, `${url}`, `${fields}`, `${timestamp}`.
 
 ---
@@ -271,9 +277,11 @@ curl -sk -X POST -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate validation, or import the vRLI certificate into your system trust store.
-    **`{"error":"Invalid credentials","statusCode":401}`** — Verify the admin username and password are correct and the account has API permissions enabled.
-    **`curl: (7) Failed to connect to <vrli-fqdn> port 443: Connection refused`** — Confirm the vRLI hostname/IP is correct, the service is running, and firewall rules allow port 443 access from your client.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate validation, or import the vRLI certificate into your system trust store. |
+    | `{"error":"Invalid credentials","statusCode":401}` | Verify the admin username and password are correct and the account has API permissions enabled. |
+    | `curl: (7) Failed to connect to <vrli-fqdn> port 443: Connection refused` | Confirm the vRLI hostname/IP is correct, the service is running, and firewall rules allow port 443 access from your client. |
 After configuration, alerts in vRLI that match the integration criteria create corresponding events in Aria Operations, visible in the **Workbench** and alert timeline.
 
 ---
@@ -315,8 +323,10 @@ grep -i "nsx\|tnc\|edge" /var/log/loginsight/ingestion.log | tail -20
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/loginsight/ingestion.log: No such file or directory`** — Verify vRLI is running with `systemctl status loginsight` and check the correct log path with `find /var/log -name "*ingestion*"`.
-    **`tail: cannot open '/var/log/loginsight/ingestion.log' for reading: Permission denied`** — Run the command with `sudo` or switch to the loginsight user with `sudo su - loginsight`.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/loginsight/ingestion.log: No such file or directory` | Verify vRLI is running with `systemctl status loginsight` and check the correct log path with `find /var/log -name "*ingestion*"`. |
+    | `tail: cannot open '/var/log/loginsight/ingestion.log' for reading: Permission denied` | Run the command with `sudo` or switch to the loginsight user with `sudo su - loginsight`. |
 ---
 
 ## Configure Event Forwarding to SIEM
@@ -354,9 +364,11 @@ Connection to siem-prod-01.corp.local 514 port [tcp/syslog] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`nc: getaddrinfo failed for <siem-host>: Name or service not known`** — Verify the SIEM hostname is resolvable by running `nslookup <siem-host>` or update `/etc/hosts` with the correct IP address.
-    **`Connection refused`** — Confirm the SIEM service is listening on the specified port with `netstat -tlnp | grep <siem-port>` on the SIEM host and verify firewall rules allow vRLI to that destination.
-    **`No such file or directory`** — Check that the vRLI appliance has the correct log file path by running `ls -la /var/log/loginsight/` to confirm runtime.log exists.
+    | Error | Fix |
+    |---|---|
+    | `nc: getaddrinfo failed for <siem-host>: Name or service not known` | Verify the SIEM hostname is resolvable by running `nslookup <siem-host>` or update `/etc/hosts` with the correct IP address. |
+    | `Connection refused` | Confirm the SIEM service is listening on the specified port with `netstat -tlnp | grep <siem-port>` on the SIEM host and verify firewall rules allow vRLI to that destination. |
+    | `No such file or directory` | Check that the vRLI appliance has the correct log file path by running `ls -la /var/log/loginsight/` to confirm runtime.log exists. |
 ---
 
 ## Create a Custom Extracted Field
@@ -438,9 +450,11 @@ inet 192.168.1.50/32 scope global secondary eth0
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 192.168.1.50 port 514 (tcp) failed: Connection refused`** — Verify the syslog forwarder service is running on the vRLI cluster with `systemctl status loginsight` and check firewall rules allow port 514 inbound.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate validation, or import the vRLI self-signed cert into your management host's CA bundle.
-    **`inet 192.168.1.50/32 scope global secondary eth0` not found in output`** — SSH to the vRLI master node and confirm keepalived is running with `systemctl status keepalived`; if stopped, restart it with `systemctl start keepalived`.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 192.168.1.50 port 514 (tcp) failed: Connection refused` | Verify the syslog forwarder service is running on the vRLI cluster with `systemctl status loginsight` and check firewall rules allow port 514 inbound. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate validation, or import the vRLI self-signed cert into your management host's CA bundle. |
+    | `inet 192.168.1.50/32 scope global secondary eth0` not found in output` | SSH to the vRLI master node and confirm keepalived is running with `systemctl status keepalived`; if stopped, restart it with `systemctl start keepalived`. |
 6. Test HA failover: power off the master VM → confirm VIP moves to a worker (now promoted master) within ~30 seconds
 
 ---
@@ -500,9 +514,11 @@ curl -sk -u 'admin:<password>' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, so verify the flag is not being removed).
-    **`jq: parse error: Cannot index string with string "nodes"`** — Ensure the API endpoint is correct and the cluster is fully initialized; check that you're using `/api/v2/cluster/nodes` not `/api/v1/cluster/nodes`.
-    **`401 Unauthorized`** — Verify the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u 'admin:password' https://<vrli-fqdn>/api/v1/version` first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, so verify the flag is not being removed). |
+    | `jq: parse error: Cannot index string with string "nodes"` | Ensure the API endpoint is correct and the cluster is fully initialized; check that you're using `/api/v2/cluster/nodes` not `/api/v1/cluster/nodes`. |
+    | `401 Unauthorized` | Verify the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u 'admin:password' https://<vrli-fqdn>/api/v1/version` first. |
 - vRLI UI → **Administration** → **Content Packs** → confirm all installed packs still active
 - vRLI UI → **Administration** → **Cluster** → confirm all nodes **ACTIVE**
 - Delete node snapshots after a 48-hour burn-in period
@@ -563,9 +579,11 @@ curl -sk -u 'admin:<password>' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vRLI certificate into your system's CA bundle.
-    **`curl: (7) Failed to connect to <vrli-fqdn> port 443: Connection refused`** — Verify the vRLI hostname/IP is correct, the appliance is running, and port 443 is accessible from your management host.
-    **`HTTP/1.1 401 Unauthorized`** — Confirm the admin credentials are correct and the user has API access permissions in vRLI.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the vRLI certificate into your system's CA bundle. |
+    | `curl: (7) Failed to connect to <vrli-fqdn> port 443: Connection refused` | Verify the vRLI hostname/IP is correct, the appliance is running, and port 443 is accessible from your management host. |
+    | `HTTP/1.1 401 Unauthorized` | Confirm the admin credentials are correct and the user has API access permissions in vRLI. |
 ---
 
 ## Common Search Queries
@@ -662,9 +680,11 @@ Connection to 192.168.45.120 6514 [tcp] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 192.168.45.120 port 514 (tcp) failed: Connection refused`** — Verify the Aria Operations for Logs service is running with `systemctl status aria-logs` and confirm the syslog listener is enabled in the configuration.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the Aria Operations for Logs CA certificate into your system's trusted store.
-    **`curl: (7) Failed to connect to 192.168.45.120 port 9543: Connection timed out`** — Check network connectivity and firewall rules; ensure port 9543 is open and the Aria Operations for Logs API service is listening with `netstat -tlnp | grep 9543`.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 192.168.45.120 port 514 (tcp) failed: Connection refused` | Verify the Aria Operations for Logs service is running with `systemctl status aria-logs` and confirm the syslog listener is enabled in the configuration. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the Aria Operations for Logs CA certificate into your system's trusted store. |
+    | `curl: (7) Failed to connect to 192.168.45.120 port 9543: Connection timed out` | Check network connectivity and firewall rules; ensure port 9543 is open and the Aria Operations for Logs API service is listening with `netstat -tlnp | grep 9543`. |
 If the connection is refused, check:
 - Firewall rules between the source and Aria Logs (see architecture/ports page for required ports)
 - Aria Logs worker/master health: `ssh root@<aria-logs-ip>` → `service cfapi status`
@@ -694,9 +714,11 @@ journalctl -u rsyslog -n 50 | grep -i error
 ```
 
 !!! warning "Common errors"
-    **`grep: /etc/rsyslog.d/: No such file or directory`** — Create the rsyslog.d directory with `mkdir -p /etc/rsyslog.d/` and add your Aria Logs forwarding rule there.
-    **`Job for rsyslog.service failed because the control process exited with error code.`** — Validate rsyslog configuration syntax with `rsyslog -N1` to identify malformed rules before restarting.
-    **`connect(2) failed in doAction() to 192.168.45.120:514 [name=192.168.45.120 errno=111 Connection refused]`** — Verify the Aria Logs collector is running and listening on port 514 with `nc -zv 192.168.45.120 514`.
+    | Error | Fix |
+    |---|---|
+    | `grep: /etc/rsyslog.d/: No such file or directory` | Create the rsyslog.d directory with `mkdir -p /etc/rsyslog.d/` and add your Aria Logs forwarding rule there. |
+    | `Job for rsyslog.service failed because the control process exited with error code.` | Validate rsyslog configuration syntax with `rsyslog -N1` to identify malformed rules before restarting. |
+    | `connect(2) failed in doAction() to 192.168.45.120:514 [name=192.168.45.120 errno=111 Connection refused]` | Verify the Aria Logs collector is running and listening on port 514 with `nc -zv 192.168.45.120 514`. |
 **For ESXi hosts:**
 
 ```bash
@@ -720,8 +742,10 @@ Syslog.queues.discardThreshold: 90
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace syslog`** — Verify the ESXi host version supports esxcli syslog commands (6.5+) and run the command directly on the ESXi host, not a vCenter server.
-    **`Connection refused to syslog target <IP>:514`** — Confirm the remote syslog server is listening on the specified port and firewall rules allow outbound UDP/TCP 514 from the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace syslog` | Verify the ESXi host version supports esxcli syslog commands (6.5+) and run the command directly on the ESXi host, not a vCenter server. |
+    | `Connection refused to syslog target <IP>:514` | Confirm the remote syslog server is listening on the specified port and firewall rules allow outbound UDP/TCP 514 from the ESXi host. |
 ### Step 4 — Verify the Content Pack / Field Extraction
 
 ![Step 4 — Verify the Content Pack / Field Extraction](../../../../../assets/aria-operations-for-logs-proc-step-4-verify-the-content-pack-field-extractio.svg)
@@ -816,9 +840,11 @@ systemctl restart rsyslog
 ```
 
 !!! warning "Common errors"
-    **`sed: can't read /etc/rsyslog.conf: No such file or directory`** — Verify the rsyslog package is installed with `rpm -q rsyslog` or `dpkg -l | grep rsyslog` and install if missing.
-    **`Failed to restart rsyslog.service: Unit rsyslog.service not found.`** — Confirm rsyslog is installed and enabled with `systemctl list-unit-files | grep rsyslog`, or use the correct service name for your syslog daemon.
-    **`sed: -i may not be used on stdin`** — Ensure `/etc/rsyslog.conf` is a regular file and not a pipe; check file permissions with `ls -l /etc/rsyslog.conf` and verify you have write access.
+    | Error | Fix |
+    |---|---|
+    | `sed: can't read /etc/rsyslog.conf: No such file or directory` | Verify the rsyslog package is installed with `rpm -q rsyslog` or `dpkg -l | grep rsyslog` and install if missing. |
+    | `Failed to restart rsyslog.service: Unit rsyslog.service not found.` | Confirm rsyslog is installed and enabled with `systemctl list-unit-files | grep rsyslog`, or use the correct service name for your syslog daemon. |
+    | `sed: -i may not be used on stdin` | Ensure `/etc/rsyslog.conf` is a regular file and not a pipe; check file permissions with `ls -l /etc/rsyslog.conf` and verify you have write access. |
 **ESXi:**
 
 ```bash
@@ -834,8 +860,10 @@ esxcli system syslog reload
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or flag '--loghost'`** — Use the correct flag syntax `--loghost=` with an equals sign instead of a space.
-    **`Error: Permission denied`** — Run the command with root privileges or as a user with ESXi administrative permissions using `sudo` or direct root login.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or flag '--loghost'` | Use the correct flag syntax `--loghost=` with an equals sign instead of a space. |
+    | `Error: Permission denied` | Run the command with root privileges or as a user with ESXi administrative permissions using `sudo` or direct root login. |
 **Windows (Aria Logs agent):**
 
 ```powershell

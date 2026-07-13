@@ -159,9 +159,11 @@ network-nsg-exemption                 /subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1
 ```
 
 !!! warning "Common errors"
-    **`The provided scope is invalid.`** — Verify the subscription ID and resource group name are correct, and that the resource exists in the specified scope.
-    **`The policy exemption 'legacy-vm-public-ip-exemption' was not found.`** — Confirm the exemption name matches exactly and exists in the target scope before attempting to update.
-    **`The date format is invalid. Expected format: YYYY-MM-DDTHH:MM:SSZ`** — Use ISO 8601 format with UTC timezone (Z suffix) for the `--expires-on` parameter.
+    | Error | Fix |
+    |---|---|
+    | `The provided scope is invalid.` | Verify the subscription ID and resource group name are correct, and that the resource exists in the specified scope. |
+    | `The policy exemption 'legacy-vm-public-ip-exemption' was not found.` | Confirm the exemption name matches exactly and exists in the target scope before attempting to update. |
+    | `The date format is invalid. Expected format: YYYY-MM-DDTHH:MM:SSZ` | Use ISO 8601 format with UTC timezone (Z suffix) for the `--expires-on` parameter. |
 ### Exemption Lifecycle
 
 | Stage | Action |
@@ -197,9 +199,11 @@ Time                          Operation                                    Calle
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The subscription '<subscription-id>' could not be found.`** — Replace `<subscription-id>` with your actual Azure subscription ID or run `az account show --query id` to retrieve it.
-    **`ERROR: The following arguments are required: --subscription`** — Provide the `--subscription` parameter with a valid subscription ID or set the default subscription using `az account set --subscription <id>`.
-    **`ERROR: The time format is invalid. Valid formats are: 'YYYY-MM-DDTHH:MM:SSZ' or 'YYYY-MM-DD HH:MM:SS'.`** — Ensure the `--start-time` value uses ISO 8601 format (e.g., `2026-05-01T00:00:00Z`) with a valid date.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The subscription '<subscription-id>' could not be found.` | Replace `<subscription-id>` with your actual Azure subscription ID or run `az account show --query id` to retrieve it. |
+    | `ERROR: The following arguments are required: --subscription` | Provide the `--subscription` parameter with a valid subscription ID or set the default subscription using `az account set --subscription <id>`. |
+    | `ERROR: The time format is invalid. Valid formats are: 'YYYY-MM-DDTHH:MM:SSZ' or 'YYYY-MM-DD HH:MM:SS'.` | Ensure the `--start-time` value uses ISO 8601 format (e.g., `2026-05-01T00:00:00Z`) with a valid date. |
 ## Exemption Best Practices
 
 | Practice | Rationale |

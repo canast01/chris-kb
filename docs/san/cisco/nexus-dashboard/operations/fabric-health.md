@@ -99,9 +99,11 @@ curl -sk -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; ensure it's not removed in production use).
-    **`{"error": "Invalid token or token expired"}`** — Regenerate the bearer token from Nexus Dashboard admin panel and update the Authorization header.
-    **`{"error": "Invalid filter parameter: drop_count_gt"}`** — Use the correct filter syntax `"drop_count": {"$gt": 0}` instead of `drop_count_gt`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; ensure it's not removed in production use). |
+    | `{"error": "Invalid token or token expired"}` | Regenerate the bearer token from Nexus Dashboard admin panel and update the Authorization header. |
+    | `{"error": "Invalid filter parameter: drop_count_gt"}` | Use the correct filter syntax `"drop_count": {"$gt": 0}` instead of `drop_count_gt`. |
 ## Common Fabric Health Issues
 
 | Issue | Likely Cause | Fix |

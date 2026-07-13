@@ -96,9 +96,11 @@ xtrabackup: recognized client arguments: --socket=/var/run/mysqld/mysqld.sock
 ```
 
 !!! warning "Common errors"
-    **`xtrabackup: error: failed to read encryption key from '/etc/xtrabackup.key': Permission denied`** — Ensure the key file is readable by the MySQL/backup user with `chmod 400 /etc/xtrabackup.key && chown mysql:mysql /etc/xtrabackup.key`.
-    **`xtrabackup: error: Target directory '/backup/xb-2024-04-15' already exists`** — Remove the existing backup directory or use a unique target directory name with a different timestamp or suffix.
-    **`xtrabackup: error: Failed to connect to MySQL server on 'localhost' (111)`** — Verify MySQL is running with `systemctl status mysql` and check socket/port connectivity.
+    | Error | Fix |
+    |---|---|
+    | `xtrabackup: error: failed to read encryption key from '/etc/xtrabackup.key': Permission denied` | Ensure the key file is readable by the MySQL/backup user with `chmod 400 /etc/xtrabackup.key && chown mysql:mysql /etc/xtrabackup.key`. |
+    | `xtrabackup: error: Target directory '/backup/xb-2024-04-15' already exists` | Remove the existing backup directory or use a unique target directory name with a different timestamp or suffix. |
+    | `xtrabackup: error: Failed to connect to MySQL server on 'localhost' (111)` | Verify MySQL is running with `systemctl status mysql` and check socket/port connectivity. |
 ## Key Rotation
 
 ```sql

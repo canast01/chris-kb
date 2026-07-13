@@ -198,8 +198,10 @@ logdir /var/log/chrony
 ```
 
 !!! warning "Common errors"
-    **`chrony: /etc/chrony/chrony.conf:1: Unknown command 'pool'`** — Ensure you are editing the correct chrony configuration file (/etc/chrony/chrony.conf) and not ntpd's ntp.conf, as syntax differs between the two daemons.
-    **`chrony: /var/log/chrony: Permission denied`** — Create the logdir with appropriate permissions using `mkdir -p /var/log/chrony && chown chrony:chrony /var/log/chrony && chmod 755 /var/log/chrony` before restarting chronyd.
+    | Error | Fix |
+    |---|---|
+    | `chrony: /etc/chrony/chrony.conf:1: Unknown command 'pool'` | Ensure you are editing the correct chrony configuration file (/etc/chrony/chrony.conf) and not ntpd's ntp.conf, as syntax differs between the two daemons. |
+    | `chrony: /var/log/chrony: Permission denied` | Create the logdir with appropriate permissions using `mkdir -p /var/log/chrony && chown chrony:chrony /var/log/chrony && chmod 755 /var/log/chrony` before restarting chronyd. |
 ## Troubleshooting
 
 | Symptom | Check | Action |

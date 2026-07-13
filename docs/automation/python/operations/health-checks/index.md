@@ -88,9 +88,11 @@ OK
 ```
 
 !!! warning "Common errors"
-    **`pip3: command not found`** — Install Python 3 and pip3 using your system package manager (apt install python3-pip on Ubuntu/Debian).
-    **`WARNING: pip is being invoked by an old script wrapper`** — Upgrade pip with `python3 -m pip install --upgrade pip`.
-    **`error: externally-managed-environment`** — Use a virtual environment or add `--break-system-packages` flag to pip install commands.
+    | Error | Fix |
+    |---|---|
+    | `pip3: command not found` | Install Python 3 and pip3 using your system package manager (apt install python3-pip on Ubuntu/Debian). |
+    | `WARNING: pip is being invoked by an old script wrapper` | Upgrade pip with `python3 -m pip install --upgrade pip`. |
+    | `error: externally-managed-environment` | Use a virtual environment or add `--break-system-packages` flag to pip install commands. |
 **Check pyenv version (if using pyenv)**
 
 ```bash
@@ -105,8 +107,10 @@ cat .python-version
 ```
 
 !!! warning "Common errors"
-    **`pyenv: version `3.11.7' is not installed`** — Run `pyenv install 3.11.7` to install the required Python version.
-    **`cat: .python-version: No such file or directory`** — Create a `.python-version` file in the project root with `echo "3.11.7" > .python-version`.
+    | Error | Fix |
+    |---|---|
+    | `pyenv: version `3.11.7' is not installed` | Run `pyenv install 3.11.7` to install the required Python version. |
+    | `cat: .python-version: No such file or directory` | Create a `.python-version` file in the project root with `echo "3.11.7" > .python-version`. |
 The `.python-version` file records the required Python version for the project. `pyenv` activates it automatically when entering the directory.
 
 **Verify virtual environment is active**
@@ -123,8 +127,10 @@ python3 -c "import sys; print(sys.prefix)"
 ```
 
 !!! warning "Common errors"
-    **`No such file or directory`** — Activate the virtual environment first with `source /path/to/venv/bin/activate`.
-    **`ModuleNotFoundError: No module named 'sys'`** — This is extremely rare; reinstall Python with `python3 -m venv /path/to/venv` and reactivate.
+    | Error | Fix |
+    |---|---|
+    | `No such file or directory` | Activate the virtual environment first with `source /path/to/venv/bin/activate`. |
+    | `ModuleNotFoundError: No module named 'sys'` | This is extremely rare; reinstall Python with `python3 -m venv /path/to/venv` and reactivate. |
 If `VIRTUAL_ENV` is empty, activate the venv before running scripts:
 
 ```bash
@@ -137,8 +143,10 @@ source /opt/automation/venv/bin/activate
 ```
 
 !!! warning "Common errors"
-    **`bash: /opt/automation/venv/bin/activate: No such file or directory`** — Create the virtual environment with `python3 -m venv /opt/automation/venv` or verify the correct path.
-    **`bash: source: command not found`** — Use `. /opt/automation/venv/bin/activate` instead, or ensure you're running bash (not sh).
+    | Error | Fix |
+    |---|---|
+    | `bash: /opt/automation/venv/bin/activate: No such file or directory` | Create the virtual environment with `python3 -m venv /opt/automation/venv` or verify the correct path. |
+    | `bash: source: command not found` | Use `. /opt/automation/venv/bin/activate` instead, or ensure you're running bash (not sh). |
 **Check for environment variable completeness**
 
 ```bash
@@ -151,8 +159,10 @@ python3 -c "import os; print([k for k in ['API_URL','API_TOKEN','LOG_DIR'] if k 
 ```
 
 !!! warning "Common errors"
-    **`ModuleNotFoundError: No module named 'os'`** — This is extremely rare; reinstall Python 3 if it occurs, as `os` is a built-in module.
-    **`SyntaxError: invalid syntax`** — Ensure the bash block is copied exactly without line breaks; paste the entire command as a single line or properly escape newlines with backslashes.
+    | Error | Fix |
+    |---|---|
+    | `ModuleNotFoundError: No module named 'os'` | This is extremely rare; reinstall Python 3 if it occurs, as `os` is a built-in module. |
+    | `SyntaxError: invalid syntax` | Ensure the bash block is copied exactly without line breaks; paste the entire command as a single line or properly escape newlines with backslashes. |
 Replace the list with the environment variables your scripts require.
 
 **Key health indicators**
@@ -201,8 +211,10 @@ pyyaml                     6.0.1       6.0.2       wheel
 ```
 
 !!! warning "Common errors"
-    **`WARNING: pip is being invoked by an old script wrapper.`** — Upgrade pip with `python3 -m pip install --upgrade pip` to use the current wrapper.
-    **`ERROR: Could not find a version that satisfies the requirement`** — Ensure the package name is spelled correctly and the PyPI repository is accessible.
+    | Error | Fix |
+    |---|---|
+    | `WARNING: pip is being invoked by an old script wrapper.` | Upgrade pip with `python3 -m pip install --upgrade pip` to use the current wrapper. |
+    | `ERROR: Could not find a version that satisfies the requirement` | Ensure the package name is spelled correctly and the PyPI repository is accessible. |
 **Check for dependency conflicts**
 
 ```bash
@@ -220,8 +232,10 @@ To avoid this problem you can invoke Python with '-m pip' instead of trying to c
 ```
 
 !!! warning "Common errors"
-    **`ERROR: pip's dependency resolver does not currently take into account all the packages that are installed with your project in order to compare their dependency versions.`** — Run `pip3 install --upgrade pip` to update pip to the latest version that fully resolves dependencies.
-    **`WARNING: Ignoring invalid distribution -ip`** — Remove corrupted package metadata by running `pip3 install --force-reinstall <package_name>` or clear pip cache with `rm -rf ~/.cache/pip`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: pip's dependency resolver does not currently take into account all the packages that are installed with your project in order to compare their dependency versions.` | Run `pip3 install --upgrade pip` to update pip to the latest version that fully resolves dependencies. |
+    | `WARNING: Ignoring invalid distribution -ip` | Remove corrupted package metadata by running `pip3 install --force-reinstall <package_name>` or clear pip cache with `rm -rf ~/.cache/pip`. |
 Any output from `pip3 check` indicates a broken dependency graph that must be resolved.
 
 **Audit for known CVEs**
@@ -263,8 +277,10 @@ Successfully installed safety-2.3.5
 ```
 
 !!! warning "Common errors"
-    **`pip3: command not found`** — Install Python 3 and pip3 using your system package manager (apt-get install python3-pip on Debian/Ubuntu).
-    **`safety: command not found`** — Ensure the pip3 installation completed successfully and /usr/local/bin is in your PATH, or use python3 -m safety check instead.
+    | Error | Fix |
+    |---|---|
+    | `pip3: command not found` | Install Python 3 and pip3 using your system package manager (apt-get install python3-pip on Debian/Ubuntu). |
+    | `safety: command not found` | Ensure the pip3 installation completed successfully and /usr/local/bin is in your PATH, or use python3 -m safety check instead. |
 **Export current dependencies (freeze)**
 
 ```bash
@@ -277,8 +293,10 @@ pip3 freeze > requirements-$(date +%Y%m%d).txt
 ```
 
 !!! warning "Common errors"
-    **`pip3: command not found`** — Install Python 3 and pip3 with `apt-get install python3-pip` (Debian/Ubuntu) or `brew install python3` (macOS).
-    **`Permission denied`** — Run the command from a directory where you have write permissions, or use `sudo` if necessary (though this is not recommended for pip operations).
+    | Error | Fix |
+    |---|---|
+    | `pip3: command not found` | Install Python 3 and pip3 with `apt-get install python3-pip` (Debian/Ubuntu) or `brew install python3` (macOS). |
+    | `Permission denied` | Run the command from a directory where you have write permissions, or use `sudo` if necessary (though this is not recommended for pip operations). |
 **Install from pinned requirements**
 
 ```bash
@@ -297,9 +315,11 @@ Successfully installed certifi-2023.7.22 requests-2.31.0 pyyaml-6.0.1 psutil-5.9
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'`** — Verify you are in the correct directory where requirements.txt is located, or provide the full path to the file.
-    **`ERROR: pip's dependency resolver does not currently take into account all the packages that are installed with setuptools==X.X.X`** — This is typically a warning and safe to ignore; if installation fails, upgrade pip with `pip3 install --upgrade pip`.
-    **`error: Microsoft Visual C++ 14.0 or greater is required`** — Install the Microsoft C++ Build Tools or ensure a compatible C++ compiler is available on your system.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'` | Verify you are in the correct directory where requirements.txt is located, or provide the full path to the file. |
+    | `ERROR: pip's dependency resolver does not currently take into account all the packages that are installed with setuptools==X.X.X` | This is typically a warning and safe to ignore; if installation fails, upgrade pip with `pip3 install --upgrade pip`. |
+    | `error: Microsoft Visual C++ 14.0 or greater is required` | Install the Microsoft C++ Build Tools or ensure a compatible C++ compiler is available on your system. |
 **Verify a specific critical library is importable**
 
 ```bash
@@ -316,9 +336,11 @@ python3 -c "import paramiko; print(paramiko.__version__)"
 ```
 
 !!! warning "Common errors"
-    **`ModuleNotFoundError: No module named 'requests'`** — Install the missing package with `pip3 install requests`.
-    **`ModuleNotFoundError: No module named 'boto3'`** — Install AWS SDK with `pip3 install boto3`.
-    **`ModuleNotFoundError: No module named 'paramiko'`** — Install SSH library with `pip3 install paramiko`.
+    | Error | Fix |
+    |---|---|
+    | `ModuleNotFoundError: No module named 'requests'` | Install the missing package with `pip3 install requests`. |
+    | `ModuleNotFoundError: No module named 'boto3'` | Install AWS SDK with `pip3 install boto3`. |
+    | `ModuleNotFoundError: No module named 'paramiko'` | Install SSH library with `pip3 install paramiko`. |
 **Key health indicators**
 
 | Indicator | Healthy | Action Required |
@@ -348,8 +370,10 @@ crontab -l | grep python
 ```
 
 !!! warning "Common errors"
-    **`no crontab for root`** — Run `sudo crontab -e` to create a crontab entry for the current user or specify the user with `sudo crontab -u username -l`.
-    **`command not found: crontab`** — Install cron service with `sudo apt-get install cron` (Debian/Ubuntu) or `sudo yum install cronie` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `no crontab for root` | Run `sudo crontab -e` to create a crontab entry for the current user or specify the user with `sudo crontab -u username -l`. |
+    | `command not found: crontab` | Install cron service with `sudo apt-get install cron` (Debian/Ubuntu) or `sudo yum install cronie` (RHEL/CentOS). |
 **Check system-wide cron for Python jobs**
 
 ```bash
@@ -368,8 +392,10 @@ grep -r "python" /etc/cron.d/ /etc/cron.daily/ /etc/cron.hourly/ /etc/cron.weekl
 ```
 
 !!! warning "Common errors"
-    **`grep: /etc/cron.hourly/: No such file or directory`** — Create the missing directory with `mkdir -p /etc/cron.hourly/` or remove it from the grep search path if it's not needed.
-    **`Permission denied`** — Run the command with `sudo` to access protected cron directories: `sudo grep -r "python" /etc/cron.d/ /etc/cron.daily/ /etc/cron.hourly/ /etc/cron.weekly/ 2>/dev/null`
+    | Error | Fix |
+    |---|---|
+    | `grep: /etc/cron.hourly/: No such file or directory` | Create the missing directory with `mkdir -p /etc/cron.hourly/` or remove it from the grep search path if it's not needed. |
+    | `Permission denied` | Run the command with `sudo` to access protected cron directories: `sudo grep -r "python" /etc/cron.d/ /etc/cron.daily/ /etc/cron.hourly/ /etc/cron.weekly/ 2>/dev/null` |
 **Check cron daemon is running**
 
 ```bash
@@ -394,8 +420,10 @@ Jan 15 09:23:47 prod-scheduler-01 systemd[1]: Started Command Scheduler.
 ```
 
 !!! warning "Common errors"
-    **`Unit cron.service could not be found.`** — Use `systemctl status crond` on RHEL/CentOS systems instead of `cron`.
-    **`System has not been booted with systemd as init system (PID 1). Can't operate.`** — Use `service crond status` or `ps aux | grep crond` on systems without systemd.
+    | Error | Fix |
+    |---|---|
+    | `Unit cron.service could not be found.` | Use `systemctl status crond` on RHEL/CentOS systems instead of `cron`. |
+    | `System has not been booted with systemd as init system (PID 1). Can't operate.` | Use `service crond status` or `ps aux | grep crond` on systems without systemd. |
 **Review recent cron execution log**
 
 ```bash
@@ -419,8 +447,10 @@ Jan 16 00:30:02 prod-app-01 CRON[9521]: (postgres) CMD (VACUUM ANALYZE;)
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/syslog: No such file or directory`** — Use the RHEL/CentOS path `/var/log/cron` instead, or check your distro's actual syslog location with `ls /var/log/`.
-    **`Permission denied`** — Run the command with `sudo` since cron logs typically require root privileges to read.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/syslog: No such file or directory` | Use the RHEL/CentOS path `/var/log/cron` instead, or check your distro's actual syslog location with `ls /var/log/`. |
+    | `Permission denied` | Run the command with `sudo` since cron logs typically require root privileges to read. |
 **Check systemd timer units (alternative to cron)**
 
 ```bash
@@ -438,8 +468,10 @@ Mon 2024-01-15 16:15:00 UTC  3h 59m   Sun 2024-01-14 16:15:22 UTC  22h      pyth
 ```
 
 !!! warning "Common errors"
-    **`Failed to get properties: Unit python-health-check.timer not found.`** — Verify the timer unit exists with `systemctl list-unit-files | grep python` and enable it if needed with `systemctl enable python-health-check.timer`.
-    **`Failed to list timers: Access denied`** — Run the command with `sudo` or ensure your user is in the `systemd-journal` group.
+    | Error | Fix |
+    |---|---|
+    | `Failed to get properties: Unit python-health-check.timer not found.` | Verify the timer unit exists with `systemctl list-unit-files | grep python` and enable it if needed with `systemctl enable python-health-check.timer`. |
+    | `Failed to list timers: Access denied` | Run the command with `sudo` or ensure your user is in the `systemd-journal` group. |
 **Verify script output log (if scripts redirect output)**
 
 ```bash
@@ -464,8 +496,10 @@ tail -20 /var/log/automation/<script-name>.log
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/automation/<script-name>.log' for reading: No such file or directory`** — Replace `<script-name>` with the actual script name and verify the log directory exists.
-    **`tail: cannot open '/var/log/automation/database-sync.log' for reading: Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the log file.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/automation/<script-name>.log' for reading: No such file or directory` | Replace `<script-name>` with the actual script name and verify the log directory exists. |
+    | `tail: cannot open '/var/log/automation/database-sync.log' for reading: Permission denied` | Run the command with `sudo` or ensure your user has read permissions on the log file. |
 **Key health indicators**
 
 | Indicator | Healthy | Action Required |

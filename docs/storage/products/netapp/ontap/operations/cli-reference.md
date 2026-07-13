@@ -97,9 +97,11 @@ Temperature Sensor 2: 31°C (OK)
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: cluster show`** — Ensure you are connected to the ONTAP cluster management interface (SSH to cluster IP, not node IP).
-    **`Error: NTP server 192.168.1.50 is already configured`** — Delete the existing NTP server entry first with `cluster time-service ntp server delete -server 192.168.1.50` before creating a new one.
-    **`Error: node-01: command not found: sysconfig`** — Verify the node name is correct and the node is in a healthy state; use `node show` to confirm node availability.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: cluster show` | Ensure you are connected to the ONTAP cluster management interface (SSH to cluster IP, not node IP). |
+    | `Error: NTP server 192.168.1.50 is already configured` | Delete the existing NTP server entry first with `cluster time-service ntp server delete -server 192.168.1.50` before creating a new one. |
+    | `Error: node-01: command not found: sysconfig` | Verify the node name is correct and the node is in a healthy state; use `node show` to confirm node availability. |
 ---
 
 ## System Health & Events
@@ -193,9 +195,11 @@ AutoSupport invoked successfully on node-01. Message ID: 123e4567-e89b-12d3-a456
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: system health status show`** — Ensure you are connected to the ONTAP cluster CLI (ssh admin@<cluster-ip>) and not the local shell.
-    **`Error: Access denied. Insufficient privileges to run "system health alert show"`** — Verify your user role has admin or read-only admin privileges using `security login show`.
-    **`Error: Node "<node_name>" not found`** — Confirm the node name exists by running `cluster show` and use the exact node name from the "Node" column.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: system health status show` | Ensure you are connected to the ONTAP cluster CLI (ssh admin@<cluster-ip>) and not the local shell. |
+    | `Error: Access denied. Insufficient privileges to run "system health alert show"` | Verify your user role has admin or read-only admin privileges using `security login show`. |
+    | `Error: Node "<node_name>" not found` | Confirm the node name exists by running `cluster show` and use the exact node name from the "Node" column. |
 ---
 
 ## Storage — Aggregates & Disks
@@ -256,9 +260,11 @@ shelf2    50:0a:09:80:87:65:43:21     DS224C       normal
 ```
 
 !!! warning "Common errors"
-    **`Error: "aggr0" does not exist`** — Verify the aggregate name with `storage aggregate show` and use the correct name.
-    **`Error: Disk "SAS2.1" is not a spare disk`** — Check disk status with `storage disk show -fields disk,container-type` before attempting operations.
-    **`Error: RAID group size cannot exceed maximum allowed for this aggregate`** — Reduce the requested RAID size or add more disks to the aggregate with `storage aggregate add-disks`.
+    | Error | Fix |
+    |---|---|
+    | `Error: "aggr0" does not exist` | Verify the aggregate name with `storage aggregate show` and use the correct name. |
+    | `Error: Disk "SAS2.1" is not a spare disk` | Check disk status with `storage disk show -fields disk,container-type` before attempting operations. |
+    | `Error: RAID group size cannot exceed maximum allowed for this aggregate` | Reduce the requested RAID size or add more disks to the aggregate with `storage aggregate add-disks`. |
 ---
 
 ## Volumes
@@ -327,9 +333,11 @@ Percent Complete: 42%
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: volume does not exist`** — Verify the volume name and SVM name are correct with `volume show -vserver <svm>`.
-    **`Error: command failed: aggregate does not have enough space`** — Check aggregate free space with `storage aggregate show` and request a larger aggregate or reduce the requested volume size.
-    **`Error: command failed: volume is in use and cannot be deleted`** — Unmount the volume with `volume unmount` and ensure no clients are connected before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: volume does not exist` | Verify the volume name and SVM name are correct with `volume show -vserver <svm>`. |
+    | `Error: command failed: aggregate does not have enough space` | Check aggregate free space with `storage aggregate show` and request a larger aggregate or reduce the requested volume size. |
+    | `Error: command failed: volume is in use and cannot be deleted` | Unmount the volume with `volume unmount` and ensure no clients are connected before attempting deletion. |
 ---
 
 ## Snapshots
@@ -403,9 +411,11 @@ Volume snapshot restore: Command completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Snapshot "snap_name" does not exist on volume "data_vol"`** — Verify the snapshot name exists with `volume snapshot show -vserver <svm> -volume <vol>` before attempting deletion or restore.
-    **`Error: command failed: Cannot restore snapshot while volume is online and in use`** — Either take the volume offline with `volume offline -vserver <svm> -volume <vol>` or use the `-online true` parameter to restore while online.
-    **`Error: command failed: Snapshot reserve space is insufficient`** — Increase the snapshot reserve percentage with `volume modify -vserver <svm> -volume <vol> -percent-snapshot-space <higher_value>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Snapshot "snap_name" does not exist on volume "data_vol"` | Verify the snapshot name exists with `volume snapshot show -vserver <svm> -volume <vol>` before attempting deletion or restore. |
+    | `Error: command failed: Cannot restore snapshot while volume is online and in use` | Either take the volume offline with `volume offline -vserver <svm> -volume <vol>` or use the `-online true` parameter to restore while online. |
+    | `Error: command failed: Snapshot reserve space is insufficient` | Increase the snapshot reserve percentage with `volume modify -vserver <svm> -volume <vol> -percent-snapshot-space <higher_value>`. |
 ---
 
 ## SVMs (Storage Virtual Machines)
@@ -499,9 +509,11 @@ svm-prod-01   enabled       enabled  enabled
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Vserver "svm-prod-01" already exists.`** — Verify the SVM name is unique or use a different name before creation.
-    **`Error: command failed: Cannot delete Vserver "svm-prod-01": Vserver is in running state.`** — Stop the SVM with `vserver stop -vserver <svm_name>` before attempting deletion.
-    **`Error: command failed: Cannot create CIFS server: Domain "corp.local" is not reachable.`** — Verify DNS resolution and network connectivity to the Active Directory domain controller.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Vserver "svm-prod-01" already exists.` | Verify the SVM name is unique or use a different name before creation. |
+    | `Error: command failed: Cannot delete Vserver "svm-prod-01": Vserver is in running state.` | Stop the SVM with `vserver stop -vserver <svm_name>` before attempting deletion. |
+    | `Error: command failed: Cannot create CIFS server: Domain "corp.local" is not reachable.` | Verify DNS resolution and network connectivity to the Active Directory domain controller. |
 ---
 
 ## Network
@@ -563,9 +575,11 @@ PING nfs_lif_01 (192.168.1.100) from 192.168.1.100: 56 data bytes
 ```
 
 !!! warning "Common errors"
-    **`Error: "cluster-01" is not a valid home node for this cluster`** — Verify the node name matches output from `cluster show` and that the node is healthy.
-    **`Error: Port "e0d" does not exist on node "cluster-02"`** — Confirm the port exists using `network port show -node <node>` before assigning it to a LIF.
-    **`Error: Address 192.168.1.100 is already in use by interface nfs_lif_01`** — Assign a unique IP address or delete the existing LIF first with `network interface delete`.
+    | Error | Fix |
+    |---|---|
+    | `Error: "cluster-01" is not a valid home node for this cluster` | Verify the node name matches output from `cluster show` and that the node is healthy. |
+    | `Error: Port "e0d" does not exist on node "cluster-02"` | Confirm the port exists using `network port show -node <node>` before assigning it to a LIF. |
+    | `Error: Address 192.168.1.100 is already in use by interface nfs_lif_01` | Assign a unique IP address or delete the existing LIF first with `network interface delete`. |
 ---
 
 ## NFS
@@ -651,9 +665,11 @@ NFS Version: nfsv4.1
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Vserver "svm-prod-01" does not exist.`** — Verify the SVM name with `vserver show` and use the correct name in the -vserver parameter.
-    **`Error: command failed: Export policy "clients-rw" does not exist on Vserver "svm-prod-01".`** — Create the export policy first using `vserver export-policy create` before assigning it to a volume.
-    **`Error: command failed: Client IP 10.20.15.42 does not have access to volume vol-data01.`** — Verify the export policy rule includes the client IP/CIDR and is assigned to the volume with `volume show -fields policy`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Vserver "svm-prod-01" does not exist.` | Verify the SVM name with `vserver show` and use the correct name in the -vserver parameter. |
+    | `Error: command failed: Export policy "clients-rw" does not exist on Vserver "svm-prod-01".` | Create the export policy first using `vserver export-policy create` before assigning it to a volume. |
+    | `Error: command failed: Client IP 10.20.15.42 does not have access to volume vol-data01.` | Verify the export policy rule includes the client IP/CIDR and is assigned to the volume with `volume show -fields policy`. |
 ---
 
 ## CIFS / SMB
@@ -723,9 +739,11 @@ svm-prod-02   up
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: CIFS server "fileserver01" already exists on Vserver "svm-prod-01"`** — Verify the CIFS server does not already exist with `vserver cifs show -vserver <svm>` before creation.
-    **`Error: command failed: Cannot delete CIFS server while shares exist`** — Delete all CIFS shares first using `vserver cifs share delete -vserver <svm> -share-name <name>` before deleting the CIFS server.
-    **`Error: command failed: Active Directory connection failed for domain "corp.example.com"`** — Verify DNS resolution and AD credentials are correct, and check network connectivity to domain controllers with `network ping -vserver <svm> -destination <dc-ip>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: CIFS server "fileserver01" already exists on Vserver "svm-prod-01"` | Verify the CIFS server does not already exist with `vserver cifs show -vserver <svm>` before creation. |
+    | `Error: command failed: Cannot delete CIFS server while shares exist` | Delete all CIFS shares first using `vserver cifs share delete -vserver <svm> -share-name <name>` before deleting the CIFS server. |
+    | `Error: command failed: Active Directory connection failed for domain "corp.example.com"` | Verify DNS resolution and AD credentials are correct, and check network connectivity to domain controllers with `network ping -vserver <svm> -destination <dc-ip>`. |
 ---
 
 ## Block Protocols (iSCSI / FC)
@@ -806,9 +824,11 @@ node-02   0b      online 16Gb  false
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: LUN /vol/datastore01/lun_vm_prod_001 is already mapped to igroup igroup_esxi_01`** — Verify the LUN is not already mapped to the target igroup before attempting to map it again.
-    **`Error: command failed: igroup igroup_esxi_01 does not exist`** — Create the igroup first using `lun igroup create` before adding initiators or mapping LUNs to it.
-    **`Error: command failed: LUN /vol/datastore01/lun_vm_prod_001 cannot be deleted while it is mapped`** — Unmap the LUN from all igroups using `lun unmap` before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: LUN /vol/datastore01/lun_vm_prod_001 is already mapped to igroup igroup_esxi_01` | Verify the LUN is not already mapped to the target igroup before attempting to map it again. |
+    | `Error: command failed: igroup igroup_esxi_01 does not exist` | Create the igroup first using `lun igroup create` before adding initiators or mapping LUNs to it. |
+    | `Error: command failed: LUN /vol/datastore01/lun_vm_prod_001 cannot be deleted while it is mapped` | Unmap the LUN from all igroups using `lun unmap` before attempting deletion. |
 ---
 
 ## SnapMirror
@@ -869,9 +889,11 @@ snapmirror_update_1702145891             12346   completed  11/09/2024 14:31:31
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Relationship does not exist`** — Verify the destination path exists and the SnapMirror relationship has been created with `snapmirror create`.
-    **`Error: command failed: Destination volume is not a DP volume`** — Ensure the destination volume was created with type `DP` (Data Protection) before creating the SnapMirror relationship.
-    **`Error: command failed: Transfer is in progress`** — Wait for the current transfer to complete or use `snapmirror abort -destination-path <svm>:<vol>` before attempting another operation.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Relationship does not exist` | Verify the destination path exists and the SnapMirror relationship has been created with `snapmirror create`. |
+    | `Error: command failed: Destination volume is not a DP volume` | Ensure the destination volume was created with type `DP` (Data Protection) before creating the SnapMirror relationship. |
+    | `Error: command failed: Transfer is in progress` | Wait for the current transfer to complete or use `snapmirror abort -destination-path <svm>:<vol>` before attempting another operation. |
 ---
 
 ## Quotas
@@ -938,9 +960,11 @@ user    DOMAIN\achen      100GB        80GB              -             -
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Quotas are not enabled on volume "vol_data"`** — Run `volume quota on -vserver <svm> -volume <vol>` before creating rules.
-    **`Error: command failed: Quota policy rule already exists`** — Delete the existing rule with `volume quota policy rule delete` before recreating it with different parameters.
-    **`Error: command failed: Cannot disable quotas while resize is in progress`** — Wait for the resize operation to complete by checking `volume quota resize` status before attempting to disable quotas.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Quotas are not enabled on volume "vol_data"` | Run `volume quota on -vserver <svm> -volume <vol>` before creating rules. |
+    | `Error: command failed: Quota policy rule already exists` | Delete the existing rule with `volume quota policy rule delete` before recreating it with different parameters. |
+    | `Error: command failed: Cannot disable quotas while resize is in progress` | Wait for the resize operation to complete by checking `volume quota resize` status before attempting to disable quotas. |
 ---
 
 ## Performance & QoS
@@ -1020,9 +1044,11 @@ Latency: 4.2ms
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: policy group "prod-limit" already exists`** — Delete the existing policy group first with `qos policy-group delete -policy-group prod-limit` or use a different name.
-    **`Error: QoS policy group "prod-limit" is in use and cannot be deleted`** — Remove the policy group from all volumes using `volume modify -vserver <svm> -volume <vol> -qos-policy-group none` before deletion.
-    **`Error: Invalid value specified for "-max-throughput": value must be between 100 and 999999`** — Ensure throughput values are numeric and within the valid range (e.g., use `5000IOPS` not `5000 IOPS`).
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: policy group "prod-limit" already exists` | Delete the existing policy group first with `qos policy-group delete -policy-group prod-limit` or use a different name. |
+    | `Error: QoS policy group "prod-limit" is in use and cannot be deleted` | Remove the policy group from all volumes using `volume modify -vserver <svm> -volume <vol> -qos-policy-group none` before deletion. |
+    | `Error: Invalid value specified for "-max-throughput": value must be between 100 and 999999` | Ensure throughput values are numeric and within the valid range (e.g., use `5000IOPS` not `5000 IOPS`). |
 ---
 
 ## Security & Users
@@ -1101,9 +1127,11 @@ cluster1::> vserver audit show -vserver svm-prod
 ```
 
 !!! warning "Common errors"
-    **`Error: entry already exists`** — Verify the user does not already exist with `security login show -vserver <svm>` before creation.
-    **`Error: Cannot generate certificate: Certificate already exists for this vserver`** — Delete the existing certificate with `security certificate delete -vserver <svm>` before generating a new one.
-    **`Error: Vserver "<svm>" does not exist`** — Confirm the SVM name is correct and exists by running `vserver show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: entry already exists` | Verify the user does not already exist with `security login show -vserver <svm>` before creation. |
+    | `Error: Cannot generate certificate: Certificate already exists for this vserver` | Delete the existing certificate with `security certificate delete -vserver <svm>` before generating a new one. |
+    | `Error: Vserver "<svm>" does not exist` | Confirm the SVM name is correct and exists by running `vserver show`. |
 ---
 
 ## AutoSupport
@@ -1174,9 +1202,11 @@ AutoSupport HTTPS Connectivity Check Results:
 ```
 
 !!! warning "Common errors"
-    **`Error: "cluster1-03" is not a valid node name`** — Verify the node name matches output from `cluster show` and use the correct node identifier.
-    **`Error: SMTP server "invalid.mail.local" is not reachable`** — Confirm the mail host is resolvable and accessible on port 25 from the cluster management network.
-    **`Error: AutoSupport invoke failed: transport https not configured`** — Enable HTTPS transport first using `autosupport modify -node <node> -transport https` before invoking HTTPS-based AutoSupport messages.
+    | Error | Fix |
+    |---|---|
+    | `Error: "cluster1-03" is not a valid node name` | Verify the node name matches output from `cluster show` and use the correct node identifier. |
+    | `Error: SMTP server "invalid.mail.local" is not reachable` | Confirm the mail host is resolvable and accessible on port 25 from the cluster management network. |
+    | `Error: AutoSupport invoke failed: transport https not configured` | Enable HTTPS transport first using `autosupport modify -node <node> -transport https` before invoking HTTPS-based AutoSupport messages. |
 ---
 
 ## Verify

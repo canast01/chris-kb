@@ -53,9 +53,11 @@ passwd: password updated successfully
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host <sannav-ip> port 22: Connection refused`** — Wait 2–3 minutes for SSH daemon to start after VM powers on, then retry.
-    **`sannav status: command not found`** — Source the SANnav environment or add `/opt/sannav/bin` to PATH with `export PATH=$PATH:/opt/sannav/bin`.
-    **`Permission denied (publickey,password)`** — Verify default credentials are `admin`/`passw0rd` and that the admin account has not been locked; reset via console if needed.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host <sannav-ip> port 22: Connection refused` | Wait 2–3 minutes for SSH daemon to start after VM powers on, then retry. |
+    | `sannav status: command not found` | Source the SANnav environment or add `/opt/sannav/bin` to PATH with `export PATH=$PATH:/opt/sannav/bin`. |
+    | `Permission denied (publickey,password)` | Verify default credentials are `admin`/`passw0rd` and that the admin account has not been locked; reset via console if needed. |
 ```bash
 # On each switch (FOS CLI)
 snmpconfig --set trapdest -index <n> -trapdest 0.0.0.0   # clear trap destination
@@ -69,8 +71,10 @@ User sannav_svc deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Invalid index <n>`** — Replace `<n>` with a valid integer (typically 1–4) matching your switch's trap destination configuration.
-    **`User sannav_svc does not exist`** — Verify the exact username with `userconfig --show` before deletion; the service account name may differ per environment.
+    | Error | Fix |
+    |---|---|
+    | `Invalid index <n>` | Replace `<n>` with a valid integer (typically 1–4) matching your switch's trap destination configuration. |
+    | `User sannav_svc does not exist` | Verify the exact username with `userconfig --show` before deletion; the service account name may differ per environment. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

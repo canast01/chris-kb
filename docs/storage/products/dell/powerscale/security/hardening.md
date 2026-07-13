@@ -111,8 +111,10 @@ Modify web settings completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid TLS version '1.2'. Supported versions: 1.0, 1.1, 1.3`** — Verify the OneFS version supports TLS 1.2 (requires OneFS 8.0+) and use a supported version string.
-    **`Error: session-timeout must be between 60 and 86400 seconds`** — Adjust the timeout value; 900 seconds (15 minutes) is valid, so check for typos or ensure the parameter name is exactly `--session-timeout`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid TLS version '1.2'. Supported versions: 1.0, 1.1, 1.3` | Verify the OneFS version supports TLS 1.2 (requires OneFS 8.0+) and use a supported version string. |
+    | `Error: session-timeout must be between 60 and 86400 seconds` | Adjust the timeout value; 900 seconds (15 minutes) is valid, so check for typos or ensure the parameter name is exactly `--session-timeout`. |
 ### Disable SMB1 and Enforce SMB Signing
 
 ```bash
@@ -135,8 +137,10 @@ server_signing: required
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid value 'false' for parameter support-smb1`** — Use `--support-smb1=false` with an equals sign, or check your OneFS version supports this parameter name.
-    **`Error: Connection refused to 192.168.1.10:8080`** — Ensure you are connected to the PowerScale cluster management IP and have network access to port 8080.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid value 'false' for parameter support-smb1` | Use `--support-smb1=false` with an equals sign, or check your OneFS version supports this parameter name. |
+    | `Error: Connection refused to 192.168.1.10:8080` | Ensure you are connected to the PowerScale cluster management IP and have network access to port 8080. |
 ### NFS Root Squash
 
 Root squash maps NFS client UID 0 (root) to the anonymous user (typically `nobody`). This prevents an NFS client root user from having unrestricted access to cluster data.
@@ -182,8 +186,10 @@ map_failure                    deny
 ```
 
 !!! warning "Common errors"
-    **`Error: Export <export_id> not found`** — Verify the export ID exists with `isi nfs exports list` and use the correct identifier.
-    **`Error: Invalid user 'nobody' — user does not exist on this cluster`** — Create the nobody user or use an existing local user with `isi auth users list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Export <export_id> not found` | Verify the export ID exists with `isi nfs exports list` and use the correct identifier. |
+    | `Error: Invalid user 'nobody' — user does not exist on this cluster` | Create the nobody user or use an existing local user with `isi auth users list`. |
 ### Disable Unused Protocols Per Access Zone
 
 ```bash
@@ -224,9 +230,11 @@ Service: ntp                    Status: running
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster CLI or have the OneFS SDK installed on your local system.
-    **`Error: Invalid zone name '<zone_name>'`** — Replace `<zone_name>` with an actual access zone name; verify it exists with `isi zone zones list`.
-    **`Error: Service cannot be disabled in this zone`** — Confirm the service is not actively in use by clients before attempting to disable it, or check cluster-wide dependencies with `isi services -a`.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are logged into the PowerScale cluster CLI or have the OneFS SDK installed on your local system. |
+    | `Error: Invalid zone name '<zone_name>'` | Replace `<zone_name>` with an actual access zone name; verify it exists with `isi zone zones list`. |
+    | `Error: Service cannot be disabled in this zone` | Confirm the service is not actively in use by clients before attempting to disable it, or check cluster-wide dependencies with `isi services -a`. |
 ### Restrict SSH Access
 
 ```bash
@@ -259,8 +267,10 @@ Restrict root SSH login via /etc/ssh/sshd_config on each node
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are running this command on a PowerScale cluster node with OneFS installed, not a remote management workstation.
-    **`Error: Permission denied`** — Run the command with appropriate administrative privileges (sudo or as root account with SSH key authentication).
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are running this command on a PowerScale cluster node with OneFS installed, not a remote management workstation. |
+    | `Error: Permission denied` | Run the command with appropriate administrative privileges (sudo or as root account with SSH key authentication). |
 ### SNMP v3 Configuration
 
 ```bash
@@ -302,9 +312,11 @@ SNMP v3 users:
 ```
 
 !!! warning "Common errors"
-    **`Error: SNMP v1/v2c access cannot be disabled while SNMP v3 access is disabled`** — Enable SNMP v3 access before disabling v1/v2c, or combine both modifications in a single command.
-    **`Error: User 'monitoring-user' already exists`** — Delete the existing user with `isi snmp v3users delete --name monitoring-user` before recreating it.
-    **`Error: Authentication password must be at least 8 characters`** — Ensure both `<auth_password>` and `<priv_password>` meet minimum length requirements (typically 8+ characters).
+    | Error | Fix |
+    |---|---|
+    | `Error: SNMP v1/v2c access cannot be disabled while SNMP v3 access is disabled` | Enable SNMP v3 access before disabling v1/v2c, or combine both modifications in a single command. |
+    | `Error: User 'monitoring-user' already exists` | Delete the existing user with `isi snmp v3users delete --name monitoring-user` before recreating it. |
+    | `Error: Authentication password must be at least 8 characters` | Ensure both `<auth_password>` and `<priv_password>` meet minimum length requirements (typically 8+ characters). |
 ### Audit Logging
 
 ```bash
@@ -364,9 +376,11 @@ Protocol Topic Details
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid syslog server address 'siem.example.com'`** — Verify DNS resolution with `nslookup siem.example.com` or use the IP address directly.
-    **`Error: CEE server URI is unreachable at 'http://siem.example.com:12228/cee'`** — Confirm the SIEM server is running and accessible on port 12228 from the PowerScale cluster.
-    **`Error: Insufficient privileges to modify audit settings`** — Run the command as root or a user with cluster administration role using `isi auth login`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid syslog server address 'siem.example.com'` | Verify DNS resolution with `nslookup siem.example.com` or use the IP address directly. |
+    | `Error: CEE server URI is unreachable at 'http://siem.example.com:12228/cee'` | Confirm the SIEM server is running and accessible on port 12228 from the PowerScale cluster. |
+    | `Error: Insufficient privileges to modify audit settings` | Run the command as root or a user with cluster administration role using `isi auth login`. |
 ### Restrict IP Pool Access by Subnet
 
 Limit which source IPs can connect to each access zone's IP pool:
@@ -399,8 +413,10 @@ Rebalance Policy: auto
 ```
 
 !!! warning "Common errors"
-    **`Error: pool <pool_name> does not exist`** — Verify the pool name with `isi network pools list` and use the correct name from the output.
-    **`Error: invalid subnet format '<allowed_subnet>'`** — Ensure the subnet is in CIDR notation (e.g., `10.0.0.0/8`) and is a valid IP range.
+    | Error | Fix |
+    |---|---|
+    | `Error: pool <pool_name> does not exist` | Verify the pool name with `isi network pools list` and use the correct name from the output. |
+    | `Error: invalid subnet format '<allowed_subnet>'` | Ensure the subnet is in CIDR notation (e.g., `10.0.0.0/8`) and is a valid IP range. |
 ---
 
 ## Role-Based Administration
@@ -475,9 +491,11 @@ Privileges: ISI_PRIV_LOGIN_CONSOLE, ISI_PRIV_BACKUP
 ```
 
 !!! warning "Common errors"
-    **`Error: Role 'ReadOnlyMonitor' already exists`** — Use `isi auth roles modify` instead of `create`, or delete the existing role first with `isi auth roles delete ReadOnlyMonitor`.
-    **`Error: User '<username>' not found in authentication provider`** — Verify the username exists in the configured directory service (Active Directory/LDAP) using `isi auth users list`.
-    **`Error: Invalid privilege 'ISI_PRIV_BACKUP' for this role type`** — Confirm the privilege name is correct by running `isi auth privileges list` and checking exact spelling.
+    | Error | Fix |
+    |---|---|
+    | `Error: Role 'ReadOnlyMonitor' already exists` | Use `isi auth roles modify` instead of `create`, or delete the existing role first with `isi auth roles delete ReadOnlyMonitor`. |
+    | `Error: User '<username>' not found in authentication provider` | Verify the username exists in the configured directory service (Active Directory/LDAP) using `isi auth users list`. |
+    | `Error: Invalid privilege 'ISI_PRIV_BACKUP' for this role type` | Confirm the privilege name is correct by running `isi auth privileges list` and checking exact spelling. |
 ### Recommended Role Structure
 
 | Role | Members | Privileges |
@@ -549,8 +567,10 @@ legacy_monitor                       Enabled: No
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are running commands on the PowerScale cluster or via SSH session to the cluster management IP, not your local workstation.
-    **`Permission denied`** — Verify your user account has cluster admin privileges by running `isi auth whoami` to confirm role assignment.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are running commands on the PowerScale cluster or via SSH session to the cluster management IP, not your local workstation. |
+    | `Permission denied` | Verify your user account has cluster admin privileges by running `isi auth whoami` to confirm role assignment. |
 ---
 
 ## Hardening Standards Reference

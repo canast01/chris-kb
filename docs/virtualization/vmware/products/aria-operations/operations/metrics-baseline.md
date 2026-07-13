@@ -38,9 +38,11 @@ Timestamp: 2024-01-15T14:32:18Z
 ```
 
 !!! warning "Common errors"
-    **`qos: command not found`** — Verify the QoS monitoring module is installed and the service is running with `systemctl status aria-operations-qos`.
-    **`statistics: invalid object 'system'`** — Confirm the correct object name using `statistics show -objects` and replace with a valid object like `datastore` or `host`.
-    **`Connection refused on localhost:8080`** — Ensure the Aria Operations service is running and accessible by checking `curl -I http://localhost:8080/api/health`.
+    | Error | Fix |
+    |---|---|
+    | `qos: command not found` | Verify the QoS monitoring module is installed and the service is running with `systemctl status aria-operations-qos`. |
+    | `statistics: invalid object 'system'` | Confirm the correct object name using `statistics show -objects` and replace with a valid object like `datastore` or `host`. |
+    | `Connection refused on localhost:8080` | Ensure the Aria Operations service is running and accessible by checking `curl -I http://localhost:8080/api/health`. |
 **Pure FlashArray:**
 ```bash
 purecli array get --mirrored

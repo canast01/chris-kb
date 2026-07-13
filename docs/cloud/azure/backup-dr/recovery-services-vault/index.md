@@ -86,9 +86,11 @@ dev-backup-rg          dev-vault-002       eastus      Microsoft.RecoveryService
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group exists in the target subscription with `az group list` and use the correct `--resource-group` name.
-    **`VaultAlreadyExists`** — Choose a unique vault name within the resource group, as Recovery Services Vault names must be globally unique.
-    **`InvalidLocation`** — Ensure the `--location` value is a valid Azure region (e.g., eastus, westus2, northeurope) by running `az account list-locations`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group exists in the target subscription with `az group list` and use the correct `--resource-group` name. |
+    | `VaultAlreadyExists` | Choose a unique vault name within the resource group, as Recovery Services Vault names must be globally unique. |
+    | `InvalidLocation` | Ensure the `--location` value is a valid Azure region (e.g., eastus, westus2, northeurope) by running `az account list-locations`. |
 ---
 
 ## Storage Redundancy Settings
@@ -123,9 +125,11 @@ GeoRedundant
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<rg>' was not found.`** — Verify the vault name and resource group name are correct and exist in your subscription.
-    **`InvalidApiVersionParameter : The api-version '2021-07-01' is not supported by this operation. Please use api version '2023-01-01' or newer.`** — Update your Azure CLI to the latest version with `az upgrade`.
-    **`BadRequest : Storage model type cannot be changed after vault creation.`** — Storage redundancy is immutable after vault creation; delete and recreate the vault with the desired redundancy setting.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<rg>' was not found.` | Verify the vault name and resource group name are correct and exist in your subscription. |
+    | `InvalidApiVersionParameter : The api-version '2021-07-01' is not supported by this operation. Please use api version '2023-01-01' or newer.` | Update your Azure CLI to the latest version with `az upgrade`. |
+    | `BadRequest : Storage model type cannot be changed after vault creation.` | Storage redundancy is immutable after vault creation; delete and recreate the vault with the desired redundancy setting. |
 | Redundancy | RTO / RPO | Cross-Region Restore | Cost |
 |---|---|---|---|
 | LocallyRedundant (LRS) | Lowest | No | Lowest |
@@ -167,8 +171,10 @@ Are you sure you want to disable soft delete for vault 'prod-vault-eastus'? This
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<rg>' was not found.`** — Verify the resource group name and vault name are correct and exist in the target subscription.
-    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupconfig/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>'.`** — Ensure your user account has the Backup Operator or higher role assigned on the Recovery Services Vault.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<rg>' was not found.` | Verify the resource group name and vault name are correct and exist in the target subscription. |
+    | `AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupconfig/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.RecoveryServices/vaults/<vault-name>'.` | Ensure your user account has the Backup Operator or higher role assigned on the Recovery Services Vault. |
 ---
 
 ## Cross-Region Restore
@@ -224,9 +230,11 @@ RecoveryPointTime          RecoveryPointType    RecoveryPointId
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The resource 'Microsoft.RecoveryServices/vaults/<vault-name>' could not be found.`** — Verify the vault name and resource group name are correct and the vault exists in the specified region.
-    **`BadRequest : Cross-region restore is not supported for this vault type or replication setting.`** — Ensure the vault is configured with Geo-Redundant Storage (GRS) replication, not Locally Redundant Storage (LRS).
-    **`InvalidParameter : The container name '<container-name>' does not exist in the secondary region.`** — Confirm the backup item has completed at least one backup cycle and recovery points are available in the secondary region before querying.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The resource 'Microsoft.RecoveryServices/vaults/<vault-name>' could not be found.` | Verify the vault name and resource group name are correct and the vault exists in the specified region. |
+    | `BadRequest : Cross-region restore is not supported for this vault type or replication setting.` | Ensure the vault is configured with Geo-Redundant Storage (GRS) replication, not Locally Redundant Storage (LRS). |
+    | `InvalidParameter : The container name '<container-name>' does not exist in the secondary region.` | Confirm the backup item has completed at least one backup cycle and recovery points are available in the secondary region before querying. |
 ---
 
 ## Access Control
@@ -314,8 +322,10 @@ Vault 'recovery-vault-prod' in resource group 'rg-backup-dr' has been deleted su
 ```
 
 !!! warning "Common errors"
-    **`BadRequest: The vault 'recovery-vault-prod' cannot be deleted as it still contains backup items.`** — Run `az backup item list` to identify remaining items and delete or stop protection on each before retrying vault deletion.
-    **`ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/recovery-vault-prod' under resource group 'rg-backup-dr' was not found.`** — Verify the vault name and resource group are correct using `az backup vault list --resource-group <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `BadRequest: The vault 'recovery-vault-prod' cannot be deleted as it still contains backup items.` | Run `az backup item list` to identify remaining items and delete or stop protection on each before retrying vault deletion. |
+    | `ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/recovery-vault-prod' under resource group 'rg-backup-dr' was not found.` | Verify the vault name and resource group are correct using `az backup vault list --resource-group <rg>`. |
 ---
 
 ## Diagnostic Settings
@@ -369,6 +379,8 @@ vault-diagnostics       prod-backup-rg     /subscriptions/.../workspaces/prod-lo
 ```
 
 !!! warning "Common errors"
-    **`The resource '<vault-resource-id>' does not have type 'Microsoft.RecoveryServices/vaults'`** — Replace `<vault-resource-id>` with the full resource ID of your Recovery Services vault (format: `/subscriptions/{subId}/resourceGroups/{rgName}/providers/Microsoft.RecoveryServices/vaults/{vaultName}`).
-    **`The workspace '<workspace-id>' does not exist or you do not have permission to access it`** — Verify the Log Analytics workspace ID is correct and your user has Contributor role on both the vault and workspace resources.
-    **`BadRequest: The diagnostic setting name 'vault-diagnostics' already exists`** — Use a unique name for the diagnostic setting or delete the existing one with `az monitor diagnostic-settings delete --name vault-diagnostics --resource <vault-resource-id>`.
+    | Error | Fix |
+    |---|---|
+    | `The resource '<vault-resource-id>' does not have type 'Microsoft.RecoveryServices/vaults'` | Replace `<vault-resource-id>` with the full resource ID of your Recovery Services vault (format: `/subscriptions/{subId}/resourceGroups/{rgName}/providers/Microsoft.RecoveryServices/vaults/{vaultName}`). |
+    | `The workspace '<workspace-id>' does not exist or you do not have permission to access it` | Verify the Log Analytics workspace ID is correct and your user has Contributor role on both the vault and workspace resources. |
+    | `BadRequest: The diagnostic setting name 'vault-diagnostics' already exists` | Use a unique name for the diagnostic setting or delete the existing one with `az monitor diagnostic-settings delete --name vault-diagnostics --resource <vault-resource-id>`. |

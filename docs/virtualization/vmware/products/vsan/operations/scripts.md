@@ -186,9 +186,11 @@ Report saved to: C:\Users\YourName\Desktop\vsan_report_20240115_143247.csv
 ```
 
 !!! warning "Common errors"
-    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
-    **`The term 'Connect-VIServer' is not recognized`** — Install VMware PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force`.
-    **`Unable to connect to vCenter server`** — Verify vCenter hostname/IP and credentials in the script configuration section, and confirm network connectivity to the vCenter server.
+    | Error | Fix |
+    |---|---|
+    | `cannot be loaded because running scripts is disabled on this system` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script. |
+    | `The term 'Connect-VIServer' is not recognized` | Install VMware PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force`. |
+    | `Unable to connect to vCenter server` | Verify vCenter hostname/IP and credentials in the script configuration section, and confirm network connectivity to the vCenter server. |
 **What you should see**
 
 ```text
@@ -383,9 +385,11 @@ Report saved to: vsan_health_report_20240115_143218.json
 ```
 
 !!! warning "Common errors"
-    **`python: command not found`** — Ensure Python 3.7+ is installed and added to your system PATH, or use the full path to the Python executable.
-    **`ConnectionError: Unable to connect to vCenter at vcenter.corp.local`** — Verify vCenter hostname/IP is correct and accessible, and check that credentials in the script configuration are valid.
-    **`PermissionError: [Errno 13] Permission denied: 'vsan_object_health.py'`** — Run the script with appropriate permissions or ensure the file has execute permissions (use `chmod +x vsan_object_health.py` on Linux/Mac).
+    | Error | Fix |
+    |---|---|
+    | `python: command not found` | Ensure Python 3.7+ is installed and added to your system PATH, or use the full path to the Python executable. |
+    | `ConnectionError: Unable to connect to vCenter at vcenter.corp.local` | Verify vCenter hostname/IP is correct and accessible, and check that credentials in the script configuration are valid. |
+    | `PermissionError: [Errno 13] Permission denied: 'vsan_object_health.py'` | Run the script with appropriate permissions or ensure the file has execute permissions (use `chmod +x vsan_object_health.py` on Linux/Mac). |
 **What you should see**
 
 If everything is healthy:
@@ -550,9 +554,11 @@ Collection completed successfully in 2m 34s
 ```
 
 !!! warning "Common errors"
-    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
-    **`The term 'vsan_perf_baseline.ps1' is not recognized`** — Verify the script exists in the current directory with `ls *.ps1` and check the exact filename spelling.
-    **`Connect-VIServer : Cannot connect to vCenter server`** — Ensure vCenter is reachable and update the vCenter hostname/IP in the script's configuration section.
+    | Error | Fix |
+    |---|---|
+    | `cannot be loaded because running scripts is disabled on this system` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script. |
+    | `The term 'vsan_perf_baseline.ps1' is not recognized` | Verify the script exists in the current directory with `ls *.ps1` and check the exact filename spelling. |
+    | `Connect-VIServer : Cannot connect to vCenter server` | Ensure vCenter is reachable and update the vCenter hostname/IP in the script's configuration section. |
 **What you should see**
 
 ```text
@@ -675,8 +681,10 @@ GNU nano, version 2.9.8
 ```
 
 !!! warning "Common errors"
-    **`nano: command not found`** — Install nano with `apt-get install nano` (Debian/Ubuntu) or `yum install nano` (RHEL/CentOS), or use `vi` instead.
-    **`nano: Error reading /root/vsan_health.yml: No such file or directory`** — Create the file first with `touch ~/vsan_health.yml` or ensure the home directory path is correct.
+    | Error | Fix |
+    |---|---|
+    | `nano: command not found` | Install nano with `apt-get install nano` (Debian/Ubuntu) or `yum install nano` (RHEL/CentOS), or use `vi` instead. |
+    | `nano: Error reading /root/vsan_health.yml: No such file or directory` | Create the file first with `touch ~/vsan_health.yml` or ensure the home directory path is correct. |
 Paste the entire code block, then press `Ctrl+X`, then `Y`, then `Enter` to save.
 
 **Step 2 — Fill in your details**
@@ -702,8 +710,10 @@ export VC_PASS="YourPassword"
 ```
 
 !!! warning "Common errors"
-    **`bash: export: `YourPassword': not a valid identifier`** — Wrap the password in quotes if it contains special characters: `export VC_PASS="Your\$Password"` or use single quotes for literal interpretation.
-    **`bash: administrator@vsphere.local: command not found`** — Ensure the VC_USER value is quoted; use `export VC_USER="administrator@vsphere.local"` instead of unquoted assignment.
+    | Error | Fix |
+    |---|---|
+    | `bash: export: `YourPassword': not a valid identifier` | Wrap the password in quotes if it contains special characters: `export VC_PASS="Your\$Password"` or use single quotes for literal interpretation. |
+    | `bash: administrator@vsphere.local: command not found` | Ensure the VC_USER value is quoted; use `export VC_USER="administrator@vsphere.local"` instead of unquoted assignment. |
 **Step 4 — Create a minimal inventory file**
 
 ```bash
@@ -716,8 +726,10 @@ echo "localhost ansible_connection=local" > ~/inventory
 ```
 
 !!! warning "Common errors"
-    **`bash: /root/inventory: Permission denied`** — Ensure the home directory is writable or use a different path with appropriate permissions.
-    **`bash: line 1: ~/inventory: No such file or directory`** — Verify the home directory exists and the tilde expansion is working; check with `echo $HOME`.
+    | Error | Fix |
+    |---|---|
+    | `bash: /root/inventory: Permission denied` | Ensure the home directory is writable or use a different path with appropriate permissions. |
+    | `bash: line 1: ~/inventory: No such file or directory` | Verify the home directory exists and the tilde expansion is working; check with `echo $HOME`. |
 **Step 5 — Run it**
 
 ```bash
@@ -756,9 +768,11 @@ esx-host-03.lab.local      : ok=2    changed=0    unreachable=1    failed=0
 ```
 
 !!! warning "Common errors"
-    **`[Errno 2] No such file or directory: '/root/inventory'`** — Verify the inventory file path exists or use an absolute path with `-i /path/to/inventory`.
-    **`fatal: [esx-host-02.lab.local]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure SSH keys are properly configured and the ansible user has passwordless SSH access to all ESXi hosts.
-    **`ERROR! the playbook: ~/vsan_health.yml could not be found`** — Expand the tilde manually or use an absolute path like `-i /root/inventory ~/vsan_health.yml`.
+    | Error | Fix |
+    |---|---|
+    | `[Errno 2] No such file or directory: '/root/inventory'` | Verify the inventory file path exists or use an absolute path with `-i /path/to/inventory`. |
+    | `fatal: [esx-host-02.lab.local]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Ensure SSH keys are properly configured and the ansible user has passwordless SSH access to all ESXi hosts. |
+    | `ERROR! the playbook: ~/vsan_health.yml could not be found` | Expand the tilde manually or use an absolute path like `-i /root/inventory ~/vsan_health.yml`. |
 **What you should see**
 
 Each task prints `ok` or `failed`. A RED health test causes a hard failure. YELLOW tests are reported but do not stop the playbook (they are logged with `failed_when: false`). The final debug task prints a summary.
@@ -940,9 +954,11 @@ Report saved to: C:\Users\YourName\Desktop\vsan_health_report_20240115.html
 ```
 
 !!! warning "Common errors"
-    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
-    **`The term 'vsan_health_windows.ps1' is not recognized`** — Verify the script exists in the current directory and use `Get-ChildItem` to confirm the filename matches exactly.
-    **`Connect-VIServer : The server certificate could not be validated`** — Add `-WarningAction SilentlyContinue` to the vCenter connection command or import the vCenter SSL certificate to the trusted store.
+    | Error | Fix |
+    |---|---|
+    | `cannot be loaded because running scripts is disabled on this system` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script. |
+    | `The term 'vsan_health_windows.ps1' is not recognized` | Verify the script exists in the current directory and use `Get-ChildItem` to confirm the filename matches exactly. |
+    | `Connect-VIServer : The server certificate could not be validated` | Add `-WarningAction SilentlyContinue` to the vCenter connection command or import the vCenter SSL certificate to the trusted store. |
 **What you should see**
 
 ```text
@@ -1103,9 +1119,11 @@ Check completed at 2024-01-15 14:32:47 UTC
 ```
 
 !!! warning "Common errors"
-    **`'vsan_diskgroup_check.bat' is not recognized as an internal or external command`** — Verify the script exists in the current directory or provide the full path (e.g., `.\vsan_diskgroup_check.bat`).
-    **`Access Denied`** — Run the command prompt as Administrator or check file permissions on the script.
-    **`Unable to connect to vCenter server`** — Ensure vCenter credentials are configured in the script and the vCenter host is reachable on the network.
+    | Error | Fix |
+    |---|---|
+    | `'vsan_diskgroup_check.bat' is not recognized as an internal or external command` | Verify the script exists in the current directory or provide the full path (e.g., `.\vsan_diskgroup_check.bat`). |
+    | `Access Denied` | Run the command prompt as Administrator or check file permissions on the script. |
+    | `Unable to connect to vCenter server` | Ensure vCenter credentials are configured in the script and the vCenter host is reachable on the network. |
 **What you should see**
 
 ```text
@@ -1353,9 +1371,11 @@ Last resync activity: 2025-01-15 14:22:15 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the host. The session is not authenticated.`** — Re-authenticate with `esxcli system login` or ensure your SSH session has valid credentials.
-    **`Error: vSAN is not enabled on this host`** — Verify vSAN is licensed and enabled on the cluster with `esxcli vsan cluster get`.
-    **`Error: Unknown command or namespace 'vsan debug resync summary get'`** — Confirm the ESXi host version supports this command (requires vSAN 6.7+); check with `esxcli system version get`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the host. The session is not authenticated.` | Re-authenticate with `esxcli system login` or ensure your SSH session has valid credentials. |
+    | `Error: vSAN is not enabled on this host` | Verify vSAN is licensed and enabled on the cluster with `esxcli vsan cluster get`. |
+    | `Error: Unknown command or namespace 'vsan debug resync summary get'` | Confirm the ESXi host version supports this command (requires vSAN 6.7+); check with `esxcli system version get`. |
 **What you should see**
 
 ```text

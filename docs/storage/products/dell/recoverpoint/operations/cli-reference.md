@@ -138,9 +138,11 @@ Group Resume
 ```
 
 !!! warning "Common errors"
-    **`Error: CG 'Production_DB_CG' is in FAILED state — image access cannot be enabled`** — Check replication link status with `boxmgmt> groups status` and resolve connectivity issues before retrying.
-    **`Error: Copy 'DR_Copy' has no valid images available for the selected timeframe`** — Verify retention policy settings and ensure the copy has completed at least one full synchronization cycle.
-    **`Error: Cannot suspend CG — test failover currently in progress`** — Wait for the test failover to complete or abort it with `boxmgmt> test failover abort` before suspending.
+    | Error | Fix |
+    |---|---|
+    | `Error: CG 'Production_DB_CG' is in FAILED state — image access cannot be enabled` | Check replication link status with `boxmgmt> groups status` and resolve connectivity issues before retrying. |
+    | `Error: Copy 'DR_Copy' has no valid images available for the selected timeframe` | Verify retention policy settings and ensure the copy has completed at least one full synchronization cycle. |
+    | `Error: Cannot suspend CG — test failover currently in progress` | Wait for the test failover to complete or abort it with `boxmgmt> test failover abort` before suspending. |
 ---
 
 ## RPAPI REST
@@ -159,8 +161,10 @@ AUTH="-u admin:password --insecure"
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `--insecure` flag to the curl command or import the RecoverPoint certificate into your system's CA bundle.
-    **`curl: (7) Failed to connect to recoverpoint.example.com port 443: Connection refused`** — Verify the RecoverPoint appliance is running and accessible at the specified hostname/IP, and confirm port 443 is not blocked by firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `--insecure` flag to the curl command or import the RecoverPoint certificate into your system's CA bundle. |
+    | `curl: (7) Failed to connect to recoverpoint.example.com port 443: Connection refused` | Verify the RecoverPoint appliance is running and accessible at the specified hostname/IP, and confirm port 443 is not blocked by firewall rules. |
 ### Cluster Information
 
 ```bash
@@ -208,8 +212,10 @@ Cluster: a1b2c3d4-e5f6-47g8-9h0i-j1k2l3m4n5o6  name=dr-rp-cluster-02
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.10.45 port 443: Connection refused`** — Verify the RecoverPoint appliance is reachable and the REST API service is running; check firewall rules and network connectivity to the management IP.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Confirm the `$AUTH` variable is set correctly with valid credentials and the `$RP` endpoint URL is accurate.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.10.45 port 443: Connection refused` | Verify the RecoverPoint appliance is reachable and the REST API service is running; check firewall rules and network connectivity to the management IP. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Confirm the `$AUTH` variable is set correctly with valid credentials and the `$RP` endpoint URL is accurate. |
 ### Consistency Groups
 
 ```bash
@@ -299,9 +305,11 @@ CG=app-tier-cg-02               enabled=False  copies=['app-copy-local']
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused`** — Verify the RecoverPoint appliance IP in `$RP` variable and confirm the management interface is reachable and the API service is running.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Ensure `$AUTH` contains valid credentials (e.g., `-H "Authorization: Bearer <token>"`) and the API endpoint is correct; test with `curl -v` to inspect the response.
-    **`KeyError: 'innerSet'`** — Confirm the RecoverPoint API version matches your script; older versions may use different JSON structure keys—check API documentation for your RP version.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused` | Verify the RecoverPoint appliance IP in `$RP` variable and confirm the management interface is reachable and the API service is running. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Ensure `$AUTH` contains valid credentials (e.g., `-H "Authorization: Bearer <token>"`) and the API endpoint is correct; test with `curl -v` to inspect the response. |
+    | `KeyError: 'innerSet'` | Confirm the RecoverPoint API version matches your script; older versions may use different JSON structure keys—check API documentation for your RP version. |
 ### CG Operations via REST
 
 ```bash
@@ -367,9 +375,11 @@ curl -s -X PUT $AUTH "$RP/group/${CG_UID}/test_consistency" | python3 -m json.to
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.45 port 443: Connection refused`** — Verify the RecoverPoint appliance IP in the `$RP` variable and confirm the management interface is reachable and the API service is running.
-    **`"error": "Invalid group UID format"`** — Ensure `$CG_UID` is a valid UUID (e.g., `7f8c3a2b-1e9d-4f6a-9c2e-5d3b8a1f4e7c`) and the consistency group exists on the appliance.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip SSL verification, or import the RecoverPoint appliance certificate into your system's trusted store.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.45 port 443: Connection refused` | Verify the RecoverPoint appliance IP in the `$RP` variable and confirm the management interface is reachable and the API service is running. |
+    | `"error": "Invalid group UID format"` | Ensure `$CG_UID` is a valid UUID (e.g., `7f8c3a2b-1e9d-4f6a-9c2e-5d3b8a1f4e7c`) and the consistency group exists on the appliance. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to the curl command to skip SSL verification, or import the RecoverPoint appliance certificate into your system's trusted store. |
 ### RPA Health
 
 ```bash
@@ -405,9 +415,11 @@ Cluster: backup-cluster-02    Quorum: 2/5
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <host>: Connection refused`** — Verify the RecoverPoint API endpoint is reachable and the service is running with `systemctl status recoverpoint-api`.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Confirm `$AUTH` and `$RP` variables are set correctly with `echo $RP $AUTH` and check API authentication credentials.
-    **`KeyError: 'innerSet'`** — The API response structure may differ by RecoverPoint version; add error handling with `.get('innerSet', [])` or verify API documentation for your version.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <host>: Connection refused` | Verify the RecoverPoint API endpoint is reachable and the service is running with `systemctl status recoverpoint-api`. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Confirm `$AUTH` and `$RP` variables are set correctly with `echo $RP $AUTH` and check API authentication credentials. |
+    | `KeyError: 'innerSet'` | The API response structure may differ by RecoverPoint version; add error handling with `.get('innerSet', [])` or verify API documentation for your version. |
 ### Journal Usage
 
 ```bash
@@ -435,9 +447,11 @@ CG=backup-cg                  copy=remote-vault           journal_vols=4
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <ip>: Connection refused`** — Verify the RecoverPoint appliance IP in `$RP` is reachable and the REST API service is running.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Confirm `$AUTH` contains valid credentials (e.g., `-u admin:password`) and the endpoint `/group/all_groups_details` exists on this RP version.
-    **`KeyError: 'innerSet'`** — The API response structure differs from expected; check RecoverPoint firmware version compatibility and validate the JSON schema with `curl -s $AUTH "$RP/group/all_groups_details" | python3 -m json.tool`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <ip>: Connection refused` | Verify the RecoverPoint appliance IP in `$RP` is reachable and the REST API service is running. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Confirm `$AUTH` contains valid credentials (e.g., `-u admin:password`) and the endpoint `/group/all_groups_details` exists on this RP version. |
+    | `KeyError: 'innerSet'` | The API response structure differs from expected; check RecoverPoint firmware version compatibility and validate the JSON schema with `curl -s $AUTH "$RP/group/all_groups_details" | python3 -m json.tool`. |
 ---
 
 ## Key Operational Scenarios
@@ -497,9 +511,11 @@ curl -s -X PUT $AUTH "$RP/group/${CG_UID}/copy/${COPY_UID}/disable_image_access"
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 10.50.12.45 port 443: Connection refused`** — Verify RecoverPoint appliance is running and accessible; check firewall rules and $RP variable is set correctly.
-    **`{"error":"Invalid copy UID","errorCode":40001}`** — Confirm $COPY_UID matches an actual copy in the consistency group; list all copies with the first curl command to verify the UID.
-    **`{"error":"Image access already enabled on copy","errorCode":40015}`** — Disable image access first before re-enabling; check current copy state with the all_groups_details query.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 10.50.12.45 port 443: Connection refused` | Verify RecoverPoint appliance is running and accessible; check firewall rules and $RP variable is set correctly. |
+    | `{"error":"Invalid copy UID","errorCode":40001}` | Confirm $COPY_UID matches an actual copy in the consistency group; list all copies with the first curl command to verify the UID. |
+    | `{"error":"Image access already enabled on copy","errorCode":40015}` | Disable image access first before re-enabling; check current copy state with the all_groups_details query. |
 ---
 
 ## Verify

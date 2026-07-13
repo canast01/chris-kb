@@ -164,9 +164,11 @@ cluster1::> security login delete -username svc-backup -application ssh -vserver
 ```
 
 !!! warning "Common errors"
-    **`Error: "svc-monitor" is not a valid user name for Vserver "cluster1".`** — Verify the username exists with `security login show` before attempting to modify it.
-    **`Error: Failed to set password: Account is locked.`** — Unlock the account first using `security login unlock -username <user> -vserver <svm>`.
-    **`Error: Cannot delete user "admin" from application "ssh": Admin user cannot be deleted.`** — Create an alternative admin account before attempting to remove the default admin user.
+    | Error | Fix |
+    |---|---|
+    | `Error: "svc-monitor" is not a valid user name for Vserver "cluster1".` | Verify the username exists with `security login show` before attempting to modify it. |
+    | `Error: Failed to set password: Account is locked.` | Unlock the account first using `security login unlock -username <user> -vserver <svm>`. |
+    | `Error: Cannot delete user "admin" from application "ssh": Admin user cannot be deleted.` | Create an alternative admin account before attempting to remove the default admin user. |
 ### Built-in Accounts
 
 | Account | Default State | Notes |
@@ -187,8 +189,10 @@ security login lock -username diag -vserver <cluster-name>
 ```
 
 !!! warning "Common errors"
-    **`Error: "diag" is not a valid user on vserver "cluster-prod"`** — Verify the username exists with `security login show` before locking.
-    **`Error: This operation is not permitted: user "admin" cannot lock built-in user "diag"`** — Use a cluster admin account or check if the user role permits lock operations.
+    | Error | Fix |
+    |---|---|
+    | `Error: "diag" is not a valid user on vserver "cluster-prod"` | Verify the username exists with `security login show` before locking. |
+    | `Error: This operation is not permitted: user "admin" cannot lock built-in user "diag"` | Use a cluster admin account or check if the user role permits lock operations. |
 ---
 
 ## SSH Public Key Authentication
@@ -237,8 +241,10 @@ Index Username                   Algorithm  Fingerprint
 ```
 
 !!! warning "Common errors"
-    **`Error: Entry already exists at index 0`** — Use a different index number (e.g., `-index 1`) or delete the existing key first with `security login publickey delete`.
-    **`Error: Invalid public key format`** — Ensure the key string is complete and properly formatted (starts with `ssh-rsa`, `ssh-ed25519`, or `ecdsa-sha2-nistp256`).
+    | Error | Fix |
+    |---|---|
+    | `Error: Entry already exists at index 0` | Use a different index number (e.g., `-index 1`) or delete the existing key first with `security login publickey delete`. |
+    | `Error: Invalid public key format` | Ensure the key string is complete and properly formatted (starts with `ssh-rsa`, `ssh-ed25519`, or `ecdsa-sha2-nistp256`). |
 ### Requiring Key-Only Authentication
 
 After confirming key authentication works, disable password auth for the admin account:
@@ -263,8 +269,10 @@ admin                   cluster1                publickey
 ```
 
 !!! warning "Common errors"
-    **`Error: entry doesn't exist`** — Verify the admin user exists and the authentication method is currently set to password using `security login show -username admin` before deletion.
-    **`Error: Cannot delete the last authentication method`** — Ensure key-based authentication is already configured and tested for admin before removing the password method, or use a different user account for the deletion command.
+    | Error | Fix |
+    |---|---|
+    | `Error: entry doesn't exist` | Verify the admin user exists and the authentication method is currently set to password using `security login show -username admin` before deletion. |
+    | `Error: Cannot delete the last authentication method` | Ensure key-based authentication is already configured and tested for admin before removing the password method, or use a different user account for the deletion command. |
 ### Key Rotation
 
 ```bash
@@ -286,8 +294,10 @@ security login publickey modify -username admin -index 1 -new-index 0
 ```
 
 !!! warning "Common errors"
-    **`Error: entry already exists`** — Verify the public key doesn't already exist for this user with `security login publickey show -username admin`.
-    **`Error: cannot delete the last public key for user`** — Ensure at least one valid public key remains; create the new key and test SSH access before deleting the old one.
+    | Error | Fix |
+    |---|---|
+    | `Error: entry already exists` | Verify the public key doesn't already exist for this user with `security login publickey show -username admin`. |
+    | `Error: cannot delete the last public key for user` | Ensure at least one valid public key remains; create the new key and test SSH access before deleting the old one. |
 ---
 
 ## Active Directory / CIFS Authentication
@@ -336,9 +346,11 @@ dc03.domain.corp     192.168.10.47   false
 ```
 
 !!! warning "Common errors"
-    **`CIFS server "NAS-PROD-01" already exists on Vserver "svm_prod_01".`** — Verify the SVM is not already domain-joined using `vserver cifs show -vserver <svm>` before attempting to create a new CIFS server.
-    **`Failed to join domain "domain.corp": Authentication failed (Kerberos error 24)`** — Confirm Domain Admin credentials are correct and the SVM has network connectivity to at least one domain controller on port 389 (LDAP) and 88 (Kerberos).
-    **`Failed to join domain "domain.corp": The specified organizational unit does not exist.`** — Verify the OU path exists in Active Directory and use the correct DN format (e.g., `OU=StorageServers,DC=domain,DC=corp`).
+    | Error | Fix |
+    |---|---|
+    | `CIFS server "NAS-PROD-01" already exists on Vserver "svm_prod_01".` | Verify the SVM is not already domain-joined using `vserver cifs show -vserver <svm>` before attempting to create a new CIFS server. |
+    | `Failed to join domain "domain.corp": Authentication failed (Kerberos error 24)` | Confirm Domain Admin credentials are correct and the SVM has network connectivity to at least one domain controller on port 389 (LDAP) and 88 (Kerberos). |
+    | `Failed to join domain "domain.corp": The specified organizational unit does not exist.` | Verify the OU path exists in Active Directory and use the correct DN format (e.g., `OU=StorageServers,DC=domain,DC=corp`). |
 ### Domain Account Management Login
 
 Domain accounts can be granted ONTAP management access without requiring a local account:
@@ -383,9 +395,11 @@ DOMAIN\StorageAdmins         ssh         domain     false  admin
 ```
 
 !!! warning "Common errors"
-    **`Error: "DOMAIN\admin-user" is not a valid user name`** — Escape the backslash properly in your shell context or use single quotes around the username string.
-    **`Error: This user already exists`** — The login entry already exists; use `security login modify` to change its role or authentication method instead.
-    **`Error: Domain authentication is not configured`** — Configure LDAP or Active Directory on the cluster first using `security config modify -authentication-method domain`.
+    | Error | Fix |
+    |---|---|
+    | `Error: "DOMAIN\admin-user" is not a valid user name` | Escape the backslash properly in your shell context or use single quotes around the username string. |
+    | `Error: This user already exists` | The login entry already exists; use `security login modify` to change its role or authentication method instead. |
+    | `Error: Domain authentication is not configured` | Configure LDAP or Active Directory on the cluster first using `security config modify -authentication-method domain`. |
 ---
 
 ## LDAP Integration
@@ -443,9 +457,11 @@ Bind Status: successful
 ```
 
 !!! warning "Common errors"
-    **`Error: "LDAP client config <ldap-config-name> already exists"`** — Use a unique client configuration name or delete the existing config with `vserver services name-service ldap client delete`.
-    **`Error: "LDAP server <ldap-server-ip> is unreachable"`** — Verify network connectivity to the LDAP server, check firewall rules for port 389/636, and confirm the IP address is correct.
-    **`Error: "Invalid bind DN or password"`** — Verify the bind account credentials and DN format match your Active Directory structure using `ldapsearch` from a test client.
+    | Error | Fix |
+    |---|---|
+    | `Error: "LDAP client config <ldap-config-name> already exists"` | Use a unique client configuration name or delete the existing config with `vserver services name-service ldap client delete`. |
+    | `Error: "LDAP server <ldap-server-ip> is unreachable"` | Verify network connectivity to the LDAP server, check firewall rules for port 389/636, and confirm the IP address is correct. |
+    | `Error: "Invalid bind DN or password"` | Verify the bind account credentials and DN format match your Active Directory structure using `ldapsearch` from a test client. |
 ### Name Service Switch
 
 The name service switch defines the order in which ONTAP resolves user and group information:
@@ -485,9 +501,11 @@ bootparams  files
 ```
 
 !!! warning "Common errors"
-    **`Error: "svm-prod-01" is not a valid vserver name`** — Verify the SVM name exists with `vserver show` and use the correct name in the `-vserver` parameter.
-    **`Error: Invalid value specified for option "sources": "files,ldap"`** — Ensure LDAP is configured on the SVM first with `vserver services name-service ldap client create` before adding it to ns-switch sources.
-    **`Error: Access denied. Insufficient privileges to perform the requested operation`** — Run the commands with cluster admin credentials or ensure your role has `vserver-admin` privileges.
+    | Error | Fix |
+    |---|---|
+    | `Error: "svm-prod-01" is not a valid vserver name` | Verify the SVM name exists with `vserver show` and use the correct name in the `-vserver` parameter. |
+    | `Error: Invalid value specified for option "sources": "files,ldap"` | Ensure LDAP is configured on the SVM first with `vserver services name-service ldap client create` before adding it to ns-switch sources. |
+    | `Error: Access denied. Insufficient privileges to perform the requested operation` | Run the commands with cluster admin credentials or ensure your role has `vserver-admin` privileges. |
 ---
 
 ## SNMPv3 Authentication
@@ -542,9 +560,11 @@ SNMPv1/v2c Communities:
 ```
 
 !!! warning "Common errors"
-    **`Error: SNMP user "snmpv3monitor" already exists`** — Delete the existing user with `system snmp user delete -username snmpv3monitor` before recreating it.
-    **`Error: Invalid IP address <monitoring-host-ip>`** — Replace `<monitoring-host-ip>` with a valid IPv4 address (e.g., 192.168.45.120) and ensure the monitoring host is reachable from the cluster.
-    **`Error: Community string "public" does not exist`** — Verify the community name exists first by running `system snmp community show` before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: SNMP user "snmpv3monitor" already exists` | Delete the existing user with `system snmp user delete -username snmpv3monitor` before recreating it. |
+    | `Error: Invalid IP address <monitoring-host-ip>` | Replace `<monitoring-host-ip>` with a valid IPv4 address (e.g., 192.168.45.120) and ensure the monitoring host is reachable from the cluster. |
+    | `Error: Community string "public" does not exist` | Verify the community name exists first by running `system snmp community show` before attempting deletion. |
 Recommended SNMPv3 security levels:
 
 | Parameter | Recommended Value | Notes |
@@ -593,9 +613,11 @@ IdP Cert Expiry: 2026-03-15
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid IdP metadata URL format`** — Verify the `-idp-uri` parameter is a valid HTTPS URL and the metadata endpoint is accessible from the cluster.
-    **`Error: SAML SP already exists on vserver "cluster"`** — Delete the existing SAML SP configuration with `security saml-sp delete` before creating a new one.
-    **`Error: Cannot resolve cluster management FQDN`** — Ensure the `-sp-host` parameter matches the cluster's management interface FQDN and is resolvable in DNS.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid IdP metadata URL format` | Verify the `-idp-uri` parameter is a valid HTTPS URL and the metadata endpoint is accessible from the cluster. |
+    | `Error: SAML SP already exists on vserver "cluster"` | Delete the existing SAML SP configuration with `security saml-sp delete` before creating a new one. |
+    | `Error: Cannot resolve cluster management FQDN` | Ensure the `-sp-host` parameter matches the cluster's management interface FQDN and is resolvable in DNS. |
 SAML configuration requires:
 1. Download the ONTAP SP metadata from `https://<cluster-mgmt>/saml-service-provider-metadata.xml`
 2. Register the SP in your IdP (ADFS, Okta, or Azure AD) using the SP metadata
@@ -626,8 +648,10 @@ Comment: -
 ```
 
 !!! warning "Common errors"
-    **`Error: "admin" is not a valid username for Vserver "cluster1"`** — Verify the username exists with `security login show` and use the correct Vserver name with `-vserver` parameter if in a multi-Vserver environment.
-    **`Error: entry doesn't exist`** — Ensure an SSH public key is already configured for the admin user with `security login publickey load-from-uri` or `security login publickey create` before enabling SAML.
+    | Error | Fix |
+    |---|---|
+    | `Error: "admin" is not a valid username for Vserver "cluster1"` | Verify the username exists with `security login show` and use the correct Vserver name with `-vserver` parameter if in a multi-Vserver environment. |
+    | `Error: entry doesn't exist` | Ensure an SSH public key is already configured for the admin user with `security login publickey load-from-uri` or `security login publickey create` before enabling SAML. |
 ---
 
 ## Kerberos for NFS
@@ -690,9 +714,11 @@ Status: created
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Kerberos realm CORP.LOCAL already exists`** — Check existing realms with `vserver nfs kerberos realm show` before creating a new one.
-    **`Error: command failed: LIF nfs_lif_01 is not configured for NFS`** — Ensure the LIF has NFS protocol enabled using `vserver nfs create` or `network interface modify`.
-    **`Error: command failed: Cannot resolve KDC hostname or IP address unreachable`** — Verify network connectivity to the domain controller IP and confirm the KDC port 88 is open in firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Kerberos realm CORP.LOCAL already exists` | Check existing realms with `vserver nfs kerberos realm show` before creating a new one. |
+    | `Error: command failed: LIF nfs_lif_01 is not configured for NFS` | Ensure the LIF has NFS protocol enabled using `vserver nfs create` or `network interface modify`. |
+    | `Error: command failed: Cannot resolve KDC hostname or IP address unreachable` | Verify network connectivity to the domain controller IP and confirm the KDC port 88 is open in firewall rules. |
 Kerberos security flavors for NFS exports:
 
 | Flavor | Authentication | Integrity | Encryption |
@@ -718,9 +744,11 @@ vserver export-policy rule modify \
 ```
 
 !!! warning "Common errors"
-    **`Error: "krb5p" is not a valid value for this parameter`** — Use valid authentication methods like `krb5`, `krb5i`, `sys`, or `none` instead of `krb5p`.
-    **`Error: policy <policy> does not exist`** — Verify the policy name is correct and exists on the SVM using `vserver export-policy show -vserver <svm>`.
-    **`Error: rule index 1 does not exist in policy <policy>`** — Check available rule indices with `vserver export-policy rule show -vserver <svm> -policyname <policy>` before modifying.
+    | Error | Fix |
+    |---|---|
+    | `Error: "krb5p" is not a valid value for this parameter` | Use valid authentication methods like `krb5`, `krb5i`, `sys`, or `none` instead of `krb5p`. |
+    | `Error: policy <policy> does not exist` | Verify the policy name is correct and exists on the SVM using `vserver export-policy show -vserver <svm>`. |
+    | `Error: rule index 1 does not exist in policy <policy>` | Check available rule indices with `vserver export-policy rule show -vserver <svm> -policyname <policy>` before modifying. |
 ---
 
 ## Related Reference

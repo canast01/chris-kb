@@ -72,9 +72,11 @@ Premium_LRS                   [1, 2, 3]
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --location`** — Add `--location eastus` (or your target region) to the `az vm list-skus` command.
-    **`No JSON object could be decoded`** — Ensure your Azure CLI is updated with `az upgrade` and you're authenticated with `az login`.
-    **`The resource type 'virtualMachines' is invalid`** — Use lowercase `virtualmachines` or omit the `--resource-type` flag to query all resources in the location.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --location` | Add `--location eastus` (or your target region) to the `az vm list-skus` command. |
+    | `No JSON object could be decoded` | Ensure your Azure CLI is updated with `az upgrade` and you're authenticated with `az login`. |
+    | `The resource type 'virtualMachines' is invalid` | Use lowercase `virtualmachines` or omit the `--resource-type` flag to query all resources in the location. |
 ---
 
 ## Deploying Zone-Pinned VMs
@@ -166,9 +168,11 @@ vm-z3     3       Standard_D2s_v3
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name is correct and exists in your subscription with `az group list`.
-    **`InvalidImageName`** — Replace `Ubuntu2204` with a valid image URN like `UbuntuLTS` or `Canonical:0001-com-ubuntu-server-jammy:22_04-lts-gen2:latest`.
-    **`ZoneNotAvailable`** — Confirm availability zones 1–3 are supported in your region with `az vm list-skus --location <region> --query "[?zones]" --output table`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name is correct and exists in your subscription with `az group list`. |
+    | `InvalidImageName` | Replace `Ubuntu2204` with a valid image URN like `UbuntuLTS` or `Canonical:0001-com-ubuntu-server-jammy:22_04-lts-gen2:latest`. |
+    | `ZoneNotAvailable` | Confirm availability zones 1–3 are supported in your region with `az vm list-skus --location <region> --query "[?zones]" --output table`. |
 ---
 
 ## Zone-Redundant Managed Disks
@@ -214,9 +218,11 @@ Disk attached.
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/disks/<disk-name>' under resource group '<rg>' was not found.`** — Verify the disk name and resource group match exactly, and that the disk creation completed successfully before attempting attachment.
-    **`InvalidParameter : The resource with id '/subscriptions/.../virtualMachines/<vm-name>' could not be found.`** — Confirm the VM name and resource group are correct, and that the VM exists in the same region and resource group as the disk.
-    **`SkuNotAvailable : The requested sku 'Premium_ZRS' is not available in location 'eastus'.`** — Check Azure's current SKU availability for your region using `az vm list-skus --location eastus --query "[?name=='Premium_ZRS']"` and select an available location.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/disks/<disk-name>' under resource group '<rg>' was not found.` | Verify the disk name and resource group match exactly, and that the disk creation completed successfully before attempting attachment. |
+    | `InvalidParameter : The resource with id '/subscriptions/.../virtualMachines/<vm-name>' could not be found.` | Confirm the VM name and resource group are correct, and that the VM exists in the same region and resource group as the disk. |
+    | `SkuNotAvailable : The requested sku 'Premium_ZRS' is not available in location 'eastus'.` | Check Azure's current SKU availability for your region using `az vm list-skus --location eastus --query "[?name=='Premium_ZRS']"` and select an available location. |
 | Disk SKU | Zone-Redundant | Use Case |
 |---|---|---|
 | Premium_LRS | No | Single-zone premium performance |
@@ -315,9 +321,11 @@ az network lb address-pool address add \
 ```
 
 !!! warning "Common errors"
-    **`BadRequest: The resource with id ... does not exist.`** — Verify the resource group name, public IP name, and load balancer name exist before running the address pool command.
-    **`InvalidResourceReference: The vnet parameter must be a full resource ID, not a name.`** — Use the full vnet resource ID format: `/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Network/virtualNetworks/<vnet-name>`.
-    **`ConflictingUserInput: Cannot use zones parameter with Basic SKU public IP.`** — Remove the `--zone` parameter or change the SKU to `Standard` for zone-redundancy support.
+    | Error | Fix |
+    |---|---|
+    | `BadRequest: The resource with id ... does not exist.` | Verify the resource group name, public IP name, and load balancer name exist before running the address pool command. |
+    | `InvalidResourceReference: The vnet parameter must be a full resource ID, not a name.` | Use the full vnet resource ID format: `/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Network/virtualNetworks/<vnet-name>`. |
+    | `ConflictingUserInput: Cannot use zones parameter with Basic SKU public IP.` | Remove the `--zone` parameter or change the SKU to `Standard` for zone-redundancy support. |
 ---
 
 ## Cross-Zone Latency Considerations
@@ -362,9 +370,11 @@ az vm run-command invoke \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name-z1>' under resource group '<rg>' was not found.`** — Verify the VM name and resource group name are correct using `az vm list --resource-group <rg>`.
-    **`The client '<principal-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/runCommands/action'`** — Assign the VM Contributor or higher role to your user/service principal using `az role assignment create`.
-    **`Network connectivity failed: 100% packet loss`** — Ensure the target VM's private IP is correct, both VMs are in the same virtual network or peered networks, and NSG rules allow ICMP traffic between them.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name-z1>' under resource group '<rg>' was not found.` | Verify the VM name and resource group name are correct using `az vm list --resource-group <rg>`. |
+    | `The client '<principal-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/runCommands/action'` | Assign the VM Contributor or higher role to your user/service principal using `az role assignment create`. |
+    | `Network connectivity failed: 100% packet loss` | Ensure the target VM's private IP is correct, both VMs are in the same virtual network or peered networks, and NSG rules allow ICMP traffic between them. |
 ---
 
 ## Availability Zones vs Availability Sets
@@ -402,5 +412,7 @@ az disk show \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Network/publicIPAddresses/<pip-name>' under resource group '<rg>' was not found.`** — Verify the public IP name and resource group name are correct with `az network public-ip list --resource-group <rg>`.
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/disks/<disk-name>' under resource group '<rg>' was not found.`** — Confirm the disk name exists in the resource group using `az disk list --resource-group <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Network/publicIPAddresses/<pip-name>' under resource group '<rg>' was not found.` | Verify the public IP name and resource group name are correct with `az network public-ip list --resource-group <rg>`. |
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/disks/<disk-name>' under resource group '<rg>' was not found.` | Confirm the disk name exists in the resource group using `az disk list --resource-group <rg>`. |

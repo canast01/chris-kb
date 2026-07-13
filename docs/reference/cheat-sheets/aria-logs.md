@@ -63,7 +63,9 @@ cat /var/log/liagent.log | tail -50            # recent agent log
 ```
 
 !!! warning "Common errors"
-    **`Job for liagent.service failed because the control process exited with error code.`** — Check `/var/log/liagent.log` for the root cause and verify `/etc/liagent.ini` has correct hostname and port settings.
+    | Error | Fix |
+    |---|---|
+    | `Job for liagent.service failed because the control process exited with error code.` | Check `/var/log/liagent.log` for the root cause and verify `/etc/liagent.ini` has correct hostname and port settings. |
     **`Connection refused (111) to loginsight.lab.
 ## REST API
 
@@ -156,9 +158,11 @@ curl -sk $HDR "$BASE/alerts" | python3 -m json.tool                      # confi
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it appears before `-X`).
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the sessionId was successfully extracted by testing `curl -sk -X POST $BASE/sessions ... | python3 -c "import sys,json; print(json.load(sys.stdin))"` to confirm valid JSON response before piping to sessionId extraction.
-    **`curl: (401) Unauthorized`** — Confirm the SESSION variable contains a valid token by running `echo $SESSION` and verify the token hasn't expired; re-authenticate if necessary.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it appears before `-X`). |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the sessionId was successfully extracted by testing `curl -sk -X POST $BASE/sessions ... | python3 -c "import sys,json; print(json.load(sys.stdin))"` to confirm valid JSON response before piping to sessionId extraction. |
+    | `curl: (401) Unauthorized` | Confirm the SESSION variable contains a valid token by running `echo $SESSION` and verify the token hasn't expired; re-authenticate if necessary. |
 ## See also
 
 - [Aria Logs Procedures](../../../virtualization/vmware/products/aria-operations-for-logs/operations/procedures/)

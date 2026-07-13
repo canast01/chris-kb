@@ -116,9 +116,11 @@ root@vra-prod-01:~# ls -lh /tmp/vr-support*.zip
 ```
 
 !!! warning "Common errors"
-    **`bash: /etc/rc3.d/*vrms/scripts/vr-support.sh: No such file or directory`** — Verify the correct VRA version path with `find /etc -name "vr-support.sh" 2>/dev/null` and adjust the script location accordingly.
-    **`Permission denied`** — Ensure you are logged in as root or have sudo privileges; if using a non-root account, prepend `sudo` to the command.
-    **`/tmp: No space left on device`** — Free up disk space on the VRA appliance with `rm -rf /tmp/vr-support*.zip` to remove old bundles, or increase the /tmp partition size.
+    | Error | Fix |
+    |---|---|
+    | `bash: /etc/rc3.d/*vrms/scripts/vr-support.sh: No such file or directory` | Verify the correct VRA version path with `find /etc -name "vr-support.sh" 2>/dev/null` and adjust the script location accordingly. |
+    | `Permission denied` | Ensure you are logged in as root or have sudo privileges; if using a non-root account, prepend `sudo` to the command. |
+    | `/tmp: No space left on device` | Free up disk space on the VRA appliance with `rm -rf /tmp/vr-support*.zip` to remove old bundles, or increase the /tmp partition size. |
 ### 3. Collect ESXi replication logs from the source host
 
 ```bash
@@ -154,9 +156,11 @@ hbr.log                                          100%  2847KB   4.2MB/s   00:00
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and that root login is enabled on the ESXi host via DCUI or vSphere Client.
-    **`No such file or directory`** — Confirm the ESXi host is running vSphere Replication Agent; if not installed, deploy it from the vSphere Replication appliance.
-    **`Connection refused`** — Ensure the source ESXi host is reachable on the network and SSH service is running (check firewall rules and host connectivity).
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and that root login is enabled on the ESXi host via DCUI or vSphere Client. |
+    | `No such file or directory` | Confirm the ESXi host is running vSphere Replication Agent; if not installed, deploy it from the vSphere Replication appliance. |
+    | `Connection refused` | Ensure the source ESXi host is reachable on the network and SSH service is running (check firewall rules and host connectivity). |
 ### 4. Export vCenter system logs
 
 In vSphere Client:
@@ -298,9 +302,11 @@ vmware-h4 is running.
 ```
 
 !!! warning "Common errors"
-    **`Failed to authenticate with remote VRA at <IP>: javax.net.ssl.SSLHandshakeException: PKIX path validation failed`** — Regenerate and re-exchange SSL certificates between VRA appliances using the vSphere Replication management interface or re-pair the sites.
-    **`Unable to create snapshot on datastore: No space left on device`** — Expand the replication datastore capacity or reduce the number of concurrent replications to free up storage space.
-    **`Heartbeat timeout from peer VRA`** — Verify network connectivity between VRA appliances on port 31031 and check firewall rules; restart vmware-h4 service if connectivity is confirmed.
+    | Error | Fix |
+    |---|---|
+    | `Failed to authenticate with remote VRA at <IP>: javax.net.ssl.SSLHandshakeException: PKIX path validation failed` | Regenerate and re-exchange SSL certificates between VRA appliances using the vSphere Replication management interface or re-pair the sites. |
+    | `Unable to create snapshot on datastore: No space left on device` | Expand the replication datastore capacity or reduce the number of concurrent replications to free up storage space. |
+    | `Heartbeat timeout from peer VRA` | Verify network connectivity between VRA appliances on port 31031 and check firewall rules; restart vmware-h4 service if connectivity is confirmed. |
 ```bash
 # SSH to the source ESXi host as root
 
@@ -324,8 +330,10 @@ vmk2    192.168.101.15    fe80::1       00:50:56:c0:00:02  1500 true     Managem
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/hbr.log' for reading: No such file or directory`** — Verify vSphere Replication is installed on the ESXi host by checking the VR extension in vCenter or reinstall the VR agent.
-    **`Name    IPv4 Address      IPv6 Address  MAC Address        MTU  Enabled  Portset`** — If no replication vmkernel is listed, create a dedicated vmk interface tagged for vSphere Replication traffic in vCenter's host networking configuration.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/hbr.log' for reading: No such file or directory` | Verify vSphere Replication is installed on the ESXi host by checking the VR extension in vCenter or reinstall the VR agent. |
+    | `Name    IPv4 Address      IPv6 Address  MAC Address        MTU  Enabled  Portset` | If no replication vmkernel is listed, create a dedicated vmk interface tagged for vSphere Replication traffic in vCenter's host networking configuration. |
 ---
 
 ## Support SLA Reference

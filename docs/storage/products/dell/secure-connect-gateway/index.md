@@ -109,9 +109,11 @@ Last Heartbeat: 2024-01-17 14:30:15
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to esrs.emc.com port 443: Connection timed out`** — Verify SCG has outbound HTTPS access to Dell support endpoints; check firewall rules and proxy settings if applicable.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Use the `-k` flag to skip certificate verification for self-signed certs on localhost, or import the SCG CA certificate into your system trust store.
-    **`jq: command not found`** — Install `python3-json.tool` or use `python3 -m json.tool` instead of `jq` for JSON formatting on systems without jq.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to esrs.emc.com port 443: Connection timed out` | Verify SCG has outbound HTTPS access to Dell support endpoints; check firewall rules and proxy settings if applicable. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Use the `-k` flag to skip certificate verification for self-signed certs on localhost, or import the SCG CA certificate into your system trust store. |
+    | `jq: command not found` | Install `python3-json.tool` or use `python3 -m json.tool` instead of `jq` for JSON formatting on systems without jq. |
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

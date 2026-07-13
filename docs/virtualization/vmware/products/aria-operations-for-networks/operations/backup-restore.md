@@ -24,9 +24,11 @@ Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBsb2NhbCIsImlhdCI6
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify the platform URL is correct and the authentication service is responding; check credentials and ensure the API endpoint `/api/ni/auth/token` is accessible.
-    **`command not found: python3`** — Install Python 3 or replace `python3` with `python` if only Python 2 is available on the system.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify the platform URL is correct and the authentication service is responding; check credentials and ensure the API endpoint `/api/ni/auth/token` is accessible. |
+    | `command not found: python3` | Install Python 3 or replace `python3` with `python` if only Python 2 is available on the system. |
 ```bash
 # crontab entry — runs daily at 02:00
 0 2 * * * /usr/local/bin/aon-backup.sh >> /var/log/aon-backup.log 2>&1
@@ -37,8 +39,10 @@ Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBsb2NhbCIsImlhdCI6
 ```
 
 !!! warning "Common errors"
-    **`command not found: /usr/local/bin/aon-backup.sh`** — Verify the backup script exists at the specified path and is executable with `ls -la /usr/local/bin/aon-backup.sh && chmod +x /usr/local/bin/aon-backup.sh`.
-    **`Permission denied`** — Ensure the crontab user (typically root or aria-ops service account) has execute permissions on the script and read/write access to `/var/log/aon-backup.log`.
+    | Error | Fix |
+    |---|---|
+    | `command not found: /usr/local/bin/aon-backup.sh` | Verify the backup script exists at the specified path and is executable with `ls -la /usr/local/bin/aon-backup.sh && chmod +x /usr/local/bin/aon-backup.sh`. |
+    | `Permission denied` | Ensure the crontab user (typically root or aria-ops service account) has execute permissions on the script and read/write access to `/var/log/aon-backup.log`. |
 ```bash
 PLATFORM="https://aon-new.example.local"
 TOKEN=$(curl -sk -X POST "${PLATFORM}/api/ni/auth/token" \
@@ -59,9 +63,11 @@ cat /tmp/restore-response.json
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`jq: command not found` or `python3: command not found`** — Install the required JSON parser with `apt-get install python3` or `yum install python3` on the Aria Operations for Networks appliance.
-    **`{"status":"error","message":"Invalid or expired token","code":"AUTH_FAILED"}`** — Verify the admin credentials are correct and the authentication endpoint is reachable with `curl -sk https://aon-new.example.local/api/ni/auth/token`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `jq: command not found` or `python3: command not found` | Install the required JSON parser with `apt-get install python3` or `yum install python3` on the Aria Operations for Networks appliance. |
+    | `{"status":"error","message":"Invalid or expired token","code":"AUTH_FAILED"}` | Verify the admin credentials are correct and the authentication endpoint is reachable with `curl -sk https://aon-new.example.local/api/ni/auth/token`. |
 ```bash
 ssh ubuntu@10.10.10.51    # Collector VM
 
@@ -87,9 +93,11 @@ Collector is now paired with platform.aria.local
 ```
 
 !!! warning "Common errors"
-    **`sudo: /home/ubuntu/support/pairing.sh: command not found`** — Verify the pairing.sh script exists at /home/ubuntu/support/ or check if the support directory path differs in your deployment.
-    **`Connection refused: Unable to reach platform.aria.local on port 443`** — Ensure the Platform VM FQDN is correct and reachable from the Collector VM, and verify network connectivity and firewall rules allow port 443.
-    **`Current pairing key: [key] - Error: Invalid pairing key format`** — Enter a valid UUID-format pairing key (8-4-4-4-12 hexadecimal characters separated by hyphens).
+    | Error | Fix |
+    |---|---|
+    | `sudo: /home/ubuntu/support/pairing.sh: command not found` | Verify the pairing.sh script exists at /home/ubuntu/support/ or check if the support directory path differs in your deployment. |
+    | `Connection refused: Unable to reach platform.aria.local on port 443` | Ensure the Platform VM FQDN is correct and reachable from the Collector VM, and verify network connectivity and firewall rules allow port 443. |
+    | `Current pairing key: [key] - Error: Invalid pairing key format` | Enter a valid UUID-format pairing key (8-4-4-4-12 hexadecimal characters separated by hyphens). |
 ```bash
 ssh ubuntu@aon-platform.example.local
 
@@ -154,8 +162,10 @@ Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-42-generic x86_64)
 ```
 
 !!! warning "Common errors"
-    **`Job for cassandra.service failed because the control process exited with error code.`** — Run `sudo find /var/lib/cassandra -name "*.tmp" -delete && sudo systemctl start cassandra` to clear corrupted temp files from an unclean shutdown.
-    **`Unit postgres.service not found.`** — Verify the correct service name with `sudo systemctl list-units --type
+    | Error | Fix |
+    |---|---|
+    | `Job for cassandra.service failed because the control process exited with error code.` | Run `sudo find /var/lib/cassandra -name "*.tmp" -delete && sudo systemctl start cassandra` to clear corrupted temp files from an unclean shutdown. |
+    | `Unit postgres.service not found.` | Verify the correct service name with `sudo systemctl list-units --type |
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

@@ -133,8 +133,10 @@ Is SSD: false
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan storage list.`** — Verify VSAN is licensed and enabled on the cluster, then SSH directly to an ESXi host that is part of the VSAN cluster.
-    **`Connection refused`** — Ensure SSH is enabled on the ESXi host (Configuration > Security Profile > Services > SSH) and you are using the correct hostname/IP and credentials.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan storage list.` | Verify VSAN is licensed and enabled on the cluster, then SSH directly to an ESXi host that is part of the VSAN cluster. |
+    | `Connection refused` | Ensure SSH is enabled on the ESXi host (Configuration > Security Profile > Services > SSH) and you are using the correct hostname/IP and credentials. |
 ### vSAN Policies and FTT
 
 | Policy | FTT | Minimum Nodes | Data Copies |
@@ -234,9 +236,11 @@ curl -sk -u 'admin:password' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the VxRail Manager's CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to <vxrail-manager-ip> port 443: Connection refused`** — Verify the VxRail Manager IP address is correct and the REST API service is running with `systemctl status vxrail-rest-api`.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure python3 is installed and the API response is valid JSON; test with `curl -sk -u 'admin:password' "https://<vxrail-manager-ip>/rest/vxm/v1/cluster"` without piping to check raw output.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the VxRail Manager's CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to <vxrail-manager-ip> port 443: Connection refused` | Verify the VxRail Manager IP address is correct and the REST API service is running with `systemctl status vxrail-rest-api`. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure python3 is installed and the API response is valid JSON; test with `curl -sk -u 'admin:password' "https://<vxrail-manager-ip>/rest/vxm/v1/cluster"` without piping to check raw output. |
 | Account | Default Username | Notes |
 |---|---|---|
 | VxRail Manager local admin | `mystic` | Change on first login |

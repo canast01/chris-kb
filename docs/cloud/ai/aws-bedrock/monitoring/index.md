@@ -110,8 +110,10 @@ aws cloudwatch get-metric-statistics \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ValidationException) when calling the GetMetricStatistics operation: The parameter MetricName is invalid.`** — Verify the metric name is exactly `Invocations` or `InvocationLatency` and check AWS/Bedrock namespace documentation for available metrics.
-    **`An error occurred (InvalidParameterValue) when calling the GetMetricStatistics operation: The start time is after the end time.`** — Ensure the `--start-time` is before `--end-time`; verify your system clock is synchronized with UTC.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ValidationException) when calling the GetMetricStatistics operation: The parameter MetricName is invalid.` | Verify the metric name is exactly `Invocations` or `InvocationLatency` and check AWS/Bedrock namespace documentation for available metrics. |
+    | `An error occurred (InvalidParameterValue) when calling the GetMetricStatistics operation: The start time is after the end time.` | Ensure the `--start-time` is before `--end-time`; verify your system clock is synchronized with UTC. |
 ## Key Metrics Reference
 
 | Metric | Namespace | Description |
@@ -156,9 +158,11 @@ aws bedrock put-model-invocation-logging-configuration \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ValidationException) when calling the PutModelInvocationLoggingConfiguration operation: Invalid ARN format for roleArn`** — Verify the IAM role ARN exists and follows the format `arn:aws:iam::ACCOUNT-ID:role/ROLE-NAME`.
-    **`An error occurred (AccessDeniedException) when calling the PutModelInvocationLoggingConfiguration operation: User is not authorized to perform: bedrock:PutModelInvocationLoggingConfiguration`** — Add the `bedrock:PutModelInvocationLoggingConfiguration` permission to your IAM user or role policy.
-    **`An error occurred (ValidationException) when calling the PutModelInvocationLoggingConfiguration operation: S3 bucket does not exist or is not accessible`** — Ensure both S3 buckets exist in the same region and the IAM role has `s3:PutObject` and `s3:GetObject` permissions.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ValidationException) when calling the PutModelInvocationLoggingConfiguration operation: Invalid ARN format for roleArn` | Verify the IAM role ARN exists and follows the format `arn:aws:iam::ACCOUNT-ID:role/ROLE-NAME`. |
+    | `An error occurred (AccessDeniedException) when calling the PutModelInvocationLoggingConfiguration operation: User is not authorized to perform: bedrock:PutModelInvocationLoggingConfiguration` | Add the `bedrock:PutModelInvocationLoggingConfiguration` permission to your IAM user or role policy. |
+    | `An error occurred (ValidationException) when calling the PutModelInvocationLoggingConfiguration operation: S3 bucket does not exist or is not accessible` | Ensure both S3 buckets exist in the same region and the IAM role has `s3:PutObject` and `s3:GetObject` permissions. |
 Payloads larger than 100 KB are written to S3 even if CloudWatch is the primary destination.
 
 ## CloudWatch Alarms
@@ -184,8 +188,10 @@ aws cloudwatch put-metric-alarm \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ValidationError) when calling the PutMetricAlarm operation: Invalid SNS topic ARN`** — Verify the SNS topic ARN exists in the specified region and your IAM user has `sns:Publish` permissions.
-    **`An error occurred (AccessDenied) when calling the PutMetricAlarm operation: User is not authorized to perform: cloudwatch:PutMetricAlarm`** — Add the `cloudwatch:PutMetricAlarm` permission to your IAM policy or use an IAM role with CloudWatch full access.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ValidationError) when calling the PutMetricAlarm operation: Invalid SNS topic ARN` | Verify the SNS topic ARN exists in the specified region and your IAM user has `sns:Publish` permissions. |
+    | `An error occurred (AccessDenied) when calling the PutMetricAlarm operation: User is not authorized to perform: cloudwatch:PutMetricAlarm` | Add the `cloudwatch:PutMetricAlarm` permission to your IAM policy or use an IAM role with CloudWatch full access. |
 ## Querying Logs with CloudWatch Insights
 
 ```bash
@@ -209,9 +215,11 @@ fields @timestamp, modelId, inputTokenCount, outputTokenCount, invocationLatency
 ```
 
 !!! warning "Common errors"
-    **`Syntax error near 'filter': unexpected token`** — Ensure this query is run within CloudWatch Logs Insights console or CLI with proper syntax; the pipe syntax shown is CloudWatch Logs Insights-specific and requires the correct query context.
-    **`No results found`** — Verify the log group contains Bedrock invocation logs by checking that detailed monitoring is enabled on your Bedrock model invocations and logs are being sent to CloudWatch.
-    **`Field 'invocationLatency' does not exist`** — Confirm the field name matches your log structure; use `fields @message | head 5` first to inspect actual field names in your Bedrock logs.
+    | Error | Fix |
+    |---|---|
+    | `Syntax error near 'filter': unexpected token` | Ensure this query is run within CloudWatch Logs Insights console or CLI with proper syntax; the pipe syntax shown is CloudWatch Logs Insights-specific and requires the correct query context. |
+    | `No results found` | Verify the log group contains Bedrock invocation logs by checking that detailed monitoring is enabled on your Bedrock model invocations and logs are being sent to CloudWatch. |
+    | `Field 'invocationLatency' does not exist` | Confirm the field name matches your log structure; use `fields @message | head 5` first to inspect actual field names in your Bedrock logs. |
 Run in the CloudWatch Logs Insights console targeting the `/aws/bedrock/model-invocations` log group.
 
 ## Latency Tracking with Dashboards

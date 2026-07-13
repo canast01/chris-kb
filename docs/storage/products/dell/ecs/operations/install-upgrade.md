@@ -107,9 +107,11 @@ curl -sk -H "X-SDS-AUTH-TOKEN: $TOKEN" "$ECS/vdc/alerts"   | python3 -m json.too
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but verify it's not being stripped by shell escaping).
-    **`X-SDS-AUTH-TOKEN: command not found`** — Ensure the TOKEN variable is properly set by checking `echo $TOKEN` returns a non-empty value; if empty, verify the login credentials and ECS node hostname are correct.
-    **`jq: command not found`** — Install `python3-json` or use `python3 -m json.tool` instead (already used in the example, but if `jq` is preferred, install it with `apt-get install jq`).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, but verify it's not being stripped by shell escaping). |
+    | `X-SDS-AUTH-TOKEN: command not found` | Ensure the TOKEN variable is properly set by checking `echo $TOKEN` returns a non-empty value; if empty, verify the login credentials and ECS node hostname are correct. |
+    | `jq: command not found` | Install `python3-json` or use `python3 -m json.tool` instead (already used in the example, but if `jq` is preferred, install it with `apt-get install jq`). |
 ## Upgrade and Update Paths
 
 ECS upgrades are rolling — the cluster remains online throughout. The ECS Portal handles upgrade orchestration; each node is upgraded sequentially with automatic health validation between each node.
@@ -233,9 +235,11 @@ aws s3 ls --endpoint-url https://<ecs-s3-endpoint>:9021 --no-verify-ssl --profil
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands to skip SSL verification, or import the ECS certificate into your system's CA bundle.
-    **`jq: command not found`** — Install `python3-json.tool` or use `python3 -m json.tool` instead of `jq` for JSON formatting.
-    **`Unable to locate credentials`** — Ensure AWS credentials are configured in `~/.aws/credentials` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables for the ECS profile.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands to skip SSL verification, or import the ECS certificate into your system's CA bundle. |
+    | `jq: command not found` | Install `python3-json.tool` or use `python3 -m json.tool` instead of `jq` for JSON formatting. |
+    | `Unable to locate credentials` | Ensure AWS credentials are configured in `~/.aws/credentials` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables for the ECS profile. |
 ## Adding a New Node to an Existing VDC
 
 Adding nodes expands cluster capacity and compute. ECS rebalances erasure coding stripes in the background after a new node is added.

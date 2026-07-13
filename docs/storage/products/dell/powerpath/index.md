@@ -119,9 +119,11 @@ All paths restored. 0 paths marked for retry.
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install PowerPath package with `rpm -ivh PowerPath*.rpm` or verify `/opt/emc/powerpath/bin` is in your PATH.
-    **`powermt: Not authorized to run this command`** — Run commands with `sudo` or add your user to the `powerpath` group with `usermod -a -G powerpath <username>`.
-    **`No Symmetrix devices found`** — Verify storage array is zoned and LUNs are presented to the host using `powermt discover` to rescan for devices.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install PowerPath package with `rpm -ivh PowerPath*.rpm` or verify `/opt/emc/powerpath/bin` is in your PATH. |
+    | `powermt: Not authorized to run this command` | Run commands with `sudo` or add your user to the `powerpath` group with `usermod -a -G powerpath <username>`. |
+    | `No Symmetrix devices found` | Verify storage array is zoned and LUNs are presented to the host using `powermt discover` to rescan for devices. |
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

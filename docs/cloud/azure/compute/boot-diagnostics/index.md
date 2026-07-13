@@ -76,11 +76,11 @@ az vm show \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the resource group name and VM name are correct with `az vm list --resource-group <rg>`.
-    
-    **`StorageAccountNotFound : The storage account '<storage-account-uri>' does not exist or you do not have permission to access it.`** — Ensure the storage account URI is valid and your account has Storage Blob Data Contributor role on that storage account.
-    
-    **`InvalidParameter : Boot diagnostics storage account must be in the same region as the virtual machine.`** — Create or specify a storage account in the same Azure region as your VM.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the resource group name and VM name are correct with `az vm list --resource-group <rg>`. |
+    | `StorageAccountNotFound : The storage account '<storage-account-uri>' does not exist or you do not have permission to access it.` | Ensure the storage account URI is valid and your account has Storage Blob Data Contributor role on that storage account. |
+    | `InvalidParameter : Boot diagnostics storage account must be in the same region as the virtual machine.` | Create or specify a storage account in the same Azure region as your VM. |
 ---
 
 ## Enabling at VM Creation
@@ -134,9 +134,11 @@ az vm create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group exists in the target subscription with `az group list` and use the correct `--resource-group` name.
-    **`InvalidStorageAccountUri`** — Ensure the storage account URI follows the format `https://<storage-account>.blob.core.windows.net/` and the storage account exists in the same region and subscription.
-    **`InsufficientQuotaAvailable`** — Request a quota increase for the Standard_D2s_v3 VM size in your subscription via the Azure portal or contact support.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group exists in the target subscription with `az group list` and use the correct `--resource-group` name. |
+    | `InvalidStorageAccountUri` | Ensure the storage account URI follows the format `https://<storage-account>.blob.core.windows.net/` and the storage account exists in the same region and subscription. |
+    | `InsufficientQuotaAvailable` | Request a quota increase for the Standard_D2s_v3 VM size in your subscription via the Azure portal or contact support. |
 ---
 
 ## Reading Boot Logs
@@ -216,9 +218,10 @@ ProvisioningState/succeeded  Provisioning succeeded  Guest Agent has reported su
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFoundError: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the resource group name and VM name are correct with `az vm list --resource-group <rg>`.
-    
-    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.`** — Ensure your Azure account has at least Reader role on the resource group or VM.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFoundError: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the resource group name and VM name are correct with `az vm list --resource-group <rg>`. |
+    | `AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.` | Ensure your Azure account has at least Reader role on the resource group or VM. |
 | Serial Console Feature | Linux | Windows |
 |---|---|---|
 | GRUB menu access | Yes | N/A |
@@ -268,8 +271,10 @@ Access Level        : *
 ```
 
 !!! warning "Common errors"
-    **`ch -si: No such channel`** — Verify the channel number exists by running `ch -?` first and use the correct number in parentheses.
-    **`SAC>: command not found`** — Ensure you are in the Serial Admin Console (SAC) session; if disconnected, reconnect via `sasutil.exe` or the Azure portal's Serial Console blade.
+    | Error | Fix |
+    |---|---|
+    | `ch -si: No such channel` | Verify the channel number exists by running `ch -?` first and use the correct number in parentheses. |
+    | `SAC>: command not found` | Ensure you are in the Serial Admin Console (SAC) session; if disconnected, reconnect via `sasutil.exe` or the Azure portal's Serial Console blade. |
 ---
 
 ## Common Boot Issues and Diagnostics
@@ -296,5 +301,7 @@ Command group 'vm boot-diagnostics' is deprecated and will be removed in a futur
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound : The resource group '<rg>' could not be found.`** — Verify the resource group name with `az group list` and ensure you're using the correct subscription via `az account set --subscription <id>`.
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Confirm the VM name and resource group are correct by running `az vm list --resource-group <rg> --query "[].name"`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound : The resource group '<rg>' could not be found.` | Verify the resource group name with `az group list` and ensure you're using the correct subscription via `az account set --subscription <id>`. |
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Confirm the VM name and resource group are correct by running `az vm list --resource-group <rg> --query "[].name"`. |

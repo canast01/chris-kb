@@ -95,9 +95,11 @@ PSP: VMW_PSP_MRU
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace esxcli storage`** — Verify esxcli is available and you are running commands directly on an ESXi host (not vCenter); SSH to the ESXi management IP and try again.
-    **`State: dead` paths persist after reboot** — Run `esxcli storage core path set --path=<path_id> --state=active` to manually recover the path, or check array-side LUN masking and fabric connectivity.
-    **`grep: (standard input) is empty`** — The storage subsystem may not have detected any paths; verify LUN presentation with `esxcli storage core device list` and rescan HBAs using `esxcli storage core adapter rescan --adapter=vmhba0`.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace esxcli storage` | Verify esxcli is available and you are running commands directly on an ESXi host (not vCenter); SSH to the ESXi management IP and try again. |
+    | `State: dead` paths persist after reboot` | Run `esxcli storage core path set --path=<path_id> --state=active` to manually recover the path, or check array-side LUN masking and fabric connectivity. |
+    | `grep: (standard input) is empty` | The storage subsystem may not have detected any paths; verify LUN presentation with `esxcli storage core device list` and rescan HBAs using `esxcli storage core adapter rescan --adapter=vmhba0`. |
 ## Step 3: Check for vSAN Resync or Rebuild
 
 vSAN resync heavily consumes storage backend IOPS:
@@ -129,8 +131,10 @@ Object UUID                           State        Health   ComponentCount
 ```
 
 !!! warning "Common errors"
-    **`VSAN is not enabled on this host`** — Run `esxcli vsan cluster get` to verify VSAN is enabled; if not, enable it via vSphere Client or `esxcli vsan cluster new`.
-    **`grep: (standard input): No such file or directory`** — Ensure the first `esxcli vsan debug resync list` command completes successfully before piping; check host connectivity and VSAN service status with `systemctl status vsanvpd`.
+    | Error | Fix |
+    |---|---|
+    | `VSAN is not enabled on this host` | Run `esxcli vsan cluster get` to verify VSAN is enabled; if not, enable it via vSphere Client or `esxcli vsan cluster new`. |
+    | `grep: (standard input): No such file or directory` | Ensure the first `esxcli vsan debug resync list` command completes successfully before piping; check host connectivity and VSAN service status with `systemctl status vsanvpd`. |
 ## Step 4: Queue Depth and Congestion
 
 ```bash
@@ -160,9 +164,11 @@ Operation completed successfully on device naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option --device`** — Use the correct flag format `--device=<naa.xxx>` or check esxcli storage core device set --help for valid parameters.
-    **`Error: Device naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m not found`** — Verify the NAA identifier is correct by running `esxcli storage core device list` and copying the exact device name.
-    **`Permission denied: /var/log/vmkernel.log`** — Run the grep command with `sudo` or as root user to access vmkernel logs.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option --device` | Use the correct flag format `--device=<naa.xxx>` or check esxcli storage core device set --help for valid parameters. |
+    | `Error: Device naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m not found` | Verify the NAA identifier is correct by running `esxcli storage core device list` and copying the exact device name. |
+    | `Permission denied: /var/log/vmkernel.log` | Run the grep command with `sudo` or as root user to access vmkernel logs. |
 ## Step 5: Datastores on the Same LUN/Volume
 
 Multiple datastores sharing an underlying volume compete for IOPS:
@@ -193,8 +199,10 @@ VAAI Status:
 ```
 
 !!! warning "Common errors"
-    **`Device naa.60a98000572d534b4e6d396f59386b41 not found`** — Verify the NAA identifier is correct by running `esxcli storage core device list` without the `-d` flag to list all available devices.
-    **`Unknown command or namespace`** — Ensure you are running this command on an ESXi host with VAAI-capable storage; older ESXi versions may not support the `vaai status get` subcommand.
+    | Error | Fix |
+    |---|---|
+    | `Device naa.60a98000572d534b4e6d396f59386b41 not found` | Verify the NAA identifier is correct by running `esxcli storage core device list` without the `-d` flag to list all available devices. |
+    | `Unknown command or namespace` | Ensure you are running this command on an ESXi host with VAAI-capable storage; older ESXi versions may not support the `vaai status get` subcommand. |
 ## Step 6: esxtop Storage Analysis
 
 ```bash
@@ -222,8 +230,10 @@ Press 'q' to quit esxtop
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Ensure you are logged into an ESXi host directly (SSH) or use vSphere Client; esxtop only runs on ESXi, not vCenter.
-    **`DAVG/cmd column not visible`** — Press 'f' to customize fields and enable DAVG, KAVG, and QAVG columns in the storage device view.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Ensure you are logged into an ESXi host directly (SSH) or use vSphere Client; esxtop only runs on ESXi, not vCenter. |
+    | `DAVG/cmd column not visible` | Press 'f' to customize fields and enable DAVG, KAVG, and QAVG columns in the storage device view. |
 ## Common Causes Reference
 
 | Cause | Indicator | Fix |

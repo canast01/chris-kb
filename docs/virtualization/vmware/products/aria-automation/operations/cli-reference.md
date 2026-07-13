@@ -79,9 +79,11 @@ Waiting for all services to become healthy...
 ```
 
 !!! warning "Common errors"
-    **`vracli: command not found`** — Ensure vRA is installed and `/opt/vmware/vra/bin` is in your PATH, or use the full path `/opt/vmware/vra/bin/vracli`.
-    **`Error: Unable to connect to vRA service on localhost:5480`** — Verify vRA services are running with `systemctl status vra-*` and check network connectivity to the appliance.
-    **`Timeout waiting for services after 300 seconds`** — Increase the wait timeout with `vracli status --wait --timeout 600` or investigate hung services with `vracli logs --service <service-name>`.
+    | Error | Fix |
+    |---|---|
+    | `vracli: command not found` | Ensure vRA is installed and `/opt/vmware/vra/bin` is in your PATH, or use the full path `/opt/vmware/vra/bin/vracli`. |
+    | `Error: Unable to connect to vRA service on localhost:5480` | Verify vRA services are running with `systemctl status vra-*` and check network connectivity to the appliance. |
+    | `Timeout waiting for services after 300 seconds` | Increase the wait timeout with `vracli status --wait --timeout 600` or investigate hung services with `vracli logs --service <service-name>`. |
 ### Certificate Management
 
 ```bash
@@ -131,9 +133,11 @@ Trusted Certificates:
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate file not found: /tmp/vra.crt`** — Verify the certificate file path exists and is readable with `ls -la /tmp/vra.crt`.
-    **`Error: Private key validation failed - key does not match certificate`** — Ensure the private key and certificate were generated as a pair and use the correct files.
-    **`Error: Certificate chain validation failed - untrusted root CA`** — Add the root CA certificate to the trust store first using `vracli certificate trust add` before importing the signed certificate.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate file not found: /tmp/vra.crt` | Verify the certificate file path exists and is readable with `ls -la /tmp/vra.crt`. |
+    | `Error: Private key validation failed - key does not match certificate` | Ensure the private key and certificate were generated as a pair and use the correct files. |
+    | `Error: Certificate chain validation failed - untrusted root CA` | Add the root CA certificate to the trust store first using `vracli certificate trust add` before importing the signed certificate. |
 ### vIDM (Identity) Configuration
 
 ```bash
@@ -174,9 +178,11 @@ Sync completed successfully in 45 seconds.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to vidm.corp.local:443 — Connection refused`** — Verify the vIDM host is reachable and the HTTPS port is open using `ping vidm.corp.local` and `telnet vidm.corp.local 443`.
-    **`Error: Authentication failed for admin@vidm.local — Invalid credentials`** — Confirm the admin password is correct and the account has not been locked by running a manual login test against vIDM.
-    **`Error: vracli: command not found`** — Ensure you are running this command on an Aria Automation appliance with vracli installed, or source the environment with `source /etc/profile.d/vra-cli.sh`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to vidm.corp.local:443 — Connection refused` | Verify the vIDM host is reachable and the HTTPS port is open using `ping vidm.corp.local` and `telnet vidm.corp.local 443`. |
+    | `Error: Authentication failed for admin@vidm.local — Invalid credentials` | Confirm the admin password is correct and the account has not been locked by running a manual login test against vIDM. |
+    | `Error: vracli: command not found` | Ensure you are running this command on an Aria Automation appliance with vracli installed, or source the environment with `source /etc/profile.d/vra-cli.sh`. |
 ### Proxy and Network
 
 ```bash
@@ -223,9 +229,11 @@ Configuration will take effect after service restart.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid proxy URL format. Expected http:// or https://`** — Ensure the proxy URL includes the protocol scheme (http:// or https://) and valid hostname.
-    **`Error: Unable to resolve NTP server 'ntp1.corp.local': Name or service not known`** — Verify NTP server hostnames are resolvable from the Aria Automation appliance and reachable on port 123.
-    **`Error: vracli command not found`** — Ensure you are logged into the Aria Automation appliance via SSH or execute the command from the appliance's shell environment.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid proxy URL format. Expected http:// or https://` | Ensure the proxy URL includes the protocol scheme (http:// or https://) and valid hostname. |
+    | `Error: Unable to resolve NTP server 'ntp1.corp.local': Name or service not known` | Verify NTP server hostnames are resolvable from the Aria Automation appliance and reachable on port 123. |
+    | `Error: vracli command not found` | Ensure you are logged into the Aria Automation appliance via SSH or execute the command from the appliance's shell environment. |
 ### Cluster Management (3-Node HA)
 
 ```bash
@@ -262,9 +270,11 @@ Node vra-node-02 joining cluster:
 ```
 
 !!! warning "Common errors"
-    **`error: cluster join failed: invalid token or token expired`** — Regenerate a new token on the master node using `vracli cluster token` as tokens expire after one hour.
-    **`error: unable to reach master node at <ip>: connection refused`** — Verify network connectivity and that the master node's vRA services are running with `vracli service status` on the master.
-    **`error: node already part of a cluster`** — Reset the node to standalone state first by running `vracli cluster reset --force` before attempting to join a different cluster.
+    | Error | Fix |
+    |---|---|
+    | `error: cluster join failed: invalid token or token expired` | Regenerate a new token on the master node using `vracli cluster token` as tokens expire after one hour. |
+    | `error: unable to reach master node at <ip>: connection refused` | Verify network connectivity and that the master node's vRA services are running with `vracli service status` on the master. |
+    | `error: node already part of a cluster` | Reset the node to standalone state first by running `vracli cluster reset --force` before attempting to join a different cluster. |
 ---
 
 ## kubectl — Kubernetes Diagnostics
@@ -303,9 +313,11 @@ aria-automation-cache-9k3l2m5n-vw6x7   0        0
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "pods"`** — Verify the cluster context is set correctly with `kubectl config current-context` and the API server is accessible.
-    **`error: metrics not available yet`** — Wait 1-2 minutes for metrics-server to initialize, then retry `kubectl top pods`.
-    **`No resources found in namespace "prelude"`** — Confirm the namespace exists with `kubectl get namespaces` and Aria Automation is deployed in the correct namespace.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "pods"` | Verify the cluster context is set correctly with `kubectl config current-context` and the API server is accessible. |
+    | `error: metrics not available yet` | Wait 1-2 minutes for metrics-server to initialize, then retry `kubectl top pods`. |
+    | `No resources found in namespace "prelude"` | Confirm the namespace exists with `kubectl get namespaces` and Aria Automation is deployed in the correct namespace. |
 ### Logs
 
 ```bash
@@ -337,9 +349,11 @@ kubectl logs --previous <pod-name> -n prelude
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): pods "<pod-name>" not found`** — Verify the pod name with `kubectl get pods -n prelude` and ensure you're querying the correct namespace.
-    **`error: a container name must be specified for pod <pod-name>, choose one of: [catalog-service init-config]`** — Use `kubectl get pods <pod-name> -n prelude -o jsonpath='{.spec.containers[*].name}'` to list available containers and specify the correct one with `-c`.
-    **`error: previous terminated container "<container-name>" in pod "<pod-name>" not found`** — The pod has not restarted yet; use regular `kubectl logs` without `--previous` to view current logs instead.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): pods "<pod-name>" not found` | Verify the pod name with `kubectl get pods -n prelude` and ensure you're querying the correct namespace. |
+    | `error: a container name must be specified for pod <pod-name>, choose one of: [catalog-service init-config]` | Use `kubectl get pods <pod-name> -n prelude -o jsonpath='{.spec.containers[*].name}'` to list available containers and specify the correct one with `-c`. |
+    | `error: previous terminated container "<container-name>" in pod "<pod-name>" not found` | The pod has not restarted yet; use regular `kubectl logs` without `--previous` to view current logs instead. |
 ### Service and Config
 
 ```bash
@@ -388,9 +402,11 @@ pod "aria-automation-api-7d4f9c2b1" deleted
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): configmaps "<name>" not found`** — Verify the ConfigMap name with `kubectl get configmap -n prelude` and use the exact name from the NAME column.
-    **`error: resource name may not be empty`** — Replace `<name>` and `<pod-name>` placeholders with actual resource names; do not run the command with angle brackets.
-    **`Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:prelude:default" cannot delete resource "pods"`** — Ensure your kubectl user has sufficient RBAC permissions; contact your cluster administrator to grant `pods/delete` verb.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): configmaps "<name>" not found` | Verify the ConfigMap name with `kubectl get configmap -n prelude` and use the exact name from the NAME column. |
+    | `error: resource name may not be empty` | Replace `<name>` and `<pod-name>` placeholders with actual resource names; do not run the command with angle brackets. |
+    | `Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:prelude:default" cannot delete resource "pods"` | Ensure your kubectl user has sufficient RBAC permissions; contact your cluster administrator to grant `pods/delete` verb. |
 ---
 
 ## REST API — Authentication and Token
@@ -423,9 +439,11 @@ Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <aria-auto> port 443: Connection refused`** — Verify the Aria Automation hostname/IP in the URL and ensure the appliance is running and network accessible.
-    **`jq: error (at <stdin>:1): Cannot index null with string "cspAuthToken"`** — Check that credentials are correct and the CSP gateway is responding; verify the JSON response contains `cspAuthToken` field using `curl -s ... | jq '.'` to inspect the full response.
-    **`bash: jq: command not found`** — Install jq on the system with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <aria-auto> port 443: Connection refused` | Verify the Aria Automation hostname/IP in the URL and ensure the appliance is running and network accessible. |
+    | `jq: error (at <stdin>:1): Cannot index null with string "cspAuthToken"` | Check that credentials are correct and the CSP gateway is responding; verify the JSON response contains `cspAuthToken` field using `curl -s ... | jq '.'` to inspect the full response. |
+    | `bash: jq: command not found` | Install jq on the system with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS). |
 ---
 
 ## REST API — Deployments
@@ -505,8 +523,10 @@ redis-cache-01
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <aria-auto> port 443: Connection refused`** — Verify the VRA hostname is correct and the Aria Automation appliance is running and accessible on the network.
-    **`{"status":401,"message":"Unauthorized"}`** — Ensure the $
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <aria-auto> port 443: Connection refused` | Verify the VRA hostname is correct and the Aria Automation appliance is running and accessible on the network. |
+    | `{"status":401,"message":"Unauthorized"}` | Ensure the $ |
 ---
 
 ## REST API — Blueprints and Catalog
@@ -599,8 +619,10 @@ resources:
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to aria-automation.corp: Name or service not known`** — Verify the $VRA variable is set correctly with the full FQDN or IP address (e.g., `export VRA=https://aria-automation.corp:443`).
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the API token in $TOKEN is valid and not expired; re-authenticate and regenerate the bearer token
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to aria-automation.corp: Name or service not known` | Verify the $VRA variable is set correctly with the full FQDN or IP address (e.g., `export VRA=https://aria-automation.corp:443`). |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the API token in $TOKEN is valid and not expired; re-authenticate and regenerate the bearer token |
 ---
 
 ## REST API — Projects and Cloud Accounts
@@ -650,9 +672,11 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to aria-automation.corp.local port 443: Connection refused`** — Verify the $VRA variable is set correctly and the Aria Automation appliance is running and accessible on the network.
-    **`jq: parse error: Invalid JSON text at line 1`** — Check that the $TOKEN is valid and not expired; an invalid token returns HTML error pages instead of JSON.
-    **`curl: (22) The requested URL returned error: 404 Not Found`** — Ensure the cloud account ID in the URL path is correct and the account still exists in the system.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to aria-automation.corp.local port 443: Connection refused` | Verify the $VRA variable is set correctly and the Aria Automation appliance is running and accessible on the network. |
+    | `jq: parse error: Invalid JSON text at line 1` | Check that the $TOKEN is valid and not expired; an invalid token returns HTML error pages instead of JSON. |
+    | `curl: (22) The requested URL returned error: 404 Not Found` | Ensure the cloud account ID in the URL path is correct and the account still exists in the system. |
 ---
 
 ## PowerVRA — PowerShell Module
@@ -725,9 +749,11 @@ curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the Aria Automation CA certificate into your system trust store.
-    **`jq: parse error: Cannot index string with string "attributes"`** — Verify the API response structure matches your jq filter by running `curl ... | jq '.'` first to inspect the actual JSON format.
-    **`{"error":"Invalid token","error_description":"The access token expired"}`** — Regenerate the Bearer token by re-authenticating to Aria Automation's OAuth endpoint before retrying the API call.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the Aria Automation CA certificate into your system trust store. |
+    | `jq: parse error: Cannot index string with string "attributes"` | Verify the API response structure matches your jq filter by running `curl ... | jq '.'` first to inspect the actual JSON format. |
+    | `{"error":"Invalid token","error_description":"The access token expired"}` | Regenerate the Bearer token by re-authenticating to Aria Automation's OAuth endpoint before retrying the API call. |
 ---
 
 ## VAMI — Appliance Management Interface

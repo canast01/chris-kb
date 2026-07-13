@@ -92,9 +92,11 @@ system:serviceaccount:kube-system:admin	system:masters	default/deployer
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): users.user.openshift.io "alice" not found`** — Create the user first with `oc create user alice` or ensure the user exists in your identity provider.
-    **`Error from server (Forbidden): clusterroles.rbac.authorization.k8s.io is forbidden: User "system:anonymous" cannot create resource`** — Ensure you are logged in with sufficient permissions using `oc login` with a cluster-admin account.
-    **`Error from server (NotFound): rolebindings.rbac.authorization.k8s.io "admin" not found`** — Verify the role exists in the namespace with `oc get roles -n my-project` before attempting to remove it.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): users.user.openshift.io "alice" not found` | Create the user first with `oc create user alice` or ensure the user exists in your identity provider. |
+    | `Error from server (Forbidden): clusterroles.rbac.authorization.k8s.io is forbidden: User "system:anonymous" cannot create resource` | Ensure you are logged in with sufficient permissions using `oc login` with a cluster-admin account. |
+    | `Error from server (NotFound): rolebindings.rbac.authorization.k8s.io "admin" not found` | Verify the role exists in the namespace with `oc get roles -n my-project` before attempting to remove it. |
 ## Custom Role Creation
 
 ```bash
@@ -125,9 +127,11 @@ rolebinding.rbac.authorization.k8s.io/read-pods-group created
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to the server: dial tcp: lookup api.openshift.local on 127.0.0.11:53: no such host`** — Verify the cluster is running and your kubeconfig points to the correct API endpoint with `oc cluster-info`.
-    **`Error from server (AlreadyExists): roles.rbac.authorization.k8s.io "pod-reader" already exists`** — Delete the existing role with `oc delete role pod-reader -n my-project` before recreating it, or use `oc apply` with a YAML manifest instead.
-    **`Error from server (NotFound): namespaces "my-project" not found`** — Create the namespace first with `oc create namespace my-project` or change `-n my-project` to an existing namespace.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to the server: dial tcp: lookup api.openshift.local on 127.0.0.11:53: no such host` | Verify the cluster is running and your kubeconfig points to the correct API endpoint with `oc cluster-info`. |
+    | `Error from server (AlreadyExists): roles.rbac.authorization.k8s.io "pod-reader" already exists` | Delete the existing role with `oc delete role pod-reader -n my-project` before recreating it, or use `oc apply` with a YAML manifest instead. |
+    | `Error from server (NotFound): namespaces "my-project" not found` | Create the namespace first with `oc create namespace my-project` or change `-n my-project` to an existing namespace. |
 ## Security Context Constraints (SCC)
 
 SCCs are an OpenShift-specific admission controller that enforces pod security configuration before a pod is created. Every pod must match at least one SCC granted to its service account.
@@ -207,9 +211,11 @@ use                 scc                          anyuid          security.opensh
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): serviceaccounts "myapp-sa" not found`** — Verify the service account exists in the target namespace with `oc get sa -n my-project` before granting SCC permissions.
-    **`error: the server doesn't have a resource type "scc"`** — Use the full resource path `scc/anyuid` or run `oc adm policy who-can use scc/anyuid` instead of `oc get scc/anyuid`.
-    **`Error: pod.yaml: error validating the pod: spec.serviceAccountName: Invalid value: "": serviceAccountName is required`** — Ensure the pod YAML includes a valid `serviceAccountName` field under `spec` before running the scc-subject-review command.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): serviceaccounts "myapp-sa" not found` | Verify the service account exists in the target namespace with `oc get sa -n my-project` before granting SCC permissions. |
+    | `error: the server doesn't have a resource type "scc"` | Use the full resource path `scc/anyuid` or run `oc adm policy who-can use scc/anyuid` instead of `oc get scc/anyuid`. |
+    | `Error: pod.yaml: error validating the pod: spec.serviceAccountName: Invalid value: "": serviceAccountName is required` | Ensure the pod YAML includes a valid `serviceAccountName` field under `spec` before running the scc-subject-review command. |
 ## Service Accounts
 
 ```bash
@@ -248,9 +254,11 @@ secrets:
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): serviceaccounts "myapp-sa" not found`** — Verify the namespace exists with `oc get ns my-project` and ensure you're connected to the correct cluster.
-    **`error: the server doesn't have a resource type "token"`** — Update to OpenShift 4.11+ or use legacy token secrets with `oc create secret generic myapp-sa-token --from-literal=token=<value>`.
-    **`Error: user "myapp-sa" cannot create tokens in namespace "my-project"`** — Ensure your user has `create` permissions on `serviceaccounts/token` resource with `oc auth can-i create serviceaccounts/token -n my-project`.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): serviceaccounts "myapp-sa" not found` | Verify the namespace exists with `oc get ns my-project` and ensure you're connected to the correct cluster. |
+    | `error: the server doesn't have a resource type "token"` | Update to OpenShift 4.11+ or use legacy token secrets with `oc create secret generic myapp-sa-token --from-literal=token=<value>`. |
+    | `Error: user "myapp-sa" cannot create tokens in namespace "my-project"` | Ensure your user has `create` permissions on `serviceaccounts/token` resource with `oc auth can-i create serviceaccounts/token -n my-project`. |
 ## Namespace Isolation with NetworkPolicy
 
 ```bash
@@ -305,9 +313,11 @@ networkpolicy.networking.k8s.io/allow-from-router created
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): namespaces "my-project" not found`** — Create the namespace first with `oc create namespace my-project` or ensure you are logged into the correct cluster.
-    **`error: unable to recognize "STDIN": no matches for kind "NetworkPolicy" in version "networking.k8s.io/v1"`** — Verify the cluster supports NetworkPolicy resources by running `oc api-resources | grep networkpolicies` and confirm your OpenShift version is 3.11+.
-    **`The NetworkPolicy "deny-all" is invalid: spec.egress: Invalid value: []`** — Remove the `Egress` policyType or add explicit egress rules, as deny-all egress without allow rules will block all outbound traffic including DNS.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): namespaces "my-project" not found` | Create the namespace first with `oc create namespace my-project` or ensure you are logged into the correct cluster. |
+    | `error: unable to recognize "STDIN": no matches for kind "NetworkPolicy" in version "networking.k8s.io/v1"` | Verify the cluster supports NetworkPolicy resources by running `oc api-resources | grep networkpolicies` and confirm your OpenShift version is 3.11+. |
+    | `The NetworkPolicy "deny-all" is invalid: spec.egress: Invalid value: []` | Remove the `Egress` policyType or add explicit egress rules, as deny-all egress without allow rules will block all outbound traffic including DNS. |
 ## Project Request Template
 
 A project request template auto-applies NetworkPolicies, LimitRanges, and ResourceQuotas to every new project created in the cluster.
@@ -385,8 +395,10 @@ project.config.openshift.io/cluster patched
 ```
 
 !!! warning "Common errors"
-    **`error: unable to recognize "project-request.yaml": no matches for kind "Template" in version "template.openshift.io/v1"`** — Ensure the YAML file contains `kind: Template` and `apiVersion: template.openshift.io/v1` at the top.
-    **`Error from server (NotFound): project.config.openshift.io "cluster" not found`** — Verify the cluster configuration object exists by running `oc get project.config.openshift.io` first.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to recognize "project-request.yaml": no matches for kind "Template" in version "template.openshift.io/v1"` | Ensure the YAML file contains `kind: Template` and `apiVersion: template.openshift.io/v1` at the top. |
+    | `Error from server (NotFound): project.config.openshift.io "cluster" not found` | Verify the cluster configuration object exists by running `oc get project.config.openshift.io` first. |
 ## Audit Logging
 
 API server audit logs record every request with user identity, verb, resource, and response code.
@@ -451,9 +463,11 @@ audit.log audit.log.2024-01-15.gz audit.log.2024-01-14.gz audit.log.2024-01-13.g
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "apiserver"`** — Ensure you are connected to an OpenShift 4.x cluster with `oc login` and the APIServer CRD is available.
-    **`chroot: cannot change root directory to /host: No such file or directory`** — Run `oc debug node/<master-node>` first and wait for the debug pod to fully initialize before executing chroot.
-    **`jq: parse error: Invalid numeric literal at line 1, column 10`** — Pipe only valid JSON lines to jq by using `grep` to filter complete audit entries before processing.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "apiserver"` | Ensure you are connected to an OpenShift 4.x cluster with `oc login` and the APIServer CRD is available. |
+    | `chroot: cannot change root directory to /host: No such file or directory` | Run `oc debug node/<master-node>` first and wait for the debug pod to fully initialize before executing chroot. |
+    | `jq: parse error: Invalid numeric literal at line 1, column 10` | Pipe only valid JSON lines to jq by using `grep` to filter complete audit entries before processing. |
 | Audit Level | What Is Logged | Use Case |
 |---|---|---|
 | `None` | Nothing | Disable auditing (not recommended in production) |
@@ -529,9 +543,11 @@ admin-sa
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "rolebindings"`** — Use the correct plural form `oc get rolebindings` or check that your OpenShift API server is running and accessible.
-    **`error: User "alice" cannot get rolebindings in namespace "my-project"`** — Ensure your current user has sufficient permissions; try running as a cluster-admin or grant the necessary role to your user.
-    **`command not found: jq`** — Install jq on your system using your package manager (e.g., `apt-get install jq` or `brew install jq`) before running JSON filtering commands.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "rolebindings"` | Use the correct plural form `oc get rolebindings` or check that your OpenShift API server is running and accessible. |
+    | `error: User "alice" cannot get rolebindings in namespace "my-project"` | Ensure your current user has sufficient permissions; try running as a cluster-admin or grant the necessary role to your user. |
+    | `command not found: jq` | Install jq on your system using your package manager (e.g., `apt-get install jq` or `brew install jq`) before running JSON filtering commands. |
 ## See also
 
 - [OpenShift — Authentication](../authentication/)

@@ -58,9 +58,11 @@ curl -s -u admin:pass http://grafana:3000/api/datasources | jq '.[] | {name:.nam
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to prometheus port 9090: Connection refused`** — Verify Prometheus is running with `docker ps | grep prometheus` or check service status with `systemctl status prometheus`.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the endpoint is responding with valid JSON by testing with `curl -s http://prometheus:9090/api/v1/targets | head -c 200` first.
-    **`curl: (401) Unauthorized`** — Update the Grafana credentials in the curl command to match your actual admin password, or generate an API token with `-H "Authorization: Bearer <token>"`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to prometheus port 9090: Connection refused` | Verify Prometheus is running with `docker ps | grep prometheus` or check service status with `systemctl status prometheus`. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the endpoint is responding with valid JSON by testing with `curl -s http://prometheus:9090/api/v1/targets | head -c 200` first. |
+    | `curl: (401) Unauthorized` | Update the Grafana credentials in the curl command to match your actual admin password, or generate an API token with `-H "Authorization: Bearer <token>"`. |
 ```bash
 # SSSD on Linux
 systemctl status sssd
@@ -114,9 +116,11 @@ mail: testuser@corp.example.com
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not get domain status for <domain>: No such domain`** — Verify the domain name matches SSSD configuration in `/etc/sssd/sssd.conf` and restart sssd with `systemctl restart sssd`.
-    **`wbinfo: error looking up domain users`** — Ensure Winbind is running with `systemctl start winbind` and the domain trust is established via `net ads join -U administrator`.
-    **`ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090400, comment: AcceptSecurityContext error, data 52e, v3839`** — Verify AD user credentials are correct and the account is not locked; use a service account with appropriate permissions for LDAP queries.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not get domain status for <domain>: No such domain` | Verify the domain name matches SSSD configuration in `/etc/sssd/sssd.conf` and restart sssd with `systemctl restart sssd`. |
+    | `wbinfo: error looking up domain users` | Ensure Winbind is running with `systemctl start winbind` and the domain trust is established via `net ads join -U administrator`. |
+    | `ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090400, comment: AcceptSecurityContext error, data 52e, v3839` | Verify AD user credentials are correct and the account is not locked; use a service account with appropriate permissions for LDAP queries. |
 ```bash
 # PgBouncer status
 psql -h /tmp -p 6432 pgbouncer -c "SHOW POOLS;"
@@ -146,9 +150,11 @@ hostgroup_id | hostname          | status
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "/tmp" to address: Name or service not known`** — Verify PgBouncer is listening on the Unix socket path `/tmp` or use `-h 127.0.0.1` with the correct TCP port.
-    **`ERROR 1045 (28000): Access denied for user 'admin'@'127.0.0.1' (using password: YES)`** — Confirm ProxySQL admin credentials in `/etc/proxysql.cnf` or reset them with `proxysql --initial`.
-    **`psql: error: connection refused`** — Ensure PgBouncer is running with `systemctl status pgbouncer` and listening on port 6432.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "/tmp" to address: Name or service not known` | Verify PgBouncer is listening on the Unix socket path `/tmp` or use `-h 127.0.0.1` with the correct TCP port. |
+    | `ERROR 1045 (28000): Access denied for user 'admin'@'127.0.0.1' (using password: YES)` | Confirm ProxySQL admin credentials in `/etc/proxysql.cnf` or reset them with `proxysql --initial`. |
+    | `psql: error: connection refused` | Ensure PgBouncer is running with `systemctl status pgbouncer` and listening on port 6432. |
 ```bash
 # SSSD (re-read AD group membership)
 sssctl cache-remove -y && systemctl restart sssd

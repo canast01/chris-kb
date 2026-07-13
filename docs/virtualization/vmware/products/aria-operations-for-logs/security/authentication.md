@@ -83,9 +83,11 @@ subject=CN = dc01.example.local, O = Corp, C = US
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked in Active Directory.
-    **`Can't open /tmp/corp-ca.pem, No such file or directory`** — Export the domain controller's CA certificate to `/tmp/corp-ca.pem` or update the `-CAfile` path to the correct location.
-    **`ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)`** — Confirm DNS resolution for `dc01.example.local` and that port 636 is open from the Aria Ops appliance to the domain controller.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account is not locked in Active Directory. |
+    | `Can't open /tmp/corp-ca.pem, No such file or directory` | Export the domain controller's CA certificate to `/tmp/corp-ca.pem` or update the `-CAfile` path to the correct location. |
+    | `ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)` | Confirm DNS resolution for `dc01.example.local` and that port 636 is open from the Aria Ops appliance to the domain controller. |
 ---
 
 ## Session Policies
@@ -114,8 +116,10 @@ Location: https://vrli-prod-01.example.local/
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to vrli-prod-01.example.local port 80: Connection refused`** — Verify the vRealize Log Insight appliance is running and HTTP port 80 is accessible; check firewall rules and appliance network connectivity.
-    **`curl: (6) Could not resolve host: vrli-prod-01.example.local`** — Ensure DNS resolution is working by testing `nslookup vrli-prod-01.example.local` or update your `/etc/hosts` file with the correct IP address.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to vrli-prod-01.example.local port 80: Connection refused` | Verify the vRealize Log Insight appliance is running and HTTP port 80 is accessible; check firewall rules and appliance network connectivity. |
+    | `curl: (6) Could not resolve host: vrli-prod-01.example.local` | Ensure DNS resolution is working by testing `nslookup vrli-prod-01.example.local` or update your `/etc/hosts` file with the correct IP address. |
 Ensure the firewall permits inbound TCP 443 and TCP 80 from admin workstations. Block all other inbound ports except those required for log ingestion (514, 1514, 9543).
 ---
 

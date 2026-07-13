@@ -118,9 +118,11 @@ System clock synchronized: yes
 ```
 
 !!! warning "Common errors"
-    **`nslookup: can't resolve 'api.ocp.example.com': No address associated with hostname`** — Verify DNS A record exists for api.ocp.example.com and resolves to the load balancer VIP.
-    **`dig: couldn't get address for '_etcd-server-ssl._tcp.ocp.example.com': not known`** — Create SRV records for etcd cluster members or ensure DNS is configured with proper etcd service discovery entries.
-    **`System clock unsynchronized: no`** — Start and enable chrony/ntpd service with `systemctl start chronyd && systemctl enable chronyd`, then wait 1–2 minutes for clock synchronization.
+    | Error | Fix |
+    |---|---|
+    | `nslookup: can't resolve 'api.ocp.example.com': No address associated with hostname` | Verify DNS A record exists for api.ocp.example.com and resolves to the load balancer VIP. |
+    | `dig: couldn't get address for '_etcd-server-ssl._tcp.ocp.example.com': not known` | Create SRV records for etcd cluster members or ensure DNS is configured with proper etcd service discovery entries. |
+    | `System clock unsynchronized: no` | Start and enable chrony/ntpd service with `systemctl start chronyd && systemctl enable chronyd`, then wait 1–2 minutes for clock synchronization. |
 ## install-config.yaml (vSphere IPI — Full Example)
 
 ```yaml
@@ -328,9 +330,11 @@ INFO To access the cluster as the system:admin user when using 'oc', run 'export
 ```
 
 !!! warning "Common errors"
-    **`error: open ocp-install/manifests/cluster-scheduler-02-config.yml: no such file or directory`** — Run `./openshift-install create manifests --dir ocp-install` first to generate the manifests directory.
-    **`error: Unable to connect to the server: dial tcp: lookup api.ocp.example.com: no such host`** — Ensure DNS is resolving your API endpoint and the cluster network is reachable before running wait-for commands.
-    **`error: http.server: Address already in use`** — Kill the existing process on port 8080 with `lsof -ti:8080 | xargs kill -9` or use a different port with `python3 -m http.server 8081`.
+    | Error | Fix |
+    |---|---|
+    | `error: open ocp-install/manifests/cluster-scheduler-02-config.yml: no such file or directory` | Run `./openshift-install create manifests --dir ocp-install` first to generate the manifests directory. |
+    | `error: Unable to connect to the server: dial tcp: lookup api.ocp.example.com: no such host` | Ensure DNS is resolving your API endpoint and the cluster network is reachable before running wait-for commands. |
+    | `error: http.server: Address already in use` | Kill the existing process on port 8080 with `lsof -ti:8080 | xargs kill -9` or use a different port with `python3 -m http.server 8081`. |
 ## Agent-Based Install
 
 Agent-based install (`openshift-install agent create image`) generates a bootable ISO that combines ignition, networking config, and the install agent. Use when: bare-metal without PXE infrastructure, disconnected/air-gap environments, single-node OCP (SNO).
@@ -410,9 +414,11 @@ INFO kubeconfig written to: ocp-install/auth/kubeconfig
 ```
 
 !!! warning "Common errors"
-    **`Error: install-config.yaml not found in ocp-install directory`** — Ensure install-config.yaml and agent-config.yaml are present in the ocp-install directory before running the create image command.
-    **`Error: failed to discover agents: no agents joined the cluster within timeout`** — Verify all nodes have booted from the ISO, network connectivity is functional, and firewall rules allow agent communication on port 8090.
-    **`Error: bootstrap did not complete: pending csr approvals`** — Manually approve pending certificate signing requests using `oc adm certificate approve <csr-name>` or ensure automatic CSR approval is configured.
+    | Error | Fix |
+    |---|---|
+    | `Error: install-config.yaml not found in ocp-install directory` | Ensure install-config.yaml and agent-config.yaml are present in the ocp-install directory before running the create image command. |
+    | `Error: failed to discover agents: no agents joined the cluster within timeout` | Verify all nodes have booted from the ISO, network connectivity is functional, and firewall rules allow agent communication on port 8090. |
+    | `Error: bootstrap did not complete: pending csr approvals` | Manually approve pending certificate signing requests using `oc adm certificate approve <csr-name>` or ensure automatic CSR approval is configured. |
 ## Air-Gap Mirror Setup
 
 ```yaml
@@ -479,9 +485,11 @@ sha256:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to quay.local:8443: x509: certificate signed by unknown authority`** — Add `--dest-skip-tls` flag to the mirror command or import the registry's CA certificate into the cluster's trusted store.
-    **`Error from server (NotFound): imagecontentsourcepolicies.config.openshift.io "release-0" not found`** — Verify the ICSP YAML file path is correct and the `oc apply` command targeted the correct results directory with wildcard expansion.
-    **`error: unable to pull image: rpc error: code = Unknown desc = failed to pull and unpack image: failed to resolve reference: name not found`** — Ensure the image was successfully mirrored by checking `oc-mirror-workspace/results-*/mapping.txt` and verify the mirror registry hostname is resolvable from the node.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to quay.local:8443: x509: certificate signed by unknown authority` | Add `--dest-skip-tls` flag to the mirror command or import the registry's CA certificate into the cluster's trusted store. |
+    | `Error from server (NotFound): imagecontentsourcepolicies.config.openshift.io "release-0" not found` | Verify the ICSP YAML file path is correct and the `oc apply` command targeted the correct results directory with wildcard expansion. |
+    | `error: unable to pull image: rpc error: code = Unknown desc = failed to pull and unpack image: failed to resolve reference: name not found` | Ensure the image was successfully mirrored by checking `oc-mirror-workspace/results-*/mapping.txt` and verify the mirror registry hostname is resolvable from the node. |
 ## Post-Install Validation Checklist
 
 | Check | Command | Expected Result |
@@ -530,9 +538,11 @@ secret "kubeadmin" deleted
 ```
 
 !!! warning "Common errors"
-    **`error: unable to read the kubeconfig file "ocp-install/auth/kubeconfig": open ocp-install/auth/kubeconfig: no such file or directory`** — Verify the installation directory path is correct and run the command from the parent directory where `ocp-install/` exists.
-    **`error: the server has asked for the client to provide credentials`** — Ensure the kubeconfig file has valid credentials and the API server is accessible; regenerate kubeconfig if corrupted.
-    **`error: secrets "kubeadmin" not found`** — The kubeadmin secret may have already been deleted or the cluster uses a different identity provider; verify the secret exists before deletion with `oc get secret kubeadmin -n kube-system`.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to read the kubeconfig file "ocp-install/auth/kubeconfig": open ocp-install/auth/kubeconfig: no such file or directory` | Verify the installation directory path is correct and run the command from the parent directory where `ocp-install/` exists. |
+    | `error: the server has asked for the client to provide credentials` | Ensure the kubeconfig file has valid credentials and the API server is accessible; regenerate kubeconfig if corrupted. |
+    | `error: secrets "kubeadmin" not found` | The kubeadmin secret may have already been deleted or the cluster uses a different identity provider; verify the secret exists before deletion with `oc get secret kubeadmin -n kube-system`. |
 ---
 
 ## See also

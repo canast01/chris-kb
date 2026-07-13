@@ -119,9 +119,11 @@ curl -sk -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present; if error persists, verify certificate chain on vCenter).
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure jq is installed (`yum install jq`) and that the API response is valid JSON by testing the curl command without piping to jq first.
-    **`{"value":{"messages":[{"default_message":"Authentication failed"}]}}`** — Verify the vCenter administrator password is correct and the user account is not locked; reset credentials in vCenter if needed.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present; if error persists, verify certificate chain on vCenter). |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure jq is installed (`yum install jq`) and that the API response is valid JSON by testing the curl command without piping to jq first. |
+    | `{"value":{"messages":[{"default_message":"Authentication failed"}]}}` | Verify the vCenter administrator password is correct and the user account is not locked; reset credentials in vCenter if needed. |
 ### Scheduled backup via VAMI
 
 1. VAMI → Backup → **Schedule**.
@@ -169,8 +171,10 @@ drwxr-xr-x 4 backup backup 4.0K 2024-01-13 22:45 /backups/vcenter/sn-20240113-22
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/backups/vcenter/sn-*/': No such file or directory`** — Verify the backup mount point is mounted with `mount | grep backups` and check the SFTP target path is correct.
-    **`cat: /backups/vcenter/sn-<timestamp>/manifest.json: No such file or directory`** — Replace `<timestamp>` with an actual backup directory name from the `ls` output (e.g., `sn-20240115-143200`).
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/backups/vcenter/sn-*/': No such file or directory` | Verify the backup mount point is mounted with `mount | grep backups` and check the SFTP target path is correct. |
+    | `cat: /backups/vcenter/sn-<timestamp>/manifest.json: No such file or directory` | Replace `<timestamp>` with an actual backup directory name from the `ls` output (e.g., `sn-20240115-143200`). |
 A valid backup contains:
 - `manifest.json` — metadata and component list
 - `*.bak` — encrypted backup data files

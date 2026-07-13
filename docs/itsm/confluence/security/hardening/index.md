@@ -74,9 +74,11 @@ curl -u admin:password \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip certificate verification, or import the self-signed cert into your system's CA bundle.
-    **`jq: command not found`** — Install `jq` package (`apt-get install jq` or `yum install jq`) as an alternative to `python3 -m json.tool` for better JSON parsing.
-    **`HTTP 401 Unauthorized`** — Verify the admin credentials are correct and the user has API access permissions in Confluence administration settings.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl to skip certificate verification, or import the self-signed cert into your system's CA bundle. |
+    | `jq: command not found` | Install `jq` package (`apt-get install jq` or `yum install jq`) as an alternative to `python3 -m json.tool` for better JSON parsing. |
+    | `HTTP 401 Unauthorized` | Verify the admin credentials are correct and the user has API access permissions in Confluence administration settings. |
 ```bash
 # Disable automatic plugin updates in production (require manual review)
 # Administration > Manage Apps > Settings > Disable automatic updates
@@ -149,9 +151,11 @@ local6.*  @@siem.example.local:514
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or import the self-signed certificate into the system CA bundle.
-    **`jq: parse error: Invalid numeric literal at line 1 column 10`** — Verify the API response is valid JSON by testing `curl -u admin:password "https://confluence.example.local/rest/api/audit?limit=10"` directly first.
-    **`rsyslog: imfile: cannot open file '/var/log/confluence-audit-export.json'`** — Ensure the file exists and rsyslog process has read permissions; create it with `touch /var/log/confluence-audit-export.json && chmod 644 /var/log/confluence-audit-export.json`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl or import the self-signed certificate into the system CA bundle. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 10` | Verify the API response is valid JSON by testing `curl -u admin:password "https://confluence.example.local/rest/api/audit?limit=10"` directly first. |
+    | `rsyslog: imfile: cannot open file '/var/log/confluence-audit-export.json'` | Ensure the file exists and rsyslog process has read permissions; create it with `touch /var/log/confluence-audit-export.json && chmod 644 /var/log/confluence-audit-export.json`. |
 ```bash
 # /opt/atlassian/confluence/confluence/WEB-INF/urlrewrite.xml
 # Restrict access to admin URLs from management IPs only
@@ -197,9 +201,11 @@ JVM_SUPPORT_RECOMMENDED_ARGS="
 ```
 
 !!! warning "Common errors"
-    **`setenv.sh: Permission denied`** — Run `chmod +x /opt/atlassian/confluence/bin/setenv.sh` to make the script executable before sourcing it.
-    **`server.xml: No such file or directory`** — Verify Confluence installation path with `ls -la /opt/atlassian/confluence/conf/` and confirm the correct CONFLUENCE_HOME directory.
-    **`Tomcat fails to start after server.xml edit`** — Validate XML syntax with `xmllint /opt/atlassian/confluence/conf/server.xml` before restarting the service.
+    | Error | Fix |
+    |---|---|
+    | `setenv.sh: Permission denied` | Run `chmod +x /opt/atlassian/confluence/bin/setenv.sh` to make the script executable before sourcing it. |
+    | `server.xml: No such file or directory` | Verify Confluence installation path with `ls -la /opt/atlassian/confluence/conf/` and confirm the correct CONFLUENCE_HOME directory. |
+    | `Tomcat fails to start after server.xml edit` | Validate XML syntax with `xmllint /opt/atlassian/confluence/conf/server.xml` before restarting the service. |
 ```bash
 # Run Confluence as a dedicated non-root service account
 # Create service account

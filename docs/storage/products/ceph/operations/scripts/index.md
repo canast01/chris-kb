@@ -108,9 +108,11 @@ echo "=== PASS=$PASS  WARN=$WARN  FAIL=$FAIL ==="
 ```
 
 !!! warning "Common errors"
-    **`command not found: ceph`** — Ensure Ceph CLI tools are installed and the ceph-common package is available on the monitoring host.
-    **`Error initializing cluster client: ('error connecting to the cluster', -2)`** — Verify the Ceph cluster is running, the monitor nodes are reachable, and /etc/ceph/ceph.conf is properly configured.
-    **`grep: invalid option -- 'P'`** — Replace `grep -oP` with `grep -oE` if using a system without PCRE support in grep (e.g., macOS or older Linux distributions).
+    | Error | Fix |
+    |---|---|
+    | `command not found: ceph` | Ensure Ceph CLI tools are installed and the ceph-common package is available on the monitoring host. |
+    | `Error initializing cluster client: ('error connecting to the cluster', -2)` | Verify the Ceph cluster is running, the monitor nodes are reachable, and /etc/ceph/ceph.conf is properly configured. |
+    | `grep: invalid option -- 'P'` | Replace `grep -oP` with `grep -oE` if using a system without PCRE support in grep (e.g., macOS or older Linux distributions). |
 ## osd-replace.sh
 
 ```bash
@@ -174,9 +176,11 @@ Done. Monitor: ceph -s
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: invalid osd id 3`** — Verify the OSD ID exists with `ceph osd ls` before running the script.
-    **`Error: No orchestrator backend configured`** — Ensure Ceph Orchestrator (cephadm) is deployed with `ceph orch status`.
-    **`Error: device /dev/sdd is already in use`** — Wipe the disk with `ceph-volume lvm zap /dev/sdd --destroy` before re-adding the OSD.
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: invalid osd id 3` | Verify the OSD ID exists with `ceph osd ls` before running the script. |
+    | `Error: No orchestrator backend configured` | Ensure Ceph Orchestrator (cephadm) is deployed with `ceph orch status`. |
+    | `Error: device /dev/sdd is already in use` | Wipe the disk with `ceph-volume lvm zap /dev/sdd --destroy` before re-adding the OSD. |
 ## capacity-report.sh
 
 ```bash
@@ -225,8 +229,10 @@ POOLS:
 ```
 
 !!! warning "Common errors"
-    **`Error: error connecting to the cluster`** — Verify the Ceph cluster is running with `ceph status` and check `/etc/ceph/ceph.conf` connectivity settings.
-    **`awk: syntax error in pattern near line 1`** — Ensure the Ceph output format hasn't changed; run `ceph df` manually to verify column alignment matches the awk field references.
+    | Error | Fix |
+    |---|---|
+    | `Error: error connecting to the cluster` | Verify the Ceph cluster is running with `ceph status` and check `/etc/ceph/ceph.conf` connectivity settings. |
+    | `awk: syntax error in pattern near line 1` | Ensure the Ceph output format hasn't changed; run `ceph df` manually to verify column alignment matches the awk field references. |
 ## ceph-health-snapshot.sh
 
 ```bash
@@ -319,7 +325,9 @@ Snapshot written to: /tmp/ceph-snapshot-2024-01-15-1430.txt
 ```
 
 !!! warning "Common errors"
-    **`Error: error connecting to the cluster`** — Verify C
+    | Error | Fix |
+    |---|---|
+    | `Error: error connecting to the cluster` | Verify C |
 ## osd-utilization-report.sh
 
 ```bash
@@ -369,9 +377,11 @@ RESULT: 3 OSD(s) above 80% utilization
 ```
 
 !!! warning "Common errors"
-    **`command not found: ceph`** — Ensure the Ceph CLI tools are installed and the user has access to the Ceph cluster configuration files in /etc/ceph/.
-    **`jq: command not found`** — Replace the `python3 -m json.tool` pipeline with `jq -r '.host'` or install python3 if JSON parsing is required.
-    **`error: osd.X does not exist`** — Verify the OSD IDs in `ceph osd df` output are valid; if OSDs have been removed, run `ceph osd purge-new` to clean up stale entries.
+    | Error | Fix |
+    |---|---|
+    | `command not found: ceph` | Ensure the Ceph CLI tools are installed and the user has access to the Ceph cluster configuration files in /etc/ceph/. |
+    | `jq: command not found` | Replace the `python3 -m json.tool` pipeline with `jq -r '.host'` or install python3 if JSON parsing is required. |
+    | `error: osd.X does not exist` | Verify the OSD IDs in `ceph osd df` output are valid; if OSDs have been removed, run `ceph osd purge-new` to clean up stale entries. |
 ## rbd-snapshot-rotate.sh
 
 ```bash
@@ -421,9 +431,11 @@ SNAPID                                 NAME                 SIZE   PROTECTED TIM
 ```
 
 !!! warning "Common errors"
-    **`error: image not found`** — Verify the pool and image name exist with `rbd ls <pool>` and check for typos.
-    **`error: snapshot already exists`** — The script ran twice on the same day; either wait until tomorrow or manually remove the duplicate snapshot with `rbd snap rm`.
-    **`date: invalid date 'now'`** — Use GNU date syntax (`date -d`) on Linux or BSD date syntax (`date -v`) on macOS; the script attempts both but may fail if neither is available.
+    | Error | Fix |
+    |---|---|
+    | `error: image not found` | Verify the pool and image name exist with `rbd ls <pool>` and check for typos. |
+    | `error: snapshot already exists` | The script ran twice on the same day; either wait until tomorrow or manually remove the duplicate snapshot with `rbd snap rm`. |
+    | `date: invalid date 'now'` | Use GNU date syntax (`date -d`) on Linux or BSD date syntax (`date -v`) on macOS; the script attempts both but may fail if neither is available. |
 ---
 
 ## See also

@@ -104,9 +104,11 @@ GID  NAME                                   NWCFG  MEMSZ  GRANT  MCTLSZ  SWCUR  
 ```
 
 !!! warning "Common errors"
-    **`ESXTOP: command not found`** — Ensure you are logged into the ESXi host directly via SSH or console; esxtop is not available on vCenter or Windows management stations.
-    **`Cannot open /proc/vmware/sched/cpu: Permission denied`** — Run esxtop with root privileges or as a user with administrative rights on the ESXi host.
-    **`ESXTOP: Unable to connect to the host`** — Verify network connectivity to the ESXi host and confirm SSH/direct console access is enabled in the host's management interface.
+    | Error | Fix |
+    |---|---|
+    | `ESXTOP: command not found` | Ensure you are logged into the ESXi host directly via SSH or console; esxtop is not available on vCenter or Windows management stations. |
+    | `Cannot open /proc/vmware/sched/cpu: Permission denied` | Run esxtop with root privileges or as a user with administrative rights on the ESXi host. |
+    | `ESXTOP: Unable to connect to the host` | Verify network connectivity to the ESXi host and confirm SSH/direct console access is enabled in the host's management interface. |
 ---
 
 ## HA and DRS
@@ -201,8 +203,10 @@ Link State: up
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not find adapter vmhba64`** — Verify the iSCSI adapter exists with `esxcli iscsi adapter list` and use the correct adapter name.
-    **`Error: Could not retrieve boot device information`** — Ensure you have root privileges and the system is fully booted; try again after waiting for storage initialization.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not find adapter vmhba64` | Verify the iSCSI adapter exists with `esxcli iscsi adapter list` and use the correct adapter name. |
+    | `Error: Could not retrieve boot device information` | Ensure you have root privileges and the system is fully booted; try again after waiting for storage initialization. |
 ---
 
 ## Host Profiles

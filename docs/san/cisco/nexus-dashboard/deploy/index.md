@@ -161,8 +161,10 @@ Overall Cluster Status: healthy
 ```
 
 !!! warning "Common errors"
-    **`command not found: acs`** — Ensure you are logged into a Nexus Dashboard node directly (not a bastion host) and have admin privileges.
-    **`Error: Cluster unhealthy - 1 node unreachable`** — Verify network connectivity to all three nodes and check that the Nexus Dashboard service is running on the unreachable node with `systemctl status nexus-dashboard`.
+    | Error | Fix |
+    |---|---|
+    | `command not found: acs` | Ensure you are logged into a Nexus Dashboard node directly (not a bastion host) and have admin privileges. |
+    | `Error: Cluster unhealthy - 1 node unreachable` | Verify network connectivity to all three nodes and check that the Nexus Dashboard service is running on the unreachable node with `systemctl status nexus-dashboard`. |
 ---
 
 ## Install NDFC/NDI Services
@@ -202,8 +204,10 @@ Vault                                 Running
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify SSH connectivity to the ND node and ensure the management IP is reachable with `ping`.
-    **`NDFC.*Failed`** or **`NDI.*Failed`** — Restart the affected service with `acs services restart <service-name>` and check logs with `acs logs tail <service-name>`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify SSH connectivity to the ND node and ensure the management IP is reachable with `ping`. |
+    | `NDFC.*Failed`** or **`NDI.*Failed` | Restart the affected service with `acs services restart <service-name>` and check logs with `acs logs tail <service-name>`. |
 **Access NDFC:**
 
 Navigate to **Services > Nexus Dashboard Fabric Controller**. The NDFC interface opens within Nexus Dashboard. First launch may take 2–3 minutes while NDFC initializes its internal database.
@@ -268,9 +272,11 @@ All services operational. No critical alerts.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to ACS daemon on localhost:8443`** — Verify the Nexus Dashboard cluster is fully initialized with `acs cluster status` and wait for all nodes to reach "Ready" state.
-    **`Service 'cisco-app-network-assurance' shows status Unknown`** — Restart the affected service with `acs services restart cisco-app-network-assurance` and confirm recovery with a follow-up status check.
-    **`High restart count detected: cisco-app-telemetry (15 restarts)`** — Check service logs with `acs services logs cisco-app-telemetry --tail 100` to identify memory leaks or configuration issues, then contact Cisco TAC if restarts continue.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to ACS daemon on localhost:8443` | Verify the Nexus Dashboard cluster is fully initialized with `acs cluster status` and wait for all nodes to reach "Ready" state. |
+    | `Service 'cisco-app-network-assurance' shows status Unknown` | Restart the affected service with `acs services restart cisco-app-network-assurance` and confirm recovery with a follow-up status check. |
+    | `High restart count detected: cisco-app-telemetry (15 restarts)` | Check service logs with `acs services logs cisco-app-telemetry --tail 100` to identify memory leaks or configuration issues, then contact Cisco TAC if restarts continue. |
 **NDFC fabric connectivity:**
 
 1. Open **Services > NDFC**.

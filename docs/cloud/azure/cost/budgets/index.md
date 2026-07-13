@@ -130,8 +130,10 @@ annual-cap-budget    Cost        50000.0   Annually     2026-01-01       2026-12
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (InvalidRequest) Invalid scope format. Scope must be a valid resource ID.`** — Replace `<subscription-id>` with your actual subscription ID (e.g., `a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d`).
-    **`ERROR: (AuthorizationFailed) The client 'user@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.CostManagement/budgets/write' over scope '/subscriptions/xxx'.`** — Ensure your user account has the Cost Management Contributor role assigned on the subscription.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (InvalidRequest) Invalid scope format. Scope must be a valid resource ID.` | Replace `<subscription-id>` with your actual subscription ID (e.g., `a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d`). |
+    | `ERROR: (AuthorizationFailed) The client 'user@example.com' with object id 'xxx' does not have authorization to perform action 'Microsoft.CostManagement/budgets/write' over scope '/subscriptions/xxx'.` | Ensure your user account has the Cost Management Contributor role assigned on the subscription. |
     **`ERROR: (BadRequest) Invalid JSON in notifications parameter: Unexpected character in JSON at position 45.
 ## Scope Options
 
@@ -183,9 +185,11 @@ az costmanagement budget create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound: The resource group 'rg-team-alpha' could not be found.`** — Verify the resource group name exists in the subscription using `az group list --query "[].name"`.
-    **`InvalidParameter: The value of parameter 'scope' is invalid.`** — Ensure the subscription ID is correct and the scope format is exactly `/subscriptions/<sub-id>/resourceGroups/<rg-name>` with no trailing slashes.
-    **`AuthorizationFailed: The client does not have authorization to perform action 'Microsoft.CostManagement/budgets/write'.`** — Assign the user or service principal the "Cost Management Contributor" role on the resource group or subscription.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound: The resource group 'rg-team-alpha' could not be found.` | Verify the resource group name exists in the subscription using `az group list --query "[].name"`. |
+    | `InvalidParameter: The value of parameter 'scope' is invalid.` | Ensure the subscription ID is correct and the scope format is exactly `/subscriptions/<sub-id>/resourceGroups/<rg-name>` with no trailing slashes. |
+    | `AuthorizationFailed: The client does not have authorization to perform action 'Microsoft.CostManagement/budgets/write'.` | Assign the user or service principal the "Cost Management Contributor" role on the resource group or subscription. |
 ## Alert Thresholds
 
 Each budget supports up to five notification rules. Notifications fire when actual or forecasted spend crosses a percentage of the budget amount.
@@ -243,8 +247,10 @@ az monitor action-group show \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound : Resource group 'rg-finops' could not be found.`** — Create the resource group first with `az group create --name rg-finops --location eastus`.
-    **`InvalidEmailAddress : The email address 'finops@example.com' is invalid or the action cannot be created.`** — Verify the email address is correctly formatted and the recipient has accepted the action group notification.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound : Resource group 'rg-finops' could not be found.` | Create the resource group first with `az group create --name rg-finops --location eastus`. |
+    | `InvalidEmailAddress : The email address 'finops@example.com' is invalid or the action cannot be created.` | Verify the email address is correctly formatted and the recipient has accepted the action group notification. |
 ## Budget Best Practices
 
 | Practice | Rationale |

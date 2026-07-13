@@ -35,9 +35,11 @@ az policy state list --resource-group <rg> \
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --resource-group/-g`** — Provide the resource group name using `-g <rg-name>` or `--resource-group <rg-name>`.
-    **`ERROR: Invalid filter expression. Invalid property name 'policyDefinitionId'.`** — Use the correct property name `policyDefinitionReferenceId` instead of `policyDefinitionId` in the filter expression.
-    **`ERROR: No registered resource provider found for location 'eastus'.`** — Ensure the subscription is active and the resource group exists by running `az group show -n <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --resource-group/-g` | Provide the resource group name using `-g <rg-name>` or `--resource-group <rg-name>`. |
+    | `ERROR: Invalid filter expression. Invalid property name 'policyDefinitionId'.` | Use the correct property name `policyDefinitionReferenceId` instead of `policyDefinitionId` in the filter expression. |
+    | `ERROR: No registered resource provider found for location 'eastus'.` | Ensure the subscription is active and the resource group exists by running `az group show -n <rg>`. |
 ```bash
 # Add delete lock to production resource group
 az lock create --name "prod-rg-lock" --resource-group <rg> --lock-type CanNotDelete
@@ -70,8 +72,10 @@ az lock list --resource-group <rg>
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name is correct and exists in your subscription with `az group list`.
-    **`AuthorizationFailed`** — Ensure your Azure account has `Microsoft.Authorization/locks/write` permissions on the resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name is correct and exists in your subscription with `az group list`. |
+    | `AuthorizationFailed` | Ensure your Azure account has `Microsoft.Authorization/locks/write` permissions on the resource group. |
 ![Azure Architecture — Design Standards — Diagram](../../../../assets/cloud-azure-architecture-design-standards-diagram.svg)
 
 ---

@@ -88,9 +88,11 @@ rtt min/avg/max/stddev = 1.89/2.07/2.34/0.18 ms
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <esxi-mgmt-ip>`** — Replace `<esxi-mgmt-ip>` with the actual ESXi management IP address (e.g., `192.168.1.42`).
-    **`From 192.168.1.1 icmp_seq=1 Destination Host Unreachable`** — Verify the ESXi host is powered on, the management network is connected, and firewall rules allow ICMP traffic.
-    **`ping: sendto: No route to host`** — Confirm the ESXi management IP is on the same subnet or that routing is properly configured between your admin workstation and the ESXi management network.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <esxi-mgmt-ip>` | Replace `<esxi-mgmt-ip>` with the actual ESXi management IP address (e.g., `192.168.1.42`). |
+    | `From 192.168.1.1 icmp_seq=1 Destination Host Unreachable` | Verify the ESXi host is powered on, the management network is connected, and firewall rules allow ICMP traffic. |
+    | `ping: sendto: No route to host` | Confirm the ESXi management IP is on the same subnet or that routing is properly configured between your admin workstation and the ESXi management network. |
 - **Reachable** → host is up; issue is vpxa/hostd or SSL.
 - **Unreachable** → network is down or host crashed; use iDRAC/iLO console.
 
@@ -125,9 +127,11 @@ hostd (pid 3124) is running...
 ```
 
 !!! warning "Common errors"
-    **`vpxa (pid XXXX) is running... hostd (pid XXXX) is running...`** — Both services are healthy; if either shows "is stopped," restart with `/etc/init.d/vpxa start` and `/etc/init.d/hostd start`.
-    **`tail: cannot open '/var/log/vpxa.log' for reading: Permission denied`** — Run the command with `sudo` or as root to access ESXi host logs.
-    **`[7F2A4C1B9700 error 'Hostd'] Connection to vCenter failed: timeout`** — Verify network connectivity to vCenter and check firewall rules on port 443.
+    | Error | Fix |
+    |---|---|
+    | `vpxa (pid XXXX) is running... hostd (pid XXXX) is running...` | Both services are healthy; if either shows "is stopped," restart with `/etc/init.d/vpxa start` and `/etc/init.d/hostd start`. |
+    | `tail: cannot open '/var/log/vpxa.log' for reading: Permission denied` | Run the command with `sudo` or as root to access ESXi host logs. |
+    | `[7F2A4C1B9700 error 'Hostd'] Connection to vCenter failed: timeout` | Verify network connectivity to vCenter and check firewall rules on port 443. |
 If an agent is stopped or crashed, restart it:
 
 ```bash
@@ -144,8 +148,10 @@ Starting hostd:                                            [  OK  ]
 ```
 
 !!! warning "Common errors"
-    **`vpxa: unrecognized service`** — Verify the ESXi host is running and the vpxa service exists by checking `/etc/init.d/vpxa` file permissions and presence.
-    **`hostd: command not found`** — Ensure you are running these commands directly on the ESXi host (not a remote system) with root privileges.
+    | Error | Fix |
+    |---|---|
+    | `vpxa: unrecognized service` | Verify the ESXi host is running and the vpxa service exists by checking `/etc/init.d/vpxa` file permissions and presence. |
+    | `hostd: command not found` | Ensure you are running these commands directly on the ESXi host (not a remote system) with root privileges. |
 Wait 60–90 seconds, then attempt the vCenter Reconnect action again.
 
 ---
@@ -178,8 +184,10 @@ Current Hostname: esx-prod-01.lab.local
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace network ip interface ipv4 get`** — Verify esxcli is available and you are running ESXi 5.0 or later; older versions use different command syntax.
-    **`Error: Unable to connect to the host`** — Ensure SSH is enabled on the ESXi host and your user account has sufficient privileges (typically root or a user in the administrators group).
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace network ip interface ipv4 get` | Verify esxcli is available and you are running ESXi 5.0 or later; older versions use different command syntax. |
+    | `Error: Unable to connect to the host` | Ensure SSH is enabled on the ESXi host and your user account has sufficient privileges (typically root or a user in the administrators group). |
 Look for: vmk0 shows the correct static IP, default gateway is present, FQDN matches what vCenter has registered. Any mismatch prevents reconnection even after agent restarts.
 
 ---
@@ -213,9 +221,11 @@ IPv4 DNS Servers
 ```
 
 !!! warning "Common errors"
-    **`nslookup: can't resolve 'vcenter.domain.local': No address associated with hostname`** — Verify the DNS server is reachable and the hostname exists in DNS; check `/etc/resolv.conf` has correct nameserver entries.
-    **`cat: /etc/resolv.conf: No such file or directory`** — This file may not exist on some ESXi hosts; use `esxcli network ip dns server list` instead to verify DNS configuration.
-    **`Could not connect to Management Agent on localhost`** — Run the commands directly on the ESXi host via SSH or vSphere Client console, not from a remote system without proper credentials.
+    | Error | Fix |
+    |---|---|
+    | `nslookup: can't resolve 'vcenter.domain.local': No address associated with hostname` | Verify the DNS server is reachable and the hostname exists in DNS; check `/etc/resolv.conf` has correct nameserver entries. |
+    | `cat: /etc/resolv.conf: No such file or directory` | This file may not exist on some ESXi hosts; use `esxcli network ip dns server list` instead to verify DNS configuration. |
+    | `Could not connect to Management Agent on localhost` | Run the commands directly on the ESXi host via SSH or vSphere Client console, not from a remote system without proper credentials. |
 Correct a missing DNS server:
 
 ```bash
@@ -228,8 +238,10 @@ esxcli network ip dns server add --server <dns-ip>
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or parameter: --server`** — Use the correct syntax `esxcli network ip dns server add -a <dns-ip>` (the flag is `-a`, not `--server`).
-    **`Error: Connect to localhost failed. Connection refused`** — Ensure you are running this command directly on an ESXi host with SSH enabled, not from a remote vSphere client; alternatively, use `esxcli -s <host-ip> -u root -p <password>` to target the host remotely.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or parameter: --server` | Use the correct syntax `esxcli network ip dns server add -a <dns-ip>` (the flag is `-a`, not `--server`). |
+    | `Error: Connect to localhost failed. Connection refused` | Ensure you are running this command directly on an ESXi host with SSH enabled, not from a remote vSphere client; alternatively, use `esxcli -s <host-ip> -u root -p <password>` to target the host remotely. |
 Look for: `nslookup` returns the correct vCenter IP; no "NXDOMAIN" or timeout errors.
 
 ---
@@ -260,9 +272,11 @@ Thu Mar 14 09:47:23 UTC 2024
 ```
 
 !!! warning "Common errors"
-    **`NTP Enabled: false`** — Enable NTP with `esxcli system ntp set --enabled=true` and start the service with `systemctl start ntpd`.
-    **`reach   0`** — Verify network connectivity to NTP servers and check firewall rules allowing UDP port 123 outbound from the ESXi host.
-    **`command not found: ntpq`** — Install the ntp client package or use `esxcli system ntp get` alone if ntpq is unavailable on your ESXi version.
+    | Error | Fix |
+    |---|---|
+    | `NTP Enabled: false` | Enable NTP with `esxcli system ntp set --enabled=true` and start the service with `systemctl start ntpd`. |
+    | `reach   0` | Verify network connectivity to NTP servers and check firewall rules allowing UDP port 123 outbound from the ESXi host. |
+    | `command not found: ntpq` | Install the ntp client package or use `esxcli system ntp get` alone if ntpq is unavailable on your ESXi version. |
 Look for: offset column in `ntpq -p` output beyond ±60,000 ms (60 seconds) from the reference server. Compare `date` output on the host with vCenter system time to confirm drift.
 
 Fix NTP if drifted — see the
@@ -291,8 +305,10 @@ tail -100 /var/log/vpxa.log  | grep -iE "error|ssl|certificate|timeout|refused"
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/hostd.log' for reading: No such file or directory`** — Verify the ESXi host is running and the log file path is correct; check if you're on the correct host or if logs have been rotated.
-    **`grep: (standard input) is empty`** — This occurs when the log file exists but has no matching entries; it's not an error condition, just no matching lines found.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/hostd.log' for reading: No such file or directory` | Verify the ESXi host is running and the log file path is correct; check if you're on the correct host or if logs have been rotated. |
+    | `grep: (standard input) is empty` | This occurs when the log file exists but has no matching entries; it's not an error condition, just no matching lines found. |
 Common patterns:
 
 ```text
@@ -323,8 +339,10 @@ Starting NSX Message Processing Agent...                           [  OK  ]
 ```
 
 !!! warning "Common errors"
-    **`/etc/init.d/nsx-opsagent: No such file or directory`** — Verify NSX is installed on this host and the service paths are correct with `ls -la /etc/init.d/ | grep nsx`.
-    **`Job for nsx-opsagent.service failed because the control process exited with error code.`** — Check service logs with `journalctl -u nsx-opsagent -n 50` to identify the underlying startup failure.
+    | Error | Fix |
+    |---|---|
+    | `/etc/init.d/nsx-opsagent: No such file or directory` | Verify NSX is installed on this host and the service paths are correct with `ls -la /etc/init.d/ | grep nsx`. |
+    | `Job for nsx-opsagent.service failed because the control process exited with error code.` | Check service logs with `journalctl -u nsx-opsagent -n 50` to identify the underlying startup failure. |
 Look for: transport node state transitions to "Up" in NSX Manager within 60–90 seconds.
 
 ---

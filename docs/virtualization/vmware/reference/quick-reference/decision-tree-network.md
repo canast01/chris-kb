@@ -73,9 +73,11 @@ traceroute to example.com (93.184.216.34), 30 hops max, 60 byte packets
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <gateway-ip>`** — Replace `<gateway-ip>` with the actual gateway IP address (e.g., 192.168.1.1) or verify the VM has network connectivity.
-    **`ping: sendto: Operation not permitted`** — Check that ICMP is not blocked by the VM's firewall or security group rules; disable the firewall temporarily to test.
-    **`traceroute: command not found`** — Install traceroute with `apt-get install traceroute` (Debian/Ubuntu) or `yum install traceroute` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <gateway-ip>` | Replace `<gateway-ip>` with the actual gateway IP address (e.g., 192.168.1.1) or verify the VM has network connectivity. |
+    | `ping: sendto: Operation not permitted` | Check that ICMP is not blocked by the VM's firewall or security group rules; disable the firewall temporarily to test. |
+    | `traceroute: command not found` | Install traceroute with `apt-get install traceroute` (Debian/Ubuntu) or `yum install traceroute` (RHEL/CentOS). |
 **Cannot ping gateway** → Step 2 (L2/VLAN issue)
 **Can ping gateway, not destination** → Step 4 (routing/firewall issue)
 
@@ -121,9 +123,11 @@ GET /api/v1/logical-switches?display_name=<segment-name>
 ```
 
 !!! warning "Common errors"
-    **`{"error_code":400,"error_message":"Invalid display_name parameter"}`** — Verify the segment name matches exactly (case-sensitive) and is URL-encoded if it contains special characters.
-    **`{"error_code":401,"error_message":"Unauthorized"}`** — Ensure your NSX Manager API credentials are valid and the authentication token has not expired.
-    **`{"error_code":404,"error_message":"Segment not found"}`** — Confirm the segment exists in NSX Manager and check that you are querying the correct NSX Manager instance.
+    | Error | Fix |
+    |---|---|
+    | `{"error_code":400,"error_message":"Invalid display_name parameter"}` | Verify the segment name matches exactly (case-sensitive) and is URL-encoded if it contains special characters. |
+    | `{"error_code":401,"error_message":"Unauthorized"}` | Ensure your NSX Manager API credentials are valid and the authentication token has not expired. |
+    | `{"error_code":404,"error_message":"Segment not found"}` | Confirm the segment exists in NSX Manager and check that you are querying the correct NSX Manager instance. |
 **Port group/segment misconfigured** → Correct assignment and re-test.
 
 ## Step 3 — MTU Check
@@ -158,9 +162,11 @@ vmnic3       1500
 ```
 
 !!! warning "Common errors"
-    **`ping: -M: unknown option`** — Use `ping -M do` on Linux; the `-M` flag is not available on macOS or older Linux versions—verify your OS and use `man ping` to confirm syntax.
-    **`PING: transmit failed. General failure.`** — Ensure the gateway IP is reachable and on the same subnet; verify network connectivity with `ipconfig /all` and check firewall rules.
-    **`Command 'esxcfg-nics' not found`** — Run the command directly on an ESXi host via SSH or console, not from a vCenter server or Linux VM; verify you are logged into the correct host.
+    | Error | Fix |
+    |---|---|
+    | `ping: -M: unknown option` | Use `ping -M do` on Linux; the `-M` flag is not available on macOS or older Linux versions—verify your OS and use `man ping` to confirm syntax. |
+    | `PING: transmit failed. General failure.` | Ensure the gateway IP is reachable and on the same subnet; verify network connectivity with `ipconfig /all` and check firewall rules. |
+    | `Command 'esxcfg-nics' not found` | Run the command directly on an ESXi host via SSH or console, not from a vCenter server or Linux VM; verify you are logged into the correct host. |
 **Packet loss on large packets** → MTU mismatch on physical switch, dvSwitch, or NSX TEP VLAN.
 
 ## Step 4 — Routing Issue
@@ -203,9 +209,11 @@ traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
 ```
 
 !!! warning "Common errors"
-    **`SIOCADDRT: No such process`** — Verify the gateway IP is reachable and the network interface is up with `ip link show`.
-    **`traceroute: command not found`** — Install traceroute with `apt-get install traceroute` (Debian/Ubuntu) or `yum install traceroute` (RHEL/CentOS).
-    **`Network is unreachable`** — Confirm the VM's network adapter is connected to the correct vSwitch and the default gateway matches the subnet configuration.
+    | Error | Fix |
+    |---|---|
+    | `SIOCADDRT: No such process` | Verify the gateway IP is reachable and the network interface is up with `ip link show`. |
+    | `traceroute: command not found` | Install traceroute with `apt-get install traceroute` (Debian/Ubuntu) or `yum install traceroute` (RHEL/CentOS). |
+    | `Network is unreachable` | Confirm the VM's network adapter is connected to the correct vSwitch and the default gateway matches the subnet configuration. |
 If traffic drops at the tier-0 edge:
 - Check BGP peer state on the edge node:
   ```bash
@@ -248,9 +256,11 @@ Last Updated: 2024-01-15 14:32:18
 ```
 
 !!! warning "Common errors"
-    **`vsipioctl: command not found`** — Ensure you are running this command directly on the ESXi host (SSH into the host), not from vCenter or a remote machine.
-    **`Filter not found or invalid filter name`** — Verify the filter name matches exactly what appears in the VM's .vmx file (case-sensitive) by checking `/vmfs/volumes/<datastore>/vm-name/vm-name.vmx`.
-    **`summarize-dvfilter: command not found`** — This command is only available on ESXi 6.0+; for older versions, use `net-dvs -l` to list distributed virtual switch filters instead.
+    | Error | Fix |
+    |---|---|
+    | `vsipioctl: command not found` | Ensure you are running this command directly on the ESXi host (SSH into the host), not from vCenter or a remote machine. |
+    | `Filter not found or invalid filter name` | Verify the filter name matches exactly what appears in the VM's .vmx file (case-sensitive) by checking `/vmfs/volumes/<datastore>/vm-name/vm-name.vmx`. |
+    | `summarize-dvfilter: command not found` | This command is only available on ESXi 6.0+; for older versions, use `net-dvs -l` to list distributed virtual switch filters instead. |
 Look for DENY rules matching the traffic flow. Check in NSX Manager:
 - Policy → Security → Gateway Firewall and Distributed Firewall
 - Use "Trace Flow" to simulate a specific flow and see which rule handles it:
@@ -288,7 +298,9 @@ Capture completed successfully
 ```
 
 !!! warning "Common errors"
-    **`pktcap-uw: command not found`** — Run the command directly on the ESXi host via SSH or console, not from a vCenter client machine.
-    **`net-dvs: command not found`** — Ensure you are connected to the ESXi host shell; these tools are only available in the ESXi command line, not in vCenter.
-    **`Error: Invalid port ID`** — Verify the port ID exists by running `net-dvs -l` first and confirm the VM is powered on and connected to the distributed virtual switch.
+    | Error | Fix |
+    |---|---|
+    | `pktcap-uw: command not found` | Run the command directly on the ESXi host via SSH or console, not from a vCenter client machine. |
+    | `net-dvs: command not found` | Ensure you are connected to the ESXi host shell; these tools are only available in the ESXi command line, not in vCenter. |
+    | `Error: Invalid port ID` | Verify the port ID exists by running `net-dvs -l` first and confirm the VM is powered on and connected to the distributed virtual switch. |
 Analyse with Wireshark: download from `/tmp/capture.pcap` via SCP.

@@ -180,7 +180,9 @@ Secret key '8F7C2A9E1B4D5F3C' deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Authentication failed. Invalid credentials or ECS node unreachable.`** — Verify the ECS node hostname/IP is correct, the user exists, and the password is accurate;
+    | Error | Fix |
+    |---|---|
+    | `Error: Authentication failed. Invalid credentials or ECS node unreachable.` | Verify the ECS node hostname/IP is correct, the user exists, and the password is accurate; |
 ---
 
 ## S3 API (aws cli / s3cmd)

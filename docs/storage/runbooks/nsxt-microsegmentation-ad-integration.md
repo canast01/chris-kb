@@ -143,9 +143,11 @@ firewall identity ldap-servers
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it's not removed).
-    **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify the NSX Manager admin password is correct and URL is accessible; test connectivity with `ping nsxmgr.corp.local` first.
-    **`Connection refused on 192.168.1.10:389`** — Confirm the LDAP server hostname/IP is correct and port 389 is open; verify firewall rules allow NSX Manager to reach the LDAP server.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it's not removed). |
+    | `{"error_code":401,"error_message":"Invalid credentials"}` | Verify the NSX Manager admin password is correct and URL is accessible; test connectivity with `ping nsxmgr.corp.local` first. |
+    | `Connection refused on 192.168.1.10:389` | Confirm the LDAP server hostname/IP is correct and port 389 is open; verify firewall rules allow NSX Manager to reach the LDAP server. |
 ### 1.3 Verify Group Sync
 
 ```bash
@@ -169,9 +171,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store.
-    **`jq: parse error: Invalid JSON at line 1`** — Verify the NSX Manager API endpoint is accessible and responding with valid JSON; check credentials and ensure the domain_id parameter matches an existing Active Directory domain.
-    **`"error": "Unauthorized"`** — Confirm the admin credentials are correct and the user has API access permissions in NSX Manager's role-based access control settings.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store. |
+    | `jq: parse error: Invalid JSON at line 1` | Verify the NSX Manager API endpoint is accessible and responding with valid JSON; check credentials and ensure the domain_id parameter matches an existing Active Directory domain. |
+    | `"error": "Unauthorized"` | Confirm the admin credentials are correct and the user has API access permissions in NSX Manager's role-based access control settings. |
 ---
 
 ## Phase 2: Create NSX Security Groups
@@ -258,9 +262,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store.
-    **`{"error_code":403,"error_message":"User admin is not authorized to perform POST on /infra/domains/default/groups"}`** — Ensure the admin user has the Enterprise Administrator role or a custom role with Create permissions on Security Groups in NSX Manager.
-    **`jq: command not found`** — Install `python3-json` or use `python3 -m json.tool` instead of piping to `jq`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store. |
+    | `{"error_code":403,"error_message":"User admin is not authorized to perform POST on /infra/domains/default/groups"}` | Ensure the admin user has the Enterprise Administrator role or a custom role with Create permissions on Security Groups in NSX Manager. |
+    | `jq: command not found` | Install `python3-json` or use `python3 -m json.tool` instead of piping to `jq`. |
 ---
 
 ## Phase 3: Distributed Firewall Rules
@@ -383,9 +389,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`{"error_code":403,"error_message":"User admin is not authorized to perform PATCH on SecurityPolicy"}`** — Ensure the admin user has the NSX Policy Admin role assigned in NSX Manager's role-based access control settings.
-    **`{"error_code":404,"error_message":"SecurityPolicy NSX-Microseg-Allow not found"}`** — Create the security policy objects first using PUT instead of PATCH, or verify the policy names match existing policies in the default domain.
-    **`curl: (60) SSL certificate problem: self signed certificate in certificate chain`** — Add the `-k` flag (already present) or import the NSX Manager's CA certificate into your system's trusted store to avoid SSL verification errors.
+    | Error | Fix |
+    |---|---|
+    | `{"error_code":403,"error_message":"User admin is not authorized to perform PATCH on SecurityPolicy"}` | Ensure the admin user has the NSX Policy Admin role assigned in NSX Manager's role-based access control settings. |
+    | `{"error_code":404,"error_message":"SecurityPolicy NSX-Microseg-Allow not found"}` | Create the security policy objects first using PUT instead of PATCH, or verify the policy names match existing policies in the default domain. |
+    | `curl: (60) SSL certificate problem: self signed certificate in certificate chain` | Add the `-k` flag (already present) or import the NSX Manager's CA certificate into your system's trusted store to avoid SSL verification errors. |
 ### 3.3 Create Custom Service (TCP 8080)
 
 ```bash
@@ -430,9 +438,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify the NSX Manager admin password is correct and the user has API access permissions.
-    **`{"error_code":404,"error_message":"Service TCP-8080 not found"}`** — Create the service first using a POST request to `/policy/api/v1/infra/services` before attempting to PATCH it.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `{"error_code":401,"error_message":"Invalid credentials"}` | Verify the NSX Manager admin password is correct and the user has API access permissions. |
+    | `{"error_code":404,"error_message":"Service TCP-8080 not found"}` | Create the service first using a POST request to `/policy/api/v1/infra/services` before attempting to PATCH it. |
 ---
 
 ## Phase 4: Identity-Based Firewall Rules (IDFW)
@@ -517,9 +527,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`{"error_code":403,"error_message":"User admin does not have permission to modify security policies"}`** — Ensure the admin user has the NSX Security Administrator role assigned in NSX Manager.
-    **`{"error_code":404,"error_message":"SecurityPolicy not found: NSX-Microseg-IDFW"}`** — Create the security policy first using a POST request to `/infra/domains/default/security-policies` before attempting to PATCH it.
-    **`curl: (60) SSL certificate problem: self signed certificate in certificate chain`** — Add the `-k` flag to skip SSL verification, or import the NSX Manager CA certificate into your system's trusted store.
+    | Error | Fix |
+    |---|---|
+    | `{"error_code":403,"error_message":"User admin does not have permission to modify security policies"}` | Ensure the admin user has the NSX Security Administrator role assigned in NSX Manager. |
+    | `{"error_code":404,"error_message":"SecurityPolicy not found: NSX-Microseg-IDFW"}` | Create the security policy first using a POST request to `/infra/domains/default/security-policies` before attempting to PATCH it. |
+    | `curl: (60) SSL certificate problem: self signed certificate in certificate chain` | Add the `-k` flag to skip SSL verification, or import the NSX Manager CA certificate into your system's trusted store. |
 ### 4.4 Verify AD User-to-IP Mapping
 
 ```bash
@@ -548,9 +560,11 @@ Total users: 5
 ```
 
 !!! warning "Common errors"
-    **`Unknown command: get firewall identity users`** — Verify NSX Manager version supports identity firewall feature; use `help firewall` to list available commands.
-    **`Connection refused`** — Confirm NSX Manager hostname resolves correctly and SSH is enabled on port 22; check firewall rules allow admin access.
-    **`Authentication failed for user admin`** — Verify admin credentials and that the admin account has not been locked; reset password via NSX Manager UI if needed.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command: get firewall identity users` | Verify NSX Manager version supports identity firewall feature; use `help firewall` to list available commands. |
+    | `Connection refused` | Confirm NSX Manager hostname resolves correctly and SSH is enabled on port 22; check firewall rules allow admin access. |
+    | `Authentication failed for user admin` | Verify admin credentials and that the admin account has not been locked; reset password via NSX Manager UI if needed. |
 ---
 
 ## Phase 5: Validation
@@ -598,8 +612,10 @@ Connection to 192.168.30.10 5432 port [tcp/postgresql] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 192.168.30.10 port 5432 (tcp) timed out`** — Verify the DFW rule blocking webvm01→db traffic is correctly applied; check NSX-T Distributed Firewall logs to confirm the default-deny rule is active.
-    **`Connection refused`** — Ensure the PostgreSQL service is running on 192.168.30.10 with `systemctl status postgresql` and listening on port 5432 via `netstat -tlnp | grep 5432`.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 192.168.30.10 port 5432 (tcp) timed out` | Verify the DFW rule blocking webvm01→db traffic is correctly applied; check NSX-T Distributed Firewall logs to confirm the default-deny rule is active. |
+    | `Connection refused` | Ensure the PostgreSQL service is running on 192.168.30.10 with `systemctl status postgresql` and listening on port 5432 via `netstat -tlnp | grep 5432`. |
 ### 5.2 Check DFW Hit Counters
 
 ```bash
@@ -642,9 +658,11 @@ Distributed Firewall Statistics:
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify SSH credentials and that the ESXi host is reachable via `ping esxi01.corp.local`.
-    **`vsipioctl: command not found`** — Ensure you are logged into an ESXi host (not vCenter) and that DFW is installed; check with `esxcli software vib list | grep vsipioctl`.
-    **`Filter not found: nic-XXXX-eth0-vmware-sfw.2`** — Replace the placeholder filter name with an actual filter from the `getfilters` output or verify the VM's vNIC is still active.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify SSH credentials and that the ESXi host is reachable via `ping esxi01.corp.local`. |
+    | `vsipioctl: command not found` | Ensure you are logged into an ESXi host (not vCenter) and that DFW is installed; check with `esxcli software vib list | grep vsipioctl`. |
+    | `Filter not found: nic-XXXX-eth0-vmware-sfw.2` | Replace the placeholder filter name with an actual filter from the `getfilters` output or verify the VM's vNIC is still active. |
 ### 5.3 Verify DFW Rule Application via API
 
 ```bash
@@ -667,9 +685,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the NSX Manager certificate into your system CA bundle.
-    **`jq: command not found`** — Install `python3-json.tool` or use `python3 -m json.tool` instead of piping to `jq`.
-    **`HTTP 401 Unauthorized`** — Verify the admin credentials are correct and the user has API access permissions in NSX Manager.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the NSX Manager certificate into your system CA bundle. |
+    | `jq: command not found` | Install `python3-json.tool` or use `python3 -m json.tool` instead of piping to `jq`. |
+    | `HTTP 401 Unauthorized` | Verify the admin credentials are correct and the user has API access permissions in NSX Manager. |
 ### 5.4 Verify Group Membership
 
 ```bash
@@ -696,9 +716,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the NSX Manager certificate into your system's CA bundle.
-    **`jq: command not found`** — Install `python3-json-tool` or use `python3 -m json.tool` instead of piping to `jq`.
-    **`HTTP/1.1 401 Unauthorized`** — Verify the admin password is correct and the user has API access permissions in NSX Manager.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the NSX Manager certificate into your system's CA bundle. |
+    | `jq: command not found` | Install `python3-json-tool` or use `python3 -m json.tool` instead of piping to `jq`. |
+    | `HTTP/1.1 401 Unauthorized` | Verify the admin password is correct and the user has API access permissions in NSX Manager. |
 ---
 
 ## Rollback
@@ -737,9 +759,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store.
-    **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify the admin password is correct and URL-encoded if it contains special characters; use `-u admin:$(echo -n 'password' | jq -sRr @uri)` for special chars.
-    **`{"error_code":404,"error_message":"The requested resource could not be found"}`** — Confirm the security policy name "NSX-Microseg-Deny" and rule name "deny-east-west" exist by listing policies with `curl -sk -u admin:password https://nsxmgr.corp.local/policy/api/v1/infra/domains/default/security-policies`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the NSX Manager CA certificate into your system trust store. |
+    | `{"error_code":401,"error_message":"Invalid credentials"}` | Verify the admin password is correct and URL-encoded if it contains special characters; use `-u admin:$(echo -n 'password' | jq -sRr @uri)` for special chars. |
+    | `{"error_code":404,"error_message":"The requested resource could not be found"}` | Confirm the security policy name "NSX-Microseg-Deny" and rule name "deny-east-west" exist by listing policies with `curl -sk -u admin:password https://nsxmgr.corp.local/policy/api/v1/infra/domains/default/security-policies`. |
 ### Option B: Add Emergency Permit Rule (UI)
 
 1. Navigate to **Security → Distributed Firewall**
@@ -784,9 +808,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the NSX Manager certificate into your system trust store.
-    **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify the admin password is correct and URL-encoded if it contains special characters; use `-u admin:$(echo -n 'password' | jq -sRr @uri)` for special chars.
-    **`{"error_code":404,"error_message":"Segment seg-web not found"}`** — Confirm the segment ID exists by running `curl -sk -u admin:password https://nsxmgr.corp.local/policy/api/v1/infra/segments | jq '.results[].id'`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the NSX Manager certificate into your system trust store. |
+    | `{"error_code":401,"error_message":"Invalid credentials"}` | Verify the admin password is correct and URL-encoded if it contains special characters; use `-u admin:$(echo -n 'password' | jq -sRr @uri)` for special chars. |
+    | `{"error_code":404,"error_message":"Segment seg-web not found"}` | Confirm the segment ID exists by running `curl -sk -u admin:password https://nsxmgr.corp.local/policy/api/v1/infra/segments | jq '.results[].id'`. |
 ---
 
 ## See Also

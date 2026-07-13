@@ -142,8 +142,10 @@ Adapter: vmhba3
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace rescan`** — Verify you are running this command on an ESXi host (not vCenter) with esxcli available in PATH.
-    **`Error: Could not get list of paths`** — Ensure the storage adapter is not in a completely failed state; if APD persists, proceed with adapter removal in vCenter before rescanning.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace rescan` | Verify you are running this command on an ESXi host (not vCenter) with esxcli available in PATH. |
+    | `Error: Could not get list of paths` | Ensure the storage adapter is not in a completely failed state; if APD persists, proceed with adapter removal in vCenter before rescanning. |
 **Expected output:** `esxcli storage core path list` shows `State: active` for all paths. APD condition resolves in vCenter (datastore no longer shows "All Paths Down").
 
 ## Replication Lag Diagnosis
@@ -193,9 +195,11 @@ Connecting to 10.45.82.19 port 5201
 ```
 
 !!! warning "Common errors"
-    **`purepod: command not found`** — Install the Pure Storage Python SDK or ensure the FlashArray CLI tools are in your PATH.
-    **`symrdf: command not found`** — Install Dell EMC Solutions Enabler (SE) and verify the SYMCLI_CONNECT environment variable is set.
-    **`connect failed: No route to host`** — Verify network connectivity and firewall rules allow iperf3 traffic (default port 5201) between source and target sites.
+    | Error | Fix |
+    |---|---|
+    | `purepod: command not found` | Install the Pure Storage Python SDK or ensure the FlashArray CLI tools are in your PATH. |
+    | `symrdf: command not found` | Install Dell EMC Solutions Enabler (SE) and verify the SYMCLI_CONNECT environment variable is set. |
+    | `connect failed: No route to host` | Verify network connectivity and firewall rules allow iperf3 traffic (default port 5201) between source and target sites. |
 ## Array Health Check Commands
 
 ```bash
@@ -243,6 +247,8 @@ Dev#  Attr  Cap(GB)  Config  Status
 ```
 
 !!! warning "Common errors"
-    **`command not found: purearray`** — Verify Pure Storage CLI tools are installed and added to $PATH, or use full path `/opt/purestorage/bin/purearray`.
-    **`Error: Invalid SID <sid>`** — Confirm the Symmetrix ID is correct by running `symcfg list` to enumerate available arrays.
-    **`Error: command requires ONTAP admin credentials`** — Authenticate to the ONTAP cluster first using `ssh admin@<cluster-mgmt-ip>` or configure SSH keys for passwordless access.
+    | Error | Fix |
+    |---|---|
+    | `command not found: purearray` | Verify Pure Storage CLI tools are installed and added to $PATH, or use full path `/opt/purestorage/bin/purearray`. |
+    | `Error: Invalid SID <sid>` | Confirm the Symmetrix ID is correct by running `symcfg list` to enumerate available arrays. |
+    | `Error: command requires ONTAP admin credentials` | Authenticate to the ONTAP cluster first using `ssh admin@<cluster-mgmt-ip>` or configure SSH keys for passwordless access. |

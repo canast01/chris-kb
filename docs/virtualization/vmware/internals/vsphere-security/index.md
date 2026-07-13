@@ -406,8 +406,10 @@ lsi-mr3                                       VMwareCertified
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace esxcli system settings encryption`** — Verify you are running ESXi 6.7 or later; this command is not available on older versions.
-    **`Error: The DCUI or direct console login is required to enable Secure Boot`** — Connect via DCUI or use SSH with root credentials; remote vSphere Client connections cannot modify Secure Boot settings.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace esxcli system settings encryption` | Verify you are running ESXi 6.7 or later; this command is not available on older versions. |
+    | `Error: The DCUI or direct console login is required to enable Secure Boot` | Connect via DCUI or use SSH with root credentials; remote vSphere Client connections cannot modify Secure Boot settings. |
 ---
 
 ## Security Architecture Summary

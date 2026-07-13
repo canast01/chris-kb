@@ -44,9 +44,11 @@ Cleanup process initiated. Monitor progress with: filesys clean status
 ```
 
 !!! warning "Common errors"
-    **`filesys clean start: operation already in progress`** — Wait for the current cleanup to complete using `filesys clean status` or cancel it with `filesys clean stop` before starting a new one.
-    **`filesys clean start: insufficient privileges`** — Run the command with administrative credentials or ensure your user account has Data Domain system admin role assigned.
-    **`filesys clean start: filesystem is in read-only mode`** — Bring the filesystem online and into read-write mode using `filesys set rw` before initiating cleanup.
+    | Error | Fix |
+    |---|---|
+    | `filesys clean start: operation already in progress` | Wait for the current cleanup to complete using `filesys clean status` or cancel it with `filesys clean stop` before starting a new one. |
+    | `filesys clean start: insufficient privileges` | Run the command with administrative credentials or ensure your user account has Data Domain system admin role assigned. |
+    | `filesys clean start: filesystem is in read-only mode` | Bring the filesystem online and into read-write mode using `filesys set rw` before initiating cleanup. |
 ---
 
 ## DDBoost Restore (Backup Application)
@@ -92,9 +94,11 @@ Read Latency (ms):            12.4
 ```
 
 !!! warning "Common errors"
-    **`ddboost: command not found`** — Verify DD Boost is installed and the system PATH includes the DD Boost binary directory, or use the full path `/opt/emc/ddboost/bin/ddboost`.
-    **`Error: Unable to connect to Data Domain management interface`** — Ensure the Data Domain system is reachable on the network and that your user account has DD Boost administrative privileges.
-    **`Error: No active DD Boost connections`** — Confirm that restore clients are actively connected; if restores are idle or queued, connections may not appear in the active client list.
+    | Error | Fix |
+    |---|---|
+    | `ddboost: command not found` | Verify DD Boost is installed and the system PATH includes the DD Boost binary directory, or use the full path `/opt/emc/ddboost/bin/ddboost`. |
+    | `Error: Unable to connect to Data Domain management interface` | Ensure the Data Domain system is reachable on the network and that your user account has DD Boost administrative privileges. |
+    | `Error: No active DD Boost connections` | Confirm that restore clients are actively connected; if restores are idle or queued, connections may not appear in the active client list. |
 ### Per-Application Restore Initiation
 
 | Backup Software | Restore Entry Point | Notes |
@@ -139,8 +143,10 @@ Network throughput (out):    89.2 MB/s
 ```
 
 !!! warning "Common errors"
-    **`ddboost show stats: command not found`** — Verify ddboost is installed and the Data Domain CLI is properly initialized with `ddboost initialize`.
-    **`system show stats: permission denied`** — Run the command with appropriate privileges or ensure your user account has system monitoring permissions on the Data Domain appliance.
+    | Error | Fix |
+    |---|---|
+    | `ddboost show stats: command not found` | Verify ddboost is installed and the Data Domain CLI is properly initialized with `ddboost initialize`. |
+    | `system show stats: permission denied` | Run the command with appropriate privileges or ensure your user account has system monitoring permissions on the Data Domain appliance. |
 If throughput is below expected, check for:
 - Active cleaning cycle (`filesys clean status`)
 - Disk errors (`disk show state`)
@@ -182,9 +188,11 @@ drwxr-xr-x   4 root root  4096 Nov 14 08:45 daily
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: access denied by server while mounting <dd-hostname>:/data/col1/<mtree-name>`** — Verify the target server IP is correctly added to the NFS export and matches the client attempting to mount.
-    **`mount.nfs: No such file or directory`** — Confirm the MTree path `/data/col1/<mtree-name>` exists on the Data Domain and the NFS export is active with `nfs show exports`.
-    **`ls: cannot open directory '/mnt/dd-restore/': Permission denied`** — Check that the mount permissions allow read access; remount with appropriate NFS options like `mount -t nfs -o rw,hard,intr <dd-hostname>:/data/col1/<mtree-name> /mnt/dd-restore`.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: access denied by server while mounting <dd-hostname>:/data/col1/<mtree-name>` | Verify the target server IP is correctly added to the NFS export and matches the client attempting to mount. |
+    | `mount.nfs: No such file or directory` | Confirm the MTree path `/data/col1/<mtree-name>` exists on the Data Domain and the NFS export is active with `nfs show exports`. |
+    | `ls: cannot open directory '/mnt/dd-restore/': Permission denied` | Check that the mount permissions allow read access; remount with appropriate NFS options like `mount -t nfs -o rw,hard,intr <dd-hostname>:/data/col1/<mtree-name> /mnt/dd-restore`. |
 ### Restore Files from NFS Mount
 
 ```bash
@@ -223,9 +231,11 @@ total size is 2,847,392,104  speedup is 1.00
 ```
 
 !!! warning "Common errors"
-    **`umount: /mnt/dd-restore: target is busy`** — Ensure all file handles are closed by running `lsof /mnt/dd-restore` and killing any processes, then retry umount.
-    **`cp: cannot create regular file '/target/restore/path/': No such file or directory`** — Create the target directory first with `mkdir -p /target/restore/path/` before running cp or rsync.
-    **`rsync: change_dir "/mnt/dd-restore/<backup-path>" failed: No such file or directory (2)`** — Verify the backup path exists and is correctly mounted by running `ls /mnt/dd-restore/` to confirm the directory structure.
+    | Error | Fix |
+    |---|---|
+    | `umount: /mnt/dd-restore: target is busy` | Ensure all file handles are closed by running `lsof /mnt/dd-restore` and killing any processes, then retry umount. |
+    | `cp: cannot create regular file '/target/restore/path/': No such file or directory` | Create the target directory first with `mkdir -p /target/restore/path/` before running cp or rsync. |
+    | `rsync: change_dir "/mnt/dd-restore/<backup-path>" failed: No such file or directory (2)` | Verify the backup path exists and is correctly mounted by running `ls /mnt/dd-restore/` to confirm the directory structure. |
 ### NFS Restore — Common Issues
 
 | Issue | Cause | Fix |
@@ -262,8 +272,10 @@ Share added successfully: /data/col1/backup_mtree
 ```
 
 !!! warning "Common errors"
-    **`share not found`** — Run `cifs share show` to list all existing shares and verify the exact share name and path.
-    **`Permission denied`** — Ensure the Data Domain user account has administrative privileges and the mtree path `/data/col1/<mtree-name>` exists and is accessible.
+    | Error | Fix |
+    |---|---|
+    | `share not found` | Run `cifs share show` to list all existing shares and verify the exact share name and path. |
+    | `Permission denied` | Ensure the Data Domain user account has administrative privileges and the mtree path `/data/col1/<mtree-name>` exists and is accessible. |
 ---
 
 ## VTL Restore
@@ -313,9 +325,11 @@ Library    Name              Status      Slots    Loaded
 ```
 
 !!! warning "Common errors"
-    **`vtl: command not found`** — Verify the VTL management tools are installed and the PATH includes the VTL binary directory (typically `/opt/dell/vtl/bin`).
-    **`Error: VTL service not running`** — Start the VTL daemon with `systemctl start vtl-service` or the appropriate service manager for your environment.
-    **`Permission denied`** — Run the command with `sudo` or ensure your user account is a member of the `vtl-admin` group.
+    | Error | Fix |
+    |---|---|
+    | `vtl: command not found` | Verify the VTL management tools are installed and the PATH includes the VTL binary directory (typically `/opt/dell/vtl/bin`). |
+    | `Error: VTL service not running` | Start the VTL daemon with `systemctl start vtl-service` or the appropriate service manager for your environment. |
+    | `Permission denied` | Run the command with `sudo` or ensure your user account is a member of the `vtl-admin` group. |
 The backup media server must be FC-zoned to the DD VTL FC ports. Confirm zoning is correct if tapes are not visible to the backup application.
 
 ---
@@ -366,9 +380,11 @@ Backup exported successfully (2.4 MB transferred in 8.3 seconds)
 ```
 
 !!! warning "Common errors"
-    **`Error: SSH key authentication failed for user@jump-host`** — Verify the SSH key is installed on the jump host and the user has permission to write to the target directory.
-    **`Error: Insufficient space on remote destination (required: 2.4 MB, available: 512 KB)`** — Free up disk space on the remote server or specify an alternate backup destination path.
-    **`Error: config backup export: command not found`** — Ensure you are logged into the Data Domain management interface with appropriate admin credentials.
+    | Error | Fix |
+    |---|---|
+    | `Error: SSH key authentication failed for user@jump-host` | Verify the SSH key is installed on the jump host and the user has permission to write to the target directory. |
+    | `Error: Insufficient space on remote destination (required: 2.4 MB, available: 512 KB)` | Free up disk space on the remote server or specify an alternate backup destination path. |
+    | `Error: config backup export: command not found` | Ensure you are logged into the Data Domain management interface with appropriate admin credentials. |
 **Best practice:** Create a configuration backup before every planned change. Export the configuration backup off-appliance to a management server so it is available even if the DD is unavailable.
 
 ### Configuration Restore
@@ -406,8 +422,10 @@ Restore completed successfully at 2024-01-16 10:22:45
 ```
 
 !!! warning "Common errors"
-    **`Error: Backup 'dd-config-2024-01-15-prod-02' not found`** — Verify the exact backup name using `config backup list` and ensure you are using the correct naming convention.
-    **`Error: Backup validation failed - checksum mismatch`** — The backup file may be corrupted; restore from an alternative backup or contact Dell EMC support if all backups are compromised.
+    | Error | Fix |
+    |---|---|
+    | `Error: Backup 'dd-config-2024-01-15-prod-02' not found` | Verify the exact backup name using `config backup list` and ensure you are using the correct naming convention. |
+    | `Error: Backup validation failed - checksum mismatch` | The backup file may be corrupted; restore from an alternative backup or contact Dell EMC support if all backups are compromised. |
 Configuration restore replaces the current DD configuration with the saved snapshot. It does not affect backup data in the DDFS.
 
 ---
@@ -453,9 +471,11 @@ backup-server-02       192.168.10.46     connected   2024-01-15 14:31:55
 ```
 
 !!! warning "Common errors"
-    **`Error: Replication context 'ctx-prod-mtree-01' not found`** — Verify the context ID exists with `replication show` and use the correct context identifier.
-    **`Error: MTree 'prod-mtree-01' is still in replication mode and cannot be accessed`** — Ensure the failover command completed successfully and check replication status with `replication show <context-id>`.
-    **`Error: No clients connected to DDBoost`** — Verify the backup server's network connectivity to the destination DD and confirm DDBoost credentials are configured correctly in the backup application.
+    | Error | Fix |
+    |---|---|
+    | `Error: Replication context 'ctx-prod-mtree-01' not found` | Verify the context ID exists with `replication show` and use the correct context identifier. |
+    | `Error: MTree 'prod-mtree-01' is still in replication mode and cannot be accessed` | Ensure the failover command completed successfully and check replication status with `replication show <context-id>`. |
+    | `Error: No clients connected to DDBoost` | Verify the backup server's network connectivity to the destination DD and confirm DDBoost credentials are configured correctly in the backup application. |
 ### Failback After Primary Recovery
 
 ```bash
@@ -485,9 +505,11 @@ connection_status: CONNECTED
 ```
 
 !!! warning "Common errors"
-    **`replication resync: invalid context-id`** — Verify the context ID with `replication show contexts` and use the correct hexadecimal identifier.
-    **`replication show stats: command not found`** — Confirm you are logged into the Data Domain management interface; use `ssh admin@<dd-ip>` and authenticate first.
-    **`Replication lag is 1.2 GB and not decreasing`** — Check network connectivity between primary and secondary with `network ping <secondary-ip>` and verify replication bandwidth limits are not throttled.
+    | Error | Fix |
+    |---|---|
+    | `replication resync: invalid context-id` | Verify the context ID with `replication show contexts` and use the correct hexadecimal identifier. |
+    | `replication show stats: command not found` | Confirm you are logged into the Data Domain management interface; use `ssh admin@<dd-ip>` and authenticate first. |
+    | `Replication lag is 1.2 GB and not decreasing` | Check network connectivity between primary and secondary with `network ping <secondary-ip>` and verify replication bandwidth limits are not throttled. |
 ---
 
 ## FastCopy — Efficient Intra-DD Data Movement
@@ -523,9 +545,11 @@ Bytes Copied: 2.3 TB
 ```
 
 !!! warning "Common errors"
-    **`Error: Source path /data/col1/<source-mtree>/<path> does not exist`** — Verify the source MTree name and path exist using `mtree list` and `ls -la /data/col1/<mtree>/`.
-    **`Error: Destination MTree <destination-mtree> is at capacity`** — Check available space with `mtree show <destination-mtree>` and either expand the MTree or choose a different destination.
-    **`Error: FastCopy operation already in progress for destination path`** — Wait for the existing job to complete or cancel it with `fastcopy cancel <job-id>` before retrying.
+    | Error | Fix |
+    |---|---|
+    | `Error: Source path /data/col1/<source-mtree>/<path> does not exist` | Verify the source MTree name and path exist using `mtree list` and `ls -la /data/col1/<mtree>/`. |
+    | `Error: Destination MTree <destination-mtree> is at capacity` | Check available space with `mtree show <destination-mtree>` and either expand the MTree or choose a different destination. |
+    | `Error: FastCopy operation already in progress for destination path` | Wait for the existing job to complete or cancel it with `fastcopy cancel <job-id>` before retrying. |
 FastCopy is not a substitute for replication — it creates a local copy on the same array, which does not protect against array-level failure.
 
 ---

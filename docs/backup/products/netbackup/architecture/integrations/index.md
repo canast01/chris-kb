@@ -50,9 +50,11 @@ Agent Uptime: 18 days, 4 hours, 22 minutes
 ```
 
 !!! warning "Common errors"
-    **`OpsCenter Agent Status Report: command not found`** — Verify the OpsCenter agent is installed at `/opt/SYMCOpsCenterServer/bin/` or adjust the path accordingly.
-    **`Agent Status: Not Running`** — Start the OpsCenter agent with `/opt/SYMCOpsCenterServer/bin/opscenteragent start` and check system logs for startup errors.
-    **`Master Server Connection: Disconnected`** — Verify network connectivity to the OpsCenter host, check firewall rules for port 443, and confirm the OpsCenter server address in the agent configuration file.
+    | Error | Fix |
+    |---|---|
+    | `OpsCenter Agent Status Report: command not found` | Verify the OpsCenter agent is installed at `/opt/SYMCOpsCenterServer/bin/` or adjust the path accordingly. |
+    | `Agent Status: Not Running` | Start the OpsCenter agent with `/opt/SYMCOpsCenterServer/bin/opscenteragent start` and check system logs for startup errors. |
+    | `Master Server Connection: Disconnected` | Verify network connectivity to the OpsCenter host, check firewall rules for port 443, and confirm the OpsCenter server address in the agent configuration file. |
 Key reports:
 - Job success rate by policy
 - Backup window utilisation

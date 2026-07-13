@@ -138,9 +138,11 @@ STATUS: DEGRADED — Dead paths found. Run 'powermt restore' after fixing the un
 ```
 
 !!! warning "Common errors"
-    **`ERROR: powermt display dev=all failed.`** — Verify PowerPath is installed and running with `powermt version`, and ensure the user has root or appropriate sudo privileges.
-    **`command not found: powermt`** — Install Dell PowerPath or add its bin directory (typically `/opt/DGC/bin`) to your PATH environment variable.
-    **`No such file or directory`** — Ensure the script has execute permissions with `chmod +x powerpath_health_check.sh` and is being run from the correct directory.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: powermt display dev=all failed.` | Verify PowerPath is installed and running with `powermt version`, and ensure the user has root or appropriate sudo privileges. |
+    | `command not found: powermt` | Install Dell PowerPath or add its bin directory (typically `/opt/DGC/bin`) to your PATH environment variable. |
+    | `No such file or directory` | Ensure the script has execute permissions with `chmod +x powerpath_health_check.sh` and is being run from the correct directory. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -192,9 +194,11 @@ Health Status: HEALTHY
 ```
 
 !!! warning "Common errors"
-    **`Permission denied`** — Run the script with `sudo` or ensure the user has read access to `/dev/emcpower*` devices.
-    **`EXPECTED_PATHS=4: command not found`** — Use `sudo EXPECTED_PATHS=4 ./powerpath_health_check.sh` (environment variable must come before `sudo` or inside the script).
-    **`powerpath_health_check.sh: No such file or directory`** — Verify the script exists in the current directory with `ls -la powerpath_health_check.sh` and check the working directory with `pwd`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied` | Run the script with `sudo` or ensure the user has read access to `/dev/emcpower*` devices. |
+    | `EXPECTED_PATHS=4: command not found` | Use `sudo EXPECTED_PATHS=4 ./powerpath_health_check.sh` (environment variable must come before `sudo` or inside the script). |
+    | `powerpath_health_check.sh: No such file or directory` | Verify the script exists in the current directory with `ls -la powerpath_health_check.sh` and check the working directory with `pwd`. |
 **What you should see**
 
 A table with one row per PowerPath pseudo device showing total paths, dead paths, alive paths, and status. The summary shows total devices, how many have dead paths, and how many have fewer paths than expected. If all paths are healthy the final status is `STATUS: OK — All paths healthy.`
@@ -329,9 +333,11 @@ All 4 expected paths are active and healthy.
 ```
 
 !!! warning "Common errors"
-    **`Can't open perl script "powerpath_path_validator.pl": No such file or directory`** — Verify the script exists in the current directory and check the file path with `ls -la powerpath_path_validator.pl`.
-    **`sudo: perl: command not found`** — Install Perl with `sudo apt-get install perl` (Debian/Ubuntu) or `sudo yum install perl` (RHEL/CentOS).
-    **`Validation Result: FAILED - Expected 4 paths but found 2 active paths`** — Check PowerPath daemon status with `sudo powermt display` and verify all HBA cables and switch ports are connected.
+    | Error | Fix |
+    |---|---|
+    | `Can't open perl script "powerpath_path_validator.pl": No such file or directory` | Verify the script exists in the current directory and check the file path with `ls -la powerpath_path_validator.pl`. |
+    | `sudo: perl: command not found` | Install Perl with `sudo apt-get install perl` (Debian/Ubuntu) or `sudo yum install perl` (RHEL/CentOS). |
+    | `Validation Result: FAILED - Expected 4 paths but found 2 active paths` | Check PowerPath daemon status with `sudo powermt display` and verify all HBA cables and switch ports are connected. |
 **What you should see**
 
 A table listing each pseudo device with total paths, dead paths, alive paths, and PASS or FAIL. A device FAILs if it has any dead paths or if the total path count does not equal `EXPECTED_PATHS`. The final line shows total devices, passes, and failures.
@@ -458,9 +464,11 @@ STATUS: FAIL — 2 device(s) not using CLAROpt.
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Install EMC PowerPath package or ensure /opt/emc/powerpath/bin is in PATH.
-    **`powermt: insufficient privileges`** — Run the script with sudo or as root user.
-    **`Policy=CLAROpt\(co\): No such file or directory`** — Ensure powermt display dev=all output format matches the regex pattern; verify PowerPath version compatibility.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Install EMC PowerPath package or ensure /opt/emc/powerpath/bin is in PATH. |
+    | `powermt: insufficient privileges` | Run the script with sudo or as root user. |
+    | `Policy=CLAROpt\(co\): No such file or directory` | Ensure powermt display dev=all output format matches the regex pattern; verify PowerPath version compatibility. |
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -521,9 +529,11 @@ Report saved to: /var/log/powerpath/audit_2024-01-15_143247.log
 ```
 
 !!! warning "Common errors"
-    **`Permission denied`** — Run `chmod +x powerpath_policy_audit.sh` before executing the script.
-    **`sudo: ./powerpath_policy_audit.sh: command not found`** — Verify the script exists in the current directory with `ls -la powerpath_policy_audit.sh` and check the shebang line is correct.
-    **`EMC PowerPath not installed or not running`** — Install PowerPath or start the service with `sudo systemctl start powerpath` before running the audit.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied` | Run `chmod +x powerpath_policy_audit.sh` before executing the script. |
+    | `sudo: ./powerpath_policy_audit.sh: command not found` | Verify the script exists in the current directory with `ls -la powerpath_policy_audit.sh` and check the shebang line is correct. |
+    | `EMC PowerPath not installed or not running` | Install PowerPath or start the service with `sudo systemctl start powerpath` before running the audit. |
 To check and automatically fix any non-CLAROpt devices:
 ```bash
 sudo ./powerpath_policy_audit.sh --fix
@@ -556,9 +566,11 @@ Report saved to: /var/log/powerpath/audit_2024-01-15_094233.log
 ```
 
 !!! warning "Common errors"
-    **`sudo: ./powerpath_policy_audit.sh: command not found`** — Verify the script exists in the current directory and run from the correct path, or use the full path like `sudo /opt/emc/powerpath/powerpath_policy_audit.sh --fix`.
-    **`Permission denied`** — Ensure the script has execute permissions by running `chmod +x powerpath_policy_audit.sh` before executing.
-    **`powerpath: command not found`** — Confirm PowerPath is installed and the EMC PowerPath daemon is running with `sudo systemctl status powerpath` or `/etc/init.d/powerpath status`.
+    | Error | Fix |
+    |---|---|
+    | `sudo: ./powerpath_policy_audit.sh: command not found` | Verify the script exists in the current directory and run from the correct path, or use the full path like `sudo /opt/emc/powerpath/powerpath_policy_audit.sh --fix`. |
+    | `Permission denied` | Ensure the script has execute permissions by running `chmod +x powerpath_policy_audit.sh` before executing. |
+    | `powerpath: command not found` | Confirm PowerPath is installed and the EMC PowerPath daemon is running with `sudo systemctl status powerpath` or `/etc/init.d/powerpath status`. |
 **What you should see**
 
 The current global PowerPath options, then a per-device table showing the policy in use and PASS or FAIL. The summary shows how many devices are not using CLAROpt. With `--fix`, CLAROpt is applied to all devices and `powermt save` is run to make it permanent.
@@ -676,9 +688,11 @@ Check completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`'powerpath_remote_check.bat' is not recognized as an internal or external command`** — Verify the script exists in the current directory or provide the full path (e.g., `.\powerpath_remote_check.bat`).
-    **`Access Denied`** — Run Command Prompt as Administrator or check file permissions on the script.
-    **`Connection timeout to storage-01.corp.local`** — Verify network connectivity and that the remote host's PowerPath agent is running and accessible on the configured port.
+    | Error | Fix |
+    |---|---|
+    | `'powerpath_remote_check.bat' is not recognized as an internal or external command` | Verify the script exists in the current directory or provide the full path (e.g., `.\powerpath_remote_check.bat`). |
+    | `Access Denied` | Run Command Prompt as Administrator or check file permissions on the script. |
+    | `Connection timeout to storage-01.corp.local` | Verify network connectivity and that the remote host's PowerPath agent is running and accessible on the configured port. |
 ---
 
 ## Windows: PowerPath Check on Local Windows Host (CMD)
@@ -833,9 +847,11 @@ Total devices: 4
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Cannot connect to 192.168.1.50 or powermt not available`** — Verify SSH connectivity with `ssh -v root@192.168.1.50` and confirm EMC PowerPath is installed via `ssh root@192.168.1.50 which powermt`.
-    **`Host key verification failed.`** — Add the host key to `~/.ssh/known_hosts` by running `ssh-keyscan -H 192.168.1.50 >> ~/.ssh/known_hosts` or remove `-o StrictHostKeyChecking=no` if using key-based auth.
-    **`Permission denied (publickey,password).`** — Ensure SSH_USER has passwordless key-based authentication configured, or use `SSH_OPTS="-o PasswordAuthentication=yes"` and provide credentials via SSH agent or config file.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Cannot connect to 192.168.1.50 or powermt not available` | Verify SSH connectivity with `ssh -v root@192.168.1.50` and confirm EMC PowerPath is installed via `ssh root@192.168.1.50 which powermt`. |
+    | `Host key verification failed.` | Add the host key to `~/.ssh/known_hosts` by running `ssh-keyscan -H 192.168.1.50 >> ~/.ssh/known_hosts` or remove `-o StrictHostKeyChecking=no` if using key-based auth. |
+    | `Permission denied (publickey,password).` | Ensure SSH_USER has passwordless key-based authentication configured, or use `SSH_OPTS="-o PasswordAuthentication=yes"` and provide credentials via SSH agent or config file. |
 ---
 
 ## Incident Triage Script
@@ -1071,9 +1087,11 @@ PowerPath Installed and running
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH_USER has passwordless key-based auth configured and HOST_IP is reachable; test with `ssh -v ${SSH_USER}@${HOST_IP}`.
-    **`powermt: command not found`** — Ensure PowerPath is installed on the target host and the powermt binary is in the SSH user's PATH.
-    **`[FAIL] emcpowerb: only 1 alive path(s) — UNSAFE for HBA removal`** — Wait for failed paths to recover or restore redundancy before proceeding; check `powermt display dev=emcpowerb` for path status details.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH_USER has passwordless key-based auth configured and HOST_IP is reachable; test with `ssh -v ${SSH_USER}@${HOST_IP}`. |
+    | `powermt: command not found` | Ensure PowerPath is installed on the target host and the powermt binary is in the SSH user's PATH. |
+    | `[FAIL] emcpowerb: only 1 alive path(s) — UNSAFE for HBA removal` | Wait for failed paths to recover or restore redundancy before proceeding; check `powermt display dev=emcpowerb` for path status details. |
 ---
 
 ## Post-Change Validation Script
@@ -1179,9 +1197,11 @@ emcpowerd                  4     0      4  RESTORED OK
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Cannot connect to 192.168.42.15`** — Verify the HOST_IP is correct, the SSH key is deployed, and the host is reachable with `ssh -o StrictHostKeyChecking=no root@<IP>`.
-    **`command not found: powermt`** — Install PowerPath tools on the target host or verify the PATH includes the PowerPath bin directory (typically `/opt/emc/PowerPath/bin`).
-    **`ModuleNotFoundError: No module named 'python3'`** — Install Python 3 on the target host with `apt-get install python3` (Debian/Ubuntu) or `yum install python3` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Cannot connect to 192.168.42.15` | Verify the HOST_IP is correct, the SSH key is deployed, and the host is reachable with `ssh -o StrictHostKeyChecking=no root@<IP>`. |
+    | `command not found: powermt` | Install PowerPath tools on the target host or verify the PATH includes the PowerPath bin directory (typically `/opt/emc/PowerPath/bin`). |
+    | `ModuleNotFoundError: No module named 'python3'` | Install Python 3 on the target host with `apt-get install python3` (Debian/Ubuntu) or `yum install python3` (RHEL/CentOS). |
 ---
 
 ## Health Check Script
@@ -1252,9 +1272,11 @@ PP_HEALTH host=192.168.42.15 total_devices=8 total_paths=32 dead_paths=0 low_pat
 ```
 
 !!! warning "Common errors"
-    **`HOST_IP: parameter null or not set`** — Export HOST_IP before running the script: `export HOST_IP=192.168.42.15`.
-    **`Permission denied (publickey,password)`** — Ensure SSH key-based authentication is configured for the SSH_USER account, or add password authentication to SSH_OPTS.
-    **`powermt: command not found`** — Verify PowerPath is installed on the target host and the powermt binary is in the SSH_USER's PATH; check `/opt/emc/powerpath/bin/powermt`.
+    | Error | Fix |
+    |---|---|
+    | `HOST_IP: parameter null or not set` | Export HOST_IP before running the script: `export HOST_IP=192.168.42.15`. |
+    | `Permission denied (publickey,password)` | Ensure SSH key-based authentication is configured for the SSH_USER account, or add password authentication to SSH_OPTS. |
+    | `powermt: command not found` | Verify PowerPath is installed on the target host and the powermt binary is in the SSH_USER's PATH; check `/opt/emc/powerpath/bin/powermt`. |
 ---
 
 ## Verify

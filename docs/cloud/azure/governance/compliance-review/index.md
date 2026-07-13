@@ -84,9 +84,11 @@ Scan trigger request accepted for resource group rg-production
 ```
 
 !!! warning "Common errors"
-    **`The subscription 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' could not be found.`** — Verify the subscription ID is correct and you have access to it using `az account show`.
-    **`ResourceGroupNotFound: The resource group 'rg-production' could not be found in the subscription.`** — Confirm the resource group name exists in the target subscription with `az group list`.
-    **`AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.PolicyInsights/policyStates/triggerScan/action'.`** — Ensure your account has the Policy Insights Contributor or higher role assigned at the subscription or management group scope.
+    | Error | Fix |
+    |---|---|
+    | `The subscription 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' could not be found.` | Verify the subscription ID is correct and you have access to it using `az account show`. |
+    | `ResourceGroupNotFound: The resource group 'rg-production' could not be found in the subscription.` | Confirm the resource group name exists in the target subscription with `az group list`. |
+    | `AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.PolicyInsights/policyStates/triggerScan/action'.` | Ensure your account has the Policy Insights Contributor or higher role assigned at the subscription or management group scope. |
 ### Compliance State Values
 
 | State | Description |
@@ -147,9 +149,11 @@ require-https-only                2
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The subscription '<subscription-id>' could not be found.`** — Replace `<subscription-id>` with an actual subscription ID or use `az account set --subscription <id>` to set the default subscription.
-    **`ERROR: No registered resource providers found for location 'eastus'.`** — Ensure the subscription is active and you have Reader permissions; run `az account show` to verify authentication.
-    **`ERROR: The filter expression is invalid.`** — Verify filter syntax uses valid OData operators (`eq`, `and`, `or`) and valid property names like `complianceState` and `policyAssignmentName`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The subscription '<subscription-id>' could not be found.` | Replace `<subscription-id>` with an actual subscription ID or use `az account set --subscription <id>` to set the default subscription. |
+    | `ERROR: No registered resource providers found for location 'eastus'.` | Ensure the subscription is active and you have Reader permissions; run `az account show` to verify authentication. |
+    | `ERROR: The filter expression is invalid.` | Verify filter syntax uses valid OData operators (`eq`, `and`, `or`) and valid property names like `complianceState` and `policyAssignmentName`. |
 ## Remediation Tasks
 
 Policies with `deployIfNotExists` or `modify` effects can create remediation tasks to bring non-compliant resources into compliance automatically.
@@ -263,6 +267,8 @@ non-compliant-20240115.json
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The subscription of the context does not match the subscription in the request. Subscription id: 12345678-1234-1234-1234-123456789012`** — Replace `<subscription-id>` with your actual subscription ID or run `az account show --query id -o tsv` to retrieve it.
-    **`ERROR: This operation requires a minimum CLI version of 2.50.0. You have 2.45.0`** — Update Azure CLI with `az upgrade` to access the latest policy state filtering options.
-    **`ERROR: Authorization failed: User does not have permission to read policy compliance states`** — Ensure your account has the "Policy Insights Data Writer" or "Reader" role assigned at the subscription scope using `az role assignment create`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The subscription of the context does not match the subscription in the request. Subscription id: 12345678-1234-1234-1234-123456789012` | Replace `<subscription-id>` with your actual subscription ID or run `az account show --query id -o tsv` to retrieve it. |
+    | `ERROR: This operation requires a minimum CLI version of 2.50.0. You have 2.45.0` | Update Azure CLI with `az upgrade` to access the latest policy state filtering options. |
+    | `ERROR: Authorization failed: User does not have permission to read policy compliance states` | Ensure your account has the "Policy Insights Data Writer" or "Reader" role assigned at the subscription scope using `az role assignment create`. |

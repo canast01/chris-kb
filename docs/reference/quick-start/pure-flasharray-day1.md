@@ -57,8 +57,10 @@ pure-fa-x70-r2.corp.local     192.168.1.44    6.3.8     20230712-002
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or add the installation directory to your PATH environment variable.
-    **`Error: Unable to connect to array at 192.168.1.42`** — Verify network connectivity to the array management IP and confirm firewall rules allow access to port 443.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or add the installation directory to your PATH environment variable. |
+    | `Error: Unable to connect to array at 192.168.1.42` | Verify network connectivity to the array management IP and confirm firewall rules allow access to port 443. |
 Key fields: `array_name`, `version`, `id`. No output means SSH connectivity issue.
 
 ```bash
@@ -75,8 +77,10 @@ flasharray-backup-04          75.0T     61.2T     8.5T       3.2x            1
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or add the installation directory to your PATH environment variable.
-    **`Error: Unable to connect to array management interface`** — Verify network connectivity to the array management IP and ensure your credentials are configured in ~/.purerc or via environment variables.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or add the installation directory to your PATH environment variable. |
+    | `Error: Unable to connect to array management interface` | Verify network connectivity to the array management IP and ensure your credentials are configured in ~/.purerc or via environment variables. |
 Shows all array properties including `SafeMode` status.
 
 ### Drive Health
@@ -105,8 +109,10 @@ flasharray-01-ssd-2            PDRV.SSD1Q2R3S4T5U6W  960GB     960GB     healthy
 ```
 
 !!! warning "Common errors"
-    **`puredrive: command not found`** — Install the Pure Storage CLI tools or ensure the PATH includes the Pure management utilities directory.
-    **`Error: Unable to connect to array at <ip>`** — Verify the array hostname/IP is reachable and that you have authenticated with `pureadmin login` or set valid credentials.
+    | Error | Fix |
+    |---|---|
+    | `puredrive: command not found` | Install the Pure Storage CLI tools or ensure the PATH includes the Pure management utilities directory. |
+    | `Error: Unable to connect to array at <ip>` | Verify the array hostname/IP is reachable and that you have authenticated with `pureadmin login` or set valid credentials. |
 Sort by `status`. Any status other than `healthy` is actionable.
 
 ### Hardware Component Status
@@ -125,8 +131,10 @@ flasharray-test-01            warning   FA-250R3           5001234567890ABD0    
 ```
 
 !!! warning "Common errors"
-    **`purehw: command not found`** — Install the Pure Storage CLI tools or ensure the PATH includes the directory containing the purehw binary.
-    **`Error: Unable to connect to array management interface`** — Verify network connectivity to the FlashArray management interface and check firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `purehw: command not found` | Install the Pure Storage CLI tools or ensure the PATH includes the directory containing the purehw binary. |
+    | `Error: Unable to connect to array management interface` | Verify network connectivity to the FlashArray management interface and check firewall rules. |
 Check all hardware components — controllers, power supplies, fans, NVRAM. Any component showing `not_installed` that should be present, or `failed`, warrants a support case.
 
 ### Protection Group Schedules
@@ -164,8 +172,10 @@ pg-repl-01                    9        4      15         (none)
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or API token expired`** — Verify your Pure Storage API token is set in your environment or configuration file.
-    **`Error: Connection refused to management IP`** — Confirm the FlashArray management IP is reachable and the Pure1 REST API service is running.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or API token expired` | Verify your Pure Storage API token is set in your environment or configuration file. |
+    | `Error: Connection refused to management IP` | Confirm the FlashArray management IP is reachable and the Pure1 REST API service is running. |
 ### SafeMode Status
 
 SafeMode prevents snapshot deletion without Pure Support authorization — critical for ransomware protection.
@@ -184,8 +194,10 @@ flasharray-test-01            Enabled   True              2025-02-28T09:15:00Z
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the PATH includes the directory containing the purearray binary.
-    **`grep: (standard input) is empty`** — Verify the FlashArray is reachable and the purearray CLI is authenticated with valid credentials.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or ensure the PATH includes the directory containing the purearray binary. |
+    | `grep: (standard input) is empty` | Verify the FlashArray is reachable and the purearray CLI is authenticated with valid credentials. |
 If SafeMode is enabled, confirm who holds the authorization contact — disabling requires a support call.
 
 ### Pure1 Connection
@@ -217,8 +229,10 @@ dev-test-volume                          250GB      250GB      8.9GB           2
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or unable to connect to array`** — Verify the FlashArray management IP is reachable and your credentials are configured via `pureadmin login` or environment variables.
-    **`Error: Command 'purevol' not found`** — Install the Pure Storage Python SDK with `pip install purestorage` or ensure the Pure CLI tools are in your system PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or unable to connect to array` | Verify the FlashArray management IP is reachable and your credentials are configured via `pureadmin login` or environment variables. |
+    | `Error: Command 'purevol' not found` | Install the Pure Storage Python SDK with `pip install purestorage` or ensure the Pure CLI tools are in your system PATH. |
 Key columns: `name`, `size`, `total_used`, `data_reduction`, `unique`. Note any volume consuming significantly more unique space than expected (low data reduction ratio may indicate uncompressible data).
 
 ### Check Replication Lag
@@ -238,8 +252,10 @@ pg-test-01                    flasharray-dr.example.com     Snap→Repl  enabled
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or unable to connect to array`** — Verify the FlashArray management IP is reachable and your API token is set via `export PURE_API_TOKEN=<token>`.
-    **`Error: purepgroup: command not found`** — Install the Pure Storage Python SDK with `pip install purestorage` and ensure the CLI tools are in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or unable to connect to array` | Verify the FlashArray management IP is reachable and your API token is set via `export PURE_API_TOKEN=<token>`. |
+    | `Error: purepgroup: command not found` | Install the Pure Storage Python SDK with `pip install purestorage` and ensure the CLI tools are in your PATH. |
 The `lag` field shows how far behind the remote copy is from the source. For synchronous replication (ActiveCluster), lag should be near-zero.
 
 For asynchronous protection groups:
@@ -258,8 +274,10 @@ pg-archive-cold               flasharray-02       flasharray-03        0%
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or unable to connect to array`** — Verify your Pure Storage array credentials are configured via `pureadmin login` or check the PURE_IP and PURE_API_TOKEN environment variables.
-    **`Error: No protection groups found with active transfers`** — This is expected if no replication or migration is currently in progress; run `purepgroup list` to see all protection groups regardless of transfer status.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or unable to connect to array` | Verify your Pure Storage array credentials are configured via `pureadmin login` or check the PURE_IP and PURE_API_TOKEN environment variables. |
+    | `Error: No protection groups found with active transfers` | This is expected if no replication or migration is currently in progress; run `purepgroup list` to see all protection groups regardless of transfer status. |
 Shows current in-flight replication transfer status and estimated completion.
 
 ### Verify Snapshot Schedule
@@ -288,8 +306,10 @@ protection-group-prod.5       2024-01-15T04:30:09Z     2.3TB
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown protection group '<pgroup-name>'`** — Replace `<pgroup-name>` with an actual protection group name from the output of `purepgroup list`.
-    **`Error: You do not have permission to perform this operation`** — Verify your Pure Storage API token or credentials have sufficient privileges for snapshot operations.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown protection group '<pgroup-name>'` | Replace `<pgroup-name>` with an actual protection group name from the output of `purepgroup list`. |
+    | `Error: You do not have permission to perform this operation` | Verify your Pure Storage API token or credentials have sufficient privileges for snapshot operations. |
 Confirm:
 
 1. Snapshots exist for the expected time periods (hourly, daily, weekly)
@@ -322,9 +342,11 @@ host-prod-01     backup-vol-002   2
 ```
 
 !!! warning "Common errors"
-    **`Error: Host 'host-prod-01' already exists`** — Use `purehost list` to verify the hostname doesn't already exist, or delete it first with `purehost delete <hostname>`.
-    **`Error: Volume '<volume-name>' not found`** — Confirm the volume name is correct with `purehost list --vol` and ensure it exists on the array.
-    **`Error: Host '<hostname>' not found`** — Verify the hostname was created successfully in the previous step and check spelling with `purehost list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host 'host-prod-01' already exists` | Use `purehost list` to verify the hostname doesn't already exist, or delete it first with `purehost delete <hostname>`. |
+    | `Error: Volume '<volume-name>' not found` | Confirm the volume name is correct with `purehost list --vol` and ensure it exists on the array. |
+    | `Error: Host '<hostname>' not found` | Verify the hostname was created successfully in the previous step and check spelling with `purehost list`. |
 ---
 
 ## See Also

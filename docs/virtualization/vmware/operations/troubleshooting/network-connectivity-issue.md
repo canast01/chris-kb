@@ -79,8 +79,10 @@ vmk1          192.168.100.50       ::1           1500 00:0c:29:a4:2b:1d  true
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the host. The host may not be running, or the login credentials may not be valid.`** — Verify ESXi host is reachable and you have valid credentials; if running locally on the host, ensure you're in the DCUI or SSH session.
-    **`Unknown option or malformed command.`** — Check esxcli syntax; use `esxcli network ip interface list --help` to verify correct command format for your ESXi version.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the host. The host may not be running, or the login credentials may not be valid.` | Verify ESXi host is reachable and you have valid credentials; if running locally on the host, ensure you're in the DCUI or SSH session. |
+    | `Unknown option or malformed command.` | Check esxcli syntax; use `esxcli network ip interface list --help` to verify correct command format for your ESXi version. |
 **Step 2 — Verify MTU consistency** — vMotion requires jumbo frames (MTU 9000) if configured; a mismatch between the VMkernel adapter, vSwitch, and physical switch will cause failures:
 
 ```bash
@@ -112,9 +114,11 @@ round-trip min/avg/max = 2.156/2.297/2.401 ms
 ```
 
 !!! warning "Common errors"
-    **`Fragmentation is occurring; packets are fragmented`** — Reduce the payload size or verify the physical switch and vSAN network are configured for jumbo frames (MTU 9000).
-    **`vmk1: No such device`** — Verify the vMotion VMkernel adapter exists with `esxcli network ip interface list` and use the correct interface name.
-    **`100% packet loss`** — Check network connectivity between hosts, verify the destination IP is reachable, and confirm firewall rules allow ICMP traffic on the vMotion network.
+    | Error | Fix |
+    |---|---|
+    | `Fragmentation is occurring; packets are fragmented` | Reduce the payload size or verify the physical switch and vSAN network are configured for jumbo frames (MTU 9000). |
+    | `vmk1: No such device` | Verify the vMotion VMkernel adapter exists with `esxcli network ip interface list` and use the correct interface name. |
+    | `100% packet loss` | Check network connectivity between hosts, verify the destination IP is reachable, and confirm firewall rules allow ICMP traffic on the vMotion network. |
 **Step 3 — Check error details in vCenter Tasks:**
 
 - "The migration was not attempted because no valid network is available" → No vMotion vmk on the destination
@@ -161,8 +165,10 @@ DV-vMotion                        10  DSwitch-Mgmt
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the host. Error: Connection refused`** — Verify ESXi host is reachable and SSH is enabled (Configuration > Security Profile > Services > SSH).
-    **`This command is not supported on this system`** — Confirm you are running the command directly on ESXi; distributed vSwitch commands require vCenter connectivity or must be run from the vCenter CLI.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the host. Error: Connection refused` | Verify ESXi host is reachable and SSH is enabled (Configuration > Security Profile > Services > SSH). |
+    | `This command is not supported on this system` | Confirm you are running the command directly on ESXi; distributed vSwitch commands require vCenter connectivity or must be run from the vCenter CLI. |
 Confirm the port group VLAN ID matches the upstream switch configuration. A recent switch-side VLAN change will strand all VMs on that port group.
 
 **Step 3 — Check physical uplinks:**
@@ -189,8 +195,10 @@ vSwitch1                iSCSI-Network                       9000    False       
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Ensure you are running this command directly on an ESXi host via SSH or console, not from a vCenter server or external system.
-    **`Unable to find a matching nic`** — Verify the vmnic naming is correct (vmnic0, vmnic1, etc.) and that the network stack is running with `esxcli system module list | grep vsanmgmt`.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Ensure you are running this command directly on an ESXi host via SSH or console, not from a vCenter server or external system. |
+    | `Unable to find a matching nic` | Verify the vmnic naming is correct (vmnic0, vmnic1, etc.) and that the network stack is running with `esxcli system module list | grep vsanmgmt`. |
 **Step 4 — Check NIC teaming policy** — if an uplink failed and the teaming policy does not failover correctly:
 
 ```bash
@@ -211,8 +219,10 @@ Network Failure Detection: Link Status only
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or esxcli command`** — Verify you are running this command on an ESXi host with network management enabled, not from vCenter; use SSH to connect directly to the ESXi host.
-    **`Error: Could not find vswitch named vSwitch0`** — Check the correct vSwitch name using `esxcli network vswitch standard list` and replace vSwitch0 with the actual name.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or esxcli command` | Verify you are running this command on an ESXi host with network management enabled, not from vCenter; use SSH to connect directly to the ESXi host. |
+    | `Error: Could not find vswitch named vSwitch0` | Check the correct vSwitch name using `esxcli network vswitch standard list` and replace vSwitch0 with the actual name. |
 ---
 
 ## Host Management Network Issue
@@ -246,8 +256,10 @@ Destination     Netmask         Gateway         Device
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace network.ip.interface.ipv4.get`** — Verify the ESXi version supports this esxcli namespace; use `esxcli network ip interface list` as an alternative on older versions.
-    **`Error: Unable to connect to the host`** — Confirm SSH is fully restored and the management network (vmk0) is up by checking `esxcli network ip interface list` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace network.ip.interface.ipv4.get` | Verify the ESXi version supports this esxcli namespace; use `esxcli network ip interface list` as an alternative on older versions. |
+    | `Error: Unable to connect to the host` | Confirm SSH is fully restored and the management network (vmk0) is up by checking `esxcli network ip interface list` first. |
 ---
 
 ## NSX Issues
@@ -291,9 +303,11 @@ nsx-mpa is running
 ```
 
 !!! warning "Common errors"
-    **`vmkping: Unknown host <remote-tep-ip>`** — Replace `<remote-tep-ip>` with an actual TEP IP address (e.g., 172.16.50.25) that is reachable from the source host.
-    **`nsx-opsagent is not running`** — Restart the NSX agent with `/etc/init.d/nsx-opsagent start` and verify NSX Manager connectivity and licensing.
-    **`Unknown command or namespace: network ip interface`** — Verify you are running this command directly on an ESXi host (not vCenter); use `ssh root@<esxi-host>` to connect first.
+    | Error | Fix |
+    |---|---|
+    | `vmkping: Unknown host <remote-tep-ip>` | Replace `<remote-tep-ip>` with an actual TEP IP address (e.g., 172.16.50.25) that is reachable from the source host. |
+    | `nsx-opsagent is not running` | Restart the NSX agent with `/etc/init.d/nsx-opsagent start` and verify NSX Manager connectivity and licensing. |
+    | `Unknown command or namespace: network ip interface` | Verify you are running this command directly on an ESXi host (not vCenter); use `ssh root@<esxi-host>` to connect first. |
 From NSX Manager UI:
 - System → Fabric → Hosts — check each transport node status
 - System → Fabric → Edges — check edge node status and tunnel state
@@ -342,9 +356,11 @@ round-trip min/avg/max = 2.089/2.134/3.421 ms
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not get nic stats for vmnic0`** — Verify the vmnic exists with `esxcli network nic list` and confirm you have root/admin privileges.
-    **`Unable to resolve destination-ip`** — Replace `<destination-ip>` with an actual reachable IP address on the network segment being tested.
-    **`vmkping: command not found`** — Confirm you are running this command directly on the ESXi host console or via SSH, not from vCenter.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not get nic stats for vmnic0` | Verify the vmnic exists with `esxcli network nic list` and confirm you have root/admin privileges. |
+    | `Unable to resolve destination-ip` | Replace `<destination-ip>` with an actual reachable IP address on the network segment being tested. |
+    | `vmkping: command not found` | Confirm you are running this command directly on the ESXi host console or via SSH, not from vCenter. |
 Common causes:
 
 | Cause | Indicator | Fix |

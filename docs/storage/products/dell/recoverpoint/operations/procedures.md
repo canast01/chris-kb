@@ -192,9 +192,11 @@ Active Alarms:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to RPA cluster at 192.168.42.10`** — Verify network connectivity and that the RecoverPoint management interface is accessible on port 7225.
-    **`Error: Group 7a3f8c2e-91b4-4d2a-b6f1-2c5e9d1a4b7f is in Paused state`** — Resume replication using `groups resume <group-id>` before confirming production role transition.
-    **`Error: Stale image access session detected on copy copy-dr-02`** — Disconnect the session with `image access disconnect <session-id>` before proceeding with failover.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to RPA cluster at 192.168.42.10` | Verify network connectivity and that the RecoverPoint management interface is accessible on port 7225. |
+    | `Error: Group 7a3f8c2e-91b4-4d2a-b6f1-2c5e9d1a4b7f is in Paused state` | Resume replication using `groups resume <group-id>` before confirming production role transition. |
+    | `Error: Stale image access session detected on copy copy-dr-02` | Disconnect the session with `image access disconnect <session-id>` before proceeding with failover. |
 | Check | Expected Result |
 |---|---|
 | DR copy role | Now marked as Production |
@@ -281,9 +283,11 @@ Consistency Group Status Summary:
 ```
 
 !!! warning "Common errors"
-    **`Error: Consistency group '<cg_name>' not found`** — Replace `<cg_name>` with the actual consistency group name from your RecoverPoint configuration.
-    **`Error: Reverse replication failed — primary site storage capacity exceeded`** — Verify primary site has sufficient free storage capacity before initiating reverse replication.
-    **`Error: Image access denied — copy is currently in use by another operation`** — Wait for any ongoing snapshots or replications to complete before enabling image access.
+    | Error | Fix |
+    |---|---|
+    | `Error: Consistency group '<cg_name>' not found` | Replace `<cg_name>` with the actual consistency group name from your RecoverPoint configuration. |
+    | `Error: Reverse replication failed — primary site storage capacity exceeded` | Verify primary site has sufficient free storage capacity before initiating reverse replication. |
+    | `Error: Image access denied — copy is currently in use by another operation` | Wait for any ongoing snapshots or replications to complete before enabling image access. |
 ---
 
 ## Recovery
@@ -357,9 +361,11 @@ HR_Systems                 ACTIVE         CONSISTENT     2024-01-15 06:13:45 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: CG 'Production_DB' not found or invalid copy name 'DR_Copy'`** — Verify the consistency group name and copy name match exactly using `group list_bookmarks --gname <cg_name>` and check for typos.
-    **`Error: Image access already active on CG 'Production_DB'. Disable current access before enabling new access.`** — Run `group disable-image-access --gname Production_DB` first, then retry the enable command.
-    **`Error: Bookmark 'prod_db_hourly_2024_01_15_0600' is older than RPO window and unavailable`** — Select a more recent bookmark from the list or wait for newer snapshots to be created.
+    | Error | Fix |
+    |---|---|
+    | `Error: CG 'Production_DB' not found or invalid copy name 'DR_Copy'` | Verify the consistency group name and copy name match exactly using `group list_bookmarks --gname <cg_name>` and check for typos. |
+    | `Error: Image access already active on CG 'Production_DB'. Disable current access before enabling new access.` | Run `group disable-image-access --gname Production_DB` first, then retry the enable command. |
+    | `Error: Bookmark 'prod_db_hourly_2024_01_15_0600' is older than RPO window and unavailable` | Select a more recent bookmark from the list or wait for newer snapshots to be created. |
 ### Full Failover — Production Site Down
 
 ![Full Failover — Production Site Down](../../../../../assets/recoverpoint-proc-full-failover-production-site-down.svg)
@@ -413,9 +419,11 @@ Consistency Group Status Detail:
 ```
 
 !!! warning "Common errors"
-    **`Error: Production copy still reachable. Disable before recovery.`** — Verify production site is truly offline before attempting recovery, or use `--force-recovery` flag if confirmed unreachable.
-    **`Error: Image access mode 'logged' requires sufficient journal capacity. Current: 87%.`** — Expand the journal volume or wait for synchronization to reduce journal usage before enabling logged access.
-    **`Error: Consistency group prod_db_01 has pending writes. Cannot promote to production.`** — Flush all pending writes with `group flush --gname prod_db_01` before initiating recovery.
+    | Error | Fix |
+    |---|---|
+    | `Error: Production copy still reachable. Disable before recovery.` | Verify production site is truly offline before attempting recovery, or use `--force-recovery` flag if confirmed unreachable. |
+    | `Error: Image access mode 'logged' requires sufficient journal capacity. Current: 87%.` | Expand the journal volume or wait for synchronization to reduce journal usage before enabling logged access. |
+    | `Error: Consistency group prod_db_01 has pending writes. Cannot promote to production.` | Flush all pending writes with `group flush --gname prod_db_01` before initiating recovery. |
 | Step | Command | Verification |
 |---|---|---|
 | Enable image access | `group enable-image-access` | State: ImageAccess |
@@ -468,9 +476,11 @@ Image access disabled for consistency group 'prod-db-cg'
 ```
 
 !!! warning "Common errors"
-    **`Error: consistency group '<cg_name>' not found`** — Replace `<cg_name>` with the actual consistency group name from the `group list_bookmarks` output.
-    **`Error: image timestamp '2026-05-06 14:30:00' does not exist for copy 'DR_Copy'`** — Verify the timestamp matches exactly one of the available bookmarks listed by `journals list` and use the correct date-time format.
-    **`Error: cannot enable image access — copy 'DR_Copy' is already in use`** — Wait for any ongoing recovery operations to complete or disable access on the copy first with `group disable-image-access`.
+    | Error | Fix |
+    |---|---|
+    | `Error: consistency group '<cg_name>' not found` | Replace `<cg_name>` with the actual consistency group name from the `group list_bookmarks` output. |
+    | `Error: image timestamp '2026-05-06 14:30:00' does not exist for copy 'DR_Copy'` | Verify the timestamp matches exactly one of the available bookmarks listed by `journals list` and use the correct date-time format. |
+    | `Error: cannot enable image access — copy 'DR_Copy' is already in use` | Wait for any ongoing recovery operations to complete or disable access on the copy first with `group disable-image-access`. |
 ### Post-Recovery Validation
 
 ![Post-Recovery Validation](../../../../../assets/recoverpoint-proc-post-recovery-validation.svg)
@@ -523,9 +533,11 @@ Last Check: 2024-01-15 14:35:42 UTC
 ```
 
 !!! warning "Common errors"
-    **`groups: command not found`** — Verify you are logged into the RecoverPoint CLI console or source the appropriate environment setup script.
-    **`Group <cg_name> not found or invalid`** — Replace `<cg_name>` with the actual consistency group name (e.g., `production-db-cg`) and verify the group exists with `groups list`.
-    **`RPO threshold exceeded: current 450s > SLA 300s`** — Check replication link bandwidth and target array performance; if persistent, increase journal size or adjust SLA target.
+    | Error | Fix |
+    |---|---|
+    | `groups: command not found` | Verify you are logged into the RecoverPoint CLI console or source the appropriate environment setup script. |
+    | `Group <cg_name> not found or invalid` | Replace `<cg_name>` with the actual consistency group name (e.g., `production-db-cg`) and verify the group exists with `groups list`. |
+    | `RPO threshold exceeded: current 450s > SLA 300s` | Check replication link bandwidth and target array performance; if persistent, increase journal size or adjust SLA target. |
 ### Recovery RTO/RPO Reference
 
 ![Recovery RTO/RPO Reference](../../../../../assets/recoverpoint-proc-recovery-rto-rpo-reference.svg)
@@ -557,9 +569,11 @@ Last sync: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Consistency group 'prod-db-cg' not found`** — Verify the consistency group name with `list_consistency_groups` and use the exact name in the `-g` parameter.
-    **`Error: Volume vol-0a7f2c9e1b3d5f8g is already a member of group 'backup-cg'`** — Remove the volume from its current consistency group first using `remove_volumes_from_group` before adding it to a different group.
-    **`Error: Cannot add volume to group during active replication`** — Wait for the current replication cycle to complete or pause replication with `pause_replication -g <cg-name>` before adding volumes.
+    | Error | Fix |
+    |---|---|
+    | `Error: Consistency group 'prod-db-cg' not found` | Verify the consistency group name with `list_consistency_groups` and use the exact name in the `-g` parameter. |
+    | `Error: Volume vol-0a7f2c9e1b3d5f8g is already a member of group 'backup-cg'` | Remove the volume from its current consistency group first using `remove_volumes_from_group` before adding it to a different group. |
+    | `Error: Cannot add volume to group during active replication` | Wait for the current replication cycle to complete or pause replication with `pause_replication -g <cg-name>` before adding volumes. |
 After adding volumes, verify the CG protection status to confirm the new volumes are being replicated:
 
 ```bash
@@ -584,9 +598,11 @@ Failover Ready: YES
 ```
 
 !!! warning "Common errors"
-    **`Error: Group '<cg-name>' not found`** — Verify the group name with `group list` and use the exact name from the output.
-    **`Error: Connection timeout to RecoverPoint appliance`** — Check network connectivity to the RecoverPoint management interface and verify credentials are still valid.
-    **`Error: Insufficient permissions to query group status`** — Ensure your user account has the appropriate role assigned in RecoverPoint's access control settings.
+    | Error | Fix |
+    |---|---|
+    | `Error: Group '<cg-name>' not found` | Verify the group name with `group list` and use the exact name from the output. |
+    | `Error: Connection timeout to RecoverPoint appliance` | Check network connectivity to the RecoverPoint management interface and verify credentials are still valid. |
+    | `Error: Insufficient permissions to query group status` | Ensure your user account has the appropriate role assigned in RecoverPoint's access control settings. |
 Confirm the CG returns to ACTIVE state with all volumes included before closing the change. If the CG shows a degraded state after adding volumes, check storage connectivity and journal capacity.
 
 ---

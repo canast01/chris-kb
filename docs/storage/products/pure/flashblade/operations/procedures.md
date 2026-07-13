@@ -98,8 +98,10 @@ fs-weekly-backup                    data-vol-01         2024-01-08T00:15:33Z    
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid filter syntax`** — Verify filter format matches `--filter "source='filesystem_name'"` with proper quote escaping.
-    **`Error: Filesystem not found`** — Confirm the filesystem name exists by running `purefb fs list` and use the exact name from the output.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid filter syntax` | Verify filter format matches `--filter "source='filesystem_name'"` with proper quote escaping. |
+    | `Error: Filesystem not found` | Confirm the filesystem name exists by running `purefb fs list` and use the exact name from the output. |
 ### Create a Snapshot
 
 ![Create a Snapshot](../../../../../assets/flashblade-proc-create-a-snapshot.svg)
@@ -119,9 +121,11 @@ Source: data-prod
 ```
 
 !!! warning "Common errors"
-    **`Error: Filesystem 'data-prod' not found`** — Verify the filesystem name with `purefb fs list` and ensure you have the correct spelling.
-    **`Error: Authentication failed`** — Confirm your Pure FlashBlade credentials are configured with `purefb login` and that your API token has not expired.
-    **`Error: Snapshot name already exists`** — Choose a different suffix value or delete the existing snapshot with `purefb fs-snapshot destroy --name <snap_name>` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Filesystem 'data-prod' not found` | Verify the filesystem name with `purefb fs list` and ensure you have the correct spelling. |
+    | `Error: Authentication failed` | Confirm your Pure FlashBlade credentials are configured with `purefb login` and that your API token has not expired. |
+    | `Error: Snapshot name already exists` | Choose a different suffix value or delete the existing snapshot with `purefb fs-snapshot destroy --name <snap_name>` first. |
 Example:
 ```bash
 purefb fs-snapshot create --source prod-nfs --suffix daily-2026-05-06
@@ -137,9 +141,11 @@ Size: 2.3TB
 ```
 
 !!! warning "Common errors"
-    **`Error: Filesystem 'prod-nfs' not found`** — Verify the source filesystem name exists by running `purefb fs list` and use the correct name.
-    **`Error: Authentication failed`** — Ensure your Pure FlashBlade credentials are configured correctly via `purefb login` or check that your API token has not expired.
-    **`Error: Snapshot name 'prod-nfs.daily-2026-05-06' already exists`** — Use a unique suffix or timestamp; check existing snapshots with `purefb fs-snapshot list --source prod-nfs`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Filesystem 'prod-nfs' not found` | Verify the source filesystem name exists by running `purefb fs list` and use the correct name. |
+    | `Error: Authentication failed` | Ensure your Pure FlashBlade credentials are configured correctly via `purefb login` or check that your API token has not expired. |
+    | `Error: Snapshot name 'prod-nfs.daily-2026-05-06' already exists` | Use a unique suffix or timestamp; check existing snapshots with `purefb fs-snapshot list --source prod-nfs`. |
 ### Accessing Snapshot Data
 
 ![Accessing Snapshot Data](../../../../../assets/flashblade-proc-accessing-snapshot-data.svg)
@@ -167,8 +173,10 @@ hourly.5
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/mnt/<fs_mount>/.snapshot/': No such file or directory`** — Replace `<fs_mount>` with the actual mount point name (e.g., `/mnt/data/.snapshot/`).
-    **`Permission denied`** — Ensure your user has read permissions on the mount point; use `sudo ls /mnt/<fs_mount>/.snapshot/` if needed.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/mnt/<fs_mount>/.snapshot/': No such file or directory` | Replace `<fs_mount>` with the actual mount point name (e.g., `/mnt/data/.snapshot/`). |
+    | `Permission denied` | Ensure your user has read permissions on the mount point; use `sudo ls /mnt/<fs_mount>/.snapshot/` if needed. |
 Users can browse and copy files directly from the `.snapshot` path without administrator involvement.
 
 ### Restore a File System from Snapshot
@@ -192,9 +200,11 @@ Current progress: 34%
 ```
 
 !!! warning "Common errors"
-    **`Error: Filesystem 'data' is in use by 1 active NFS client(s). Cannot restore with --overwrite-fs flag.`** — Unmount or disconnect all clients from the filesystem before attempting the restore operation.
-    **`Error: Snapshot 'data.snap-20240115-prod' not found on array.`** — Verify the snapshot name exists using `purefb fs-snapshot list <fs_name>` and use the correct snapshot identifier.
-    **`Error: Insufficient space available. Snapshot size (2.5 TiB) exceeds available capacity (1.8 TiB).`** — Free up space on the array or expand the filesystem capacity before retrying the restore.
+    | Error | Fix |
+    |---|---|
+    | `Error: Filesystem 'data' is in use by 1 active NFS client(s). Cannot restore with --overwrite-fs flag.` | Unmount or disconnect all clients from the filesystem before attempting the restore operation. |
+    | `Error: Snapshot 'data.snap-20240115-prod' not found on array.` | Verify the snapshot name exists using `purefb fs-snapshot list <fs_name>` and use the correct snapshot identifier. |
+    | `Error: Insufficient space available. Snapshot size (2.5 TiB) exceeds available capacity (1.8 TiB).` | Free up space on the array or expand the filesystem capacity before retrying the restore. |
 > This replaces all current data on the file system — ensure this is intentional.
 
 ### Copy a Snapshot to a New File System
@@ -216,9 +226,11 @@ Estimated time remaining: 2m 30s
 ```
 
 !!! warning "Common errors"
-    **`Error: Snapshot 'data-prod.daily-2024-01-15' not found`** — Verify the snapshot exists with `purefb fs-snapshot list` and confirm the naming format is `<filesystem>.<snapshot>`.
-    **`Error: Filesystem 'data-prod-clone' already exists`** — Use a unique name for the target filesystem or remove the existing one with `purefb fs delete data-prod-clone`.
-    **`Error: Insufficient space on array`** — Check available capacity with `purefb hardware list` and ensure the target filesystem size fits within remaining array capacity.
+    | Error | Fix |
+    |---|---|
+    | `Error: Snapshot 'data-prod.daily-2024-01-15' not found` | Verify the snapshot exists with `purefb fs-snapshot list` and confirm the naming format is `<filesystem>.<snapshot>`. |
+    | `Error: Filesystem 'data-prod-clone' already exists` | Use a unique name for the target filesystem or remove the existing one with `purefb fs delete data-prod-clone`. |
+    | `Error: Insufficient space on array` | Check available capacity with `purefb hardware list` and ensure the target filesystem size fits within remaining array capacity. |
 Creates a new independent file system from the snapshot without affecting the original.
 
 ### Delete a Snapshot
@@ -242,8 +254,10 @@ Snapshot eradicated permanently. This action cannot be undone.
 ```
 
 !!! warning "Common errors"
-    **`Error: Snapshot '<fs_name>.<snap_name>' not found`** — Verify the snapshot exists with `purefb fs-snapshot list` and confirm the exact naming format matches.
-    **`Error: Permission denied`** — Ensure your user account has administrative privileges on the FlashBlade array or request elevated access from your storage administrator.
+    | Error | Fix |
+    |---|---|
+    | `Error: Snapshot '<fs_name>.<snap_name>' not found` | Verify the snapshot exists with `purefb fs-snapshot list` and confirm the exact naming format matches. |
+    | `Error: Permission denied` | Ensure your user account has administrative privileges on the FlashBlade array or request elevated access from your storage administrator. |
 ### Snapshot Policy (Automated Scheduling)
 
 ![Snapshot Policy (Automated Scheduling)](../../../../../assets/flashblade-proc-snapshot-policy-automated-scheduling.svg)
@@ -269,9 +283,11 @@ snapshot-hourly              true     2024-01-01T00:00:00Z       2024-01-15T07:3
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused — unable to reach management IP`** — Verify the FlashBlade management IP is reachable and the purefb CLI is configured with the correct target via `purefb list --address`.
-    **`Error: Authentication failed — invalid API token`** — Regenerate and export a valid API token using `export PUREFB_API_TOKEN=<new_token>` or reconfigure credentials with `purefb login`.
-    **`Error: Command 'purefb' not found`** — Install the Pure Storage Python SDK and CLI tools using `pip install purity-fb` and ensure the installation directory is in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused — unable to reach management IP` | Verify the FlashBlade management IP is reachable and the purefb CLI is configured with the correct target via `purefb list --address`. |
+    | `Error: Authentication failed — invalid API token` | Regenerate and export a valid API token using `export PUREFB_API_TOKEN=<new_token>` or reconfigure credentials with `purefb login`. |
+    | `Error: Command 'purefb' not found` | Install the Pure Storage Python SDK and CLI tools using `pip install purity-fb` and ensure the installation directory is in your PATH. |
 ### Common Issues
 
 ![Common Issues](../../../../../assets/flashblade-proc-common-issues.svg)
@@ -327,9 +343,11 @@ mount.nfs: mounting 172.16.50.100:/prod-data
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: No such file or directory`** — Verify the FlashBlade data VIP is reachable with `ping 172.16.50.100` and confirm the file system name matches exactly in the mount command.
-    **`pureds: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure CLI binary directory (typically `/opt/pureapp/bin`).
-    **`Export policy rule add failed: Client CIDR invalid`** — Use valid CIDR notation (e.g., `10.20.0.0/16` instead of `10.20.0.0`) and verify the subnet mask is correct.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: No such file or directory` | Verify the FlashBlade data VIP is reachable with `ping 172.16.50.100` and confirm the file system name matches exactly in the mount command. |
+    | `pureds: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure CLI binary directory (typically `/opt/pureapp/bin`). |
+    | `Export policy rule add failed: Client CIDR invalid` | Use valid CIDR notation (e.g., `10.20.0.0/16` instead of `10.20.0.0`) and verify the subnet mask is correct. |
 Verify the mount is accessible and confirm read/write permissions from the client before closing the change.
 
 ## Create an Object Store Bucket
@@ -365,9 +383,11 @@ An error occurred (InvalidAccessKeyId) when calling the ListBucket operation: Th
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidAccessKeyId) when calling the ListBucket operation: The Access Key ID you provided does not exist in our records.`** — Verify the AWS credentials are configured for the correct S3 account and that the access key has been created in Purity//FB under Object Store → Access Keys.
-    **`An error occurred (AccessDenied) when calling the ListBucket operation: Access Denied`** — Confirm the bucket access policy has been applied to the user's access key and includes the s3:ListBucket permission for the target bucket.
-    **`purebucket: command not found`** — Install or source the Pure Storage CLI tools, or verify the purebucket binary is in your PATH by running `which purebucket`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidAccessKeyId) when calling the ListBucket operation: The Access Key ID you provided does not exist in our records.` | Verify the AWS credentials are configured for the correct S3 account and that the access key has been created in Purity//FB under Object Store → Access Keys. |
+    | `An error occurred (AccessDenied) when calling the ListBucket operation: Access Denied` | Confirm the bucket access policy has been applied to the user's access key and includes the s3:ListBucket permission for the target bucket. |
+    | `purebucket: command not found` | Install or source the Pure Storage CLI tools, or verify the purebucket binary is in your PATH by running `which purebucket`. |
 Confirm the bucket listing returns without error. For application integration, create an object store user and generate access keys: **Object Store → Users → Create User → Generate Access Key**.
 
 ## Create a Snapshot Schedule
@@ -409,8 +429,10 @@ prod-data.1704078000                    prod-data           2024-01-01 15:00:00 
 ```
 
 !!! warning "Common errors"
-    **`Error: Schedule '<sched>' already exists`** — Use a unique schedule name or delete the existing schedule with `puresnapshot schedule delete --name <sched>`.
-    **`Error: Filesystem '<name>' not found`** — Verify the filesystem exists with `purefb fs list` and use the correct filesystem name in the protection policy.
+    | Error | Fix |
+    |---|---|
+    | `Error: Schedule '<sched>' already exists` | Use a unique schedule name or delete the existing schedule with `puresnapshot schedule delete --name <sched>`. |
+    | `Error: Filesystem '<name>' not found` | Verify the filesystem exists with `purefb fs list` and use the correct filesystem name in the protection policy. |
 Adjust `--every` and `--keep-for` values to match the RPO requirement. Longer retention periods consume more capacity — monitor array free space after enabling the schedule.
 
 ## Configure Replication to a Remote FlashBlade
@@ -456,9 +478,11 @@ fs-logs-to-dr       syncing     156 MB      423.8 GB            87%
 ```
 
 !!! warning "Common errors"
-    **`Error: Target flashblade-dr is unreachable`** — Verify the target FlashBlade IP address is correct and reachable from the source array using `ping <ip>`.
-    **`Error: Filesystem fs-prod does not exist on target`** — Create the target filesystem first with `purefilesystem create --name fs-prod` on the target FlashBlade before creating the replication job.
-    **`Error: Replication job already exists for this source-target pair`** — Delete the existing job with `purefilecopy delete --name fs-prod-to-dr` before creating a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: Target flashblade-dr is unreachable` | Verify the target FlashBlade IP address is correct and reachable from the source array using `ping <ip>`. |
+    | `Error: Filesystem fs-prod does not exist on target` | Create the target filesystem first with `purefilesystem create --name fs-prod` on the target FlashBlade before creating the replication job. |
+    | `Error: Replication job already exists for this source-target pair` | Delete the existing job with `purefilecopy delete --name fs-prod-to-dr` before creating a new one. |
 Confirm the replication lag is within the RPO requirement. For Active-Active configurations where both sites serve I/O, use ActiveDR failover procedures rather than a simple file copy.
 
 ## Expand a File System
@@ -483,9 +507,11 @@ data-store-01   50T       12.3T     37.7T      50T          healthy
 ```
 
 !!! warning "Common errors"
-    **`Error: File system '<name>' not found`** — Verify the file system name matches exactly using `pureds list` without filters.
-    **`Error: New size must be larger than current size`** — Ensure the new size value is greater than the current provisioned capacity shown in the list output.
-    **`Error: Insufficient capacity on array`** — Check available physical capacity on the FlashBlade array using `purearray list` before attempting expansion.
+    | Error | Fix |
+    |---|---|
+    | `Error: File system '<name>' not found` | Verify the file system name matches exactly using `pureds list` without filters. |
+    | `Error: New size must be larger than current size` | Ensure the new size value is greater than the current provisioned capacity shown in the list output. |
+    | `Error: Insufficient capacity on array` | Check available physical capacity on the FlashBlade array using `purearray list` before attempting expansion. |
 No downtime is required. NFS clients see the new capacity immediately. Confirm the updated size is reflected in the `df -h` output from a mounted client. If the file system has a snapshot policy, verify that snapshot creation continues normally after the expansion.
 
 ---
@@ -512,9 +538,11 @@ Name                    Size        NFS Enabled    SMB Enabled    Data Reduction
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid size format '<size>'. Use format like 10T, 100G, etc.`** — Ensure the size parameter uses valid units (T, G, M) without spaces between the number and unit.
-    **`Error: File system '<name>' already exists`** — Choose a unique file system name or delete the existing file system before recreating it.
-    **`Error: Insufficient capacity on array`** — Verify available capacity on the FlashBlade array using `purefb info` before creating the file system.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid size format '<size>'. Use format like 10T, 100G, etc.` | Ensure the size parameter uses valid units (T, G, M) without spaces between the number and unit. |
+    | `Error: File system '<name>' already exists` | Choose a unique file system name or delete the existing file system before recreating it. |
+    | `Error: Insufficient capacity on array` | Verify available capacity on the FlashBlade array using `purefb info` before creating the file system. |
 GUI path: **Storage → File Systems → Create**. Set a hard limit (enforced) or soft limit (advisory with grace period) at creation time.
 
 ### Configure an NFS Export
@@ -554,8 +582,10 @@ Client              Access       Security  Anonymous UID
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy '<policy-name>' not found`** — Verify the policy exists with `purefb nfs-export-policy list` and use the correct name.
-    **`Error: Invalid CIDR notation for client address`** — Ensure the client parameter uses valid CIDR notation (e.g., `10.0.0.0/24` not `10.0.0.0-10.0.0.255`).
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy '<policy-name>' not found` | Verify the policy exists with `purefb nfs-export-policy list` and use the correct name. |
+    | `Error: Invalid CIDR notation for client address` | Ensure the client parameter uses valid CIDR notation (e.g., `10.0.0.0/24` not `10.0.0.0-10.0.0.255`). |
 Test from a client: `mount -t nfs <fb-data-vip>:/<name> /mnt/test` and confirm read-write access.
 
 ### Configure an SMB Share
@@ -590,9 +620,11 @@ Applied successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: File system <name> not found`** — Verify the file system exists with `purefb fs list` and use the correct name.
-    **`Error: SMB is not licensed on this array`** — Contact Pure Storage support to enable the SMB protocol license on your FlashBlade.
-    **`Error: User DOMAIN\AdminGroup not found or invalid format`** — Ensure the domain user/group exists and use the format `DOMAIN\username` with proper escaping or quotes.
+    | Error | Fix |
+    |---|---|
+    | `Error: File system <name> not found` | Verify the file system exists with `purefb fs list` and use the correct name. |
+    | `Error: SMB is not licensed on this array` | Contact Pure Storage support to enable the SMB protocol license on your FlashBlade. |
+    | `Error: User DOMAIN\AdminGroup not found or invalid format` | Ensure the domain user/group exists and use the format `DOMAIN\username` with proper escaping or quotes. |
 Verify from a Windows client: `net use \\<fb-mgmt>\<share>` — confirm the share maps successfully and files are accessible.
 
 ### Create an Object Store Bucket
@@ -622,9 +654,11 @@ An error occurred (InvalidAccessKeyId) when calling the ListBucket operation: Th
 ```
 
 !!! warning "Common errors"
-    **`bucket-name already exists`** — Verify the bucket name is unique within the object store account using `purefb bucket list --account <account-name>`.
-    **`The Access Key ID you provided does not exist in our records`** — Ensure the access key was created successfully and allow 10-15 seconds for replication across the cluster before testing S3 access.
-    **`Unable to locate credentials`** — Export the generated access key as environment variables: `export AWS_ACCESS_KEY_ID=<key>` and `export AWS_SECRET_ACCESS_KEY=<secret>`.
+    | Error | Fix |
+    |---|---|
+    | `bucket-name already exists` | Verify the bucket name is unique within the object store account using `purefb bucket list --account <account-name>`. |
+    | `The Access Key ID you provided does not exist in our records` | Ensure the access key was created successfully and allow 10-15 seconds for replication across the cluster before testing S3 access. |
+    | `Unable to locate credentials` | Export the generated access key as environment variables: `export AWS_ACCESS_KEY_ID=<key>` and `export AWS_SECRET_ACCESS_KEY=<secret>`. |
 Confirm the listing returns without error. For application integration, generate access keys via **Object Store → Users → Create User → Generate Access Key** in the GUI.
 
 ### Configure Array-to-Array Replication
@@ -672,9 +706,11 @@ backup-vol-link     backup-vol      backup-replica      flashblade-dr-02  outbou
 ```
 
 !!! warning "Common errors"
-    **`Error: Array connection failed: Connection refused on 10.20.50.15:443`** — Verify the remote FlashBlade management IP is reachable and the array is online using `ping` and `purefb array list`.
-    **`Error: Filesystem 'data-vol-01' not found on local array`** — Confirm the local filesystem name is correct and exists by running `purefb fs list` to view available filesystems.
-    **`Error: Remote array 'flashblade-dr-02' not connected`** — Ensure the array connection was created successfully in Step 1 and verify connectivity with `purefb array-connection list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Array connection failed: Connection refused on 10.20.50.15:443` | Verify the remote FlashBlade management IP is reachable and the array is online using `ping` and `purefb array list`. |
+    | `Error: Filesystem 'data-vol-01' not found on local array` | Confirm the local filesystem name is correct and exists by running `purefb fs list` to view available filesystems. |
+    | `Error: Remote array 'flashblade-dr-02' not connected` | Ensure the array connection was created successfully in Step 1 and verify connectivity with `purefb array-connection list`. |
 Confirm the replica link shows as active and lag is within the RPO target. For failover, use ActiveDR procedures to promote the remote file system.
 
 ### Expand a File System
@@ -699,9 +735,11 @@ Name                    Provisioned     Used            Data Reduction  NFS Enab
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid size format. Size must be specified in valid units (B, KB, MB, GB, TB, PB).`** — Ensure the size argument uses valid units (e.g., `20T` not `20TB` or `20 T`).
-    **`Error: Filesystem <name> not found.`** — Verify the filesystem name is correct and exists on the Pure FlashBlade array using `purefb fs list`.
-    **`Error: New size must be larger than current provisioned size.`** — Confirm the new size (20T) exceeds the current provisioned capacity.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid size format. Size must be specified in valid units (B, KB, MB, GB, TB, PB).` | Ensure the size argument uses valid units (e.g., `20T` not `20TB` or `20 T`). |
+    | `Error: Filesystem <name> not found.` | Verify the filesystem name is correct and exists on the Pure FlashBlade array using `purefb fs list`. |
+    | `Error: New size must be larger than current provisioned size.` | Confirm the new size (20T) exceeds the current provisioned capacity. |
 NFS and SMB clients see the new capacity immediately without remounting. Confirm with `df -h` from a mounted client. Shrinking a file system is not supported — plan capacity requirements carefully before provisioning.
 
 ### Manage Quotas (User and Group)
@@ -748,9 +786,11 @@ GID      Quota Limit    Used       % Used
 ```
 
 !!! warning "Common errors"
-    **`Error: File system '<name>' not found`** — Replace `<name>` with an actual file system name from `purefb fs list`.
-    **`Error: User/Group ID does not exist on system`** — Verify the UID/GID exists on the FlashBlade or connected directory service with `id <username>` or `getent passwd 1001`.
-    **`Error: Quota limit must be greater than current usage`** — Set a quota limit larger than the current data already consumed on that user/group.
+    | Error | Fix |
+    |---|---|
+    | `Error: File system '<name>' not found` | Replace `<name>` with an actual file system name from `purefb fs list`. |
+    | `Error: User/Group ID does not exist on system` | Verify the UID/GID exists on the FlashBlade or connected directory service with `id <username>` or `getent passwd 1001`. |
+    | `Error: Quota limit must be greater than current usage` | Set a quota limit larger than the current data already consumed on that user/group. |
 Quota limits are enforced as hard limits. Users or groups that reach their limit receive a write error. Monitor quota usage regularly to identify accounts approaching their limit before they are blocked.
 
 ---

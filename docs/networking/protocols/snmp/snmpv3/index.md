@@ -94,9 +94,11 @@ SNMPv3-MIB::usmUserAuthProtocol = OID: usmHMACwithSHAAuthProtocol
 ```
 
 !!! warning "Common errors"
-    **`Error: cannot open /var/lib/snmp/snmpd.conf: No such file or directory`** — Create the directory with `mkdir -p /var/lib/snmp` before running net-snmp-create-v3-user.
-    **`snmpget: Unknown user name "<username>"`** — Verify the username was created in /var/lib/snmp/snmpd.conf and restart snmpd with `systemctl restart snmpd`.
-    **`snmpget: Authentication failure (incorrect password, community or key)`** — Ensure the authentication and privacy passwords match exactly between user creation and the snmpget command, including case sensitivity.
+    | Error | Fix |
+    |---|---|
+    | `Error: cannot open /var/lib/snmp/snmpd.conf: No such file or directory` | Create the directory with `mkdir -p /var/lib/snmp` before running net-snmp-create-v3-user. |
+    | `snmpget: Unknown user name "<username>"` | Verify the username was created in /var/lib/snmp/snmpd.conf and restart snmpd with `systemctl restart snmpd`. |
+    | `snmpget: Authentication failure (incorrect password, community or key)` | Ensure the authentication and privacy passwords match exactly between user creation and the snmpget command, including case sensitivity. |
 ## Cisco IOS
 
 ```bash
@@ -136,9 +138,11 @@ Standard IP access list SNMP-MGMT
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the device is in global configuration mode and supports SNMPv3 (use `configure terminal` first).
-    **`% Incomplete command`** — Ensure all parameters including `<authpass>` and `<privpass>` are provided without angle brackets.
-    **`% Access denied: SNMP-MGMT not found`** — Create the access list before applying it to the group with `ip access-list standard SNMP-MGMT` first.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the device is in global configuration mode and supports SNMPv3 (use `configure terminal` first). |
+    | `% Incomplete command` | Ensure all parameters including `<authpass>` and `<privpass>` are provided without angle brackets. |
+    | `% Access denied: SNMP-MGMT not found` | Create the access list before applying it to the group with `ip access-list standard SNMP-MGMT` first. |
 ## Arista EOS
 
 ```text
@@ -162,8 +166,10 @@ snmp-server enable traps
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command.`** — Verify you are in the correct configuration mode (use `configure terminal` on Cisco devices or equivalent for your platform).
-    **`% Incomplete command.`** — Add the required security level parameter; use `snmp-server host <nms-ip> version 3 priv <username>` with a valid username configured via `snmp-server user`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command.` | Verify you are in the correct configuration mode (use `configure terminal` on Cisco devices or equivalent for your platform). |
+    | `% Incomplete command.` | Add the required security level parameter; use `snmp-server host <nms-ip> version 3 priv <username>` with a valid username configured via `snmp-server user`. |
 ## Polling with SNMPv3
 
 ```bash
@@ -198,9 +204,11 @@ IF-MIB::ifMtu.1 = INTEGER: 1500
 ```
 
 !!! warning "Common errors"
-    **`snmpwalk: Unknown user name "<username>"`** — Replace `<username>` with an actual SNMPv3 user configured on the target device.
-    **`snmpwalk: Authentication failure (incorrect password, community or engine ID)`** — Verify the authentication password (`-A`) and privacy password (`-X`) match the device configuration exactly.
-    **`snmpwalk: No response from <device-ip>`** — Confirm the device IP is reachable, SNMPv3 is enabled on port 161, and the firewall allows SNMP traffic.
+    | Error | Fix |
+    |---|---|
+    | `snmpwalk: Unknown user name "<username>"` | Replace `<username>` with an actual SNMPv3 user configured on the target device. |
+    | `snmpwalk: Authentication failure (incorrect password, community or engine ID)` | Verify the authentication password (`-A`) and privacy password (`-X`) match the device configuration exactly. |
+    | `snmpwalk: No response from <device-ip>` | Confirm the device IP is reachable, SNMPv3 is enabled on port 161, and the firewall allows SNMP traffic. |
 ## Prometheus SNMP Exporter — SNMPv3 Config
 
 ```yaml

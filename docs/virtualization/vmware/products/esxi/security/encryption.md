@@ -61,8 +61,10 @@ config.encryption.keyProviderId = "com.vmware.vcenter.km.provider.vault"
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace esxcli vm process list`** — Ensure you are running this command directly on an ESXi host (not vCenter) with root or equivalent privileges.
-    **`vim-cmd: command not found`** — Load the VMware command environment with `source /etc/profile` or use the full path `/usr/lib/vmware-vix/bin/vim-cmd`.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace esxcli vm process list` | Ensure you are running this command directly on an ESXi host (not vCenter) with root or equivalent privileges. |
+    | `vim-cmd: command not found` | Load the VMware command environment with `source /etc/profile` or use the full path `/usr/lib/vmware-vix/bin/vim-cmd`. |
 ---
 
 ## Before you begin
@@ -183,8 +185,10 @@ SHA1 Fingerprint=A3:B2:C1:D4:E5:F6:07:18:29:3A:4B:5C:6D:7E:8F:90:A1:B2:C3:D4
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the certificate file exists at `/etc/vmware/ssl/rui.crt` and you have read permissions on the ESXi host.
-    **`No such file or directory`** — Ensure you are running the command directly on the ESXi host via SSH, not from a remote system, as the certificate path is local to the ESXi filesystem.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the certificate file exists at `/etc/vmware/ssl/rui.crt` and you have read permissions on the ESXi host. |
+    | `No such file or directory` | Ensure you are running the command directly on the ESXi host via SSH, not from a remote system, as the certificate path is local to the ESXi filesystem. |
 ### Certificate Modes (vCenter Managed)
 
 vCenter Certificate Authority (VMCA) manages ESXi host certificates automatically. When a host is added to vCenter, VMCA signs its certificate. Certificates are renewed automatically before expiry.
@@ -222,9 +226,11 @@ issuer=CN = esxi-01.example.local, O = VMware, C = US
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the ESXi host is reachable and SSH/HTTPS is enabled; check firewall rules allowing port 443 inbound.
-    **`verify error:num=20:unable to get local issuer certificate`** — This is expected for self-signed certificates; if using a CA-signed cert, ensure the full certificate chain is imported into the ESXi certificate store.
-    **`openssl: command not found`** — Install openssl on your management workstation or run the verification command from a Linux host that has openssl available.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the ESXi host is reachable and SSH/HTTPS is enabled; check firewall rules allowing port 443 inbound. |
+    | `verify error:num=20:unable to get local issuer certificate` | This is expected for self-signed certificates; if using a CA-signed cert, ensure the full certificate chain is imported into the ESXi certificate store. |
+    | `openssl: command not found` | Install openssl on your management workstation or run the verification command from a Linux host that has openssl available. |
 ### Certificate Expiry Monitoring
 
 ```powershell

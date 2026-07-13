@@ -55,8 +55,10 @@ Vacuuming done, freed 89.7M of previously allocated disk space.
 ```
 
 !!! warning "Common errors"
-    **`Failed to vacuum journal: Permission denied`** — Run the command with `sudo` since journal management requires root privileges.
-    **`Vacuuming done, but no space was freed`** — The retention policy is already met; check current usage with `journalctl --disk-usage` and adjust `--vacuum-time` or `--vacuum-size` parameters to match your actual journal size.
+    | Error | Fix |
+    |---|---|
+    | `Failed to vacuum journal: Permission denied` | Run the command with `sudo` since journal management requires root privileges. |
+    | `Vacuuming done, but no space was freed` | The retention policy is already met; check current usage with `journalctl --disk-usage` and adjust `--vacuum-time` or `--vacuum-size` parameters to match your actual journal size. |
 ## Windows Event Forwarding
 
 ```powershell

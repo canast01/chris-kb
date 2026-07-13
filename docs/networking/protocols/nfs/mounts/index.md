@@ -62,9 +62,11 @@ umount -f -l /mnt/shared
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: mount to NFS server '192.168.10.10' failed: Connection refused`** — Verify the NFS server is running (`systemctl status nfs-server` on the server) and the firewall allows port 2049/tcp and 111/udp.
-    **`mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared`** — Check the NFS server's `/etc/exports` file to ensure the client IP is listed with appropriate permissions (e.g., `192.168.1.0/24(rw,sync,no_subtree_check)`).
-    **`umount: /mnt/shared: target is busy`** — Close all open files on the mount point with `lsof /mnt/shared` and kill the processes, or use `umount -f -l` to force lazy unmount.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: mount to NFS server '192.168.10.10' failed: Connection refused` | Verify the NFS server is running (`systemctl status nfs-server` on the server) and the firewall allows port 2049/tcp and 111/udp. |
+    | `mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared` | Check the NFS server's `/etc/exports` file to ensure the client IP is listed with appropriate permissions (e.g., `192.168.1.0/24(rw,sync,no_subtree_check)`). |
+    | `umount: /mnt/shared: target is busy` | Close all open files on the mount point with `lsof /mnt/shared` and kill the processes, or use `umount -f -l` to force lazy unmount. |
 ## /etc/fstab Options
 
 ```bash
@@ -85,9 +87,11 @@ If executed with `mount -a`:
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: mount to NFS server '192.168.10.10' failed: server is down`** — Verify NFS server is running with `systemctl status nfs-server` on the server and check network connectivity with `ping 192.168.10.10`.
-    **`mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared`** — Ensure the client IP is listed in the NFS server's `/etc/exports` file and reload exports with `exportfs -ra`.
-    **`mount.nfs: No such file or directory`** — Create the mount point directories with `mkdir -p /mnt/shared /mnt/logs` before running `mount -a`.
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: mount to NFS server '192.168.10.10' failed: server is down` | Verify NFS server is running with `systemctl status nfs-server` on the server and check network connectivity with `ping 192.168.10.10`. |
+    | `mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared` | Ensure the client IP is listed in the NFS server's `/etc/exports` file and reload exports with `exportfs -ra`. |
+    | `mount.nfs: No such file or directory` | Create the mount point directories with `mkdir -p /mnt/shared /mnt/logs` before running `mount -a`. |
 ## Mount Option Reference
 
 | Option | Effect |
@@ -156,9 +160,11 @@ Created symlink /etc/systemd/system/multi-user.target.wants/autofs.service → /
 ```
 
 !!! warning "Common errors"
-    **`automount[1234]: lookup(file): lookup for shared failed`** — Verify the NFS server IP and export paths are correct in `/etc/auto.nfs`, and confirm the NFS server is reachable with `ping 192.168.10.10`.
-    **`mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared`** — Check NFS server export permissions in `/etc/exports` and ensure the client IP is listed with appropriate read/write flags, then run `exportfs -ra` on the server.
-    **`systemctl: Unit autofs.service not found`** — Install autofs first with `dnf install autofs` or `apt install autofs` before attempting to enable the service.
+    | Error | Fix |
+    |---|---|
+    | `automount[1234]: lookup(file): lookup for shared failed` | Verify the NFS server IP and export paths are correct in `/etc/auto.nfs`, and confirm the NFS server is reachable with `ping 192.168.10.10`. |
+    | `mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared` | Check NFS server export permissions in `/etc/exports` and ensure the client IP is listed with appropriate read/write flags, then run `exportfs -ra` on the server. |
+    | `systemctl: Unit autofs.service not found` | Install autofs first with `dnf install autofs` or `apt install autofs` before attempting to enable the service. |
 ## Known Issues
 
 - `hard` mounts can cause processes to hang indefinitely if the NFS server goes offline. For non-critical mounts, use `soft` with a short `timeo` and handle errors in the application layer.

@@ -292,9 +292,11 @@ Telemetry Enabled:   true
 ```
 
 !!! warning "Common errors"
-    **`Error: Authentication failed for host 10.10.10.50`** — Verify the username and password are correct and the device account is not locked.
-    **`Error: Unable to reach host 10.10.10.60 on port 443`** — Confirm the device IP is reachable and firewall rules allow SCG to connect on the required port.
-    **`Error: Device type POWERMAX is not supported in this SCG version`** — Check the SCG release notes and upgrade if necessary, or use a supported device type.
+    | Error | Fix |
+    |---|---|
+    | `Error: Authentication failed for host 10.10.10.50` | Verify the username and password are correct and the device account is not locked. |
+    | `Error: Unable to reach host 10.10.10.60 on port 443` | Confirm the device IP is reachable and firewall rules allow SCG to connect on the required port. |
+    | `Error: Device type POWERMAX is not supported in this SCG version` | Check the SCG release notes and upgrade if necessary, or use a supported device type. |
 ---
 
 ## Connectivity Check
@@ -370,9 +372,11 @@ Connection to downloads.dell.com 443 port [tcp/https] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to esrs3.emc.com port 443: Connection timed out`** — Verify outbound HTTPS (port 443) is not blocked by firewall rules; check SCG security group or network ACLs permit egress to Dell domains.
-    **`nslookup: can't resolve 'esrs3.emc.com': No answer`** — Confirm DNS resolver is configured on SCG (check /etc/resolv.conf) and can reach upstream DNS servers; test with `nslookup 8.8.8.8` first.
-    **`nc: getaddrinfo for host "api.dell.com" port 443: Temporary failure in name resolution`** — Ensure DNS is functional by running `nslookup api.dell.com` first; if DNS fails, configure nameserver in SCG network settings before retrying connectivity tests.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to esrs3.emc.com port 443: Connection timed out` | Verify outbound HTTPS (port 443) is not blocked by firewall rules; check SCG security group or network ACLs permit egress to Dell domains. |
+    | `nslookup: can't resolve 'esrs3.emc.com': No answer` | Confirm DNS resolver is configured on SCG (check /etc/resolv.conf) and can reach upstream DNS servers; test with `nslookup 8.8.8.8` first. |
+    | `nc: getaddrinfo for host "api.dell.com" port 443: Temporary failure in name resolution` | Ensure DNS is functional by running `nslookup api.dell.com` first; if DNS fails, configure nameserver in SCG network settings before retrying connectivity tests. |
 ---
 
 ## Log Collection
@@ -451,9 +455,11 @@ Size: 487 MB
 ```
 
 !!! warning "Common errors"
-    **`log show: component 'gateway' not found`** — Verify the component name matches one of the available options (gateway, collector, api, system) and that SCG is running.
-    **`supportassist collect: Device ID not registered or offline`** — Ensure the device is registered in SCG and has active connectivity; check with `log show --component gateway` for connection errors.
-    **`Permission denied: /var/support/scg_bundle_*.tar.gz`** — Run the supportbundle command from the SCG shell with appropriate admin privileges, or use `sudo` if executing from OS shell.
+    | Error | Fix |
+    |---|---|
+    | `log show: component 'gateway' not found` | Verify the component name matches one of the available options (gateway, collector, api, system) and that SCG is running. |
+    | `supportassist collect: Device ID not registered or offline` | Ensure the device is registered in SCG and has active connectivity; check with `log show --component gateway` for connection errors. |
+    | `Permission denied: /var/support/scg_bundle_*.tar.gz` | Run the supportbundle command from the SCG shell with appropriate admin privileges, or use `sudo` if executing from OS shell. |
 ---
 
 ## REST API (curl)

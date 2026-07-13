@@ -90,9 +90,11 @@ Discovering SCSI targets for 192.168.1.51:3260
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to 192.168.1.50 port 443: Connection refused`** — Verify the Unity management IP is correct and Unisphere service is running with `systemctl status unisphere` on the array.
-    **`clnt_create: RPC: Port mapper failure - Unable to receive: errno 111 (Connection refused)`** — Confirm NFS service is enabled on the Unity array and the NFS IP is routable from the client.
-    **`iscsiadm: No records found`** — Ensure iSCSI target portal is configured and active on the Unity array, and verify network connectivity to the iSCSI IP on port 3260.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to 192.168.1.50 port 443: Connection refused` | Verify the Unity management IP is correct and Unisphere service is running with `systemctl status unisphere` on the array. |
+    | `clnt_create: RPC: Port mapper failure - Unable to receive: errno 111 (Connection refused)` | Confirm NFS service is enabled on the Unity array and the NFS IP is routable from the client. |
+    | `iscsiadm: No records found` | Ensure iSCSI target portal is configured and active on the Unity array, and verify network connectivity to the iSCSI IP on port 3260. |
 ## See also
 
 - [Dell Unity — Architecture](../how-it-works/)

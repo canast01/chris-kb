@@ -118,9 +118,11 @@ Symmetrix ID           SN              Model           Microcode
 ```
 
 !!! warning "Common errors"
-    **`symlicense: Command not found`** — Ensure the Symmetrix management tools are installed and the PATH includes the Symmetrix bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`License Feature COD not found`** — The COD license key has not been installed on the array; contact Dell EMC to obtain and install the license key file using `symlicense -sid <SID> install -f <keyfile>`.
-    **`Array Serial Number mismatch: key bound to 000987654321XYZ, array is 000123456789ABC`** — The license key is bound to a different array serial number; request a new key from Dell EMC with the correct array serial number.
+    | Error | Fix |
+    |---|---|
+    | `symlicense: Command not found` | Ensure the Symmetrix management tools are installed and the PATH includes the Symmetrix bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `License Feature COD not found` | The COD license key has not been installed on the array; contact Dell EMC to obtain and install the license key file using `symlicense -sid <SID> install -f <keyfile>`. |
+    | `Array Serial Number mismatch: key bound to 000987654321XYZ, array is 000123456789ABC` | The license key is bound to a different array serial number; request a new key from Dell EMC with the correct array serial number. |
 ---
 
 ## Step 2 — Inspect the COD key file
@@ -154,8 +156,10 @@ SN>005098765432ABC</SN>
 ```
 
 !!! warning "Common errors"
-    **`grep: /path/to/cod-license.xml: No such file or directory`** — Verify the actual license file path with `find / -name "*license*.xml" 2>/dev/null` or check the COD installation directory (typically `/opt/emc/cod/` or `/var/lib/cod/`).
-    **`VENDOR_SN mismatch: file shows 005098765432ABC but symcfg list shows 005098765432XYZ`** — The license key is bound to a different array; obtain the correct license file for this array's serial number from Dell support.
+    | Error | Fix |
+    |---|---|
+    | `grep: /path/to/cod-license.xml: No such file or directory` | Verify the actual license file path with `find / -name "*license*.xml" 2>/dev/null` or check the COD installation directory (typically `/opt/emc/cod/` or `/var/lib/cod/`). |
+    | `VENDOR_SN mismatch: file shows 005098765432ABC but symcfg list shows 005098765432XYZ` | The license key is bound to a different array; obtain the correct license file for this array's serial number from Dell support. |
 ---
 
 ## Step 3 — Dry-run the key installation
@@ -190,9 +194,11 @@ Ready to install.
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI_C_INVALID_LICENSE: SN mismatch`** — Verify the array serial number on the chassis label matches the SID in the license file, or request a new key from Dell with the correct SN.
-    **`symlicense: command not found`** — Ensure the Symmetrix management tools are installed and the PATH includes the symcli bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`Cannot open file /path/to/cod-license.xml: No such file or directory`** — Confirm the license file path is correct and readable by the user running symlicense.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI_C_INVALID_LICENSE: SN mismatch` | Verify the array serial number on the chassis label matches the SID in the license file, or request a new key from Dell with the correct SN. |
+    | `symlicense: command not found` | Ensure the Symmetrix management tools are installed and the PATH includes the symcli bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `Cannot open file /path/to/cod-license.xml: No such file or directory` | Confirm the license file path is correct and readable by the user running symlicense. |
 ---
 
 ## Step 4 — Install the key and verify capacity
@@ -258,9 +264,11 @@ Free Capacity:         58.5 TB
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI Error (18) : Cannot open Symmetrix device`** — Verify the SID is correct and the Symmetrix management port is reachable via network connectivity.
-    **`License file not found: /path/to/cod-license.xml`** — Confirm the license file path is absolute and readable; use `ls -l /path/to/cod-license.xml` to verify existence and permissions.
-    **`Error: License key has expired or is invalid`** — Contact Dell EMC support to obtain a valid COD license key and re-run the installation command.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI Error (18) : Cannot open Symmetrix device` | Verify the SID is correct and the Symmetrix management port is reachable via network connectivity. |
+    | `License file not found: /path/to/cod-license.xml` | Confirm the license file path is absolute and readable; use `ls -l /path/to/cod-license.xml` to verify existence and permissions. |
+    | `Error: License key has expired or is invalid` | Contact Dell EMC support to obtain a valid COD license key and re-run the installation command. |
 ---
 
 ## Step 5 — Add new drives to a thin pool
@@ -300,9 +308,11 @@ Symmetrix ID: 000123456789012
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_C_POOL_NOT_FOUND: Pool <pool-name> not found`** — Verify the pool name matches exactly (case-sensitive) using `symcfg -sid <SID> -pool list` to list all available pools.
-    **`SYMCLI_C_NO_AVAILABLE_DRIVES: No available unassigned drives found`** — Confirm COD drives are physically present and visible to the array using `symcfg -sid <SID> -drive list` before attempting to add them.
-    **`SYMCLI_C_INSUFFICIENT_PRIVILEGE: User does not have permission to modify pool`** — Run the command with appropriate credentials or use a user account with storage administrator privileges.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_C_POOL_NOT_FOUND: Pool <pool-name> not found` | Verify the pool name matches exactly (case-sensitive) using `symcfg -sid <SID> -pool list` to list all available pools. |
+    | `SYMCLI_C_NO_AVAILABLE_DRIVES: No available unassigned drives found` | Confirm COD drives are physically present and visible to the array using `symcfg -sid <SID> -drive list` before attempting to add them. |
+    | `SYMCLI_C_INSUFFICIENT_PRIVILEGE: User does not have permission to modify pool` | Run the command with appropriate credentials or use a user account with storage administrator privileges. |
 ---
 
 ## Step 6 — Audit COD activation history
@@ -376,9 +386,11 @@ Diagnostic snapshot saved to: /tmp/cod-diag-2026-06-15-1447.txt
 ```
 
 !!! warning "Common errors"
-    **`symaudit: Command not found`** — Verify SYMCLI is installed and /opt/emc/SYMCLI/bin is in your PATH, or use the full path `/opt/emc/SYMCLI/bin/symaudit`.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the Unisphere certificate; if still failing, verify the Unisphere host is reachable on port 8443.
-    **`jq: command not found`** — Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS), or pipe to `grep -i licen` instead.
+    | Error | Fix |
+    |---|---|
+    | `symaudit: Command not found` | Verify SYMCLI is installed and /opt/emc/SYMCLI/bin is in your PATH, or use the full path `/opt/emc/SYMCLI/bin/symaudit`. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the Unisphere certificate; if still failing, verify the Unisphere host is reachable on port 8443. |
+    | `jq: command not found` | Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS), or pipe to `grep -i licen` instead. |
 ---
 
 ## See also

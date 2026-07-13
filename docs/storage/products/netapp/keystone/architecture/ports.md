@@ -82,9 +82,11 @@ systemctl status keystone-collector
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the ONTAP cluster's CA certificate into the system trust store.
-    **`curl: (7) Failed to connect to keystone.netapp.com port 443: Connection timed out`** — Verify the Collector VM has outbound HTTPS access to keystone.netapp.com and check firewall/proxy rules.
-    **`Unit keystone-collector.service could not be found.`** — Ensure the Keystone Collector package is installed with `rpm -i keystone-collector-*.rpm` and systemd daemon is reloaded with `systemctl daemon-reload`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the ONTAP cluster's CA certificate into the system trust store. |
+    | `curl: (7) Failed to connect to keystone.netapp.com port 443: Connection timed out` | Verify the Collector VM has outbound HTTPS access to keystone.netapp.com and check firewall/proxy rules. |
+    | `Unit keystone-collector.service could not be found.` | Ensure the Keystone Collector package is installed with `rpm -i keystone-collector-*.rpm` and systemd daemon is reloaded with `systemctl daemon-reload`. |
 ## See also
 
 - [NetApp Keystone — Architecture](../how-it-works/)

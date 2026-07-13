@@ -62,9 +62,11 @@ Certificate Valid Until: 2025-06-10
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Ensure the Pure Storage management tools are installed and the PATH includes the Pure bin directory, or use the full path `/opt/purearray/bin/purearray`.
-    **`Error: Unable to connect to array management interface`** — Verify network connectivity to the array's management IP and confirm the array hostname/IP is correctly configured in your management client settings.
-    **`Certificate verification failed: CERTIFICATE_EXPIRED`** — Renew the SSL certificate on the Pure array by contacting Pure Storage support or regenerating the certificate through the management console.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Ensure the Pure Storage management tools are installed and the PATH includes the Pure bin directory, or use the full path `/opt/purearray/bin/purearray`. |
+    | `Error: Unable to connect to array management interface` | Verify network connectivity to the array's management IP and confirm the array hostname/IP is correctly configured in your management client settings. |
+    | `Certificate verification failed: CERTIFICATE_EXPIRED` | Renew the SSL certificate on the Pure array by contacting Pure Storage support or regenerating the certificate through the management console. |
 Any disruption to phonehome connectivity should be treated as urgent — Pure's SLA monitoring, proactive maintenance, and automatic case creation all depend on continuous telemetry.
 
 ## Opening a Case
@@ -148,9 +150,11 @@ ActiveCluster-DC2      synced       18
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the PATH includes the Pure management tools directory.
-    **`Error: Array unreachable at 192.168.1.42`** — Verify network connectivity to the array management IP and confirm credentials are set via `pureauth login`.
-    **`Error: Insufficient permissions for operation`** — Ensure your Pure user account has the required role; contact your Pure administrator to grant API access.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or ensure the PATH includes the Pure management tools directory. |
+    | `Error: Array unreachable at 192.168.1.42` | Verify network connectivity to the array management IP and confirm credentials are set via `pureauth login`. |
+    | `Error: Insufficient permissions for operation` | Ensure your Pure user account has the required role; contact your Pure administrator to grant API access. |
 For service-level issues, also download from Pure1:
 - Monthly consumption report (Pure1 > Evergreen//One > Consumption > Export)
 - SLA compliance report (Pure1 > Evergreen//One > SLA > Export)

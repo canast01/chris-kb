@@ -114,9 +114,11 @@ AllowAgentForwarding no
 ```
 
 !!! warning "Common errors"
-    **`sshd[12847]: Invalid user service from 192.168.1.50 port 54321`** — Ensure the service account exists on the VPLEX system with `useradd service` before applying these settings.
-    **`sshd: no hostkeys available -- exiting.`** — Verify SSH host keys exist in `/etc/ssh/` (ssh_host_rsa_key, ssh_host_ed25519_key) and regenerate with `ssh-keygen -A` if missing.
-    **`sshd[12847]: fatal: kex_exchange_identification: Connection closed by remote host`** — Replace `<MGMT_JUMP_HOST_IP>` with the actual management host IP address (e.g., `AllowUsers service@10.20.30.40`) before restarting sshd.
+    | Error | Fix |
+    |---|---|
+    | `sshd[12847]: Invalid user service from 192.168.1.50 port 54321` | Ensure the service account exists on the VPLEX system with `useradd service` before applying these settings. |
+    | `sshd: no hostkeys available -- exiting.` | Verify SSH host keys exist in `/etc/ssh/` (ssh_host_rsa_key, ssh_host_ed25519_key) and regenerate with `ssh-keygen -A` if missing. |
+    | `sshd[12847]: fatal: kex_exchange_identification: Connection closed by remote host` | Replace `<MGMT_JUMP_HOST_IP>` with the actual management host IP address (e.g., `AllowUsers service@10.20.30.40`) before restarting sshd. |
 After editing, test the configuration and restart:
 
 ```bash
@@ -145,9 +147,11 @@ Health Status: HEALTHY
 ```
 
 !!! warning "Common errors"
-    **`sshd: no hostkeys available -- exiting.`** — Regenerate SSH host keys with `ssh-keygen -A` or restore from backup before restarting sshd.
-    **`Permission denied (publickey).`** — Verify the vplex_ed25519 private key has 600 permissions and the public key is in service@<VMS_IP>'s ~/.ssh/authorized_keys file.
-    **`Connection refused`** — Confirm sshd restarted successfully with `systemctl status sshd` and that <VMS_IP> is reachable before attempting the key authentication test.
+    | Error | Fix |
+    |---|---|
+    | `sshd: no hostkeys available -- exiting.` | Regenerate SSH host keys with `ssh-keygen -A` or restore from backup before restarting sshd. |
+    | `Permission denied (publickey).` | Verify the vplex_ed25519 private key has 600 permissions and the public key is in service@<VMS_IP>'s ~/.ssh/authorized_keys file. |
+    | `Connection refused` | Confirm sshd restarted successfully with `systemctl status sshd` and that <VMS_IP> is reachable before attempting the key authentication test. |
 ---
 
 ## Network Segmentation
@@ -234,9 +238,11 @@ health-check --full: PASSED (completed in 47 seconds)
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey).`** — Verify the SSH key path is correct and the service account public key is installed on the VMS with `ssh-copy-id -i ~/.ssh/vplex_ed25519.pub service@<VMS_IP>`.
-    **`unable to load certificate`** — Ensure the corporate CA certificate is properly installed in the VMS trust store by running `vplexcli -q -e "certificate-import --ca-cert /path/to/ca.pem"`.
-    **`Witness connectivity-status: DISCONNECTED`** — Confirm network connectivity to the witness server at 10.48.10.88 and verify firewall rules allow port 7225 bidirectionally.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey).` | Verify the SSH key path is correct and the service account public key is installed on the VMS with `ssh-copy-id -i ~/.ssh/vplex_ed25519.pub service@<VMS_IP>`. |
+    | `unable to load certificate` | Ensure the corporate CA certificate is properly installed in the VMS trust store by running `vplexcli -q -e "certificate-import --ca-cert /path/to/ca.pem"`. |
+    | `Witness connectivity-status: DISCONNECTED` | Confirm network connectivity to the witness server at 10.48.10.88 and verify firewall rules allow port 7225 bidirectionally. |
 ---
 
 ## See also

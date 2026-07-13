@@ -134,9 +134,11 @@ pg-repl-4h        Replication    4 hours    Active
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused — Verify the array management IP is reachable and the Pure1 REST API service is running with `systemctl status pure-rest-api`.`**
-    **`Error: Authentication failed — Ensure your Pure credentials are configured in `~/.purerc` or via environment variables `PURE_API_TOKEN` and `PURE_MGMT_IP`.`**
-    **`Error: Command not found: purearray — Install the Pure Storage Python SDK with `pip install purestorage` or verify the CLI tools are in your PATH.`**
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused` | Verify the array management IP is reachable and the Pure1 REST API service is running with `systemctl status pure-rest-api`. |
+    | `Error: Authentication failed` | Ensure your Pure credentials are configured in `~/.purerc` or via environment variables `PURE_API_TOKEN` and `PURE_MGMT_IP`. |
+    | `Error: Command not found: purearray` | Install the Pure Storage Python SDK with `pip install purestorage` or verify the CLI tools are in your PATH. |
 For issues related to the service agreement, SLA compliance, or capacity billing, all investigation starts in Pure1 — not the array CLI.
 
 ## Log Locations

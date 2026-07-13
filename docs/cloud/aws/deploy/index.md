@@ -83,8 +83,10 @@ aws organizations create-organization --feature-set ALL
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AlreadyExistsException) when calling the CreateOrganization operation: Organization already exists`** — An organization already exists in this AWS account; use `aws organizations describe-organization` to view it instead.
-    **`An error occurred (AccessDeniedException) when calling the CreateOrganization operation: User is not authorized to perform: organizations:CreateOrganization`** — Ensure the IAM user or role has the `organizations:CreateOrganization` permission attached.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AlreadyExistsException) when calling the CreateOrganization operation: Organization already exists` | An organization already exists in this AWS account; use `aws organizations describe-organization` to view it instead. |
+    | `An error occurred (AccessDeniedException) when calling the CreateOrganization operation: User is not authorized to perform: organizations:CreateOrganization` | Ensure the IAM user or role has the `organizations:CreateOrganization` permission attached. |
 **Enable all features** (required for SCPs):
 
 ```bash
@@ -120,8 +122,10 @@ aws organizations enable-all-features
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AlreadyEnabledException) when calling the EnableAllFeatures operation: All features are already enabled`** — Verify the organization's current feature set with `aws organizations describe-organization` before attempting to enable.
-    **`An error occurred (AccessDeniedException) when calling the EnableAllFeatures operation: User is not authorized to perform: organizations:EnableAllFeatures`** — Ensure the IAM principal has the `organizations:EnableAllFeatures` permission attached to their policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AlreadyEnabledException) when calling the EnableAllFeatures operation: All features are already enabled` | Verify the organization's current feature set with `aws organizations describe-organization` before attempting to enable. |
+    | `An error occurred (AccessDeniedException) when calling the EnableAllFeatures operation: User is not authorized to perform: organizations:EnableAllFeatures` | Ensure the IAM principal has the `organizations:EnableAllFeatures` permission attached to their policy. |
 **Enable IAM Identity Center (AWS SSO):**
 
 1. Console → IAM Identity Center → Enable.
@@ -194,7 +198,9 @@ aws organizations list-accounts
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AWSOrganizationsNotInUseException) when calling the DescribeOrganization operation: Your AWS organization does not exist`** — Enable AWS Organizations in your AWS account by visiting the Organizations console or use `aws organizations create-organization`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AWSOrganizationsNotInUseException) when calling the DescribeOrganization operation: Your AWS organization does not exist` | Enable AWS Organizations in your AWS account by visiting the Organizations console or use `aws organizations create-organization`. |
     **`An error occurred (AccessDeniedException) when calling the ListAccounts operation: You don't have permissions to access this operation`** —
 ---
 
@@ -242,8 +248,10 @@ ou-a1b2-c3d4e5f6
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AWSOrganizationsNotInUseException) when calling the ListRoots operation: Your AWS organization does not exist`** — Enable AWS Organizations first by running `aws organizations create-organization`.
-    **`An error occurred (AccessDeniedException) when calling the CreateOrganizationalUnit operation: User is not authorized to perform: organizations:CreateOrganizationalUnit`** — Ensure your IAM user has the `organizations:CreateOrganizationalUnit` permission attached via an appropriate policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AWSOrganizationsNotInUseException) when calling the ListRoots operation: Your AWS organization does not exist` | Enable AWS Organizations first by running `aws organizations create-organization`. |
+    | `An error occurred (AccessDeniedException) when calling the CreateOrganizationalUnit operation: User is not authorized to perform: organizations:CreateOrganizationalUnit` | Ensure your IAM user has the `organizations:CreateOrganizationalUnit` permission attached via an appropriate policy. |
 **Create member accounts:**
 
 ```bash
@@ -305,9 +313,11 @@ aws organizations create-account \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDeniedException) when calling the CreateAccount operation: You do not have permissions to invoke CreateAccount`** — Ensure the calling principal has the `organizations:CreateAccount` permission in the management account.
-    **`An error occurred (InvalidInputException) when calling the CreateAccount operation: Invalid email address provided`** — Verify the email addresses are valid and properly formatted (e.g., no spaces or special characters).
-    **`An error occurred (ConstraintViolationException) when calling the CreateAccount operation: You have exceeded the maximum number of accounts you can create in this organization`** — Wait for pending account creation requests to complete or contact AWS Support to increase the account limit.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDeniedException) when calling the CreateAccount operation: You do not have permissions to invoke CreateAccount` | Ensure the calling principal has the `organizations:CreateAccount` permission in the management account. |
+    | `An error occurred (InvalidInputException) when calling the CreateAccount operation: Invalid email address provided` | Verify the email addresses are valid and properly formatted (e.g., no spaces or special characters). |
+    | `An error occurred (ConstraintViolationException) when calling the CreateAccount operation: You have exceeded the maximum number of accounts you can create in this organization` | Wait for pending account creation requests to complete or contact AWS Support to increase the account limit. |
 **Move accounts into OUs:**
 
 ```bash
@@ -324,8 +334,10 @@ aws organizations move-account \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccountNotFound) when calling the MoveAccount operation: You provided an invalid account id <account-id>`** — Verify the account ID is correct and exists in your organization with `aws organizations list-accounts`.
-    **`An error occurred (ParentNotFoundException) when calling the MoveAccount operation: Parent with id ou-12345678-1234-1234-1234-123456789012 does not exist`** — Confirm the destination OU ID is valid and accessible by running `aws organizations list-organizational-units-for-parent --parent-id $ROOT_ID`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccountNotFound) when calling the MoveAccount operation: You provided an invalid account id <account-id>` | Verify the account ID is correct and exists in your organization with `aws organizations list-accounts`. |
+    | `An error occurred (ParentNotFoundException) when calling the MoveAccount operation: Parent with id ou-12345678-1234-1234-1234-123456789012 does not exist` | Confirm the destination OU ID is valid and accessible by running `aws organizations list-organizational-units-for-parent --parent-id $ROOT_ID`. |
 ---
 
 ## Configure CloudTrail (All Regions)
@@ -344,8 +356,10 @@ make_bucket: org-cloudtrail-logs-123456789012
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (BucketAlreadyExists) when calling the MakeBucket operation: The requested bucket name is not available. The bucket namespace is shared by all AWS accounts.`** — Choose a globally unique bucket name by adding a timestamp or random suffix (e.g., `org-cloudtrail-logs-123456789012-$(date +%s)`).
-    **`An error occurred (AccessDenied) when calling the MakeBucket operation: User: arn:aws:iam::123456789012:user/deployer is not authorized to perform: s3:CreateBucket`** — Ensure the IAM user or role has the `s3:CreateBucket` permission in their policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (BucketAlreadyExists) when calling the MakeBucket operation: The requested bucket name is not available. The bucket namespace is shared by all AWS accounts.` | Choose a globally unique bucket name by adding a timestamp or random suffix (e.g., `org-cloudtrail-logs-123456789012-$(date +%s)`). |
+    | `An error occurred (AccessDenied) when calling the MakeBucket operation: User: arn:aws:iam::123456789012:user/deployer is not authorized to perform: s3:CreateBucket` | Ensure the IAM user or role has the `s3:CreateBucket` permission in their policy. |
 Apply a bucket policy that allows CloudTrail to write from the management account:
 
 ```json
@@ -401,9 +415,11 @@ aws cloudtrail start-logging --name org-trail
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (S3BucketDoesNotExist) when calling the CreateTrail operation: S3 bucket does not exist`** — Create the S3 bucket first with `aws s3 mb s3://org-cloudtrail-logs-<account-id>` and ensure CloudTrail has permission via a bucket policy.
-    **`An error occurred (InvalidParameterException) when calling the CreateTrail operation: Organization trail cannot be created in non-organization account`** — Verify the AWS account is the organization master account and that AWS Organizations is enabled with `aws organizations describe-organization`.
-    **`An error occurred (TrailAlreadyExists) when calling the CreateTrail operation: Trail already exists`** — Either delete the existing trail with `aws cloudtrail delete-trail --name org-trail` or use a different trail name.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (S3BucketDoesNotExist) when calling the CreateTrail operation: S3 bucket does not exist` | Create the S3 bucket first with `aws s3 mb s3://org-cloudtrail-logs-<account-id>` and ensure CloudTrail has permission via a bucket policy. |
+    | `An error occurred (InvalidParameterException) when calling the CreateTrail operation: Organization trail cannot be created in non-organization account` | Verify the AWS account is the organization master account and that AWS Organizations is enabled with `aws organizations describe-organization`. |
+    | `An error occurred (TrailAlreadyExists) when calling the CreateTrail operation: Trail already exists` | Either delete the existing trail with `aws cloudtrail delete-trail --name org-trail` or use a different trail name. |
 Verify:
 
 ```bash
@@ -431,9 +447,11 @@ aws cloudtrail get-trail-status --name org-trail
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (TrailNotFoundException) when calling the GetTrailStatus operation: Unknown trail: org-trail`** — Verify the trail name matches exactly with `aws cloudtrail describe-trails` and confirm it exists in the current AWS region.
-    **`An error occurred (InvalidTrailNameException) when calling the GetTrailStatus operation: Invalid trail name`** — Use the full ARN format `arn:aws:cloudtrail:region:account-id:trail/trail-name` or ensure the trail name contains only alphanumeric characters and hyphens.
-    **`An error occurred (AccessDenied) when calling the GetTrailStatus operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: cloudtrail:GetTrailStatus`** — Add the `cloudtrail:GetTrailStatus` permission to the IAM user or role's policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (TrailNotFoundException) when calling the GetTrailStatus operation: Unknown trail: org-trail` | Verify the trail name matches exactly with `aws cloudtrail describe-trails` and confirm it exists in the current AWS region. |
+    | `An error occurred (InvalidTrailNameException) when calling the GetTrailStatus operation: Invalid trail name` | Use the full ARN format `arn:aws:cloudtrail:region:account-id:trail/trail-name` or ensure the trail name contains only alphanumeric characters and hyphens. |
+    | `An error occurred (AccessDenied) when calling the GetTrailStatus operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: cloudtrail:GetTrailStatus` | Add the `cloudtrail:GetTrailStatus` permission to the IAM user or role's policy. |
 `IsLogging` should be `true`.
 
 ---
@@ -461,9 +479,11 @@ aws configservice start-configuration-recorder --configuration-recorder-name def
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValueException) when calling the PutConfigurationRecorder operation: The role ARN arn:aws:iam::<account-id>:role/AWSConfigRole is invalid or does not exist.`** — Verify the IAM role exists in the target account and has the correct trust relationship with the AWS Config service.
-    **`An error occurred (InvalidS3KeyPrefixException) when calling the PutDeliveryChannel operation: The S3 bucket org-config-logs-<account-id> does not exist or you do not have permission to write to it.`** — Create the S3 bucket in the same region and account, or verify your IAM user has `s3:PutObject` and `s3:GetBucketVersioning` permissions on it.
-    **`An error occurred (NoSuchConfigurationRecorderException) when calling the StartConfigurationRecorder operation: The configuration recorder 'default' does not exist.`** — Run the `put-configuration-recorder` command first to create the recorder before attempting to start it.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValueException) when calling the PutConfigurationRecorder operation: The role ARN arn:aws:iam::<account-id>:role/AWSConfigRole is invalid or does not exist.` | Verify the IAM role exists in the target account and has the correct trust relationship with the AWS Config service. |
+    | `An error occurred (InvalidS3KeyPrefixException) when calling the PutDeliveryChannel operation: The S3 bucket org-config-logs-<account-id> does not exist or you do not have permission to write to it.` | Create the S3 bucket in the same region and account, or verify your IAM user has `s3:PutObject` and `s3:GetBucketVersioning` permissions on it. |
+    | `An error occurred (NoSuchConfigurationRecorderException) when calling the StartConfigurationRecorder operation: The configuration recorder 'default' does not exist.` | Run the `put-configuration-recorder` command first to create the recorder before attempting to start it. |
 **Enable CIS benchmark conformance pack:**
 
 ```bash
@@ -480,9 +500,11 @@ aws configservice put-conformance-pack \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ValidationException) when calling the PutConformancePack operation: S3 bucket does not exist or you do not have permission to access it.`** — Verify the S3 bucket exists in the same region and your AWS credentials have `s3:GetObject` permissions on that bucket.
-    **`An error occurred (AccessDenied) when calling the PutConformancePack operation: User is not authorized to perform: config:PutConformancePack`** — Add the `config:PutConformancePack` permission to your IAM user or role policy.
-    **`An error occurred (ConformancePackAlreadyExistsException) when calling the PutConformancePack operation: Conformance pack with name CIS-AWS-Foundations already exists.`** — Either delete the existing conformance pack first or use a different conformance pack name.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ValidationException) when calling the PutConformancePack operation: S3 bucket does not exist or you do not have permission to access it.` | Verify the S3 bucket exists in the same region and your AWS credentials have `s3:GetObject` permissions on that bucket. |
+    | `An error occurred (AccessDenied) when calling the PutConformancePack operation: User is not authorized to perform: config:PutConformancePack` | Add the `config:PutConformancePack` permission to your IAM user or role policy. |
+    | `An error occurred (ConformancePackAlreadyExistsException) when calling the PutConformancePack operation: Conformance pack with name CIS-AWS-Foundations already exists.` | Either delete the existing conformance pack first or use a different conformance pack name. |
 Verify compliance status:
 
 ```bash
@@ -513,8 +535,10 @@ aws configservice describe-conformance-pack-compliance \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ConformancePackNotFoundException) when calling the DescribeConformancePack operation: Conformance pack with name CIS-AWS-Foundations does not exist`** — Verify the conformance pack name matches exactly using `aws configservice list-conformance-packs` and check the correct AWS region is configured.
-    **`An error occurred (AccessDenied) when calling the DescribeConformancePack operation: User is not authorized to perform: config:DescribeConformancePack`** — Ensure your IAM user or role has the `config:DescribeConformancePack` permission attached via an appropriate policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ConformancePackNotFoundException) when calling the DescribeConformancePack operation: Conformance pack with name CIS-AWS-Foundations does not exist` | Verify the conformance pack name matches exactly using `aws configservice list-conformance-packs` and check the correct AWS region is configured. |
+    | `An error occurred (AccessDenied) when calling the DescribeConformancePack operation: User is not authorized to perform: config:DescribeConformancePack` | Ensure your IAM user or role has the `config:DescribeConformancePack` permission attached via an appropriate policy. |
 ---
 
 ## Set Up VPC and Networking
@@ -600,7 +624,9 @@ An error occurred (InvalidSubnetID.NotFound) when calling the CreateNatGateway o
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidSubnetID.NotFound) when calling the CreateNatGateway operation: The subnet ID 'subnet-<public-subnet-1a-id>' does not exist`** — Replace `<public-subnet-1a-id>` with the actual subnet ID from the first public subnet creation output (e.g., `subnet-0c5d8e2f1a9b4g3h2`).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidSubnetID.NotFound) when calling the CreateNatGateway operation: The subnet ID 'subnet-<public-subnet-1a-id>' does not exist` | Replace `<public-subnet-1a-id>` with the actual subnet ID from the first public subnet creation output (e.g., `subnet-0c5d8e2f1a9b4g3h2`). |
     **`An error occurred (InvalidParameterValue) when calling the CreateNatGateway operation: The Elastic IP address 'eipalloc-...' is already associated`** —
 ---
 
@@ -635,9 +661,11 @@ aws iam attach-role-policy --role-name InfraAdmin \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchEntity) when calling the CreateRole operation: The trust policy document you provided is invalid.`** — Validate the JSON syntax in trust-policy.json using `jq . < trust-policy.json` or the AWS IAM Policy Simulator.
-    **`An error occurred (EntityAlreadyExists) when calling the CreateRole operation: Role with name InfraAdmin already exists.`** — Use a unique role name or delete the existing role with `aws iam delete-role --role-name InfraAdmin` first.
-    **`An error occurred (AccessDenied) when calling the AttachRolePolicyOperation: User: arn:aws:iam::123456789012:user/deployer is not authorized to perform: iam:AttachRolePolicy`** — Ensure your IAM user has `iam:AttachRolePolicy` and `iam:CreateRole` permissions in your policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchEntity) when calling the CreateRole operation: The trust policy document you provided is invalid.` | Validate the JSON syntax in trust-policy.json using `jq . < trust-policy.json` or the AWS IAM Policy Simulator. |
+    | `An error occurred (EntityAlreadyExists) when calling the CreateRole operation: Role with name InfraAdmin already exists.` | Use a unique role name or delete the existing role with `aws iam delete-role --role-name InfraAdmin` first. |
+    | `An error occurred (AccessDenied) when calling the AttachRolePolicyOperation: User: arn:aws:iam::123456789012:user/deployer is not authorized to perform: iam:AttachRolePolicy` | Ensure your IAM user has `iam:AttachRolePolicy` and `iam:CreateRole` permissions in your policy. |
 **Apply a Deny-region SCP to restrict to approved regions only:**
 
 ```json
@@ -692,9 +720,11 @@ aws organizations attach-policy \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (PolicyNotFoundException) when calling the AttachPolicy operation: You provided a policy that could not be found.`** — Verify the policy ID from the create-policy output matches the `--policy-id` parameter exactly.
-    **`An error occurred (TargetNotFoundException) when calling the AttachPolicy operation: You provided a target that could not be found.`** — Confirm the OU ID exists by running `aws organizations list-organizational-units-for-parent --parent-id r-xxxx` and use the correct `Id` value.
-    **`An error occurred (PolicyTypeNotEnabledException) when calling the AttachPolicy operation: SERVICE_CONTROL_POLICY is not enabled in this root.`** — Enable SCPs at the root level with `aws organizations enable-policy-type --root-id r-xxxx --policy-type SERVICE_CONTROL_POLICY`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (PolicyNotFoundException) when calling the AttachPolicy operation: You provided a policy that could not be found.` | Verify the policy ID from the create-policy output matches the `--policy-id` parameter exactly. |
+    | `An error occurred (TargetNotFoundException) when calling the AttachPolicy operation: You provided a target that could not be found.` | Confirm the OU ID exists by running `aws organizations list-organizational-units-for-parent --parent-id r-xxxx` and use the correct `Id` value. |
+    | `An error occurred (PolicyTypeNotEnabledException) when calling the AttachPolicy operation: SERVICE_CONTROL_POLICY is not enabled in this root.` | Enable SCPs at the root level with `aws organizations enable-policy-type --root-id r-xxxx --policy-type SERVICE_CONTROL_POLICY`. |
 ---
 
 ## Enable GuardDuty
@@ -720,8 +750,10 @@ aws guardduty enable-organization-admin-account --admin-account-id <security-too
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (BadRequestException) when calling the CreateDetector operation: Detector already exists`** — Run `aws guardduty list-detectors` to check for existing detectors; if one exists, skip the create-detector command.
-    **`An error occurred (InvalidInputException) when calling the EnableOrganizationAdminAccount operation: The account provided is not a member of the organization`** — Verify the security-tooling-account-id is a valid AWS Organization member account and matches the account ID format exactly.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (BadRequestException) when calling the CreateDetector operation: Detector already exists` | Run `aws guardduty list-detectors` to check for existing detectors; if one exists, skip the create-detector command. |
+    | `An error occurred (InvalidInputException) when calling the EnableOrganizationAdminAccount operation: The account provided is not a member of the organization` | Verify the security-tooling-account-id is a valid AWS Organization member account and matches the account ID format exactly. |
 Configure findings export to S3:
 
 ```bash
@@ -736,8 +768,10 @@ aws guardduty update-detector \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidInputException) when calling the UpdateDetector operation: Invalid detector ID`** — Verify the detector ID exists in your region with `aws guardduty list-detectors` and ensure you're using the correct region via `--region`.
-    **`An error occurred (AccessDeniedException) when calling the UpdateDetector operation: User is not authorized to perform: guardduty:UpdateDetector`** — Add the `guardduty:UpdateDetector` permission to your IAM user or role policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidInputException) when calling the UpdateDetector operation: Invalid detector ID` | Verify the detector ID exists in your region with `aws guardduty list-detectors` and ensure you're using the correct region via `--region`. |
+    | `An error occurred (AccessDeniedException) when calling the UpdateDetector operation: User is not authorized to perform: guardduty:UpdateDetector` | Add the `guardduty:UpdateDetector` permission to your IAM user or role policy. |
 Verify:
 
 ```bash
@@ -768,8 +802,10 @@ aws guardduty get-detector --detector-id <detector-id>
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidInput) when calling the ListDetectors operation: Invalid input received`** — Verify your AWS credentials are configured correctly with `aws configure` and you have GuardDuty permissions.
-    **`An error occurred (BadRequest) when calling the GetDetector operation: The request is invalid`** — Replace `<detector-id>` with an actual detector ID from the list-detectors output.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidInput) when calling the ListDetectors operation: Invalid input received` | Verify your AWS credentials are configured correctly with `aws configure` and you have GuardDuty permissions. |
+    | `An error occurred (BadRequest) when calling the GetDetector operation: The request is invalid` | Replace `<detector-id>` with an actual detector ID from the list-detectors output. |
 `Status` should be `ENABLED`.
 
 ---
@@ -813,8 +849,10 @@ aws securityhub describe-standards-subscriptions
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceConflictException) when calling the EnableSecurityHub operation: Security Hub is already enabled in this account.`** — Security Hub is already active; remove the enable command or use `describe-standards-subscriptions` alone to verify current state.
-    **`An error occurred (InvalidInputException) when calling the EnableSecurityHub operation: Invalid control finding generator: SECURITY_CONTROL`** — Use a valid value like `SECURITY_CONTROL` or `STANDARD_CONTROL`, or omit the parameter to use the default.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceConflictException) when calling the EnableSecurityHub operation: Security Hub is already enabled in this account.` | Security Hub is already active; remove the enable command or use `describe-standards-subscriptions` alone to verify current state. |
+    | `An error occurred (InvalidInputException) when calling the EnableSecurityHub operation: Invalid control finding generator: SECURITY_CONTROL` | Use a valid value like `SECURITY_CONTROL` or `STANDARD_CONTROL`, or omit the parameter to use the default. |
 Enable the CIS AWS Foundations standard explicitly if not auto-enabled:
 
 ```bash
@@ -841,9 +879,11 @@ aws securityhub batch-enable-standards \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidInputException) when calling the BatchEnableStandards operation: StandardsArn is invalid`** — Verify the standards ARN format matches your AWS region and Security Hub supports that benchmark version in your account.
-    **`An error occurred (ResourceNotFoundException) when calling the BatchEnableStandards operation: SecurityHub is not enabled`** — Enable Security Hub in your account first using `aws securityhub enable-security-hub`.
-    **`An error occurred (AccessDeniedException) when calling the BatchEnableStandards operation: User is not authorized to perform: securityhub:BatchEnableStandards`** — Add the `securityhub:BatchEnableStandards` permission to your IAM user or role policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidInputException) when calling the BatchEnableStandards operation: StandardsArn is invalid` | Verify the standards ARN format matches your AWS region and Security Hub supports that benchmark version in your account. |
+    | `An error occurred (ResourceNotFoundException) when calling the BatchEnableStandards operation: SecurityHub is not enabled` | Enable Security Hub in your account first using `aws securityhub enable-security-hub`. |
+    | `An error occurred (AccessDeniedException) when calling the BatchEnableStandards operation: User is not authorized to perform: securityhub:BatchEnableStandards` | Add the `securityhub:BatchEnableStandards` permission to your IAM user or role policy. |
 Review initial findings:
 
 ```bash
@@ -865,9 +905,11 @@ aws securityhub get-findings \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDenied) when calling the GetFindings operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: securityhub:GetFindings`** — Attach the `SecurityHubReadOnlyAccess` policy or equivalent to the IAM user/role.
-    **`An error occurred (ResourceNotFoundException) when calling the GetFindings operation: The request is missing a required parameter.`** — Ensure Security Hub is enabled in your AWS account by running `aws securityhub describe-hub`.
-    **`Invalid filter property SeverityLabel`** — Use the correct filter key `SeverityLabel` (case-sensitive) or check your Security Hub API version supports this filter.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDenied) when calling the GetFindings operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: securityhub:GetFindings` | Attach the `SecurityHubReadOnlyAccess` policy or equivalent to the IAM user/role. |
+    | `An error occurred (ResourceNotFoundException) when calling the GetFindings operation: The request is missing a required parameter.` | Ensure Security Hub is enabled in your AWS account by running `aws securityhub describe-hub`. |
+    | `Invalid filter property SeverityLabel` | Use the correct filter key `SeverityLabel` (case-sensitive) or check your Security Hub API version supports this filter. |
 Address all `CRITICAL` findings before workloads are deployed into the accounts.
 
 ---

@@ -77,9 +77,11 @@ legacy-vault-03   legacy-rg          northeurope Microsoft.RecoveryServices/vaul
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group exists in the target subscription with `az group list`.
-    **`VaultAlreadyExists`** — Use a unique vault name or delete the existing vault before recreating it.
-    **`InvalidBackupStorageRedundancy`** — Ensure no backup items are registered to the vault before changing redundancy; use `az backup container list` to verify.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group exists in the target subscription with `az group list`. |
+    | `VaultAlreadyExists` | Use a unique vault name or delete the existing vault before recreating it. |
+    | `InvalidBackupStorageRedundancy` | Ensure no backup items are registered to the vault before changing redundancy; use `az backup container list` to verify. |
 | Redundancy Option | Description |
 |---|---|
 | LocallyRedundant (LRS) | 3 copies in same datacenter — lowest cost |
@@ -157,9 +159,11 @@ MonthlyBackup-1year-retention  AzureIaasVM             VM
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/<vault-name>' does not exist`** — Verify the vault name and resource group name are correct using `az backup vault list --resource-group <rg>`.
-    **`InvalidPolicyDefinition: Policy file is invalid or malformed`** — Ensure the policy.json file is valid JSON and contains required fields like `schedulePolicy` and `retentionPolicy` by validating against Azure backup policy schema.
-    **`PolicyAlreadyExists: A policy with name '<policy-name>' already exists in this vault`** — Use a unique policy name or delete the existing policy first with `az backup policy delete --resource-group <rg> --vault-name <vault-name> --name <policy-name>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/<vault-name>' does not exist` | Verify the vault name and resource group name are correct using `az backup vault list --resource-group <rg>`. |
+    | `InvalidPolicyDefinition: Policy file is invalid or malformed` | Ensure the policy.json file is valid JSON and contains required fields like `schedulePolicy` and `retentionPolicy` by validating against Azure backup policy schema. |
+    | `PolicyAlreadyExists: A policy with name '<policy-name>' already exists in this vault` | Use a unique policy name or delete the existing policy first with `az backup policy delete --resource-group <rg> --vault-name <vault-name> --name <policy-name>`. |
 ---
 
 ## Enabling Protection on VMs
@@ -222,9 +226,11 @@ dev-test-vm          corp-backup-rg       RecoveryVault-East  ProtectionStopped 
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The specified vault 'RecoveryVault-East' could not be found in resource group 'corp-backup-rg'.`** — Verify the vault name and resource group name match exactly, and that the vault exists in the correct subscription.
-    **`InvalidPolicyName : Policy 'CustomPolicy-Daily' does not exist in vault 'RecoveryVault-East'.`** — List available policies with `az backup policy list --resource-group <rg> --vault-name <vault-name>` and use an existing policy name.
-    **`VMNotFound : Virtual machine 'prod-web-01' not found in resource group 'corp-backup-rg'.`** — Confirm the VM name is correct and exists in the specified resource group using `az vm list --resource-group <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The specified vault 'RecoveryVault-East' could not be found in resource group 'corp-backup-rg'.` | Verify the vault name and resource group name match exactly, and that the vault exists in the correct subscription. |
+    | `InvalidPolicyName : Policy 'CustomPolicy-Daily' does not exist in vault 'RecoveryVault-East'.` | List available policies with `az backup policy list --resource-group <rg> --vault-name <vault-name>` and use an existing policy name. |
+    | `VMNotFound : Virtual machine 'prod-web-01' not found in resource group 'corp-backup-rg'.` | Confirm the VM name is correct and exists in the specified resource group using `az vm list --resource-group <rg>`. |
 ---
 
 ## On-Demand Backup
@@ -266,9 +272,11 @@ BackupJob-prod-vm-01-20250115-143022
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The specified vault was not found in the subscription.`** — Verify the vault name and resource group are correct, and the vault exists in the current subscription context.
-    **`InvalidParameterValue: The container name does not exist or is not registered with the vault.`** — Ensure the VM is registered with the Recovery Services vault by running `az backup container list` to confirm the container name format.
-    **`BadRequest: The retain-until date must be at least 7 days from today.`** — Set the `--retain-until` date to a minimum of 7 days in the future from the current date.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The specified vault was not found in the subscription.` | Verify the vault name and resource group are correct, and the vault exists in the current subscription context. |
+    | `InvalidParameterValue: The container name does not exist or is not registered with the vault.` | Ensure the VM is registered with the Recovery Services vault by running `az backup container list` to confirm the container name format. |
+    | `BadRequest: The retain-until date must be at least 7 days from today.` | Set the `--retain-until` date to a minimum of 7 days in the future from the current date. |
 ---
 
 ## Recovery Points
@@ -319,9 +327,11 @@ Name                                 Type    Timestamp
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The specified backup item could not be found.`** — Verify the container name matches the VM's protection container name (typically `IaasVMContainer;iaasvmcontainerv2;<rg>;<vm-name>`).
-    **`InvalidRecoveryPointId: Recovery point '<recovery-point-id>' does not exist for the specified item.`** — Ensure the recovery point name is an exact timestamp from the list output and hasn't expired based on retention policy.
-    **`VaultNotFound: The Recovery Services vault '<vault-name>' was not found in resource group '<rg>'.`** — Confirm the vault name and resource group are correct and the vault exists in your subscription.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The specified backup item could not be found.` | Verify the container name matches the VM's protection container name (typically `IaasVMContainer;iaasvmcontainerv2;<rg>;<vm-name>`). |
+    | `InvalidRecoveryPointId: Recovery point '<recovery-point-id>' does not exist for the specified item.` | Ensure the recovery point name is an exact timestamp from the list output and hasn't expired based on retention policy. |
+    | `VaultNotFound: The Recovery Services vault '<vault-name>' was not found in resource group '<rg>'.` | Confirm the vault name and resource group are correct and the vault exists in your subscription. |
 | Recovery Point Type | Description |
 |---|---|
 | AppConsistent | Application-quiesced snapshot, safe for DBs |
@@ -374,9 +384,11 @@ Items Failed: 0
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/<vault-name>' could not be found.`** — Verify the vault name and resource group are correct and exist in your subscription.
-    **`InvalidParameterValue: The recovery point '<recovery-point-id>' is invalid or expired.`** — List available recovery points with `az backup recoverypoint list` and use a valid, non-expired recovery point ID.
-    **`AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems/recoveryPoints/restore/action'.`** — Ensure your user or service principal has the "Backup Operator" or "Contributor" role on the Recovery Services vault.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/<vault-name>' could not be found.` | Verify the vault name and resource group are correct and exist in your subscription. |
+    | `InvalidParameterValue: The recovery point '<recovery-point-id>' is invalid or expired.` | List available recovery points with `az backup recoverypoint list` and use a valid, non-expired recovery point ID. |
+    | `AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems/recoveryPoints/restore/action'.` | Ensure your user or service principal has the "Backup Operator" or "Contributor" role on the Recovery Services vault. |
 ---
 
 ## Disabling and Removing Protection
@@ -415,8 +427,8 @@ Delete backup data request has been submitted successfully.
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The specified backup item could not be found.`** — Verify the container name matches the VM's registered name in the vault using `az backup container list --resource-group <rg> --vault-name <vault-name>`.
-    
-    **`InvalidParameterValue : The value of parameter 'backupManagementType' is invalid.`** — Ensure `--backup-management-type` is set to `AzureIaasVM` (case-sensitive) and matches the actual backup type of the item.
-    
-    **`AuthorizationFailed : The client does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems/write'.`** — Assign the Backup Operator or Backup Admin role to your Azure account on the Recovery Services vault.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The specified backup item could not be found.` | Verify the container name matches the VM's registered name in the vault using `az backup container list --resource-group <rg> --vault-name <vault-name>`. |
+    | `InvalidParameterValue : The value of parameter 'backupManagementType' is invalid.` | Ensure `--backup-management-type` is set to `AzureIaasVM` (case-sensitive) and matches the actual backup type of the item. |
+    | `AuthorizationFailed : The client does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/backupFabrics/protectionContainers/protectedItems/write'.` | Assign the Backup Operator or Backup Admin role to your Azure account on the Recovery Services vault. |

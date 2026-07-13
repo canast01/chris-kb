@@ -122,9 +122,11 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification or import the vRA certificate into your system trust store.
-    **`jq: parse error: Cannot index string with string "content"`** — Verify the API response is valid JSON and the endpoint URL is correct; check that `$TOKEN` is set and has not expired.
-    **`curl: (401) Unauthorized`** — Regenerate or refresh the bearer token and ensure it has the `approval:read` and `policy:read` scopes.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification or import the vRA certificate into your system trust store. |
+    | `jq: parse error: Cannot index string with string "content"` | Verify the API response is valid JSON and the endpoint URL is correct; check that `$TOKEN` is set and has not expired. |
+    | `curl: (401) Unauthorized` | Regenerate or refresh the bearer token and ensure it has the `approval:read` and `policy:read` scopes. |
 ---
 
 ## Reviewing Role Assignments via API
@@ -170,9 +172,11 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify the hostname matches the certificate CN).
-    **`jq: parse error: Invalid JSON`** — Ensure the `$TOKEN` variable is valid and not expired; test with `curl -sk -H "Authorization: Bearer $TOKEN" "https://vra-prod-01.example.local/csp/gateway/am/api/orgs/<org-id>/role-assignments"` without piping to jq first.
-    **`404 Not Found`** — Replace `<org-id>` and `<project-id>` placeholders with actual UUIDs from your vRA instance (retrieve with `curl -sk -H "Authorization: Bearer $TOKEN" "https://vra-prod-01.example.local/csp/gateway/am/api/orgs" | jq '.items[].id'`).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify the hostname matches the certificate CN). |
+    | `jq: parse error: Invalid JSON` | Ensure the `$TOKEN` variable is valid and not expired; test with `curl -sk -H "Authorization: Bearer $TOKEN" "https://vra-prod-01.example.local/csp/gateway/am/api/orgs/<org-id>/role-assignments"` without piping to jq first. |
+    | `404 Not Found` | Replace `<org-id>` and `<project-id>` placeholders with actual UUIDs from your vRA instance (retrieve with `curl -sk -H "Authorization: Bearer $TOKEN" "https://vra-prod-01.example.local/csp/gateway/am/api/orgs" | jq '.items[].id'`). |
 Audit role assignments monthly — remove access for team members who have changed roles or left the organisation.
 
 ---

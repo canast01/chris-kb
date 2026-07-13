@@ -98,9 +98,11 @@ delete: s3://my-bucket/path/file.txt
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchBucket) when calling the ListObjects operation: The specified bucket does not exist`** — Verify the bucket name is correct and exists in your AWS account with `aws s3 ls`.
-    **`An error occurred (AccessDenied) when calling the GetBucketPolicy operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: s3:GetBucketPolicy on resource`** — Ensure your IAM user has `s3:GetBucketPolicy` permission in their policy document.
-    **`fatal error: An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The AWS Access Key Id you provided does not exist in our records.`** — Run `aws configure` to verify your AWS credentials are correct and current.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchBucket) when calling the ListObjects operation: The specified bucket does not exist` | Verify the bucket name is correct and exists in your AWS account with `aws s3 ls`. |
+    | `An error occurred (AccessDenied) when calling the GetBucketPolicy operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: s3:GetBucketPolicy on resource` | Ensure your IAM user has `s3:GetBucketPolicy` permission in their policy document. |
+    | `fatal error: An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The AWS Access Key Id you provided does not exist in our records.` | Run `aws configure` to verify your AWS credentials are correct and current. |
 ---
 
 ## IAM
@@ -250,9 +252,11 @@ arn:aws:rds:us-east-1:123456789012:db:prod-mysql | system-update
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (DBInstanceNotFound) when calling the DescribeDBInstances operation: DBInstance not found`** — Verify the DB instance identifier exists in your region using `aws rds describe-db-instances --region <region>`.
-    **`An error occurred (InvalidDBInstanceState) when calling the ModifyDBInstance operation: Invalid DB instance state`** — Wait for the instance to reach "available" status before modifying; check current status with `aws rds describe-db-instances --db-instance-identifier prod-mysql`.
-    **`An error occurred (AccessDenied) when calling the CreateDBSnapshot operation: User is not authorized to perform: rds:CreateDBSnapshot`** — Ensure your IAM user/role has the `rds:CreateDBSnapshot` permission attached in your AWS account.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (DBInstanceNotFound) when calling the DescribeDBInstances operation: DBInstance not found` | Verify the DB instance identifier exists in your region using `aws rds describe-db-instances --region <region>`. |
+    | `An error occurred (InvalidDBInstanceState) when calling the ModifyDBInstance operation: Invalid DB instance state` | Wait for the instance to reach "available" status before modifying; check current status with `aws rds describe-db-instances --db-instance-identifier prod-mysql`. |
+    | `An error occurred (AccessDenied) when calling the CreateDBSnapshot operation: User is not authorized to perform: rds:CreateDBSnapshot` | Ensure your IAM user/role has the `rds:CreateDBSnapshot` permission attached in your AWS account. |
 ---
 
 ## CloudWatch
@@ -322,8 +326,10 @@ aws logs filter-log-events \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the DescribeAlarms operation: The alarm does not exist.`** — Verify the alarm name exists in your region with `aws cloudwatch describe-alarms --alarm-names <name>`.
-    **`An error occurred (InvalidParameterValue) when calling the GetMetricStatistics operation: 1 validation error detected: Value '<stream-name>' at 'logStreamName' failed to satisfy constraint`** — Replace `<stream-name>` with an actual log stream name from `aws logs describe-log-streams --log-group-name /aws/lambda/my-function`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the DescribeAlarms operation: The alarm does not exist.` | Verify the alarm name exists in your region with `aws cloudwatch describe-alarms --alarm-names <name>`. |
+    | `An error occurred (InvalidParameterValue) when calling the GetMetricStatistics operation: 1 validation error detected: Value '<stream-name>' at 'logStreamName' failed to satisfy constraint` | Replace `<stream-name>` with an actual log stream name from `aws logs describe-log-streams --log-group-name /aws/lambda/my-function`. |
 ---
 
 ## VPC / Networking
@@ -398,7 +404,9 @@ aws ec2 describe-security-group-rules \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (UnauthorizedOperation) when calling the DescribeVpcs operation: You are not authorized to perform: ec2:DescribeVpcs on resource`** — Ensure your IAM user/role has the `ec2:Describe*` permissions attached via an appropriate policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (UnauthorizedOperation) when calling the DescribeVpcs operation: You are not authorized to perform: ec2:DescribeVpcs on resource` | Ensure your IAM user/role has the `ec2:Describe*` permissions attached via an appropriate policy. |
     **`An error occurred (InvalidParameterValue
 ---
 
@@ -469,9 +477,11 @@ Added new context arn:aws:eks:eu-west-1:123456789012:cluster/my-cluster to /home
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the ListClusters operation: No clusters found in region eu-west-1`** — Verify the AWS region is correct with `aws configure get region` or explicitly set `--region` in the command.
-    **`An error occurred (InvalidParameterException) when calling the UpdateNodegroupConfig operation: Desired size must be between minSize and maxSize`** — Ensure desiredSize (4) is within the range of minSize (2) and maxSize (10).
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the ListClusters operation: No clusters found in region eu-west-1` | Verify the AWS region is correct with `aws configure get region` or explicitly set `--region` in the command. |
+    | `An error occurred (InvalidParameterException) when calling the UpdateNodegroupConfig operation: Desired size must be between minSize and maxSize` | Ensure desiredSize (4) is within the range of minSize (2) and maxSize (10). |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
 ---
 
 ## SSM — Session Manager
@@ -510,9 +520,11 @@ tmpfs           1.9G     0  1.9G   0% /dev/shm
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidInstanceID.NotFound) when calling the StartSession operation: The instance ID 'i-0abc123def456789' does not exist or you do not have permission to access it.`** — Verify the instance ID is correct and the IAM role has `ssm:StartSession` permissions.
-    **`An error occurred (InvalidDocument) when calling the SendCommand operation: The document 'AWS-RunShellScript' does not exist in the account.`** — Use `aws ssm describe-document --name AWS-RunShellScript` to confirm the document exists in your region.
-    **`An error occurred (InvalidCommandId.NotFound) when calling the GetCommandInvocation operation: The command ID 'd4f8c2a1-9e7b-4c3d-b1a2-5f6e7d8c9b0a' does not exist.`** — Replace `<command-id>` with the actual command ID from the send-command output and wait 2-3 seconds for the command to execute.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidInstanceID.NotFound) when calling the StartSession operation: The instance ID 'i-0abc123def456789' does not exist or you do not have permission to access it.` | Verify the instance ID is correct and the IAM role has `ssm:StartSession` permissions. |
+    | `An error occurred (InvalidDocument) when calling the SendCommand operation: The document 'AWS-RunShellScript' does not exist in the account.` | Use `aws ssm describe-document --name AWS-RunShellScript` to confirm the document exists in your region. |
+    | `An error occurred (InvalidCommandId.NotFound) when calling the GetCommandInvocation operation: The command ID 'd4f8c2a1-9e7b-4c3d-b1a2-5f6e7d8c9b0a' does not exist.` | Replace `<command-id>` with the actual command ID from the send-command output and wait 2-3 seconds for the command to execute. |
 ---
 
 ## Verify

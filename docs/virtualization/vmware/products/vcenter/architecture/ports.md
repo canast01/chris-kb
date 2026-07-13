@@ -131,9 +131,11 @@ Connection to esxi01.corp.local 902 port 902 [tcp/opsec-3] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self-signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's included if removed).
-    **`nc: getaddrinfo for name/port failed: Name or service not known`** — Verify the FQDN is resolvable by running `nslookup dc.corp.local` and confirm DNS is configured on the VCSA.
-    **`Connection refused`** — Confirm the ESXi host is powered on and the vCenter management network can reach the ESXi management interface on port 902.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self-signed certificate` | Add `-k` flag to skip certificate verification (already present in example, but ensure it's included if removed). |
+    | `nc: getaddrinfo for name/port failed: Name or service not known` | Verify the FQDN is resolvable by running `nslookup dc.corp.local` and confirm DNS is configured on the VCSA. |
+    | `Connection refused` | Confirm the ESXi host is powered on and the vCenter management network can reach the ESXi management interface on port 902. |
 ---
 
 ## See also

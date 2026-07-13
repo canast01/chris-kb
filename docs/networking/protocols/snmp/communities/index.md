@@ -71,9 +71,11 @@ SNMP v2-MIB::sysORLastChange.0 = Timeticks: (1) 0:00:00.01
 ```
 
 !!! warning "Common errors"
-    **`snmpwalk: Unknown host (localhost)`** — Verify snmpd is running with `systemctl status snmpd` and listening on 127.0.0.1:161.
-    **`rocommunity: line X: token parse error`** — Check for trailing whitespace or incorrect CIDR notation in /etc/snmp/snmpd.conf and validate syntax with `snmpconf -g basic_setup`.
-    **`Timeout: No Response from localhost`** — Ensure the rocommunity string "monitoring-ro" matches exactly in snmpd.conf and firewall rules allow UDP 161 on localhost.
+    | Error | Fix |
+    |---|---|
+    | `snmpwalk: Unknown host (localhost)` | Verify snmpd is running with `systemctl status snmpd` and listening on 127.0.0.1:161. |
+    | `rocommunity: line X: token parse error` | Check for trailing whitespace or incorrect CIDR notation in /etc/snmp/snmpd.conf and validate syntax with `snmpconf -g basic_setup`. |
+    | `Timeout: No Response from localhost` | Ensure the rocommunity string "monitoring-ro" matches exactly in snmpd.conf and firewall rules allow UDP 161 on localhost. |
 ## Cisco IOS
 
 ```bash
@@ -109,9 +111,11 @@ Storage type: nonvolatile
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Replace `<community-string>` and `<rw-string>` with actual community names (e.g., `monitoring-ro` and `admin-rw`).
-    **`% Access list SNMP-MGMT not found`** — Create the ACL before referencing it in the snmp-server command; ensure the `ip access-list standard SNMP-MGMT` block is configured first.
-    **`% Community string too long (max 32 characters)`** — Use community names with 32 characters or fewer.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Replace `<community-string>` and `<rw-string>` with actual community names (e.g., `monitoring-ro` and `admin-rw`). |
+    | `% Access list SNMP-MGMT not found` | Create the ACL before referencing it in the snmp-server command; ensure the `ip access-list standard SNMP-MGMT` block is configured first. |
+    | `% Community string too long (max 32 characters)` | Use community names with 32 characters or fewer. |
 ## Arista EOS
 
 ```text
@@ -145,9 +149,11 @@ SNMP v1 Configuration:
 ```
 
 !!! warning "Common errors"
-    **`snmpconfig: command not found`** — Install the SNMP tools package with `apt-get install snmp snmp-mibs-downloader` or equivalent for your distribution.
-    **`Error: Invalid CIDR notation in access list`** — Use valid CIDR notation (e.g., `192.168.1.0/24`) or single IPs separated by commas without spaces.
-    **`Permission denied: cannot write to /etc/snmp/snmpd.conf`** — Run the command with `sudo` or as root to modify SNMP configuration files.
+    | Error | Fix |
+    |---|---|
+    | `snmpconfig: command not found` | Install the SNMP tools package with `apt-get install snmp snmp-mibs-downloader` or equivalent for your distribution. |
+    | `Error: Invalid CIDR notation in access list` | Use valid CIDR notation (e.g., `192.168.1.0/24`) or single IPs separated by commas without spaces. |
+    | `Permission denied: cannot write to /etc/snmp/snmpd.conf` | Run the command with `sudo` or as root to modify SNMP configuration files. |
 ## Testing Community Access
 
 ```bash
@@ -175,9 +181,11 @@ SNMPv2-MIB::sysORLastChange.0 = Timeticks: (0) 0:00:00.00
 ```
 
 !!! warning "Common errors"
-    **`Timeout: No Response from <device-ip>`** — Verify the community string matches the device configuration and confirm UDP port 161 is not blocked by firewall rules between NMS and target device.
-    **`snmpget: Unknown host name`** — Ensure the device IP address is correct and reachable by pinging the target before attempting SNMP queries.
-    **`Error in packet: Reason: (noSuchName)`** — Confirm the device supports SNMPv2c (not SNMPv3-only) and that the community string has read permissions for the requested OID.
+    | Error | Fix |
+    |---|---|
+    | `Timeout: No Response from <device-ip>` | Verify the community string matches the device configuration and confirm UDP port 161 is not blocked by firewall rules between NMS and target device. |
+    | `snmpget: Unknown host name` | Ensure the device IP address is correct and reachable by pinging the target before attempting SNMP queries. |
+    | `Error in packet: Reason: (noSuchName)` | Confirm the device supports SNMPv2c (not SNMPv3-only) and that the community string has read permissions for the requested OID. |
 ## Community String Standards
 
 - Minimum 16 characters, mixed alphanumeric

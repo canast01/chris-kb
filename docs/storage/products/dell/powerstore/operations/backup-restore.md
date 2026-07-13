@@ -114,9 +114,11 @@ curl -k -X PATCH "https://<mgmt-ip>/api/rest/volume_group/<vg-id>" \
 ```
 
 !!! warning "Common errors"
-    **`{"error": "Unauthorized", "code": 401, "message": "Invalid or expired DELL-EMC-TOKEN"}`** — Regenerate the authentication token via the PowerStore management console or API login endpoint.
-    **`{"error": "Bad Request", "code": 400, "message": "Invalid snapshot_rule ID in policy snapshot_rules array"}`** — Verify the hourly and daily rule IDs match exactly the IDs returned from the first two curl commands.
-    **`{"error": "Not Found", "code": 404, "message": "Volume group <vg-id> does not exist"}`** — Confirm the volume group ID exists by running `curl -k -H "DELL-EMC-TOKEN: <token>" "https://<mgmt-ip>/api/rest/volume_group"` to list all groups.
+    | Error | Fix |
+    |---|---|
+    | `{"error": "Unauthorized", "code": 401, "message": "Invalid or expired DELL-EMC-TOKEN"}` | Regenerate the authentication token via the PowerStore management console or API login endpoint. |
+    | `{"error": "Bad Request", "code": 400, "message": "Invalid snapshot_rule ID in policy snapshot_rules array"}` | Verify the hourly and daily rule IDs match exactly the IDs returned from the first two curl commands. |
+    | `{"error": "Not Found", "code": 404, "message": "Volume group <vg-id> does not exist"}` | Confirm the volume group ID exists by running `curl -k -H "DELL-EMC-TOKEN: <token>" "https://<mgmt-ip>/api/rest/volume_group"` to list all groups. |
 ### Recommended Snapshot Retention by Tier
 
 | Tier | Workload Type | Snapshot Frequency | Local Retention |
@@ -180,9 +182,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/volume_snapshot/<snap-id>/restore" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip certificate verification (already present in the example, but ensure it is not removed).
-    **`{"error": "Invalid or expired token", "error_code": "UNAUTHENTICATED"}`** — Regenerate the DELL-EMC-TOKEN via the PowerStore management API authentication endpoint and verify it has not expired.
-    **`{"error": "Volume is mounted on 1 host(s)", "error_code": "VOLUME_IN_USE"}`** — Unmount the volume on all connected hosts before executing the restore operation.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to the curl command to skip certificate verification (already present in the example, but ensure it is not removed). |
+    | `{"error": "Invalid or expired token", "error_code": "UNAUTHENTICATED"}` | Regenerate the DELL-EMC-TOKEN via the PowerStore management API authentication endpoint and verify it has not expired. |
+    | `{"error": "Volume is mounted on 1 host(s)", "error_code": "VOLUME_IN_USE"}` | Unmount the volume on all connected hosts before executing the restore operation. |
 ### File System Snapshot Restore (NFS/SMB)
 
 ```bash
@@ -229,9 +233,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/filesystem_snapshot/<snap-id>/restor
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-    **`{"error_code": 401, "message": "Invalid or expired token"}`** — Regenerate the authentication token via the management console and update the DELL-EMC-TOKEN header value.
-    **`{"error_code": 404, "message": "Snapshot not found"}`** — Verify the snapshot ID exists by listing snapshots first and confirm the filesystem_id matches the target filesystem.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed). |
+    | `{"error_code": 401, "message": "Invalid or expired token"}` | Regenerate the authentication token via the management console and update the DELL-EMC-TOKEN header value. |
+    | `{"error_code": 404, "message": "Snapshot not found"}` | Verify the snapshot ID exists by listing snapshots first and confirm the filesystem_id matches the target filesystem. |
 **SMB Previous Versions (Shadow Copies):** PowerStore NAS supports Windows Shadow Copies via the NAS server. When snapshots are scheduled, Windows clients can access previous versions of files directly from the share via right-click → Properties → Previous Versions. Enable this in PowerStore Manager → NAS server → SMB configuration → Enable Shadow Access Copies.
 
 ## Backup Integration
@@ -389,9 +395,11 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/host_volume_mapping" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the PowerStore management certificate into your system trust store.
-    **`{"error": "Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN by re-authenticating to the PowerStore API and ensure the token has not exceeded its TTL.
-    **`{"error": "Host not found or not registered"}`** — Verify the restore-host-id exists in PowerStore inventory by running `curl -k -X GET "https://<mgmt-ip>/api/rest/host" -H "DELL-EMC-TOKEN: <token>"` and confirm the host is properly registered.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the PowerStore management certificate into your system trust store. |
+    | `{"error": "Invalid or expired token"}` | Regenerate the DELL-EMC-TOKEN by re-authenticating to the PowerStore API and ensure the token has not exceeded its TTL. |
+    | `{"error": "Host not found or not registered"}` | Verify the restore-host-id exists in PowerStore inventory by running `curl -k -X GET "https://<mgmt-ip>/api/rest/host" -H "DELL-EMC-TOKEN: <token>"` and confirm the host is properly registered. |
 ## Recovery Objectives
 
 | Recovery Scenario | Method | Typical RTO | RPO |

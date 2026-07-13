@@ -69,9 +69,11 @@ rule family="ipv4" source address="10.0.0.0/8" service name="ntp" accept
 ```
 
 !!! warning "Common errors"
-    **`Error: INVALID_SERVICE: ntp not known to firewalld`** — Use `firewall-cmd --get-services | grep ntp` to verify the service name, or replace with the port directly using `--add-port=123/udp`.
-    **`Error: COMMAND_FAILED: '/usr/sbin/firewalld' not running`** — Start the firewalld service with `systemctl start firewalld` before running firewall-cmd commands.
-    **`Error: INVALID_RULE: rule family="ipv4" source address="10.0.0.0/8" service name="ntp" accept`** — Ensure the rich rule syntax is correct; use `firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.0.0.0/8" port protocol="udp" port="123" accept'` if the service name is not recognized.
+    | Error | Fix |
+    |---|---|
+    | `Error: INVALID_SERVICE: ntp not known to firewalld` | Use `firewall-cmd --get-services | grep ntp` to verify the service name, or replace with the port directly using `--add-port=123/udp`. |
+    | `Error: COMMAND_FAILED: '/usr/sbin/firewalld' not running` | Start the firewalld service with `systemctl start firewalld` before running firewall-cmd commands. |
+    | `Error: INVALID_RULE: rule family="ipv4" source address="10.0.0.0/8" service name="ntp" accept` | Ensure the rich rule syntax is correct; use `firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.0.0.0/8" port protocol="udp" port="123" accept'` if the service name is not recognized. |
 ## Linux — iptables
 
 ```bash
@@ -92,8 +94,10 @@ iptables-save > /etc/iptables/rules.v4
 ```
 
 !!! warning "Common errors"
-    **`iptables: No chain/target/match by that name`** — Ensure the iptables kernel module is loaded with `modprobe iptables_filter` and that you have root privileges.
-    **`bash: /etc/iptables/rules.v4: Permission denied`** — Run the entire script with `sudo` or ensure the `/etc/iptables/` directory is writable by the current user.
+    | Error | Fix |
+    |---|---|
+    | `iptables: No chain/target/match by that name` | Ensure the iptables kernel module is loaded with `modprobe iptables_filter` and that you have root privileges. |
+    | `bash: /etc/iptables/rules.v4: Permission denied` | Run the entire script with `sudo` or ensure the `/etc/iptables/` directory is writable by the current user. |
 ## Windows Firewall
 
 ```powershell
@@ -123,8 +127,10 @@ access-list OUTSIDE_IN extended permit udp host <ntp-server> eq 123 any
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the ACL syntax matches your device OS (Cisco ASA/IOS format shown); some platforms use different keywords like `allow` instead of `permit`.
-    **`% Access list <name> not found`** — Ensure the access list name (e.g., `INSIDE_OUT`) exists before applying it to an interface with the `access-group` command.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the ACL syntax matches your device OS (Cisco ASA/IOS format shown); some platforms use different keywords like `allow` instead of `permit`. |
+    | `% Access list <name> not found` | Ensure the access list name (e.g., `INSIDE_OUT`) exists before applying it to an interface with the `access-group` command. |
 ## Testing Connectivity
 
 ```bash
@@ -177,9 +183,11 @@ MS Name/IP Address         Stratum Poll Reach LastRx Last sample
 ```
 
 !!! warning "Common errors"
-    **`ntpdate[2847]: no server suitable for synchronization found`** — Verify the NTP server IP is correct and reachable via `ping <ntp-server>`, then check firewall rules allow outbound UDP 123.
-    **`Nmap scan report for ntp.example.com (203.0.113.45) | Host seems down | QUITTING!`** — Confirm the host is online with `ping` and that your network allows ICMP; use `nmap -Pn -sU -p 123 <ntp-server>` to skip ping checks.
-    **`501 Not authorised`** — The NTP server may require authentication or have ACL restrictions; verify the server allows queries from your client IP using `ntpq -p <ntp-server>` instead.
+    | Error | Fix |
+    |---|---|
+    | `ntpdate[2847]: no server suitable for synchronization found` | Verify the NTP server IP is correct and reachable via `ping <ntp-server>`, then check firewall rules allow outbound UDP 123. |
+    | `Nmap scan report for ntp.example.com (203.0.113.45) | Host seems down | QUITTING!` | Confirm the host is online with `ping` and that your network allows ICMP; use `nmap -Pn -sU -p 123 <ntp-server>` to skip ping checks. |
+    | `501 Not authorised` | The NTP server may require authentication or have ACL restrictions; verify the server allows queries from your client IP using `ntpq -p <ntp-server>` instead. |
 ## NTP Server Access Control (chrony)
 
 If a host acts as an NTP server for other hosts, restrict which clients can query it:
@@ -197,5 +205,7 @@ deny all                   # deny everyone else
 ```
 
 !!! warning "Common errors"
-    **`chrony.conf:2: Unknown command 'allow'`** — Ensure you're editing `/etc/chrony.conf` on a system with chrony installed; if using ntpd instead, use `restrict` directives in `/etc/ntp.conf` instead.
-    **`Job for chrony.service failed because the control process exited with error code.`** — Run `chronyc waitsync` or `systemctl restart chrony` after editing to validate syntax; check `journalctl -u chrony -n 20` for the specific parsing error.
+    | Error | Fix |
+    |---|---|
+    | `chrony.conf:2: Unknown command 'allow'` | Ensure you're editing `/etc/chrony.conf` on a system with chrony installed; if using ntpd instead, use `restrict` directives in `/etc/ntp.conf` instead. |
+    | `Job for chrony.service failed because the control process exited with error code.` | Run `chronyc waitsync` or `systemctl restart chrony` after editing to validate syntax; check `journalctl -u chrony -n 20` for the specific parsing error. |

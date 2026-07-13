@@ -252,9 +252,11 @@ ceph auth get-or-create client.glance \
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: invalid command`** — Verify the Ceph cluster is running with `ceph status` and check syntax matches your Ceph version.
-    **`Error EACCES: permission denied`** — Run the commands with `sudo` or as a user with Ceph admin keyring access.
-    **`Error ENOENT: pool does not exist`** — Create the required pools (`ceph osd pool create volumes`, `ceph osd pool create images`, `ceph osd pool create vms`) before creating the user capabilities.
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: invalid command` | Verify the Ceph cluster is running with `ceph status` and check syntax matches your Ceph version. |
+    | `Error EACCES: permission denied` | Run the commands with `sudo` or as a user with Ceph admin keyring access. |
+    | `Error ENOENT: pool does not exist` | Create the required pools (`ceph osd pool create volumes`, `ceph osd pool create images`, `ceph osd pool create vms`) before creating the user capabilities. |
 | Service | Ceph Backend | Pool | Benefit |
 |---|---|---|---|
 | Cinder | RBD | `volumes` | Thin provisioning, snapshots, live resize |
@@ -313,8 +315,10 @@ ceph_pg_active 256
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <mgr-host> port 9283: Connection refused`** — Verify the MGR host is correct and the prometheus module is actually running with `ceph mgr services`.
-    **`Error ENOENT: mgr module 'prometheus' not found`** — Ensure you're running a Ceph version that includes the prometheus module (Luminous or later) and check `ceph versions`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <mgr-host> port 9283: Connection refused` | Verify the MGR host is correct and the prometheus module is actually running with `ceph mgr services`. |
+    | `Error ENOENT: mgr module 'prometheus' not found` | Ensure you're running a Ceph version that includes the prometheus module (Luminous or later) and check `ceph versions`. |
 **Prometheus scrape config:**
 
 ```yaml
@@ -414,9 +418,11 @@ Scheduled rgw update for service rgw.myorg
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to http://rgw.ceph.local:7480`** — Verify RGW service is running with `ceph orch ps | grep rgw` and check DNS resolution for rgw.ceph.local.
-    **`error: invalid access key format`** — Use a valid AWS access key ID (typically 20 alphanumeric characters) instead of the placeholder AKID.
-    **`error: user 's3user' does not exist`** — Create the user first with `radosgw-admin user create` before attempting quota operations.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to http://rgw.ceph.local:7480` | Verify RGW service is running with `ceph orch ps | grep rgw` and check DNS resolution for rgw.ceph.local. |
+    | `error: invalid access key format` | Use a valid AWS access key ID (typically 20 alphanumeric characters) instead of the placeholder AKID. |
+    | `error: user 's3user' does not exist` | Create the user first with `radosgw-admin user create` before attempting quota operations. |
 ## CephFS (Shared Filesystem)
 
 ```bash
@@ -442,9 +448,11 @@ ceph-fuse[12847]: starting fuse
 ```
 
 !!! warning "Common errors"
-    **`mount.ceph: mount failed: (1) Operation not permitted`** — Verify the admin keyring exists at `/etc/ceph/admin.secret` with correct permissions (mode 0400) and the Ceph cluster is healthy with `ceph status`.
-    **`ceph-fuse[PID]: error connecting to cluster`** — Ensure the monitor address is resolvable and port 6789 is accessible; check `/etc/ceph/ceph.conf` has correct `mon_host` entries.
-    **`ceph fs new: Error EINVAL: filesystem name already exists`** — Drop the existing filesystem with `ceph fs rm myfs --yes-i-really-mean-it` before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `mount.ceph: mount failed: (1) Operation not permitted` | Verify the admin keyring exists at `/etc/ceph/admin.secret` with correct permissions (mode 0400) and the Ceph cluster is healthy with `ceph status`. |
+    | `ceph-fuse[PID]: error connecting to cluster` | Ensure the monitor address is resolvable and port 6789 is accessible; check `/etc/ceph/ceph.conf` has correct `mon_host` entries. |
+    | `ceph fs new: Error EINVAL: filesystem name already exists` | Drop the existing filesystem with `ceph fs rm myfs --yes-i-really-mean-it` before recreating it. |
 ## NFS / Ganesha
 
 NFS-Ganesha provides an NFS v4.1 export layer over CephFS, enabling non-Linux clients (ESXi, Windows via NFS client) to access Ceph storage.
@@ -490,9 +498,11 @@ nfs.my-nfs.nfs-host2.ghijkl   nfs-host2           running (2h)  2m ago    2h   4
 ```
 
 !!! warning "Common errors"
-    **`Error: NFS cluster 'my-nfs' already exists`** — Delete the existing cluster with `ceph nfs cluster rm my-nfs` before recreating it.
-    **`mount.nfs4: No such file or directory`** — Verify the NFS export path exists on the CephFS filesystem and the Ganesha service is running with `ceph orch ps | grep nfs`.
-    **`Error: NFS module not enabled`** — Run `ceph mgr module enable nfs` before attempting to create NFS clusters.
+    | Error | Fix |
+    |---|---|
+    | `Error: NFS cluster 'my-nfs' already exists` | Delete the existing cluster with `ceph nfs cluster rm my-nfs` before recreating it. |
+    | `mount.nfs4: No such file or directory` | Verify the NFS export path exists on the CephFS filesystem and the Ganesha service is running with `ceph orch ps | grep nfs`. |
+    | `Error: NFS module not enabled` | Run `ceph mgr module enable nfs` before attempting to create NFS clusters. |
 | Parameter | Value | Notes |
 |---|---|---|
 | NFS version | v4.1 | v4.0 and v3 also supported with extra config |

@@ -370,8 +370,10 @@ esx-esxi-host-01-2024-01-15--10-34-22.tgz    100%  487MB   8.2MB/s   00:59
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH key is loaded or use `ssh-keyscan` to add the host key, then retry the connection.
-    **`No such file or directory`** — Confirm the exact bundle filename from the `ls -lh` output and use the correct timestamp in the SCP command path.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH key is loaded or use `ssh-keyscan` to add the host key, then retry the connection. |
+    | `No such file or directory` | Confirm the exact bundle filename from the `ls -lh` output and use the correct timestamp in the SCP command path. |
 The vm-support bundle includes: vmkernel.log, hostd.log, vpxa.log, network config, storage config, and running process state.
 
 ---
@@ -445,9 +447,11 @@ vxrail-support-bundle-20250115-143845.tar.gz saved
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands to skip SSL verification (already present in examples above).
-    **`{"error": "Unauthorized", "code": 401}`** — Verify base64 encoding of credentials with `echo -n 'mystic:password' | base64` and ensure the mystic user has API permissions in VxRail.
-    **`{"error": "Bundle generation already in progress", "code": 409}`** — Wait for the previous bundle job to complete by checking status with the requests endpoint before triggering a new bundle.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl commands to skip SSL verification (already present in examples above). |
+    | `{"error": "Unauthorized", "code": 401}` | Verify base64 encoding of credentials with `echo -n 'mystic:password' | base64` and ensure the mystic user has API permissions in VxRail. |
+    | `{"error": "Bundle generation already in progress", "code": 409}` | Wait for the previous bundle job to complete by checking status with the requests endpoint before triggering a new bundle. |
 ---
 
 ## Log locations

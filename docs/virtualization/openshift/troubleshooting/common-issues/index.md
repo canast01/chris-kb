@@ -174,9 +174,11 @@ $ oc describe pod nginx-deployment-5d4b8c9f7-k2x9m -n production | grep -A5 "Rea
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): pods "<pod>" not found`** — Verify the pod name and namespace with `oc get pods -n <ns>` and use the exact pod name.
-    **`error: unable to upgrade connection: container not found ("<container>")`** — Ensure the pod is running (not in CrashLoopBackOff) before attempting `oc debug`; use `oc get pods -n <ns>` to check status.
-    **`Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:..." cannot get resource "pods"`** — Add RBAC permissions for the service account with `oc adm policy add-role-to-user view <user> -n <ns>`.
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): pods "<pod>" not found` | Verify the pod name and namespace with `oc get pods -n <ns>` and use the exact pod name. |
+    | `error: unable to upgrade connection: container not found ("<container>")` | Ensure the pod is running (not in CrashLoopBackOff) before attempting `oc debug`; use `oc get pods -n <ns>` to check status. |
+    | `Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:..." cannot get resource "pods"` | Add RBAC permissions for the service account with `oc adm policy add-role-to-user view <user> -n <ns>`. |
 ## ImagePullBackOff
 
 ```bash
@@ -251,9 +253,11 @@ spec:
 ```
 
 !!! warning "Common errors"
-    **`Failed to pull image "quay.io/myapp:latest": unexpected status code [manifests latest]: 401`** — Create a pull secret with valid credentials and link it to the service account using `oc secrets link default registry-creds --for=pull -n <ns>`.
-    **`rpc error: code = Unknown desc = failed to resolve reference`** — Verify the image tag exists in the registry and the node has network connectivity to the registry; check firewall rules and proxy environment variables with `oc debug node/<node>`.
-    **`ImagePullBackOff`** — Check the pod events with `oc describe pod <pod> -n <ns>` to see the exact pull error, then address the root cause (auth, network, or image availability).
+    | Error | Fix |
+    |---|---|
+    | `Failed to pull image "quay.io/myapp:latest": unexpected status code [manifests latest]: 401` | Create a pull secret with valid credentials and link it to the service account using `oc secrets link default registry-creds --for=pull -n <ns>`. |
+    | `rpc error: code = Unknown desc = failed to resolve reference` | Verify the image tag exists in the registry and the node has network connectivity to the registry; check firewall rules and proxy environment variables with `oc debug node/<node>`. |
+    | `ImagePullBackOff` | Check the pod events with `oc describe pod <pod> -n <ns>` to see the exact pull error, then address the root cause (auth, network, or image availability). |
 ## Pending Pods (Not Scheduling)
 
 ```bash
@@ -325,9 +329,11 @@ database-pvc        Bound    pvc-a7f2c8d1-9e4b-4a2c-b1f3-8c9d2e1f5a6b  50Gi     
 ```
 
 !!! warning "Common errors"
-    **`0/6 nodes are available: Insufficient cpu`** — Increase resource requests in the pod spec, add worker nodes, or evict low-priority workloads using `oc delete pod` on non-critical pods.
-    **`unable to validate against any security context constraint`** — Add the appropriate SCC to the service account with `oc adm policy add-scc-to-user <scc-name> -z <sa-name> -n <namespace>`.
-    **`node(s) had untolerated taint`** — Add matching tolerations to the pod spec under `spec.tolerations` or remove the taint from the node with `oc adm taint nodes <node-name> <key>=<value>:<effect>-`.
+    | Error | Fix |
+    |---|---|
+    | `0/6 nodes are available: Insufficient cpu` | Increase resource requests in the pod spec, add worker nodes, or evict low-priority workloads using `oc delete pod` on non-critical pods. |
+    | `unable to validate against any security context constraint` | Add the appropriate SCC to the service account with `oc adm policy add-scc-to-user <scc-name> -z <sa-name> -n <namespace>`. |
+    | `node(s) had untolerated taint` | Add matching tolerations to the pod spec under `spec.tolerations` or remove the taint from the node with `oc adm taint nodes <node-name> <key>=<value>:<effect>-`. |
 ## OOMKilled
 
 ```bash
@@ -370,9 +376,11 @@ deployment.apps/api-server resource requirements updated
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): pods "<pod>" not found`** — Verify the pod name and namespace with `oc get pods -n <ns>` before running describe.
-    **`error: the server doesn't have a resource type "top"`** — Enable metrics-server on the cluster with `oc apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml`.
-    **`Error from server (NotFound): deployments.apps "<name>" not found`** — Confirm the deployment exists in the target namespace and use the correct resource type (deployment, statefulset, daemonset, etc.).
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): pods "<pod>" not found` | Verify the pod name and namespace with `oc get pods -n <ns>` before running describe. |
+    | `error: the server doesn't have a resource type "top"` | Enable metrics-server on the cluster with `oc apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml`. |
+    | `Error from server (NotFound): deployments.apps "<name>" not found` | Confirm the deployment exists in the target namespace and use the correct resource type (deployment, statefulset, daemonset, etc.). |
 ## Node NotReady
 
 ```bash
@@ -436,9 +444,11 @@ worker                  rendered-worker-x9y8z7w6v5u4t3s2r1q0p9o8   False     Tru
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to the server: dial tcp: lookup <node>: no such host`** — Replace `<node>` with the actual node name from `oc get nodes`.
-    **`chroot: cannot change root directory to /host: No such file or directory`** — Ensure you are running `oc debug node/<node>` first and waiting for the debug pod to start before executing chroot.
-    **`Unit kubelet.service could not be found.`** — The kubelet service may not be installed or the node OS differs; verify the node is RHCOS and check `/etc/systemd/system/kubelet.service.d/` for custom configurations.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to the server: dial tcp: lookup <node>: no such host` | Replace `<node>` with the actual node name from `oc get nodes`. |
+    | `chroot: cannot change root directory to /host: No such file or directory` | Ensure you are running `oc debug node/<node>` first and waiting for the debug pod to start before executing chroot. |
+    | `Unit kubelet.service could not be found.` | The kubelet service may not be installed or the node OS differs; verify the node is RHCOS and check `/etc/systemd/system/kubelet.service.d/` for custom configurations. |
 ## etcd High Latency
 
 High disk I/O latency causes etcd to miss heartbeat deadlines, leading to leader elections, slow API responses, and cascading CrashLoopBackOff on etcd pods.
@@ -496,9 +506,11 @@ Defragmentation finished for member 8e4c5d7f9a2b1c3e
 ```
 
 !!! warning "Common errors"
-    **`error: unable to match a pod using the provided selectors: etcd=true`** — Verify the label selector with `oc get pod -n openshift-etcd --show-labels` and update the label name if it differs (e.g., `app=etcd` or `k8s-app=etcd`).
-    **`x509: certificate signed by unknown authority`** — Ensure the certificate paths are correct and the pod is running with proper mounted secrets by checking `oc describe pod $ETCD_POD -n openshift-etcd` for volume mounts.
-    **`error: node "<master-node>" not found`** — Replace `<master-node>` with an actual node name from `oc get nodes -l node-role.kubernetes.io/master` (e.g., `master-0.ocp.example.com`).
+    | Error | Fix |
+    |---|---|
+    | `error: unable to match a pod using the provided selectors: etcd=true` | Verify the label selector with `oc get pod -n openshift-etcd --show-labels` and update the label name if it differs (e.g., `app=etcd` or `k8s-app=etcd`). |
+    | `x509: certificate signed by unknown authority` | Ensure the certificate paths are correct and the pod is running with proper mounted secrets by checking `oc describe pod $ETCD_POD -n openshift-etcd` for volume mounts. |
+    | `error: node "<master-node>" not found` | Replace `<master-node>` with an actual node name from `oc get nodes -l node-role.kubernetes.io/master` (e.g., `master-0.ocp.example.com`). |
 ## DNS Failures
 
 ```bash
@@ -578,9 +590,11 @@ dns-default   ClusterIP   172.30.0.10   <none>        53/UDP    45d
 ```
 
 !!! warning "Common errors"
-    **`error: unable to forward to node "worker-1.example.com": error when getting node: nodes "worker-1.example.com" not found`** — Use the exact node name from `oc get nodes` instead of the FQDN.
-    **`nslookup: can't resolve 'nginx.default.svc.cluster.local': No answer`** — Verify the service exists with `oc get svc -n default` and check CoreDNS logs for forwarding errors.
-    **`nameserver 10.0.0.1`** — The resolver is pointing to the host DNS instead of the cluster DNS (172.30.0.10); restart the pod or check the CNI plugin configuration.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to forward to node "worker-1.example.com": error when getting node: nodes "worker-1.example.com" not found` | Use the exact node name from `oc get nodes` instead of the FQDN. |
+    | `nslookup: can't resolve 'nginx.default.svc.cluster.local': No answer` | Verify the service exists with `oc get svc -n default` and check CoreDNS logs for forwarding errors. |
+    | `nameserver 10.0.0.1` | The resolver is pointing to the host DNS instead of the cluster DNS (172.30.0.10); restart the pod or check the CNI plugin configuration. |
 ## Cluster Operator Degraded
 
 ```bash
@@ -670,7 +684,9 @@ deployment.apps/dns-default restarted
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "co"`** — Use the full resource name `oc describe clusteroperator
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "co"` | Use the full resource name `oc describe clusteroperator |
 ---
 
 ## See also

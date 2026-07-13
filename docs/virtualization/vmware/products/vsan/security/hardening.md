@@ -64,8 +64,10 @@ Operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or setting '/UserVars/ESXiShellInteractiveTimeOut'`** — Verify the exact parameter name with `esxcli system settings advanced list | grep -i timeout` as the setting may differ by ESXi version.
-    **`Error: Ruleset 'sshServer' does not exist`** — Use `esxcli network firewall ruleset list` to confirm the correct ruleset name (typically `sshServer` on ESXi 6.5+, but may vary).
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or setting '/UserVars/ESXiShellInteractiveTimeOut'` | Verify the exact parameter name with `esxcli system settings advanced list | grep -i timeout` as the setting may differ by ESXi version. |
+    | `Error: Ruleset 'sshServer' does not exist` | Use `esxcli network firewall ruleset list` to confirm the correct ruleset name (typically `sshServer` on ESXi 6.5+, but may vary). |
 ### ESXi Firewall
 
 ```bash
@@ -106,8 +108,10 @@ FaultTolerance          true
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or malformed command`** — Verify the ruleset-id exists by running `esxcli network firewall ruleset list` and use the exact name from the output.
-    **`Error: This operation requires elevated privileges`** — Run the commands as root or with appropriate ESXi administrative credentials.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or malformed command` | Verify the ruleset-id exists by running `esxcli network firewall ruleset list` and use the exact name from the output. |
+    | `Error: This operation requires elevated privileges` | Run the commands as root or with appropriate ESXi administrative credentials. |
 ### Account and Password Policies
 
 ```bash
@@ -133,8 +137,10 @@ esxcli system settings advanced set -o /Security/PasswordHistory -i 5
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option /Security/PasswordQualityControl`** — Verify the advanced setting name matches your ESXi version (some versions use `/Security/PasswordQuality` without `Control`); check `esxcli system settings advanced list | grep -i password` to confirm available options.
-    **`Error: Invalid value for option /Security/AccountLockFailures: value must be an integer`** — Remove the `-i` flag if the parameter expects a string, or ensure the value is a valid integer without quotes.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option /Security/PasswordQualityControl` | Verify the advanced setting name matches your ESXi version (some versions use `/Security/PasswordQuality` without `Control`); check `esxcli system settings advanced list | grep -i password` to confirm available options. |
+    | `Error: Invalid value for option /Security/AccountLockFailures: value must be an integer` | Remove the `-i` flag if the parameter expects a string, or ensure the value is a valid integer without quotes. |
 **Via host profile (recommended for cluster-wide enforcement):**
 
 vSphere Client → Policies and Profiles → Host Profiles → Edit Profile → Security and Services → Security Settings → Password Policies
@@ -156,8 +162,10 @@ PermitRootLogin no
 ```
 
 !!! warning "Common errors"
-    **`grep: /etc/ssh/sshd_config: No such file or directory`** — This command runs on ESXi hosts where SSH config is located at `/etc/ssh/sshd_config`; verify SSH is enabled on the host and you are connected to the correct ESXi system.
-    **`Permission denied`** — Run the command as root or with `sudo` since `/etc/ssh/sshd_config` requires elevated privileges to read on some ESXi versions.
+    | Error | Fix |
+    |---|---|
+    | `grep: /etc/ssh/sshd_config: No such file or directory` | This command runs on ESXi hosts where SSH config is located at `/etc/ssh/sshd_config`; verify SSH is enabled on the host and you are connected to the correct ESXi system. |
+    | `Permission denied` | Run the command as root or with `sudo` since `/etc/ssh/sshd_config` requires elevated privileges to read on some ESXi versions. |
 From ESXi 8.0, the `PermitRootLogin` option can be set to `no` with named admin accounts defined. Document this change before applying — losing root SSH access to all hosts simultaneously is a recovery scenario.
 
 ### Audit Logging to Syslog
@@ -188,9 +196,11 @@ Queue Drop Mark: 90
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option --loghost`** — Use `--loghost=` syntax without spaces (e.g., `--loghost=udp://siem.example.com:514`).
-    **`Error: Unable to resolve hostname siem.example.com`** — Verify DNS resolution on the ESXi host with `esxcli network ip dns server list` and ensure the SIEM server hostname is correct.
-    **`Error: Ruleset syslog not found`** — The ruleset name is `syslog` but may not exist on all ESXi versions; use `esxcli network firewall ruleset list` to confirm the exact ruleset name.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option --loghost` | Use `--loghost=` syntax without spaces (e.g., `--loghost=udp://siem.example.com:514`). |
+    | `Error: Unable to resolve hostname siem.example.com` | Verify DNS resolution on the ESXi host with `esxcli network ip dns server list` and ensure the SIEM server hostname is correct. |
+    | `Error: Ruleset syslog not found` | The ruleset name is `syslog` but may not exist on all ESXi versions; use `esxcli network firewall ruleset list` to confirm the exact ruleset name. |
 **Key events to monitor in syslog:**
 
 - `SSH login`
@@ -237,9 +247,11 @@ NTP Synchronized: true
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify that NTP servers are reachable from the ESXi host and that firewall rules allow UDP port 123 outbound.
-    **`Error: Unable to set NTP servers`** — Ensure you have root/administrator privileges and that the ESXi host is not in lockdown mode.
-    **`ntpq: read: Connection refused`** — Confirm that the ntpd service is running with `systemctl status ntpd` or restart it with `systemctl restart ntpd`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify that NTP servers are reachable from the ESXi host and that firewall rules allow UDP port 123 outbound. |
+    | `Error: Unable to set NTP servers` | Ensure you have root/administrator privileges and that the ESXi host is not in lockdown mode. |
+    | `ntpq: read: Connection refused` | Confirm that the ntpd service is running with `systemctl status ntpd` or restart it with `systemctl restart ntpd`. |
 **Via host profile:**
 Host Profiles → Security and Services → Time Configuration → NTP Configuration
 
@@ -281,8 +293,10 @@ EOF
 ```
 
 !!! warning "Common errors"
-    **`cat: /etc/vmware-syslog/syslog.conf: Permission denied`** — Run the commands with `sudo` or as root user.
-    **`Job for rsyslog.service failed because the control process exited with error code.`** — Verify the syslog.conf syntax is correct and the SIEM server address is reachable with `telnet siem.example.com 514`.
+    | Error | Fix |
+    |---|---|
+    | `cat: /etc/vmware-syslog/syslog.conf: Permission denied` | Run the commands with `sudo` or as root user. |
+    | `Job for rsyslog.service failed because the control process exited with error code.` | Verify the syslog.conf syntax is correct and the SIEM server address is reachable with `telnet siem.example.com 514`. |
 ### TLS and Cipher Configuration
 
 vCenter uses TLS 1.2 minimum from vSphere 7.0. Verify:
@@ -301,8 +315,10 @@ Issuer CN=VMware-Root-CA, OU=VMware, O=VMware, C=US
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to local certificate store`** — Ensure the vmafd service is running with `systemctl status vmafd` and restart if needed.
-    **`grep: (standard input): No such file or directory`** — Verify the MACHINE_SSL_CERT store exists by running `vecs-cli store list` first to confirm certificate stores are accessible.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to local certificate store` | Ensure the vmafd service is running with `systemctl status vmafd` and restart if needed. |
+    | `grep: (standard input): No such file or directory` | Verify the MACHINE_SSL_CERT store exists by running `vecs-cli store list` first to confirm certificate stores are accessible. |
 Disable weak ciphers via the vSphere Client:
 vCenter → Configure → Advanced Settings → search for `config.tls` and `config.ssl`
 

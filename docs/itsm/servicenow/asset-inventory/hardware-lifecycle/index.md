@@ -56,9 +56,11 @@ System Firmware: 2.14.2 → 2.15.1 [██████████████�
 ```
 
 !!! warning "Common errors"
-    **`racadm: ERROR: DRAC IP <192.168.1.100> is not reachable`** — Verify iDRAC network connectivity and ensure the IP address is correct with `ping <drac-ip>`.
-    **`hponcfg: ERROR: Unable to locate iLO interface`** — Confirm HPE iLO is enabled in BIOS and accessible via the management network interface.
-    **`fwupdmgr: No devices found that support firmware updates`** — Install the appropriate firmware plugin package (e.g., `fwupd-plugin-dell` or `fwupd-plugin-hpe`) for your hardware vendor.
+    | Error | Fix |
+    |---|---|
+    | `racadm: ERROR: DRAC IP <192.168.1.100> is not reachable` | Verify iDRAC network connectivity and ensure the IP address is correct with `ping <drac-ip>`. |
+    | `hponcfg: ERROR: Unable to locate iLO interface` | Confirm HPE iLO is enabled in BIOS and accessible via the management network interface. |
+    | `fwupdmgr: No devices found that support firmware updates` | Install the appropriate firmware plugin package (e.g., `fwupd-plugin-dell` or `fwupd-plugin-hpe`) for your hardware vendor. |
 ```bash
 # Secure erase a drive (ATA)
 hdparm -I /dev/sda | grep -i "security"  # check if security-erase supported

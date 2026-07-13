@@ -105,9 +105,11 @@ drwxr-xr-x  3 root root       4096 Dec 20 14:10 .
 ```
 
 !!! warning "Common errors"
-    **`bash: nextbootdir=/altbootbank: command not found`** — Remove the leading `#` comment character; this is a shell variable assignment, not a comment.
-    **`Permission denied`** — Ensure you are logged in as root or have root privileges via sudo; bootbank modifications require elevated access.
-    **`/altbootbank: No such file or directory`** — Verify the ESXi host supports dual bootbanks (ESXi 6.5+); older versions may only have /bootbank.
+    | Error | Fix |
+    |---|---|
+    | `bash: nextbootdir=/altbootbank: command not found` | Remove the leading `#` comment character; this is a shell variable assignment, not a comment. |
+    | `Permission denied` | Ensure you are logged in as root or have root privileges via sudo; bootbank modifications require elevated access. |
+    | `/altbootbank: No such file or directory` | Verify the ESXi host supports dual bootbanks (ESXi 6.5+); older versions may only have /bootbank. |
 This works immediately post-upgrade before any configuration changes are made. After hosts are rejoined to vCenter and NSX re-prepared, bootbank rollback becomes impractical.
 
 ## NSX Backup Before Upgrade
@@ -154,8 +156,10 @@ Backup successfully transferred to sftp://backup.corp.local/nsx-backups/backup-2
 ```
 
 !!! warning "Common errors"
-    **`{"error_code": 6001, "error_message": "NSX Manager cluster is not stable"}`** — Wait for cluster health to reach 100% via `GET /api/v1/cluster/status` before triggering backup.
-    **`{"error_code": 5003, "error_message": "External backup target unreachable"}`** — Verify SFTP credentials and network connectivity to the backup server in NSX Manager UI under Backup & Restore settings.
+    | Error | Fix |
+    |---|---|
+    | `{"error_code": 6001, "error_message": "NSX Manager cluster is not stable"}` | Wait for cluster health to reach 100% via `GET /api/v1/cluster/status` before triggering backup. |
+    | `{"error_code": 5003, "error_message": "External backup target unreachable"}` | Verify SFTP credentials and network connectivity to the backup server in NSX Manager UI under Backup & Restore settings. |
 ## Aria Product Rollback (Snapshots)
 
 Snapshot all Aria appliances before upgrade via LCM or directly:

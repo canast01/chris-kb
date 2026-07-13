@@ -107,9 +107,11 @@ Block high-risk sign-ins                enabledForReportingButNotEnforced   e5f6
 ```
 
 !!! warning "Common errors"
-    **`Authorization_RequestDenied: Insufficient privileges to complete the operation.`** — Ensure your Azure AD account has the Conditional Access Administrator or Global Administrator role assigned.
-    **`Invalid template expansion: <policy-id>`** — Replace `<policy-id>` with an actual policy UUID (e.g., `a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6`) from the list output.
-    **`Bad Request: Invalid request body`** — Validate the JSON body syntax and ensure required fields like `displayName`, `state`, `conditions`, and `grantControls` are properly formatted without trailing commas.
+    | Error | Fix |
+    |---|---|
+    | `Authorization_RequestDenied: Insufficient privileges to complete the operation.` | Ensure your Azure AD account has the Conditional Access Administrator or Global Administrator role assigned. |
+    | `Invalid template expansion: <policy-id>` | Replace `<policy-id>` with an actual policy UUID (e.g., `a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6`) from the list output. |
+    | `Bad Request: Invalid request body` | Validate the JSON body syntax and ensure required fields like `displayName`, `state`, `conditions`, and `grantControls` are properly formatted without trailing commas. |
 ## Conditions
 
 Conditions define the context in which a policy applies. Multiple conditions can be combined with AND logic.
@@ -191,9 +193,11 @@ az rest \
 ```
 
 !!! warning "Common errors"
-    **`Authorization_RequestDenied`** — Ensure your Azure AD account has the Policy.ReadWrite.ConditionalAccess permission or is assigned the Conditional Access Administrator role.
-    **`Invalid JSON in request body`** — Validate the JSON syntax using `jq` before submission: `echo '<json>' | jq .`
-    **`Insufficient privileges to complete the operation`** — Verify you are authenticated with `az account show` and have Global Administrator or Conditional Access Administrator role in the target tenant.
+    | Error | Fix |
+    |---|---|
+    | `Authorization_RequestDenied` | Ensure your Azure AD account has the Policy.ReadWrite.ConditionalAccess permission or is assigned the Conditional Access Administrator role. |
+    | `Invalid JSON in request body` | Validate the JSON syntax using `jq` before submission: `echo '<json>' | jq .` |
+    | `Insufficient privileges to complete the operation` | Verify you are authenticated with `az account show` and have Global Administrator or Conditional Access Administrator role in the target tenant. |
 ## Named Locations
 
 Named locations represent trusted IP ranges or countries/regions used in Conditional Access conditions.
@@ -245,9 +249,11 @@ Guest WiFi           #microsoft.graph.countryNamedLocation   770e8400-e29b-41d4-
 ```
 
 !!! warning "Common errors"
-    **`Authorization_RequestDenied: Insufficient privileges to complete the operation.`** — Ensure your Azure AD account has the "Conditional Access Administrator" or "Global Administrator" role assigned.
-    **`Invalid JSON in request body`** — Validate the JSON syntax in the `--body` parameter; check for missing commas or mismatched quotes around field names like `@odata.type`.
-    **`The request body parameter 'ipRanges' cannot be null or empty.`** — Include at least one valid IPv4 or IPv6 CIDR range in the `ipRanges` array with proper `@odata.type` declaration.
+    | Error | Fix |
+    |---|---|
+    | `Authorization_RequestDenied: Insufficient privileges to complete the operation.` | Ensure your Azure AD account has the "Conditional Access Administrator" or "Global Administrator" role assigned. |
+    | `Invalid JSON in request body` | Validate the JSON syntax in the `--body` parameter; check for missing commas or mismatched quotes around field names like `@odata.type`. |
+    | `The request body parameter 'ipRanges' cannot be null or empty.` | Include at least one valid IPv4 or IPv6 CIDR range in the `ipRanges` array with proper `@odata.type` declaration. |
 ## Report-Only Mode
 
 Always deploy new policies in `enabledForReportingButNotEnforced` (report-only) state first. This allows you to see sign-in impact in logs before enforcing.
@@ -300,8 +306,10 @@ az rest \
 ```
 
 !!! warning "Common errors"
-    **`Authorization_RequestDenied`** — Ensure your Azure CLI account has `AuditLog.Read.All` permission in Microsoft Graph API.
-    **`Invalid filter clause value: '2026-05-01T00:00:00Z'`** — Use a valid past date in ISO 8601 format (e.g., `2024-05-01T00:00:00Z`) instead of a future date.
+    | Error | Fix |
+    |---|---|
+    | `Authorization_RequestDenied` | Ensure your Azure CLI account has `AuditLog.Read.All` permission in Microsoft Graph API. |
+    | `Invalid filter clause value: '2026-05-01T00:00:00Z'` | Use a valid past date in ISO 8601 format (e.g., `2024-05-01T00:00:00Z`) instead of a future date. |
 ## CA Policy Deployment Checklist
 
 | Step | Action |

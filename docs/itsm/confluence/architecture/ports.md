@@ -83,9 +83,11 @@ Connection to confluence-node-02.internal 25500 port [tcp/*] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or install the CA certificate in your system trust store.
-    **`nc: connect to <postgres-host> port 5432 (tcp) failed: Connection refused`** — Verify PostgreSQL is running on the target host with `systemctl status postgresql` and check that the port is not blocked by firewall rules.
-    **`nc: connect to <peer-confluence-node> port 5701 (tcp) failed: No route to host`** — Confirm network connectivity between nodes and verify Hazelcast is bound to `0.0.0.0` (not `localhost`) in `confluence.cfg.xml`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or install the CA certificate in your system trust store. |
+    | `nc: connect to <postgres-host> port 5432 (tcp) failed: Connection refused` | Verify PostgreSQL is running on the target host with `systemctl status postgresql` and check that the port is not blocked by firewall rules. |
+    | `nc: connect to <peer-confluence-node> port 5701 (tcp) failed: No route to host` | Confirm network connectivity between nodes and verify Hazelcast is bound to `0.0.0.0` (not `localhost`) in `confluence.cfg.xml`. |
 ## See also
 
 - [Confluence — Architecture](../how-it-works/)

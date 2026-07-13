@@ -73,9 +73,11 @@ security-team        org_admin         cn=security-team,ou=groups,dc=corp,dc=loc
 ```
 
 !!! warning "Common errors"
-    **`Error: User 'svc-veeam' already exists`** — Check existing users with `purefb admin list` and use a unique name or delete the existing user first.
-    **`Error: Invalid role 'storage_adm'. Valid roles are: system_admin, org_admin, storage_admin, readonly`** — Correct the role name spelling in the `--role` parameter.
-    **`Error: LDAP/AD not configured`** — Configure directory services with `purefb directoryservice create` before attempting to list group mappings.
+    | Error | Fix |
+    |---|---|
+    | `Error: User 'svc-veeam' already exists` | Check existing users with `purefb admin list` and use a unique name or delete the existing user first. |
+    | `Error: Invalid role 'storage_adm'. Valid roles are: system_admin, org_admin, storage_admin, readonly` | Correct the role name spelling in the `--role` parameter. |
+    | `Error: LDAP/AD not configured` | Configure directory services with `purefb directoryservice create` before attempting to list group mappings. |
 ---
 
 ## NFS Export Policy Access Control
@@ -129,9 +131,11 @@ prod-ml-training-data     2.5TB     10.0.1.0/24(rw,root_squash):10.0.5.0/24(ro) 
 ```
 
 !!! warning "Common errors"
-    **`Error: Filesystem 'prod-ml-training-data' not found`** — Verify the filesystem name matches exactly with `purefb filesystem list` and check for typos.
-    **`Error: Invalid NFS rule syntax 'rw,root_squash'`** — Ensure NFS rules follow the format `subnet/mask(option1,option2)` with parentheses and no spaces inside the rule definition.
-    **`Error: CIDR block 10.0.10.50/32 overlaps with existing rule`** — Use a non-overlapping subnet or remove the conflicting rule before applying the new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: Filesystem 'prod-ml-training-data' not found` | Verify the filesystem name matches exactly with `purefb filesystem list` and check for typos. |
+    | `Error: Invalid NFS rule syntax 'rw,root_squash'` | Ensure NFS rules follow the format `subnet/mask(option1,option2)` with parentheses and no spaces inside the rule definition. |
+    | `Error: CIDR block 10.0.10.50/32 overlaps with existing rule` | Use a non-overlapping subnet or remove the conflicting rule before applying the new one. |
 ### Export Policy Best Practices
 
 | Requirement | Configuration |
@@ -200,9 +204,11 @@ a9b8c7d6e5f4g3h2i1j0         admin                             default         2
 ```
 
 !!! warning "Common errors"
-    **`Error: object store account 'ml-platform' already exists`** — Use `purefb object-store-account list` to verify the account name is unique, or delete the existing account first with `purefb object-store-account delete --name ml-platform`.
-    **`Error: user 'svc-training-pipeline' already exists in account 'ml-platform'`** — Verify the username with `purefb object-store-user list --account ml-platform` and use a different name or delete the existing user.
-    **`Error: failed to connect to FlashBlade management interface`** — Ensure the FlashBlade array is reachable and you are authenticated with `purefb login` or check your `PUREFB_HOST` and `PUREFB_API_TOKEN` environment variables.
+    | Error | Fix |
+    |---|---|
+    | `Error: object store account 'ml-platform' already exists` | Use `purefb object-store-account list` to verify the account name is unique, or delete the existing account first with `purefb object-store-account delete --name ml-platform`. |
+    | `Error: user 'svc-training-pipeline' already exists in account 'ml-platform'` | Verify the username with `purefb object-store-user list --account ml-platform` and use a different name or delete the existing user. |
+    | `Error: failed to connect to FlashBlade management interface` | Ensure the FlashBlade array is reachable and you are authenticated with `purefb login` or check your `PUREFB_HOST` and `PUREFB_API_TOKEN` environment variables. |
 ### Rotate an S3 Access Key
 
 S3 access keys do not expire automatically. Rotate them on a defined schedule:
@@ -241,9 +247,11 @@ Deleted access key: 0a1b2c3d4e5f6g7h
 ```
 
 !!! warning "Common errors"
-    **`Error: access key not found for user svc-training-pipeline/ml-platform`** — Verify the user exists in Pure FlashBlade with `purefb user list` and confirm the user path is correct.
-    **`An error occurred (InvalidAccessKeyId) when calling the ListBucket operation: The Access Key Id you provided does not exist in our records.`** — Ensure the new access key credentials were correctly copied to the application config and the old key was not deleted before the new one was fully propagated (wait 30 seconds).
-    **`Error: access key <old_access_key_id> not found`** — Confirm the exact access key ID with `purefb object-store-access-key list --user svc-training-pipeline/ml-platform` before deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: access key not found for user svc-training-pipeline/ml-platform` | Verify the user exists in Pure FlashBlade with `purefb user list` and confirm the user path is correct. |
+    | `An error occurred (InvalidAccessKeyId) when calling the ListBucket operation: The Access Key Id you provided does not exist in our records.` | Ensure the new access key credentials were correctly copied to the application config and the old key was not deleted before the new one was fully propagated (wait 30 seconds). |
+    | `Error: access key <old_access_key_id> not found` | Confirm the exact access key ID with `purefb object-store-access-key list --user svc-training-pipeline/ml-platform` before deletion. |
 ### Bucket Policies
 
 Bucket policies provide IAM-style access control rules on a per-bucket basis. Use bucket policies when multiple accounts or users need different levels of access to the same bucket.
@@ -306,9 +314,11 @@ Policy:
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid JSON in policy document`** — Validate the JSON syntax using `jq . <<< '<policy>'` before applying, or escape quotes properly with backslashes.
-    **`Error: Bucket 'prod-ml-training-data' not found`** — Verify the bucket exists with `purefb bucket list` and confirm the name matches exactly.
-    **`Error: Principal ARN format invalid`** — Ensure IAM user ARNs follow the correct format `arn:aws:iam::ACCOUNT-ID:user/USERNAME` with a valid account ID in the third field.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid JSON in policy document` | Validate the JSON syntax using `jq . <<< '<policy>'` before applying, or escape quotes properly with backslashes. |
+    | `Error: Bucket 'prod-ml-training-data' not found` | Verify the bucket exists with `purefb bucket list` and confirm the name matches exactly. |
+    | `Error: Principal ARN format invalid` | Ensure IAM user ARNs follow the correct format `arn:aws:iam::ACCOUNT-ID:user/USERNAME` with a valid account ID in the third field. |
 **S3 access control best practices:**
 
 | Requirement | Implementation |
@@ -352,9 +362,11 @@ TEMP-WORKSPACE        temp-storage            SMB       /temp-storage
 ```
 
 !!! warning "Common errors"
-    **`Error: Filesystem 'prod-analytics-share' not found`** — Verify the filesystem name exists with `purefb filesystem list` and correct any typos.
-    **`Error: SMB is not enabled on filesystem 'prod-analytics-share'`** — Ensure the filesystem update command completes successfully before attempting to create the SMB share.
-    **`Error: SMB share 'PROD-ANALYTICS' already exists`** — Use a different share name or delete the existing share with `purefb smb-share delete --name PROD-ANALYTICS` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Filesystem 'prod-analytics-share' not found` | Verify the filesystem name exists with `purefb filesystem list` and correct any typos. |
+    | `Error: SMB is not enabled on filesystem 'prod-analytics-share'` | Ensure the filesystem update command completes successfully before attempting to create the SMB share. |
+    | `Error: SMB share 'PROD-ANALYTICS' already exists` | Use a different share name or delete the existing share with `purefb smb-share delete --name PROD-ANALYTICS` first. |
 ### Share-Level Access Control
 
 SMB share-level permissions are configured in the Windows environment using the share's security descriptor. From a Windows host with appropriate AD credentials:
@@ -403,8 +415,10 @@ Clients will reconnect within 30 seconds.
 ```
 
 !!! warning "Common errors"
-    **`Error: SMB share 'PROD-ANALYTICS' not found`** — Verify the share name matches exactly (case-sensitive) using `purefb smb-share list`.
-    **`Error: Invalid encryption mode 'required'. Valid modes: disabled, preferred, required`** — Use one of the three valid encryption modes; note that 'required' may disconnect clients using older SMB versions.
+    | Error | Fix |
+    |---|---|
+    | `Error: SMB share 'PROD-ANALYTICS' not found` | Verify the share name matches exactly (case-sensitive) using `purefb smb-share list`. |
+    | `Error: Invalid encryption mode 'required'. Valid modes: disabled, preferred, required` | Use one of the three valid encryption modes; note that 'required' may disconnect clients using older SMB versions. |
 ---
 
 ## Audit Logging
@@ -452,9 +466,11 @@ File size: 12.4 MB
 ```
 
 !!! warning "Common errors"
-    **`Error: Authentication failed. Invalid credentials or session expired.`** — Re-authenticate using `purefb login` with valid admin credentials.
-    **`Error: Invalid filter syntax. Expected format: --filter "field='value'"`** — Verify filter field names match audit schema (e.g., `user`, `operation_name`, `resource`) and use single quotes around values.
-    **`Error: Insufficient permissions. User role does not have audit read access.`** — Grant the user the Audit Reader or Admin role via the FlashBlade management interface.
+    | Error | Fix |
+    |---|---|
+    | `Error: Authentication failed. Invalid credentials or session expired.` | Re-authenticate using `purefb login` with valid admin credentials. |
+    | `Error: Invalid filter syntax. Expected format: --filter "field='value'"` | Verify filter field names match audit schema (e.g., `user`, `operation_name`, `resource`) and use single quotes around values. |
+    | `Error: Insufficient permissions. User role does not have audit read access.` | Grant the user the Audit Reader or Admin role via the FlashBlade management interface. |
 **Forward audit logs off-array** to prevent tampering and to maintain a persistent audit trail:
 
 ```bash
@@ -480,9 +496,11 @@ siem-udp      udp://siem.example.com:514       all       local0
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to siem.example.com:6514`** — Verify the SIEM server hostname/IP is reachable and the syslog service is listening on the specified port.
-    **`Error: Syslog destination 'siem-tls' already exists`** — Remove the existing destination with `purefb syslog delete siem-tls` before recreating it.
-    **`Error: Invalid URI scheme 'tls'. Valid schemes are: udp, tcp`** — Confirm your FlashBlade firmware supports TLS syslog (requires Purity 3.0+); use `tcp://` as an alternative if TLS is unavailable.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to siem.example.com:6514` | Verify the SIEM server hostname/IP is reachable and the syslog service is listening on the specified port. |
+    | `Error: Syslog destination 'siem-tls' already exists` | Remove the existing destination with `purefb syslog delete siem-tls` before recreating it. |
+    | `Error: Invalid URI scheme 'tls'. Valid schemes are: udp, tcp` | Confirm your FlashBlade firmware supports TLS syslog (requires Purity 3.0+); use `tcp://` as an alternative if TLS is unavailable. |
 Configure SIEM alerts for the following audit events:
 - Multiple failed login attempts from the same source IP (brute force indicator)
 - API token creation or deletion — especially outside business hours
@@ -550,9 +568,11 @@ fs-archive              8.2TB           true
 ```
 
 !!! warning "Common errors"
-    **`purefb: command not found`** — Install the Pure Storage FlashBlade CLI tools or ensure the purefb binary is in your PATH.
-    **`Error: Authentication failed`** — Verify your FlashBlade credentials are configured via `purefb login` or environment variables.
-    **`Error: Permission denied`** — Confirm your admin account has sufficient role privileges to list the requested resource type.
+    | Error | Fix |
+    |---|---|
+    | `purefb: command not found` | Install the Pure Storage FlashBlade CLI tools or ensure the purefb binary is in your PATH. |
+    | `Error: Authentication failed` | Verify your FlashBlade credentials are configured via `purefb login` or environment variables. |
+    | `Error: Permission denied` | Confirm your admin account has sufficient role privileges to list the requested resource type. |
 | Check | Expected State | Action if Unexpected |
 |---|---|---|
 | No `array_admin` service accounts | Only named human admins hold this role | Downgrade service account roles to `storage_admin` or lower |

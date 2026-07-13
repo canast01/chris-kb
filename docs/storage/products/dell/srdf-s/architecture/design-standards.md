@@ -56,8 +56,10 @@ Time         Read_Reqs  Write_Reqs  Read_MB/s  Write_MB/s  Queue_Depth  Util%
 ```
 
 !!! warning "Common errors"
-    **`symstat: Error: Invalid SID <SID>`** — Replace `<SID>` with an actual Symmetrix ID (e.g., `000123456789012`).
-    **`symstat: Error: RDF group not found or not configured`** — Verify the array has SRDF/S configured and the RDF group is online using `symcfg list -rdf`.
+    | Error | Fix |
+    |---|---|
+    | `symstat: Error: Invalid SID <SID>` | Replace `<SID>` with an actual Symmetrix ID (e.g., `000123456789012`). |
+    | `symstat: Error: RDF group not found or not configured` | Verify the array has SRDF/S configured and the RDF group is online using `symcfg list -rdf`. |
 Sizing must be validated at peak (end-of-month batch, backup window) — not average load.
 
 ---
@@ -82,8 +84,10 @@ Device Name           : 000FA
 ```
 
 !!! warning "Common errors"
-    **`symdev: Command not found`** — Install the EMC Solutions Enabler package or ensure the Symmetrix management tools are in your PATH.
-    **`symdev: Cannot connect to the Symmetrix array <target_SID>`** — Verify the target SID is correct and the Symmetrix engine is accessible via the management network.
+    | Error | Fix |
+    |---|---|
+    | `symdev: Command not found` | Install the EMC Solutions Enabler package or ensure the Symmetrix management tools are in your PATH. |
+    | `symdev: Cannot connect to the Symmetrix array <target_SID>` | Verify the target SID is correct and the Symmetrix engine is accessible via the management network. |
 ---
 
 ## Test Frequency

@@ -106,9 +106,11 @@ dest-cluster-01   ic_lif_02 intercluster up      none
 ```
 
 !!! warning "Common errors"
-    **`PING <dest-intercluster-lif-ip> from <source-intercluster-lif>: no answer`** — Verify network connectivity and firewall rules allow port 10001 (ONTAP cluster communication) between intercluster LIFs.
-    **`Error: command failed: Cluster peer relationship does not exist`** — Establish cluster peering first using `cluster peer create -peer-addrs <dest-cluster-mgmt-ip>` before attempting SnapMirror operations.
-    **`Error: command failed: SnapMirror relationship not initialized`** — Initialize the SnapMirror relationship with `snapmirror initialize -source-path <source-svm>:<volume> -destination-path <dest-svm>:<volume>`.
+    | Error | Fix |
+    |---|---|
+    | `PING <dest-intercluster-lif-ip> from <source-intercluster-lif>: no answer` | Verify network connectivity and firewall rules allow port 10001 (ONTAP cluster communication) between intercluster LIFs. |
+    | `Error: command failed: Cluster peer relationship does not exist` | Establish cluster peering first using `cluster peer create -peer-addrs <dest-cluster-mgmt-ip>` before attempting SnapMirror operations. |
+    | `Error: command failed: SnapMirror relationship not initialized` | Initialize the SnapMirror relationship with `snapmirror initialize -source-path <source-svm>:<volume> -destination-path <dest-svm>:<volume>`. |
 ## See also
 
 - [NetApp ONTAP — Ports](../../ontap/architecture/ports.md)

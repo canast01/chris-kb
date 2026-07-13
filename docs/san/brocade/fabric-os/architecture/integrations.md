@@ -64,8 +64,10 @@ Alias created successfully: powermax01_fa0e (5x:xx:xx:xx:xx:xx:xx:xx)
 ```
 
 !!! warning "Common errors"
-    **`Invalid WWPN format`** — Verify the WWPN is 16 hexadecimal characters (8 pairs separated by colons) and matches the format from Unisphere exactly.
-    **`Alias name already exists`** — Use `alidelete` to remove the existing alias before recreating it, or choose a unique alias name.
+    | Error | Fix |
+    |---|---|
+    | `Invalid WWPN format` | Verify the WWPN is 16 hexadecimal characters (8 pairs separated by colons) and matches the format from Unisphere exactly. |
+    | `Alias name already exists` | Use `alidelete` to remove the existing alias before recreating it, or choose a unique alias name. |
 ---
 
 ## NetApp ONTAP Integration
@@ -102,9 +104,11 @@ Effective Configuration:  prod-cfg
 ```
 
 !!! warning "Common errors"
-    **`Invalid WWPN format`** — Verify the WWPN from ONTAP using `network interface show -fields wwpn` and ensure it matches the 16-character hexadecimal format (e.g., `50:0a:09:81:23:45:67:89`).
-    **`Zone member does not exist`** — Confirm both the HBA alias and ONTAP LIF alias are created before adding them to a zone using `aliastatus` to verify.
-    **`Configuration not enabled`** — Run `cfgenable "prod-cfg"` after `cfgadd` to activate the configuration, as zones remain inactive until the parent configuration is enabled.
+    | Error | Fix |
+    |---|---|
+    | `Invalid WWPN format` | Verify the WWPN from ONTAP using `network interface show -fields wwpn` and ensure it matches the 16-character hexadecimal format (e.g., `50:0a:09:81:23:45:67:89`). |
+    | `Zone member does not exist` | Confirm both the HBA alias and ONTAP LIF alias are created before adding them to a zone using `aliastatus` to verify. |
+    | `Configuration not enabled` | Run `cfgenable "prod-cfg"` after `cfgadd` to activate the configuration, as zones remain inactive until the parent configuration is enabled. |
 ---
 
 ## Pure Storage FlashArray Integration
@@ -130,9 +134,11 @@ Zone created successfully: esxi-host01_hba1-pure-fa01_ct1
 ```
 
 !!! warning "Common errors"
-    **`Invalid WWPN format`** — Verify the WWPN from Pure UI matches the 16-character hex format (52:4a:xx:xx:xx:xx:xx:xx) and replace xx placeholders with actual values.
-    **`Alias name already exists`** — Check for duplicate alias names in the fabric using `alshow` and use a unique name or delete the existing alias first.
-    **`Member not found in fabric`** — Confirm the HBA WWPN (esxi-host01_hba0) and target port WWPN are logged into the fabric by running `fabricshow` before creating the zone.
+    | Error | Fix |
+    |---|---|
+    | `Invalid WWPN format` | Verify the WWPN from Pure UI matches the 16-character hex format (52:4a:xx:xx:xx:xx:xx:xx) and replace xx placeholders with actual values. |
+    | `Alias name already exists` | Check for duplicate alias names in the fabric using `alshow` and use a unique name or delete the existing alias first. |
+    | `Member not found in fabric` | Confirm the HBA WWPN (esxi-host01_hba0) and target port WWPN are logged into the fabric by running `fabricshow` before creating the zone. |
 ---
 
 ## SNMP and Syslog
@@ -167,9 +173,11 @@ Syslog servers configured:
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid IP address format`** — Ensure the SIEM IP is in valid dotted-decimal notation (e.g., 192.168.100.45) and rerun the command.
-    **`Error: Syslog server already exists`** — Remove the duplicate entry with `syslogadmin --remove -ip <siem-ip>` before adding it again.
-    **`Error: Authentication passphrase too short (minimum 8 characters)`** — Re-run `snmpconfig --set mibCapability` and enter a passphrase with at least 8 characters.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid IP address format` | Ensure the SIEM IP is in valid dotted-decimal notation (e.g., 192.168.100.45) and rerun the command. |
+    | `Error: Syslog server already exists` | Remove the duplicate entry with `syslogadmin --remove -ip <siem-ip>` before adding it again. |
+    | `Error: Authentication passphrase too short (minimum 8 characters)` | Re-run `snmpconfig --set mibCapability` and enter a passphrase with at least 8 characters. |
 **Test SNMP from monitoring server:**
 
 ```bash
@@ -198,9 +206,11 @@ System Description:
 ```
 
 !!! warning "Common errors"
-    **`Timeout: No Response from <switch-ip>`** — Verify the switch IP is reachable with `ping <switch-ip>` and confirm SNMP is enabled on the switch.
-    **`Error in packet: Decryption error`** — Ensure the authentication and privacy passwords are correct and match the SNMPv3 user credentials configured on the switch.
-    **`Unknown user name`** — Confirm the username exists on the switch by checking the SNMPv3 user configuration with `snmpusm list` on the Brocade switch.
+    | Error | Fix |
+    |---|---|
+    | `Timeout: No Response from <switch-ip>` | Verify the switch IP is reachable with `ping <switch-ip>` and confirm SNMP is enabled on the switch. |
+    | `Error in packet: Decryption error` | Ensure the authentication and privacy passwords are correct and match the SNMPv3 user credentials configured on the switch. |
+    | `Unknown user name` | Confirm the username exists on the switch by checking the SNMPv3 user configuration with `snmpusm list` on the Brocade switch. |
 ---
 
 ## See also

@@ -57,9 +57,11 @@ rtt min/avg/max/stddev = 2.18/2.30/2.41/0.09 ms
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <esxi-management-ip>`** — Replace the placeholder with the actual ESXi management IP address (e.g., `ping -c 4 172.16.10.42`).
-    **`PING <esxi-management-ip> (PING: sendto: Operation not permitted)`** — Verify firewall rules allow ICMP traffic to the ESXi host and check that the management network is reachable from your current network segment.
-    **`100% packet loss`** — Confirm the ESXi host is powered on, the management IP is correct, and the network cable is connected to the management vmnic.
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <esxi-management-ip>` | Replace the placeholder with the actual ESXi management IP address (e.g., `ping -c 4 172.16.10.42`). |
+    | `PING <esxi-management-ip> (PING: sendto: Operation not permitted)` | Verify firewall rules allow ICMP traffic to the ESXi host and check that the management network is reachable from your current network segment. |
+    | `100% packet loss` | Confirm the ESXi host is powered on, the management IP is correct, and the network cable is connected to the management vmnic. |
 **No response:**
 → Check physical network switch — port enabled? VLAN correct?
 → Check iDRAC/iLO — is the host powered on?
@@ -87,9 +89,11 @@ root@esx-prod-01:~#
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname <esxi-management-ip>: Name or service not known`** — Replace `<esxi-management-ip>` with the actual ESXi host IP address (e.g., 192.168.1.42).
-    **`Permission denied (publickey,password).`** — Verify the root password is correct and the ESXi host has SSH enabled (Configuration > Security Profile > Services > SSH).
-    **`ssh: connect to host 192.168.1.42 port 22: Connection refused`** — Enable SSH on the ESXi host via vCenter or DCUI, as the SSH service is disabled by default.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname <esxi-management-ip>: Name or service not known` | Replace `<esxi-management-ip>` with the actual ESXi host IP address (e.g., 192.168.1.42). |
+    | `Permission denied (publickey,password).` | Verify the root password is correct and the ESXi host has SSH enabled (Configuration > Security Profile > Services > SSH). |
+    | `ssh: connect to host 192.168.1.42 port 22: Connection refused` | Enable SSH on the ESXi host via vCenter or DCUI, as the SSH service is disabled by default. |
 **SSH fails:**
 → vSphere management agents may be down
 → Try restarting from iDRAC console: `services.sh restart`
@@ -129,9 +133,11 @@ vpxa started.
 ```
 
 !!! warning "Common errors"
-    **`hostd is stopped.`** — Run `/etc/init.d/hostd start` to bring the service online.
-    **`/var/log/hostd.log: No such file or directory`** — Verify the ESXi host is accessible via SSH and the log file exists; check `/var/log/` directory contents with `ls -la /var/log/`.
-    **`Permission denied`** — Ensure you are logged in as root or have sudo privileges; use `sudo -i` to escalate if needed.
+    | Error | Fix |
+    |---|---|
+    | `hostd is stopped.` | Run `/etc/init.d/hostd start` to bring the service online. |
+    | `/var/log/hostd.log: No such file or directory` | Verify the ESXi host is accessible via SSH and the log file exists; check `/var/log/` directory contents with `ls -la /var/log/`. |
+    | `Permission denied` | Ensure you are logged in as root or have sudo privileges; use `sudo -i` to escalate if needed. |
 After restart: wait 2–3 minutes and check if vCenter shows the host as Connected.
 
 ## Step 4 — PSOD (Purple Screen of Death)?
@@ -194,8 +200,10 @@ Device: naa.60000000000000000000000000000001
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace esxcli hardware`** — Verify ESXi version supports the hardware namespace (6.5+) and run from ESXi shell, not vCenter.
-    **`Error: Could not find device <device_id>`** — Use `esxcli storage core device list` first to get the exact naa device identifier and replace `<device_id>` with the full device name.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace esxcli hardware` | Verify ESXi version supports the hardware namespace (6.5+) and run from ESXi shell, not vCenter. |
+    | `Error: Could not find device <device_id>` | Use `esxcli storage core device list` first to get the exact naa device identifier and replace `<device_id>` with the full device name. |
 Review iDRAC/iLO system event log for hardware faults.
 
 ## Escalation

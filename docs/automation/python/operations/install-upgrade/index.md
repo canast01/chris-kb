@@ -73,9 +73,11 @@ Python 3.12.3
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to pyenv.run port 443: Connection timed out`** — Verify network connectivity and retry, or manually clone pyenv from https://github.com/pyenv/pyenv.git to ~/.pyenv.
-    **`pyenv: command not found`** — Ensure the shell profile edits were saved and run `exec "$SHELL"` to reload the shell with updated PATH.
-    **`ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?`** — Install required build dependencies with `sudo apt-get install libssl-dev libffi-dev python3-dev` (Ubuntu/Debian) or `brew install openssl` (macOS).
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to pyenv.run port 443: Connection timed out` | Verify network connectivity and retry, or manually clone pyenv from https://github.com/pyenv/pyenv.git to ~/.pyenv. |
+    | `pyenv: command not found` | Ensure the shell profile edits were saved and run `exec "$SHELL"` to reload the shell with updated PATH. |
+    | `ERROR: The Python ssl extension was not compiled. Missing the OpenSSL lib?` | Install required build dependencies with `sudo apt-get install libssl-dev libffi-dev python3-dev` (Ubuntu/Debian) or `brew install openssl` (macOS). |
 ```bash
 # 1. Inventory all automation using Python on this host
 find /opt /home -name "*.py" -not -path "*/.venv/*" -not -path "*/__pycache__/*" 2>/dev/null
@@ -128,9 +130,11 @@ tests/integration/test_deploy.py ..................... [ 100%]
 ```
 
 !!! warning "Common errors"
-    **`pyenv: command not found`** — Install pyenv with `curl https://pyenv.run | bash` and add it to your PATH, or use `apt install pyenv` on Debian-based systems.
-    **`ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'`** — Ensure you are in the correct project directory containing requirements.txt before running pip install.
-    **`FAILED tests/integration/test_deploy.py::test_api_connection - ConnectionError: Failed to connect to localhost:8080`** — Start required test services (database, API mock server) or mark integration tests as skipped with `@pytest.mark.skip` before running in isolated environments.
+    | Error | Fix |
+    |---|---|
+    | `pyenv: command not found` | Install pyenv with `curl https://pyenv.run | bash` and add it to your PATH, or use `apt install pyenv` on Debian-based systems. |
+    | `ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'` | Ensure you are in the correct project directory containing requirements.txt before running pip install. |
+    | `FAILED tests/integration/test_deploy.py::test_api_connection - ConnectionError: Failed to connect to localhost:8080` | Start required test services (database, API mock server) or mark integration tests as skipped with `@pytest.mark.skip` before running in isolated environments. |
 ```bash
 # Step 1: Install new Python version (alongside existing)
 pyenv install 3.12.3  # Does NOT replace existing
@@ -212,9 +216,11 @@ ExecStart=/opt/automation/my-project/.venv/bin/python -m my_automation.main
 ```
 
 !!! warning "Common errors"
-    **`pyenv: command not found`** — Install pyenv using your package manager (apt install pyenv on Ubuntu, or brew install pyenv on macOS) and add it to your PATH.
-    **`ERROR: Could not find a version that satisfies the requirement <package>==X.Y.Z`** — Check requirements.txt for version pins incompatible with Python 3.12; update or remove version constraints and re-run pip install.
-    **`ModuleNotFoundError: No module named 'pytest'`** — Add pytest to requirements.txt and re-run pip install -r requirements.txt in the activated venv.
+    | Error | Fix |
+    |---|---|
+    | `pyenv: command not found` | Install pyenv using your package manager (apt install pyenv on Ubuntu, or brew install pyenv on macOS) and add it to your PATH. |
+    | `ERROR: Could not find a version that satisfies the requirement <package>==X.Y.Z` | Check requirements.txt for version pins incompatible with Python 3.12; update or remove version constraints and re-run pip install. |
+    | `ModuleNotFoundError: No module named 'pytest'` | Add pytest to requirements.txt and re-run pip install -r requirements.txt in the activated venv. |
 ```bash
 # pip-audit — checks PyPI advisory database
 pip install pip-audit
@@ -256,8 +262,10 @@ Successfully installed safety-3.0.1
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Could not find a version that satisfies the requirement pip-audit`** — Ensure pip is up to date with `pip install --upgrade pip` and check your PyPI index connectivity.
-    **`ERROR: pip-audit: command not found`** — Add the pip user bin directory to PATH with `export PATH="$HOME/.local/bin:$PATH"` or reinstall with `pip install --user pip-audit`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Could not find a version that satisfies the requirement pip-audit` | Ensure pip is up to date with `pip install --upgrade pip` and check your PyPI index connectivity. |
+    | `ERROR: pip-audit: command not found` | Add the pip user bin directory to PATH with `export PATH="$HOME/.local/bin:$PATH"` or reinstall with `pip install --user pip-audit`. |
 ```bash
 # Check outdated packages
 pip list --outdated
@@ -326,9 +334,11 @@ index 4a2c8f1..9e3d5b2 100644
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Could not find a version that satisfies the requirement requests==2.32.3`** — Check PyPI connectivity and verify the package version exists with `pip index versions requests`.
-    **`FAILED tests/ — AssertionError: expected 200 but got 404`** — Revert the upgrade with `pip install -r requirements.txt.bak` and investigate breaking API changes in the upgraded package.
-    **`awk: command not found`** — Install awk with your system package manager (`apt-get install gawk` on Ubuntu or `brew install gawk` on macOS) or use Python's built-in tools instead.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Could not find a version that satisfies the requirement requests==2.32.3` | Check PyPI connectivity and verify the package version exists with `pip index versions requests`. |
+    | `FAILED tests/ — AssertionError: expected 200 but got 404` | Revert the upgrade with `pip install -r requirements.txt.bak` and investigate breaking API changes in the upgraded package. |
+    | `awk: command not found` | Install awk with your system package manager (`apt-get install gawk` on Ubuntu or `brew install gawk` on macOS) or use Python's built-in tools instead. |
 ```bash
 # Show outdated dependencies
 poetry show --outdated

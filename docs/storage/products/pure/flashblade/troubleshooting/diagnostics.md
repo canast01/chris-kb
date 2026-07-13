@@ -154,9 +154,11 @@ purity-fb-01>
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the FlashBlade management IP is correct and SSH is enabled; check firewall rules allowing port 22 to the management interface.
-    **`purefb: command not found`** — Ensure you are logged into the FlashBlade CLI (after `ssh` connection succeeds); if using a jump host, SSH directly to the management IP instead.
-    **`Alert severity=error or severity=warning present`** — Cross-reference the alert code and timestamp with the audit log to identify recent config changes, then consult Pure Storage support matrix for the specific alert remediation steps.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the FlashBlade management IP is correct and SSH is enabled; check firewall rules allowing port 22 to the management interface. |
+    | `purefb: command not found` | Ensure you are logged into the FlashBlade CLI (after `ssh` connection succeeds); if using a jump host, SSH directly to the management IP instead. |
+    | `Alert severity=error or severity=warning present` | Cross-reference the alert code and timestamp with the audit log to identify recent config changes, then consult Pure Storage support matrix for the specific alert remediation steps. |
 ---
 
 ## Step 2 — Check blade and hardware health
@@ -203,9 +205,11 @@ data-vip-2          10.20.3.101         True        10000Mbps   data
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or unable to connect to array`** — Verify the Pure FlashBlade management IP is reachable and your API token is valid with `purefb --version` and check network connectivity.
-    **`blade-X status: unhealthy`** — Contact Pure Storage support immediately and check blade logs with `purefb blade list --verbose` to identify the specific hardware failure.
-    **`network interface list: command not found`** — Ensure you are running the correct Pure FlashBlade CLI version; use `purefb network interface list` instead of `purefb network list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or unable to connect to array` | Verify the Pure FlashBlade management IP is reachable and your API token is valid with `purefb --version` and check network connectivity. |
+    | `blade-X status: unhealthy` | Contact Pure Storage support immediately and check blade logs with `purefb blade list --verbose` to identify the specific hardware failure. |
+    | `network interface list: command not found` | Ensure you are running the correct Pure FlashBlade CLI version; use `purefb network interface list` instead of `purefb network list`. |
 ---
 
 ## Step 3 — Check filesystem and bucket state
@@ -271,9 +275,11 @@ backup-svc            ops-team          Read-Only
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy 'nfs-invalid-policy' not found`** — Verify the policy name exists with `purefb policy list` and check for typos.
-    **`Error: Directory service connection failed: LDAP server unreachable`** — Confirm LDAP/AD server IP and port are correct, and network connectivity exists from the FlashBlade management interface.
-    **`Error: Filesystem 'data-prod' is 96% full`** — Increase provisioned capacity immediately with `purefb filesystem update --name data-prod --provisioned <new-size>` to prevent write failures.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy 'nfs-invalid-policy' not found` | Verify the policy name exists with `purefb policy list` and check for typos. |
+    | `Error: Directory service connection failed: LDAP server unreachable` | Confirm LDAP/AD server IP and port are correct, and network connectivity exists from the FlashBlade management interface. |
+    | `Error: Filesystem 'data-prod' is 96% full` | Increase provisioned capacity immediately with `purefb filesystem update --name data-prod --provisioned <new-size>` to prevent write failures. |
 ---
 
 ## Step 4 — Check replication health
@@ -322,9 +328,11 @@ bucket-daily.1704153600 analytics-bucket    2024-01-02 12:00:00  128GB
 ```
 
 !!! warning "Common errors"
-    **`replication link status: broken`** — Verify network connectivity between replication VIPs using `ping` and check firewall rules allow port 443 bidirectionally.
-    **`command not found: purefb`** — Install the Pure Storage Python SDK with `pip install purestorage` or ensure the FlashBlade CLI tools are in your PATH.
-    **`connection refused on remote array`** — Confirm the remote array's replication VIPs are reachable and that the replication link was accepted on the destination array using `purefb replication arrayconnection approve`.
+    | Error | Fix |
+    |---|---|
+    | `replication link status: broken` | Verify network connectivity between replication VIPs using `ping` and check firewall rules allow port 443 bidirectionally. |
+    | `command not found: purefb` | Install the Pure Storage Python SDK with `pip install purestorage` or ensure the FlashBlade CLI tools are in your PATH. |
+    | `connection refused on remote array` | Confirm the remote array's replication VIPs are reachable and that the replication link was accepted on the destination array using `purefb replication arrayconnection approve`. |
 ---
 
 ## Step 5 — Diagnose performance issues
@@ -383,9 +391,11 @@ eth3              100Gbps        up             5.1GB
 ```
 
 !!! warning "Common errors"
-    **`purefb: command not found`** — Ensure the Pure Storage CLI is installed and the `purefb` binary is in your PATH, or source the Pure SDK environment setup script.
-    **`Error: Authentication failed`** — Verify your Pure FlashBlade credentials are configured via `purefb login` or check that your API token environment variable is set correctly.
-    **`Error: No filesystems found`** — Confirm that filesystems exist on the array and your user account has read permissions; use `purefb fs list` without filters to verify connectivity.
+    | Error | Fix |
+    |---|---|
+    | `purefb: command not found` | Ensure the Pure Storage CLI is installed and the `purefb` binary is in your PATH, or source the Pure SDK environment setup script. |
+    | `Error: Authentication failed` | Verify your Pure FlashBlade credentials are configured via `purefb login` or check that your API token environment variable is set correctly. |
+    | `Error: No filesystems found` | Confirm that filesystems exist on the array and your user account has read permissions; use `purefb fs list` without filters to verify connectivity. |
 **Common performance root causes:**
 
 | Symptom | Check | Action |
@@ -437,9 +447,11 @@ Purity//FB Version: 4.3.2
 ```
 
 !!! warning "Common errors"
-    **`Error: Phone-home is not active on this array`** — Enable phone-home with `purefb phonehome --enable` or manually download the bundle from `/var/log/pure/diag/` and contact Pure Support with the file path.
-    **`Error: Insufficient disk space for diagnostic bundle`** — Free at least 500 MB on the management network by removing old logs with `purefb support diag --clear-old` before retrying.
-    **`Error: Connection timeout to Pure Storage support servers`** — Verify network connectivity and firewall rules allow HTTPS outbound on port 443 to `support.purestorage.com`, then retry the command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Phone-home is not active on this array` | Enable phone-home with `purefb phonehome --enable` or manually download the bundle from `/var/log/pure/diag/` and contact Pure Support with the file path. |
+    | `Error: Insufficient disk space for diagnostic bundle` | Free at least 500 MB on the management network by removing old logs with `purefb support diag --clear-old` before retrying. |
+    | `Error: Connection timeout to Pure Storage support servers` | Verify network connectivity and firewall rules allow HTTPS outbound on port 443 to `support.purestorage.com`, then retry the command. |
 ---
 
 ## Log locations

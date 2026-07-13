@@ -85,9 +85,11 @@ All services started successfully
 ```
 
 !!! warning "Common errors"
-    **`Service vpxd failed to start: timeout waiting for service to become available`** — Increase the startup timeout by running `service-control --start vpxd --timeout 300` or check database connectivity with `service-control --status vmware-vpostgres`.
-    **`find: '/var/log/vmware': Permission denied`** — Run the commands with `sudo` or as root user since `/var/log/vmware` requires elevated privileges.
-    **`service-control: command not found`** — Ensure you are running this on a vCenter Server appliance (VCSA) and not a Windows vCenter installation; use `systemctl` instead on Linux-based systems if service-control is unavailable.
+    | Error | Fix |
+    |---|---|
+    | `Service vpxd failed to start: timeout waiting for service to become available` | Increase the startup timeout by running `service-control --start vpxd --timeout 300` or check database connectivity with `service-control --status vmware-vpostgres`. |
+    | `find: '/var/log/vmware': Permission denied` | Run the commands with `sudo` or as root user since `/var/log/vmware` requires elevated privileges. |
+    | `service-control: command not found` | Ensure you are running this on a vCenter Server appliance (VCSA) and not a Windows vCenter installation; use `systemctl` instead on Linux-based systems if service-control is unavailable. |
 **Log location:** `/var/log/vmware/vpxd/vpxd.log`
 
 ---
@@ -176,9 +178,11 @@ Not After: 2025-01-15T10:23:45.000Z
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the vCenter FQDN is correct and port 443 is accessible from your client (check firewall rules and network connectivity).
-    **`error in x509 lookup routine:X509_LIB`** — The openssl s_client connection succeeded but returned invalid certificate data; restart the vCenter SSL service with `service-control --restart vsphere-ui` on the VCSA.
-    **`Error: Could not connect to localhost:2012`** — Run the vecs-cli command directly on the VCSA via SSH, not from a remote client; VECS is a local service only.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the vCenter FQDN is correct and port 443 is accessible from your client (check firewall rules and network connectivity). |
+    | `error in x509 lookup routine:X509_LIB` | The openssl s_client connection succeeded but returned invalid certificate data; restart the vCenter SSL service with `service-control --restart vsphere-ui` on the VCSA. |
+    | `Error: Could not connect to localhost:2012` | Run the vecs-cli command directly on the VCSA via SSH, not from a remote client; VECS is a local service only. |
 ### Resolution — Renew Machine SSL (VMCA-signed)
 
 ```bash
@@ -208,9 +212,11 @@ Select an option [1-10]:
 ```
 
 !!! warning "Common errors"
-    **`bash: /usr/lib/vmware-vmca/bin/certificate-manager: No such file or directory`** — Verify the VCSA version and confirm the certificate-manager binary exists; try `/usr/lib/vmware-vmca/bin/certificate-manager.py` on newer versions.
-    **`Permission denied`** — Run the command with `sudo` or ensure you are logged in as root on the VCSA appliance.
-    **`Error: Unable to connect to the local Platform Services Controller`** — Restart the vCenter services using `service-control --start --all` before running certificate-manager.
+    | Error | Fix |
+    |---|---|
+    | `bash: /usr/lib/vmware-vmca/bin/certificate-manager: No such file or directory` | Verify the VCSA version and confirm the certificate-manager binary exists; try `/usr/lib/vmware-vmca/bin/certificate-manager.py` on newer versions. |
+    | `Permission denied` | Run the command with `sudo` or ensure you are logged in as root on the VCSA appliance. |
+    | `Error: Unable to connect to the local Platform Services Controller` | Restart the vCenter services using `service-control --start --all` before running certificate-manager. |
 After renewal, restart services and verify:
 
 ```bash
@@ -233,9 +239,11 @@ notAfter=Jan 15 10:22:33 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Ensure you are running this command on the vCenter Server appliance itself, not a remote client; service-control is only available on VCSA.
-    **`unable to load certificate`** — The certificate chain is incomplete or the vCenter service failed to start; wait 30-60 seconds after service restart and retry the openssl command.
-    **`Connection refused`** — Port 443 is not listening yet after service restart; allow 2-3 minutes for all vCenter services to fully initialize before retrying.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Ensure you are running this command on the vCenter Server appliance itself, not a remote client; service-control is only available on VCSA. |
+    | `unable to load certificate` | The certificate chain is incomplete or the vCenter service failed to start; wait 30-60 seconds after service restart and retry the openssl command. |
+    | `Connection refused` | Port 443 is not listening yet after service restart; allow 2-3 minutes for all vCenter services to fully initialize before retrying. |
 **Log location:** `/var/log/vmware/vmcad/certificate-manager.log`
 
 ---
@@ -289,9 +297,11 @@ vpxa is running
 ```
 
 !!! warning "Common errors"
-    **`Get-VMHost : The term 'Get-VMHost' is not recognized`** — Load the VMware.VimAutomation.Core PowerCLI module with `Import-Module VMware.VimAutomation.Core` before running cmdlets.
-    **`grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory`** — SSH into the vCenter Server Appliance (VCSA) directly rather than the ESXi host; the vpxd log only exists on vCenter.
-    **`hostd is stopped`** — Restart the hostd service on the ESXi host with `/etc/init.d/hostd restart` and verify network connectivity to vCenter.
+    | Error | Fix |
+    |---|---|
+    | `Get-VMHost : The term 'Get-VMHost' is not recognized` | Load the VMware.VimAutomation.Core PowerCLI module with `Import-Module VMware.VimAutomation.Core` before running cmdlets. |
+    | `grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory` | SSH into the vCenter Server Appliance (VCSA) directly rather than the ESXi host; the vpxd log only exists on vCenter. |
+    | `hostd is stopped` | Restart the hostd service on the ESXi host with `/etc/init.d/hostd restart` and verify network connectivity to vCenter. |
 ### Resolution
 
 ```bash
@@ -314,9 +324,11 @@ Starting hostd: [  OK  ]
 ```
 
 !!! warning "Common errors"
-    **`Connect-VIServer : The specified item could not be found.`** — Verify the ESXi hostname matches exactly in vCenter inventory and that you are connected to vCenter with Get-VIServer before running the reconnect command.
-    **`/etc/init.d/vpxa: not found`** — SSH directly to the ESXi host using root credentials and confirm you are in the correct shell; use `sh /etc/init.d/vpxa restart` if the direct path fails.
-    **`Cannot contact the vCenter Server system.`** — Wait 30–60 seconds after restarting hostd and vpxa for the ESXi host to re-register with vCenter before attempting further operations.
+    | Error | Fix |
+    |---|---|
+    | `Connect-VIServer : The specified item could not be found.` | Verify the ESXi hostname matches exactly in vCenter inventory and that you are connected to vCenter with Get-VIServer before running the reconnect command. |
+    | `/etc/init.d/vpxa: not found` | SSH directly to the ESXi host using root credentials and confirm you are in the correct shell; use `sh /etc/init.d/vpxa restart` if the direct path fails. |
+    | `Cannot contact the vCenter Server system.` | Wait 30–60 seconds after restarting hostd and vpxa for the ESXi host to re-register with vCenter before attempting further operations. |
 **Log locations:**
 - VCSA: `/var/log/vmware/vpxd/vpxd.log`
 - ESXi: `/var/log/vmware/vpxa.log`, `/var/log/vmware/hostd.log`
@@ -374,9 +386,11 @@ dc: corp
 ```
 
 !!! warning "Common errors"
-    **`ldapsearch: error code 49 "80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839 WILL_NOT_PERFORM"`** — Verify the bind user credentials are correct and the account is not locked; reset the password in Active Directory and re-run the ldapsearch command.
-    **`nslookup: can't resolve '<ad-domain>': No address associated with hostname`** — Confirm the DNS server IP is reachable from VCSA and that the AD domain name is correctly spelled; check `/etc/resolv.conf` on VCSA to ensure the correct DNS server is configured.
-    **`ldapsearch: error code 1 "000004DC: LdapErr: DSID-0C090A4C, comment: In order to perform this operation a successful bind must be completed on the connection, data 0, v3839"`** — Ensure the LDAP bind user has proper permissions in Active Directory and that the domain controller firewall allows LDAP (port 389) traffic from the VCSA IP address.
+    | Error | Fix |
+    |---|---|
+    | `ldapsearch: error code 49 "80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839 WILL_NOT_PERFORM"` | Verify the bind user credentials are correct and the account is not locked; reset the password in Active Directory and re-run the ldapsearch command. |
+    | `nslookup: can't resolve '<ad-domain>': No address associated with hostname` | Confirm the DNS server IP is reachable from VCSA and that the AD domain name is correctly spelled; check `/etc/resolv.conf` on VCSA to ensure the correct DNS server is configured. |
+    | `ldapsearch: error code 1 "000004DC: LdapErr: DSID-0C090A4C, comment: In order to perform this operation a successful bind must be completed on the connection, data 0, v3839"` | Ensure the LDAP bind user has proper permissions in Active Directory and that the domain controller firewall allows LDAP (port 389) traffic from the VCSA IP address. |
 ### Resolution
 
 ```bash
@@ -399,9 +413,11 @@ User account 'administrator@vsphere.local' unlocked successfully
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Ensure you are running this command on the vCenter Server appliance (VCSA) as root, not on a Windows vCenter installation.
-    **`Error: Unable to connect to directory service on localhost:389`** — Verify that vmware-vmafd service is running with `service-control --status vmware-vmafd` and restart it if needed.
-    **`Error: Invalid credentials provided`** — Replace `<current-admin-pwd>` with the actual administrator@vsphere.local password in plaintext or use an interactive prompt.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Ensure you are running this command on the vCenter Server appliance (VCSA) as root, not on a Windows vCenter installation. |
+    | `Error: Unable to connect to directory service on localhost:389` | Verify that vmware-vmafd service is running with `service-control --status vmware-vmafd` and restart it if needed. |
+    | `Error: Invalid credentials provided` | Replace `<current-admin-pwd>` with the actual administrator@vsphere.local password in plaintext or use an interactive prompt. |
 **Log location:** `/var/log/vmware/sso/vmware-sts-idmd.log`, `/var/log/vmware/sso/ssoAdminServer.log`
 
 ---
@@ -450,9 +466,11 @@ LISTEN     0      128                    [::]:5480                [::]:*        
 ```
 
 !!! warning "Common errors"
-    **`Unit applmgmt.service could not be found.`** — Ensure you are running on a vCenter Server Appliance (VCSA) and not a standalone ESXi host; this service only exists on VCSA.
-    **`ss: No such file or directory`** — Install the iproute2 package with `apt-get install iproute2` or use `netstat -tlnp | grep 5480` as an alternative.
-    **`tail: cannot open '/var/log/vmware/applmgmt/applmgmt.log' for reading: No such file or directory`** — Check that the applmgmt service has actually started and created log files; verify the correct log path with `find /var/log/vmware -name '*applmgmt*'`.
+    | Error | Fix |
+    |---|---|
+    | `Unit applmgmt.service could not be found.` | Ensure you are running on a vCenter Server Appliance (VCSA) and not a standalone ESXi host; this service only exists on VCSA. |
+    | `ss: No such file or directory` | Install the iproute2 package with `apt-get install iproute2` or use `netstat -tlnp | grep 5480` as an alternative. |
+    | `tail: cannot open '/var/log/vmware/applmgmt/applmgmt.log' for reading: No such file or directory` | Check that the applmgmt service has actually started and created log files; verify the correct log path with `find /var/log/vmware -name '*applmgmt*'`. |
 ### Resolution
 
 ```bash
@@ -474,9 +492,11 @@ LISTEN    0      128             [::]:5480          [::]:*    users:(("java",pid
 ```
 
 !!! warning "Common errors"
-    **`Operation being performed: Start applmgmt`** — Wait 30-60 seconds for the service to fully initialize before checking port status, as applmgmt requires time to bind to the port.
-    **`ss: No such file or directory`** — Use `netstat -tlnp | grep 5480` instead if `ss` is not available on your vCenter version.
-    **`(No such process)`** — Verify the applmgmt service started successfully by running `service-control --status applmgmt` before checking the port.
+    | Error | Fix |
+    |---|---|
+    | `Operation being performed: Start applmgmt` | Wait 30-60 seconds for the service to fully initialize before checking port status, as applmgmt requires time to bind to the port. |
+    | `ss: No such file or directory` | Use `netstat -tlnp | grep 5480` instead if `ss` is not available on your vCenter version. |
+    | `(No such process)` | Verify the applmgmt service started successfully by running `service-control --status applmgmt` before checking the port. |
 If SSH itself is inaccessible, use the VCSA VM console in ESXi direct UI to log in as root.
 
 ---
@@ -524,9 +544,11 @@ nfs-san-03.corp.local:/vol3   false       esx-dev-01, esx-dev-02
 ```
 
 !!! warning "Common errors"
-    **`Get-Datastore : The term 'Get-Datastore' is not recognized`** — Load the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running PowerCLI cmdlets.
-    **`You are not currently connected to any servers. Please connect to at least one server before running this command.`** — Connect to vCenter first using `Connect-VIServer -Server vcenter.corp.local -Credential (Get-Credential)`.
-    **`Cannot index into a null array`** — Ensure datastores exist and are visible to vCenter; verify vCenter has proper permissions and network connectivity to storage.
+    | Error | Fix |
+    |---|---|
+    | `Get-Datastore : The term 'Get-Datastore' is not recognized` | Load the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running PowerCLI cmdlets. |
+    | `You are not currently connected to any servers. Please connect to at least one server before running this command.` | Connect to vCenter first using `Connect-VIServer -Server vcenter.corp.local -Credential (Get-Credential)`. |
+    | `Cannot index into a null array` | Ensure datastores exist and are visible to vCenter; verify vCenter has proper permissions and network connectivity to storage. |
 ---
 
 ## DRS / HA Configuration Warnings
@@ -563,9 +585,11 @@ CreatedTime           FullFormattedMessage
 ```
 
 !!! warning "Common errors"
-    **`Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet`** — Import the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running PowerCLI commands.
-    **`You are not currently connected to any servers. Please connect to at least one server before running this command.`** — Connect to vCenter using `Connect-VIServer -Server vcenter.corp.local -Credential (Get-Credential)` first.
-    **`Get-VIEvent : Cannot find cluster with name "cluster-name"`** — Replace `"cluster-name"` with the actual cluster name from the first command's output, such as `"prod-cluster-01"`.
+    | Error | Fix |
+    |---|---|
+    | `Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet` | Import the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running PowerCLI commands. |
+    | `You are not currently connected to any servers. Please connect to at least one server before running this command.` | Connect to vCenter using `Connect-VIServer -Server vcenter.corp.local -Credential (Get-Credential)` first. |
+    | `Get-VIEvent : Cannot find cluster with name "cluster-name"` | Replace `"cluster-name"` with the actual cluster name from the first command's output, such as `"prod-cluster-01"`. |
 ### Resolution
 
 Most HA config warnings are resolved by:
@@ -607,8 +631,10 @@ tmpfs           8.0G     0  8.0G   0% /dev/shm
 ```
 
 !!! warning "Common errors"
-    **`Precheck failed: insufficient disk space on /storage/db`** — Expand the /storage/db partition or delete old logs/snapshots to free at least 50GB before retrying the upgrade.
-    **`tail: cannot open '/var/log/vmware/applmgmt/applmgmt.log' for reading: Permission denied`** — Run the command with `sudo` or as root user to access VCSA system logs.
+    | Error | Fix |
+    |---|---|
+    | `Precheck failed: insufficient disk space on /storage/db` | Expand the /storage/db partition or delete old logs/snapshots to free at least 50GB before retrying the upgrade. |
+    | `tail: cannot open '/var/log/vmware/applmgmt/applmgmt.log' for reading: Permission denied` | Run the command with `sudo` or as root user to access VCSA system logs. |
 ### Resolution
 
 1. If precheck failed (before stage 2 installs): the system is unchanged. Free disk space, then retry.

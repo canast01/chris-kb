@@ -160,9 +160,11 @@ realm list
 ```
 
 !!! warning "Common errors"
-    **`realm: Couldn't authenticate with server: SASL(-1): generic failure`** — Verify the service account credentials are correct and the account has domain join permissions in Active Directory.
-    **`Error: Could not resolve hostname corp.example.com`** — Ensure DNS is configured correctly on the Linux system and can resolve the AD domain name.
-    **`realm: Couldn't find a suitable server to join`** — Confirm the domain name is correct, the AD domain controller is reachable on port 389/636, and firewall rules allow LDAP/Kerberos traffic.
+    | Error | Fix |
+    |---|---|
+    | `realm: Couldn't authenticate with server: SASL(-1): generic failure` | Verify the service account credentials are correct and the account has domain join permissions in Active Directory. |
+    | `Error: Could not resolve hostname corp.example.com` | Ensure DNS is configured correctly on the Linux system and can resolve the AD domain name. |
+    | `realm: Couldn't find a suitable server to join` | Confirm the domain name is correct, the AD domain controller is reachable on port 389/636, and firewall rules allow LDAP/Kerberos traffic. |
 Key `/etc/sssd/sssd.conf` settings:
 
 ```ini
@@ -217,9 +219,11 @@ read:errno=0
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the CA cert file exists at `/etc/pki/ca-trust/source/anchors/` and run `update-ca-trust` before testing.
-    **`connect: Connection refused`** — Confirm the Domain Controller is online, LDAPS port 636 is open, and the hostname resolves with `nslookup dc01.corp.example.com`.
-    **`verify error:num=20:unable to get local issuer certificate`** — Ensure the complete certificate chain (issuing CA and root CA) is imported into `/etc/pki/ca-trust/source/anchors/` and `update-ca-trust` was executed.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the CA cert file exists at `/etc/pki/ca-trust/source/anchors/` and run `update-ca-trust` before testing. |
+    | `connect: Connection refused` | Confirm the Domain Controller is online, LDAPS port 636 is open, and the hostname resolves with `nslookup dc01.corp.example.com`. |
+    | `verify error:num=20:unable to get local issuer certificate` | Ensure the complete certificate chain (issuing CA and root CA) is imported into `/etc/pki/ca-trust/source/anchors/` and `update-ca-trust` was executed. |
 ---
 
 ## Splunk Universal Forwarder on Domain Controllers

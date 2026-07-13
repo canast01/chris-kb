@@ -80,9 +80,11 @@ nutanix@10.20.30.40's password:
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the CVM IP address is correct and the SSH service is running with `sudo systemctl status sshd` on the CVM.
-    **`Permission denied (publickey,password)`** — Ensure you are using the correct nutanix user credentials and that SSH key-based authentication is properly configured if required by your cluster.
-    **`cluster: command not found`** — SSH into a CVM and verify the Nutanix cluster tools are installed by running `which cluster` or check if you need to source the environment with `source /etc/profile`.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the CVM IP address is correct and the SSH service is running with `sudo systemctl status sshd` on the CVM. |
+    | `Permission denied (publickey,password)` | Ensure you are using the correct nutanix user credentials and that SSH key-based authentication is properly configured if required by your cluster. |
+    | `cluster: command not found` | SSH into a CVM and verify the Nutanix cluster tools are installed by running `which cluster` or check if you need to source the environment with `source /etc/profile`. |
 **Expected output:** All services listed as `UP`. If any service shows `DOWN`, investigate that service before continuing.
 
 ```bash
@@ -110,9 +112,11 @@ node-3: ZooKeeper              RUNNING
 ```
 
 !!! warning "Common errors"
-    **`allssh: command not found`** — Ensure you are running this command from a Nutanix cluster node or source the Nutanix environment setup script.
-    **`Connection refused on node-2`** — Verify the CVM on node-2 is powered on and the network connectivity between cluster nodes is functional.
-    **`Permission denied (publickey)`** — Confirm SSH keys are properly configured in ~/.ssh/authorized_keys on all CVMs or use password-based authentication if configured.
+    | Error | Fix |
+    |---|---|
+    | `allssh: command not found` | Ensure you are running this command from a Nutanix cluster node or source the Nutanix environment setup script. |
+    | `Connection refused on node-2` | Verify the CVM on node-2 is powered on and the network connectivity between cluster nodes is functional. |
+    | `Permission denied (publickey)` | Confirm SSH keys are properly configured in ~/.ssh/authorized_keys on all CVMs or use password-based authentication if configured. |
 **Expected:** Each CVM returns `Genesis is running.`
 
 ### 2. NCC Quick Check (Critical Tests Only)
@@ -142,9 +146,11 @@ Total runtime: 2m 41s
 ```
 
 !!! warning "Common errors"
-    **`ncc: command not found`** — Ensure NCC is installed on the CVM or add its path to $PATH (typically `/home/nutanix/ncc/bin/ncc`).
-    **`ERROR: Failed to connect to cluster — Connection refused`** — Verify cluster connectivity and that Prism Element is accessible; check network connectivity from the CVM.
-    **`WARNING: Some checks skipped — insufficient permissions`** — Run the command with appropriate sudo privileges or as the nutanix user account.
+    | Error | Fix |
+    |---|---|
+    | `ncc: command not found` | Ensure NCC is installed on the CVM or add its path to $PATH (typically `/home/nutanix/ncc/bin/ncc`). |
+    | `ERROR: Failed to connect to cluster — Connection refused` | Verify cluster connectivity and that Prism Element is accessible; check network connectivity from the CVM. |
+    | `WARNING: Some checks skipped — insufficient permissions` | Run the command with appropriate sudo privileges or as the nutanix user account. |
 **Expected:** `PASS` for all critical checks. Any `FAIL` must be investigated immediately.
 
 ```bash
@@ -180,9 +186,11 @@ WARN | Log Rotation | /var/log partition 76% full on cvm-03
 ```
 
 !!! warning "Common errors"
-    **`ncc: command not found`** — Ensure NCC is installed via `yum install nutanix-cluster-check` or verify PATH includes `/opt/nutanix/bin`.
-    **`Permission denied`** — Run the command with `sudo` or as the `nutanix` user; NCC requires elevated privileges to access cluster health data.
-    **`Connection refused to Prism (127.0.0.1:9440)`** — Verify Prism Central/Element is running with `systemctl status prism-gw` and check network connectivity to the cluster.
+    | Error | Fix |
+    |---|---|
+    | `ncc: command not found` | Ensure NCC is installed via `yum install nutanix-cluster-check` or verify PATH includes `/opt/nutanix/bin`. |
+    | `Permission denied` | Run the command with `sudo` or as the `nutanix` user; NCC requires elevated privileges to access cluster health data. |
+    | `Connection refused to Prism (127.0.0.1:9440)` | Verify Prism Central/Element is running with `systemctl status prism-gw` and check network connectivity to the cluster. |
 ### 3. Cluster Resilience
 
 ![3. Cluster Resilience](../../../assets/virtualization-nutanix-hc-3-cluster-resilience.svg)
@@ -213,8 +221,10 @@ Domain Fault Tolerance Status for Node:
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused on 127.0.0.1:9440`** — Ensure the Nutanix cluster is running and accessible; verify network connectivity to the cluster IP.
-    **`Error: Authentication failed - invalid credentials`** — Verify your ncli credentials are correct and your user has cluster admin permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused on 127.0.0.1:9440` | Ensure the Nutanix cluster is running and accessible; verify network connectivity to the cluster IP. |
+    | `Error: Authentication failed - invalid credentials` | Verify your ncli credentials are correct and your user has cluster admin permissions. |
 **Expected:** `CAN_TOLERATE_FAILURE_COUNT` ≥ 1 (RF2) or ≥ 2 (RF3).
 
 If `CAN_TOLERATE_FAILURE_COUNT=0`, the cluster cannot tolerate any additional failure — investigate immediately (node down, disk missing, degraded objects).
@@ -258,9 +268,11 @@ Compression Ratio: 1.87x
 ```
 
 !!! warning "Common errors"
-    **`ncli: command not found`** — Ensure you are running this command on a Nutanix cluster node or install the Nutanix CLI tools in your PATH.
-    **`Error: Not authenticated to cluster`** — Run `ncli -u admin -p <password>` or ensure your Nutanix credentials are configured in your environment.
-    **`Error: container-backup: Over-provisioned (105.3% usage)`** — Expand the container capacity or migrate data to another container with available space immediately.
+    | Error | Fix |
+    |---|---|
+    | `ncli: command not found` | Ensure you are running this command on a Nutanix cluster node or install the Nutanix CLI tools in your PATH. |
+    | `Error: Not authenticated to cluster` | Run `ncli -u admin -p <password>` or ensure your Nutanix credentials are configured in your environment. |
+    | `Error: container-backup: Over-provisioned (105.3% usage)` | Expand the container capacity or migrate data to another container with available space immediately. |
 **Expected:** Used capacity below 70% on each container. Alert at 70%; critical at 80%.
 
 ```bash
@@ -284,8 +296,10 @@ alert-20240114-158               Warning   Storage     Snapshot backup delayed b
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (127.0.0.1:9440)`** — Verify the Nutanix cluster is reachable and ncli is configured with correct credentials using `ncli -h <cluster-ip>`.
-    **`Error: Invalid severity value 'critical'. Valid values are: CRITICAL, WARNING, INFO`** — Use uppercase severity levels: `ncli alert list severity=CRITICAL`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (127.0.0.1:9440)` | Verify the Nutanix cluster is reachable and ncli is configured with correct credentials using `ncli -h <cluster-ip>`. |
+    | `Error: Invalid severity value 'critical'. Valid values are: CRITICAL, WARNING, INFO` | Use uppercase severity levels: `ncli alert list severity=CRITICAL`. |
 ### 5. CVM Health
 
 ![5. CVM Health](../../../assets/virtualization-nutanix-hc-5-cvm-health.svg)
@@ -322,8 +336,10 @@ host-03.ntnx.local: UN  192.168.1.103  100.0 GB  256     33.4%  c3d4e5f6-a7b8-90
 ```
 
 !!! warning "Common errors"
-    **`allssh: command not found`** — Ensure you are running this command from a CVM with the Nutanix environment sourced, or use `ssh` to each CVM individually.
-    **`DN  192.168.1.102  100.0 GB  256     33.3%`** — A node showing "DN" (Down/Normal) indicates the Cassandra service is down; restart it with `allssh "service cassandra restart"` on the affected CVM.
+    | Error | Fix |
+    |---|---|
+    | `allssh: command not found` | Ensure you are running this command from a CVM with the Nutanix environment sourced, or use `ssh` to each CVM individually. |
+    | `DN  192.168.1.102  100.0 GB  256     33.3%` | A node showing "DN" (Down/Normal) indicates the Cassandra service is down; restart it with `allssh "service cassandra restart"` on the affected CVM. |
 ### 6. AHV Host Health
 
 ![6. AHV Host Health](../../../assets/virtualization-nutanix-hc-6-ahv-host-health.svg)
@@ -374,8 +390,10 @@ host-04: Mem:        262144       187392        74752          0        2048    
 ```
 
 !!! warning "Common errors"
-    **`acli: command not found`** — Ensure you are running this command from a Nutanix cluster node or have the Nutanix CLI tools installed in your PATH.
-    **`allssh: command not found`** — Run this command from the Nutanix cluster master node where allssh is available, or source the Nutanix environment setup script.
+    | Error | Fix |
+    |---|---|
+    | `acli: command not found` | Ensure you are running this command from a Nutanix cluster node or have the Nutanix CLI tools installed in your PATH. |
+    | `allssh: command not found` | Run this command from the Nutanix cluster master node where allssh is available, or source the Nutanix environment setup script. |
 **Expected:** All hosts show `normal` state; no unexpected maintenance mode entries.
 
 ### 7. VM Health
@@ -405,9 +423,11 @@ acli: error code 4001 — VM filter not supported
 ```
 
 !!! warning "Common errors"
-    **`acli: error code 4001 — VM filter not supported`** — Remove the `--include_filter` parameter; use `acli vm.list` and pipe to `grep` instead to filter by NIC count.
-    **`Connection refused`** — Ensure the Nutanix cluster is reachable and acli is authenticated; verify cluster IP and credentials with `acli cluster status`.
-    **`grep: (standard input) is empty`** — Confirm VMs exist in the cluster by running `acli vm.list` without filters; if empty, the cluster may have no VMs or acli connection is broken.
+    | Error | Fix |
+    |---|---|
+    | `acli: error code 4001 — VM filter not supported` | Remove the `--include_filter` parameter; use `acli vm.list` and pipe to `grep` instead to filter by NIC count. |
+    | `Connection refused` | Ensure the Nutanix cluster is reachable and acli is authenticated; verify cluster IP and credentials with `acli cluster status`. |
+    | `grep: (standard input) is empty` | Confirm VMs exist in the cluster by running `acli vm.list` without filters; if empty, the cluster may have no VMs or acli connection is broken. |
 ### 8. Alert Review
 
 ![8. Alert Review](../../../assets/virtualization-nutanix-hc-8-alert-review.svg)
@@ -440,8 +460,10 @@ alert-uuid-007-g7h8i9j0k1l2m3n4    CRITICAL  NTP sync failed on prism-node-02   
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid time format for start-time parameter`** — Ensure the date command outputs milliseconds in the correct format; use `date -d "24 hours ago" +%s000` without the trailing zeros.
-    **`Error: Alert ID not found or already acknowledged`** — Verify the alert ID exists and is unacknowledged by running `ncli alert list` first to confirm the exact alert UUID.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid time format for start-time parameter` | Ensure the date command outputs milliseconds in the correct format; use `date -d "24 hours ago" +%s000` without the trailing zeros. |
+    | `Error: Alert ID not found or already acknowledged` | Verify the alert ID exists and is unacknowledged by running `ncli alert list` first to confirm the exact alert UUID. |
 **From Prism Element:** Home → Alerts → filter by Severity = Critical. Acknowledge or create tickets for all unacknowledged critical alerts.
 
 ---
@@ -508,9 +530,11 @@ LCM Inventory Check:
 ```
 
 !!! warning "Common errors"
-    **`ncli: command not found`** — Ensure you are logged into a Nutanix cluster node or have the Nutanix CLI installed; verify PATH includes `/usr/local/nutanix/bin`.
-    **`Error: Cluster is not accessible`** — Verify cluster connectivity with `ncli cluster status` and confirm your user has appropriate RBAC permissions.
-    **`grep: (standard input) is empty`** — The NCC result may be empty if no checks have run in the past 7 days; run `ncli ncc run` to trigger a health check.
+    | Error | Fix |
+    |---|---|
+    | `ncli: command not found` | Ensure you are logged into a Nutanix cluster node or have the Nutanix CLI installed; verify PATH includes `/usr/local/nutanix/bin`. |
+    | `Error: Cluster is not accessible` | Verify cluster connectivity with `ncli cluster status` and confirm your user has appropriate RBAC permissions. |
+    | `grep: (standard input) is empty` | The NCC result may be empty if no checks have run in the past 7 days; run `ncli ncc run` to trigger a health check. |
 ---
 
 ---

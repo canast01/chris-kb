@@ -227,9 +227,11 @@ root@uag-prod-01:~# exit
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the UAG's CA certificate into your system trust store.
-    **`Connection refused`** — Verify the UAG hostname/IP is correct, the appliance is powered on, and firewall rules allow traffic from your client to the UAG on the tested port.
-    **`ssh: Permission denied (publickey,password)`** — Ensure you are using the correct root password and that SSH
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the UAG's CA certificate into your system trust store. |
+    | `Connection refused` | Verify the UAG hostname/IP is correct, the appliance is powered on, and firewall rules allow traffic from your client to the UAG on the tested port. |
+    | `ssh: Permission denied (publickey,password)` | Ensure you are using the correct root password and that SSH |
 ---
 
 ## Step 5 — Use vdmadmin for session and assignment diagnostics
@@ -336,9 +338,11 @@ POOL-LINUX-KIOSK | MANAGED | false
 ```
 
 !!! warning "Common errors"
-    **`{"error":"Invalid credentials","error_code":"INVALID_CREDENTIALS"}`** — Verify the username, password, and domain are correct; check that the admin account is not locked.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command (already present) or import the Connection Server's CA certificate into your system trust store.
-    **`jq: parse error: Cannot index string with string "access_token"`** — Ensure the login endpoint returned valid JSON; check that `<cs-fqdn>` resolves and the Connection Server is responding on port 443.
+    | Error | Fix |
+    |---|---|
+    | `{"error":"Invalid credentials","error_code":"INVALID_CREDENTIALS"}` | Verify the username, password, and domain are correct; check that the admin account is not locked. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command (already present) or import the Connection Server's CA certificate into your system trust store. |
+    | `jq: parse error: Cannot index string with string "access_token"` | Ensure the login endpoint returned valid JSON; check that `<cs-fqdn>` resolves and the Connection Server is responding on port 443. |
 ---
 
 ## Step 7 — Collect Horizon support bundle

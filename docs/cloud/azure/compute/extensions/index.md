@@ -57,8 +57,10 @@ az vm show \
 ```
 
 !!! warning "Common errors"
-    **`The resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the resource group name and VM name are correct using `az vm list --resource-group <rg>`.
-    **`ERROR: The following arguments are required: --resource-group/-g, --name/-n`** — Provide both `--resource-group` and `--name` parameters with actual values instead of placeholders.
+    | Error | Fix |
+    |---|---|
+    | `The resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the resource group name and VM name are correct using `az vm list --resource-group <rg>`. |
+    | `ERROR: The following arguments are required: --resource-group/-g, --name/-n` | Provide both `--resource-group` and `--name` parameters with actual values instead of placeholders. |
 ---
 
 ## Listing Extensions
@@ -129,9 +131,11 @@ DependencyAgentWindows               9.10.6   Windows
 ```
 
 !!! warning "Common errors"
-    **`The resource 'Microsoft.Compute/virtualMachines/<vm-name>/extensions/<extension-name>' under resource group '<rg>' was not found.`** — Verify the extension name matches exactly using `az vm extension list` and check that the VM exists in the specified resource group.
-    **`ResourceGroupNotFound : Resource group '<rg>' could not be found.`** — Confirm the resource group name is correct and exists in your subscription using `az group list`.
-    **`The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/extensions/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.`** — Ensure your Azure account has at least Reader role on the VM or resource group using `az role assignment list --scope /subscriptions/<sub-
+    | Error | Fix |
+    |---|---|
+    | `The resource 'Microsoft.Compute/virtualMachines/<vm-name>/extensions/<extension-name>' under resource group '<rg>' was not found.` | Verify the extension name matches exactly using `az vm extension list` and check that the VM exists in the specified resource group. |
+    | `ResourceGroupNotFound : Resource group '<rg>' could not be found.` | Confirm the resource group name is correct and exists in your subscription using `az group list`. |
+    | `The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/extensions/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.` | Ensure your Azure account has at least Reader role on the VM or resource group using `az role assignment list --scope /subscriptions/<sub- |
 ---
 
 ## Custom Script Extension
@@ -202,9 +206,11 @@ az vm extension set \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the VM name and resource group name are correct using `az vm list --resource-group <rg>`.
-    **`InvalidParameter : The value of parameter 'settings' is invalid.`** — Ensure JSON in the `--settings` parameter is properly escaped and valid; test with `echo '{"commandToExecute": "..."}' | jq` before running.
-    **`AuthorizationFailed : The client '<user>' with object id '<id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/extensions/write' over scope '<scope>'.`** — Add the Contributor or Virtual Machine Contributor role to your Azure account for the target resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the VM name and resource group name are correct using `az vm list --resource-group <rg>`. |
+    | `InvalidParameter : The value of parameter 'settings' is invalid.` | Ensure JSON in the `--settings` parameter is properly escaped and valid; test with `echo '{"commandToExecute": "..."}' | jq` before running. |
+    | `AuthorizationFailed : The client '<user>' with object id '<id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/extensions/write' over scope '<scope>'.` | Add the Contributor or Virtual Machine Contributor role to your Azure account for the target resource group. |
 ---
 
 ## Azure Monitor Agent (AMA) Extension
@@ -268,9 +274,11 @@ az vm extension set \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the VM name and resource group name are correct and the VM exists in the specified subscription.
-    **`ExtensionAlreadyExists : Extension 'AzureMonitorLinuxAgent' already exists on virtual machine '<vm-name>'.`** — Remove the existing extension with `az vm extension delete --resource-group <rg> --vm-name <vm-name> --name AzureMonitorLinuxAgent` before reinstalling.
-    **`InvalidApiVersionForOperation : The api-version '2021-03-01' does not support operations on 'Microsoft.Compute/virtualMachines/extensions'.`** — Update the Azure CLI to the latest version with `az upgrade`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the VM name and resource group name are correct and the VM exists in the specified subscription. |
+    | `ExtensionAlreadyExists : Extension 'AzureMonitorLinuxAgent' already exists on virtual machine '<vm-name>'.` | Remove the existing extension with `az vm extension delete --resource-group <rg> --vm-name <vm-name> --name AzureMonitorLinuxAgent` before reinstalling. |
+    | `InvalidApiVersionForOperation : The api-version '2021-03-01' does not support operations on 'Microsoft.Compute/virtualMachines/extensions'.` | Update the Azure CLI to the latest version with `az upgrade`. |
 ---
 
 ## Diagnostic Extension (LAD / WAD)
@@ -313,9 +321,11 @@ az vm extension set \
 ```
 
 !!! warning "Common errors"
-    **`Error: The following arguments are required: --resource-group, --vm-name`** — Ensure both `<rg>` and `<vm-name>` placeholders are replaced with actual resource group and VM names.
-    **`FileNotFoundError: [Errno 2] No such file or directory: 'lad-settings.json'`** — Create the LAD configuration files in the current working directory or provide absolute paths (e.g., `@/path/to/lad-settings.json`).
-    **`BadRequest: The extension with publisher 'Microsoft.Azure.Diagnostics' and type 'LinuxDiagnostic' is not supported on this VM`** — Verify the VM is running a supported Linux distribution (Ubuntu, CentOS, RHEL) and that the extension is available in your region.
+    | Error | Fix |
+    |---|---|
+    | `Error: The following arguments are required: --resource-group, --vm-name` | Ensure both `<rg>` and `<vm-name>` placeholders are replaced with actual resource group and VM names. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: 'lad-settings.json'` | Create the LAD configuration files in the current working directory or provide absolute paths (e.g., `@/path/to/lad-settings.json`). |
+    | `BadRequest: The extension with publisher 'Microsoft.Azure.Diagnostics' and type 'LinuxDiagnostic' is not supported on this VM` | Verify the VM is running a supported Linux distribution (Ubuntu, CentOS, RHEL) and that the extension is available in your region. |
 ---
 
 ## Common Extension Reference
@@ -355,8 +365,10 @@ az vm extension delete \
 ```
 
 !!! warning "Common errors"
-    **`Extension '<extension-name>' was not found on virtual machine '<vm-name>'.`** — Verify the extension name with `az vm extension list --resource-group <rg> --vm-name <vm-name>` and use the correct name from the output.
-    **`The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/extensions/delete' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>/extensions/<extension-name>'.`** — Ensure your Azure account has Contributor or Owner role on the resource group or VM.
+    | Error | Fix |
+    |---|---|
+    | `Extension '<extension-name>' was not found on virtual machine '<vm-name>'.` | Verify the extension name with `az vm extension list --resource-group <rg> --vm-name <vm-name>` and use the correct name from the output. |
+    | `The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/extensions/delete' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>/extensions/<extension-name>'.` | Ensure your Azure account has Contributor or Owner role on the resource group or VM. |
 ---
 
 ## Troubleshooting Extensions
@@ -387,6 +399,8 @@ Microsoft.Compute/VMAccessExtension  Provisioning succeeded  Enable extension su
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (ResourceNotFound) The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the resource group name and VM name are correct with `az vm list --resource-group <rg>`.
-    **`ERROR: The query resulted in no output. Verify the JMESPath query is valid.`** — Check that the VM has extensions installed; if none exist, the query returns empty results—use `--query "instanceView.extensions"` without filtering to debug.
-    **`ERROR: (AuthorizationFailed) The client '<user>' with object id '<id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '<scope>'.`** — Ensure your Azure account has at least Reader role on the resource group with `az role assignment list --resource-group <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (ResourceNotFound) The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the resource group name and VM name are correct with `az vm list --resource-group <rg>`. |
+    | `ERROR: The query resulted in no output. Verify the JMESPath query is valid.` | Check that the VM has extensions installed; if none exist, the query returns empty results—use `--query "instanceView.extensions"` without filtering to debug. |
+    | `ERROR: (AuthorizationFailed) The client '<user>' with object id '<id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '<scope>'.` | Ensure your Azure account has at least Reader role on the resource group with `az role assignment list --resource-group <rg>`. |

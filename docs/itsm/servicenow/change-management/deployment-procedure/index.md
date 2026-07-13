@@ -53,9 +53,11 @@ pre-change-config-20240115.tar.gz
 ```
 
 !!! warning "Common errors"
-    **`error: The subscription 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' could not be found.`** — Verify the correct Azure subscription is active with `az account show` and switch if needed using `az account set --subscription <subscription-id>`.
-    **`An error occurred (InvalidVolume.NotFound) when calling the CreateSnapshot operation: The volume 'vol-xxxxxxxx' does not exist`** — Confirm the volume ID is correct and exists in the target AWS region with `aws ec2 describe-volumes --volume-ids <vol-id>`.
-    **`curl: (7) Failed to connect to localhost port 8080: Connection refused`** — Verify the service is listening on the correct port with `netstat -tlnp | grep <service>` or check service logs with `journalctl -u <service> -n 20`.
+    | Error | Fix |
+    |---|---|
+    | `error: The subscription 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' could not be found.` | Verify the correct Azure subscription is active with `az account show` and switch if needed using `az account set --subscription <subscription-id>`. |
+    | `An error occurred (InvalidVolume.NotFound) when calling the CreateSnapshot operation: The volume 'vol-xxxxxxxx' does not exist` | Confirm the volume ID is correct and exists in the target AWS region with `aws ec2 describe-volumes --volume-ids <vol-id>`. |
+    | `curl: (7) Failed to connect to localhost port 8080: Connection refused` | Verify the service is listening on the correct port with `netstat -tlnp | grep <service>` or check service logs with `journalctl -u <service> -n 20`. |
 ```bash
 # Remove temporary files and pre-change backups (after soak period)
 rm /etc/<service>.conf.pre-<date>   # only after validation passes
@@ -68,8 +70,10 @@ rm /etc/<service>.conf.pre-<date>   # only after validation passes
 ```
 
 !!! warning "Common errors"
-    **`rm: cannot remove '/etc/<service>.conf.pre-<date>': No such file or directory`** — Verify the exact filename and date format match what was created during the pre-change backup step.
-    **`rm: cannot remove '/etc/<service>.conf.pre-<date>': Permission denied`** — Run the command with `sudo` or ensure the user has write permissions to the `/etc/` directory.
+    | Error | Fix |
+    |---|---|
+    | `rm: cannot remove '/etc/<service>.conf.pre-<date>': No such file or directory` | Verify the exact filename and date format match what was created during the pre-change backup step. |
+    | `rm: cannot remove '/etc/<service>.conf.pre-<date>': Permission denied` | Run the command with `sudo` or ensure the user has write permissions to the `/etc/` directory. |
 ![Deployment Procedure — Diagram](../../../../assets/itsm-servicenow-change-management-deployment-procedure-diagram.svg)
 ```bash
 # Restore config from backup

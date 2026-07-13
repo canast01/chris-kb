@@ -70,9 +70,11 @@ EventTimestamp                 ResourceGroup      OperationName                 
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure you have access to the subscription.
-    **`InvalidDateFormat`** — Use ISO 8601 format (YYYY-MM-DDTHH:MM:SSZ) for `--start-time` and `--end-time` parameters.
-    **`AuthorizationFailed`** — Ensure your Azure account has at least Reader role on the resource group using `az role assignment list --resource-group myRG`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure you have access to the subscription. |
+    | `InvalidDateFormat` | Use ISO 8601 format (YYYY-MM-DDTHH:MM:SSZ) for `--start-time` and `--end-time` parameters. |
+    | `AuthorizationFailed` | Ensure your Azure account has at least Reader role on the resource group using `az role assignment list --resource-group myRG`. |
 ## Exporting to a Log Analytics Workspace
 
 Export the activity log to a Log Analytics workspace for long-term KQL querying and integration with alert rules.
@@ -148,9 +150,11 @@ az monitor diagnostic-settings show \
 ```
 
 !!! warning "Common errors"
-    **`BadRequest: The resource /subscriptions/<sub-id> is not a valid resource for diagnostic settings.`** — Use the full resource ID of a specific resource (e.g., `/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM`) or omit `--resource` to target the subscription-level Activity Log.
-    **`ResourceNotFound: The Log Analytics workspace with id /subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace could not be found.`** — Verify the workspace name, resource group, and subscription ID are correct using `az monitor log-analytics workspace list`.
-    **`InvalidJsonFormat: Invalid JSON in logs parameter.`** — Ensure the JSON string is properly escaped and uses valid category names; test with `echo '<json>' | jq` before passing to the command.
+    | Error | Fix |
+    |---|---|
+    | `BadRequest: The resource /subscriptions/<sub-id> is not a valid resource for diagnostic settings.` | Use the full resource ID of a specific resource (e.g., `/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM`) or omit `--resource` to target the subscription-level Activity Log. |
+    | `ResourceNotFound: The Log Analytics workspace with id /subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace could not be found.` | Verify the workspace name, resource group, and subscription ID are correct using `az monitor log-analytics workspace list`. |
+    | `InvalidJsonFormat: Invalid JSON in logs parameter.` | Ensure the JSON string is properly escaped and uses valid category names; test with `echo '<json>' | jq` before passing to the command. |
 Once exported, query with KQL using the `AzureActivity` table:
 
 ```kql
@@ -212,9 +216,11 @@ az monitor diagnostic-settings create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/<sub-id>' does not exist.`** — Replace `<sub-id>` with your actual subscription ID from `az account show --query id -o tsv`.
-    **`InvalidResourceId: The provided resource ID for storage account is invalid or the account does not exist.`** — Verify the storage account exists in the specified resource group with `az storage account show --name myStorageAccount --resource-group myRG`.
-    **`AuthorizationFailed: The client does not have permission to perform action 'microsoft.insights/diagnosticSettings/write'.`** — Ensure your Azure account has the Monitoring Contributor or Owner role on the subscription with `az role assignment list --assignee <your-email>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/<sub-id>' does not exist.` | Replace `<sub-id>` with your actual subscription ID from `az account show --query id -o tsv`. |
+    | `InvalidResourceId: The provided resource ID for storage account is invalid or the account does not exist.` | Verify the storage account exists in the specified resource group with `az storage account show --name myStorageAccount --resource-group myRG`. |
+    | `AuthorizationFailed: The client does not have permission to perform action 'microsoft.insights/diagnosticSettings/write'.` | Ensure your Azure account has the Monitoring Contributor or Owner role on the subscription with `az role assignment list --assignee <your-email>`. |
 ## Alerts on Activity Log Events
 
 Activity log alerts fire when a specific event matches defined conditions. Common uses include detecting VM deletions, role assignment changes, or policy state changes.
@@ -290,9 +296,11 @@ az monitor activity-log alert create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound : The resource group 'myRG' could not be found.`** — Verify the resource group exists in your subscription with `az group list` and use the correct name.
-    **`InvalidTemplate : The provided action group resource ID is invalid or does not exist.`** — Replace `<sub-id>` with your actual subscription ID from `az account show --query id -o tsv` and ensure the action group was created successfully.
-    **`BadRequest : The condition format is invalid.`** — Ensure condition parameters are space-separated key=value pairs without quotes, e.g., `category=Administrative operationName=Microsoft.Compute/virtualMachines/delete`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound : The resource group 'myRG' could not be found.` | Verify the resource group exists in your subscription with `az group list` and use the correct name. |
+    | `InvalidTemplate : The provided action group resource ID is invalid or does not exist.` | Replace `<sub-id>` with your actual subscription ID from `az account show --query id -o tsv` and ensure the action group was created successfully. |
+    | `BadRequest : The condition format is invalid.` | Ensure condition parameters are space-separated key=value pairs without quotes, e.g., `category=Administrative operationName=Microsoft.Compute/virtualMachines/delete`. |
 ## Activity Log Categories
 
 | Category        | Description                                          |
@@ -347,6 +355,8 @@ Time                 ResourceGroup    OperationName                          Sta
 ```
 
 !!! warning "Common errors"
-    **`The start-time value '2026-04-01T00:00:00Z' is invalid. Specify a valid ISO 8601 datetime.`** — Use a past date or ensure the datetime format is exactly `YYYY-MM-DDTHH:MM:SSZ` in UTC.
-    **`The caller '<service-principal-object-id>' does not exist or is invalid.`** — Verify the service principal object ID with `az ad sp list --query "[].objectId"` and use the correct UUID.
-    **`date: illegal time format`** — On macOS, replace `date -u -v-7d` with `date -u -d '7 days ago'` or use `gdate` from GNU coreutils.
+    | Error | Fix |
+    |---|---|
+    | `The start-time value '2026-04-01T00:00:00Z' is invalid. Specify a valid ISO 8601 datetime.` | Use a past date or ensure the datetime format is exactly `YYYY-MM-DDTHH:MM:SSZ` in UTC. |
+    | `The caller '<service-principal-object-id>' does not exist or is invalid.` | Verify the service principal object ID with `az ad sp list --query "[].objectId"` and use the correct UUID. |
+    | `date: illegal time format` | On macOS, replace `date -u -v-7d` with `date -u -d '7 days ago'` or use `gdate` from GNU coreutils. |

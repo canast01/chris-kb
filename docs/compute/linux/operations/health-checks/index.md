@@ -214,9 +214,11 @@ Dec 15 13:45:02 prod-app-01 kernel: [8934.582104] Out of memory: Kill process 15
 ```
 
 !!! warning "Common errors"
-    **`grep: (standard input): No such file or directory`** — Ensure `/proc/meminfo` exists and is readable; this error typically indicates a permission issue or non-Linux system.
-    **`journalctl: command not found`** — Install systemd or use `dmesg` alone if the system doesn't use journalctl for kernel logging.
-    **`ps: command not found`** — Verify `procps` or `procps-ng` package is installed on the system.
+    | Error | Fix |
+    |---|---|
+    | `grep: (standard input): No such file or directory` | Ensure `/proc/meminfo` exists and is readable; this error typically indicates a permission issue or non-Linux system. |
+    | `journalctl: command not found` | Install systemd or use `dmesg` alone if the system doesn't use journalctl for kernel logging. |
+    | `ps: command not found` | Verify `procps` or `procps-ng` package is installed on the system. |
 ## Disk
 
 ```bash
@@ -271,9 +273,11 @@ sdb              89.12  156.44     2.89      8.12     5.1    22.3   5.4   12.5  
 ```
 
 !!! warning "Common errors"
-    **`awk: syntax error at source line 1`** — Ensure awk is installed and the script uses proper syntax; try `awk 'NR==1 || ($5+0) > 80'` with explicit parentheses.
-    **`iostat: command not found`** — Install sysstat package with `apt-get install sysstat` or `yum install sysstat`.
-    **`du: Permission denied`** — Run with `sudo du -sh /var/log/* 2>/dev/null` or adjust directory permissions for the executing user.
+    | Error | Fix |
+    |---|---|
+    | `awk: syntax error at source line 1` | Ensure awk is installed and the script uses proper syntax; try `awk 'NR==1 || ($5+0) > 80'` with explicit parentheses. |
+    | `iostat: command not found` | Install sysstat package with `apt-get install sysstat` or `yum install sysstat`. |
+    | `du: Permission denied` | Run with `sudo du -sh /var/log/* 2>/dev/null` or adjust directory permissions for the executing user. |
 ## Network
 
 ```bash
@@ -323,8 +327,10 @@ Total: TCP sockets: 47 (estab 12, closed 0, orphaned 0, synrecv 0, timewait 2, t
 ```
 
 !!! warning "Common errors"
-    **`Cannot open netlink socket: Permission denied`** — Run the commands with `sudo` or as root user.
-    **`ss: No such file or service`** — Install the iproute2 package with `apt install iproute2` (Debian/Ubuntu) or `yum install iproute2` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `Cannot open netlink socket: Permission denied` | Run the commands with `sudo` or as root user. |
+    | `ss: No such file or service` | Install the iproute2 package with `apt install iproute2` (Debian/Ubuntu) or `yum install iproute2` (RHEL/CentOS). |
 ## Services and Systemd
 
 ```bash
@@ -365,9 +371,11 @@ Jan 08 22:18:33 prod-web-01 systemd[1]: nginx.service: Start request repeated to
 ```
 
 !!! warning "Common errors"
-    **`Unit <service-name> could not be found.`** — Verify the service name with `systemctl list-units --type=service` and use the correct name without the `.service` suffix.
-    **`Failed to get properties: Connection refused`** — Ensure systemd is running with `systemctl status` and check that you have sufficient permissions (use `sudo` if needed).
-    **`journalctl: No entries found in specified time range.`** — Adjust the time range with `--since "48 hours ago"` or remove the filter to check all available logs.
+    | Error | Fix |
+    |---|---|
+    | `Unit <service-name> could not be found.` | Verify the service name with `systemctl list-units --type=service` and use the correct name without the `.service` suffix. |
+    | `Failed to get properties: Connection refused` | Ensure systemd is running with `systemctl status` and check that you have sufficient permissions (use `sudo` if needed). |
+    | `journalctl: No entries found in specified time range.` | Adjust the time range with `--since "48 hours ago"` or remove the filter to check all available logs. |
 ## System Logs — Quick Errors
 
 ```bash
@@ -455,9 +463,11 @@ System time     : 0.000234567 seconds fast of NTP time
 ```
 
 !!! warning "Common errors"
-    **`chronyc: command not found`** — Install chrony with `sudo yum install chrony` (RHEL) or `sudo apt install chrony` (Debian), then start the service with `sudo systemctl start chronyd`.
-    **`System time     : 1.234567 seconds fast of NTP time`** — Offset exceeds 1 second; run `sudo chronyc makestep` to force immediate clock correction, then verify with `timedatectl status`.
-    **`Leap status     : Leap second pending`** — A leap second adjustment is scheduled; this is normal and will resolve automatically at the designated UTC time.
+    | Error | Fix |
+    |---|---|
+    | `chronyc: command not found` | Install chrony with `sudo yum install chrony` (RHEL) or `sudo apt install chrony` (Debian), then start the service with `sudo systemctl start chronyd`. |
+    | `System time     : 1.234567 seconds fast of NTP time` | Offset exceeds 1 second; run `sudo chronyc makestep` to force immediate clock correction, then verify with `timedatectl status`. |
+    | `Leap status     : Leap second pending` | A leap second adjustment is scheduled; this is normal and will resolve automatically at the designated UTC time. |
 ## Security Posture
 
 ```bash
@@ -490,9 +500,11 @@ grammar check successful
 ```
 
 !!! warning "Common errors"
-    **`getenforce: command not found`** — Install SELinux utilities with `yum install policycoreutils-python-utils` on RHEL systems.
-    **`aa-status: command not found`** — Install AppArmor tools with `apt-get install apparmor-utils` on Ubuntu systems.
-    **`>>> /etc/sudoers: syntax error near line 42`** — Fix the syntax error in `/etc/sudoers` using `visudo` editor directly and review the flagged line.
+    | Error | Fix |
+    |---|---|
+    | `getenforce: command not found` | Install SELinux utilities with `yum install policycoreutils-python-utils` on RHEL systems. |
+    | `aa-status: command not found` | Install AppArmor tools with `apt-get install apparmor-utils` on Ubuntu systems. |
+    | `>>> /etc/sudoers: syntax error near line 42` | Fix the syntax error in `/etc/sudoers` using `visudo` editor directly and review the flagged line. |
 ## Health Check Summary Table
 
 | Check | Command | Healthy |
@@ -608,8 +620,10 @@ dmesg: read 1048576 bytes of kernel log buffer
 ```
 
 !!! warning "Common errors"
-    **`dmesg: read buffer failed: Operation not permitted`** — Run the command with `sudo` or as root user.
-    **`dmesg: invalid log level 'err,warn'`** — Use `dmesg --level=err --level=warn` or upgrade to a newer kernel version that supports comma-separated levels.
+    | Error | Fix |
+    |---|---|
+    | `dmesg: read buffer failed: Operation not permitted` | Run the command with `sudo` or as root user. |
+    | `dmesg: invalid log level 'err,warn'` | Use `dmesg --level=err --level=warn` or upgrade to a newer kernel version that supports comma-separated levels. |
 ## Audit Log (auditd)
 
 ```bash
@@ -662,9 +676,11 @@ admin                1
 ```
 
 !!! warning "Common errors"
-    **`ausearch: no matches found`** — Verify the audit daemon is running with `systemctl status auditd` and that audit rules are loaded with `auditctl -l`.
-    **`Error opening config file (/etc/audit/audit.rules): Permission denied`** — Run ausearch and aureport commands with `sudo` or as root user.
-    **`audit: type=1130 audit(1702475122.445:8934): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='audit: rate limit exceeded'`** — Increase the audit buffer size in `/etc/audit/audit.rules` with `buffer_size = 8192` and reload with `service auditd restart`.
+    | Error | Fix |
+    |---|---|
+    | `ausearch: no matches found` | Verify the audit daemon is running with `systemctl status auditd` and that audit rules are loaded with `auditctl -l`. |
+    | `Error opening config file (/etc/audit/audit.rules): Permission denied` | Run ausearch and aureport commands with `sudo` or as root user. |
+    | `audit: type=1130 audit(1702475122.445:8934): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='audit: rate limit exceeded'` | Increase the audit buffer size in `/etc/audit/audit.rules` with `buffer_size = 8192` and reload with `service auditd restart`. |
 ## Remote Log Forwarding (rsyslog)
 
 ```bash
@@ -688,9 +704,11 @@ tcp    LISTEN      0      128    0.0.0.0:514              0.0.0.0:*
 ```
 
 !!! warning "Common errors"
-    **`Job for rsyslog.service failed because the control process exited with error code.`** — Check `/var/log/rsyslog.log` for syntax errors in the config file (missing quotes, brackets, or invalid action parameters).
-    **`Name or service not known`** — Verify the hostname `syslog.example.local` resolves correctly with `nslookup syslog.example.local` or update `/etc/hosts` with the correct IP address.
-    **`Connection refused`** — Confirm the remote syslog server is listening on port 514 with `ss -tnlp` on the syslog server and check firewall rules allow outbound TCP 514.
+    | Error | Fix |
+    |---|---|
+    | `Job for rsyslog.service failed because the control process exited with error code.` | Check `/var/log/rsyslog.log` for syntax errors in the config file (missing quotes, brackets, or invalid action parameters). |
+    | `Name or service not known` | Verify the hostname `syslog.example.local` resolves correctly with `nslookup syslog.example.local` or update `/etc/hosts` with the correct IP address. |
+    | `Connection refused` | Confirm the remote syslog server is listening on port 514 with `ss -tnlp` on the syslog server and check firewall rules allow outbound TCP 514. |
 ## Journal Size Management
 
 ```bash
@@ -717,8 +735,10 @@ Vacuumed journals to 500M.
 ```
 
 !!! warning "Common errors"
-    **`Failed to vacuum journal: Permission denied`** — Run the journalctl and systemctl commands with `sudo`.
-    **`Failed to parse config file '/etc/systemd/journald.conf': Invalid argument`** — Check the SystemMaxUse syntax in journald.conf; ensure it uses valid units like `2G`, `1024M`, or `512K`.
+    | Error | Fix |
+    |---|---|
+    | `Failed to vacuum journal: Permission denied` | Run the journalctl and systemctl commands with `sudo`. |
+    | `Failed to parse config file '/etc/systemd/journald.conf': Invalid argument` | Check the SystemMaxUse syntax in journald.conf; ensure it uses valid units like `2G`, `1024M`, or `512K`. |
 ---
 
 ## CPU Health
@@ -829,9 +849,11 @@ NAME      TYPE SIZE USED PRIO
 ```
 
 !!! warning "Common errors"
-    **`journalctl: command not found`** — Install systemd-journal or use `dmesg` alone on systems without journalctl.
-    **`cat: /proc/meminfo: No such file or directory`** — This file is only available on Linux; confirm the system is Linux-based.
-    **`swapon: command not found`** — Install the util-linux package or use `cat /proc/swaps` as an alternative.
+    | Error | Fix |
+    |---|---|
+    | `journalctl: command not found` | Install systemd-journal or use `dmesg` alone on systems without journalctl. |
+    | `cat: /proc/meminfo: No such file or directory` | This file is only available on Linux; confirm the system is Linux-based. |
+    | `swapon: command not found` | Install the util-linux package or use `cat /proc/swaps` as an alternative. |
 What to look for:
 - `MemAvailable` below 10% of `MemTotal` indicates memory pressure.
 - Any OOM kill events in `dmesg` require immediate investigation — a process was terminated by the kernel.
@@ -897,9 +919,11 @@ nvme0n1         312.4   203.1     18.6     31.2     0.0      0.0   12.1   0.9  5
 ```
 
 !!! warning "Common errors"
-    **`awk: syntax error in file - line 1: unexpected character '+'`** — Use `$5 > 80` instead of `$5+0 > 80` if awk version doesn't support coercion, or ensure field 5 contains only numeric values.
-    **`dmesg: read error: Operation not permitted`** — Run the dmesg command with `sudo` to access the full kernel ring buffer.
-    **`du: cannot access '/var/log/*': Permission denied`** — Add `sudo` before the du commands or check read permissions on the target directories.
+    | Error | Fix |
+    |---|---|
+    | `awk: syntax error in file - line 1: unexpected character '+'` | Use `$5 > 80` instead of `$5+0 > 80` if awk version doesn't support coercion, or ensure field 5 contains only numeric values. |
+    | `dmesg: read error: Operation not permitted` | Run the dmesg command with `sudo` to access the full kernel ring buffer. |
+    | `du: cannot access '/var/log/*': Permission denied` | Add `sudo` before the du commands or check read permissions on the target directories. |
 What to look for:
 - Any filesystem above 85% used requires action — logs and application data will fail to write at 100%.
 - `await` above 20ms in `iostat` output indicates disk latency; above 100ms is critical.
@@ -1040,9 +1064,11 @@ ssh.service                                enabled  enabled
 ```
 
 !!! warning "Common errors"
-    **`Unit <service-name> could not be found.`** — Verify the exact service name with `systemctl list-units --type=service` and use the correct unit file name.
-    **`Failed to get properties: Connection refused`** — Restart systemd with `systemctl daemon-reexec` or reboot the system to restore the systemd connection.
-    **`Start request repeated too quickly for <service>.service`** — Check service logs with `journalctl -u <service> -n 50` to identify the root cause (missing config, port conflict, or dependency failure) and fix it before re-enabling.
+    | Error | Fix |
+    |---|---|
+    | `Unit <service-name> could not be found.` | Verify the exact service name with `systemctl list-units --type=service` and use the correct unit file name. |
+    | `Failed to get properties: Connection refused` | Restart systemd with `systemctl daemon-reexec` or reboot the system to restore the systemd connection. |
+    | `Start request repeated too quickly for <service>.service` | Check service logs with `journalctl -u <service> -n 50` to identify the root cause (missing config, port conflict, or dependency failure) and fix it before re-enabling. |
 What to look for:
 - Any unit in `systemctl --failed` output requires immediate investigation and resolution.
 - Services entering a restart loop (`Start request repeated too quickly`) indicate a configuration or dependency problem.
@@ -1123,9 +1149,11 @@ LISTEN    0         128                [::]:22                 [::]:*           
 ```
 
 !!! warning "Common errors"
-    **`ausearch: command not found`** — Install audit tools with `yum install audit` or `apt install auditd` and ensure the auditd service is running.
-    **`grep: /var/log/secure: No such file or directory`** — On Ubuntu/Debian systems, check `/var/log/auth.log` instead of `/var/log/secure` (which is RHEL/AlmaLinux only).
-    **`ss: command not found`** — Install iproute2 package with `y
+    | Error | Fix |
+    |---|---|
+    | `ausearch: command not found` | Install audit tools with `yum install audit` or `apt install auditd` and ensure the auditd service is running. |
+    | `grep: /var/log/secure: No such file or directory` | On Ubuntu/Debian systems, check `/var/log/auth.log` instead of `/var/log/secure` (which is RHEL/AlmaLinux only). |
+    | `ss: command not found` | Install iproute2 package with `y |
 What to look for:
 - SELinux should be `Enforcing` on production RHEL systems — `Permissive` means policy is not being enforced.
 - Repeated failed SSH logins from the same IP indicate a brute-force attack — consider `fail2ban` or firewall block.

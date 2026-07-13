@@ -87,8 +87,10 @@ ReservationId                            DisplayName                    State   
 ```
 
 !!! warning "Common errors"
-    **`The provided reservation order ID '<order-id>' does not exist.`** — Replace `<order-id>` with a valid reservation order ID from the `az reservation reservation-order list` output.
-    **`Authorization failed for template deployment. The client '<client-id>' with object id '<object-id>' does not have permission to perform action 'Microsoft.Capacity/reservationOrders/read' over scope '/subscriptions/<subscription-id>'.`** — Ensure your Azure account has the Reader role or higher on the subscription containing the reservations.
+    | Error | Fix |
+    |---|---|
+    | `The provided reservation order ID '<order-id>' does not exist.` | Replace `<order-id>` with a valid reservation order ID from the `az reservation reservation-order list` output. |
+    | `Authorization failed for template deployment. The client '<client-id>' with object id '<object-id>' does not have permission to perform action 'Microsoft.Capacity/reservationOrders/read' over scope '/subscriptions/<subscription-id>'.` | Ensure your Azure account has the Reader role or higher on the subscription containing the reservations. |
 ### Purchase Workflow
 
 Reservations are purchased through the Azure portal or REST API. The CLI is used primarily for post-purchase management (listing, scope changes, exchange/refund).
@@ -144,9 +146,11 @@ az reservation reservation update \
 ```
 
 !!! warning "Common errors"
-    **`InvalidParameterValue: The provided reservation order ID is invalid or not found.`** — Verify the reservation order ID exists in your subscription using `az reservation reservation-order list`.
-    **`AuthorizationFailed: The client does not have permission to perform action 'Microsoft.Capacity/reservationOrders/reservations/write' on scope.`** — Ensure your Azure account has Owner or Contributor role on the subscription containing the reservation.
-    **`BadRequest: Cannot change scope type from Single to Shared when reservation has applied scopes defined.`** — Remove existing applied scopes first using `az reservation reservation update --applied-scopes ""` before changing scope type.
+    | Error | Fix |
+    |---|---|
+    | `InvalidParameterValue: The provided reservation order ID is invalid or not found.` | Verify the reservation order ID exists in your subscription using `az reservation reservation-order list`. |
+    | `AuthorizationFailed: The client does not have permission to perform action 'Microsoft.Capacity/reservationOrders/reservations/write' on scope.` | Ensure your Azure account has Owner or Contributor role on the subscription containing the reservation. |
+    | `BadRequest: Cannot change scope type from Single to Shared when reservation has applied scopes defined.` | Remove existing applied scopes first using `az reservation reservation update --applied-scopes ""` before changing scope type. |
 ## Exchange and Refund
 
 Reservations can be exchanged for a different SKU or region, or refunded (subject to a 12% early termination fee and $50,000/year refund cap).
@@ -173,8 +177,10 @@ az reservation reservation show \
 ```
 
 !!! warning "Common errors"
-    **`The provided reservation order ID '<order-id>' is invalid or does not exist.`** — Verify the reservation order ID by running `az reservation reservation-order list` and copy the exact ID from the output.
-    **`No subscriptions found in your account. Please call 'az account set' to select a subscription.`** — Set your active subscription with `az account set --subscription <subscription-id>` before running the command.
+    | Error | Fix |
+    |---|---|
+    | `The provided reservation order ID '<order-id>' is invalid or does not exist.` | Verify the reservation order ID by running `az reservation reservation-order list` and copy the exact ID from the output. |
+    | `No subscriptions found in your account. Please call 'az account set' to select a subscription.` | Set your active subscription with `az account set --subscription <subscription-id>` before running the command. |
 ## Utilisation Monitoring
 
 Low utilisation means the discount is being wasted. Track utilisation and act quickly if it drops below 80%.

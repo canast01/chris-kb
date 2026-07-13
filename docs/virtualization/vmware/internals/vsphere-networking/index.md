@@ -120,9 +120,11 @@ Portset: DPG-Storage
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace network vswitch dvs vmware list`** — Use `esxcli network vswitch dvs list` instead (the `vmware` subcommand does not exist in standard esxcli).
-    **`Error: Unable to connect to the ESX Server`** — Ensure SSH is enabled on the ESXi host and you have network connectivity; verify with `ping <esxi-hostname>` first.
-    **`Error: The object has already been deleted or has not been completely created`** — Wait 30–60 seconds after VDS creation before running these commands, as the distributed switch may still be initializing.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace network vswitch dvs vmware list` | Use `esxcli network vswitch dvs list` instead (the `vmware` subcommand does not exist in standard esxcli). |
+    | `Error: Unable to connect to the ESX Server` | Ensure SSH is enabled on the ESXi host and you have network connectivity; verify with `ping <esxi-hostname>` first. |
+    | `Error: The object has already been deleted or has not been completely created` | Wait 30–60 seconds after VDS creation before running these commands, as the distributed switch may still be initializing. |
 Key consideration: always migrate the management VMkernel port (vmk0) last and ensure physical uplinks are available to the VDS before detaching them from the VSS.
 
 > **VCP-DCV Exam Note:** VDS requires **vSphere Enterprise Plus** licensing. VSS is included with all vSphere editions. A VDS can be used even if vCenter becomes unavailable — hosts retain their last-known configuration, but you cannot make configuration changes until vCenter is restored.
@@ -180,8 +182,10 @@ vmk2    true     true       vmotion          192.168.20.50      255.255.255.0   
 ```
 
 !!! warning "Common errors"
-    **`Error: The object or name is not valid.`** — Verify the portgroup "vMotion-PG" exists on the vSwitch using `esxcli network vswitch standard portgroup list`.
-    **`Error: Could not set ipv4 config for vmk1`** — Ensure the VMkernel interface was successfully created and the IP address is not already in use on the network.
+    | Error | Fix |
+    |---|---|
+    | `Error: The object or name is not valid.` | Verify the portgroup "vMotion-PG" exists on the vSwitch using `esxcli network vswitch standard portgroup list`. |
+    | `Error: Could not set ipv4 config for vmk1` | Ensure the VMkernel interface was successfully created and the IP address is not already in use on the network. |
 From the vCenter UI: **Host → Configure → Networking → VMkernel adapters → Add networking**.
 
 > **VCP-DCV Exam Note:** A single VMkernel adapter can serve multiple services (e.g., management + vSphere Replication), but this is not recommended for production. vSAN and vMotion should always have dedicated vmk adapters on dedicated VLANs. FT Logging requires very low latency — it must be on its own vmk and ideally a dedicated NIC.
@@ -271,8 +275,10 @@ VDS-Production      7.0.0   4
 ```
 
 !!! warning "Common errors"
-    **`Get-VDSwitch : The object 'VDS-Production' could not be found on the specified Folder, Datacenter or ResourcePool.`** — Verify the VDS name matches exactly and you are connected to the correct vCenter server with `Connect-VIServer`.
-    **`You do not have permission to perform this operation.`** — Ensure your vCenter account has Administrator role or equivalent Network Administrator privileges on the VDS object.
+    | Error | Fix |
+    |---|---|
+    | `Get-VDSwitch : The object 'VDS-Production' could not be found on the specified Folder, Datacenter or ResourcePool.` | Verify the VDS name matches exactly and you are connected to the correct vCenter server with `Connect-VIServer`. |
+    | `You do not have permission to perform this operation.` | Ensure your vCenter account has Administrator role or equivalent Network Administrator privileges on the VDS object. |
 ---
 
 ## Port Groups and VLANs
@@ -342,8 +348,10 @@ vxlan           active  false
 ```
 
 !!! warning "Common errors"
-    **`Error: The object or item referenced could not be found.`** — Verify the portgroup name exists with `esxcli network vswitch standard portgroup list` and use the exact name.
-    **`Error: The specified virtual NIC is already bound to a netstack.`** — Remove the interface from its current stack first using `esxcli network ip interface remove --interface-name vmk2`.
+    | Error | Fix |
+    |---|---|
+    | `Error: The object or item referenced could not be found.` | Verify the portgroup name exists with `esxcli network vswitch standard portgroup list` and use the exact name. |
+    | `Error: The specified virtual NIC is already bound to a netstack.` | Remove the interface from its current stack first using `esxcli network ip interface remove --interface-name vmk2`. |
 **Why they exist:** Without separate stacks, vMotion and the management interface share the same routing table. If management is on 192.168.1.0/24 and vMotion is on 10.10.10.0/24, you need a route for both — but only one default gateway. Separate stacks eliminate this routing conflict by giving vMotion its own gateway.
 
 ---
@@ -407,8 +415,10 @@ DSwitch-Prod-02      vmnic5  Up      10Gbps  Full
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan`** — Verify vSAN is licensed and enabled on the cluster; if not, skip vSAN-specific commands.
-    **`Error: Could not get property for object of type HostVirtualNic`** — Ensure the ESXi host is in a healthy state and the vSphere API is responding; try reconnecting the host to vCenter.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan` | Verify vSAN is licensed and enabled on the cluster; if not, skip vSAN-specific commands. |
+    | `Error: Could not get property for object of type HostVirtualNic` | Ensure the ESXi host is in a healthy state and the vSphere API is responding; try reconnecting the host to vCenter. |
 ---
 
 ## Related Pages

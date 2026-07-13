@@ -71,9 +71,11 @@ Alias created successfully: fa01_ct0_p1 (52:4a:93:7c:00:00:00:02)
 ```
 
 !!! warning "Common errors"
-    **`Alias name already exists`** — Check for duplicate alias names using `aliashow` and remove the conflicting alias with `alidelete` before recreating.
-    **`Invalid WWN format`** — Verify the WWN is 16 hexadecimal characters in the format `xx:xx:xx:xx:xx:xx:xx:xx` using `portshow` to confirm the correct port WWN.
-    **`Permission denied`** — Ensure your user account has admin or fabric admin privileges; check with `usershow` and request elevated access if needed.
+    | Error | Fix |
+    |---|---|
+    | `Alias name already exists` | Check for duplicate alias names using `aliashow` and remove the conflicting alias with `alidelete` before recreating. |
+    | `Invalid WWN format` | Verify the WWN is 16 hexadecimal characters in the format `xx:xx:xx:xx:xx:xx:xx:xx` using `portshow` to confirm the correct port WWN. |
+    | `Permission denied` | Ensure your user account has admin or fabric admin privileges; check with `usershow` and request elevated access if needed. |
 ### Create and Manage Zones
 
 ![Create and Manage Zones](../../../../assets/fabric-os-proc-create-and-manage-zones.svg)
@@ -101,9 +103,11 @@ Zone esxi01_hba0__fa01_ct0_p0 deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Zone esxi01_hba0__fa01_ct0_p0 is in use by zone set`** — Remove the zone from all active zone sets using `zonesetremove` before attempting deletion.
-    **`Invalid member: fa01_ct0_p2 not found in fabric`** — Verify the port WWN or alias exists in the fabric by running `portshow` or `aliasshow`.
-    **`Zone esxi01_hba0__fa01_ct0_p0 already exists`** — Use `zoneadd` to add members to an existing zone instead of `zonecreate`.
+    | Error | Fix |
+    |---|---|
+    | `Zone esxi01_hba0__fa01_ct0_p0 is in use by zone set` | Remove the zone from all active zone sets using `zonesetremove` before attempting deletion. |
+    | `Invalid member: fa01_ct0_p2 not found in fabric` | Verify the port WWN or alias exists in the fabric by running `portshow` or `aliasshow`. |
+    | `Zone esxi01_hba0__fa01_ct0_p0 already exists` | Use `zoneadd` to add members to an existing zone instead of `zonecreate`. |
 ### Zone Set Management
 
 ![Zone Set Management](../../../../assets/fabric-os-proc-zone-set-management.svg)
@@ -137,9 +141,11 @@ Configuration saved. Checksum: 0x4a7f92c1
 ```
 
 !!! warning "Common errors"
-    **`Invalid zone member syntax`** — Verify zone member names match the format `<initiator>__<target>` with double underscores and no spaces around semicolons.
-    **`Zone set "dc1-fabA-prod" does not exist`** — Run `cfgcreate` before attempting `cfgadd`, `cfgremove`, or `cfgenable` on a zone set.
-    **`Cannot activate zone set: fabric lock in progress`** — Wait for any ongoing fabric operations to complete or check `fabricshow` for lock status before retrying `cfgenable`.
+    | Error | Fix |
+    |---|---|
+    | `Invalid zone member syntax` | Verify zone member names match the format `<initiator>__<target>` with double underscores and no spaces around semicolons. |
+    | `Zone set "dc1-fabA-prod" does not exist` | Run `cfgcreate` before attempting `cfgadd`, `cfgremove`, or `cfgenable` on a zone set. |
+    | `Cannot activate zone set: fabric lock in progress` | Wait for any ongoing fabric operations to complete or check `fabricshow` for lock status before retrying `cfgenable`. |
 ### Example: Zone a New Host to FlashArray
 
 ![Example: Zone a New Host to FlashArray](../../../../assets/fabric-os-proc-example-zone-a-new-host-to-flasharray.svg)
@@ -175,9 +181,11 @@ Configuration saved successfully
 ```
 
 !!! warning "Common errors"
-    **`Invalid WWN format`** — Verify the HBA WWN is 16 hexadecimal characters (8 bytes) formatted as 10:00:00:90:fa:12:34:56.
-    **`Zone member not found: fa01_ct0_p0`** — Confirm the switch port alias exists on the fabric by running `portaliasshow` before adding it to the zone.
-    **`Config is already active`** — Disable the current active config with `cfgdisable` before enabling a different one.
+    | Error | Fix |
+    |---|---|
+    | `Invalid WWN format` | Verify the HBA WWN is 16 hexadecimal characters (8 bytes) formatted as 10:00:00:90:fa:12:34:56. |
+    | `Zone member not found: fa01_ct0_p0` | Confirm the switch port alias exists on the fabric by running `portaliasshow` before adding it to the zone. |
+    | `Config is already active` | Disable the current active config with `cfgdisable` before enabling a different one. |
 ### Zone Audit
 
 ![Zone Audit](../../../../assets/fabric-os-proc-zone-audit.svg)
@@ -227,8 +235,10 @@ Zone Member Access for 50:00:14:40:5c:2a:b1:23:
 ```
 
 !!! warning "Common errors"
-    **`nszonemember: WWN not found in fabric`** — Verify the WWN exists in the fabric with `zoneshow` and check for typos in the 16-character hex string.
-    **`alishow: No aliases defined`** — Create aliases using `alicreate` or check that the switch has been properly configured with alias definitions.
+    | Error | Fix |
+    |---|---|
+    | `nszonemember: WWN not found in fabric` | Verify the WWN exists in the fabric with `zoneshow` and check for typos in the 16-character hex string. |
+    | `alishow: No aliases defined` | Create aliases using `alicreate` or check that the switch has been properly configured with alias definitions. |
 ### Zoning Troubleshooting
 
 ![Zoning Troubleshooting](../../../../assets/fabric-os-proc-zoning-troubleshooting.svg)
@@ -283,8 +293,10 @@ Switch ID   Worldwide Name      Fabric Name         FC Address
 ```
 
 !!! warning "Common errors"
-    **`Domain ID already in use`** — Choose a unique domain ID not already assigned to another switch in the fabric using `switchshow` to verify availability.
-    **`Switch failed to enable - fabric merge in progress`** — Wait 30-60 seconds for the fabric merge to complete before retrying `switchEnable`.
+    | Error | Fix |
+    |---|---|
+    | `Domain ID already in use` | Choose a unique domain ID not already assigned to another switch in the fabric using `switchshow` to verify availability. |
+    | `Switch failed to enable - fabric merge in progress` | Wait 30-60 seconds for the fabric merge to complete before retrying `switchEnable`. |
 ## Create a Zone and Zone Configuration
 
 `zonecreate "zone_host01_array01", "10:00:00:00:00:00:00:01; 50:00:00:00:00:00:00:02"` → `cfgadd "cfg_prod", "zone_host01_array01"` → `cfgsave` → `cfgenable "cfg_prod"`.
@@ -308,9 +320,11 @@ Effective configuration: cfg_prod
 ```
 
 !!! warning "Common errors"
-    **`Error: Zone zone_host01_array01 already exists`** — Delete the existing zone with `zonedelete "zone_host01_array01"` before recreating it.
-    **`Error: Config cfg_prod does not exist`** — Create the configuration first using `cfgcreate "cfg_prod", "zone_host01_array01"` instead of cfgadd.
-    **`Error: Invalid WWN format in zone member`** — Verify WWN syntax is 16 hexadecimal characters separated by colons (e.g., `10:00:00:00:00:00:00:01`).
+    | Error | Fix |
+    |---|---|
+    | `Error: Zone zone_host01_array01 already exists` | Delete the existing zone with `zonedelete "zone_host01_array01"` before recreating it. |
+    | `Error: Config cfg_prod does not exist` | Create the configuration first using `cfgcreate "cfg_prod", "zone_host01_array01"` instead of cfgadd. |
+    | `Error: Invalid WWN format in zone member` | Verify WWN syntax is 16 hexadecimal characters separated by colons (e.g., `10:00:00:00:00:00:00:01`). |
 ## Add a Member to an Existing Zone
 
 `zoneadd "zone_host01_array01", "10:00:00:00:00:00:00:03"` → `cfgsave` → `cfgenable "cfg_prod"`.
@@ -329,8 +343,10 @@ Configuration cfg_prod has been enabled.
 ```
 
 !!! warning "Common errors"
-    **`zoneadd: zone_host01_array01 already exists`** — Use `zonedelete` to remove the existing zone first, or choose a different zone name.
-    **`cfgsave: No configuration changes to save`** — Verify that zone creation succeeded by running `zoneshow` before attempting to save.
+    | Error | Fix |
+    |---|---|
+    | `zoneadd: zone_host01_array01 already exists` | Use `zonedelete` to remove the existing zone first, or choose a different zone name. |
+    | `cfgsave: No configuration changes to save` | Verify that zone creation succeeded by running `zoneshow` before attempting to save. |
 ## Remove a Zone Member
 
 `zoneremove "zone_host01_array01", "10:00:00:00:00:00:00:03"` → `cfgsave` → `cfgenable`.
@@ -350,8 +366,10 @@ cfg_prod is now the active configuration.
 ```
 
 !!! warning "Common errors"
-    **`zoneremove: zone_host01_array01 not found`** — Verify the zone name exists with `zoneshow` and check for typos in the zone name.
-    **`cfgenable: cfg_prod is already the active configuration`** — This is informational; the configuration is already enabled, so no action is needed.
+    | Error | Fix |
+    |---|---|
+    | `zoneremove: zone_host01_array01 not found` | Verify the zone name exists with `zoneshow` and check for typos in the zone name. |
+    | `cfgenable: cfg_prod is already the active configuration` | This is informational; the configuration is already enabled, so no action is needed. |
 ## Replace a Failed SFP
 
 Identify failed port with `portshow <port>` → hot-replace SFP (no switch reboot needed) → verify with `sfpshow <port>`.
@@ -389,8 +407,10 @@ SFP Information for port 0/1:
 ```
 
 !!! warning "Common errors"
-    **`portshow: Invalid port number`** — Verify the port number format (e.g., `0/1` for slot 0, port 1) and confirm it exists on your switch model.
-    **`sfpshow: Port is disabled or offline`** — Enable the port with `portcfgpersistentenable <port>` and wait 30 seconds for the SFP to initialize before running sfpshow again.
+    | Error | Fix |
+    |---|---|
+    | `portshow: Invalid port number` | Verify the port number format (e.g., `0/1` for slot 0, port 1) and confirm it exists on your switch model. |
+    | `sfpshow: Port is disabled or offline` | Enable the port with `portcfgpersistentenable <port>` and wait 30 seconds for the SFP to initialize before running sfpshow again. |
 ## Replace a Failed Switch (Fabric Resilience)
 
 ISL failover to redundant paths → install replacement switch → restore domain ID and port config from backup → reconnect ISLs → verify fabric.
@@ -460,9 +480,11 @@ Fabric Information
 ```
 
 !!! warning "Common errors"
-    **`FTP: Connection refused`** — Verify the FTP server is running and accessible at the specified IP address and that firewall rules permit the switch to reach it.
-    **`Invalid user credentials for <user>`** — Confirm the username and password are correct and that the user account has read permissions on the backup file.
-    **`File not found: <filename>`** — Ensure the backup file exists on the FTP server at the specified path and the filename is spelled correctly.
+    | Error | Fix |
+    |---|---|
+    | `FTP: Connection refused` | Verify the FTP server is running and accessible at the specified IP address and that firewall rules permit the switch to reach it. |
+    | `Invalid user credentials for <user>` | Confirm the username and password are correct and that the user account has read permissions on the backup file. |
+    | `File not found: <filename>` | Ensure the backup file exists on the FTP server at the specified path and the filename is spelled correctly. |
 ## Collect Support Bundle
 
 `supportsave` → saves fabric and switch state to USB or remote FTP — use for TAC cases.
@@ -490,9 +512,11 @@ Transfer bundle via FTP or email to Broadcom support.
 ```
 
 !!! warning "Common errors"
-    **`supportsave: command not found`** — Verify you are logged into the Brocade switch CLI directly (not SSH to a management server) and have admin privileges.
-    **`Permission denied`** — Run the command as an admin user or use `admin` role credentials to execute supportsave.
-    **`Insufficient disk space: /var/log requires 500 MB free`** — Delete old support bundles with `rm /var/log/supportsave_*.tar.gz` or increase partition size before retrying.
+    | Error | Fix |
+    |---|---|
+    | `supportsave: command not found` | Verify you are logged into the Brocade switch CLI directly (not SSH to a management server) and have admin privileges. |
+    | `Permission denied` | Run the command as an admin user or use `admin` role credentials to execute supportsave. |
+    | `Insufficient disk space: /var/log requires 500 MB free` | Delete old support bundles with `rm /var/log/supportsave_*.tar.gz` or increase partition size before retrying. |
 ## Monitor Port Errors
 
 `porterrshow` — shows CRC errors, LR in/out, link failures per port; investigate any port with non-zero CRC.
@@ -518,8 +542,10 @@ Total Ports: 48
 ```
 
 !!! warning "Common errors"
-    **`porterrshow: command not found`** — Verify you are logged into the Brocade switch CLI (not the Linux host shell) by checking the prompt or using `switchshow` first.
-    **`porterrshow: Permission denied`** — Ensure your user account has administrative privileges on the fabric switch; contact your SAN administrator to grant the necessary role.
+    | Error | Fix |
+    |---|---|
+    | `porterrshow: command not found` | Verify you are logged into the Brocade switch CLI (not the Linux host shell) by checking the prompt or using `switchshow` first. |
+    | `porterrshow: Permission denied` | Ensure your user account has administrative privileges on the fabric switch; contact your SAN administrator to grant the necessary role. |
 ## Back Up Switch Configuration
 
 `configupload -all -P ftp -h <server> -u <user> -f <filename>` — saves running configuration for DR.
@@ -539,9 +565,11 @@ Elapsed time: 12 seconds
 ```
 
 !!! warning "Common errors"
-    **`FTP connection failed: Connection timed out`** — Verify the FTP server is reachable and the hostname/IP in `-h` parameter is correct.
-    **`Authentication failed for user '<user>'`** — Confirm the FTP username and password are correct, and the user has write permissions on the FTP server.
-    **`File not found: <filename>`** — Ensure the configuration file exists in the current directory or provide the full path to the file.
+    | Error | Fix |
+    |---|---|
+    | `FTP connection failed: Connection timed out` | Verify the FTP server is reachable and the hostname/IP in `-h` parameter is correct. |
+    | `Authentication failed for user '<user>'` | Confirm the FTP username and password are correct, and the user has write permissions on the FTP server. |
+    | `File not found: <filename>` | Ensure the configuration file exists in the current directory or provide the full path to the file. |
 ---
 
 ### Enable and Disable Ports
@@ -585,9 +613,11 @@ Brocade Switch:admin> switchshow | grep -E "^<port>"
 ```
 
 !!! warning "Common errors"
-    **`Invalid port number <port-number>`** — Verify the port number exists on your switch model using `switchshow` and use a valid port index (typically 0-23 or 0-31).
-    **`Access denied: insufficient privileges`** — Ensure you are logged in as admin or have the appropriate role assigned using `userconfig --show`.
-    **`Port is locked by another user`** — Wait for the current operation to complete or use `portshow <port-number>` to check if another session is modifying the port.
+    | Error | Fix |
+    |---|---|
+    | `Invalid port number <port-number>` | Verify the port number exists on your switch model using `switchshow` and use a valid port index (typically 0-23 or 0-31). |
+    | `Access denied: insufficient privileges` | Ensure you are logged in as admin or have the appropriate role assigned using `userconfig --show`. |
+    | `Port is locked by another user` | Wait for the current operation to complete or use `portshow <port-number>` to check if another session is modifying the port. |
 Always disable both ends of an ISL before removing a cable. Never disable a port that is the only active path to a host.
 
 ### Configure an ISL (E-Port / Trunk)
@@ -640,9 +670,11 @@ Fabric Port Name Index State
 ```
 
 !!! warning "Common errors"
-    **`Error: Port <port-number> is not an E-Port`** — Verify the port is configured as an E-Port using `portcfg <port-number> e` before enabling trunking.
-    **`Error: Trunking is not supported on this switch`** — Confirm your Fabric OS version supports trunking with `version` and upgrade if necessary.
-    **`Error: Port is already a member of another trunk group`** — Remove the port from its existing trunk group using `trunkport <port-number> none` before reassigning it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Port <port-number> is not an E-Port` | Verify the port is configured as an E-Port using `portcfg <port-number> e` before enabling trunking. |
+    | `Error: Trunking is not supported on this switch` | Confirm your Fabric OS version supports trunking with `version` and upgrade if necessary. |
+    | `Error: Port is already a member of another trunk group` | Remove the port from its existing trunk group using `trunkport <port-number> none` before reassigning it. |
 The port column in `switchshow` must show `E-Port` before enabling trunking. Fabric parameters (BB credit, speed, distance) must match on both ends.
 
 ### Firmware Upgrade
@@ -685,9 +717,11 @@ Status: Both CPs synchronized
 ```
 
 !!! warning "Common errors"
-    **`Download failed: Connection timeout to 10.20.30.40`** — Verify the FTP/SFTP host is reachable and the path is correct using `ping` and `telnet <host> 21` or `22`.
-    **`Error: HA failover not permitted — system in non-redundant mode`** — Remove the `-b` flag if the switch lacks a standby CP, or restore HA configuration before attempting firmware update.
-    **`Insufficient space on flash: required 512MB, available 256MB`** — Delete old firmware images with `firmwaredelete <old-version>` to free space before retrying the download.
+    | Error | Fix |
+    |---|---|
+    | `Download failed: Connection timeout to 10.20.30.40` | Verify the FTP/SFTP host is reachable and the path is correct using `ping` and `telnet <host> 21` or `22`. |
+    | `Error: HA failover not permitted — system in non-redundant mode` | Remove the `-b` flag if the switch lacks a standby CP, or restore HA configuration before attempting firmware update. |
+    | `Insufficient space on flash: required 512MB, available 256MB` | Delete old firmware images with `firmwaredelete <old-version>` to free space before retrying the download. |
 The `-b` flag causes the standby CP to upgrade and reboot first; the active CP follows automatically. Verify all ISLs are healthy and no alarms are present before starting.
 
 ### Switch Health Check
@@ -756,9 +790,11 @@ Fabric Members: 4 switches
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid port number <port>`** — Replace `<port>` with an actual numeric port identifier (e.g., `portshow 0` or `portshow 5`).
-    **`Error: Access denied — insufficient privileges`** — Ensure your user account has admin or read-only fabric permissions; use `userconfig --show` to verify role assignments.
-    **`Error: Fabric not initialized`** — Initialize the fabric with `fabricinit` or verify switch connectivity and ISL links are active using `islshow`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid port number <port>` | Replace `<port>` with an actual numeric port identifier (e.g., `portshow 0` or `portshow 5`). |
+    | `Error: Access denied — insufficient privileges` | Ensure your user account has admin or read-only fabric permissions; use `userconfig --show` to verify role assignments. |
+    | `Error: Fabric not initialized` | Initialize the fabric with `fabricinit` or verify switch connectivity and ISL links are active using `islshow`. |
 Flag any `FAIL` or `MARGINAL` result before proceeding. A healthy switch shows all sensors `OK` and all expected switches in `fabricshow`.
 
 ### User and RBAC Management
@@ -809,9 +845,11 @@ User account operator deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`userconfig: user already exists`** — Choose a different username or delete the existing account first with `userconfig --delete <username>`.
-    **`passwd: user not found`** — Verify the username exists by running `userconfig --show -a` and use the exact username from the list.
-    **`userconfig: insufficient privileges`** — Ensure you are logged in as root or an admin-level account to modify user accounts.
+    | Error | Fix |
+    |---|---|
+    | `userconfig: user already exists` | Choose a different username or delete the existing account first with `userconfig --delete <username>`. |
+    | `passwd: user not found` | Verify the username exists by running `userconfig --show -a` and use the exact username from the list. |
+    | `userconfig: insufficient privileges` | Ensure you are logged in as root or an admin-level account to modify user accounts. |
 Verify: `userconfig --show -a` should list the account with the correct role. Use `securityadmin` role for managing certificates and security policies only.
 
 ### Port Diagnostics
@@ -878,9 +916,11 @@ Port  CRC_Errors  LR_Errors  Link_Failures  Timeout_Discards
 ```
 
 !!! warning "Common errors"
-    **`portloopbacktest: port <port> is not online`** — Bring the port online with `portcfgport <port> 1` before running loopback tests.
-    **`portloopbacktest: external loopback SFP not detected on port <port>`** — Install a qualified loopback SFP transceiver in the specified port or use internal loopback mode instead.
-    **`porterrshow: insufficient privileges`** — Run the command as admin user or with `sudo` if configured in the Brocade switch.
+    | Error | Fix |
+    |---|---|
+    | `portloopbacktest: port <port> is not online` | Bring the port online with `portcfgport <port> 1` before running loopback tests. |
+    | `portloopbacktest: external loopback SFP not detected on port <port>` | Install a qualified loopback SFP transceiver in the specified port or use internal loopback mode instead. |
+    | `porterrshow: insufficient privileges` | Run the command as admin user or with `sudo` if configured in the Brocade switch. |
 A non-zero B2B credit 0 count in `portbuffershow` indicates the remote end is not returning credits fast enough — investigate slow-drain devices on that path. `portperfshow` output auto-refreshes every second; press Ctrl-C to exit.
 
 ---

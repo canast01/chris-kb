@@ -66,8 +66,10 @@ Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
 ```
 
 !!! warning "Common errors"
-    **`SSL certificate verification failed: certificate has expired`** — Regenerate the SSL certificates on both vSphere Replication servers and re-pair the sites.
-    **`Thumbprint mismatch detected between sites`** — Verify network connectivity between replication servers and ensure both are running the same vSphere Replication version before refreshing thumbprints.
+    | Error | Fix |
+    |---|---|
+    | `SSL certificate verification failed: certificate has expired` | Regenerate the SSL certificates on both vSphere Replication servers and re-pair the sites. |
+    | `Thumbprint mismatch detected between sites` | Verify network connectivity between replication servers and ensure both are running the same vSphere Replication version before refreshing thumbprints. |
 ---
 
 ## VRA Admin Account
@@ -128,9 +130,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwOTMxNjgwMCw
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but verify `-sk` flags are both included).
-    **`KeyError: 'token'`** — Verify the authentication credentials are correct and the VRA server is responding with a valid JSON token object; check server logs for authentication failures.
-    **`curl: (7) Failed to connect to vra-london.example.local port 443: Connection refused`** — Confirm the VRA hostname is resolvable and the API service is running on the target host using `curl -v` for detailed connection diagnostics.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example, but verify `-sk` flags are both included). |
+    | `KeyError: 'token'` | Verify the authentication credentials are correct and the VRA server is responding with a valid JSON token object; check server logs for authentication failures. |
+    | `curl: (7) Failed to connect to vra-london.example.local port 443: Connection refused` | Confirm the VRA hostname is resolvable and the API service is running on the target host using `curl -v` for detailed connection diagnostics. |
 Token TTL: default 300 seconds — request a new token for longer-running scripts.
 
 ---

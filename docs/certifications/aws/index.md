@@ -90,9 +90,11 @@ ci-pipeline	arn:aws:iam::123456789012:user/ci-pipeline	2024-01-03T11:47:09+00:00
 ```
 
 !!! warning "Common errors"
-    **`Unable to locate credentials`** — Run `aws configure` with valid AWS Access Key ID and Secret Access Key, or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
-    **`An error occurred (UnauthorizedOperation) when calling the DescribeInstances operation: You are not authorized to perform: ec2:DescribeInstances`** — Ensure the IAM user or role has the `ec2:DescribeInstances` permission attached in the IAM policy.
-    **`An error occurred (AccessDenied) when calling the ListBuckets operation: Access Denied`** — Verify the IAM user has `s3:ListAllMyBuckets` and `s3:GetBucketLocation` permissions in their policy.
+    | Error | Fix |
+    |---|---|
+    | `Unable to locate credentials` | Run `aws configure` with valid AWS Access Key ID and Secret Access Key, or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
+    | `An error occurred (UnauthorizedOperation) when calling the DescribeInstances operation: You are not authorized to perform: ec2:DescribeInstances` | Ensure the IAM user or role has the `ec2:DescribeInstances` permission attached in the IAM policy. |
+    | `An error occurred (AccessDenied) when calling the ListBuckets operation: Access Denied` | Verify the IAM user has `s3:ListAllMyBuckets` and `s3:GetBucketLocation` permissions in their policy. |
 ## Renewal Notes
 
 AWS certifications typically require renewal every 3 years.

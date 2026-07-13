@@ -87,8 +87,10 @@ puresetting set --proxy http://proxy.example.local:8080
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid proxy URL format`** — Ensure the proxy URL follows the format `http://hostname:port` or `https://hostname:port` without trailing slashes.
-    **`Error: Connection refused to proxy server`** — Verify the proxy server is reachable from the FlashArray management network by testing connectivity to the proxy host and port first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid proxy URL format` | Ensure the proxy URL follows the format `http://hostname:port` or `https://hostname:port` without trailing slashes. |
+    | `Error: Connection refused to proxy server` | Verify the proxy server is reachable from the FlashArray management network by testing connectivity to the proxy host and port first. |
 ### Host Data Network (iSCSI / NVMe-TCP)
 
 | Requirement | Specification |
@@ -130,9 +132,11 @@ PING 192.168.100.10 (192.168.100.10): 8972 data bytes
 ```
 
 !!! warning "Common errors"
-    **`Connect: Network is unreachable`** — Verify vmk1 is on the correct VLAN and has a route to 192.168.100.10 using `esxcli network ip route ipv4 list`.
-    **`PING 192.168.100.10 (192.168.100.10): sendto: Message too long`** — Confirm MTU is set to 9000 on vmk1 with `esxcli network ip interface ipv4 set --interface-name vmk1 --mtu=9000` and verify the switch port supports jumbo frames.
-    **`100% packet loss`** — Check that the FlashArray iSCSI port 192.168.100.10 is online and reachable by testing connectivity from a different ESXi host or pinging the array management IP first.
+    | Error | Fix |
+    |---|---|
+    | `Connect: Network is unreachable` | Verify vmk1 is on the correct VLAN and has a route to 192.168.100.10 using `esxcli network ip route ipv4 list`. |
+    | `PING 192.168.100.10 (192.168.100.10): sendto: Message too long` | Confirm MTU is set to 9000 on vmk1 with `esxcli network ip interface ipv4 set --interface-name vmk1 --mtu=9000` and verify the switch port supports jumbo frames. |
+    | `100% packet loss` | Check that the FlashArray iSCSI port 192.168.100.10 is online and reachable by testing connectivity from a different ESXi host or pinging the array management IP first. |
 ### Host Data Network (FC)
 
 | Requirement | Specification |

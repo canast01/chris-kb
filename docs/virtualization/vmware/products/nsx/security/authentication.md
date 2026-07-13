@@ -75,9 +75,11 @@ curl -sk -u 'admin:password' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed).
-    **`{"httpStatus":"UNAUTHORIZED","error_code":401,"module_name":"api-service","error_message":"Invalid credentials"}`** — Verify the NSX Manager admin credentials and ensure the user has API access permissions.
-    **`{"httpStatus":"NOT_FOUND","error_code":404,"module_name":"api-service","error_message":"The requested resource could not be found"}`** — Confirm the NSX Manager hostname/IP is correct and the `/api/v1/node/aaa/auth-policy` endpoint is available on this NSX version.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed). |
+    | `{"httpStatus":"UNAUTHORIZED","error_code":401,"module_name":"api-service","error_message":"Invalid credentials"}` | Verify the NSX Manager admin credentials and ensure the user has API access permissions. |
+    | `{"httpStatus":"NOT_FOUND","error_code":404,"module_name":"api-service","error_message":"The requested resource could not be found"}` | Confirm the NSX Manager hostname/IP is correct and the `/api/v1/node/aaa/auth-policy` endpoint is available on this NSX version. |
 ```bash
 curl -sk -u 'admin:password' \
   -X POST \
@@ -107,9 +109,11 @@ curl -sk -u 'admin:password' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or use `--cacert /path/to/ca.pem` with a valid CA bundle.
-    **`{"error_code": 401, "error_message": "Invalid credentials"}`** — Verify the NSX Manager admin credentials in the `-u` parameter match the actual configured user and password.
-    **`{"error_code": 400, "error_message": "LDAP search not configured"}`** — Configure LDAP integration on the NSX Manager via the UI (System > Users and Roles > LDAP) before attempting LDAP searches.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or use `--cacert /path/to/ca.pem` with a valid CA bundle. |
+    | `{"error_code": 401, "error_message": "Invalid credentials"}` | Verify the NSX Manager admin credentials in the `-u` parameter match the actual configured user and password. |
+    | `{"error_code": 400, "error_message": "LDAP search not configured"}` | Configure LDAP integration on the NSX Manager via the UI (System > Users and Roles > LDAP) before attempting LDAP searches. |
 ```bash
 # Assign Enterprise Admin role to an AD group
 curl -sk -u 'admin:password' \
@@ -150,9 +154,11 @@ curl -sk -u 'admin:password' \
 ```
 
 !!! warning "Common errors"
-    **`{"httpStatus":401,"error_code":10000,"module_name":"common","error_message":"Authentication failed"}`** — Verify NSX Manager credentials and ensure the admin account has API access enabled.
-    **`{"httpStatus":400,"error_code":10001,"error_message":"Invalid identity_source_id"}`** — Confirm the LDAP source ID exists by running `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/aaa/identity-sources` and use the correct ID.
-    **`{"httpStatus":404,"error_code":10002,"error_message":"Role 'enterprise_admin' not found"}`** — Use a valid role name such as `enterprise_admin`, `security_admin`, or `auditor` instead.
+    | Error | Fix |
+    |---|---|
+    | `{"httpStatus":401,"error_code":10000,"module_name":"common","error_message":"Authentication failed"}` | Verify NSX Manager credentials and ensure the admin account has API access enabled. |
+    | `{"httpStatus":400,"error_code":10001,"error_message":"Invalid identity_source_id"}` | Confirm the LDAP source ID exists by running `curl -sk -u 'admin:password' https://<nsx-manager>/api/v1/aaa/identity-sources` and use the correct ID. |
+    | `{"httpStatus":404,"error_code":10002,"error_message":"Role 'enterprise_admin' not found"}` | Use a valid role name such as `enterprise_admin`, `security_admin`, or `auditor` instead. |
 ```bash
 curl -sk -u 'admin:Password123!' \
   "https://nsx-manager.example.local/api/v1/cluster/status"
@@ -196,9 +202,11 @@ curl -sk -u 'admin:Password123!' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the NSX Manager's CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to nsx-manager.example.local port 443: Connection refused`** — Verify NSX Manager is running and accessible at the hostname/IP, and check firewall rules allow HTTPS access to port 443.
-    **`{"error_code":401,"error_message":"Unauthorized"}`** — Confirm the admin credentials are correct and the user account has API access permissions in NSX Manager.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the NSX Manager's CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to nsx-manager.example.local port 443: Connection refused` | Verify NSX Manager is running and accessible at the hostname/IP, and check firewall rules allow HTTPS access to port 443. |
+    | `{"error_code":401,"error_message":"Unauthorized"}` | Confirm the admin credentials are correct and the user account has API access permissions in NSX Manager. |
 ```bash
 # Create session (returns Set-Cookie header)
 curl -sk -u 'admin:Password123!' \
@@ -253,8 +261,10 @@ curl -sk -u 'admin:Password123!' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present; verify NSX manager certificate is accessible or use `--cacert` with proper CA bundle).
-    **`{"httpStatus":"UNAUTHORIZED","error_code":401,"module_error_details":"The credentials supplied to the API were invalid","error_message":"The credentials supplied to the API were invalid"}`** — Verify admin username and password are correct and the user has API access permissions in NSX.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present; verify NSX manager certificate is accessible or use `--cacert` with proper CA bundle). |
+    | `{"httpStatus":"UNAUTHORIZED","error_code":401,"module_error_details":"The credentials supplied to the API were invalid","error_message":"The credentials supplied to the API were invalid"}` | Verify admin username and password are correct and the user has API access permissions in NSX. |
 ```bash
 # Generate client key and CSR
 openssl req -newkey rsa:2048 -nodes \
@@ -328,9 +338,11 @@ e is 65537 (0x010001)
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store.
-    **`{"error_code":400,"error_message":"Invalid PEM format in pem_encoded field"}`** — Ensure the certificate file contains valid PEM-formatted text and the awk command properly escapes newlines; test with `cat nsx-automation.crt | head -2`.
-    **`{"error_code":403,"error_message":"User admin does not have permission to perform this operation"}`** — Verify the admin account has the NSX Administrator role and that certificate management permissions are not restricted by role-based access control policies.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store. |
+    | `{"error_code":400,"error_message":"Invalid PEM format in pem_encoded field"}` | Ensure the certificate file contains valid PEM-formatted text and the awk command properly escapes newlines; test with `cat nsx-automation.crt | head -2`. |
+    | `{"error_code":403,"error_message":"User admin does not have permission to perform this operation"}` | Verify the admin account has the NSX Administrator role and that certificate management permissions are not restricted by role-based access control policies. |
 ```bash
 # Enable audit log export (NSX Manager CLI)
 nsxcli
@@ -347,9 +359,11 @@ nsx> exit
 ```
 
 !!! warning "Common errors"
-    **`Error: Syslog exporter 'siem-01' already exists`** — Use a different exporter name or delete the existing one with `delete service syslog exporter siem-01` first.
-    **`Error: Unable to resolve hostname or IP address 10.0.0.100`** — Verify network connectivity from NSX Manager to the SIEM server and confirm the IP address is reachable.
-    **`Error: TLS certificate validation failed for server 10.0.0.100:6514`** — Import the SIEM server's CA certificate into NSX Manager's trust store using `set service syslog exporter siem-01 ca-cert <cert-path>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Syslog exporter 'siem-01' already exists` | Use a different exporter name or delete the existing one with `delete service syslog exporter siem-01` first. |
+    | `Error: Unable to resolve hostname or IP address 10.0.0.100` | Verify network connectivity from NSX Manager to the SIEM server and confirm the IP address is reachable. |
+    | `Error: TLS certificate validation failed for server 10.0.0.100:6514` | Import the SIEM server's CA certificate into NSX Manager's trust store using `set service syslog exporter siem-01 ca-cert <cert-path>`. |
 ```bash
 # View recent auth events on NSX Manager node
 tail -100 /var/log/vmware/nsx-manager/audit.log | grep -i "login\|auth\|role"
@@ -368,8 +382,10 @@ tail -100 /var/log/vmware/nsx-manager/audit.log | grep -i "login\|auth\|role"
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/vmware/nsx-manager/audit.log' for reading: No such file or directory`** — Verify the NSX Manager service is running with `systemctl status nsx-manager` and check the correct log path with `find /var/log -name "*audit*"`.
-    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or ensure your user account has read permissions on the audit log file.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/vmware/nsx-manager/audit.log' for reading: No such file or directory` | Verify the NSX Manager service is running with `systemctl status nsx-manager` and check the correct log path with `find /var/log -name "*audit*"`. |
+    | `grep: (standard input): Permission denied` | Run the command with `sudo` or ensure your user account has read permissions on the audit log file. |
 ## Before you begin
 
 - **Access:** vCenter Administrator role

@@ -91,8 +91,10 @@ Path: /VSAN/ClomRepairDelay
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or setting '/VSAN/ClomRepairDelay'`** — Verify the option path is correct and the host is running vSAN; check with `esxcli system settings advanced list | grep -i clom` to confirm availability.
-    **`Error: Integer value 30 is out of range [1, 1440]`** — Use a value between 1 and 1440 minutes; for example, use `1440` for 24 hours instead of exceeding the maximum.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or setting '/VSAN/ClomRepairDelay'` | Verify the option path is correct and the host is running vSAN; check with `esxcli system settings advanced list | grep -i clom` to confirm availability. |
+    | `Error: Integer value 30 is out of range [1, 1440]` | Use a value between 1 and 1440 minutes; for example, use `1440` for 24 hours instead of exceeding the maximum. |
 | Parameter | Default | Range | Notes |
 |-----------|---------|-------|-------|
 | `ClomRepairDelay` | 60 min | 0–1440 min | 0 = immediate rebuild; 1440 = 24 h delay |
@@ -122,8 +124,10 @@ Resync IOPS Limit: 0
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option --resync-iops-limit`** — Use the per-host advanced config method instead, as `esxcli vsan cluster set` may not support this parameter in your vSAN version.
-    **`Error: Unknown advanced option '/VSAN/ResyncIopsLimit'`** — Verify the correct option path with `esxcli system settings advanced list | grep -i resync` and use the exact path returned.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option --resync-iops-limit` | Use the per-host advanced config method instead, as `esxcli vsan cluster set` may not support this parameter in your vSAN version. |
+    | `Error: Unknown advanced option '/VSAN/ResyncIopsLimit'` | Verify the correct option path with `esxcli system settings advanced list | grep -i resync` and use the exact path returned. |
 | Setting | Default | Recommended during production peak |
 |---------|---------|-------------------------------------|
 | ResyncIopsLimit | 0 (unlimited) | 500–2000 IOPS depending on workload sensitivity |
@@ -143,8 +147,10 @@ a1b2c3d4-5678-90ab-cdef-1234567890ab       0              0           3
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace vsan`** — Ensure VSAN is licensed and enabled on the ESXi host, and verify the host is part of an active vSAN cluster.
-    **`Permission denied`** — Run the command with root privileges or ensure your user account has the required vSAN diagnostic permissions on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace vsan` | Ensure VSAN is licensed and enabled on the ESXi host, and verify the host is part of an active vSAN cluster. |
+    | `Permission denied` | Run the command with root privileges or ensure your user account has the required vSAN diagnostic permissions on the ESXi host. |
 ## Object Health Inspection
 
 Inspect per-object component placement and health:
@@ -211,8 +217,10 @@ Rebalance operation stopped successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Rebalance operation already in progress`** — Wait for the current rebalance to complete or stop it first with `esxcli vsan storage rebalance stop`.
-    **`Error: VSAN cluster is not in a healthy state`** — Resolve cluster health issues (failed disks, network partitions) before initiating rebalance using `esxcli vsan cluster get`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Rebalance operation already in progress` | Wait for the current rebalance to complete or stop it first with `esxcli vsan storage rebalance stop`. |
+    | `Error: VSAN cluster is not in a healthy state` | Resolve cluster health issues (failed disks, network partitions) before initiating rebalance using `esxcli vsan cluster get`. |
 Rebalance triggers automatically if any disk group exceeds **80% full** while the cluster average is significantly lower. Threshold configurable in advanced settings.
 
 ## vSAN Health Check Procedure
@@ -272,8 +280,10 @@ Cluster Information:
 ```
 
 !!! warning "Common errors"
-    **`esxcli: Unknown command or namespace vsan`** — Ensure VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to verify VSAN is initialized.
-    **`Error: Unable to connect to vSAN cluster`** — Verify the ESXi host is part of an active VSAN cluster and network connectivity exists between cluster nodes.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: Unknown command or namespace vsan` | Ensure VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to verify VSAN is initialized. |
+    | `Error: Unable to connect to vSAN cluster` | Verify the ESXi host is part of an active VSAN cluster and network connectivity exists between cluster nodes. |
 ## Common Health Check Failures
 
 | Health Check | Failure Cause | Remediation |

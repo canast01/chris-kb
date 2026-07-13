@@ -39,9 +39,11 @@ on linux_amd64
 ```
 
 !!! warning "Common errors"
-    **`E: Could not resolve 'apt.releases.hashicorp.com'`** — Verify internet connectivity and DNS resolution with `nslookup apt.releases.hashicorp.com`.
-    **`gpg: can't connect to the GPG agent: IPC connect call failed`** — Run `gpg-connect-agent reloadagent /bye` or restart the gpg-agent service.
-    **`E: Unable to locate package terraform`** — Ensure the HashiCorp repository was added correctly by running `grep hashicorp /etc/apt/sources.list.d/*.list` and verify the GPG key import succeeded.
+    | Error | Fix |
+    |---|---|
+    | `E: Could not resolve 'apt.releases.hashicorp.com'` | Verify internet connectivity and DNS resolution with `nslookup apt.releases.hashicorp.com`. |
+    | `gpg: can't connect to the GPG agent: IPC connect call failed` | Run `gpg-connect-agent reloadagent /bye` or restart the gpg-agent service. |
+    | `E: Unable to locate package terraform` | Ensure the HashiCorp repository was added correctly by running `grep hashicorp /etc/apt/sources.list.d/*.list` and verify the GPG key import succeeded. |
 ```bash
 # Check current version
 terraform version
@@ -82,8 +84,10 @@ Terraform has been successfully initialized!
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to query available provider packages`** — Ensure your network connectivity is stable and check that your Terraform registry credentials are valid if using a private registry.
-    **`Error: Incompatible provider version`** — Run `terraform init -upgrade` to fetch compatible provider versions matching your configuration.
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to query available provider packages` | Ensure your network connectivity is stable and check that your Terraform registry credentials are valid if using a private registry. |
+    | `Error: Incompatible provider version` | Run `terraform init -upgrade` to fetch compatible provider versions matching your configuration. |
 ```bash
 # Upgrade all providers to latest allowed by version constraints
 terraform init -upgrade

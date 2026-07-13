@@ -102,8 +102,10 @@ Product: VMware ESXi
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the local host. Error: Unable to establish a connection to the host.`** — Ensure the ESXi host is powered on and accessible, or run the command directly from the ESXi console rather than remotely.
-    **`Unknown command or namespace esxcli system version get`** — Verify you are running this command on an ESXi host (not vCenter); older ESXi versions may require `vmware -v` instead.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the local host. Error: Unable to establish a connection to the host.` | Ensure the ESXi host is powered on and accessible, or run the command directly from the ESXi console rather than remotely. |
+    | `Unknown command or namespace esxcli system version get` | Verify you are running this command on an ESXi host (not vCenter); older ESXi versions may require `vmware -v` instead. |
 ### 2. Generate the VxRail support bundle
 
 ```text
@@ -153,9 +155,11 @@ vm-support-esx-host01-2026-06-15--09.30.tar.gz     100%  487MB   8.2MB/s   00:59
 ```
 
 !!! warning "Common errors"
-    **`No space left on device`** — Check available disk space with `df -h /var/core/` and delete older bundles or expand the partition if needed.
-    **`Permission denied (publickey,password)`** — Verify SSH connectivity and root credentials with `ssh -v root@<esxi-host-ip>` and ensure SSH is enabled on the ESXi host.
-    **`vm-support: command not found`** — Confirm you are logged in as root on an ESXi host (not vCenter); use `whoami` and `uname -a` to verify the correct system.
+    | Error | Fix |
+    |---|---|
+    | `No space left on device` | Check available disk space with `df -h /var/core/` and delete older bundles or expand the partition if needed. |
+    | `Permission denied (publickey,password)` | Verify SSH connectivity and root credentials with `ssh -v root@<esxi-host-ip>` and ensure SSH is enabled on the ESXi host. |
+    | `vm-support: command not found` | Confirm you are logged in as root on an ESXi host (not vCenter); use `whoami` and `uname -a` to verify the correct system. |
 ### 4. Export the iDRAC SEL (System Event Log)
 
 ```bash
@@ -171,8 +175,10 @@ racadm getsel > /tmp/idrac-sel-<service-tag>-$(date +%Y%m%d).txt
 ```
 
 !!! warning "Common errors"
-    **`bash: racadm: command not found`** — Ensure you are running this command directly on the iDRAC console or via SSH to the iDRAC IP address (not the ESXi host); if using a remote system, install Dell OMECLI or use iDRAC web UI export instead.
-    **`Permission denied`** — Verify your iDRAC user account has administrative privileges; log in with root or a user assigned the "Administrator" role in iDRAC settings.
+    | Error | Fix |
+    |---|---|
+    | `bash: racadm: command not found` | Ensure you are running this command directly on the iDRAC console or via SSH to the iDRAC IP address (not the ESXi host); if using a remote system, install Dell OMECLI or use iDRAC web UI export instead. |
+    | `Permission denied` | Verify your iDRAC user account has administrative privileges; log in with root or a user assigned the "Administrator" role in iDRAC settings. |
 The SEL is the hardware event log — it shows disk faults, DIMM errors, PSU issues, and any hardware-triggered events that preceded the failure.
 
 ### 5. Capture vSAN health status
@@ -217,9 +223,11 @@ Drive Health Summary:
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname <esxi-host-ip>: Name or service not known`** — Replace `<esxi-host-ip>` with the actual ESXi node IP address (e.g., `192.168.1.50`).
-    **`Unknown command or namespace vsan health`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN status.
-    **`Error: Unknown option or set of options: -t drivedatahealthsummary`** — Confirm ESXi version supports this health view option; use `esxcli vsan health cluster view --help` to list available view types.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname <esxi-host-ip>: Name or service not known` | Replace `<esxi-host-ip>` with the actual ESXi node IP address (e.g., `192.168.1.50`). |
+    | `Unknown command or namespace vsan health` | Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN status. |
+    | `Error: Unknown option or set of options: -t drivedatahealthsummary` | Confirm ESXi version supports this health view option; use `esxcli vsan health cluster view --help` to list available view types. |
 ### 6. Write the timeline
 
 ```text
@@ -377,9 +385,11 @@ SEL Records (last 30):
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to localhost:443`** — Verify SSH connectivity to the ESXi host and ensure vSAN is fully initialized with `esxcli vsan cluster get`.
-    **`Error: vSAN health cluster list returned empty`** — Confirm the host is part of an active vSAN cluster by checking vCenter; a single-node cluster may not report health data.
-    **`racadm: command not found`** — Install iDRAC tools or use `ipmitool sel list` instead if iDRAC CLI is unavailable on the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to localhost:443` | Verify SSH connectivity to the ESXi host and ensure vSAN is fully initialized with `esxcli vsan cluster get`. |
+    | `Error: vSAN health cluster list returned empty` | Confirm the host is part of an active vSAN cluster by checking vCenter; a single-node cluster may not report health data. |
+    | `racadm: command not found` | Install iDRAC tools or use `ipmitool sel list` instead if iDRAC CLI is unavailable on the ESXi host. |
 ---
 
 ## Support SLA Reference

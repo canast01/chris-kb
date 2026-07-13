@@ -127,9 +127,11 @@ rtt min/avg/max/stddev = 1.89/2.07/2.34/0.18 ms
 ```
 
 !!! warning "Common errors"
-    **`ping: connect: Network is unreachable`** — Verify the workstation is on the same subnet as 192.168.1.11 or configure appropriate routing.
-    **`ping: unknown host 192.168.1.11`** — Confirm the ESXi host IP address is correct and the host is powered on and network-connected.
-    **`From 192.168.1.11 icmp_seq=1 Destination Host Unreachable`** — Check that the ESXi management network interface is configured and the host firewall allows ICMP traffic.
+    | Error | Fix |
+    |---|---|
+    | `ping: connect: Network is unreachable` | Verify the workstation is on the same subnet as 192.168.1.11 or configure appropriate routing. |
+    | `ping: unknown host 192.168.1.11` | Confirm the ESXi host IP address is correct and the host is powered on and network-connected. |
+    | `From 192.168.1.11 icmp_seq=1 Destination Host Unreachable` | Check that the ESXi management network interface is configured and the host firewall allows ICMP traffic. |
 Repeat Phase 3 for ESXi-02 (use IP 192.168.1.12, hostname `esxi-02.lab.local`).
 
 ---

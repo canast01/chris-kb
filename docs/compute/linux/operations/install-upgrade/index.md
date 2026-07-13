@@ -115,9 +115,11 @@ System will reboot now.
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Leapp preupgrade found inhibitors. Please review /var/log/leapp/leapp-report.txt`** — Address all inhibitors listed in the report before running `leapp upgrade`.
-    **`ERROR: insufficient disk space for upgrade (required: 2.5G, available: 1.8G)`** — Free up disk space on the root filesystem or expand the partition before retrying the upgrade.
-    **`ERROR: leapp command not found`** — Install the leapp package with `dnf install leapp-upgrade` and ensure the RHEL subscription is active.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Leapp preupgrade found inhibitors. Please review /var/log/leapp/leapp-report.txt` | Address all inhibitors listed in the report before running `leapp upgrade`. |
+    | `ERROR: insufficient disk space for upgrade (required: 2.5G, available: 1.8G)` | Free up disk space on the root filesystem or expand the partition before retrying the upgrade. |
+    | `ERROR: leapp command not found` | Install the leapp package with `dnf install leapp-upgrade` and ensure the RHEL subscription is active. |
 Take a VM snapshot or backup before starting the upgrade. A rollback after the upgrade completes requires restoring from the snapshot.
 
 ## Server Lifecycle
@@ -183,9 +185,11 @@ kernel/x86_64                                        5.10.209-2.el9             
 ```
 
 !!! warning "Common errors"
-    **`Filesystem /var is 94% full`** — Run `df -h` to identify large files and archive or delete non-critical logs before patching.
-    **`error: rpmdb open failed: Permission denied`** — Execute the rpm/dnf commands with `sudo` or as root user.
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run apt commands with `sudo` to acquire the package manager lock.
+    | Error | Fix |
+    |---|---|
+    | `Filesystem /var is 94% full` | Run `df -h` to identify large files and archive or delete non-critical logs before patching. |
+    | `error: rpmdb open failed: Permission denied` | Execute the rpm/dnf commands with `sudo` or as root user. |
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run apt commands with `sudo` to acquire the package manager lock. |
 ### RHEL — dnf Patching
 
 ```bash
@@ -250,8 +254,10 @@ RHSA-2026:1236 | Moderate Patch Advisory | curl-7.76.1-29.el9_4
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to synchronize cache for repo 'rhel-9-baseos-rpms'`** — Verify network connectivity and subscription status with `subscription-manager status`, then retry the update.
-    **`Error: Package kernel conflicts with kernel-5.14.0-427.12.1.el9_4.x86_64`** — Remove the conflicting kernel version with `dnf remove kernel-5.14.0-427.
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to synchronize cache for repo 'rhel-9-baseos-rpms'` | Verify network connectivity and subscription status with `subscription-manager status`, then retry the update. |
+    | `Error: Package kernel conflicts with kernel-5.14.0-427.12.1.el9_4.x86_64` | Remove the conflicting kernel version with `dnf remove kernel-5.14.0-427. |
 ### RHEL — yum history (Rollback)
 
 ```bash
@@ -304,8 +310,10 @@ Complete!
 ```
 
 !!! warning "Common errors"
-    **`Transaction ID "98" doesn't exist`** — Verify the transaction ID exists by running `yum history list` and use a valid ID from the output.
-    **`Error: Could not open rpmdb`** — Ensure yum is not already running in another terminal and check disk space with `df -h /var`.
+    | Error | Fix |
+    |---|---|
+    | `Transaction ID "98" doesn't exist` | Verify the transaction ID exists by running `yum history list` and use a valid ID from the output. |
+    | `Error: Could not open rpmdb` | Ensure yum is not already running in another terminal and check disk space with `df -h /var`. |
 ### Ubuntu — apt Patching
 
 ```bash
@@ -372,8 +380,10 @@ Done.
 ```
 
 !!! warning "Common errors"
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the script with `sudo` or as the root user.
-    **`E: Unable to locate package` (during security-only upgrade)** — The grep filter may match no packages; wrap the apt-get install command with `[ -n "$(apt-get --just-print upgrade 2>/dev/null | grep "^Inst" | grep -i security)" ] &&` to skip if empty.
+    | Error | Fix |
+    |---|---|
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the script with `sudo` or as the root user. |
+    | `E: Unable to locate package` (during security-only upgrade)` | The grep filter may match no packages; wrap the apt-get install command with `[ -n "$(apt-get --just-print upgrade 2>/dev/null | grep "^Inst" | grep -i security)" ] &&` to skip if empty. |
 ### Kernel Updates and Reboot
 
 ```bash
@@ -409,8 +419,10 @@ GRUB_DEFAULT=0
 ```
 
 !!! warning "Common errors"
-    **`needs-restarting: command not found`** — Install the yum-utils package with `sudo yum install yum-utils` on RHEL/CentOS.
-    **`grep: /etc/default/grub: No such file or directory`** — Verify the system is Ubuntu/Debian-based; RHEL systems use `/etc/default/grub2` instead.
+    | Error | Fix |
+    |---|---|
+    | `needs-restarting: command not found` | Install the yum-utils package with `sudo yum install yum-utils` on RHEL/CentOS. |
+    | `grep: /etc/default/grub: No such file or directory` | Verify the system is Ubuntu/Debian-based; RHEL systems use `/etc/default/grub2` instead. |
 ### Ansible Patching at Scale
 
 ```yaml
@@ -480,9 +492,11 @@ active
 ```
 
 !!! warning "Common errors"
-    **`diff: /tmp/pre-patch-packages.txt: No such file or directory`** — Run the pre-patch snapshot command (`rpm -qa --qf "%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n" | sort > /tmp/pre-patch-packages.txt`) before patching to create the baseline file.
-    **`find: '/etc': Permission denied`** — Run the find command with `sudo` or as root to access all files in /etc without permission errors.
-    **`systemctl is-active: command not found`** — Ensure you are on a systemd-based system (RHEL 7+, CentOS 7+); on older systems use `service sshd status` instead.
+    | Error | Fix |
+    |---|---|
+    | `diff: /tmp/pre-patch-packages.txt: No such file or directory` | Run the pre-patch snapshot command (`rpm -qa --qf "%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n" | sort > /tmp/pre-patch-packages.txt`) before patching to create the baseline file. |
+    | `find: '/etc': Permission denied` | Run the find command with `sudo` or as root to access all files in /etc without permission errors. |
+    | `systemctl is-active: command not found` | Ensure you are on a systemd-based system (RHEL 7+, CentOS 7+); on older systems use `service sshd status` instead. |
 ### Patch Schedule Standards
 
 | Server Tier | Patch Frequency | Reboot Window |

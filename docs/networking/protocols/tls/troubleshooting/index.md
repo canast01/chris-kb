@@ -83,9 +83,11 @@ tls1_3: Protocol  : TLSv1.3
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the host is reachable and listening on port 443 with `nc -zv host 443`.
-    **`alert handshake failure`** — The server does not support that TLS version; check server configuration or use a supported version like TLSv1.2 or TLSv1.3.
-    **`verify return:0`** — The certificate chain is invalid; check that the server is presenting the complete chain or that your system's CA bundle is up-to-date with `update-ca-certificates`.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the host is reachable and listening on port 443 with `nc -zv host 443`. |
+    | `alert handshake failure` | The server does not support that TLS version; check server configuration or use a supported version like TLSv1.2 or TLSv1.3. |
+    | `verify return:0` | The certificate chain is invalid; check that the server is presenting the complete chain or that your system's CA bundle is up-to-date with `update-ca-certificates`. |
 ## Common Errors and Fixes
 
 | Error | Cause | Fix |
@@ -121,8 +123,10 @@ chain.pem: OK
 ```
 
 !!! warning "Common errors"
-    **`/etc/ssl/certs/server.crt: error 20 at 0 depth lookup: unable to get local issuer certificate`** — Add the intermediate certificate to your CA bundle or verify the intermediate cert is in the correct directory.
-    **`error:0900006e:PEM routines:PEM_read_bio:no start line`** — Ensure the certificate file is in valid PEM format and not corrupted; check with `file /etc/ssl/certs/server.crt`.
+    | Error | Fix |
+    |---|---|
+    | `/etc/ssl/certs/server.crt: error 20 at 0 depth lookup: unable to get local issuer certificate` | Add the intermediate certificate to your CA bundle or verify the intermediate cert is in the correct directory. |
+    | `error:0900006e:PEM routines:PEM_read_bio:no start line` | Ensure the certificate file is in valid PEM format and not corrupted; check with `file /etc/ssl/certs/server.crt`. |
 ## SNI Issues
 
 ```bash
@@ -173,9 +177,11 @@ issuer=/C=US/O=Let's Encrypt/CN=R3
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the host is reachable and listening on port 443 with `nc -zv host 443`.
-    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Add `-showcerts` to inspect the full chain, or use `-CAfile /etc/ssl/certs/ca-certificates.crt` if the CA bundle is missing.
-    **`error:1408F10B:SSL routines:ssl3_get_cipher_list:no ciphers available`** — The server may require specific TLS versions; try adding `-tls1_2` or `-tls1_3` to force a protocol version.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the host is reachable and listening on port 443 with `nc -zv host 443`. |
+    | `error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed` | Add `-showcerts` to inspect the full chain, or use `-CAfile /etc/ssl/certs/ca-certificates.crt` if the CA bundle is missing. |
+    | `error:1408F10B:SSL routines:ssl3_get_cipher_list:no ciphers available` | The server may require specific TLS versions; try adding `-tls1_2` or `-tls1_3` to force a protocol version. |
 ## mTLS Troubleshooting
 
 ```bash
@@ -225,9 +231,11 @@ DONE
 ```
 
 !!! warning "Common errors"
-    **`error:14094410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure`** — Verify the client certificate and key are valid and match the server's expectations; check that the CA file contains the correct root certificate.
-    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Ensure the CA file specified with `-CAfile` contains the issuing CA certificate for the server's certificate chain.
-    **`error:02001002:system library:fopen:No such file or directory`** — Verify the paths to `client.crt`, `client.key`, and `ca.crt` are correct and the files exist in the current directory or use absolute paths.
+    | Error | Fix |
+    |---|---|
+    | `error:14094410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure` | Verify the client certificate and key are valid and match the server's expectations; check that the CA file contains the correct root certificate. |
+    | `error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed` | Ensure the CA file specified with `-CAfile` contains the issuing CA certificate for the server's certificate chain. |
+    | `error:02001002:system library:fopen:No such file or directory` | Verify the paths to `client.crt`, `client.key`, and `ca.crt` are correct and the files exist in the current directory or use absolute paths. |
 ---
 
 ## Verify resolution

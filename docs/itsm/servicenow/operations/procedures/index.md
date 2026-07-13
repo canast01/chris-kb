@@ -69,9 +69,11 @@ curl -u user:token -G \
 ```
 
 !!! warning "Common errors"
-    **`{"error":{"message":"Invalid table API (incident)","status":"failure"}}`** — Verify the ServiceNow instance URL and that the REST API is enabled for the incident table.
-    **`{"error":{"message":"Invalid field name (assigned_to)","status":"failure"}}`** — Use the correct field name `assignment_group` or check your instance's field naming convention; some instances use `assigned_to_user` instead.
-    **`curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused`** — Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev12345.service-now.com`).
+    | Error | Fix |
+    |---|---|
+    | `{"error":{"message":"Invalid table API (incident)","status":"failure"}}` | Verify the ServiceNow instance URL and that the REST API is enabled for the incident table. |
+    | `{"error":{"message":"Invalid field name (assigned_to)","status":"failure"}}` | Use the correct field name `assignment_group` or check your instance's field naming convention; some instances use `assigned_to_user` instead. |
+    | `curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused` | Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev12345.service-now.com`). |
 ```bash
 # Flag an incident for escalation
 curl -u user:token -X PATCH \
@@ -102,9 +104,11 @@ curl -u user:token -X PATCH \
 ```
 
 !!! warning "Common errors"
-    **`401 Unauthorized`** — Verify your ServiceNow instance URL, username, and API token are correct and the token has not expired.
-    **`404 Not Found`** — Replace `SYS_ID` with the actual incident system ID (e.g., `a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6`).
-    **`403 Forbidden`** — Confirm your user account has the `incident_write` or `admin` role in ServiceNow to modify incidents.
+    | Error | Fix |
+    |---|---|
+    | `401 Unauthorized` | Verify your ServiceNow instance URL, username, and API token are correct and the token has not expired. |
+    | `404 Not Found` | Replace `SYS_ID` with the actual incident system ID (e.g., `a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6`). |
+    | `403 Forbidden` | Confirm your user account has the `incident_write` or `admin` role in ServiceNow to modify incidents. |
 ```bash
 # Resolve an incident
 curl -u user:token -X PATCH \
@@ -184,9 +188,11 @@ curl -u user:token -X PATCH \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-instance.service-now.com port 443: Name or service not known`** — Replace `your-instance` with your actual ServiceNow instance name (e.g., `dev123456`).
-    **`{"error":{"message":"Invalid field value","detail":"Invalid state value: -1"},"status":"failure"}`** — Verify the state value is valid for your change type; some change models may not support the Authorize state.
-    **`{"error":{"message":"Invalid table API (change_request)"},"status":"failure"}`** — Confirm the table name is correct; use `change_request` for standard changes or check your instance's custom change table name.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-instance.service-now.com port 443: Name or service not known` | Replace `your-instance` with your actual ServiceNow instance name (e.g., `dev123456`). |
+    | `{"error":{"message":"Invalid field value","detail":"Invalid state value: -1"},"status":"failure"}` | Verify the state value is valid for your change type; some change models may not support the Authorize state. |
+    | `{"error":{"message":"Invalid table API (change_request)"},"status":"failure"}` | Confirm the table name is correct; use `change_request` for standard changes or check your instance's custom change table name. |
 ```bash
 # Create an emergency change
 curl -u user:token -X POST \
@@ -218,9 +224,11 @@ curl -u user:token -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: your-instance.service-now.com`** — Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev12345.service-now.com`).
-    **`{"error":{"message":"Invalid table API (change_request)","status":"failure"},"status":"failure"}`** — Verify the correct table name is `change_request` and your API version supports it; check ServiceNow instance REST API documentation.
-    **`{"error":{"message":"Invalid field value [type=emergency]","status":"invalid_field_value"}}`** — Use valid change type values from your instance (typically `standard`, `normal`, or `emergency`); check your change_request table field definitions.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: your-instance.service-now.com` | Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev12345.service-now.com`). |
+    | `{"error":{"message":"Invalid table API (change_request)","status":"failure"},"status":"failure"}` | Verify the correct table name is `change_request` and your API version supports it; check ServiceNow instance REST API documentation. |
+    | `{"error":{"message":"Invalid field value [type=emergency]","status":"invalid_field_value"}}` | Use valid change type values from your instance (typically `standard`, `normal`, or `emergency`); check your change_request table field definitions. |
 ```bash
 # Query upcoming normal changes pending CAB review
 curl -u user:token -G \
@@ -268,9 +276,11 @@ curl -s -u user:token -G \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused`** — Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `acme-dev.service-now.com`).
-    **`{"error":{"message":"Invalid table API (change_request)","status":"failure"},"status":"failure"}`** — Verify the table name is correct; use `change_request` or check your instance's table naming convention via the ServiceNow API explorer.
-    **`jq: parse error: Invalid numeric literal at line 1 column 7`** — Ensure the API response is valid JSON by checking authentication credentials and that the `-s` flag is present to suppress curl progress output.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused` | Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `acme-dev.service-now.com`). |
+    | `{"error":{"message":"Invalid table API (change_request)","status":"failure"},"status":"failure"}` | Verify the table name is correct; use `change_request` or check your instance's table naming convention via the ServiceNow API explorer. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 7` | Ensure the API response is valid JSON by checking authentication credentials and that the `-s` flag is present to suppress curl progress output. |
 ```bash
 # Query open requests for a user
 curl -u user:token -G \
@@ -327,9 +337,11 @@ curl -u user:token -G \
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: your-instance.service-now.com`** — Replace `your-instance` with your actual ServiceNow instance name (e.g., `dev123456`).
-    **`{"error":{"message":"Invalid table API (sc_request)","status":"failure"},"status":"failure"}`** — Verify the table name is correct and your API user has read access to the sc_request table in ServiceNow.
-    **`{"error":{"message":"Invalid query: requested_for=jsmith^active=true","status":"failure"}}`** — Ensure field names and query syntax match your ServiceNow instance schema; use the ServiceNow API explorer to validate field names.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: your-instance.service-now.com` | Replace `your-instance` with your actual ServiceNow instance name (e.g., `dev123456`). |
+    | `{"error":{"message":"Invalid table API (sc_request)","status":"failure"},"status":"failure"}` | Verify the table name is correct and your API user has read access to the sc_request table in ServiceNow. |
+    | `{"error":{"message":"Invalid query: requested_for=jsmith^active=true","status":"failure"}}` | Ensure field names and query syntax match your ServiceNow instance schema; use the ServiceNow API explorer to validate field names. |
 ```bash
 # Get variables for a request item
 curl -u user:token -G \
@@ -386,9 +398,11 @@ curl -u user:token -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host name`** — Verify the ServiceNow instance URL is correct and replace `your-instance` with your actual instance name.
-    **`{"error":{"message":"Invalid table API (Invalid Offset)","status":"failure"}}`** — Ensure the RITM_SYS_ID and CATALOG_ITEM_SYS_ID are valid sys_id values from your ServiceNow instance.
-    **`{"error":{"message":"Invalid request. User does not have permission to access this API","status":"failure"}}`** — Confirm the API user account has the `catalog_admin` or `itil` role and appropriate table ACLs in ServiceNow.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host name` | Verify the ServiceNow instance URL is correct and replace `your-instance` with your actual instance name. |
+    | `{"error":{"message":"Invalid table API (Invalid Offset)","status":"failure"}}` | Ensure the RITM_SYS_ID and CATALOG_ITEM_SYS_ID are valid sys_id values from your ServiceNow instance. |
+    | `{"error":{"message":"Invalid request. User does not have permission to access this API","status":"failure"}}` | Confirm the API user account has the `catalog_admin` or `itil` role and appropriate table ACLs in ServiceNow. |
 ```bash
 # Query pending approvals for a request
 curl -u user:token -G \
@@ -447,9 +461,11 @@ curl -u user:token -X PATCH \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused`** — Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev12345.service-now.com`).
-    **`{"error":{"message":"Invalid table API (Invalid Referral Record)","status":"failure"},"status":"failure"}`** — Verify the `APPROVAL_SYS_ID` is a valid sys_id from the query results; use the exact value from the first API call's response.
-    **`{"error":{"message":"Invalid field name: state","status":"failure"}}`** — Confirm the field name is `state` (not `status`); check your ServiceNow instance's sysapproval_approver table schema for correct field names.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused` | Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev12345.service-now.com`). |
+    | `{"error":{"message":"Invalid table API (Invalid Referral Record)","status":"failure"},"status":"failure"}` | Verify the `APPROVAL_SYS_ID` is a valid sys_id from the query results; use the exact value from the first API call's response. |
+    | `{"error":{"message":"Invalid field name: state","status":"failure"}}` | Confirm the field name is `state` (not `status`); check your ServiceNow instance's sysapproval_approver table schema for correct field names. |
 ```bash
 # List fulfillment tasks for a request item
 curl -u user:token -G \
@@ -515,9 +531,11 @@ curl -u user:token -X PATCH \
 ```
 
 !!! warning "Common errors"
-    **`Invalid table API (Invalid table: sc_task)`** — Verify the ServiceNow instance URL and API version; use `/api/now/v2/table/sc_task` if on a newer instance.
-    **`401 Unauthorized`** — Confirm the API user credentials and token are correct, and that the user has the `itil` or `sn_request_read` role.
-    **`Invalid field name: SYS_ID`** — Replace `SYS_ID` with the actual task system ID (e.g., `a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6`) from the GET response.
+    | Error | Fix |
+    |---|---|
+    | `Invalid table API (Invalid table: sc_task)` | Verify the ServiceNow instance URL and API version; use `/api/now/v2/table/sc_task` if on a newer instance. |
+    | `401 Unauthorized` | Confirm the API user credentials and token are correct, and that the user has the `itil` or `sn_request_read` role. |
+    | `Invalid field name: SYS_ID` | Replace `SYS_ID` with the actual task system ID (e.g., `a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6`) from the GET response. |
 ```bash
 # Find overdue request items
 curl -u user:token -G \
@@ -555,9 +573,11 @@ curl -u user:token -G \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused`** — Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev12345.service-now.com`).
-    **`{"error":{"message":"Invalid table API GET request","status":"failure"},"status":"failure"}`** — Verify the table name is correct; use `sc_request` for requests or `sc_req_item` for request items, and confirm your user has table API read access.
-    **`{"error":{"message":"Invalid query: due_date<javascript:gs.now()","status":"failure"}}`** — Replace the JavaScript function with a valid ISO date string like `due_date<2024-01-20` or use the REST API's native query syntax without `javascript:` prefix.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused` | Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev12345.service-now.com`). |
+    | `{"error":{"message":"Invalid table API GET request","status":"failure"},"status":"failure"}` | Verify the table name is correct; use `sc_request` for requests or `sc_req_item` for request items, and confirm your user has table API read access. |
+    | `{"error":{"message":"Invalid query: due_date<javascript:gs.now()","status":"failure"}}` | Replace the JavaScript function with a valid ISO date string like `due_date<2024-01-20` or use the REST API's native query syntax without `javascript:` prefix. |
 ```bash
 # Add a work note to an incident
 curl -u user:token -X PATCH \
@@ -631,9 +651,11 @@ curl -u user:token -X PATCH \
 ```
 
 !!! warning "Common errors"
-    **`Invalid table API (Invalid table name [incident])`** — Verify the table name is correct (use `incident` for incidents, `change_request` for changes) and check your ServiceNow instance API version supports the endpoint.
-    **`401 Unauthorized`** — Confirm your API user credentials and token are valid, and that the user has the `itil` or `admin` role with API access permissions.
-    **`Invalid field name [work_notes]`** — Check that the field name matches your ServiceNow instance configuration; some instances use `work_notes_list` or custom field names instead of `work_notes`.
+    | Error | Fix |
+    |---|---|
+    | `Invalid table API (Invalid table name [incident])` | Verify the table name is correct (use `incident` for incidents, `change_request` for changes) and check your ServiceNow instance API version supports the endpoint. |
+    | `401 Unauthorized` | Confirm your API user credentials and token are valid, and that the user has the `itil` or `admin` role with API access permissions. |
+    | `Invalid field name [work_notes]` | Check that the field name matches your ServiceNow instance configuration; some instances use `work_notes_list` or custom field names instead of `work_notes`. |
 ```bash
 # Good work note format
 [14:35 UTC] Checked nginx access logs — confirmed 503s starting 14:28 UTC
@@ -676,9 +698,11 @@ curl -u user:token -X PATCH \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused`** — Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev123456.service-now.com`).
-    **`{"error":{"message":"Invalid table API (incident)","status":"failure"},"status":"failure"}`** — Verify the incident table name is correct and your API user has read/write permissions on the incident table.
-    **`{"error":{"message":"Invalid field value [6]","status":"failure"}}`** — Confirm that state value `6` (Closed) is valid in your ServiceNow instance; some configurations use different state codes.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-instance.service-now.com port 443: Connection refused` | Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev123456.service-now.com`). |
+    | `{"error":{"message":"Invalid table API (incident)","status":"failure"},"status":"failure"}` | Verify the incident table name is correct and your API user has read/write permissions on the incident table. |
+    | `{"error":{"message":"Invalid field value [6]","status":"failure"}}` | Confirm that state value `6` (Closed) is valid in your ServiceNow instance; some configurations use different state codes. |
 ```bash
 # Get audit history for a record
 curl -u user:token -G \
@@ -738,9 +762,11 @@ curl -u user:token -G \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to your-instance.service-now.com port 443: Name or service not known`** — Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev12345.service-now.com`).
-    **`{"error":{"message":"Invalid table API GET request","status":"failure"},"status":"failure"}`** — Verify the API user has read access to `sys_audit` and `sys_journal_field` tables; check role assignments in ServiceNow.
-    **`jq: parse error: Cannot index string with string "fieldname"`** — Ensure the API response contains valid JSON by checking authentication credentials and confirming the table name is correct.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to your-instance.service-now.com port 443: Name or service not known` | Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev12345.service-now.com`). |
+    | `{"error":{"message":"Invalid table API GET request","status":"failure"},"status":"failure"}` | Verify the API user has read access to `sys_audit` and `sys_journal_field` tables; check role assignments in ServiceNow. |
+    | `jq: parse error: Cannot index string with string "fieldname"` | Ensure the API response contains valid JSON by checking authentication credentials and confirming the table name is correct. |
 ```bash
 # Add the same work note to multiple incidents (e.g., all P1s during a major outage)
 INCIDENTS="INC0001 INC0002 INC0003"
@@ -766,9 +792,11 @@ done
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: your-instance.service-now.com`** — Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev12345.service-now.com`).
-    **`jq: parse error: Cannot index null with string "result"`** — Verify the incident number exists and your API user has read permissions on the incident table; check credentials with a test query first.
-    **`{"error":{"message":"Invalid field name: work_notes","status":"failure"}}`** — Use the correct field name `work_notes_list` or append to existing notes using `work_notes` as a JSON array instead of a string.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: your-instance.service-now.com` | Replace `your-instance` with your actual ServiceNow instance hostname (e.g., `dev12345.service-now.com`). |
+    | `jq: parse error: Cannot index null with string "result"` | Verify the incident number exists and your API user has read permissions on the incident table; check credentials with a test query first. |
+    | `{"error":{"message":"Invalid field name: work_notes","status":"failure"}}` | Use the correct field name `work_notes_list` or append to existing notes using `work_notes` as a JSON array instead of a string. |
 ---
 
 ```d2

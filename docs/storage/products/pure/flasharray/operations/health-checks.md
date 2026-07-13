@@ -137,9 +137,11 @@ hgroup-db        OK        3               4
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to management IP 10.20.30.40:443`** — Verify the array management IP is reachable and the REST API service is running with `ssh admin@<array-ip> show system`.
-    **`Error: Invalid credentials for user 'pureuser'`** — Confirm API token is valid and not expired by regenerating it in the Pure1 web UI or using `pureauthtoken set`.
-    **`Error: Command 'purearray' not found`** — Install the Pure Storage Python SDK with `pip install purestorage` and ensure the CLI tools are in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to management IP 10.20.30.40:443` | Verify the array management IP is reachable and the REST API service is running with `ssh admin@<array-ip> show system`. |
+    | `Error: Invalid credentials for user 'pureuser'` | Confirm API token is valid and not expired by regenerating it in the Pure1 web UI or using `pureauthtoken set`. |
+    | `Error: Command 'purearray' not found` | Install the Pure Storage Python SDK with `pip install purestorage` and ensure the CLI tools are in your PATH. |
 ## Controller Health
 
 ![Controller Health](../../../../../assets/storage-pure-flasharray-hc-controller-health.svg)
@@ -160,8 +162,10 @@ CT1.FM2.NV0     healthy 31C          optimal
 ```
 
 !!! warning "Common errors"
-    **`purehw: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory.
-    **`grep: (standard input) is empty`** — Verify the array is reachable and you have authenticated to the FlashArray using `pureadmin login`.
+    | Error | Fix |
+    |---|---|
+    | `purehw: command not found` | Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory. |
+    | `grep: (standard input) is empty` | Verify the array is reachable and you have authenticated to the FlashArray using `pureadmin login`. |
 Both controllers (CT0, CT1) should show `status: ok` and `temperature` within normal range.
 
 ## Drive Health
@@ -186,8 +190,10 @@ Total: 24 drives | Healthy: 23 | Degraded: 1 | Failed: 0
 ```
 
 !!! warning "Common errors"
-    **`puredrive: command not found`** — Install the Pure Storage CLI tools or ensure the PATH includes the Pure management utilities directory.
-    **`Error: Not authenticated to array`** — Authenticate to the FlashArray using `pureadmin login` with valid credentials before running drive commands.
+    | Error | Fix |
+    |---|---|
+    | `puredrive: command not found` | Install the Pure Storage CLI tools or ensure the PATH includes the Pure management utilities directory. |
+    | `Error: Not authenticated to array` | Authenticate to the FlashArray using `pureadmin login` with valid credentials before running drive commands. |
 All drives should show `status: healthy`. Any drive in `failed`, `unhealthy`, or `recovering` state requires attention.
 
 ## Volume Health
@@ -217,8 +223,10 @@ vol-dev-test-01                     1.0T           650G        1.8x
 ```
 
 !!! warning "Common errors"
-    **`purevol: command not found`** — Ensure the Pure Storage Python SDK is installed (`pip install purestorage`) and the purevol CLI wrapper is in your PATH.
-    **`Error: Unable to connect to array at <ip>`** — Verify the FlashArray management IP is reachable and set the `PURE_IP` environment variable or pass credentials via `--api-token` flag.
+    | Error | Fix |
+    |---|---|
+    | `purevol: command not found` | Ensure the Pure Storage Python SDK is installed (`pip install purestorage`) and the purevol CLI wrapper is in your PATH. |
+    | `Error: Unable to connect to array at <ip>` | Verify the FlashArray management IP is reachable and set the `PURE_IP` environment variable or pass credentials via `--api-token` flag. |
 Verify no volumes are in an unexpected state and capacity is within expected range.
 
 ## Host Connectivity
@@ -260,8 +268,10 @@ host-prod-02                  prod-backup-vol-01            3
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid option '--connect'`** — Use `purehost list --connected` (with 'ed' suffix) to show connected hosts with volume counts.
-    **`Error: Array connection failed: Connection timeout`** — Verify the Pure Storage array IP/hostname is reachable and credentials are configured in your Pure CLI environment.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid option '--connect'` | Use `purehost list --connected` (with 'ed' suffix) to show connected hosts with volume counts. |
+    | `Error: Array connection failed: Connection timeout` | Verify the Pure Storage array IP/hostname is reachable and credentials are configured in your Pure CLI environment. |
 Confirm all expected hosts are connected.
 
 ## Replication Health
@@ -293,8 +303,10 @@ flasharray-dr-site-03         Active    Daily               2024-01-16 02:00    
 ```
 
 !!! warning "Common errors"
-    **`Error: Pod 'flasharray-prod-02' is not replicating`** — Verify the replication relationship is configured and enabled with `purepod list --replicating` to confirm active replication.
-    **`Error: Connection refused to management IP 10.20.30.40`** — Ensure the FlashArray management interface is reachable and the `PURE_HOST` environment variable or `--host` parameter points to the correct IP address.
+    | Error | Fix |
+    |---|---|
+    | `Error: Pod 'flasharray-prod-02' is not replicating` | Verify the replication relationship is configured and enabled with `purepod list --replicating` to confirm active replication. |
+    | `Error: Connection refused to management IP 10.20.30.40` | Ensure the FlashArray management interface is reachable and the `PURE_HOST` environment variable or `--host` parameter points to the correct IP address. |
 Verify pod/protection group replication is healthy.
 
 ## Pure1 Cloud Monitoring

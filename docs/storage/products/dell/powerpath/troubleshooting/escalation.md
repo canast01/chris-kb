@@ -149,9 +149,11 @@ Configuration saved successfully to /etc/powerpath/powerpath.cfg
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep EMCpower` and ensure `/opt/EMCpower/powerpath/bin` is in your PATH.
-    **`Permission denied`** — Run the command with `sudo` or as root; PowerPath requires elevated privileges to display device and port states.
-    **`Cannot open /etc/powerpath/powerpath.cfg for writing`** — Ensure `/etc
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Verify PowerPath is installed with `rpm -qa | grep EMCpower` and ensure `/opt/EMCpower/powerpath/bin` is in your PATH. |
+    | `Permission denied` | Run the command with `sudo` or as root; PowerPath requires elevated privileges to display device and port states. |
+    | `Cannot open /etc/powerpath/powerpath.cfg for writing` | Ensure `/etc |
 ### 3. Capture kernel and system log messages
 
 ```bash
@@ -209,9 +211,11 @@ tcp: [2] 192.168.1.51:3260,2 iqn.1991-05.com.dell:storage.array1 (non-flash)
 ```
 
 !!! warning "Common errors"
-    **`bash: systool: command not found`** — Install `sysfsutils` package with `apt-get install sysfsutils` or `yum install sysfsutils`.
-    **`cat: /sys/class/fc_host/host*/driver_version: No such file or directory`** — Verify Fibre Channel HBA is installed and loaded with `lspci | grep -i fibre` and `lsmod | grep lpfc`.
-    **`iscsiadm: No iSCSI sessions active`** — This is informational output when no iSCSI targets are connected; confirm with `iscsiadm -m discoverydb -t sendtargets -p <target_ip> --discover` if discovery is needed.
+    | Error | Fix |
+    |---|---|
+    | `bash: systool: command not found` | Install `sysfsutils` package with `apt-get install sysfsutils` or `yum install sysfsutils`. |
+    | `cat: /sys/class/fc_host/host*/driver_version: No such file or directory` | Verify Fibre Channel HBA is installed and loaded with `lspci | grep -i fibre` and `lsmod | grep lpfc`. |
+    | `iscsiadm: No iSCSI sessions active` | This is informational output when no iSCSI targets are connected; confirm with `iscsiadm -m discoverydb -t sendtargets -p <target_ip> --discover` if discovery is needed. |
 ### 5. Write the timeline
 
 ```text
@@ -346,9 +350,11 @@ c4    qla2xxx_4-0    ON     No      1834756    512000
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep PowerPath` and ensure /opt/emc/powerpath/bin is in PATH.
-    **`emcp4          000296900001     Dead     0        0    Opt/Alua`** — Check SAN fabric connectivity and zoning for the affected HBA port; rescan with `powermt config` after restoring the path.
-    **`[13046.102938] qla2xxx [0000:0e:00.0]-5008: Link Down detected`** — Verify SFP cable and switch port status on the fabric side, then restart the HBA driver with `modprobe -r qla2xxx && modprobe qla2xxx`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Verify PowerPath is installed with `rpm -qa | grep PowerPath` and ensure /opt/emc/powerpath/bin is in PATH. |
+    | `emcp4          000296900001     Dead     0        0    Opt/Alua` | Check SAN fabric connectivity and zoning for the affected HBA port; rescan with `powermt config` after restoring the path. |
+    | `[13046.102938] qla2xxx [0000:0e:00.0]-5008: Link Down detected` | Verify SFP cable and switch port status on the fabric side, then restart the HBA driver with `modprobe -r qla2xxx && modprobe qla2xxx`. |
 ---
 
 ## Support SLA Reference

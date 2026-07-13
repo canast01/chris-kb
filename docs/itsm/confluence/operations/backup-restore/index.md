@@ -143,9 +143,11 @@ Backup completed: /backup/confluence/db/confluence_20240115_143022.dump
 ```
 
 !!! warning "Common errors"
-    **`pg_dump: error: connection to server at "db.internal.example.com" (10.45.12.8), port 5432 failed: Connection refused`** — Verify the database host is reachable and PostgreSQL is running with `psql -h db.internal.example.com -U confluence -d confluencedb`.
-    **`pg_dump: error: FATAL: password authentication failed for user "confluence"`** — Ensure the `DB_PASSWORD` environment variable is set correctly before running the script with `export DB_PASSWORD="your_password"`.
-    **`mkdir: cannot create directory '/backup/confluence/db': Permission denied`** — Run the script with sudo or change `BACKUP_DIR` to a location where the current user has write permissions.
+    | Error | Fix |
+    |---|---|
+    | `pg_dump: error: connection to server at "db.internal.example.com" (10.45.12.8), port 5432 failed: Connection refused` | Verify the database host is reachable and PostgreSQL is running with `psql -h db.internal.example.com -U confluence -d confluencedb`. |
+    | `pg_dump: error: FATAL: password authentication failed for user "confluence"` | Ensure the `DB_PASSWORD` environment variable is set correctly before running the script with `export DB_PASSWORD="your_password"`. |
+    | `mkdir: cannot create directory '/backup/confluence/db': Permission denied` | Run the script with sudo or change `BACKUP_DIR` to a location where the current user has write permissions. |
 #### `pg_dump` Format Options
 
 | Format flag | Description | Restore tool |
@@ -203,9 +205,11 @@ COMMIT
 ```
 
 !!! warning "Common errors"
-    **`pg_restore: error: could not connect to database server: FATAL: role "postgres" does not exist`** — Verify the PostgreSQL superuser exists and the `--username` parameter matches an actual database role.
-    **`pg_restore: error: input file appears to be a text format dump`** — Ensure `$BACKUP_FILE` is a custom-format dump (created with `pg_dump -Fc`), not a plain SQL text dump.
-    **`ERROR: database "confluence_verify" already exists`** — Drop the existing test database first with `dropdb confluence_verify` before running `createdb`.
+    | Error | Fix |
+    |---|---|
+    | `pg_restore: error: could not connect to database server: FATAL: role "postgres" does not exist` | Verify the PostgreSQL superuser exists and the `--username` parameter matches an actual database role. |
+    | `pg_restore: error: input file appears to be a text format dump` | Ensure `$BACKUP_FILE` is a custom-format dump (created with `pg_dump -Fc`), not a plain SQL text dump. |
+    | `ERROR: database "confluence_verify" already exists` | Drop the existing test database first with `dropdb confluence_verify` before running `createdb`. |
 ---
 
 ## Filesystem Backup — Shared Home
@@ -252,9 +256,11 @@ Shared home backup: /backup/confluence/shared-home/20240315_143027/
 ```
 
 !!! warning "Common errors"
-    **`rsync: change_dir "/mnt/confluence-shared" failed: No such file or directory (2)`** — Verify the SHARED_HOME path exists and is mounted with `mount | grep confluence-shared`.
-    **`rsync: mkdir "/backup/confluence/shared-home/20240315_143027" failed: Permission denied (13)`** — Ensure the script runs with sufficient privileges (sudo) and the backup destination directory is writable by the user.
-    **`rsync: write failed on "/backup/confluence/shared-home/20240315_143027/attachments/ver3/abc123def456/page-12847-v5.pdf": No space left on device (28)`** — Check available disk space on the backup destination with `df -h /backup` and free up space or expand the volume.
+    | Error | Fix |
+    |---|---|
+    | `rsync: change_dir "/mnt/confluence-shared" failed: No such file or directory (2)` | Verify the SHARED_HOME path exists and is mounted with `mount | grep confluence-shared`. |
+    | `rsync: mkdir "/backup/confluence/shared-home/20240315_143027" failed: Permission denied (13)` | Ensure the script runs with sufficient privileges (sudo) and the backup destination directory is writable by the user. |
+    | `rsync: write failed on "/backup/confluence/shared-home/20240315_143027/attachments/ver3/abc123def456/page-12847-v5.pdf": No space left on device (28)` | Check available disk space on the backup destination with `df -h /backup` and free up space or expand the volume. |
 ### What to Include / Exclude
 
 | Path | Include | Notes |
@@ -313,9 +319,11 @@ pg_restore: completed successfully
 ```
 
 !!! warning "Common errors"
-    **`pg_restore: [archiver] could not open input file "/backup/confluence/db/confluence_20260508_020000.dump": No such file or directory`** — Verify the backup file path exists and the full filename matches exactly with `ls -lh /backup/confluence/db/`.
-    **`pg_restore: error: connection to server at "db.internal.example.com" (10.42.8.15), port 5432 failed: Connection refused`** — Confirm the PostgreSQL server is running on the target host and the hostname/port are correct with `psql -h db.internal.example.com -U postgres -c "SELECT version();"`.
-    **`pg_restore: error: role "confluence" does not exist`** — Create the Confluence database owner role first with `psql -U postgres -c "CREATE ROLE confluence WITH LOGIN;"` before running the restore.
+    | Error | Fix |
+    |---|---|
+    | `pg_restore: [archiver] could not open input file "/backup/confluence/db/confluence_20260508_020000.dump": No such file or directory` | Verify the backup file path exists and the full filename matches exactly with `ls -lh /backup/confluence/db/`. |
+    | `pg_restore: error: connection to server at "db.internal.example.com" (10.42.8.15), port 5432 failed: Connection refused` | Confirm the PostgreSQL server is running on the target host and the hostname/port are correct with `psql -h db.internal.example.com -U postgres -c "SELECT version();"`. |
+    | `pg_restore: error: role "confluence" does not exist` | Create the Confluence database owner role first with `psql -U postgres -c "CREATE ROLE confluence WITH LOGIN;"` before running the restore. |
 ### 2. Restore the Shared Home
 
 ```bash
@@ -340,9 +348,11 @@ sent 2,847,392,156 bytes  received 45,821 bytes  transferred in 847.23 seconds
 ```
 
 !!! warning "Common errors"
-    **`rsync: change_dir "/backup/confluence/shared-home/20260508_020000" failed: No such file or directory (2)`** — Verify the backup directory path exists and the date format matches your actual backup naming convention.
-    **`chown: changing ownership of '/mnt/confluence-shared/': Operation not permitted`** — Run the command with `sudo` or ensure you have root privileges before executing chown.
-    **`rsync: [Receiver] mkdir "/mnt/confluence-shared" failed: No such file or directory (2)`** — Create the destination directory with `mkdir -p /mnt/confluence-shared/` before running rsync.
+    | Error | Fix |
+    |---|---|
+    | `rsync: change_dir "/backup/confluence/shared-home/20260508_020000" failed: No such file or directory (2)` | Verify the backup directory path exists and the date format matches your actual backup naming convention. |
+    | `chown: changing ownership of '/mnt/confluence-shared/': Operation not permitted` | Run the command with `sudo` or ensure you have root privileges before executing chown. |
+    | `rsync: [Receiver] mkdir "/mnt/confluence-shared" failed: No such file or directory (2)` | Create the destination directory with `mkdir -p /mnt/confluence-shared/` before running rsync. |
 ### 3. Restore from XML Backup (UI)
 
 If restoring from an XML site backup (small instances or content-only restore):
@@ -401,9 +411,11 @@ Tomcat started.
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command or configure proper SSL certificates on the Confluence server.
-    **`ERROR [main] [com.atlassian.confluence.setup.BootstrapManager] Database connection failed`** — Verify database credentials and connectivity in `confluence.cfg.xml` and ensure the database service is running and accessible.
-    **`ERROR [main] [com.atlassian.confluence.search.v2.ContentIndexer] Search index corruption detected`** — Delete the corrupted index directory at `/var/atlassian/application-data/confluence/index` and restart Confluence to rebuild
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command or configure proper SSL certificates on the Confluence server. |
+    | `ERROR [main] [com.atlassian.confluence.setup.BootstrapManager] Database connection failed` | Verify database credentials and connectivity in `confluence.cfg.xml` and ensure the database service is running and accessible. |
+    | `ERROR [main] [com.atlassian.confluence.search.v2.ContentIndexer] Search index corruption detected` | Delete the corrupted index directory at `/var/atlassian/application-data/confluence/index` and restart Confluence to rebuild |
 ---
 
 ## Data Center Backup Best Practices
@@ -437,9 +449,11 @@ upload: ./confluence_db_20240315_143022.sql.gz to s3://company-confluence-backup
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist`** — Verify the S3 bucket name matches your AWS account and region with `aws s3 ls | grep confluence-backups`.
-    **`An error occurred (AccessDenied) when calling the PutObject operation: User: arn:aws:iam::123456789012:user/backup-user is not authorized to perform: s3:PutObject`** — Add `s3:PutObject` and `kms:Decrypt` permissions to the IAM user's policy for the backup bucket and KMS key.
-    **`An error occurred (InvalidKeyId.NotFound) when calling the PutObject operation: Invalid keyId: alias/confluence-backup-key`** — Confirm the KMS key alias exists with `aws kms list-aliases | grep confluence-backup-key` and matches your region.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist` | Verify the S3 bucket name matches your AWS account and region with `aws s3 ls | grep confluence-backups`. |
+    | `An error occurred (AccessDenied) when calling the PutObject operation: User: arn:aws:iam::123456789012:user/backup-user is not authorized to perform: s3:PutObject` | Add `s3:PutObject` and `kms:Decrypt` permissions to the IAM user's policy for the backup bucket and KMS key. |
+    | `An error occurred (InvalidKeyId.NotFound) when calling the PutObject operation: Invalid keyId: alias/confluence-backup-key` | Confirm the KMS key alias exists with `aws kms list-aliases | grep confluence-backup-key` and matches your region. |
 ---
 
 ## Verify

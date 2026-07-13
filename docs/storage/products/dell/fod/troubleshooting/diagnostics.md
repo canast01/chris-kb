@@ -117,8 +117,10 @@ Status: Active
 ```
 
 !!! warning "Common errors"
-    **`License feature <feature-name> is not found`** — Verify the feature name spelling against the list output and use the exact name shown in the Feature column.
-    **`Symmetrix ID <SID> is not recognized`** — Confirm the SID is correct by running `symcfg list` to display all available array IDs on the system.
+    | Error | Fix |
+    |---|---|
+    | `License feature <feature-name> is not found` | Verify the feature name spelling against the list output and use the exact name shown in the Feature column. |
+    | `Symmetrix ID <SID> is not recognized` | Confirm the SID is correct by running `symcfg list` to display all available array IDs on the system. |
 ---
 
 ## Step 2 — Check array serial number
@@ -170,8 +172,10 @@ Total Usable Capacity: 50.0 TB
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Install the EMC Solutions Enabler package or add the Symmetrix CLI bin directory to your PATH environment variable.
-    **`A Symmetrix ID must be supplied`** — Replace `<SID>` with an actual array ID from the `symcfg list` output (e.g., `symcfg -sid 000123456789012 list -v`).
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Install the EMC Solutions Enabler package or add the Symmetrix CLI bin directory to your PATH environment variable. |
+    | `A Symmetrix ID must be supplied` | Replace `<SID>` with an actual array ID from the `symcfg list` output (e.g., `symcfg -sid 000123456789012 list -v`). |
 ---
 
 ## Step 3 — Inspect the FoD key file
@@ -212,9 +216,11 @@ INCREMENT_COD_CAPACITY=5
 ```
 
 !!! warning "Common errors"
-    **`grep: /path/to/fod-key.lic: No such file or directory`** — Replace `/path/to/fod-key.lic` with the actual path to your license file (typically `/opt/emc/fod/license.lic` or similar).
-    **`VENDOR_SN=CX480-SN-DIFFERENT`** — The serial number in the license does not match your array; request a new license key from Dell Account team with your correct array serial number.
-    **`EXPIRY_DATE=2023-06-15`** — The license has expired; contact Dell Account team immediately to renew the term license before features are disabled.
+    | Error | Fix |
+    |---|---|
+    | `grep: /path/to/fod-key.lic: No such file or directory` | Replace `/path/to/fod-key.lic` with the actual path to your license file (typically `/opt/emc/fod/license.lic` or similar). |
+    | `VENDOR_SN=CX480-SN-DIFFERENT` | The serial number in the license does not match your array; request a new license key from Dell Account team with your correct array serial number. |
+    | `EXPIRY_DATE=2023-06-15` | The license has expired; contact Dell Account team immediately to renew the term license before features are disabled. |
 ---
 
 ## Step 4 — Dry-run the key install (preview)
@@ -252,9 +258,11 @@ Ready to install.
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI_C_INVALID_LICENSE`** — Verify the key file SN matches the array SN with `symlicense -sid <SID> show_license` and request a re-issue from Dell Licensing if they do not match.
-    **`symlicense: command not found`** — Ensure the Symmetrix CLI tools are installed and the `$PATH` includes the installation directory (typically `/opt/emc/SYMCLI/bin`).
-    **`No such file or directory: /path/to/fod-key.lic`** — Verify the key file path is correct and readable with `ls -l /path/to/fod-key.lic`.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI_C_INVALID_LICENSE` | Verify the key file SN matches the array SN with `symlicense -sid <SID> show_license` and request a re-issue from Dell Licensing if they do not match. |
+    | `symlicense: command not found` | Ensure the Symmetrix CLI tools are installed and the `$PATH` includes the installation directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `No such file or directory: /path/to/fod-key.lic` | Verify the key file path is correct and readable with `ls -l /path/to/fod-key.lic`. |
 ---
 
 ## Step 5 — Check firmware version compatibility
@@ -282,9 +290,11 @@ Serial Number: PS-ABC123XYZ789
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Ensure Symmetrix Tools are installed and the `$PATH` includes the installation directory (typically `/opt/emc/SYMCLI/bin`).
-    **`Error: Invalid SID or array not responding`** — Verify the SID is correct with `symcfg list` and confirm the array is reachable on the management network.
-    **`uemcli: unable to connect to <mgmt-ip>`** — Check that the management IP is correct, the array is online, and your user account has sufficient permissions on the Unisphere interface.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Ensure Symmetrix Tools are installed and the `$PATH` includes the installation directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `Error: Invalid SID or array not responding` | Verify the SID is correct with `symcfg list` and confirm the array is reachable on the management network. |
+    | `uemcli: unable to connect to <mgmt-ip>` | Check that the management IP is correct, the array is online, and your user account has sufficient permissions on the Unisphere interface. |
 ---
 
 ## Step 6 — Collect diagnostic output for Dell SR
@@ -334,9 +344,11 @@ Diagnostic snapshot saved to: /tmp/fod-diag-2024-01-15-1430.txt
 ```
 
 !!! warning "Common errors"
-    **`symlicense: Command not found`** — Ensure the EMC Solutions Enabler package is installed and `/opt/emc/SYMCLI/bin` is in your PATH.
-    **`License Key File: Invalid or corrupted`** — Verify the key file path is correct and readable with `file /path/to/fod-key.lic`, and confirm it matches your array's serial number.
-    **`Symmetrix Serial Number mismatch between key and array`** — Cross-check the SN on your chassis label against the VENDOR_SN in the key file and Dell's order documentation.
+    | Error | Fix |
+    |---|---|
+    | `symlicense: Command not found` | Ensure the EMC Solutions Enabler package is installed and `/opt/emc/SYMCLI/bin` is in your PATH. |
+    | `License Key File: Invalid or corrupted` | Verify the key file path is correct and readable with `file /path/to/fod-key.lic`, and confirm it matches your array's serial number. |
+    | `Symmetrix Serial Number mismatch between key and array` | Cross-check the SN on your chassis label against the VENDOR_SN in the key file and Dell's order documentation. |
 ---
 
 ## See also

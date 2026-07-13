@@ -106,9 +106,11 @@ Last 10 samples (from /tmp/srdf_cycle_trend_000296802151_3.log):
 ```
 
 !!! warning "Common errors"
-    **`ERROR: symrdf command failed: symrdf: Command not found`** — Ensure EMC Solutions Enabler is installed and `symrdf` is in PATH, or source the appropriate environment setup script (typically `/opt/emc/SYMCLI/bin/setenv.sh`).
-    **`SID (Symmetrix serial) is required`** — Export the SID variable before running the script: `export SID=000296802151 RDF_GROUP=3 && ./srdf-cycle-time-monitor.sh`.
-    **`bc: command not found`** — Install `bc` package (`apt-get install bc` on Debian/Ubuntu or `yum install bc` on RHEL/CentOS) for floating-point threshold comparisons.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: symrdf command failed: symrdf: Command not found` | Ensure EMC Solutions Enabler is installed and `symrdf` is in PATH, or source the appropriate environment setup script (typically `/opt/emc/SYMCLI/bin/setenv.sh`). |
+    | `SID (Symmetrix serial) is required` | Export the SID variable before running the script: `export SID=000296802151 RDF_GROUP=3 && ./srdf-cycle-time-monitor.sh`. |
+    | `bc: command not found` | Install `bc` package (`apt-get install bc` on Debian/Ubuntu or `yum install bc` on RHEL/CentOS) for floating-point threshold comparisons. |
 ```bash
 #!/usr/bin/env bash
 # srdf-resync-after-dr-test.sh
@@ -235,9 +237,11 @@ Establish command submitted. Starting sync progress monitor...
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Error: RDF group 3 not found for SID PROD01`** — Verify the RDF_GROUP value matches the configured group number with `symrdf query -sid <SID>` and re-run with correct RDF_GROUP parameter.
-    **`WARNING: Sync timed out after 3600s`** — Increase SYNC_TIMEOUT environment variable (e.g., `SYNC_TIMEOUT=7200 ./srdf-resync-after-dr-test.sh`) or investigate replication delays on the array with `symrdf query -sid <SID> -rdfg <RDF_GROUP> -detail`.
-    **`Aborted by operator. Please ensure DR hosts are off R2 volumes before resyncing.`** — Confirm that all I/O has stopped and R2 volumes are unmounted on DR hosts, then re-run the script and respond with
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Error: RDF group 3 not found for SID PROD01` | Verify the RDF_GROUP value matches the configured group number with `symrdf query -sid <SID>` and re-run with correct RDF_GROUP parameter. |
+    | `WARNING: Sync timed out after 3600s` | Increase SYNC_TIMEOUT environment variable (e.g., `SYNC_TIMEOUT=7200 ./srdf-resync-after-dr-test.sh`) or investigate replication delays on the array with `symrdf query -sid <SID> -rdfg <RDF_GROUP> -detail`. |
+    | `Aborted by operator. Please ensure DR hosts are off R2 volumes before resyncing.` | Confirm that all I/O has stopped and R2 volumes are unmounted on DR hosts, then re-run the script and respond with |
 ```bash
 chmod +x srdf-resync-after-dr-test.sh
 SID=000123456789 RDF_GROUP=1 CG_NAME=MyAppCG ./srdf-resync-after-dr-test.sh
@@ -444,8 +448,10 @@ Status: PASS
 ```
 
 !!! warning "Common errors"
-    **`'srdf-a-cycle-check.bat' is not recognized as an internal or external command`** — Verify the batch file exists in the current directory or add its full path (e.g., `C:\Program Files\Dell\SRDF\srdf-a-cycle-check.bat`).
-    **`Access Denied`** — Run the command prompt as Administrator or check that your user account has execute permissions on the batch file.
+    | Error | Fix |
+    |---|---|
+    | `'srdf-a-cycle-check.bat' is not recognized as an internal or external command` | Verify the batch file exists in the current directory or add its full path (e.g., `C:\Program Files\Dell\SRDF\srdf-a-cycle-check.bat`). |
+    | `Access Denied` | Run the command prompt as Administrator or check that your user account has execute permissions on the batch file. |
 ```bash
 #!/bin/bash
 # srdf_daily_check.sh
@@ -497,9 +503,11 @@ Daily check: 0 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_HOST is required`** — Ensure the environment variable is set before running the script: `export SYMCLI_HOST=192.168.1.50`.
-    **`Permission denied (publickey,password).`** — Verify SSH key is installed on the SYMCLI host for the specified user and that `SSH_USER` matches the authorized account.
-    **`symrdf: command not found`** — Confirm `SYMCLI_PATH` points to the correct installation directory, or update it: `export SYMCLI_PATH=/opt/emc/SYMCLI/bin`.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_HOST is required` | Ensure the environment variable is set before running the script: `export SYMCLI_HOST=192.168.1.50`. |
+    | `Permission denied (publickey,password).` | Verify SSH key is installed on the SYMCLI host for the specified user and that `SSH_USER` matches the authorized account. |
+    | `symrdf: command not found` | Confirm `SYMCLI_PATH` points to the correct installation directory, or update it: `export SYMCLI_PATH=/opt/emc/SYMCLI/bin`. |
 ```bash
 #!/bin/bash
 # srdf_triage.sh
@@ -574,9 +582,11 @@ Triage data saved to: /tmp/srdf_triage_000123456789_001_20250115_143247.txt
 ```
 
 !!! warning "Common errors"
-    **`bash: /usr/symcli/bin/symrdf: No such file or directory`** — Verify SYMCLI_PATH is correct and SymCLI is installed on the target host, or override with `SYMCLI_PATH=/opt/emc/symcli/bin ./srdf_triage.sh`.
-    **`Permission denied (publickey,gssapi-keyauth)`** — Ensure SSH key-based authentication is configured for the SSH_USER account on SYMCLI_HOST, or add `-i /path/to/key` to SSH_OPTS.
-    **`symrdf: Invalid RDF Group number`** — Confirm the RDF_GROUP value exists on the array by running `symrdf list -sid $SID` manually to list available groups.
+    | Error | Fix |
+    |---|---|
+    | `bash: /usr/symcli/bin/symrdf: No such file or directory` | Verify SYMCLI_PATH is correct and SymCLI is installed on the target host, or override with `SYMCLI_PATH=/opt/emc/symcli/bin ./srdf_triage.sh`. |
+    | `Permission denied (publickey,gssapi-keyauth)` | Ensure SSH key-based authentication is configured for the SSH_USER account on SYMCLI_HOST, or add `-i /path/to/key` to SSH_OPTS. |
+    | `symrdf: Invalid RDF Group number` | Confirm the RDF_GROUP value exists on the array by running `symrdf list -sid $SID` manually to list available groups. |
 ```bash
 #!/bin/bash
 # srdf_precheck.sh
@@ -635,9 +645,11 @@ Pre-check: 0 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_HOST is required`** — Set the SYMCLI_HOST environment variable before running the script: `export SYMCLI_HOST=192.168.1.50`
-    **`Permission denied (publickey,password)`** — Ensure SSH key-based authentication is configured for the SSH_USER account on the SYMCLI_HOST, or add `-o PubkeyAuthentication=yes` to SSH_OPTS.
-    **`symrdf: command not found`** — Verify SYMCLI_PATH points to the correct Symmetrix CLI installation directory; check with `ssh $SSH_USER@$SYMCLI_HOST "which symrdf"`.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_HOST is required` | Set the SYMCLI_HOST environment variable before running the script: `export SYMCLI_HOST=192.168.1.50` |
+    | `Permission denied (publickey,password)` | Ensure SSH key-based authentication is configured for the SSH_USER account on the SYMCLI_HOST, or add `-o PubkeyAuthentication=yes` to SSH_OPTS. |
+    | `symrdf: command not found` | Verify SYMCLI_PATH points to the correct Symmetrix CLI installation directory; check with `ssh $SSH_USER@$SYMCLI_HOST "which symrdf"`. |
 ```bash
 #!/bin/bash
 # srdf_postcheck.sh
@@ -689,9 +701,11 @@ Post-change validation: 0 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_HOST is required`** — Export the SYMCLI_HOST environment variable before running the script: `export SYMCLI_HOST=192.168.1.50`
-    **`Permission denied (publickey,gssapi-keyexec)`** — Ensure SSH key-based authentication is configured for the SSH_USER account on the SYMCLI host, or add the public key to `~/.ssh/authorized_keys`.
-    **`symrdf: command not found`** — Verify SYMCLI_PATH points to the correct installation directory by running `ssh $SSH_USER@$SYMCLI_HOST "which symrdf"` to confirm the actual path.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_HOST is required` | Export the SYMCLI_HOST environment variable before running the script: `export SYMCLI_HOST=192.168.1.50` |
+    | `Permission denied (publickey,gssapi-keyexec)` | Ensure SSH key-based authentication is configured for the SSH_USER account on the SYMCLI host, or add the public key to `~/.ssh/authorized_keys`. |
+    | `symrdf: command not found` | Verify SYMCLI_PATH points to the correct installation directory by running `ssh $SSH_USER@$SYMCLI_HOST "which symrdf"` to confirm the actual path. |
 ```bash
 #!/bin/bash
 # srdf_health_check.sh
@@ -731,9 +745,11 @@ sid=000191 rdfg=2 total_pairs=48 consistent=47 degraded=1 delta_marks=12847 link
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname <ip>: Name or service not known`** — Verify SYMCLI_HOST is set to a valid IP or hostname and is reachable from the monitoring host.
-    **`Permission denied (publickey,gssapi-with-mic)`** — Ensure SSH_USER has passwordless key-based authentication configured on SYMCLI_HOST and the key is in ~/.ssh/authorized_keys.
-    **`symrdf: Command not found`** — Confirm SYMCLI_PATH points to the correct installation directory (typically /usr/symcli/bin on Symmetrix hosts) and symcli packages are installed.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname <ip>: Name or service not known` | Verify SYMCLI_HOST is set to a valid IP or hostname and is reachable from the monitoring host. |
+    | `Permission denied (publickey,gssapi-with-mic)` | Ensure SSH_USER has passwordless key-based authentication configured on SYMCLI_HOST and the key is in ~/.ssh/authorized_keys. |
+    | `symrdf: Command not found` | Confirm SYMCLI_PATH points to the correct installation directory (typically /usr/symcli/bin on Symmetrix hosts) and symcli packages are installed. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

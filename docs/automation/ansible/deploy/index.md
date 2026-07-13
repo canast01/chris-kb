@@ -79,8 +79,10 @@ Successfully installed ansible-2.10.7 jinja2-3.1.2 PyYAML-6.0 MarkupSafe-2.1.1
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Could not find a version that satisfies the requirement ansible`** — Ensure pip3 is up to date with `pip3 install --upgrade pip` and check your internet connection.
-    **`error: externally-managed-environment × This environment is externally managed`** — Use `pip3 install --break-system-packages ansible` or create a Python virtual environment with `python3 -m venv ~/ansible-env && source ~/ansible-env/bin/activate`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Could not find a version that satisfies the requirement ansible` | Ensure pip3 is up to date with `pip3 install --upgrade pip` and check your internet connection. |
+    | `error: externally-managed-environment × This environment is externally managed` | Use `pip3 install --break-system-packages ansible` or create a Python virtual environment with `python3 -m venv ~/ansible-env && source ~/ansible-env/bin/activate`. |
 Verify the installation:
 
 ```bash
@@ -98,8 +100,10 @@ ansible 2.10.7
 ```
 
 !!! warning "Common errors"
-    **`ansible: command not found`** — Install Ansible using `pip install ansible` or your system package manager.
-    **`WARNING: Ansible is being run in a world writable /tmp directory`** — Run Ansible from a non-world-writable directory or set `ANSIBLE_LOCAL_TEMP` to a secure location.
+    | Error | Fix |
+    |---|---|
+    | `ansible: command not found` | Install Ansible using `pip install ansible` or your system package manager. |
+    | `WARNING: Ansible is being run in a world writable /tmp directory` | Run Ansible from a non-world-writable directory or set `ANSIBLE_LOCAL_TEMP` to a secure location. |
 Confirm the output shows the Ansible version, Python version, and the path to the active configuration file.
 
 ## Configure Inventory File
@@ -120,8 +124,10 @@ inventory/hosts.yml
 ```
 
 !!! warning "Common errors"
-    **`[WARNING]: Unable to parse /etc/ansible/hosts as an inventory source`** — Verify the file exists and is readable with `cat /etc/ansible/hosts` or `ls -l /etc/ansible/hosts`.
-    **`[ERROR]: Unable to find inventory file at inventory/hosts.yml`** — Ensure you are running ansible from the project root directory and the file path is correct with `ls -la inventory/hosts.yml`.
+    | Error | Fix |
+    |---|---|
+    | `[WARNING]: Unable to parse /etc/ansible/hosts as an inventory source` | Verify the file exists and is readable with `cat /etc/ansible/hosts` or `ls -l /etc/ansible/hosts`. |
+    | `[ERROR]: Unable to find inventory file at inventory/hosts.yml` | Ensure you are running ansible from the project root directory and the file path is correct with `ls -la inventory/hosts.yml`. |
 Example `inventory/hosts.yml`:
 
 ```yaml
@@ -187,9 +193,11 @@ ansible-inventory --list -i inventory/
 ```
 
 !!! warning "Common errors"
-    **`[WARNING]: Unable to parse inventory/hosts as an YAML source`** — Verify inventory file syntax with `ansible-inventory --list -i inventory/hosts --yaml` or check for YAML formatting errors.
-    **`[ERROR]: Unable to find inventory file or directory`** — Ensure the `inventory/` directory exists and contains valid inventory files (hosts, *.yml, or *.yaml).
-    **`[WARNING]: No inventory was parsed`** — Confirm at least one inventory file exists in the directory and is readable with `ls -la inventory/`.
+    | Error | Fix |
+    |---|---|
+    | `[WARNING]: Unable to parse inventory/hosts as an YAML source` | Verify inventory file syntax with `ansible-inventory --list -i inventory/hosts --yaml` or check for YAML formatting errors. |
+    | `[ERROR]: Unable to find inventory file or directory` | Ensure the `inventory/` directory exists and contains valid inventory files (hosts, *.yml, or *.yaml). |
+    | `[WARNING]: No inventory was parsed` | Confirm at least one inventory file exists in the directory and is readable with `ls -la inventory/`. |
 ## Configure SSH Key Authentication
 
 Ansible connects to managed hosts over SSH. Key-based authentication is required — password authentication should not be used in production.
@@ -232,8 +240,10 @@ Number of key(s) added: 1
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Ensure the `ansible` user exists on the target host and password authentication is enabled, or pre-stage the public key manually in `~ansible/.ssh/authorized_keys`.
-    **`ssh: Could not resolve hostname web01.example.com`** — Verify DNS resolution or replace hostnames with IP addresses in the ssh-copy-id commands.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Ensure the `ansible` user exists on the target host and password authentication is enabled, or pre-stage the public key manually in `~ansible/.ssh/authorized_keys`. |
+    | `ssh: Could not resolve hostname web01.example.com` | Verify DNS resolution or replace hostnames with IP addresses in the ssh-copy-id commands. |
 Test connectivity after key distribution:
 
 ```bash
@@ -271,9 +281,11 @@ staging-app-01 | UNREACHABLE! => {
 ```
 
 !!! warning "Common errors"
-    **`[WARNING]: Unable to parse /etc/ansible/hosts as an inventory source`** — Verify the inventory file path is correct and readable; use `-i inventory/hosts` if the file is named explicitly.
-    **`fatal: [prod-web-01]: FAILED! => {"msg": "Missing sudo password"}`** — Add `--ask-become-pass` flag or configure passwordless sudo in your inventory file with `ansible_become_password`.
-    **`[prod-db-01]: UNREACHABLE! => ... Connection timed out`** — Check network connectivity and SSH access to the host; verify firewall rules allow port 22 and the host is online.
+    | Error | Fix |
+    |---|---|
+    | `[WARNING]: Unable to parse /etc/ansible/hosts as an inventory source` | Verify the inventory file path is correct and readable; use `-i inventory/hosts` if the file is named explicitly. |
+    | `fatal: [prod-web-01]: FAILED! => {"msg": "Missing sudo password"}` | Add `--ask-become-pass` flag or configure passwordless sudo in your inventory file with `ansible_become_password`. |
+    | `[prod-db-01]: UNREACHABLE! => ... Connection timed out` | Check network connectivity and SSH access to the host; verify firewall rules allow port 22 and the host is online. |
 All hosts should return `"pong"`.
 
 ## Configure ansible.cfg
@@ -307,8 +319,10 @@ config file = /etc/ansible/ansible.cfg
 ```
 
 !!! warning "Common errors"
-    **`ansible: command not found`** — Install Ansible using `pip install ansible` or your system package manager.
-    **`config file = None`** — Create `/etc/ansible/ansible.cfg` or set the `ANSIBLE_CONFIG` environment variable to point to a valid config file.
+    | Error | Fix |
+    |---|---|
+    | `ansible: command not found` | Install Ansible using `pip install ansible` or your system package manager. |
+    | `config file = None` | Create `/etc/ansible/ansible.cfg` or set the `ANSIBLE_CONFIG` environment variable to point to a valid config file. |
 ## Test Connectivity
 
 Run the built-in `ping` module against all hosts to confirm SSH access, Python availability, and inventory correctness:
@@ -343,9 +357,11 @@ db01.prod.local | SUCCESS => {
 ```
 
 !!! warning "Common errors"
-    **`[Errno 2] No such file or directory: 'inventory/'`** — Verify the inventory directory path exists and contains valid inventory files (hosts, hosts.yml, etc.).
-    **`fatal: [web01.prod.local]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure SSH public key is deployed to target hosts and the ansible_user/ansible_private_key_file is correctly configured in your inventory.
-    **`[WARNING]: Unable to parse inventory/hosts as an inventory source`** — Check that inventory files are properly formatted YAML/INI and contain valid host definitions with required connection parameters.
+    | Error | Fix |
+    |---|---|
+    | `[Errno 2] No such file or directory: 'inventory/'` | Verify the inventory directory path exists and contains valid inventory files (hosts, hosts.yml, etc.). |
+    | `fatal: [web01.prod.local]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Ensure SSH public key is deployed to target hosts and the ansible_user/ansible_private_key_file is correctly configured in your inventory. |
+    | `[WARNING]: Unable to parse inventory/hosts as an inventory source` | Check that inventory files are properly formatted YAML/INI and contain valid host definitions with required connection parameters. |
 Expected output for each host:
 
 ```yaml
@@ -394,8 +410,10 @@ geerlingguy.mysql (4.2.1) was installed successfully
 ```
 
 !!! warning "Common errors"
-    **`ERROR! Failed to download the collection community.vmware from https://galaxy.ansible.com: HTTP Error 403: Forbidden`** — Verify your Ansible Galaxy API token is valid and has collection download permissions, or check if the collection name/version exists.
-    **`ERROR! the specified role geerlingguy.apache was not found in /home/ansible/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles`** — Ensure you have internet connectivity and the GitHub repository is accessible, or manually download the role tarball and extract it to your roles directory.
+    | Error | Fix |
+    |---|---|
+    | `ERROR! Failed to download the collection community.vmware from https://galaxy.ansible.com: HTTP Error 403: Forbidden` | Verify your Ansible Galaxy API token is valid and has collection download permissions, or check if the collection name/version exists. |
+    | `ERROR! the specified role geerlingguy.apache was not found in /home/ansible/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles` | Ensure you have internet connectivity and the GitHub repository is accessible, or manually download the role tarball and extract it to your roles directory. |
 Pin versions for reproducible environments using a `requirements.yml` file:
 
 ```yaml
@@ -435,8 +453,10 @@ Starting galaxy role install process
 ```
 
 !!! warning "Common errors"
-    **`ERROR! the file requirements.yml does not exist`** — Verify the requirements.yml file exists in the current directory or provide the full path with `-r /path/to/requirements.yml`.
-    **`ERROR! Failed to download the collection at 'community.general:5.8.0' from galaxy.ansible.com`** — Check your internet connectivity and ensure the collection version exists; try `ansible-galaxy collection list` to see what's already installed.
+    | Error | Fix |
+    |---|---|
+    | `ERROR! the file requirements.yml does not exist` | Verify the requirements.yml file exists in the current directory or provide the full path with `-r /path/to/requirements.yml`. |
+    | `ERROR! Failed to download the collection at 'community.general:5.8.0' from galaxy.ansible.com` | Check your internet connectivity and ensure the collection version exists; try `ansible-galaxy collection list` to see what's already installed. |
 Verify installed collections:
 
 ```bash
@@ -458,8 +478,10 @@ kubernetes.core               2.4.0
 ```
 
 !!! warning "Common errors"
-    **`[WARNING]: Unable to parse /home/ansible/.ansible/collections/ansible_collections as an installed collection`** — Ensure the collections directory exists and has proper read permissions with `chmod 755 ~/.ansible/collections/ansible_collections`.
-    **`[ERROR]: Ansible collections not found in expected paths`** — Install collections using `ansible-galaxy collection install -r requirements.yml` or verify `ANSIBLE_COLLECTIONS_PATHS` environment variable is set correctly.
+    | Error | Fix |
+    |---|---|
+    | `[WARNING]: Unable to parse /home/ansible/.ansible/collections/ansible_collections as an installed collection` | Ensure the collections directory exists and has proper read permissions with `chmod 755 ~/.ansible/collections/ansible_collections`. |
+    | `[ERROR]: Ansible collections not found in expected paths` | Install collections using `ansible-galaxy collection install -r requirements.yml` or verify `ANSIBLE_COLLECTIONS_PATHS` environment variable is set correctly. |
 ## Configure Ansible Vault for Secrets
 
 Never store plaintext passwords or API keys in playbooks or inventory. Use Ansible Vault to encrypt sensitive values.
@@ -477,9 +499,11 @@ Confirm Vault password:
 ```
 
 !!! warning "Common errors"
-    **`ansible-vault: command not found`** — Install Ansible with `pip install ansible` or your system package manager.
-    **`[Errno 2] No such file or directory: 'group_vars/all'`** — Create the directory structure first with `mkdir -p group_vars/all`.
-    **`Error: editor not set`** — Set your default editor with `export EDITOR=vim` before running the command.
+    | Error | Fix |
+    |---|---|
+    | `ansible-vault: command not found` | Install Ansible with `pip install ansible` or your system package manager. |
+    | `[Errno 2] No such file or directory: 'group_vars/all'` | Create the directory structure first with `mkdir -p group_vars/all`. |
+    | `Error: editor not set` | Set your default editor with `export EDITOR=vim` before running the command. |
 Add secrets in the editor that opens:
 
 ```yaml
@@ -530,8 +554,10 @@ cache-01.prod.internal     : ok=3    changed=1    unreachable=0    failed=0
 ```
 
 !!! warning "Common errors"
-    **`ERROR! Decryption failed (no vault password supplied?)`** — Provide the correct vault password when prompted or ensure the vault password file exists and contains the correct password.
-    **`ERROR! Unable to read the vault password file (~/.vault_pass): [Errno 2] No such file or directory`** — Create the vault password file at `~/.vault_pass` with appropriate permissions (`chmod 600`).
+    | Error | Fix |
+    |---|---|
+    | `ERROR! Decryption failed (no vault password supplied?)` | Provide the correct vault password when prompted or ensure the vault password file exists and contains the correct password. |
+    | `ERROR! Unable to read the vault password file (~/.vault_pass): [Errno 2] No such file or directory` | Create the vault password file at `~/.vault_pass` with appropriate permissions (`chmod 600`). |
 ## Run First Playbook
 
 Always run with `--check` (dry run) before applying changes to production.
@@ -580,9 +606,11 @@ db01.example.com           : ok=3    changed=0    unreachable=0    failed=0    s
 ```
 
 !!! warning "Common errors"
-    **`fatal: [web01.example.com]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Verify SSH key permissions (chmod 600) and that the key is added to ssh-agent or specified via ansible_ssh_private_key_file in inventory.
-    **`ERROR! Unable to parse /path/to/inventory/ as an inventory source`** — Ensure the inventory directory contains valid YAML/INI files with proper syntax and that the path is relative to your playbook location.
-    **`fatal: [web02.example.com]: FAILED! => {"msg": "The following modules failed to execute: apt"}`** — Confirm the target hosts have sudo privileges configured for the ansible user or add become: yes to the playbook tasks.
+    | Error | Fix |
+    |---|---|
+    | `fatal: [web01.example.com]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Verify SSH key permissions (chmod 600) and that the key is added to ssh-agent or specified via ansible_ssh_private_key_file in inventory. |
+    | `ERROR! Unable to parse /path/to/inventory/ as an inventory source` | Ensure the inventory directory contains valid YAML/INI files with proper syntax and that the path is relative to your playbook location. |
+    | `fatal: [web02.example.com]: FAILED! => {"msg": "The following modules failed to execute: apt"}` | Confirm the target hosts have sudo privileges configured for the ansible user or add become: yes to the playbook tasks. |
 Confirm the play recap shows `failed=0` and `unreachable=0` before considering the run successful.
 
 ---

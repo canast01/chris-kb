@@ -190,9 +190,11 @@ TcpTestSucceeded : True
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present in example, but verify VBR certificate is trusted on workstation if `-k` is removed).
-    **`TcpTestSucceeded : False`** — Verify firewall rules allow the source IP to reach the destination port, and confirm the service is running on the target host with `Get-NetTCPConnection -LocalPort <port>`.
-    **`nc: getaddrinfo: Name or service not known`** — Ensure the FQDN or IP address is correct and resolvable from the proxy server by testing with `nslookup <hostname>` first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification (already present in example, but verify VBR certificate is trusted on workstation if `-k` is removed). |
+    | `TcpTestSucceeded : False` | Verify firewall rules allow the source IP to reach the destination port, and confirm the service is running on the target host with `Get-NetTCPConnection -LocalPort <port>`. |
+    | `nc: getaddrinfo: Name or service not known` | Ensure the FQDN or IP address is correct and resolvable from the proxy server by testing with `nslookup <hostname>` first. |
 ---
 
 ## See also

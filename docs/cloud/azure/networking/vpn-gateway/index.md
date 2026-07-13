@@ -75,9 +75,11 @@ Connecting
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Network/virtualNetworkGateways/myVpnGateway' under resource group 'myRG' was not found.`** — Verify the VPN gateway name matches exactly and exists in the same resource group using `az network vnet-gateway list --resource-group myRG`.
-    **`InvalidAddressPrefix : The address prefix '192.168.0.0/16' is invalid.`** — Ensure CIDR notation is correct and the prefix length is between /1 and /32.
-    **`BadRequest : The shared key must be between 1 and 128 characters and contain only alphanumeric characters and these special characters: @_-.`** — Remove special characters like `!` from the shared key or use only allowed characters.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Network/virtualNetworkGateways/myVpnGateway' under resource group 'myRG' was not found.` | Verify the VPN gateway name matches exactly and exists in the same resource group using `az network vnet-gateway list --resource-group myRG`. |
+    | `InvalidAddressPrefix : The address prefix '192.168.0.0/16' is invalid.` | Ensure CIDR notation is correct and the prefix length is between /1 and /32. |
+    | `BadRequest : The shared key must be between 1 and 128 characters and contain only alphanumeric characters and these special characters: @_-.` | Remove special characters like `!` from the shared key or use only allowed characters. |
 ## Point-to-Site Configuration
 
 P2S allows individual clients to connect to Azure without a VPN device.
@@ -139,9 +141,11 @@ az network vnet-gateway root-cert create \
 ```
 
 !!! warning "Common errors"
-    **`The certificate data provided is invalid or malformed.`** — Ensure the certificate is base64-encoded and extracted from a valid .cer or .pem file without line breaks or extra whitespace.
-    **`Gateway 'myVpnGateway' not found in resource group 'myRG'.`** — Verify the resource group name and gateway name are correct using `az network vnet-gateway list --resource-group myRG`.
-    **`InvalidCertificateFormat: The public certificate data must be in PEM format.`** — Convert the certificate to PEM format using `openssl x509 -inform DER -in cert.cer -out cert.pem` and re-encode to base64.
+    | Error | Fix |
+    |---|---|
+    | `The certificate data provided is invalid or malformed.` | Ensure the certificate is base64-encoded and extracted from a valid .cer or .pem file without line breaks or extra whitespace. |
+    | `Gateway 'myVpnGateway' not found in resource group 'myRG'.` | Verify the resource group name and gateway name are correct using `az network vnet-gateway list --resource-group myRG`. |
+    | `InvalidCertificateFormat: The public certificate data must be in PEM format.` | Convert the certificate to PEM format using `openssl x509 -inform DER -in cert.cer -out cert.pem` and re-encode to base64. |
 ## BGP Configuration
 
 ```bash
@@ -205,9 +209,11 @@ Neighbor    ASN    IP              State      ConnectedDuration
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Network/virtualNetworkGateways/myVpnGateway' under resource group 'myRG' was not found.`** — Verify the gateway name and resource group exist using `az network vnet-gateway list --resource-group myRG`.
-    **`(BadRequest) BGP is not supported for this gateway SKU.`** — Upgrade the VPN gateway to a SKU that supports BGP (Standard, HighPerformance, or VpnGw1 and above) using `az network vnet-gateway update --sku VpnGw1`.
-    **`(BadRequest) The BGP peering address 192.168.10.254 is not in the same address space as the local network gateway.`** — Ensure the BGP peering address falls within the address space defined for the local network gateway.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Network/virtualNetworkGateways/myVpnGateway' under resource group 'myRG' was not found.` | Verify the gateway name and resource group exist using `az network vnet-gateway list --resource-group myRG`. |
+    | `(BadRequest) BGP is not supported for this gateway SKU.` | Upgrade the VPN gateway to a SKU that supports BGP (Standard, HighPerformance, or VpnGw1 and above) using `az network vnet-gateway update --sku VpnGw1`. |
+    | `(BadRequest) The BGP peering address 192.168.10.254 is not in the same address space as the local network gateway.` | Ensure the BGP peering address falls within the address space defined for the local network gateway. |
 ## Active-Active Configuration
 
 Active-active mode uses two public IPs and two BGP sessions to provide higher availability.
@@ -263,9 +269,11 @@ az network vnet-gateway update \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Network/publicIPAddresses/vpn-gw-pip2' under resource group 'myRG' was not found.`** — Verify the resource group name matches and the public IP doesn't already exist in a different RG.
-    **`InvalidApiVersionParameter: The api-version '2021-02-01' is not valid for this operation.`** — Update the Azure CLI to the latest version with `az upgrade`.
-    **`BadRequest: The gateway 'myVpnGateway' does not support active-active mode with the current SKU.`** — Ensure the VPN gateway uses a HighPerformance, VpnGw2, or higher SKU that supports active-active.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Network/publicIPAddresses/vpn-gw-pip2' under resource group 'myRG' was not found.` | Verify the resource group name matches and the public IP doesn't already exist in a different RG. |
+    | `InvalidApiVersionParameter: The api-version '2021-02-01' is not valid for this operation.` | Update the Azure CLI to the latest version with `az upgrade`. |
+    | `BadRequest: The gateway 'myVpnGateway' does not support active-active mode with the current SKU.` | Ensure the VPN gateway uses a HighPerformance, VpnGw2, or higher SKU that supports active-active. |
 ## Monitoring
 
 ```bash
@@ -299,5 +307,7 @@ Timestamp                          TunnelIngressBytes    TunnelEgressBytes
 ```
 
 !!! warning "Common errors"
-    **`The resource 'Microsoft.Network/virtualNetworkGateways/myVpnGateway' under resource group 'myRG' was not found.`** — Verify the gateway name and resource group name match exactly, and confirm the gateway exists with `az network vnet-gateway list --resource-group myRG`.
-    **`Metrics data not available for the specified time range.`** — Extend the time range using `--start-time` and `--end-time` parameters, or wait for metrics to be populated (typically 5–10 minutes after gateway creation).
+    | Error | Fix |
+    |---|---|
+    | `The resource 'Microsoft.Network/virtualNetworkGateways/myVpnGateway' under resource group 'myRG' was not found.` | Verify the gateway name and resource group name match exactly, and confirm the gateway exists with `az network vnet-gateway list --resource-group myRG`. |
+    | `Metrics data not available for the specified time range.` | Extend the time range using `--start-time` and `--end-time` parameters, or wait for metrics to be populated (typically 5–10 minutes after gateway creation). |

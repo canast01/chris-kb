@@ -129,9 +129,11 @@ Packets: Sent = 3, Received = 3, Lost = 0 (0% loss)
 ```
 
 !!! warning "Common errors"
-    **`PING 192.168.10.42 with 8972 bytes of data: Request timed out.`** — Verify the destination VMkernel IP is reachable and the vMotion VMkernel port is enabled on the destination host.
-    **`Unable to locate interface vmk1`** — Confirm the vMotion VMkernel adapter exists on the source host by running `esxcli network ip interface list` and use the correct interface name.
-    **`Fragmentation is required but DF set.`** — Reduce the payload size to 1472 bytes (`vmkping -I vmk1 -d -s 1472 <destination-vmk1-ip>`) and increase MTU to 9000 on the vSwitch and physical switch port.
+    | Error | Fix |
+    |---|---|
+    | `PING 192.168.10.42 with 8972 bytes of data: Request timed out.` | Verify the destination VMkernel IP is reachable and the vMotion VMkernel port is enabled on the destination host. |
+    | `Unable to locate interface vmk1` | Confirm the vMotion VMkernel adapter exists on the source host by running `esxcli network ip interface list` and use the correct interface name. |
+    | `Fragmentation is required but DF set.` | Reduce the payload size to 1472 bytes (`vmkping -I vmk1 -d -s 1472 <destination-vmk1-ip>`) and increase MTU to 9000 on the vSwitch and physical switch port. |
 ```bash
 # Verify current MTU on the VMkernel port
 esxcli network ip interface list | grep -A5 vmk1
@@ -161,8 +163,10 @@ MTU: 9000
 ```
 
 !!! warning "Common errors"
-    **`Name: vmk1 not found`** — Verify the VMkernel port exists with `esxcli network ip interface list` and use the correct interface name (e.g., vmk0, vmk1).
-    **`error: Unknown command or namespace`** — Ensure you are running this command directly on an ESXi host via SSH or console, not from vCenter; esxcli is not available on vCenter servers.
+    | Error | Fix |
+    |---|---|
+    | `Name: vmk1 not found` | Verify the VMkernel port exists with `esxcli network ip interface list` and use the correct interface name (e.g., vmk0, vmk1). |
+    | `error: Unknown command or namespace` | Ensure you are running this command directly on an ESXi host via SSH or console, not from vCenter; esxcli is not available on vCenter servers. |
 Look for: `vmkping -d -s 8972` succeeds = MTU is correct end-to-end; failure with large frame but success with 1472-byte frame = switch or vDS MTU set to 1500.
 
 ---
@@ -199,9 +203,11 @@ vSphereReplication   false
 ```
 
 !!! warning "Common errors"
-    **`Error: The object has already been added.`** — Verify the route doesn't already exist with `esxcli network ip route ipv4 list` before adding it.
-    **`Error: Gateway is not reachable.`** — Ensure the gateway IP is on a directly connected subnet and reachable from the source VMkernel interface.
-    **`Error: Unknown option or malformed command.`** — Check that the prefix length is numeric (e.g., `/24` not `/255.255.255.0`) and all parameters are in the correct order.
+    | Error | Fix |
+    |---|---|
+    | `Error: The object has already been added.` | Verify the route doesn't already exist with `esxcli network ip route ipv4 list` before adding it. |
+    | `Error: Gateway is not reachable.` | Ensure the gateway IP is on a directly connected subnet and reachable from the source VMkernel interface. |
+    | `Error: Unknown option or malformed command.` | Check that the prefix length is numeric (e.g., `/24` not `/255.255.255.0`) and all parameters are in the correct order. |
 ---
 
 ## 5. NIC and Driver Validation
@@ -249,9 +255,11 @@ WakeOnLan Enabled                                        false
 ```
 
 !!! warning "Common errors"
-    **`Could not find NIC vmnic1`** — Verify the NIC name with `esxcli network nic list` and use the correct interface identifier.
-    **`Permission denied`** — Run the command as root or with appropriate ESXi host credentials via SSH or vSphere Client.
-    **`Rx Errors: 1247 Rx Dropped: 342`** — Check physical cable connections, SFP+ transceiver compatibility, and switch port configuration for the vMotion uplink.
+    | Error | Fix |
+    |---|---|
+    | `Could not find NIC vmnic1` | Verify the NIC name with `esxcli network nic list` and use the correct interface identifier. |
+    | `Permission denied` | Run the command as root or with appropriate ESXi host credentials via SSH or vSphere Client. |
+    | `Rx Errors: 1247 Rx Dropped: 342` | Check physical cable connections, SFP+ transceiver compatibility, and switch port configuration for the vMotion uplink. |
 Look for: any non-zero `Drop` or `Error` counter on the vMotion uplink vmnic indicates NIC or cable issues that will cause vMotion timeouts.
 
 ---
@@ -294,9 +302,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the NSX Manager CA certificate into your system trust store.
-    **`jq: command not found`** — Replace `python3 -m json.tool` with `jq '.'` or ensure Python 3 is installed and in PATH.
-    **`HTTP/1.1 401 Unauthorized`** — Verify the admin password is correct and the credentials are properly URL-encoded if they contain special characters.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag (already present) or import the NSX Manager CA certificate into your system trust store. |
+    | `jq: command not found` | Replace `python3 -m json.tool` with `jq '.'` or ensure Python 3 is installed and in PATH. |
+    | `HTTP/1.1 401 Unauthorized` | Verify the admin password is correct and the credentials are properly URL-encoded if they contain special characters. |
 Also verify the destination host's NSX kernel modules are loaded:
 
 ```bash
@@ -333,9 +343,11 @@ round-trip min/avg/max = 1.987/2.105/2.234 ms
 ```
 
 !!! warning "Common errors"
-    **`vmkping: Unknown host <remote-tep-ip>`** — Replace `<remote-tep-ip>` with the actual TEP IP address of the remote ESXi host (e.g., 10.100.50.25).
-    **`Cannot find device "vmk10"`** — Verify the TEP VMkernel interface name with `esxcli network ip interface list` and use the correct interface name in the vmkping command.
-    **`100% packet loss`** — Check network connectivity between TEP interfaces, verify MTU is set to 1600 on both sides, and confirm NSX overlay network configuration is complete.
+    | Error | Fix |
+    |---|---|
+    | `vmkping: Unknown host <remote-tep-ip>` | Replace `<remote-tep-ip>` with the actual TEP IP address of the remote ESXi host (e.g., 10.100.50.25). |
+    | `Cannot find device "vmk10"` | Verify the TEP VMkernel interface name with `esxcli network ip interface list` and use the correct interface name in the vmkping command. |
+    | `100% packet loss` | Check network connectivity between TEP interfaces, verify MTU is set to 1600 on both sides, and confirm NSX overlay network configuration is complete. |
 Look for: all NSX VIBs at matching versions; `vmkping -I vmk10 -d -s 1572` succeeds to all remote TEP IPs.
 
 ---
@@ -383,9 +395,11 @@ TCP window size: 85.3 KByte (default)
 ```
 
 !!! warning "Common errors"
-    **`iperf: command not found`** — Install iperf on both hosts using `apt-get install iperf` (Ubuntu/Debian) or `yum install iperf` (RHEL/CentOS).
-    **`connect to <destination-vmk1-ip> port 5201: Connection refused`** — Ensure the iperf server is running on the destination host before starting the client test.
-    **`bind: Cannot assign requested address`** — Verify that the source and destination VMK IP addresses are correct and reachable using `ping` before running iperf.
+    | Error | Fix |
+    |---|---|
+    | `iperf: command not found` | Install iperf on both hosts using `apt-get install iperf` (Ubuntu/Debian) or `yum install iperf` (RHEL/CentOS). |
+    | `connect to <destination-vmk1-ip> port 5201: Connection refused` | Ensure the iperf server is running on the destination host before starting the client test. |
+    | `bind: Cannot assign requested address` | Verify that the source and destination VMK IP addresses are correct and reachable using `ping` before running iperf. |
 Look for: throughput well below expected link speed (e.g., 2 Gbps on a 10 Gbps link) indicates a shared uplink with insufficient bandwidth — dedicate a higher-speed uplink to vMotion or increase streams in **Cluster → Configure → vSphere DRS → Advanced Options**.
 
 ---

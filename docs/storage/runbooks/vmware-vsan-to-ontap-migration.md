@@ -97,9 +97,11 @@ PING 192.168.100.50 (192.168.100.50) 56(84) bytes of data.
 ```
 
 !!! warning "Common errors"
-    **`esxcli: Unknown option or subcommand 'health cluster list'`** — Verify vSAN is licensed and enabled on the cluster; use `esxcli vsan cluster list` if health subcommand is unavailable.
-    **`ssh: connect to host 192.168.100.50 port 22: Connection timed out`** — Confirm the ONTAP management IP is correct and reachable from the jump host's network segment.
-    **`Get-PowerCLIVersion : The term 'Get-PowerCLIVersion' is not recognized`** — Install PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force` or ensure the module is imported.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: Unknown option or subcommand 'health cluster list'` | Verify vSAN is licensed and enabled on the cluster; use `esxcli vsan cluster list` if health subcommand is unavailable. |
+    | `ssh: connect to host 192.168.100.50 port 22: Connection timed out` | Confirm the ONTAP management IP is correct and reachable from the jump host's network segment. |
+    | `Get-PowerCLIVersion : The term 'Get-PowerCLIVersion' is not recognized` | Install PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force` or ensure the module is imported. |
 ---
 
 ## Phase 1: ONTAP Preparation
@@ -156,9 +158,11 @@ admin@ontap-mgmt-01>
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: vserver "svm_vmware" already exists.`** — Use `vserver delete -vserver svm_vmware` to remove the existing SVM first, or choose a different SVM name.
-    **`Error: command failed: Aggregate "aggr1_node01" does not exist.`** — Run `storage aggregate show` to list available aggregates and correct the aggregate names in the vserver modify command.
-    **`Error: command failed: Port "e0c" does not exist on node "node01".`** — Run `network port show -node <node01>` to verify the correct port names (typically e0a, e0b, e0c, or e0d).
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: vserver "svm_vmware" already exists.` | Use `vserver delete -vserver svm_vmware` to remove the existing SVM first, or choose a different SVM name. |
+    | `Error: command failed: Aggregate "aggr1_node01" does not exist.` | Run `storage aggregate show` to list available aggregates and correct the aggregate names in the vserver modify command. |
+    | `Error: command failed: Port "e0c" does not exist on node "node01".` | Run `network port show -node <node01>` to verify the correct port names (typically e0a, e0b, e0c, or e0d). |
 ### 1.2 Create NFS Export Policy
 
 ```bash
@@ -192,8 +196,10 @@ Anonymous User ID: 65534
 ```
 
 !!! warning "Common errors"
-    **`Error: "esxi_nfs_policy" does not exist`** — Ensure the export policy was created successfully in the first command before adding rules.
-    **`Error: Invalid client match specification "<esxi-subnet/mask>"`** — Replace the placeholder with an actual subnet in CIDR notation (e.g., `192.168.10.0/24`) or a specific host IP.
+    | Error | Fix |
+    |---|---|
+    | `Error: "esxi_nfs_policy" does not exist` | Ensure the export policy was created successfully in the first command before adding rules. |
+    | `Error: Invalid client match specification "<esxi-subnet/mask>"` | Replace the placeholder with an actual subnet in CIDR notation (e.g., `192.168.10.0/24`) or a specific host IP. |
 ### 1.3 Create the NFS Datastore Volume
 
 ```bash
@@ -228,9 +234,11 @@ svm_vmware vol_nfs_ds01  online     /vol_nfs_ds01
 ```
 
 !!! warning "Common errors"
-    **`Error: aggregate "aggr1_node01" does not exist`** — Verify the aggregate name with `storage aggregate show` and use the correct aggregate name in the volume create command.
-    **`Error: export policy "esxi_nfs_policy" does not exist`** — Create the export policy first with `vserver export-policy create -vserver svm_vmware -policyname esxi_nfs_policy` or use an existing policy name.
-    **`Error: Cannot enable efficiency on a volume that is not online`** — Wait for the volume to transition to online state and retry the efficiency commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: aggregate "aggr1_node01" does not exist` | Verify the aggregate name with `storage aggregate show` and use the correct aggregate name in the volume create command. |
+    | `Error: export policy "esxi_nfs_policy" does not exist` | Create the export policy first with `vserver export-policy create -vserver svm_vmware -policyname esxi_nfs_policy` or use an existing policy name. |
+    | `Error: Cannot enable efficiency on a volume that is not online` | Wait for the volume to transition to online state and retry the efficiency commands. |
 ### 1.4 Mount NFS Datastore on ESXi Hosts via vCenter
 
 ```powershell
@@ -294,9 +302,11 @@ Transfer rate: 287 MB/s
 ```
 
 !!! warning "Common errors"
-    **`Error: Cannot find virtual machine configuration file`** — Verify the vSAN UUID and VM folder path match exactly, and ensure the VM is registered in vCenter.
-    **`Error: Destination datastore does not have sufficient free space`** — Check available capacity on the ONTAP NFS datastore with `df -h /vmfs/volumes/<ontap-ds-uuid>` and ensure at least 120% of the VM's disk size is free.
-    **`Error: Permission denied on destination path`** — Confirm the ESXi host has read-write permissions on the ONTAP NFS mount and that the export policy allows the ESXi IP address.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cannot find virtual machine configuration file` | Verify the vSAN UUID and VM folder path match exactly, and ensure the VM is registered in vCenter. |
+    | `Error: Destination datastore does not have sufficient free space` | Check available capacity on the ONTAP NFS datastore with `df -h /vmfs/volumes/<ontap-ds-uuid>` and ensure at least 120% of the VM's disk size is free. |
+    | `Error: Permission denied on destination path` | Confirm the ESXi host has read-write permissions on the ONTAP NFS mount and that the export policy allows the ESXi IP address. |
 ### 2.2 Bulk Storage vMotion — Entire Datastore
 
 ```powershell
@@ -367,9 +377,11 @@ svm_vmware      192.168.10.44   nfsv3     Mon Nov 13 14:22:21 UTC 2023
 ```
 
 !!! warning "Common errors"
-    **`Error: "svm_vmware" is not a valid Vserver name`** — Verify the SVM name with `vserver show` and use the correct name in the command.
-    **`Error: volume "vol_nfs_ds01" does not exist`** — Confirm the volume name with `volume show -vserver svm_vmware` before querying.
-    **`Error: Statistics object "nfsv3" is not valid`** — Use `statistics show -object nfsv3 -counter ?` to list available counters for your ONTAP version.
+    | Error | Fix |
+    |---|---|
+    | `Error: "svm_vmware" is not a valid Vserver name` | Verify the SVM name with `vserver show` and use the correct name in the command. |
+    | `Error: volume "vol_nfs_ds01" does not exist` | Confirm the volume name with `volume show -vserver svm_vmware` before querying. |
+    | `Error: Statistics object "nfsv3" is not valid` | Use `statistics show -object nfsv3 -counter ?` to list available counters for your ONTAP version. |
 ### 3.2 Verify Datastore Usage in vCenter
 
 ```powershell
@@ -419,9 +431,11 @@ post-migration-check: (groupid=0, jobs=1): err= 0: pid=4521
 ```
 
 !!! warning "Common errors"
-    **`fio: openat: Permission denied`** — Run fio with sudo or ensure the VM user has write permissions to /var/tmp.
-    **`iostat: command not found`** — Install sysstat package with `apt-get install sysstat` (Ubuntu/Debian) or `yum install sysstat` (RHEL/CentOS).
-    **`fio: io_uring not available, falling back to libaio`** — This is a warning, not an error; libaio will work fine for post-migration validation.
+    | Error | Fix |
+    |---|---|
+    | `fio: openat: Permission denied` | Run fio with sudo or ensure the VM user has write permissions to /var/tmp. |
+    | `iostat: command not found` | Install sysstat package with `apt-get install sysstat` (Ubuntu/Debian) or `yum install sysstat` (RHEL/CentOS). |
+    | `fio: io_uring not available, falling back to libaio` | This is a warning, not an error; libaio will work fine for post-migration validation. |
 ---
 
 ## Phase 4: Cutover
@@ -457,8 +471,10 @@ Free Space: 8.4 TB
 ```
 
 !!! warning "Common errors"
-    **`esxcli: Unknown command or namespace vsan`** — Ensure the vSAN license is installed and the vSAN module is loaded on the ESXi host.
-    **`Cluster UUID: Unknown`** — Run the command from an ESXi host that is part of an active vSAN cluster; standalone hosts will not return cluster information.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: Unknown command or namespace vsan` | Ensure the vSAN license is installed and the vSAN module is loaded on the ESXi host. |
+    | `Cluster UUID: Unknown` | Run the command from an ESXi host that is part of an active vSAN cluster; standalone hosts will not return cluster information. |
 ### 4.2 Remove vSAN Datastore from Cluster
 
 ```powershell
@@ -532,8 +548,10 @@ Disk Group UUID                       Object Resync  Physical Capacity  Used Cap
 ```
 
 !!! warning "Common errors"
-    **`Cluster is not healthy`** — Run `esxcli vsan health cluster get` to identify specific issues and remediate them before migration.
-    **`Unable to connect to VSAN cluster`** — Verify vSAN is enabled on the cluster and you have network connectivity to the ESXi hosts.
+    | Error | Fix |
+    |---|---|
+    | `Cluster is not healthy` | Run `esxcli vsan health cluster get` to identify specific issues and remediate them before migration. |
+    | `Unable to connect to VSAN cluster` | Verify vSAN is enabled on the cluster and you have network connectivity to the ESXi hosts. |
 **4. If ONTAP volume is corrupt, restore from snapshot:**
 
 ```bash
@@ -559,8 +577,10 @@ Volume restore from snapshot "hourly.2024-01-15_0600" has been initiated on volu
 ```
 
 !!! warning "Common errors"
-    **`Volume is currently mounted. Unmount volume before restoring from snapshot.`** — Unmount the NFS datastore from all ESXi hosts and the SVM before attempting the restore.
-    **`Snapshot "snapshot-name" does not exist.`** — Replace `<snapshot-name>` with an actual snapshot name from the list output above.
+    | Error | Fix |
+    |---|---|
+    | `Volume is currently mounted. Unmount volume before restoring from snapshot.` | Unmount the NFS datastore from all ESXi hosts and the SVM before attempting the restore. |
+    | `Snapshot "snapshot-name" does not exist.` | Replace `<snapshot-name>` with an actual snapshot name from the list output above. |
 ---
 
 ## See Also

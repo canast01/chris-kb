@@ -90,8 +90,10 @@ NetBackup 8.3.2.1 (Build: 20210915)
 ```
 
 !!! warning "Common errors"
-    **`cat: /usr/openv/netbackup/bin/version: No such file or directory`** — Verify NetBackup is installed on this system with `rpm -qa | grep netbackup` or check the correct installation path.
-    **`nbpem: command not found`** — Ensure the NetBackup PATH is set correctly by sourcing `/usr/openv/netbackup/bin/bp.env` or add `/usr/openv/netbackup/bin/goodies` to your PATH.
+    | Error | Fix |
+    |---|---|
+    | `cat: /usr/openv/netbackup/bin/version: No such file or directory` | Verify NetBackup is installed on this system with `rpm -qa | grep netbackup` or check the correct installation path. |
+    | `nbpem: command not found` | Ensure the NetBackup PATH is set correctly by sourcing `/usr/openv/netbackup/bin/bp.env` or add `/usr/openv/netbackup/bin/goodies` to your PATH. |
 ### 2. Collect failing job details
 
 ```bash
@@ -152,9 +154,11 @@ Status: Online
 ```
 
 !!! warning "Common errors"
-    **`bpdbjobs: command not found`** — Ensure the NetBackup client is installed and `/usr/openv/netbackup/bin` is in your PATH, or run the command with the full path `/usr/openv/netbackup/bin/bpdbjobs`.
-    **`cat: /usr/openv/netbackup/logs/user_ops/<jobid>: No such file or directory`** — Replace `<jobid>` with an actual numeric job ID (e.g., `12847561`) and verify the log directory exists with `ls -la /usr/openv/netbackup/logs/user_ops/`.
-    **`bppllist: policy <policy-name> does not exist`** — Verify the policy name is correct by running `bppllist -L` to list all available policies, then use the exact policy name from the output.
+    | Error | Fix |
+    |---|---|
+    | `bpdbjobs: command not found` | Ensure the NetBackup client is installed and `/usr/openv/netbackup/bin` is in your PATH, or run the command with the full path `/usr/openv/netbackup/bin/bpdbjobs`. |
+    | `cat: /usr/openv/netbackup/logs/user_ops/<jobid>: No such file or directory` | Replace `<jobid>` with an actual numeric job ID (e.g., `12847561`) and verify the log directory exists with `ls -la /usr/openv/netbackup/logs/user_ops/`. |
+    | `bppllist: policy <policy-name> does not exist` | Verify the policy name is correct by running `bppllist -L` to list all available policies, then use the exact policy name from the output. |
 ### 3. Run the nbsu support utility
 
 ```bash
@@ -186,9 +190,11 @@ Elapsed time: 8 minutes 34 seconds
 ```
 
 !!! warning "Common errors"
-    **`/usr/openv/netbackup/bin/support/nbsu: Permission denied`** — Run the command with sudo or as root user.
-    **`ERROR: Unable to write to /usr/openv/support/ — disk full`** — Free up disk space on the /usr/openv partition (nbsu bundles typically require 3–5 GB free space).
-    **`ERROR: NetBackup services not running — cannot collect process data`** — Start NetBackup services with `systemctl start netbackup` or `/usr/openv/netbackup/bin/bpup -start` before running nbsu.
+    | Error | Fix |
+    |---|---|
+    | `/usr/openv/netbackup/bin/support/nbsu: Permission denied` | Run the command with sudo or as root user. |
+    | `ERROR: Unable to write to /usr/openv/support/ — disk full` | Free up disk space on the /usr/openv partition (nbsu bundles typically require 3–5 GB free space). |
+    | `ERROR: NetBackup services not running — cannot collect process data` | Start NetBackup services with `systemctl start netbackup` or `/usr/openv/netbackup/bin/bpup -start` before running nbsu. |
 ### 4. Collect key log files manually (if nbsu fails)
 
 ```bash
@@ -236,9 +242,11 @@ Media ID          Pool          Status    Last Used
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/usr/openv/netbackup/logs/bpbrm/log.<today-date>' for reading: No such file or directory`** — Replace `<today-date>` with the actual date in YYYYMMDD format (e.g., `log.20240115`) or use `ls /usr/openv/netbackup/logs/bpbrm/` to find the correct filename.
-    **`bpdbm: command not found`** — Ensure the NetBackup client is installed and `/usr/openv/netbackup/bin` is in your PATH, or run the command with the full path `/usr/openv/netbackup/bin/bpdbm`.
-    **`vmquery: command not found`** — Run the command as root or with sudo, and verify NetBackup services are running with `bpps -a`.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/usr/openv/netbackup/logs/bpbrm/log.<today-date>' for reading: No such file or directory` | Replace `<today-date>` with the actual date in YYYYMMDD format (e.g., `log.20240115`) or use `ls /usr/openv/netbackup/logs/bpbrm/` to find the correct filename. |
+    | `bpdbm: command not found` | Ensure the NetBackup client is installed and `/usr/openv/netbackup/bin` is in your PATH, or run the command with the full path `/usr/openv/netbackup/bin/bpdbm`. |
+    | `vmquery: command not found` | Run the command as root or with sudo, and verify NetBackup services are running with `bpps -a`. |
 ### 5. Write the timeline
 
 ```text
@@ -402,9 +410,11 @@ Recent error codes (last 6 hours):
 ```
 
 !!! warning "Common errors"
-    **`bpps: command not found`** — Verify NetBackup is installed and /usr/openv/netbackup/bin is in PATH, or use full path /usr/openv/netbackup/bin/bpps.
-    **`bpdbjobs: Database connection failed`** — Check that the NetBackup database is running with bpdbm and verify disk space on /usr/openv/db/ is above 10%.
-    **`nbdevquery: No devices found matching filter`** — Confirm MSDP pool name is correct and PureDisk devices are configured in NetBackup Admin Console under Storage > Disk Pools.
+    | Error | Fix |
+    |---|---|
+    | `bpps: command not found` | Verify NetBackup is installed and /usr/openv/netbackup/bin is in PATH, or use full path /usr/openv/netbackup/bin/bpps. |
+    | `bpdbjobs: Database connection failed` | Check that the NetBackup database is running with bpdbm and verify disk space on /usr/openv/db/ is above 10%. |
+    | `nbdevquery: No devices found matching filter` | Confirm MSDP pool name is correct and PureDisk devices are configured in NetBackup Admin Console under Storage > Disk Pools. |
 ---
 
 ## See also

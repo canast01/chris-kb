@@ -131,9 +131,11 @@ srm-bundle-srm-appliance-20240115.tgz          100%  487MB   8.2MB/s   00:59
 ```
 
 !!! warning "Common errors"
-    **`/usr/lib/vmware-dr/bin/dr-backup.sh: command not found`** — Verify the SRM version and confirm the correct path with `find / -name dr-backup.sh 2>/dev/null`.
-    **`Permission denied`** — Ensure you are logged in as root or have sudo privileges; use `sudo /usr/lib/vmware-dr/bin/dr-backup.sh` if needed.
-    **`scp: /tmp/srm-bundle-*.tgz: No such file or directory`** — Verify the bundle was created successfully by checking `/tmp/` directly on the SRM appliance before attempting to copy.
+    | Error | Fix |
+    |---|---|
+    | `/usr/lib/vmware-dr/bin/dr-backup.sh: command not found` | Verify the SRM version and confirm the correct path with `find / -name dr-backup.sh 2>/dev/null`. |
+    | `Permission denied` | Ensure you are logged in as root or have sudo privileges; use `sudo /usr/lib/vmware-dr/bin/dr-backup.sh` if needed. |
+    | `scp: /tmp/srm-bundle-*.tgz: No such file or directory` | Verify the bundle was created successfully by checking `/tmp/` directly on the SRM appliance before attempting to copy. |
 ### 3. Generate the vSphere Replication (vSR) bundle (both sites)
 
 If vSphere Replication is used (rather than array-based replication):
@@ -305,9 +307,11 @@ root@vra-recovery-01:~# tail -200 /var/log/vmware/hbrsrv/hbrsrv.log | grep -i "e
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/vmware/dr/dr*.log' for reading: No such file or directory`** — Verify the SRM appliance is fully deployed and check the actual log path with `find /var/log/vmware -name "*.log" -type f`.
-    **`ssh: connect to host <vra-ip> port 22: Connection refused`** — Ensure the vSphere Replication appliance is powered on and SSH is enabled; verify the IP address is correct with `ping <vra-ip>`.
-    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or ensure your user account has read permissions on the log files with `sudo tail -200 /var/log/vmware/hbrsrv/hbrsrv.log`.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/vmware/dr/dr*.log' for reading: No such file or directory` | Verify the SRM appliance is fully deployed and check the actual log path with `find /var/log/vmware -name "*.log" -type f`. |
+    | `ssh: connect to host <vra-ip> port 22: Connection refused` | Ensure the vSphere Replication appliance is powered on and SSH is enabled; verify the IP address is correct with `ping <vra-ip>`. |
+    | `grep: (standard input): Permission denied` | Run the command with `sudo` or ensure your user account has read permissions on the log files with `sudo tail -200 /var/log/vmware/hbrsrv/hbrsrv.log`. |
 ---
 
 ## Support SLA Reference

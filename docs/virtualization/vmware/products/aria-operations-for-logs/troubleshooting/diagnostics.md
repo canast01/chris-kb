@@ -123,9 +123,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH key is loaded with `ssh-add` or use password authentication; confirm admin user exists on vRLI appliance.
-    **`tail: cannot open '/var/log/loginsight/runtime.log' for reading: No such file or directory`** — SSH session may have disconnected or log directory path differs; verify correct vRLI IP and check `/var/log/loginsight/` directory exists with `ls -la`.
-    **`Filesystem /storage is 90% full — ingestion paused`** — Clear old log data with vRLI UI (Administration > Retention) or expand storage partition; ingestion resumes automatically once usage drops below 80%.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH key is loaded with `ssh-add` or use password authentication; confirm admin user exists on vRLI appliance. |
+    | `tail: cannot open '/var/log/loginsight/runtime.log' for reading: No such file or directory` | SSH session may have disconnected or log directory path differs; verify correct vRLI IP and check `/var/log/loginsight/` directory exists with `ls -la`. |
+    | `Filesystem /storage is 90% full — ingestion paused` | Clear old log data with vRLI UI (Administration > Retention) or expand storage partition; ingestion resumes automatically once usage drops below 80%. |
 ---
 
 ## Step 2 — Check cluster node health
@@ -181,9 +183,11 @@ EPS: 487293 Disk%: 68.4
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vRLI CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to <vRLI-IP> port 443: Connection refused`** — Verify the vRLI appliance is running and accessible on port 443 from your host using `telnet <vRLI-IP> 443`.
-    **`{"error":"Unauthorized","statusCode":401}`** — Confirm the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u 'admin:password' https://<vRLI-IP>/api/v1/cluster/nodes`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the vRLI CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to <vRLI-IP> port 443: Connection refused` | Verify the vRLI appliance is running and accessible on port 443 from your host using `telnet <vRLI-IP> 443`. |
+    | `{"error":"Unauthorized","statusCode":401}` | Confirm the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u 'admin:password' https://<vRLI-IP>/api/v1/cluster/nodes`. |
 ---
 
 ## Step 3 — Check syslog and ingestion
@@ -216,8 +220,10 @@ tcp        0      0 0.0.0.0:1514           0.0.0.0:*               LISTEN      1
 ```
 
 !!! warning "Common errors"
-    **`Dropping event from <IP>: buffer overflow on queue-syslog-udp`** — Increase the UDP buffer size by running `sysctl -w net.core.rmem_max=134217728` and `sysctl -w net.core.rmem_default=134217728`, then restart rsyslogd.
-    **`Parse error: unrecognized syslog format`** — Verify the source host is sending RFC3164 or RFC5424 compliant syslog format and check the syslog configuration on the source with `cat /etc/rsyslog.conf | grep -A5 "^*.* @"`.
+    | Error | Fix |
+    |---|---|
+    | `Dropping event from <IP>: buffer overflow on queue-syslog-udp` | Increase the UDP buffer size by running `sysctl -w net.core.rmem_max=134217728` and `sysctl -w net.core.rmem_default=134217728`, then restart rsyslogd. |
+    | `Parse error: unrecognized syslog format` | Verify the source host is sending RFC3164 or RFC5424 compliant syslog format and check the syslog configuration on the source with `cat /etc/rsyslog.conf | grep -A5 "^*.* @"`. |
 ---
 
 ## Step 4 — Check Cassandra performance
@@ -263,9 +269,11 @@ Heap Memory (Used/Max) : 4.27 GB / 8 GB
 ```
 
 !!! warning "Common errors"
-    **`bash: nodetool: command not found`** — SSH directly to the vRLI appliance and run commands as root or use the full path `/usr/lib/cassandra/bin/nodetool`.
-    **`Connection refused`** — Verify Cassandra is running with `systemctl status cassandra` and that port 7199 is not blocked by firewall rules.
-    **`Permission denied`** — Run the nodetool commands with `sudo` or switch to the cassandra user with `sudo su - cassandra` before executing.
+    | Error | Fix |
+    |---|---|
+    | `bash: nodetool: command not found` | SSH directly to the vRLI appliance and run commands as root or use the full path `/usr/lib/cassandra/bin/nodetool`. |
+    | `Connection refused` | Verify Cassandra is running with `systemctl status cassandra` and that port 7199 is not blocked by firewall rules. |
+    | `Permission denied` | Run the nodetool commands with `sudo` or switch to the cassandra user with `sudo su - cassandra` before executing. |
 ---
 
 ## Step 5 — Check agent (liagent) on source hosts
@@ -330,9 +338,11 @@ loglevel=INFO
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 192.168.1.105 port 9543 (tcp) failed: Connection refused`** — Verify vRLI service is running on the target host and port 9543 is not blocked by firewall rules.
-    **`ERROR: SSL handshake failed: certificate verify failed`** — Ensure the vRLI server certificate is valid and trusted, or disable SSL verification in liagent.ini if using self-signed certificates.
-    **`ERROR: Authentication failed: agent key invalid or revoked`** — Regenerate the agent key in vRLI UI and update the agentkey parameter in /var/lib/loginsight-agent/liagent.ini.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 192.168.1.105 port 9543 (tcp) failed: Connection refused` | Verify vRLI service is running on the target host and port 9543 is not blocked by firewall rules. |
+    | `ERROR: SSL handshake failed: certificate verify failed` | Ensure the vRLI server certificate is valid and trusted, or disable SSL verification in liagent.ini if using self-signed certificates. |
+    | `ERROR: Authentication failed: agent key invalid or revoked` | Regenerate the agent key in vRLI UI and update the agentkey parameter in /var/lib/loginsight-agent/liagent.ini. |
 ---
 
 ## Step 6 — Check NTP
@@ -389,8 +399,10 @@ MS Name/IP address         Stratum Poll Reach LastRx Last sample
 ```
 
 !!! warning "Common errors"
-    **`chronyc: Could not talk to daemon`** — Ensure chronyd service is running with `systemctl status chronyd` and check firewall rules allowing NTP (UDP 123).
-    **`System time : 2.345678 seconds fast of NTP time`** — Restart chronyd with `systemctl restart chronyd` and verify NTP sources are reachable; if drift persists, manually sync with `chronyc makestep`.
+    | Error | Fix |
+    |---|---|
+    | `chronyc: Could not talk to daemon` | Ensure chronyd service is running with `systemctl status chronyd` and check firewall rules allowing NTP (UDP 123). |
+    | `System time : 2.345678 seconds fast of NTP time` | Restart chronyd with `systemctl restart chronyd` and verify NTP sources are reachable; if drift persists, manually sync with `chronyc makestep`. |
 ---
 
 ## Step 7 — Collect VAMI support bundle for VMware SR
@@ -428,8 +440,10 @@ support-bundle-20240115-143022.tar.gz          100%  487MB   8.2MB/s   00:59
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and that the admin user has SSH access enabled in VAMI (Admin → Access).
-    **`scp: /tmp/support-bundle-*.tar.gz: No such file or directory`** — Confirm the bundle generation completed successfully by checking `/tmp/` directly with `ssh admin@<vRLI-IP> ls -lh /tmp/support-bundle-*.tar.gz`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and that the admin user has SSH access enabled in VAMI (Admin → Access). |
+    | `scp: /tmp/support-bundle-*.tar.gz: No such file or directory` | Confirm the bundle generation completed successfully by checking `/tmp/` directly with `ssh admin@<vRLI-IP> ls -lh /tmp/support-bundle-*.tar.gz`. |
 ---
 
 ## Log locations

@@ -93,9 +93,11 @@ curl -X POST \
 ```
 
 !!! warning "Common errors"
-    **`{"error":"invalid_client","error_description":"Client authentication failed"}`** — Verify that `<CLIENT_ID>` and `<CLIENT_SECRET>` are correct and match the OAuth application registered in ServiceNow.
-    **`{"error":"invalid_grant","error_description":"Refresh token has expired"}`** — Request a new access token using the client credentials flow instead, as refresh tokens expire after a configured period (typically 30–90 days).
-    **`{"error":"invalid_request","error_description":"Missing required parameter: grant_type"}`** — Ensure all `-d` parameters are included and properly formatted; check that the Content-Type header is set to `application/x-www-form-urlencoded`.
+    | Error | Fix |
+    |---|---|
+    | `{"error":"invalid_client","error_description":"Client authentication failed"}` | Verify that `<CLIENT_ID>` and `<CLIENT_SECRET>` are correct and match the OAuth application registered in ServiceNow. |
+    | `{"error":"invalid_grant","error_description":"Refresh token has expired"}` | Request a new access token using the client credentials flow instead, as refresh tokens expire after a configured period (typically 30–90 days). |
+    | `{"error":"invalid_request","error_description":"Missing required parameter: grant_type"}` | Ensure all `-d` parameters are included and properly formatted; check that the Content-Type header is set to `application/x-www-form-urlencoded`. |
 ```bash
 # Configure client certificate on ServiceNow integration endpoint
 # System Web Services → REST Message → (your integration)

@@ -36,9 +36,11 @@ Copyright (c) 2024 Veeam Software
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to repository.veeam.com port 443: Connection timed out`** — Verify network connectivity and firewall rules allow HTTPS outbound to repository.veeam.com, or use a proxy with `curl -x proxy:port`.
-    **`Error: Unable to find a match: veeam`** — Ensure the veeam.repo file was downloaded successfully and the repository URL is accessible; check `/etc/yum.repos.d/veeam.repo` exists and contains valid content.
-    **`veeam: command not found`** — Verify the installation completed without errors and the veeam package is in your PATH; run `which veeam` or reinstall with `dnf install -y veeam --verbose`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to repository.veeam.com port 443: Connection timed out` | Verify network connectivity and firewall rules allow HTTPS outbound to repository.veeam.com, or use a proxy with `curl -x proxy:port`. |
+    | `Error: Unable to find a match: veeam` | Ensure the veeam.repo file was downloaded successfully and the repository URL is accessible; check `/etc/yum.repos.d/veeam.repo` exists and contains valid content. |
+    | `veeam: command not found` | Verify the installation completed without errors and the veeam package is in your PATH; run `which veeam` or reinstall with `dnf install -y veeam --verbose`. |
 ```bash
 # Start a backup job immediately
 veeamconfig job start --name "SERVER01-Daily"
@@ -74,9 +76,11 @@ Backup complete
 ```
 
 !!! warning "Common errors"
-    **`Error: Job 'SERVER01-Daily' not found`** — Verify the exact job name with `veeamconfig job list` and use the correct spelling.
-    **`Error: Invalid session ID 'sess-a7f2c9e1-4b3d'`** — Replace `<session-id>` with the actual session ID returned from the `job start` command output.
-    **`grep: command not found`** — Ensure grep is installed; on minimal systems run `apt-get install grep` or use `veeamconfig session info --id <session-id> | awk '/State:/'` instead.
+    | Error | Fix |
+    |---|---|
+    | `Error: Job 'SERVER01-Daily' not found` | Verify the exact job name with `veeamconfig job list` and use the correct spelling. |
+    | `Error: Invalid session ID 'sess-a7f2c9e1-4b3d'` | Replace `<session-id>` with the actual session ID returned from the `job start` command output. |
+    | `grep: command not found` | Ensure grep is installed; on minimal systems run `apt-get install grep` or use `veeamconfig session info --id <session-id> | awk '/State:/'` instead. |
 ```bash
 # List recent backup sessions
 veeamconfig session list
@@ -107,9 +111,11 @@ Result: Success
 ```
 
 !!! warning "Common errors"
-    **`veeamconfig: command not found`** — Verify Veeam Backup & Replication is installed and the veeamconfig binary is in your PATH, or use the full path `/opt/veeam/bin/veeamconfig`.
-    **`Error: Job 'SERVER01-Daily' not found`** — Confirm the exact job name using `veeamconfig session list` and check for typos or case sensitivity in the job name parameter.
-    **`Error: Session ID 's-7f2a9c1e-4b3d-11ed-9f8a-0050569b1234' does not exist`** — Verify the session ID is correct by listing recent sessions with `veeamconfig session list` before querying session details.
+    | Error | Fix |
+    |---|---|
+    | `veeamconfig: command not found` | Verify Veeam Backup & Replication is installed and the veeamconfig binary is in your PATH, or use the full path `/opt/veeam/bin/veeamconfig`. |
+    | `Error: Job 'SERVER01-Daily' not found` | Confirm the exact job name using `veeamconfig session list` and check for typos or case sensitivity in the job name parameter. |
+    | `Error: Session ID 's-7f2a9c1e-4b3d-11ed-9f8a-0050569b1234' does not exist` | Verify the session ID is correct by listing recent sessions with `veeamconfig session list` before querying session details. |
 ```bash
 # List available restore points
 veeamconfig restorepoint list --jobName "SERVER01-Daily"
@@ -154,9 +160,11 @@ lost+found/
 ```
 
 !!! warning "Common errors"
-    **`veeamconfig: command not found`** — Ensure Veeam Agent for Linux is installed and the veeamconfig binary is in your PATH, or use the full path `/opt/veeam/bin/veeamconfig`.
-    **`Error: Restore point 'rp-20250115-093045' is already mounted`** — Unmount the restore point using `veeamconfig recoverypoints umount --restorePointId rp-20250115-093045` before attempting to mount it again.
-    **`Permission denied: /tmp/veeam/<uuid>/var/www/html/config.php`** — Run the cp command with sudo or ensure the user has read permissions on the mounted restore point directory.
+    | Error | Fix |
+    |---|---|
+    | `veeamconfig: command not found` | Ensure Veeam Agent for Linux is installed and the veeamconfig binary is in your PATH, or use the full path `/opt/veeam/bin/veeamconfig`. |
+    | `Error: Restore point 'rp-20250115-093045' is already mounted` | Unmount the restore point using `veeamconfig recoverypoints umount --restorePointId rp-20250115-093045` before attempting to mount it again. |
+    | `Permission denied: /tmp/veeam/<uuid>/var/www/html/config.php` | Run the cp command with sudo or ensure the user has read permissions on the mounted restore point directory. |
 ```bash
 # Create Veeam Recovery Media (run on a working system)
 # Requires veeam-nosnap package
@@ -191,9 +199,11 @@ Recovery media write complete. USB is ready for boot.
 ```
 
 !!! warning "Common errors"
-    **`veeam: command not found`** — Install the veeam-nosnap package with `apt-get install veeam-nosnap` or `yum install veeam-nosnap` depending on your distribution.
-    **`dd: failed to open '/dev/sdX': No such file or directory`** — Replace `/dev/sdX` with the actual USB device name (e.g., `/dev/sdb`) verified via `lsblk` or `fdisk -l`.
-    **`dd: writing to '/dev/sdb': Read-only file system`** — Ensure the USB device is not write-protected and unmount it first with `umount /dev/sdb*`.
+    | Error | Fix |
+    |---|---|
+    | `veeam: command not found` | Install the veeam-nosnap package with `apt-get install veeam-nosnap` or `yum install veeam-nosnap` depending on your distribution. |
+    | `dd: failed to open '/dev/sdX': No such file or directory` | Replace `/dev/sdX` with the actual USB device name (e.g., `/dev/sdb`) verified via `lsblk` or `fdisk -l`. |
+    | `dd: writing to '/dev/sdb': Read-only file system` | Ensure the USB device is not write-protected and unmount it first with `umount /dev/sdb*`. |
 ```bash
 # Mount the restore point and export to an image
 veeamconfig recoverypoints export \
@@ -218,9 +228,11 @@ Duration: 18 minutes 42 seconds
 ```
 
 !!! warning "Common errors"
-    **`Error: Restore point ID not found: <restore-point-id>`** — Verify the restore point ID exists by running `veeamconfig recoverypoints list` and use the correct ID from the output.
-    **`Error: Permission denied writing to /mnt/restore-output`** — Ensure the user running the command has write permissions on the target directory with `chmod 755 /mnt/restore-output` or run with appropriate sudo privileges.
-    **`Error: Insufficient disk space in /mnt/restore-output`** — Check available space with `df -h /mnt/restore-output` and ensure at least 20% free space beyond the restore point size.
+    | Error | Fix |
+    |---|---|
+    | `Error: Restore point ID not found: <restore-point-id>` | Verify the restore point ID exists by running `veeamconfig recoverypoints list` and use the correct ID from the output. |
+    | `Error: Permission denied writing to /mnt/restore-output` | Ensure the user running the command has write permissions on the target directory with `chmod 755 /mnt/restore-output` or run with appropriate sudo privileges. |
+    | `Error: Insufficient disk space in /mnt/restore-output` | Check available space with `df -h /mnt/restore-output` and ensure at least 20% free space beyond the restore point size. |
 ```bash
 # Incremental backup to a remote host using rsync
 rsync -avz --delete --link-dest=/backup/last \
@@ -274,9 +286,11 @@ total size is 3,891,445  speedup is 2.01
 ```
 
 !!! warning "Common errors"
-    **`rsync: failed to set times on "/backup/2024-01-15": Operation not permitted (1)`** — Ensure the backup destination directory is writable and the remote filesystem supports timestamp modification, or add `--no-times` flag.
-    **`Permission denied (publickey). fatal: Could not read from remote repository`** — Verify SSH key authentication is configured for the backupserver user and the remote host's SSH daemon is running on the expected port.
-    **`rsync: link_dest: cannot stat "/backup/last": No such file or directory (2)`** — Create the `/backup/last` symlink manually on the first run, or remove the `--link-dest` parameter for the initial backup.
+    | Error | Fix |
+    |---|---|
+    | `rsync: failed to set times on "/backup/2024-01-15": Operation not permitted (1)` | Ensure the backup destination directory is writable and the remote filesystem supports timestamp modification, or add `--no-times` flag. |
+    | `Permission denied (publickey). fatal: Could not read from remote repository` | Verify SSH key authentication is configured for the backupserver user and the remote host's SSH daemon is running on the expected port. |
+    | `rsync: link_dest: cannot stat "/backup/last": No such file or directory (2)` | Create the `/backup/last` symlink manually on the first run, or remove the `--link-dest` parameter for the initial backup. |
 ```bash
 # Veeam — verify a restore point (checksum validation)
 veeamconfig recoverypoints verify --id <restore-point-id>
@@ -303,9 +317,11 @@ Verification completed in 4m 32s
 ```
 
 !!! warning "Common errors"
-    **`veeamconfig: command not found`** — Install Veeam CLI tools or source the Veeam environment setup script before running veeamconfig commands.
-    **`diff: /tmp/source-checksums.txt: No such file or directory`** — Ensure the find command completed successfully on the source system and the file was written before running diff.
-    **`Permission denied`** — Run the find and diff commands with sudo or as a user with read access to /data and /backup/data directories.
+    | Error | Fix |
+    |---|---|
+    | `veeamconfig: command not found` | Install Veeam CLI tools or source the Veeam environment setup script before running veeamconfig commands. |
+    | `diff: /tmp/source-checksums.txt: No such file or directory` | Ensure the find command completed successfully on the source system and the file was written before running diff. |
+    | `Permission denied` | Run the find and diff commands with sudo or as a user with read access to /data and /backup/data directories. |
 ```bash
 # Mount the restore point and compare a sample of files
 veeamconfig recoverypoints mount --restorePointId <restore-point-id>
@@ -333,9 +349,11 @@ Unmount successful.
 ```
 
 !!! warning "Common errors"
-    **`veeamconfig: command not found`** — Ensure Veeam Agent for Linux is installed and the veeamconfig binary is in your PATH, or use the full path `/opt/veeam/bin/veeamconfig`.
-    **`diff: /tmp/veeam/<uuid>/var/www/html/index.php: No such file or directory`** — Verify the restore point mounted successfully and the file path matches the original backup structure; check mount point with `ls -la /tmp/veeam/<uuid>/`.
-    **`ERROR 1064 (42000) at line 1: You have an error in your SQL syntax`** — Ensure the SQL dump file is not corrupted and was created with a compatible MySQL version; test with `head -20 /tmp/veeam/<uuid>/var/backups/mysql-latest.sql` to inspect the dump format.
+    | Error | Fix |
+    |---|---|
+    | `veeamconfig: command not found` | Ensure Veeam Agent for Linux is installed and the veeamconfig binary is in your PATH, or use the full path `/opt/veeam/bin/veeamconfig`. |
+    | `diff: /tmp/veeam/<uuid>/var/www/html/index.php: No such file or directory` | Verify the restore point mounted successfully and the file path matches the original backup structure; check mount point with `ls -la /tmp/veeam/<uuid>/`. |
+    | `ERROR 1064 (42000) at line 1: You have an error in your SQL syntax` | Ensure the SQL dump file is not corrupted and was created with a compatible MySQL version; test with `head -20 /tmp/veeam/<uuid>/var/backups/mysql-latest.sql` to inspect the dump format. |
 ```bash
 # Check Veeam Agent service status
 systemctl status veeamservice veeamsnap

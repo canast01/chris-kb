@@ -105,9 +105,11 @@ Symmetrix ID: 000297900123
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Install PowerPath package with `apt-get install powerpath` or equivalent for your distribution.
-    **`powermt: permission denied`** — Run the command with `sudo` or ensure your user is in the powerpath group with `sudo usermod -aG powerpath $USER`.
-    **`powermt display: No devices found`** — Verify PowerPath daemon is running with `sudo systemctl status powerpath` and rescan paths using `powermt config`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Install PowerPath package with `apt-get install powerpath` or equivalent for your distribution. |
+    | `powermt: permission denied` | Run the command with `sudo` or ensure your user is in the powerpath group with `sudo usermod -aG powerpath $USER`. |
+    | `powermt display: No devices found` | Verify PowerPath daemon is running with `sudo systemctl status powerpath` and rescan paths using `powermt config`. |
 ---
 
 ## Paths
@@ -145,8 +147,10 @@ c7t6d0s2   SP B   45%  alive   E/S/O   -   -   -   -   -   -   -   -
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Verify EMC PowerPath is installed with `rpm -qa | grep -i powerpath` and install the package if missing.
-    **`powermt display: You do not have permission to run this command`** — Run the command with `sudo` or ensure your user is in the powerpath group with `sudo usermod -a -G powerpath $USER`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Verify EMC PowerPath is installed with `rpm -qa | grep -i powerpath` and install the package if missing. |
+    | `powermt display: You do not have permission to run this command` | Run the command with `sudo` or ensure your user is in the powerpath group with `sudo usermod -a -G powerpath $USER`. |
 ### Path State Values
 
 | State | Meaning |
@@ -208,9 +212,11 @@ Configuration saved to /etc/powerpath/powerpath.conf
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Verify PowerPath is installed with `rpm -qa | grep EMCpower` and ensure `/opt/EMC/PowerPath/bin` is in your PATH.
-    **`powermt: Permission denied`** — Run the command with `sudo` or as root, as PowerPath operations require elevated privileges.
-    **`Symmetrix driver not loaded`** — Load the PowerPath driver with `modprobe powerpath` or restart the PowerPath daemon with `systemctl restart PowerPath`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Verify PowerPath is installed with `rpm -qa | grep EMCpower` and ensure `/opt/EMC/PowerPath/bin` is in your PATH. |
+    | `powermt: Permission denied` | Run the command with `sudo` or as root, as PowerPath operations require elevated privileges. |
+    | `Symmetrix driver not loaded` | Load the PowerPath driver with `modprobe powerpath` or restart the PowerPath daemon with `systemctl restart PowerPath`. |
 ### Manual Path Failover and Unblock
 
 ```bash
@@ -235,9 +241,11 @@ Timestamp: Wed Oct 11 14:32:18 UTC 2024
 ```
 
 !!! warning "Common errors"
-    **`powermt: ERROR: Device emcpower0 not found`** — Verify the device name with `powermt display dev=all` and use the correct logical device identifier.
-    **`powermt: ERROR: Invalid path specification <hba_port_id>`** — Replace `<hba_port_id>` with the actual HBA port ID (e.g., `2b` or `1a`) shown in `powermt display dev=emcpower0`.
-    **`powermt: ERROR: Operation requires root privileges`** — Run the commands with `sudo` or as the root user.
+    | Error | Fix |
+    |---|---|
+    | `powermt: ERROR: Device emcpower0 not found` | Verify the device name with `powermt display dev=all` and use the correct logical device identifier. |
+    | `powermt: ERROR: Invalid path specification <hba_port_id>` | Replace `<hba_port_id>` with the actual HBA port ID (e.g., `2b` or `1a`) shown in `powermt display dev=emcpower0`. |
+    | `powermt: ERROR: Operation requires root privileges` | Run the commands with `sudo` or as the root user. |
 ### Path Detail
 
 ```bash
@@ -280,9 +288,11 @@ emcpower3 2
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Verify PowerPath is installed with `rpm -qa | grep EMCpower` and install the PowerPath agent package if missing.
-    **`Device emcpower0 not found`** — Confirm the device exists with `powermt display dev=all` and verify the EMC array is properly zoned and discovered.
-    **`ALUA state: not supported`** — Check that ALUA is enabled on the storage array and that the device firmware supports ALUA mode.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Verify PowerPath is installed with `rpm -qa | grep EMCpower` and install the PowerPath agent package if missing. |
+    | `Device emcpower0 not found` | Confirm the device exists with `powermt display dev=all` and verify the EMC array is properly zoned and discovered. |
+    | `ALUA state: not supported` | Check that ALUA is enabled on the storage array and that the device firmware supports ALUA mode. |
 ### Common Path Issues
 
 | Issue | Likely Cause | Fix |
@@ -362,9 +372,11 @@ c2:0         t4        emc0c     DEAD     No
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install EMC PowerPath package with `apt-get install powerpath` or `yum install powerpath` depending on your distribution.
-    **`powermt display: Permission denied`** — Run the command with sudo: `sudo powermt display hba` (PowerPath operations require root privileges).
-    **`No paths found for device <device_id>`** — Verify the device ID exists with `powermt display dev` and use the correct format (e.g., `emc0a` not `EMC0A`).
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install EMC PowerPath package with `apt-get install powerpath` or `yum install powerpath` depending on your distribution. |
+    | `powermt display: Permission denied` | Run the command with sudo: `sudo powermt display hba` (PowerPath operations require root privileges). |
+    | `No paths found for device <device_id>` | Verify the device ID exists with `powermt display dev` and use the correct format (e.g., `emc0a` not `EMC0A`). |
 ### Path Statistics
 
 ```bash
@@ -394,8 +406,10 @@ Path 3: Read I/Os: 46234 Write I/Os: 130102 Errors: 0
 ```
 
 !!! warning "Common errors"
-    **`powermt: ERROR: Device <device_id> not found`** — Verify the device ID exists with `powermt display dev=all` and use the correct logical device name.
-    **`powermt: ERROR: Insufficient privileges`** — Run the command with `sudo` or as root user, as PowerPath operations require elevated permissions.
+    | Error | Fix |
+    |---|---|
+    | `powermt: ERROR: Device <device_id> not found` | Verify the device ID exists with `powermt display dev=all` and use the correct logical device name. |
+    | `powermt: ERROR: Insufficient privileges` | Run the command with `sudo` or as root user, as PowerPath operations require elevated permissions. |
 ### HBA Port to WWPN Mapping
 
 ```bash
@@ -438,9 +452,11 @@ HBA Attributes for 50:00:09:4b:1a:2c:3d:e1:
 ```
 
 !!! warning "Common errors"
-    **`cat: /sys/class/fc_host/host*/port_name: No such file or directory`** — Verify FC HBA is installed and recognized with `lspci | grep -i fibre` before querying sysfs.
-    **`Get-WmiObject : Invalid namespace`** — Run PowerShell as Administrator and confirm WMI namespace exists with `Get-WmiObject -Namespace "root\WMI" -List | grep MSFC`.
-    **`hbacmd: command not found`** — Install hbanyware package for your HBA vendor (e.g., `apt-get install hbanyware` on Linux or download from Emulex/Broadcom support portal) and ensure it is in PATH.
+    | Error | Fix |
+    |---|---|
+    | `cat: /sys/class/fc_host/host*/port_name: No such file or directory` | Verify FC HBA is installed and recognized with `lspci | grep -i fibre` before querying sysfs. |
+    | `Get-WmiObject : Invalid namespace` | Run PowerShell as Administrator and confirm WMI namespace exists with `Get-WmiObject -Namespace "root\WMI" -List | grep MSFC`. |
+    | `hbacmd: command not found` | Install hbanyware package for your HBA vendor (e.g., `apt-get install hbanyware` on Linux or download from Emulex/Broadcom support portal) and ensure it is in PATH. |
 ### PowerPath Quick Reference
 
 | Task | Command |
@@ -489,9 +505,11 @@ All available paths restored successfully.
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install EMC PowerPath package using `yum install PowerPath` or equivalent for your distribution.
-    **`powermt check dev=emcpowera: Permission denied`** — Run the command with `sudo` or as root user since PowerPath operations require elevated privileges.
-    **`No such device: emcpowera`** — Verify the device name exists by running `powermt display dev=all` first to list valid device identifiers.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install EMC PowerPath package using `yum install PowerPath` or equivalent for your distribution. |
+    | `powermt check dev=emcpowera: Permission denied` | Run the command with `sudo` or as root user since PowerPath operations require elevated privileges. |
+    | `No such device: emcpowera` | Verify the device name exists by running `powermt display dev=all` first to list valid device identifiers. |
 ---
 
 ## Load Balancing & Policies
@@ -527,8 +545,10 @@ Policy: SymmOpt
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Install EMC PowerPath software or ensure the PowerPath bin directory is in your PATH environment variable.
-    **`grep: (standard input) is empty`** — Verify the device name is correct with `powermt display dev=all` and confirm PowerPath is running with `powermt check`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Install EMC PowerPath software or ensure the PowerPath bin directory is in your PATH environment variable. |
+    | `grep: (standard input) is empty` | Verify the device name is correct with `powermt display dev=all` and confirm PowerPath is running with `powermt check`. |
 ### Set Policy
 
 ```bash
@@ -559,9 +579,11 @@ Configuration saved successfully to /etc/powerpath/powerpath.conf
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Ensure EMC PowerPath is installed and `/opt/PowerPath/bin` is in your PATH, or use the full path `/opt/PowerPath/bin/powermt`.
-    **`powermt: You must be root to run this command`** — Run the command with `sudo` or switch to the root user before executing powermt commands.
-    **`powermt set: Invalid device name 'emcpower0'`** — Verify the device exists by running `powermt display dev=all` and use the correct logical device name.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Ensure EMC PowerPath is installed and `/opt/PowerPath/bin` is in your PATH, or use the full path `/opt/PowerPath/bin/powermt`. |
+    | `powermt: You must be root to run this command` | Run the command with `sudo` or switch to the root user before executing powermt commands. |
+    | `powermt set: Invalid device name 'emcpower0'` | Verify the device exists by running `powermt display dev=all` and use the correct logical device name. |
 ### Recommended Policies by Array
 
 | Array | Recommended Policy |
@@ -603,8 +625,10 @@ Path 3: dev=sdd port=6e:1 state=active
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install PowerPath package or verify the EMC PowerPath agent is installed and in your system PATH.
-    **`powermt display: device emcpower0 not found`** — Verify the device exists with `powermt display` (no device argument) and confirm the correct device name.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install PowerPath package or verify the EMC PowerPath agent is installed and in your system PATH. |
+    | `powermt display: device emcpower0 not found` | Verify the device exists with `powermt display` (no device argument) and confirm the correct device name. |
 ### Troubleshooting Uneven Load
 
 ```bash
@@ -626,9 +650,11 @@ Configuration saved successfully.
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Ensure EMC PowerPath is installed and /opt/emc/powerpath/bin is in your PATH, or run with full path `/opt/emc/powerpath/bin/powermt`.
-    **`Permission denied`** — Run powermt commands with sudo or as root user, as PowerPath configuration requires elevated privileges.
-    **`No devices found`** — Verify that storage devices are properly zoned and visible to the host by running `powermt config` to rescan devices.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Ensure EMC PowerPath is installed and /opt/emc/powerpath/bin is in your PATH, or run with full path `/opt/emc/powerpath/bin/powermt`. |
+    | `Permission denied` | Run powermt commands with sudo or as root user, as PowerPath configuration requires elevated privileges. |
+    | `No devices found` | Verify that storage devices are properly zoned and visible to the host by running `powermt config` to rescan devices. |
 ---
 
 ## Configuration & Checks
@@ -693,9 +719,11 @@ Dead paths cleaned up
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install PowerPath package with `rpm -ivh PowerPath*.rpm` or verify `/opt/emc/powerpath/bin` is in your PATH.
-    **`powermt: Unable to open /etc/powermt.custom: Permission denied`** — Run the command with `sudo` or as root user.
-    **`powermt check: No devices found`** — Verify EMC storage arrays are zoned and visible to the host with `powermt display dev=all`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install PowerPath package with `rpm -ivh PowerPath*.rpm` or verify `/opt/emc/powerpath/bin` is in your PATH. |
+    | `powermt: Unable to open /etc/powermt.custom: Permission denied` | Run the command with `sudo` or as root user. |
+    | `powermt check: No devices found` | Verify EMC storage arrays are zoned and visible to the host with `powermt display dev=all`. |
 ---
 
 ## Windows PowerPath
@@ -793,9 +821,11 @@ Restore operation completed.
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Install PowerPath EMC software or add `/opt/emc/powerpath/bin` to your PATH environment variable.
-    **`powermt display: insufficient privileges`** — Run the command with `sudo` or as root user; PowerPath requires elevated permissions.
-    **`powermt check: No Symmetrix devices detected`** — Verify SAN connectivity and zoning; confirm Fibre Channel HBAs are properly configured and visible with `powermt display dev=all`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Install PowerPath EMC software or add `/opt/emc/powerpath/bin` to your PATH environment variable. |
+    | `powermt display: insufficient privileges` | Run the command with `sudo` or as root user; PowerPath requires elevated permissions. |
+    | `powermt check: No Symmetrix devices detected` | Verify SAN connectivity and zoning; confirm Fibre Channel HBAs are properly configured and visible with `powermt display dev=all`. |
 ### Path Count Per Device
 
 ```bash
@@ -819,8 +849,10 @@ emcpower5  alive: 4  dead: 0
 ```
 
 !!! warning "Common errors"
-    **`command not found: powermt`** — Install EMC PowerPath software or verify the installation with `rpm -qa | grep PowerPath` on the target system.
-    **`awk: syntax error in pattern near line 1`** — Ensure the script uses single quotes and that no special characters are escaped incorrectly; test with `echo "test" | awk '/test/ { print }'` first.
+    | Error | Fix |
+    |---|---|
+    | `command not found: powermt` | Install EMC PowerPath software or verify the installation with `rpm -qa | grep PowerPath` on the target system. |
+    | `awk: syntax error in pattern near line 1` | Ensure the script uses single quotes and that no special characters are escaped incorrectly; test with `echo "test" | awk '/test/ { print }'` first. |
 ### Service and Driver Status (Linux)
 
 ```bash
@@ -856,8 +888,10 @@ version_date:   2023-12-15
 ```
 
 !!! warning "Common errors"
-    **`Unit PowerPath.service could not be found.`** — Install PowerPath package or verify the service file exists at `/etc/systemd/system/PowerPath.service`.
-    **`modinfo: ERROR: Module emcpower not found in directory /lib/modules/5.15.0-84-generic/kernel`** — Load the kernel module with `modprobe emcpower` or verify the driver is installed with `rpm -qa | grep PowerPath`.
+    | Error | Fix |
+    |---|---|
+    | `Unit PowerPath.service could not be found.` | Install PowerPath package or verify the service file exists at `/etc/systemd/system/PowerPath.service`. |
+    | `modinfo: ERROR: Module emcpower not found in directory /lib/modules/5.15.0-84-generic/kernel` | Load the kernel module with `modprobe emcpower` or verify the driver is installed with `rpm -qa | grep PowerPath`. |
 ### Post-Maintenance Validation
 
 After any SAN maintenance (zoning changes, LUN remapping, path reconfiguration):
@@ -901,9 +935,11 @@ Configuration saved to /etc/powerpath/powerpath.conf
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install EMC PowerPath package or verify the installation with `rpm -qa | grep PowerPath`.
-    **`powermt: Permission denied`** — Run the command with `sudo` or as root user.
-    **`No dead paths detected` but paths still unavailable** — Check physical SAN connectivity and zoning with `powermt display` and verify HBA status with `systool -c fc_host -v`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install EMC PowerPath package or verify the installation with `rpm -qa | grep PowerPath`. |
+    | `powermt: Permission denied` | Run the command with `sudo` or as root user. |
+    | `No dead paths detected` but paths still unavailable` | Check physical SAN connectivity and zoning with `powermt display` and verify HBA status with `systool -c fc_host -v`. |
 ---
 
 ## Verify

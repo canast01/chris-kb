@@ -55,8 +55,10 @@ tmpfs            16G   13G  3.2G  82% /dev/shm
 ```
 
 !!! warning "Common errors"
-    **`awk: syntax error in pattern near line 1`** — Ensure the awk syntax is correct; use `awk '$5+0 > 75 {print}'` if the pattern alone doesn't work on your awk version.
-    **`cannot access '/var/*': Permission denied`** — Run the `du` command with `sudo` to access all directories under /var with restricted permissions.
+    | Error | Fix |
+    |---|---|
+    | `awk: syntax error in pattern near line 1` | Ensure the awk syntax is correct; use `awk '$5+0 > 75 {print}'` if the pattern alone doesn't work on your awk version. |
+    | `cannot access '/var/*': Permission denied` | Run the `du` command with `sudo` to access all directories under /var with restricted permissions. |
 ### Storage Latency (ONTAP)
 
 ```bash
@@ -81,8 +83,10 @@ backup-job                3.5       7.1       10.2      22.1
 ```
 
 !!! warning "Common errors"
-    **`statistics: command not found`** — Verify you are connected to the Aria Operations cluster and have the correct CLI context loaded.
-    **`Error: Invalid counter name 'read_latency'`** — Use `statistics show -object volume -help` to list valid counter names for your environment.
+    | Error | Fix |
+    |---|---|
+    | `statistics: command not found` | Verify you are connected to the Aria Operations cluster and have the correct CLI context loaded. |
+    | `Error: Invalid counter name 'read_latency'` | Use `statistics show -object volume -help` to list valid counter names for your environment. |
 ### Network Interface Errors
 
 ```bash
@@ -124,8 +128,10 @@ Ethernet1/1
 ```
 
 !!! warning "Common errors"
-    **`Device "eth0" does not exist.`** — Verify the interface name with `ip link show` and use the correct interface identifier.
-    **`Cannot get device settings: No such device`** — Ensure the interface is present and not disabled; check with `ethtool <interface>` to confirm device exists.
+    | Error | Fix |
+    |---|---|
+    | `Device "eth0" does not exist.` | Verify the interface name with `ip link show` and use the correct interface identifier. |
+    | `Cannot get device settings: No such device` | Ensure the interface is present and not disabled; check with `ethtool <interface>` to confirm device exists. |
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

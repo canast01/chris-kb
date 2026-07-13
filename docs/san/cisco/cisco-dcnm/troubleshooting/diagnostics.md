@@ -159,9 +159,11 @@ tcp        0      0 0.0.0.0:9200            0.0.0.0:*               LISTEN      
 ```
 
 !!! warning "Common errors"
-    **`appmgr: command not found`** — SSH as root and source the DCNM environment with `source /opt/dcnm/bin/env.sh` or verify DCNM is installed in `/opt/dcnm`.
-    **`curl: (7) Failed to connect to localhost port 443: Connection refused`** — Restart the DCNM web service with `appmgr restart dcnm-web` and wait 30 seconds for the API to become available.
-    **`Filesystem /data is 95% full`** — Delete old DCNM logs and snapshots with `appmgr cleanup-logs --older-than 30d` or expand the `/data` partition immediately to prevent database corruption.
+    | Error | Fix |
+    |---|---|
+    | `appmgr: command not found` | SSH as root and source the DCNM environment with `source /opt/dcnm/bin/env.sh` or verify DCNM is installed in `/opt/dcnm`. |
+    | `curl: (7) Failed to connect to localhost port 443: Connection refused` | Restart the DCNM web service with `appmgr restart dcnm-web` and wait 30 seconds for the API to become available. |
+    | `Filesystem /data is 95% full` | Delete old DCNM logs and snapshots with `appmgr cleanup-logs --older-than 30d` or expand the `/data` partition immediately to prevent database corruption. |
 ---
 
 ## Step 2 — Authenticate and check REST API
@@ -219,9 +221,11 @@ sys	0m0.089s
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example; verify DCNM_HOST URL is correct).
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the logon endpoint returns valid JSON; check DCNM credentials and that the API service is responding with `curl -sk -v` to inspect headers.
-    **`error: 401 Unauthorized`** — Verify dcnm-cookie.txt exists and contains valid session cookie by checking `cat dcnm-cookie.txt` immediately after logon step.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example; verify DCNM_HOST URL is correct). |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the logon endpoint returns valid JSON; check DCNM credentials and that the API service is responding with `curl -sk -v` to inspect headers. |
+    | `error: 401 Unauthorized` | Verify dcnm-cookie.txt exists and contains valid session cookie by checking `cat dcnm-cookie.txt` immediately after logon step. |
 ---
 
 ## Step 3 — Check PostgreSQL database health
@@ -327,8 +331,10 @@ pmdb=> \q
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "localhost" to address: Name or service not known`** — Verify PostgreSQL service is running with `systemctl status postgresql` and check `/etc/postgresql/*/main/postgresql.conf` for listen_addresses setting.
-    **`ERROR: permission denied for schema public`** — Ensure the postgres user has proper schema permissions by running `psql -U postgres -c "GRANT ALL ON SCHEMA public TO postgres;"`.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "localhost" to address: Name or service not known` | Verify PostgreSQL service is running with `systemctl status postgresql` and check `/etc/postgresql/*/main/postgresql.conf` for listen_addresses setting. |
+    | `ERROR: permission denied for schema public` | Ensure the postgres user has proper schema permissions by running `psql -U postgres -c "GRANT ALL ON SCHEMA public TO postgres;"`. |
     **`
 ---
 
@@ -380,9 +386,11 @@ tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 65535 byte
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the dcnm_mgmt SSH key is installed on the switch and the user exists in the switch's local or TACACS database.
-    **`Timeout: No Response from <switch-ip>`** — Check network connectivity to the switch, confirm the management IP is reachable with `ping`, and verify firewall rules allow DCNM's IP to the switch.
-    **`snmpget: Unknown user name "dcnm_poll"`** — Confirm the SNMP v3 user exists on the switch by running `show snmp user` and verify the auth/priv passwords match the DCNM credential store.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the dcnm_mgmt SSH key is installed on the switch and the user exists in the switch's local or TACACS database. |
+    | `Timeout: No Response from <switch-ip>` | Check network connectivity to the switch, confirm the management IP is reachable with `ping`, and verify firewall rules allow DCNM's IP to the switch. |
+    | `snmpget: Unknown user name "dcnm_poll"` | Confirm the SNMP v3 user exists on the switch by running `show snmp user` and verify the auth/priv passwords match the DCNM credential store. |
 ---
 
 ## Step 5 — Debug discovery and fabric issues
@@ -433,9 +441,11 @@ dcnm      5678  1.2  1.8 945216  54321 ?  Sl   Jan15   8:45 /opt/dcnm/bin/discov
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/dcnm/discovery.log: No such file or directory`** — Verify DCNM is installed and running with `systemctl status dcnm`, or check the correct log path with `find /var/log -name "*discovery*"`.
-    **`free: command not found`** — Install `sysstat` package with `apt-get install sysstat` or `yum install sysstat` depending on your OS.
-    **`journalctl: command not found`** — This system uses syslog instead; check logs with `tail -f /var/log/syslog` or `tail -f /var/log/messages` depending on your distribution.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/dcnm/discovery.log: No such file or directory` | Verify DCNM is installed and running with `systemctl status dcnm`, or check the correct log path with `find /var/log -name "*discovery*"`. |
+    | `free: command not found` | Install `sysstat` package with `apt-get install sysstat` or `yum install sysstat` depending on your OS. |
+    | `journalctl: command not found` | This system uses syslog instead; check logs with `tail -f /var/log/syslog` or `tail -f /var/log/messages` depending on your distribution. |
 ---
 
 ## Step 6 — Check HA replication status
@@ -494,9 +504,11 @@ DB Replication Lag: 0 ms
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed`** — Verify PostgreSQL is running with `systemctl status dcnm-postgres` and check network connectivity to the standby node.
-    **`curl: (7) Failed to connect to localhost port 9200: Connection refused`** — Restart Elasticsearch with `systemctl restart dcnm-elasticsearch` and wait 30 seconds for cluster initialization.
-    **`replication_lag` shows `> 00:01:00`** — Check HA network link status with `ethtool -S <HA_interface>` and verify no packet loss on the replication network.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed` | Verify PostgreSQL is running with `systemctl status dcnm-postgres` and check network connectivity to the standby node. |
+    | `curl: (7) Failed to connect to localhost port 9200: Connection refused` | Restart Elasticsearch with `systemctl restart dcnm-elasticsearch` and wait 30 seconds for cluster initialization. |
+    | `replication_lag` shows `> 00:01:00` | Check HA network link status with `ethtool -S <HA_interface>` and verify no packet loss on the replication network. |
 ---
 
 ## Step 7 — Collect support bundle for Cisco TAC
@@ -545,9 +557,11 @@ show-tech-mds-fab1-sw01-20240315.txt                  100%  156MB   5.1MB/s   02
 ```
 
 !!! warning "Common errors"
-    **`/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh: command not found`** — Verify DCNM is installed at `/usr/local/cisco/dcm/dcnm/` or check the correct installation path with `find / -name collect-support-bundle.sh 2>/dev/null`.
-    **`Permission denied (publickey,password).`** — Ensure SSH key is configured for root@dcnm-dc1.corp.example.com or use `ssh-copy-id root@dcnm-dc1.corp.example.com` to add your public key.
-    **`show tech-support: command not found`** — Confirm you are in NX-OS or MDS CLI mode; if in Linux shell, type `exit` to return to device CLI or use `system bash` to access the shell context.
+    | Error | Fix |
+    |---|---|
+    | `/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh: command not found` | Verify DCNM is installed at `/usr/local/cisco/dcm/dcnm/` or check the correct installation path with `find / -name collect-support-bundle.sh 2>/dev/null`. |
+    | `Permission denied (publickey,password).` | Ensure SSH key is configured for root@dcnm-dc1.corp.example.com or use `ssh-copy-id root@dcnm-dc1.corp.example.com` to add your public key. |
+    | `show tech-support: command not found` | Confirm you are in NX-OS or MDS CLI mode; if in Linux shell, type `exit` to return to device CLI or use `system bash` to access the shell context. |
 ---
 
 ## Log locations

@@ -116,9 +116,11 @@ az network application-gateway ssl-policy set \
 ```
 
 !!! warning "Common errors"
-    **`(BadRequest) The certificate file 'cert.pfx' does not exist or is not readable.`** — Verify the PFX file path is correct and readable with `ls -l cert.pfx` before running the command.
-    **`(BadRequest) The specified frontend IP configuration '<frontend-ip-config-name>' does not exist.`** — List available frontend IP configs with `az network application-gateway frontend-ip list --resource-group <rg> --gateway-name <agw-name>` and use the correct name.
-    **`(BadRequest) The certificate password is incorrect or the PFX file is corrupted.`** — Test the PFX password locally with `openssl pkcs12 -in cert.pfx -noout -passin pass:<pfx-password>` to validate before uploading.
+    | Error | Fix |
+    |---|---|
+    | `(BadRequest) The certificate file 'cert.pfx' does not exist or is not readable.` | Verify the PFX file path is correct and readable with `ls -l cert.pfx` before running the command. |
+    | `(BadRequest) The specified frontend IP configuration '<frontend-ip-config-name>' does not exist.` | List available frontend IP configs with `az network application-gateway frontend-ip list --resource-group <rg> --gateway-name <agw-name>` and use the correct name. |
+    | `(BadRequest) The certificate password is incorrect or the PFX file is corrupted.` | Test the PFX password locally with `openssl pkcs12 -in cert.pfx -noout -passin pass:<pfx-password>` to validate before uploading. |
 ## App Service — Custom Domain TLS
 
 ```bash
@@ -184,8 +186,10 @@ A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Web/sites/<app-name>' under resource group '<rg>' was not found.`** — Verify the app name and resource group name are correct with `az webapp list --resource-group <rg>`.
-    **`BadRequest: Certificate with thumbprint '<THUMBPRINT>' not found in the resource group.`** — Ensure the certificate was successfully uploaded and the thumbprint query matches the actual certificate name with `az webapp config ssl list --resource-group <rg>`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Web/sites/<app-name>' under resource group '<rg>' was not found.` | Verify the app name and resource group name are correct with `az webapp list --resource-group <rg>`. |
+    | `BadRequest: Certificate with thumbprint '<THUMBPRINT>' not found in the resource group.` | Ensure the certificate was successfully uploaded and the thumbprint query matches the actual certificate name with `az webapp config ssl list --resource-group <rg>`. |
     **`Conflict: Hostname '<custom-domain>' is not assigned to the app.`
 ## Key Vault Certificate Integration
 
@@ -230,9 +234,11 @@ az webapp config ssl import \
 ```
 
 !!! warning "Common errors"
-    **`The user, group or application does not have permission to get the secret from the key vault.`** — Ensure the App Gateway or App Service managed identity has Key Vault Secret User role assigned on the certificate secret.
-    **`The specified certificate was not found in the key vault.`** — Verify the certificate name matches exactly in Key Vault (case-sensitive) and use the full secret URI format including `/secrets/` path.
-    **`The key vault secret is not in a valid certificate format.`** — Confirm the Key Vault secret contains a valid PFX or PEM certificate with private key, not just the public certificate.
+    | Error | Fix |
+    |---|---|
+    | `The user, group or application does not have permission to get the secret from the key vault.` | Ensure the App Gateway or App Service managed identity has Key Vault Secret User role assigned on the certificate secret. |
+    | `The specified certificate was not found in the key vault.` | Verify the certificate name matches exactly in Key Vault (case-sensitive) and use the full secret URI format including `/secrets/` path. |
+    | `The key vault secret is not in a valid certificate format.` | Confirm the Key Vault secret contains a valid PFX or PEM certificate with private key, not just the public certificate. |
 ## Validating TLS from Azure Endpoints
 
 ```bash
@@ -274,8 +280,10 @@ api.example.com: Feb 28 09:11:47 2024 GMT
 ```
 
 !!! warning "Common errors"
-    **`error:0909006C:PEM routines:get_name:no start line`** — Ensure the hostname resolves and port 443 is accessible; check firewall rules and NSG configuration.
-    **`unable to get local issuer certificate`** — This is expected for self-signed or internal CAs; add `-CAfile <cert-bundle>` or use `-showcerts` to verify the full chain is served by the endpoint.
+    | Error | Fix |
+    |---|---|
+    | `error:0909006C:PEM routines:get_name:no start line` | Ensure the hostname resolves and port 443 is accessible; check firewall rules and NSG configuration. |
+    | `unable to get local issuer certificate` | This is expected for self-signed or internal CAs; add `-CAfile <cert-bundle>` or use `-showcerts` to verify the full chain is served by the endpoint. |
 ## Monitoring Cert Expiry — Prometheus Blackbox Exporter
 
 ```yaml

@@ -118,9 +118,11 @@ round-trip min/avg/max = 2.156/2.273/2.401 ms
 ```
 
 !!! warning "Common errors"
-    **`PING 10.20.30.1 (10.20.30.1): 8972 data bytes — Packet size 9000 is too large for interface`** — Verify the ESXi vmk0 interface MTU is set to 9000 with `esxcli network ip interface list`.
-    **`100% packet loss`** — Confirm the ToR switch port connected to this ESXi host has MTU 9000 enabled and is not in an error-disabled state.
-    **`Unknown host 10.20.30.1`** — Replace `<tor-switch-ip>` with the actual IP address of your ToR switch management interface.
+    | Error | Fix |
+    |---|---|
+    | `PING 10.20.30.1 (10.20.30.1): 8972 data bytes — Packet size 9000 is too large for interface` | Verify the ESXi vmk0 interface MTU is set to 9000 with `esxcli network ip interface list`. |
+    | `100% packet loss` | Confirm the ToR switch port connected to this ESXi host has MTU 9000 enabled and is not in an error-disabled state. |
+    | `Unknown host 10.20.30.1` | Replace `<tor-switch-ip>` with the actual IP address of your ToR switch management interface. |
 ---
 
 ## Phase 2 — NSX Manager Cluster
@@ -200,9 +202,11 @@ Last Heartbeat: 2 seconds ago
 ```
 
 !!! warning "Common errors"
-    **`join management-plane: Certificate thumbprint mismatch`** — Verify the thumbprint was copied correctly from node 1 and matches exactly, including colons and case.
-    **`join management-plane: Connection refused to 10.10.0.11:443`** — Ensure node 1 is reachable and the NSX management service is running with `get service nsxd status`.
-    **`get cluster status: Cluster not yet formed`** — Wait 30-60 seconds for cluster consensus to establish after the final node joins, then retry the command.
+    | Error | Fix |
+    |---|---|
+    | `join management-plane: Certificate thumbprint mismatch` | Verify the thumbprint was copied correctly from node 1 and matches exactly, including colons and case. |
+    | `join management-plane: Connection refused to 10.10.0.11:443` | Ensure node 1 is reachable and the NSX management service is running with `get service nsxd status`. |
+    | `get cluster status: Cluster not yet formed` | Wait 30-60 seconds for cluster consensus to establish after the final node joins, then retry the command. |
 ### Configure the Cluster VIP
 
 ```bash
@@ -233,9 +237,11 @@ rtt min/avg/max/mdev = 1.89/2.02/2.14/0.10 ms
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's included if removed).
-    **`{"error_code":400,"error_message":"Invalid IP address format or IP already in use"}`** — Verify the IP address is valid, not already assigned to another node, and within the correct subnet for your NSX cluster.
-    **`No route to host`** — Ensure the VIP subnet is routable from your management network and that network connectivity exists between the NSX Manager nodes and the VIP address.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example, but ensure it's included if removed). |
+    | `{"error_code":400,"error_message":"Invalid IP address format or IP already in use"}` | Verify the IP address is valid, not already assigned to another node, and within the correct subnet for your NSX cluster. |
+    | `No route to host` | Ensure the VIP subnet is routable from your management network and that network connectivity exists between the NSX Manager nodes and the VIP address. |
 ### Register vCenter as Compute Manager
 
 **System → Fabric → Compute Managers → Add**
@@ -380,9 +386,11 @@ ls-mgmt                                    lsp-uuid-004         00:50:56:a1:8h:9
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to NSX Manager`** — Verify NSX Manager IP/hostname is reachable and nsxcli is configured with correct credentials via `set api-server` command.
-    **`Transport Node State: DOWN`** — Check host connectivity to NSX Manager, verify vxlan kernel module is loaded with `vmkload_mod -l | grep vxlan`, and confirm TEP network is routable.
-    **`No logical-switch port entries returned`** — Ensure logical switches have been created in NSX Manager UI and at least one VM is connected to the logical switch.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to NSX Manager` | Verify NSX Manager IP/hostname is reachable and nsxcli is configured with correct credentials via `set api-server` command. |
+    | `Transport Node State: DOWN` | Check host connectivity to NSX Manager, verify vxlan kernel module is loaded with `vmkload_mod -l | grep vxlan`, and confirm TEP network is routable. |
+    | `No logical-switch port entries returned` | Ensure logical switches have been created in NSX Manager UI and at least one VM is connected to the logical switch. |
 ### TEP-to-TEP Connectivity Test
 
 ```bash
@@ -429,8 +437,10 @@ round-trip min/avg/max/stddev = 2.267/2.361/2.501/0.089 ms
 ```
 
 !!! warning "Common errors"
-    **`PING 192.168.100.11 (192.168.100.11): 56 data bytes — No response from host`** — Verify the TEP VLAN is tagged on the physical switch uplink port and that the vmk10 interface is assigned to the correct VLAN ID in the NSX uplink profile.
-    **`Unable to locate vmkernel interface vmk10`** — Confirm NSX Host Preparation has completed successfully on the ESXi host by
+    | Error | Fix |
+    |---|---|
+    | `PING 192.168.100.11 (192.168.100.11): 56 data bytes — No response from host` | Verify the TEP VLAN is tagged on the physical switch uplink port and that the vmk10 interface is assigned to the correct VLAN ID in the NSX uplink profile. |
+    | `Unable to locate vmkernel interface vmk10` | Confirm NSX Host Preparation has completed successfully on the ESXi host by |
 ---
 
 ## Phase 5 — Edge Cluster and T0 Gateway
@@ -486,9 +496,11 @@ transport-node-1 (edge-02.lab.local):
 ```
 
 !!! warning "Common errors"
-    **`nsxcli: command not found`** — Ensure NSX CLI is installed and the PATH includes the NSX installation directory, or run with the full path `/opt/vmware/nsx-cli/bin/nsxcli`.
-    **`Connection refused: Unable to connect to nsx-manager-01.lab.local:443`** — Verify the NSX Manager is reachable and running, and check network connectivity with `ping` and `curl -k https://<nsx-manager-ip>`.
-    **`transport-node-0: state = DOWN`** — Check the Edge VM's vNIC connectivity, verify host-switch configuration, and review NSX Manager logs for transport node registration failures.
+    | Error | Fix |
+    |---|---|
+    | `nsxcli: command not found` | Ensure NSX CLI is installed and the PATH includes the NSX installation directory, or run with the full path `/opt/vmware/nsx-cli/bin/nsxcli`. |
+    | `Connection refused: Unable to connect to nsx-manager-01.lab.local:443` | Verify the NSX Manager is reachable and running, and check network connectivity with `ping` and `curl -k https://<nsx-manager-ip>`. |
+    | `transport-node-0: state = DOWN` | Check the Edge VM's vNIC connectivity, verify host-switch configuration, and review NSX Manager logs for transport node registration failures. |
 ### Create Edge Cluster
 
 **System → Fabric → Edge Clusters → Add**
@@ -571,8 +583,10 @@ S   0.0.0.0/0 [1/0] via 10.100.1.1, 0d05h22m
 ```
 
 !!! warning "Common errors"
-    **`% Unknown command`** — Verify the exact command syntax for your NSX version; use `?` to list available commands.
-    **`BGP neighbor 10.100.1.1 not established (State = Idle)`** — Check physical network connectivity between Edge and BGP peer, verify AS numbers match, and confirm firewall allows BGP port 179.
+    | Error | Fix |
+    |---|---|
+    | `% Unknown command` | Verify the exact command syntax for your NSX version; use `?` to list available commands. |
+    | `BGP neighbor 10.100.1.1 not established (State = Idle)` | Check physical network connectivity between Edge and BGP peer, verify AS numbers match, and confirm firewall allows BGP port 179. |
 ---
 
 ## Phase 6 — Logical Networking and Validation
@@ -631,9 +645,11 @@ VNI: 5001
 ```
 
 !!! warning "Common errors"
-    **`PING: sendto: No route to host`** — Verify the NSX edge node has a route to the gateway IP and that the logical router is properly configured on the segment.
-    **`nsxcli: command not found`** — SSH directly to the NSX Manager appliance (not a managed host) and ensure you have admin credentials to access the CLI.
-    **`No logical switch named 'seg-web-tier' found`** — Confirm the segment name matches exactly in NSX Manager; use `get logical-switches` to list all available segments.
+    | Error | Fix |
+    |---|---|
+    | `PING: sendto: No route to host` | Verify the NSX edge node has a route to the gateway IP and that the logical router is properly configured on the segment. |
+    | `nsxcli: command not found` | SSH directly to the NSX Manager appliance (not a managed host) and ensure you have admin credentials to access the CLI. |
+    | `No logical switch named 'seg-web-tier' found` | Confirm the segment name matches exactly in NSX Manager; use `get logical-switches` to list all available segments. |
 ### DFW Baseline Policy
 
 **Security → Distributed Firewall → Add Policy**
@@ -683,9 +699,11 @@ Rule ID  Direction  Protocol  Source         Destination    Port   Action
 ```
 
 !!! warning "Common errors"
-    **`summarize-dvfilter: command not found`** — Run the command from the ESXi host shell (SSH directly to the host, not vCenter), or verify the NSX agent is installed with `esxcli software vib list | grep nsx`.
-    **`vsipioctl: command not found`** — Ensure you are running this command on an ESXi host where NSX is installed; this tool is not available on vCenter or management workstations.
-    **`Error: Filter '<filter-name>' not found in kernel`** — Verify the filter name is correct by running `summarize-dvfilter` first to list active filters, then use the exact filter name from the output.
+    | Error | Fix |
+    |---|---|
+    | `summarize-dvfilter: command not found` | Run the command from the ESXi host shell (SSH directly to the host, not vCenter), or verify the NSX agent is installed with `esxcli software vib list | grep nsx`. |
+    | `vsipioctl: command not found` | Ensure you are running this command on an ESXi host where NSX is installed; this tool is not available on vCenter or management workstations. |
+    | `Error: Filter '<filter-name>' not found in kernel` | Verify the filter name is correct by running `summarize-dvfilter` first to list active filters, then use the exact filter name from the output. |
 ### End-to-End Validation
 
 ```bash
@@ -741,8 +759,10 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd
 ```
 
 !!! warning "Common errors"
-    **`ping: sendmsg: Operation not permitted`** — Verify the VM has network connectivity to the segment and check NSX firewall rules are not blocking ICMP traffic.
-    **`get bgp neighbor summary: command not found`** — Ensure you are in the NSX Edge CLI context (not NSX Manager); SSH directly to the Edge node IP and retry.
+    | Error | Fix |
+    |---|---|
+    | `ping: sendmsg: Operation not permitted` | Verify the VM has network connectivity to the segment and check NSX firewall rules are not blocking ICMP traffic. |
+    | `get bgp neighbor summary: command not found` | Ensure you are in the NSX Edge CLI context (not NSX Manager); SSH directly to the Edge node IP and retry. |
     **`0.0.0.0/0 route missing
 ### Post-Deployment Checklist
 

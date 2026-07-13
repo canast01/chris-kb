@@ -85,9 +85,11 @@ vrops-prod-03.example.local: notAfter=Jan 15 08:23:47 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify the vROps node is running and port 443 is accessible; check firewall rules and service status with `systemctl status vmware-vcopssvc`.
-    **`unable to load certificate`** — The node may be using a self-signed certificate or the connection was interrupted; retry the command or check node connectivity with `ping`.
-    **`Name or service not known`** — Ensure DNS resolution is working for the vROps hostnames; verify `/etc/hosts` entries or DNS server configuration.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify the vROps node is running and port 443 is accessible; check firewall rules and service status with `systemctl status vmware-vcopssvc`. |
+    | `unable to load certificate` | The node may be using a self-signed certificate or the connection was interrupted; retry the command or check node connectivity with `ping`. |
+    | `Name or service not known` | Ensure DNS resolution is working for the vROps hostnames; verify `/etc/hosts` entries or DNS server configuration. |
 Set a monitoring alert in Aria Operations itself for the synthetic metric `ssl_certificate_days_until_expiry` on the self-monitoring adapter.
 
 ---

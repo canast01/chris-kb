@@ -193,8 +193,10 @@ SCG Appliance [scg-prod-01] ~$
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password)`** — Verify SSH credentials and that the SCG appliance IP address is correct and reachable on the network.
-    **`sudo: command not found`** — The admin user may not have sudo privileges; contact your Dell support team to grant elevated permissions.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password)` | Verify SSH credentials and that the SCG appliance IP address is correct and reachable on the network. |
+    | `sudo: command not found` | The admin user may not have sudo privileges; contact your Dell support team to grant elevated permissions. |
 ---
 
 ## Validate Data Collection

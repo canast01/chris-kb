@@ -96,8 +96,10 @@ No rules
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/auth.log: No such file or directory`** — Check the correct log path with `ls -la /var/log/` and adjust for your system (may be `/var/log/secure` on RHEL or in journalctl on systemd systems).
-    **`No rules`** — Install and enable auditd with `sudo systemctl enable auditd && sudo systemctl start auditd`, then load rules from `/etc/audit/rules.d/`.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/auth.log: No such file or directory` | Check the correct log path with `ls -la /var/log/` and adjust for your system (may be `/var/log/secure` on RHEL or in journalctl on systemd systems). |
+    | `No rules` | Install and enable auditd with `sudo systemctl enable auditd && sudo systemctl start auditd`, then load rules from `/etc/audit/rules.d/`. |
 ## Correlation Rules (SIEM Examples)
 
 **Brute force detection:**
@@ -118,8 +120,10 @@ src_ip          user              count
 ```
 
 !!! warning "Common errors"
-    **`Error in 'where' command: Unknown field 'count'`** — Ensure the stats command completes successfully and verify field names match exactly in the where clause.
-    **`index=security: Unknown index 'security'`** — Confirm the index name exists in your Splunk instance; use `| rest /services/data/indexes` to list available indexes.
+    | Error | Fix |
+    |---|---|
+    | `Error in 'where' command: Unknown field 'count'` | Ensure the stats command completes successfully and verify field names match exactly in the where clause. |
+    | `index=security: Unknown index 'security'` | Confirm the index name exists in your Splunk instance; use `| rest /services/data/indexes` to list available indexes. |
 **Lateral movement — new admin account:**
 ```bash
 # Account created then added to privileged group within 60 minutes
@@ -141,8 +145,10 @@ user=automation_acct eventcount=2 duration=31m earliest=2024-01-15T16:33:05 late
 ```
 
 !!! warning "Common errors"
-    **`Error in 'where' command: The expression is malformed. An unexpected character has occurred.`** — Verify the Splunk version supports the `where` command syntax; use `stats count as eventcount` with `by user` instead if on older versions.
-    **`No results found`** — Confirm the index name is correct and contains Windows Security event logs (EventCode 4720 and 4728); check index permissions with `| rest /services/data/indexes`.
+    | Error | Fix |
+    |---|---|
+    | `Error in 'where' command: The expression is malformed. An unexpected character has occurred.` | Verify the Splunk version supports the `where` command syntax; use `stats count as eventcount` with `by user` instead if on older versions. |
+    | `No results found` | Confirm the index name is correct and contains Windows Security event logs (EventCode 4720 and 4728); check index permissions with `| rest /services/data/indexes`. |
 **Off-hours privileged access:**
 ```text
 index=security EventCode=4648

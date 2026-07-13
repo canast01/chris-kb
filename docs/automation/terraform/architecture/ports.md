@@ -128,9 +128,11 @@ Plan succeeded
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the vCenter CA certificate into your runner's trust store.
-    **`nc: connect to 10.42.18.55 port 22 (tcp) failed: Connection refused`** — Verify the VM has finished booting and SSH is listening; check security group rules and network ACLs allow port 22 from the Terraform runner's IP.
-    **`Error: error reading provider config: missing required argument "token"`** — Ensure all required provider credentials (vCenter username/password, AWS access keys, TFE token) are set as environment variables or in the Terraform variables file before running plan.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the vCenter CA certificate into your runner's trust store. |
+    | `nc: connect to 10.42.18.55 port 22 (tcp) failed: Connection refused` | Verify the VM has finished booting and SSH is listening; check security group rules and network ACLs allow port 22 from the Terraform runner's IP. |
+    | `Error: error reading provider config: missing required argument "token"` | Ensure all required provider credentials (vCenter username/password, AWS access keys, TFE token) are set as environment variables or in the Terraform variables file before running plan. |
 ---
 
 ## See also

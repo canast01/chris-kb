@@ -141,9 +141,11 @@ Updated object "CN=fileserver01,OU=Servers,DC=corp,DC=example,DC=com"
 ```
 
 !!! warning "Common errors"
-    **`klist: No credentials cache found while getting default principal`** — Run `kinit user@CORP.EXAMPLE.COM` to obtain initial Kerberos tickets before checking cache.
-    **`setspn: Unable to contact the Active Directory on domain.com`** — Ensure the client has network connectivity to a domain controller and DNS is resolving the domain correctly.
-    **`Access Denied: The user does not have permission to modify the object`** — Run setspn commands with domain administrator credentials or delegate SPN modification rights to the service account owner.
+    | Error | Fix |
+    |---|---|
+    | `klist: No credentials cache found while getting default principal` | Run `kinit user@CORP.EXAMPLE.COM` to obtain initial Kerberos tickets before checking cache. |
+    | `setspn: Unable to contact the Active Directory on domain.com` | Ensure the client has network connectivity to a domain controller and DNS is resolving the domain correctly. |
+    | `Access Denied: The user does not have permission to modify the object` | Run setspn commands with domain administrator credentials or delegate SPN modification rights to the service account owner. |
 ## Signing Mismatch
 
 ```powershell

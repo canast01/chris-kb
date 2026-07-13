@@ -67,9 +67,11 @@ Policy saved to /etc/powermt.custom
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Install EMC PowerPath package with `apt-get install emc-powerpath` or `yum install EMCpower.LINUX` depending on your distribution.
-    **`Permission denied (publickey,password)`** — Verify SSH key is loaded with `ssh-add` or use password authentication; check that root login is enabled in `/etc/ssh/sshd_config`.
-    **`powermt: Unable to connect to Symmetrix`** — Confirm the storage array is reachable and PowerPath daemon is running with `systemctl status powerpath`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Install EMC PowerPath package with `apt-get install emc-powerpath` or `yum install EMCpower.LINUX` depending on your distribution. |
+    | `Permission denied (publickey,password)` | Verify SSH key is loaded with `ssh-add` or use password authentication; check that root login is enabled in `/etc/ssh/sshd_config`. |
+    | `powermt: Unable to connect to Symmetrix` | Confirm the storage array is reachable and PowerPath daemon is running with `systemctl status powerpath`. |
 ### Sudo-Based Access (Recommended)
 
 The recommended model for Linux: create a named storage administration account and grant it sudo access only to specific `powermt` commands. This provides auditability (sudo logs the caller's real username) while restricting blast radius.
@@ -88,8 +90,10 @@ svc-storage ALL=(root) NOPASSWD: /usr/sbin/powermt
 ```
 
 !!! warning "Common errors"
-    **`sudoers:1 syntax error near line 1`** — Verify the file is edited only with `visudo` and check for trailing whitespace or missing spaces around operators.
-    **`sudo: /etc/sudoers.d/powermt: command not found`** — The sudoers.d file is a configuration file, not executable; verify it's in `/etc/sudoers.d/` with correct permissions (0440) and owned by root:root.
+    | Error | Fix |
+    |---|---|
+    | `sudoers:1 syntax error near line 1` | Verify the file is edited only with `visudo` and check for trailing whitespace or missing spaces around operators. |
+    | `sudo: /etc/sudoers.d/powermt: command not found` | The sudoers.d file is a configuration file, not executable; verify it's in `/etc/sudoers.d/` with correct permissions (0440) and owned by root:root. |
 This grants the `svc-storage` account the ability to run any `powermt` subcommand. If tighter restriction is needed, specify individual commands:
 
 ```bash
@@ -109,8 +113,10 @@ svc-monitoring ALL=(root) NOPASSWD: \
 ```
 
 !!! warning "Common errors"
-    **`sudoers: parse error near line 5`** — Ensure each command line ends with a comma and there are no trailing spaces after the final backslash.
-    **`svc-monitoring is not in the sudoers file. This incident will be reported.`** — Verify the sudoers.d file is owned by root:root with 0440 permissions and the user account svc-monitoring exists.
+    | Error | Fix |
+    |---|---|
+    | `sudoers: parse error near line 5` | Ensure each command line ends with a comma and there are no trailing spaces after the final backslash. |
+    | `svc-monitoring is not in the sudoers file. This incident will be reported.` | Verify the sudoers.d file is owned by root:root with 0440 permissions and the user account svc-monitoring exists. |
 Validate the sudoers file syntax before applying:
 
 ```bash
@@ -123,8 +129,10 @@ visudo -c -f /etc/sudoers.d/powerpath-monitoring
 ```
 
 !!! warning "Common errors"
-    **`visudo: /etc/sudoers.d/powerpath-monitoring: No such file or directory`** — Create the sudoers file first with `touch /etc/sudoers.d/powerpath-monitoring` and appropriate permissions before validating.
-    **`visudo: /etc/sudoers.d/powerpath-monitoring: bad permissions, should be 0440`** — Fix file permissions with `chmod 0440 /etc/sudoers.d/powerpath-monitoring` to match sudoers security requirements.
+    | Error | Fix |
+    |---|---|
+    | `visudo: /etc/sudoers.d/powerpath-monitoring: No such file or directory` | Create the sudoers file first with `touch /etc/sudoers.d/powerpath-monitoring` and appropriate permissions before validating. |
+    | `visudo: /etc/sudoers.d/powerpath-monitoring: bad permissions, should be 0440` | Fix file permissions with `chmod 0440 /etc/sudoers.d/powerpath-monitoring` to match sudoers security requirements. |
 ### PAM Integration
 
 PowerPath itself does not integrate with PAM. Host SSH authentication via PAM (including LDAP, Active Directory via SSSD, or MFA via PAM RADIUS) applies normally — PAM controls who can log into the host; once logged in, sudo controls what they can run.
@@ -148,8 +156,10 @@ storage-admins:x:1003:svc-storage,admin-user,storage-ops-user
 ```
 
 !!! warning "Common errors"
-    **`id: 'svc-storage': no such user`** — Verify the service account exists in AD and has synced to the host via LDAP/SSSD with `getent passwd svc-storage`.
-    **`storage-admins:x:1003:(empty)`** — Confirm AD group members are syncing by checking SSSD logs (`journalctl -u sssd -n 50`) and verifying group membership in Active Directory.
+    | Error | Fix |
+    |---|---|
+    | `id: 'svc-storage': no such user` | Verify the service account exists in AD and has synced to the host via LDAP/SSSD with `getent passwd svc-storage`. |
+    | `storage-admins:x:1003:(empty)` | Confirm AD group members are syncing by checking SSSD logs (`journalctl -u sssd -n 50`) and verifying group membership in Active Directory. |
 ### SSH Key Management
 
 Hosts running PowerPath should enforce SSH key authentication and disable password-based SSH login for root:
@@ -166,8 +176,10 @@ PasswordAuthentication no
 ```
 
 !!! warning "Common errors"
-    **`sshd[12345]: error: Permissions denied (publickey).`** — Ensure your public key is added to `/root/.ssh/authorized_keys` before disabling password authentication.
-    **`sshd: no hostkeys available -- exiting.`** — Generate SSH host keys with `ssh-keygen -A` before restarting sshd.
+    | Error | Fix |
+    |---|---|
+    | `sshd[12345]: error: Permissions denied (publickey).` | Ensure your public key is added to `/root/.ssh/authorized_keys` before disabling password authentication. |
+    | `sshd: no hostkeys available -- exiting.` | Generate SSH host keys with `ssh-keygen -A` before restarting sshd. |
 This ensures that interactive root access requires a managed SSH key, reducing the risk of credential-based attacks on hosts with privileged PowerPath access.
 
 ---
@@ -231,8 +243,10 @@ chuser roles=powerpath_admin storage_admin_user
 ```
 
 !!! warning "Common errors"
-    **`mkrole: 0551-102 Cannot access the /etc/security/roles file.`** — Ensure you are running as root and the /etc/security directory has proper permissions (typically 755).
-    **`chuser: 0551-101 User storage_admin_user does not exist.`** — Create the user first with `useradd storage_admin_user` before assigning roles.
+    | Error | Fix |
+    |---|---|
+    | `mkrole: 0551-102 Cannot access the /etc/security/roles file.` | Ensure you are running as root and the /etc/security directory has proper permissions (typically 755). |
+    | `chuser: 0551-101 User storage_admin_user does not exist.` | Create the user first with `useradd storage_admin_user` before assigning roles. |
 For most AIX environments, the simpler approach is a named shared account in the `system` group that is permitted to run `powermt`, with sudo configured via the IBM AIX sudo package.
 
 ---
@@ -265,9 +279,11 @@ svc-monitor ALL=(root) NOPASSWD: /usr/sbin/powermt display options
 ```
 
 !!! warning "Common errors"
-    **`sudoedit: /etc/sudoers.d/powerpath-svc-monitor: syntax error near line 3`** — Verify the sudoers file syntax with `visudo -cf /etc/sudoers.d/powerpath-svc-monitor` before applying.
-    **`svc-monitor is not in the sudoers file.  This incident will be reported.`** — Ensure the service account `svc-monitor` exists with `id svc-monitor` and the sudoers file is in `/etc/sudoers.d/` with mode 0440.
-    **`powermt: command not found`** — Install or verify the PowerPath package is installed with `rpm -qa | grep powerpath` or `apt list --installed | grep powerpath`.
+    | Error | Fix |
+    |---|---|
+    | `sudoedit: /etc/sudoers.d/powerpath-svc-monitor: syntax error near line 3` | Verify the sudoers file syntax with `visudo -cf /etc/sudoers.d/powerpath-svc-monitor` before applying. |
+    | `svc-monitor is not in the sudoers file.  This incident will be reported.` | Ensure the service account `svc-monitor` exists with `id svc-monitor` and the sudoers file is in `/etc/sudoers.d/` with mode 0440. |
+    | `powermt: command not found` | Install or verify the PowerPath package is installed with `rpm -qa | grep powerpath` or `apt list --installed | grep powerpath`. |
 ---
 
 ## Audit Trail

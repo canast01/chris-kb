@@ -98,8 +98,10 @@ flashblade-backup-04          Online    Enabled    FB60012        4.10.5
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials or unable to connect to management IP`** — Verify the FlashBlade management IP is reachable and your API token is valid via `purefb list --help` to confirm authentication setup.
-    **`Error: Command 'purefb' not found`** — Install the Pure Storage Python SDK with `pip install purestorage` and ensure it is in your system PATH.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials or unable to connect to management IP` | Verify the FlashBlade management IP is reachable and your API token is valid via `purefb list --help` to confirm authentication setup. |
+    | `Error: Command 'purefb' not found` | Install the Pure Storage Python SDK with `pip install purestorage` and ensure it is in your system PATH. |
 ```bash
 ## Log in and obtain a session token
 curl -s -k -X POST "https://<fb_ip>/api/login" \
@@ -135,9 +137,11 @@ curl -s -k -X GET "https://<fb_ip>/api/2.x/arrays" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in examples, but ensure it's not removed).
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API endpoint is correct and the authentication token/cookie is valid; test with `curl -s -k -X GET "https://<fb_ip>/api/2.x/arrays" -H "x-auth-token: <api_token>"` without piping to jq first.
-    **`curl: (401) Unauthorized`** — Confirm the API token or username/password credentials are correct and the user has sufficient permissions on the FlashBlade system.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in examples, but ensure it's not removed). |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the API endpoint is correct and the authentication token/cookie is valid; test with `curl -s -k -X GET "https://<fb_ip>/api/2.x/arrays" -H "x-auth-token: <api_token>"` without piping to jq first. |
+    | `curl: (401) Unauthorized` | Confirm the API token or username/password credentials are correct and the user has sufficient permissions on the FlashBlade system. |
 ```bash
 ## On the array CLI
 purefb admin apitoken create <username>
@@ -150,8 +154,10 @@ Expires: 2025-12-31T23:59:59Z
 ```
 
 !!! warning "Common errors"
-    **`Error: User '<username>' does not exist`** — Verify the username exists on the array with `purefb admin list` before creating a token.
-    **`Error: API token limit reached for user`** — Delete an existing token with `purefb admin apitoken delete <username> --token=<token_id>` before creating a new one.
+    | Error | Fix |
+    |---|---|
+    | `Error: User '<username>' does not exist` | Verify the username exists on the array with `purefb admin list` before creating a token. |
+    | `Error: API token limit reached for user` | Delete an existing token with `purefb admin apitoken delete <username> --token=<token_id>` before creating a new one. |
 ```bash
 ## Get array status and version
 GET /api/2.x/arrays
@@ -249,8 +255,10 @@ GET /api/2.x/array-connections
 ```
 
 !!! warning "Common errors"
-    **`401 Unauthorized`** — Verify API token is valid and included in the Authorization header with format `Authorization: Bearer <token>`.
-    **`404 Not Found`** — Confirm the FlashBlade API version matches your array version; use `/api/2.x/` for 4.x firmware or adjust the endpoint path accordingly.
+    | Error | Fix |
+    |---|---|
+    | `401 Unauthorized` | Verify API token is valid and included in the Authorization header with format `Authorization: Bearer <token>`. |
+    | `404 Not Found` | Confirm the FlashBlade API version matches your array version; use `/api/2.x/` for 4.x firmware or adjust the endpoint path accordingly. |
 ---
 
 ## See also

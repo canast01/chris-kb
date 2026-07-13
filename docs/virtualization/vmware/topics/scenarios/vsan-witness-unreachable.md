@@ -68,9 +68,11 @@ a7f3c1d2-8e4b-5g8h-d3f2-   vsan-backup-pool
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the host. Verify the host name, port, and credentials.`** — Verify the ESXi host is reachable and you have valid credentials configured in your vSphere client or SSH session.
-    **`Error: vSAN is not enabled on this cluster.`** — Enable vSAN on the cluster through vCenter Server under Cluster Settings > vSAN > General.
-    **`Error: Permission denied. User does not have required privileges.`** — Ensure your vSphere user account has the "Host.Config.Storage" privilege or equivalent vSAN administrator role.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the host. Verify the host name, port, and credentials.` | Verify the ESXi host is reachable and you have valid credentials configured in your vSphere client or SSH session. |
+    | `Error: vSAN is not enabled on this cluster.` | Enable vSAN on the cluster through vCenter Server under Cluster Settings > vSAN > General. |
+    | `Error: Permission denied. User does not have required privileges.` | Ensure your vSphere user account has the "Host.Config.Storage" privilege or equivalent vSAN administrator role. |
 Output shows 3 members when healthy. With witness unreachable, the witness UUID appears as disconnected
 or absent from the member list:
 
@@ -122,8 +124,10 @@ PING 172.16.50.78 (172.16.50.78): 56 data bytes
 ```
 
 !!! warning "Common errors"
-    **`PING 192.168.100.45 (192.168.100.45): 56 data bytes No answer from icmp_seq=0`** — Verify witness management IP is correct and witness appliance is powered on and reachable on the management network.
-    **`Unknown interface vmk1`** — Confirm vmk1 (vSAN VMkernel interface) exists on the data node using `esxcli network ip interface list`.
+    | Error | Fix |
+    |---|---|
+    | `PING 192.168.100.45 (192.168.100.45): 56 data bytes No answer from icmp_seq=0` | Verify witness management IP is correct and witness appliance is powered on and reachable on the management network. |
+    | `Unknown interface vmk1` | Confirm vmk1 (vSAN VMkernel interface) exists on the data node using `esxcli network ip interface list`. |
 If pings fail to the TEP (vmk1) but succeed to management (vmk0), the vSAN witness traffic VLAN or
 routing is broken. If both fail, the witness host or VM is down.
 
@@ -146,8 +150,10 @@ Object UUID                          State      Policy
 ```
 
 !!! warning "Common errors"
-    **`error: Unknown option or set of options: --cluster-uuid`** — Verify the VSAN cluster UUID format and ensure you're running this command on an ESXi host with VSAN enabled; use `esxcli vsan cluster get` to confirm VSAN is active.
-    **`error: Unknown command or namespace`** — Confirm the ESXi host version supports `esxcli vsan debug object list` (requires vSAN 6.0+); check with `esxcli system version get`.
+    | Error | Fix |
+    |---|---|
+    | `error: Unknown option or set of options: --cluster-uuid` | Verify the VSAN cluster UUID format and ensure you're running this command on an ESXi host with VSAN enabled; use `esxcli vsan cluster get` to confirm VSAN is active. |
+    | `error: Unknown command or namespace` | Confirm the ESXi host version supports `esxcli vsan debug object list` (requires vSAN 6.0+); check with `esxcli system version get`. |
 Objects with only witness components ABSENT are tolerable (VMs still running). Objects with a data
 component ABSENT are at risk — a second failure causes immediate inaccessibility.
 
@@ -164,8 +170,10 @@ Sub-Cluster UUID: 7f3a2b1c-9e4d-4f8b-3c2a-1d9e4f6a5b2c
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace vsan.cluster.list`** — Verify vSAN is licensed and enabled on the cluster by running `esxcli vsan cluster get`.
-    **`grep: (standard input) has no data`** — The vsan cluster list command returned no output; confirm the host is part of an active vSAN cluster with `esxcli vsan cluster get`.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace vsan.cluster.list` | Verify vSAN is licensed and enabled on the cluster by running `esxcli vsan cluster get`. |
+    | `grep: (standard input) has no data` | The vsan cluster list command returned no output; confirm the host is part of an active vSAN cluster with `esxcli vsan cluster get`. |
 ---
 
 ## 4. Review Witness Logs
@@ -192,8 +200,10 @@ grep -i "vsan" /var/log/vmkernel.log | grep -i "partition\|disconnect\|timeout" 
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/hostd.log: No such file or directory`** — Verify the ESXi host is running and the log file exists; check with `ls -la /var/log/hostd.log`.
-    **`grep: /var/log/vmkernel.log: Permission denied`** — Run the command with appropriate privileges or SSH directly to the ESXi host as root.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/hostd.log: No such file or directory` | Verify the ESXi host is running and the log file exists; check with `ls -la /var/log/hostd.log`. |
+    | `grep: /var/log/vmkernel.log: Permission denied` | Run the command with appropriate privileges or SSH directly to the ESXi host as root. |
 Look for repeated entries:
 
 ```text
@@ -234,8 +244,10 @@ vSAN-Witness-03      PoweredOn   2        4
 ```
 
 !!! warning "Common errors"
-    **`Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Import the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running the command.
-    **`Get-VM : Cannot find VM with name matching pattern 'vSAN-Witness-*'.`** — Verify the witness VM naming convention matches your environment and confirm the VMs exist with `Get-VM | Where-Object {$_.Name -like "*Witness*"}`.
+    | Error | Fix |
+    |---|---|
+    | `Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Import the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running the command. |
+    | `Get-VM : Cannot find VM with name matching pattern 'vSAN-Witness-*'.` | Verify the witness VM naming convention matches your environment and confirm the VMs exist with `Get-VM | Where-Object {$_.Name -like "*Witness*"}`. |
 After power-on, allow 2–3 minutes for ESXi services and vSAN witness participation to initialise
 before checking cluster membership.
 
@@ -258,8 +270,10 @@ tmpfs           8.0G  512M  7.5G   6% /tmp
 ```
 
 !!! warning "Common errors"
-    **`Permission denied`** — Ensure your SSH user has root or equivalent privileges on the ESXi host, or prepend the command with `sudo`.
-    **`Connection refused`** — Verify SSH is enabled on the ESXi host (Configuration > Security Profile > Services > SSH) and the hostname/IP is correct.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied` | Ensure your SSH user has root or equivalent privileges on the ESXi host, or prepend the command with `sudo`. |
+    | `Connection refused` | Verify SSH is enabled on the ESXi host (Configuration > Security Profile > Services > SSH) and the hostname/IP is correct. |
 If the witness datastore is full, expand the witness VM disk via vSphere Client and extend the
 filesystem inside the witness appliance:
 
@@ -277,8 +291,10 @@ HBA vmhba3 rescan started.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace storage core adapter rescan`** — Verify the ESXi version supports esxcli storage commands; some older versions require `esxcfg-rescan` instead.
-    **`Error: Unable to acquire lock on /var/lock/vmkiscsi.lock`** — Wait for any ongoing storage operations to complete or restart the hostd service with `services.sh restart`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace storage core adapter rescan` | Verify the ESXi version supports esxcli storage commands; some older versions require `esxcfg-rescan` instead. |
+    | `Error: Unable to acquire lock on /var/lock/vmkiscsi.lock` | Wait for any ongoing storage operations to complete or restart the hostd service with `services.sh restart`. |
 ### Temporary Workaround — Defer Rebuild Timer
 
 If restoring the witness will take more than 60 minutes and both data nodes are healthy, prevent
@@ -295,8 +311,10 @@ esxcli system settings advanced set -o /VSAN/ClomRepairDelay -i 480
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the local dcui service`** — Ensure you are running the command directly on the ESXi host via SSH or console, not remotely through vCenter.
-    **`Error: Unknown option /VSAN/ClomRepairDelay`** — Verify the ESXi host has vSAN enabled and the correct advanced option path; use `esxcli system settings advanced list | grep -i clom` to confirm the option exists.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the local dcui service` | Ensure you are running the command directly on the ESXi host via SSH or console, not remotely through vCenter. |
+    | `Error: Unknown option /VSAN/ClomRepairDelay` | Verify the ESXi host has vSAN enabled and the correct advanced option path; use `esxcli system settings advanced list | grep -i clom` to confirm the option exists. |
 This sets the rebuild delay to 480 minutes. Reset to default (60) once the witness is restored:
 
 ```bash
@@ -309,8 +327,10 @@ esxcli system settings advanced set -o /VSAN/ClomRepairDelay -i 60
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option /VSAN/ClomRepairDelay`** — Verify the exact parameter name matches your ESXi version using `esxcli system settings advanced list | grep -i clom`.
-    **`Connect to a vSAN-enabled host or cluster before running this command`** — Run the command on an ESXi host that has vSAN enabled, or use `-s <hostname>` to target a specific host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option /VSAN/ClomRepairDelay` | Verify the exact parameter name matches your ESXi version using `esxcli system settings advanced list | grep -i clom`. |
+    | `Connect to a vSAN-enabled host or cluster before running this command` | Run the command on an ESXi host that has vSAN enabled, or use `-s <hostname>` to target a specific host. |
 ---
 
 ## 6. Verification
@@ -340,8 +360,10 @@ Sub-Cluster Member Count: 3
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace vsan.`** — Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster list` to confirm VSAN is initialized.
-    **`grep: (standard input) is empty`** — Ensure the ESXi host is part of an active VSAN cluster; if newly added, wait 2–3 minutes for cluster membership to stabilize.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace vsan.` | Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster list` to confirm VSAN is initialized. |
+    | `grep: (standard input) is empty` | Ensure the ESXi host is part of an active VSAN cluster; if newly added, wait 2–3 minutes for cluster membership to stabilize. |
 ---
 
 ## 7. Prevention

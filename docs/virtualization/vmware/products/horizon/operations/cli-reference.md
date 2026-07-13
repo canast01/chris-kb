@@ -191,9 +191,11 @@ Authenticated Sessions: 403
 ```
 
 !!! warning "Common errors"
-    **`Connection refused — Verify UAG hostname/IP is correct and SSH service is running on port 22.`** — Verify UAG hostname/IP is correct and SSH service is running on port 22.
-    **`hzedge: command not found — SSH into the UAG appliance directly; these commands only work from the UAG console, not from a remote client.`** — SSH into the UAG appliance directly; these commands only work from the UAG console, not from a remote client.
-    **`Health Status: DEGRADED — Check individual service status with hzedge getservices and review /var/log/horizon/edge.log for specific failures.`** — Check individual service status with hzedge getservices and review /var/log/horizon/edge.log for specific failures.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused — Verify UAG hostname/IP is correct and SSH service is running on port 22.` | Verify UAG hostname/IP is correct and SSH service is running on port 22. |
+    | `hzedge: command not found — SSH into the UAG appliance directly; these commands only work from the UAG console, not from a remote client.` | SSH into the UAG appliance directly; these commands only work from the UAG console, not from a remote client. |
+    | `Health Status: DEGRADED — Check individual service status with hzedge getservices and review /var/log/horizon/edge.log for specific failures.` | Check individual service status with hzedge getservices and review /var/log/horizon/edge.log for specific failures. |
 ### UAG REST API (health check endpoint)
 
 ```bash
@@ -212,9 +214,11 @@ curl -sk -u admin:<password> https://uag-prod-01.corp.example.com:9443/rest/v1/m
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or install the UAG's CA certificate in your system trust store.
-    **`curl: (7) Failed to connect to uag-prod-01.corp.example.com port 9443: Connection refused`** — Verify the UAG service is running with `systemctl status vmware-uag` and confirm the hostname/port are correct.
-    **`{"error":"Unauthorized","code":401}`** — Ensure the admin credentials are correct and use the format `-u admin:password` without extra spaces or special characters that need escaping.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or install the UAG's CA certificate in your system trust store. |
+    | `curl: (7) Failed to connect to uag-prod-01.corp.example.com port 9443: Connection refused` | Verify the UAG service is running with `systemctl status vmware-uag` and confirm the hostname/port are correct. |
+    | `{"error":"Unauthorized","code":401}` | Ensure the admin credentials are correct and use the format `-u admin:password` without extra spaces or special characters that need escaping. |
 ---
 
 ## PowerShell — VMware.Hv.Helper

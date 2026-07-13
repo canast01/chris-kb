@@ -75,9 +75,11 @@ text-embedding-3-small         OpenAI     1          100
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource 'my-aoai-resource' does not exist in resource group 'my-rg'`** — Verify the resource name and resource group name match your Azure deployment with `az cognitiveservices account list -g my-rg`.
-    **`Authorization failed. The user does not have permission to access this resource`** — Ensure your Azure account has Cognitive Services Contributor or Reader role on the resource or subscription using `az role assignment list --assignee $(az account show --query user.name -o tsv)`.
-    **`jq: parse error: Invalid numeric literal at line 1 column 7`** — Confirm the access token is valid and the REST API call succeeded by testing without jq piping first: `curl -s "https://management.azure.com/subscriptions/SUB_ID/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2023-05-01" -H "Authorization: Bearer $(az account get-access-token --query accessToken -o tsv)"`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource 'my-aoai-resource' does not exist in resource group 'my-rg'` | Verify the resource name and resource group name match your Azure deployment with `az cognitiveservices account list -g my-rg`. |
+    | `Authorization failed. The user does not have permission to access this resource` | Ensure your Azure account has Cognitive Services Contributor or Reader role on the resource or subscription using `az role assignment list --assignee $(az account show --query user.name -o tsv)`. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 7` | Confirm the access token is valid and the REST API call succeeded by testing without jq piping first: `curl -s "https://management.azure.com/subscriptions/SUB_ID/providers/Microsoft.CognitiveServices/locations/eastus/models?api-version=2023-05-01" -H "Authorization: Bearer $(az account get-access-token --query accessToken -o tsv)"`. |
 Key models and typical regional availability (as of early 2026):
 
 | Model | Generally Available Regions |
@@ -138,9 +140,11 @@ OpenAI.gpt-35-turbo.eastus          2450          5000
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The following arguments are required: --resource-group`** — Add `--resource-group <rg-name>` to the `az cognitiveservices usage list` command.
-    **`Authorization failed. The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have permission to perform action 'Microsoft.CognitiveServices/commitmentPlans/write' over scope '/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.CognitiveServices/locations/eastus/commitmentPlans/gpt-4o-quota'.`** — Ensure your Azure account has the Cognitive Services Contributor or Owner role on the subscription.
-    **`Invalid value for 'api-version': '2023-05-01'. Supported versions are: 2021-04-30, 2023-08-01, 2024-06-01.`** — Update the api-version parameter to a supported version such as `2024-06-01`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The following arguments are required: --resource-group` | Add `--resource-group <rg-name>` to the `az cognitiveservices usage list` command. |
+    | `Authorization failed. The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have permission to perform action 'Microsoft.CognitiveServices/commitmentPlans/write' over scope '/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.CognitiveServices/locations/eastus/commitmentPlans/gpt-4o-quota'.` | Ensure your Azure account has the Cognitive Services Contributor or Owner role on the subscription. |
+    | `Invalid value for 'api-version': '2023-05-01'. Supported versions are: 2021-04-30, 2023-08-01, 2024-06-01.` | Update the api-version parameter to a supported version such as `2024-06-01`. |
 ## Rate Limit Headers
 
 The API returns rate limit info in response headers. Log these to detect approaching limits before 429s occur.

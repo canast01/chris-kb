@@ -94,8 +94,10 @@ Last Updated: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`vsan health cluster list: Unknown command or namespace`** — Ensure you are running the command on an ESXi host with vSAN enabled; if vSAN is not licensed, install the vSAN license first.
-    **`Error: Unable to connect to the vSAN cluster`** — Verify the host is part of an active vSAN cluster by checking vCenter under Cluster → Configure → vSAN → General.
+    | Error | Fix |
+    |---|---|
+    | `vsan health cluster list: Unknown command or namespace` | Ensure you are running the command on an ESXi host with vSAN enabled; if vSAN is not licensed, install the vSAN license first. |
+    | `Error: Unable to connect to the vSAN cluster` | Verify the host is part of an active vSAN cluster by checking vCenter under Cluster → Configure → vSAN → General. |
 ## Step 6 — Review Failed Tasks (2 min)
 
 vCenter UI → Recent Tasks → filter by Status: Error → review last 24 hours.

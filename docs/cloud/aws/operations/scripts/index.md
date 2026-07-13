@@ -119,9 +119,11 @@ Health check FAILED: stopped instances detected.
 ```
 
 !!! warning "Common errors"
-    **`Unable to locate credentials`** — Ensure AWS credentials are configured via `aws configure` or `AWS_PROFILE` environment variable points to a valid profile in `~/.aws/credentials`.
-    **`An error occurred (UnauthorizedOperation) when calling the DescribeInstances operation: You are not authorized to perform: ec2:DescribeInstances`** — Add the required IAM permissions (ec2:DescribeInstances, rds:DescribeDBInstances, elasticloadbalancing:DescribeLoadBalancers) to the IAM user or role being used.
-    **`Invalid value 'us-west-2' for region. Reason: INVALID_REGION.`** — Set `AWS_REGION` to a valid AWS region such as `us-east-1`, `eu-west-1`, or `ap-southeast-1`.
+    | Error | Fix |
+    |---|---|
+    | `Unable to locate credentials` | Ensure AWS credentials are configured via `aws configure` or `AWS_PROFILE` environment variable points to a valid profile in `~/.aws/credentials`. |
+    | `An error occurred (UnauthorizedOperation) when calling the DescribeInstances operation: You are not authorized to perform: ec2:DescribeInstances` | Add the required IAM permissions (ec2:DescribeInstances, rds:DescribeDBInstances, elasticloadbalancing:DescribeLoadBalancers) to the IAM user or role being used. |
+    | `Invalid value 'us-west-2' for region. Reason: INVALID_REGION.` | Set `AWS_REGION` to a valid AWS region such as `us-east-1`, `eu-west-1`, or `ap-southeast-1`. |
 ```bash
 #!/bin/bash
 set -euo pipefail
@@ -212,9 +214,11 @@ AWS Key Management Service                       $15.67       $18.34      +17.0%
 ```
 
 !!! warning "Common errors"
-    **`Unable to locate credentials in any of the locations`** — Set AWS credentials via `aws configure` or export `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
-    **`An error occurred (AccessDenied) when calling the GetCostAndUsage operation`** — Ensure the IAM user/role has the `ce:GetCostAndUsage` permission attached.
-    **`command not found: python3`** — Install Python 3 on the system using your package manager (e.g., `apt install python3` or `brew install python3`).
+    | Error | Fix |
+    |---|---|
+    | `Unable to locate credentials in any of the locations` | Set AWS credentials via `aws configure` or export `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
+    | `An error occurred (AccessDenied) when calling the GetCostAndUsage operation` | Ensure the IAM user/role has the `ce:GetCostAndUsage` permission attached. |
+    | `command not found: python3` | Install Python 3 on the system using your package manager (e.g., `apt install python3` or `brew install python3`). |
 ```bash
 cd ~/Desktop
 bash aws-cost-report.sh
@@ -470,9 +474,11 @@ Audit Complete. Total keys scanned: 12
 ```
 
 !!! warning "Common errors"
-    **`cd: command not found`** — Use `cd /Users/YourName/Desktop` (forward slashes) or run from PowerShell instead of bash on Windows.
-    **`ModuleNotFoundError: No module named 'boto3'`** — Ensure pip is using the correct Python interpreter with `python -m pip install boto3` or verify the virtual environment is activated.
-    **`botocore.exceptions.NoCredentialsError: Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    | Error | Fix |
+    |---|---|
+    | `cd: command not found` | Use `cd /Users/YourName/Desktop` (forward slashes) or run from PowerShell instead of bash on Windows. |
+    | `ModuleNotFoundError: No module named 'boto3'` | Ensure pip is using the correct Python interpreter with `python -m pip install boto3` or verify the virtual environment is activated. |
+    | `botocore.exceptions.NoCredentialsError: Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
 ```bash
 python iam_key_audit.py --deactivate
 ```
@@ -498,8 +504,10 @@ Report saved to: audit_report_2024-01-19.json
 ```
 
 !!! warning "Common errors"
-    **`botocore.exceptions.NoCredentialsError: Unable to locate credentials`** — Configure AWS credentials via `aws configure` or set `AWS_PROFILE` environment variable.
-    **`AccessDenied: User: arn:aws:iam::123456789012:user/audit-bot is not authorized to perform: iam:UpdateAccessKey`** — Ensure the IAM user running the script has `iam:UpdateAccessKey` and `iam:ListAccessKeys` permissions in their policy.
+    | Error | Fix |
+    |---|---|
+    | `botocore.exceptions.NoCredentialsError: Unable to locate credentials` | Configure AWS credentials via `aws configure` or set `AWS_PROFILE` environment variable. |
+    | `AccessDenied: User: arn:aws:iam::123456789012:user/audit-bot is not authorized to perform: iam:UpdateAccessKey` | Ensure the IAM user running the script has `iam:UpdateAccessKey` and `iam:ListAccessKeys` permissions in their policy. |
 ```bash
 #!/bin/bash
 set -euo pipefail
@@ -576,9 +584,11 @@ elb-target-unhealthy-hosts                     AWS/ApplicationELB        UnHealt
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (UnauthorizedOperation) when calling the DescribeAlarms operation: User: arn:aws:iam::123456789012:user/ops-user is not authorized to perform: cloudwatch:DescribeAlarms`** — Add `cloudwatch:DescribeAlarms` permission to the IAM user/role policy.
-    **`Unable to locate credentials. You can configure credentials by running "aws configure".`** — Set AWS credentials via `aws configure` or export `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
-    **`ModuleNotFoundError: No module named 'json'`** — Ensure Python 3 is installed and the json module is available (it is built-in; verify Python installation with `python3 --version`).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (UnauthorizedOperation) when calling the DescribeAlarms operation: User: arn:aws:iam::123456789012:user/ops-user is not authorized to perform: cloudwatch:DescribeAlarms` | Add `cloudwatch:DescribeAlarms` permission to the IAM user/role policy. |
+    | `Unable to locate credentials. You can configure credentials by running "aws configure".` | Set AWS credentials via `aws configure` or export `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
+    | `ModuleNotFoundError: No module named 'json'` | Ensure Python 3 is installed and the json module is available (it is built-in; verify Python installation with `python3 --version`). |
 ```bash
 cd ~/Desktop
 bash cloudwatch-check.sh

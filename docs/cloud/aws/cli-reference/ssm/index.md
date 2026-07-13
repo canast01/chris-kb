@@ -83,9 +83,11 @@ aws ssm get-parameters-by-path --path /my/
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ParameterNotFound) when calling the GetParameter operation: Parameter /my/param not found.`** — Verify the parameter name exists in Parameter Store using `aws ssm describe-parameters --filters "Key=Name,Values=/my/param"`.
-    **`An error occurred (AccessDeniedException) when calling the GetParameter operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: ssm:GetParameter on resource: arn:aws:ssm:us-east-1:123456789012:parameter/my/param`** — Add `ssm:GetParameter` and `kms:Decrypt` permissions to the IAM user/role policy.
-    **`An error occurred (InvalidParameterType) when calling the PutParameter operation: Invalid parameter type specified.`** — Use a valid type: `String`, `StringList`, or `SecureString`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ParameterNotFound) when calling the GetParameter operation: Parameter /my/param not found.` | Verify the parameter name exists in Parameter Store using `aws ssm describe-parameters --filters "Key=Name,Values=/my/param"`. |
+    | `An error occurred (AccessDeniedException) when calling the GetParameter operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: ssm:GetParameter on resource: arn:aws:ssm:us-east-1:123456789012:parameter/my/param` | Add `ssm:GetParameter` and `kms:Decrypt` permissions to the IAM user/role policy. |
+    | `An error occurred (InvalidParameterType) when calling the PutParameter operation: Invalid parameter type specified.` | Use a valid type: `String`, `StringList`, or `SecureString`. |
 ## Maintenance Windows
 
 ```bash
@@ -164,9 +166,11 @@ aws ssm describe-maintenance-window-tasks --window-id <window_id>
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidWindowId) when calling the DescribeMaintenanceWindowTasks operation: The maintenance window ID 'mw-invalid' does not exist.`** — Verify the window ID exists by running `aws ssm describe-maintenance-windows` and copy the correct WindowId value.
-    **`An error occurred (InvalidParameterValue) when calling the RegisterTaskWithMaintenanceWindow operation: The service role ARN is invalid.`** — Ensure the IAM role exists and the ARN format is correct: `arn:aws:iam::<account_id>:role/<RoleName>`, and the role has SSM maintenance window trust permissions.
-    **`An error occurred (InvalidParameterValue) when calling the CreateMaintenanceWindow operation: The schedule expression is invalid.`** — Verify the cron expression syntax; use `cron(minute hour day month day-of-week year)` format, e.g., `cron(0 3 ? * SUN *)` for 3 AM Sundays.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidWindowId) when calling the DescribeMaintenanceWindowTasks operation: The maintenance window ID 'mw-invalid' does not exist.` | Verify the window ID exists by running `aws ssm describe-maintenance-windows` and copy the correct WindowId value. |
+    | `An error occurred (InvalidParameterValue) when calling the RegisterTaskWithMaintenanceWindow operation: The service role ARN is invalid.` | Ensure the IAM role exists and the ARN format is correct: `arn:aws:iam::<account_id>:role/<RoleName>`, and the role has SSM maintenance window trust permissions. |
+    | `An error occurred (InvalidParameterValue) when calling the CreateMaintenanceWindow operation: The schedule expression is invalid.` | Verify the cron expression syntax; use `cron(minute hour day month day-of-week year)` format, e.g., `cron(0 3 ? * SUN *)` for 3 AM Sundays. |
 ## Patch Management
 
 ```bash
@@ -459,8 +463,10 @@ aws ssm describe-ops-items \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the CreateOpsItem operation: Invalid severity value. Valid values are: 1, 2, 3, 4`** — Ensure severity is a string between "1" and "4", not an integer.
-    **`An error occurred (AccessDenied) when calling the CreateOpsItem operation: User: arn:aws:iam::123456789012:user/ops-user is not authorized to perform: ssm:CreateOpsItem`** — Add the `ssm:CreateOpsItem` permission to the IAM user or role's policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the CreateOpsItem operation: Invalid severity value. Valid values are: 1, 2, 3, 4` | Ensure severity is a string between "1" and "4", not an integer. |
+    | `An error occurred (AccessDenied) when calling the CreateOpsItem operation: User: arn:aws:iam::123456789012:user/ops-user is not authorized to perform: ssm:CreateOpsItem` | Add the `ssm:CreateOpsItem` permission to the IAM user or role's policy. |
 ## Automation Documents
 
 ```bash
@@ -548,9 +554,11 @@ aws ssm stop-automation-execution \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidDocument) when calling the ListDocuments operation: Document name cannot be blank.`** — Ensure the `--document-filter-list` parameter is correctly formatted with both `key=` and `value=` specified.
-    **`An error occurred (ValidationException) when calling the StartAutomationExecution operation: 1 validation error detected: Value null at 'parameters.InstanceId' failed to satisfy constraint: Member must not be null`** — Replace `<instance_id>` with an actual EC2 instance ID (e.g., `i-0abcd1234efgh5678`).
-    **`An error occurred (AutomationExecutionNotFoundException) when calling the GetAutomationExecution operation: Execution does not exist.`** — Verify the `<execution_id>` is correct and the execution has not been purged (SSM retains execution history for 30 days).
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidDocument) when calling the ListDocuments operation: Document name cannot be blank.` | Ensure the `--document-filter-list` parameter is correctly formatted with both `key=` and `value=` specified. |
+    | `An error occurred (ValidationException) when calling the StartAutomationExecution operation: 1 validation error detected: Value null at 'parameters.InstanceId' failed to satisfy constraint: Member must not be null` | Replace `<instance_id>` with an actual EC2 instance ID (e.g., `i-0abcd1234efgh5678`). |
+    | `An error occurred (AutomationExecutionNotFoundException) when calling the GetAutomationExecution operation: Execution does not exist.` | Verify the `<execution_id>` is correct and the execution has not been purged (SSM retains execution history for 30 days). |
 ## See also
 
 - [AWS CLI Reference](../index.md)

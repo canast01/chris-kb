@@ -154,8 +154,10 @@ Address:  10.45.18.75
 ```
 
 !!! warning "Common errors"
-    **`** server can't find app.domain.local: NXDOMAIN`** — Verify the DNS record was successfully added with `dnscmd /enumrecords <zone> <hostname>` and confirm the DR DNS server IP is correct.
-    **`** server can't find app.domain.local: SERVFAIL`** — Check that the DR DNS server is online and reachable; run `ping 10.45.12.50` from the client and verify zone replication has completed on the DC.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find app.domain.local: NXDOMAIN` | Verify the DNS record was successfully added with `dnscmd /enumrecords <zone> <hostname>` and confirm the DR DNS server IP is correct. |
+    | `** server can't find app.domain.local: SERVFAIL` | Check that the DR DNS server is online and reachable; run `ping 10.45.12.50` from the client and verify zone replication has completed on the DC. |
 Expected: `nslookup` returns the DR site IP for each application FQDN.
 
 ### 5. Post-Failover Validation

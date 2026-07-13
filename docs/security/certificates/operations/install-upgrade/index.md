@@ -152,9 +152,11 @@ server.crt: OK
 ```
 
 !!! warning "Common errors"
-    **`error: unable to load certificate`** — Verify the certificate file path is correct and the file contains valid PEM-formatted data (check for encoding issues or truncation).
-    **`error: unable to load Private Key`** — Ensure the key file is in the correct format (PEM or DER) and hasn't been encrypted without providing a passphrase via `-passin` flag.
-    **`error: self signed certificate`** — Add the `-CAfile root-ca.crt` parameter to the verify command to provide the root certificate for chain validation.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to load certificate` | Verify the certificate file path is correct and the file contains valid PEM-formatted data (check for encoding issues or truncation). |
+    | `error: unable to load Private Key` | Ensure the key file is in the correct format (PEM or DER) and hasn't been encrypted without providing a passphrase via `-passin` flag. |
+    | `error: self signed certificate` | Add the `-CAfile root-ca.crt` parameter to the verify command to provide the root certificate for chain validation. |
 ---
 
 ## Certificate Renewal

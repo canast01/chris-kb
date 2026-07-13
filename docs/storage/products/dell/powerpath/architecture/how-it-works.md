@@ -124,8 +124,10 @@ Registration: PowerPath license registered for Symmetrix ID 000123456789ABCD
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Install EMC PowerPath software or add /opt/PowerPath/bin to your PATH environment variable.
-    **`Restore: 0 dead path(s) restored, 0 path(s) still dead`** — All paths are already alive; this is normal output if no paths were previously marked dead.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Install EMC PowerPath software or add /opt/PowerPath/bin to your PATH environment variable. |
+    | `Restore: 0 dead path(s) restored, 0 path(s) still dead` | All paths are already alive; this is normal output if no paths were previously marked dead. |
 ---
 
 ## See also

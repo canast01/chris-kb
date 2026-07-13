@@ -191,9 +191,11 @@ Event ID: 12844 | Timestamp: 2024-01-15 14:31:42 | Heartbeat Lost | Remote Symme
 ```
 
 !!! warning "Common errors"
-    **`SYMCFG-00001: Could not connect to the Symmetrix array`** — Verify the Symmetrix ID is correct and the local array is accessible via `symcfg list -v`.
-    **`SYMRDF-00456: RDF group <group_num> does not exist`** — Confirm the RDF group number with `symrdf -g <dgname> list` before querying.
-    **`SYMEVENT-00234: No events found matching criteria`** — Extend the time range with `-last 60` or `-last 100` to capture older suspension events.
+    | Error | Fix |
+    |---|---|
+    | `SYMCFG-00001: Could not connect to the Symmetrix array` | Verify the Symmetrix ID is correct and the local array is accessible via `symcfg list -v`. |
+    | `SYMRDF-00456: RDF group <group_num> does not exist` | Confirm the RDF group number with `symrdf -g <dgname> list` before querying. |
+    | `SYMEVENT-00234: No events found matching criteria` | Extend the time range with `-last 60` or `-last 100` to capture older suspension events. |
 **Resolution:**
 
 1. Identify and resolve the cause (WAN congestion, write storm) before resuming.
@@ -224,9 +226,11 @@ Failed Pairs:         0
 ```
 
 !!! warning "Common errors"
-    **`SYMRDF ERROR: Group <dgname> not found on array <r1_sid>`** — Verify the device group name and R1 array SID are correct with `symcfg list -g`.
-    **`SYMRDF ERROR: Group <dgname> is already in the Synchronized state`** — The group is already active; check if it re-suspended immediately by running `symrdf -g <dgname> -sid <r1_sid> query` again within 30 seconds.
-    **`SYMRDF ERROR: Cannot resume group — link state is FAILED`** — Verify network connectivity between R1 and R2 arrays and check `symrdf -g <dgname> -sid <r1_sid> query` for link errors before retrying.
+    | Error | Fix |
+    |---|---|
+    | `SYMRDF ERROR: Group <dgname> not found on array <r1_sid>` | Verify the device group name and R1 array SID are correct with `symcfg list -g`. |
+    | `SYMRDF ERROR: Group <dgname> is already in the Synchronized state` | The group is already active; check if it re-suspended immediately by running `symrdf -g <dgname> -sid <r1_sid> query` again within 30 seconds. |
+    | `SYMRDF ERROR: Cannot resume group — link state is FAILED` | Verify network connectivity between R1 and R2 arrays and check `symrdf -g <dgname> -sid <r1_sid> query` for link errors before retrying. |
 ---
 
 ## Target Volume Capacity Mismatch / Thin Pool Exhaustion
@@ -254,9 +258,11 @@ Pool                                         SRDF_POOL_02
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid SID <r2_sid>`** — Replace `<r2_sid>` with the actual R2 array SID (e.g., `symcfg -sid 000123456789 list -pool -thin -v`).
-    **`Error: Device <dev_id> not found`** — Verify the device ID exists on the target array using `symdev -sid <r2_sid> list` to confirm the correct device identifier.
-    **`Error: SYMCLI server is not running`** — Start the SYMCLI daemon with `symcli -start` or ensure the Symmetrix management console is accessible.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid SID <r2_sid>` | Replace `<r2_sid>` with the actual R2 array SID (e.g., `symcfg -sid 000123456789 list -pool -thin -v`). |
+    | `Error: Device <dev_id> not found` | Verify the device ID exists on the target array using `symdev -sid <r2_sid> list` to confirm the correct device identifier. |
+    | `Error: SYMCLI server is not running` | Start the SYMCLI daemon with `symcli -start` or ensure the Symmetrix management console is accessible. |
 **Remediation:**
 
 - Expand the thin pool on the R2 array (add more capacity devices via Unisphere).
@@ -297,9 +303,11 @@ Resync completed successfully for group DG_PROD_01
 ```
 
 !!! warning "Common errors"
-    **`SYMRDF Error (0): The specified device group <dgname> does not exist`** — Verify the device group name matches exactly with `symcfg list -g` output and confirm you are on the correct Symmetrix.
-    **`SYMRDF Error (1): Not authorized to perform this operation`** — Ensure your user account has SRDF administrator privileges and the Symmetrix is not in a locked state; check with `symacl show -user <username>`.
-    **`SYMRDF Error (2): Cannot resync — pair is in a transitional state`** — Wait 30–60 seconds for the pair state to stabilize, then retry the resync command.
+    | Error | Fix |
+    |---|---|
+    | `SYMRDF Error (0): The specified device group <dgname> does not exist` | Verify the device group name matches exactly with `symcfg list -g` output and confirm you are on the correct Symmetrix. |
+    | `SYMRDF Error (1): Not authorized to perform this operation` | Ensure your user account has SRDF administrator privileges and the Symmetrix is not in a locked state; check with `symacl show -user <username>`. |
+    | `SYMRDF Error (2): Cannot resync — pair is in a transitional state` | Wait 30–60 seconds for the pair state to stabilize, then retry the resync command. |
 **Do not run `resync` or `restore` without confirming which side has the correct data.** An incorrect resync will overwrite valid data on the target side.
 
 ---

@@ -116,9 +116,11 @@ SymGate_1: Running, Port 7578, Version 9.2.0.0
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Command not found`** — Install Unisphere for PowerMax or Solutions Enabler package on the management host.
-    **`Error: Cannot connect to array <sid>`** — Verify the array SID is correct and SymGate service is running on the management server.
-    **`Error: Insufficient privileges to query array`** — Run commands with sudo or ensure your user account has Solutions Enabler administrative permissions.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Command not found` | Install Unisphere for PowerMax or Solutions Enabler package on the management host. |
+    | `Error: Cannot connect to array <sid>` | Verify the array SID is correct and SymGate service is running on the management server. |
+    | `Error: Insufficient privileges to query array` | Run commands with sudo or ensure your user account has Solutions Enabler administrative permissions. |
 ## Devices
 
 Devices (TDEVs) are the thin volumes presented to hosts. All production volumes on PowerMax should be thin (TDEV). Create devices within storage groups so they inherit service level settings.
@@ -219,9 +221,11 @@ Top 20 devices by I/O rate displayed
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_ERROR (5) : Could not open device file`** — Verify the Symmetrix ID is correct with `symcfg list` and ensure the management server has connectivity to the array.
-    **`SYMCLI_ERROR (26) : Device is currently in use`** — Unmask the device from all masking views and storage groups before deletion using `symaccess -sid <sid> delete -name <mv_name> -type masking_view`.
-    **`SYMCLI_ERROR (1) : Invalid command syntax`** — Check that angle brackets like `<sid>` and `<devname>` are replaced with actual values and that semicolons terminate each command in `-cmd` blocks.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_ERROR (5) : Could not open device file` | Verify the Symmetrix ID is correct with `symcfg list` and ensure the management server has connectivity to the array. |
+    | `SYMCLI_ERROR (26) : Device is currently in use` | Unmask the device from all masking views and storage groups before deletion using `symaccess -sid <sid> delete -name <mv_name> -type masking_view`. |
+    | `SYMCLI_ERROR (1) : Invalid command syntax` | Check that angle brackets like `<sid>` and `<devname>` are replaced with actual values and that semicolons terminate each command in `-cmd` blocks. |
 ## Storage Groups
 
 Storage Groups are the primary logical grouping in PowerMax. Every device presented to a host must be in a storage group that is part of a masking view. Storage groups can be nested — parent SGs contain child SGs.
@@ -293,9 +297,11 @@ Operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`The specified Storage Group <sg_name> does not exist`** — Verify the storage group name matches exactly and confirm it exists with `symsg list -sid <sid>`.
-    **`Cannot delete Storage Group <sg_name>. It contains masking views.`** — Remove all masking views associated with the storage group before deletion using `symacl delete -name <mv_name> -sid <sid>`.
-    **`The specified SRP <srp_name> is not valid for this array`** — Confirm the SRP exists on the array by running `symcfg list -srp -sid <sid>` and use the correct SRP name.
+    | Error | Fix |
+    |---|---|
+    | `The specified Storage Group <sg_name> does not exist` | Verify the storage group name matches exactly and confirm it exists with `symsg list -sid <sid>`. |
+    | `Cannot delete Storage Group <sg_name>. It contains masking views.` | Remove all masking views associated with the storage group before deletion using `symacl delete -name <mv_name> -sid <sid>`. |
+    | `The specified SRP <srp_name> is not valid for this array` | Confirm the SRP exists on the array by running `symcfg list -srp -sid <sid>` and use the correct SRP name. |
 ## Masking Views & Access
 
 A masking view binds a storage group (devices), a port group (array ports), and an initiator group (host WWNs) together — this is what makes LUNs visible to a host.
@@ -364,9 +370,11 @@ Host Logins on 5e:0:
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI_C_ERRMSG_INVALID_SID`** — Verify the SID is correct and the Symmetrix array is reachable via `symcfg list`.
-    **`SYMAPI_C_ERRMSG_OBJECT_NOT_FOUND`** — Confirm the view/initiator/port group name exists with `symaccess list` before attempting to show or delete it.
-    **`SYMAPI_C_ERRMSG_DUPLICATE_NAME`** — Choose a unique name for the new view/group that does not already exist in the array.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI_C_ERRMSG_INVALID_SID` | Verify the SID is correct and the Symmetrix array is reachable via `symcfg list`. |
+    | `SYMAPI_C_ERRMSG_OBJECT_NOT_FOUND` | Confirm the view/initiator/port group name exists with `symaccess list` before attempting to show or delete it. |
+    | `SYMAPI_C_ERRMSG_DUPLICATE_NAME` | Choose a unique name for the new view/group that does not already exist in the array. |
 ## Ports & Hardware
 
 Check front-end port status and FC logins, and manage physical disks.
@@ -438,9 +446,11 @@ Bay  Disk Name  State      Temp(C)  Status
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI Error: Could not connect to the Symmetrix array`** — Verify the Symmetrix ID is correct and the management station has network connectivity to the array's management port.
-    **`SYMCLI Error: Invalid director or port specification`** — Confirm the director and port numbers exist by running `symport list -sid <sid>` without the `-dir` and `-p` flags first.
-    **`SYMCLI Error: Symmetrix ID not found`** — Ensure the SID is valid for your environment and check that the SYMCLI_CONNECT environment variable or configuration file points to the correct array.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI Error: Could not connect to the Symmetrix array` | Verify the Symmetrix ID is correct and the management station has network connectivity to the array's management port. |
+    | `SYMCLI Error: Invalid director or port specification` | Confirm the director and port numbers exist by running `symport list -sid <sid>` without the `-dir` and `-p` flags first. |
+    | `SYMCLI Error: Symmetrix ID not found` | Ensure the SID is valid for your environment and check that the SYMCLI_CONNECT environment variable or configuration file points to the correct array. |
 ## SRDF — Replication
 
 SRDF (Symmetrix Remote Data Facility) replicates data between PowerMax arrays.
@@ -519,9 +529,11 @@ RDF Group 1 Verification:
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Command not found`** — Ensure the Symmetrix CLI tools are installed and the PATH includes the installation directory (typically `/opt/emc/SYMCLI/bin`).
-    **`Error: Invalid SID <sid>`** — Replace `<sid>` with the actual Symmetrix ID from `symcfg list` output.
-    **`Error: Storage group <sg_name> not found`** — Verify the storage group name exists with `symacl list -sg` and confirm it is SRDF-enabled.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Command not found` | Ensure the Symmetrix CLI tools are installed and the PATH includes the installation directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `Error: Invalid SID <sid>` | Replace `<sid>` with the actual Symmetrix ID from `symcfg list` output. |
+    | `Error: Storage group <sg_name> not found` | Verify the storage group name exists with `symacl list -sg` and confirm it is SRDF-enabled. |
 ## SnapVX — Snapshots
 
 SnapVX provides near-instantaneous space-efficient snapshots of storage groups.
@@ -580,9 +592,11 @@ Snapshot prod_db_snap_20240115 successfully renamed to prod_db_snap_20240116.
 ```
 
 !!! warning "Common errors"
-    **`Error: Snapshot <snap_name> not found in storage group <sg_name>`** — Verify the snapshot name and storage group name are correct using `symsnapvx list -sid <sid> -sg <sg_name>`.
-    **`Error: Cannot terminate snapshot — snapshot is currently linked to target SG(s)`** — Unlink the snapshot from all target storage groups using `symsnapvx -sid <sid> snap -sg <sg_name> -name <snap_name> unlink -lnsg <target_sg>` before terminating.
-    **`Error: Restore operation failed — source devices are still mapped to host`** — Offline and unmask all source devices from the host before executing the restore command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Snapshot <snap_name> not found in storage group <sg_name>` | Verify the snapshot name and storage group name are correct using `symsnapvx list -sid <sid> -sg <sg_name>`. |
+    | `Error: Cannot terminate snapshot — snapshot is currently linked to target SG(s)` | Unlink the snapshot from all target storage groups using `symsnapvx -sid <sid> snap -sg <sg_name> -name <snap_name> unlink -lnsg <target_sg>` before terminating. |
+    | `Error: Restore operation failed — source devices are still mapped to host` | Offline and unmask all source devices from the host before executing the restore command. |
 ## Performance & Statistics
 
 `symstat` provides real-time performance data by storage group, device, director, or cache.
@@ -669,9 +683,11 @@ R2_DR     Synced  198.7    8.9    CG_PROD_02
 ```
 
 !!! warning "Common errors"
-    **`symstat: Error: Invalid SID <sid>`** — Replace `<sid>` with the actual Symmetrix ID (e.g., `000123456789012`) or use `symcfg list` to discover valid SIDs.
-    **`symstat: Error: Storage group <sg_name> not found`** — Verify the storage group name exists with `symsg list -sid <sid>` before querying.
-    **`symstat: Error: Insufficient privileges`** — Run the command with appropriate sudo privileges or as a user with Symmetrix administrator role.
+    | Error | Fix |
+    |---|---|
+    | `symstat: Error: Invalid SID <sid>` | Replace `<sid>` with the actual Symmetrix ID (e.g., `000123456789012`) or use `symcfg list` to discover valid SIDs. |
+    | `symstat: Error: Storage group <sg_name> not found` | Verify the storage group name exists with `symsg list -sid <sid>` before querying. |
+    | `symstat: Error: Insufficient privileges` | Run the command with appropriate sudo privileges or as a user with Symmetrix administrator role. |
 ## Events & Audit
 
 ```bash
@@ -799,9 +815,11 @@ RDF Mode: Synchronous
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_ERROR: Device group <dg_name> does not exist`** — Verify the device group name with `symdg list -sid <sid>` and confirm it exists on the target array.
-    **`SYMCLI_ERROR: Device <devname> is already in a device group`** — Remove the device from its current group with `symdg -g <current_dg> remove dev <devname> -sid <sid>` before adding it to a new group.
-    **`SYMCLI_ERROR: Cannot suspend SRDF pair — pair is not in Synchronized state`** — Check pair status with `symrdf -g <dg_name> -sid <sid> query` and resolve any pending operations before retrying the suspend.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_ERROR: Device group <dg_name> does not exist` | Verify the device group name with `symdg list -sid <sid>` and confirm it exists on the target array. |
+    | `SYMCLI_ERROR: Device <devname> is already in a device group` | Remove the device from its current group with `symdg -g <current_dg> remove dev <devname> -sid <sid>` before adding it to a new group. |
+    | `SYMCLI_ERROR: Cannot suspend SRDF pair — pair is not in Synchronized state` | Check pair status with `symrdf -g <dg_name> -sid <sid> query` and resolve any pending operations before retrying the suspend. |
 ---
 
 ## Verify

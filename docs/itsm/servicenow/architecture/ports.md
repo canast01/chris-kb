@@ -121,9 +121,11 @@ SNMPv2-MIB::sysDescr.0 = STRING: Cisco IOS Software, C2960X Software, Version 15
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification, or ensure the MID Server's certificate bundle includes the ServiceNow CA.
-    **`ssh: connect to host <linux-target> port 22: Connection timed out`** — Verify the Linux target is reachable from the MID Server network, check firewall rules allow port 22, and confirm the discovery user account exists on the target.
-    **`snmpget: Unknown host (<device-ip>)`** — Verify the device IP is correct and resolvable from the MID Server, and confirm SNMP is enabled on the network device with the correct community string.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification, or ensure the MID Server's certificate bundle includes the ServiceNow CA. |
+    | `ssh: connect to host <linux-target> port 22: Connection timed out` | Verify the Linux target is reachable from the MID Server network, check firewall rules allow port 22, and confirm the discovery user account exists on the target. |
+    | `snmpget: Unknown host (<device-ip>)` | Verify the device IP is correct and resolvable from the MID Server, and confirm SNMP is enabled on the network device with the correct community string. |
 ---
 
 ## See also

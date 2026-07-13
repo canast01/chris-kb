@@ -69,8 +69,10 @@ vmware-netdumper                                    STOPPED
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Ensure you are logged into the VCSA appliance directly (SSH to the vCenter Server Appliance hostname/IP), not a Windows vCenter instance.
-    **`Permission denied`** — Run the command with `sudo` or log in as root user to the VCSA appliance.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Ensure you are logged into the VCSA appliance directly (SSH to the vCenter Server Appliance hostname/IP), not a Windows vCenter instance. |
+    | `Permission denied` | Run the command with `sudo` or log in as root user to the VCSA appliance. |
 **Expected output:** No output (all services RUNNING). If any service appears, restart it:
 
 ```bash
@@ -88,9 +90,11 @@ Service <service-name> started successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown service '<service-name>'`** — Replace `<service-name>` with a valid VMware service name like `vmware-vpxd`, `vmware-esx-hostd`, or `vpxa`.
-    **`Error: Permission denied`** — Run the command with root privileges using `sudo service-control --restart <service-name>` or as the root user.
-    **`Timeout waiting for service to start`** — Check service dependencies and logs with `service-control --status <service-name>` and review `/var/log/vmware/vpxd/vpxd.log` for startup errors.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown service '<service-name>'` | Replace `<service-name>` with a valid VMware service name like `vmware-vpxd`, `vmware-esx-hostd`, or `vpxa`. |
+    | `Error: Permission denied` | Run the command with root privileges using `sudo service-control --restart <service-name>` or as the root user. |
+    | `Timeout waiting for service to start` | Check service dependencies and logs with `service-control --status <service-name>` and review `/var/log/vmware/vpxd/vpxd.log` for startup errors. |
 Check alarms in vSphere Client: **Home → Alarms → All Alarms** — filter to `Critical`. Any critical alarm here blocks the rest of the routine until acknowledged or resolved.
 
 Verify backup:
@@ -107,8 +111,10 @@ Backup completed successfully at 2024-01-15 03:45:22 UTC. Duration: 47 minutes. 
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vmware/applmgmt/backup.log: No such file or directory`** — Verify the vCenter appliance has backup logging enabled and check the correct log path with `find /var/log -name "*backup*"`.
-    **`(no output returned)`** — The backup log exists but contains no successful completions; check `/var/log/vmware/applmgmt/backup.log` directly or review VAMI for backup job status and errors.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vmware/applmgmt/backup.log: No such file or directory` | Verify the vCenter appliance has backup logging enabled and check the correct log path with `find /var/log -name "*backup*"`. |
+    | `(no output returned)` | The backup log exists but contains no successful completions; check `/var/log/vmware/applmgmt/backup.log` directly or review VAMI for backup job status and errors. |
 **Expected output:** Timestamp within last 24 hours.
 
 **Escalate if:** Any service not running after restart · Last backup > 24 h ago · Critical alarms present.
@@ -166,9 +172,11 @@ Disk Capacity: yellow
 ```
 
 !!! warning "Common errors"
-    **`Connect timed out`** — Verify the ESXi host is reachable and SSH is enabled via `esxcli system ssh set --enabled=true` on the target host.
-    **`Unknown command or namespace`** — Ensure you're connected to an ESXi host with vSAN enabled; run `esxcli vsan cluster list` first to confirm vSAN is active on the cluster.
-    **`Permission denied`** — Confirm your SSH user has root or equivalent privileges; use an account with administrative rights to the ESXi host.
+    | Error | Fix |
+    |---|---|
+    | `Connect timed out` | Verify the ESXi host is reachable and SSH is enabled via `esxcli system ssh set --enabled=true` on the target host. |
+    | `Unknown command or namespace` | Ensure you're connected to an ESXi host with vSAN enabled; run `esxcli vsan cluster list` first to confirm vSAN is active on the cluster. |
+    | `Permission denied` | Confirm your SSH user has root or equivalent privileges; use an account with administrative rights to the ESXi host. |
 **Expected output:** No output (all checks green). Any non-green line needs investigation.
 
 Check object health:
@@ -189,8 +197,10 @@ Object UUID                          State          Space Used
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Ensure you are running this command directly on an ESXi host (SSH session), not from vCenter; if on vCenter, use SSH to connect to the ESXi host first.
-    **`VSAN is not enabled on this cluster`** — Verify VSAN is licensed and enabled on the cluster by checking vSphere Client > Cluster > Configure > vSAN > General.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Ensure you are running this command directly on an ESXi host (SSH session), not from vCenter; if on vCenter, use SSH to connect to the ESXi host first. |
+    | `VSAN is not enabled on this cluster` | Verify VSAN is licensed and enabled on the cluster by checking vSphere Client > Cluster > Configure > vSAN > General. |
 **Expected output:** No output, or only objects in `state:resyncing` (acceptable if resync is making progress).
 
 Check capacity:
@@ -210,8 +220,10 @@ Total Capacity: 5.12 TB
 ```
 
 !!! warning "Common errors"
-    **`Connect to localhost failed. Error: Unable to connect to the vSAN Health Service`** — Ensure vSAN is enabled on the cluster and the vSAN Health Service is running; restart the service with `systemctl restart vsanvpd` if needed.
-    **`Unknown command or namespace vsan`** — Verify the ESXi host has vSAN licensed and enabled; check with `esxcli vsan cluster get` to confirm vSAN is active on the cluster.
+    | Error | Fix |
+    |---|---|
+    | `Connect to localhost failed. Error: Unable to connect to the vSAN Health Service` | Ensure vSAN is enabled on the cluster and the vSAN Health Service is running; restart the service with `systemctl restart vsanvpd` if needed. |
+    | `Unknown command or namespace vsan` | Verify the ESXi host has vSAN licensed and enabled; check with `esxcli vsan cluster get` to confirm vSAN is active on the cluster. |
 **Expected output:** Used capacity < 70% of total. At 70% set a ticket; at 80% escalate immediately.
 
 Check resync throughput (if objects are resyncing):
@@ -261,9 +273,11 @@ DFW sections: 47
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip SSL verification (already present in the example, so verify the flag wasn't removed).
-    **`curl: (7) Failed to connect to <nsx-mgr>: Name or service not known`** — Verify the NSX Manager hostname or IP address is correct and resolvable from your network.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Check that the NSX Manager API is responding and the credentials are valid; a 401/403 response will produce invalid JSON.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl to skip SSL verification (already present in the example, so verify the flag wasn't removed). |
+    | `curl: (7) Failed to connect to <nsx-mgr>: Name or service not known` | Verify the NSX Manager hostname or IP address is correct and resolvable from your network. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Check that the NSX Manager API is responding and the credentials are valid; a 401/403 response will produce invalid JSON. |
 **Expected output:** DFW section count matches previous day. An unexpected increase may indicate a runaway automation job.
 
 **Escalate if:** Any NSX Manager node not active · Any Edge node down · BGP session not Established · DFW count changed unexpectedly by > 5.

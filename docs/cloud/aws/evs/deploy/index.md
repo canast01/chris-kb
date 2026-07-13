@@ -83,9 +83,11 @@ aws service-quotas request-service-quota-increase \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDenied) when calling the RequestServiceQuotaIncrease operation: User: arn:aws:iam::123456789012:user/deploy is not authorized to perform: servicequotas:RequestServiceQuotaIncrease`** — Add the `servicequotas:RequestServiceQuotaIncrease` IAM permission to the user or role.
-    **`An error occurred (InvalidParameterException) when calling the RequestServiceQuotaIncrease operation: Invalid quota code: L-34B43A08`** — Verify the quota code is correct by running `aws service-quotas list-service-quotas --service-code ec2 --region us-east-1`.
-    **`An error occurred (ServiceException) when calling the RequestServiceQuotaIncrease operation: The request rate exceeded the limit. Please retry after some time.`** — Wait a few seconds before retrying the quota increase request.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDenied) when calling the RequestServiceQuotaIncrease operation: User: arn:aws:iam::123456789012:user/deploy is not authorized to perform: servicequotas:RequestServiceQuotaIncrease` | Add the `servicequotas:RequestServiceQuotaIncrease` IAM permission to the user or role. |
+    | `An error occurred (InvalidParameterException) when calling the RequestServiceQuotaIncrease operation: Invalid quota code: L-34B43A08` | Verify the quota code is correct by running `aws service-quotas list-service-quotas --service-code ec2 --region us-east-1`. |
+    | `An error occurred (ServiceException) when calling the RequestServiceQuotaIncrease operation: The request rate exceeded the limit. Please retry after some time.` | Wait a few seconds before retrying the quota increase request. |
 Track the request until it reaches `CASE_CLOSED` with the new limit applied:
 
 ```bash
@@ -100,8 +102,10 @@ aws service-quotas get-requested-service-quota-change \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDeniedException) when calling the GetRequestedServiceQuotaChange operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: servicequotas:GetRequestedServiceQuotaChange`** — Add the `servicequotas:GetRequestedServiceQuotaChange` permission to the IAM user or role's policy.
-    **`An error occurred (ResourceNotFoundException) when calling the GetRequestedServiceQuotaChange operation: Request ID req-1234567890abcdef not found`** — Verify the request ID is correct and the quota increase request exists in your account.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDeniedException) when calling the GetRequestedServiceQuotaChange operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: servicequotas:GetRequestedServiceQuotaChange` | Add the `servicequotas:GetRequestedServiceQuotaChange` permission to the IAM user or role's policy. |
+    | `An error occurred (ResourceNotFoundException) when calling the GetRequestedServiceQuotaChange operation: Request ID req-1234567890abcdef not found` | Verify the request ID is correct and the quota increase request exists in your account. |
 ### Networking Prerequisites
 
 The VPC must have DNS resolution and DNS hostnames enabled. EVS relies on AWS-provided DNS for internal service discovery during bootstrapping.
@@ -275,8 +279,10 @@ aws ec2 describe-route-tables --filters Name=vpc-id,Values=vpc-xxx \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the DescribeVirtualInterfaces operation: Invalid filter name`** — Verify the `--query` syntax uses backticks for string literals and check AWS CLI version supports JMESPath filtering.
-    **`An error occurred (InvalidVpcID.NotFound) when calling the DescribeRouteTables operation: The vpc ID 'vpc-xxx' does not exist`** — Replace `vpc-xxx` with an actual VPC ID from your AWS account using `aws ec2 describe-vpcs`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the DescribeVirtualInterfaces operation: Invalid filter name` | Verify the `--query` syntax uses backticks for string literals and check AWS CLI version supports JMESPath filtering. |
+    | `An error occurred (InvalidVpcID.NotFound) when calling the DescribeRouteTables operation: The vpc ID 'vpc-xxx' does not exist` | Replace `vpc-xxx` with an actual VPC ID from your AWS account using `aws ec2 describe-vpcs`. |
 ### IAM Prerequisites
 
 The user or role performing cluster operations needs the following minimum permissions. Attach this policy to your deployment role before running `create-environment`.
@@ -325,8 +331,10 @@ aws iam get-role --role-name AWSServiceRoleForAmazonEVS \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidInput) when calling the CreateServiceLinkedRole operation: The service-linked role already exists.`** — The role exists; skip creation and proceed directly to verification with the get-role command.
-    **`An error occurred (AccessDenied) when calling the CreateServiceLinkedRole operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: iam:CreateServiceLinkedRole`** — Attach the IAM policy `iam:CreateServiceLinkedRole` permission to your user or assume a role with sufficient privileges.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidInput) when calling the CreateServiceLinkedRole operation: The service-linked role already exists.` | The role exists; skip creation and proceed directly to verification with the get-role command. |
+    | `An error occurred (AccessDenied) when calling the CreateServiceLinkedRole operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: iam:CreateServiceLinkedRole` | Attach the IAM policy `iam:CreateServiceLinkedRole` permission to your user or assume a role with sufficient privileges. |
 Security groups for EVS require specific ports. Create the management SG before cluster creation:
 
 ```bash
@@ -406,8 +414,10 @@ aws ec2 authorize-security-group-ingress --group-id $SGID \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the CreateSecurityGroup operation: Invalid id: "vpc-xxx" id does not exist`** — Replace `vpc-xxx` with a valid VPC ID from your AWS account (e.g., `vpc-0a1b2c3d4e5f6g7h8`).
-    **`An error occurred (InvalidGroup.NotFound) when calling the AuthorizeSecurityGroupIngress operation: The security group 'sg-0a7f2c9e1b4d5f8k2' does not exist`** — Add a short delay (`
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the CreateSecurityGroup operation: Invalid id: "vpc-xxx" id does not exist` | Replace `vpc-xxx` with a valid VPC ID from your AWS account (e.g., `vpc-0a1b2c3d4e5f6g7h8`). |
+    | `An error occurred (InvalidGroup.NotFound) when calling the AuthorizeSecurityGroupIngress operation: The security group 'sg-0a7f2c9e1b4d5f8k2' does not exist` | Add a short delay (` |
 Create the SSH key pair for ESXi DCUI access:
 
 ```bash
@@ -422,8 +432,10 @@ evs-cluster-key	07:a3:2f:9c:e1:5b:4d:8f:2a:6c:9e:1d:7f:4b:3a:c2	RSA
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidKeyPair.Duplicate) when calling the CreateKeyPair operation: The key pair 'evs-cluster-key' already exists.`** — Delete the existing key pair with `aws ec2 delete-key-pair --key-name evs-cluster-key` before recreating it.
-    **`Unable to locate credentials. You have not configured AWS credentials.`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidKeyPair.Duplicate) when calling the CreateKeyPair operation: The key pair 'evs-cluster-key' already exists.` | Delete the existing key pair with `aws ec2 delete-key-pair --key-name evs-cluster-key` before recreating it. |
+    | `Unable to locate credentials. You have not configured AWS credentials.` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
 ## Create EVS Cluster (AWS CLI)
 
 Submit the cluster with all required parameters. The `connectivityInfo` block references the VPC created in the previous step. The `initialVlanSubnetTags` tells EVS which existing subnets to use for management and VTEP traffic.
@@ -503,9 +515,11 @@ aws evs create-environment \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: VPC vpc-xxx does not exist or is not accessible`** — Replace `vpc-xxx` with a valid VPC ID from your AWS account using `aws ec2 describe-vpcs`.
-    **`An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: Route server rs-xxx not found in VPC`** — Verify the route server ID exists in the specified VPC and is in an AVAILABLE state using `aws ec2 describe-route-servers`.
-    **`An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: Key pair evs-cluster-key does not exist`** — Create the EC2 key pair first using `aws ec2 create-key-pair --key-name evs-cluster-key` or use an existing key name.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: VPC vpc-xxx does not exist or is not accessible` | Replace `vpc-xxx` with a valid VPC ID from your AWS account using `aws ec2 describe-vpcs`. |
+    | `An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: Route server rs-xxx not found in VPC` | Verify the route server ID exists in the specified VPC and is in an AVAILABLE state using `aws ec2 describe-route-servers`. |
+    | `An error occurred (InvalidParameterValue) when calling the CreateEnvironment operation: Key pair evs-cluster-key does not exist` | Create the EC2 key pair first using `aws ec2 create-key-pair --key-name evs-cluster-key` or use an existing key name. |
 Capture the environment ID from the response, then poll until the state reaches `CREATED`. The transition from `CREATING` to `CREATED` normally takes 90-120 minutes.
 
 ```bash
@@ -530,8 +544,10 @@ Cluster CREATED
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the GetEnvironment operation: Environment prod-evs-cluster-01 not found`** — Verify the environment name matches exactly in your AWS account and region with `aws evs list-environments`.
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_PROFILE`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` environment variables.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the GetEnvironment operation: Environment prod-evs-cluster-01 not found` | Verify the environment name matches exactly in your AWS account and region with `aws evs list-environments`. |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_PROFILE`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` environment variables. |
 Verify all hosts reached the `CREATED` state before proceeding:
 
 ```bash
@@ -557,8 +573,10 @@ aws evs list-environment-hosts \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID format`** — Verify that `$ENV_ID` is set correctly with `echo $ENV_ID` and matches the expected environment identifier format.
-    **`An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation: User is not authorized to perform: evs:ListEnvironmentHosts`** — Add the `evs:ListEnvironmentHosts` permission to your IAM user or role's policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID format` | Verify that `$ENV_ID` is set correctly with `echo $ENV_ID` and matches the expected environment identifier format. |
+    | `An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation: User is not authorized to perform: evs:ListEnvironmentHosts` | Add the `evs:ListEnvironmentHosts` permission to your IAM user or role's policy. |
 Retrieve the SDDC Manager URL from the environment details:
 
 ```bash
@@ -574,9 +592,11 @@ https://sddc-mgr-prod-01.us-west-2.vmware.cloud/
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterException) when calling the GetEnvironment operation: Invalid environment ID format`** — Verify the `$ENV_ID` variable is set correctly with `echo $ENV_ID` and matches the expected UUID format.
-    **`An error occurred (AccessDeniedException) when calling the GetEnvironment operation: User is not authorized to perform: evs:GetEnvironment`** — Ensure your AWS IAM user/role has the `evs:GetEnvironment` permission attached in the IAM policy.
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterException) when calling the GetEnvironment operation: Invalid environment ID format` | Verify the `$ENV_ID` variable is set correctly with `echo $ENV_ID` and matches the expected UUID format. |
+    | `An error occurred (AccessDeniedException) when calling the GetEnvironment operation: User is not authorized to perform: evs:GetEnvironment` | Ensure your AWS IAM user/role has the `evs:GetEnvironment` permission attached in the IAM policy. |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
 ## VCF Initial Configuration
 
 ### Retrieve Credentials
@@ -609,9 +629,11 @@ aws secretsmanager get-secret-value \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the GetSecretValue operation: Secrets Manager can't find the specified secret.`** — Verify the secret ID path is correct and the secret exists in the same AWS region as your CLI configuration.
-    **`An error occurred (AccessDeniedException) when calling the GetSecretValue operation: User: arn:aws:iam::123456789012:user/deployer is not authorized to perform: secretsmanager:GetSecretValue`** — Add the `secretsmanager:GetSecretValue` permission to the IAM user or role's policy.
-    **`parse error: Invalid numeric literal at line 1, column 5`** — Remove the `| jq .` pipe if the secret value is not valid JSON, or ensure the secret was stored as properly formatted JSON.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the GetSecretValue operation: Secrets Manager can't find the specified secret.` | Verify the secret ID path is correct and the secret exists in the same AWS region as your CLI configuration. |
+    | `An error occurred (AccessDeniedException) when calling the GetSecretValue operation: User: arn:aws:iam::123456789012:user/deployer is not authorized to perform: secretsmanager:GetSecretValue` | Add the `secretsmanager:GetSecretValue` permission to the IAM user or role's policy. |
+    | `parse error: Invalid numeric literal at line 1, column 5` | Remove the `| jq .` pipe if the secret value is not valid JSON, or ensure the secret was stored as properly formatted JSON. |
 ### Access SDDC Manager and vCenter
 
 Log in to SDDC Manager at the URL returned above. Change the default passwords immediately after first login. The vCenter URL is visible under SDDC Manager → vCenters; use `administrator@vsphere.local` with the password from Secrets Manager.
@@ -651,9 +673,11 @@ Host: host-3h4i5j6k7l8m9n0o
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID`** — Verify that `$ENV_ID` is set correctly with `echo $ENV_ID` and matches an existing environment in your AWS account.
-    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or ensure `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables are exported.
-    **`An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation`** — Add `evs:ListEnvironmentHosts` and `evs:GetEnvironmentHost` permissions to your IAM user or role policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterException) when calling the ListEnvironmentHosts operation: Invalid environment ID` | Verify that `$ENV_ID` is set correctly with `echo $ENV_ID` and matches an existing environment in your AWS account. |
+    | `Unable to locate credentials` | Configure AWS credentials using `aws configure` or ensure `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables are exported. |
+    | `An error occurred (AccessDeniedException) when calling the ListEnvironmentHosts operation` | Add `evs:ListEnvironmentHosts` and `evs:GetEnvironmentHost` permissions to your IAM user or role policy. |
 SSH to each ESXi host and confirm:
 
 ```bash
@@ -676,8 +700,10 @@ Query NTP peers:
 ```
 
 !!! warning "Common errors"
-    **`command not found: ntpq`** — Install the ntp or chrony package (e.g., `apt-get install ntp` on Debian/Ubuntu or `yum install ntp` on RHEL).
-    **`Connection refused`** — Ensure the NTP daemon is running with `systemctl start ntp` or `systemctl start chrony`.
+    | Error | Fix |
+    |---|---|
+    | `command not found: ntpq` | Install the ntp or chrony package (e.g., `apt-get install ntp` on Debian/Ubuntu or `yum install ntp` on RHEL). |
+    | `Connection refused` | Ensure the NTP daemon is running with `systemctl start ntp` or `systemctl start chrony`. |
 ### Configure DNS Entries
 
 Create forward and reverse DNS records for all VCF components before running any SDDC Manager workflows. Missing DNS entries cause workflow failures during domain deployment and certificate generation.
@@ -722,8 +748,10 @@ Address: 192.168.1.55
 ```
 
 !!! warning "Common errors"
-    **`** server can't find sddc-manager.vcf.internal: NXDOMAIN`** — Verify the hostname is correctly spelled and exists in DNS, or check that your DNS server IP is correct.
-    **`nslookup: couldn't get address for '<your-dns-server>': not known`** — Replace `<your-dns-server>` with an actual DNS server IP address (e.g., `10.0.0.53`).
+    | Error | Fix |
+    |---|---|
+    | `** server can't find sddc-manager.vcf.internal: NXDOMAIN` | Verify the hostname is correctly spelled and exists in DNS, or check that your DNS server IP is correct. |
+    | `nslookup: couldn't get address for '<your-dns-server>': not known` | Replace `<your-dns-server>` with an actual DNS server IP address (e.g., `10.0.0.53`). |
 ### Verify vSAN Cluster Health
 
 ```bash
@@ -816,9 +844,11 @@ curl -sk -u "admin:<password>" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if still failing, verify HCX Manager IP and HTTPS connectivity on port 443).
-    **`jq: parse error: Cannot index number with string "displayName"`** — The API response structure differs from expected; run the curl command without `jq` to inspect raw JSON and confirm `.data[]` contains objects with `displayName` and `state` fields.
-    **`curl: (401) Unauthorized`** — Verify the admin password is correct and URL-encoded if it contains special characters; test credentials directly in HCX Manager UI first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; if still failing, verify HCX Manager IP and HTTPS connectivity on port 443). |
+    | `jq: parse error: Cannot index number with string "displayName"` | The API response structure differs from expected; run the curl command without `jq` to inspect raw JSON and confirm `.data[]` contains objects with `displayName` and `state` fields. |
+    | `curl: (401) Unauthorized` | Verify the admin password is correct and URL-encoded if it contains special characters; test credentials directly in HCX Manager UI first. |
 Expected state: `UP`. A state of `DEGRADED` indicates a connectivity issue between the NE appliances. Check that UDP 4500 (IPSEC NAT-T) and TCP 443 are open between the on-premises HCX appliance and the EVS HCX Cloud appliance.
 
 ## Post-Deploy Validation Checklist
@@ -838,8 +868,10 @@ RUNNING
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterException) when calling the GetEnvironment operation: Invalid environment ID format`** — Ensure `$ENV_ID` is set to a valid environment identifier (e.g., `aws evs list-environments` to find valid IDs).
-    **`An error occurred (ResourceNotFoundException) when calling the GetEnvironment operation: Environment not found`** — Verify the environment exists in the current AWS region and account; check with `aws evs list-environments --region <region>`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterException) when calling the GetEnvironment operation: Invalid environment ID format` | Ensure `$ENV_ID` is set to a valid environment identifier (e.g., `aws evs list-environments` to find valid IDs). |
+    | `An error occurred (ResourceNotFoundException) when calling the GetEnvironment operation: Environment not found` | Verify the environment exists in the current AWS region and account; check with `aws evs list-environments --region <region>`. |
 Expected output: `CREATED`. Any other state requires investigation in AWS CloudTrail and SDDC Manager logs.
 
 ### Check 2: All Hosts Connected in vCenter
@@ -863,8 +895,10 @@ esx-dev-01.dc2.internal        Disconnected    PoweredOff
 ```
 
 !!! warning "Common errors"
-    **`Get-VMHost : The term 'Get-VMHost' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Install VMware PowerCLI module using `Install-Module -Name VMware.PowerCLI -Force`.
-    **`Connect-VIServer : Cannot connect to vCenter server. The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.`** — Add the vCenter certificate to the trusted store or use `Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false` before connecting.
+    | Error | Fix |
+    |---|---|
+    | `Get-VMHost : The term 'Get-VMHost' is not recognized as the name of a cmdlet, function, script file, or operable program.` | Install VMware PowerCLI module using `Install-Module -Name VMware.PowerCLI -Force`. |
+    | `Connect-VIServer : Cannot connect to vCenter server. The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.` | Add the vCenter certificate to the trusted store or use `Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false` before connecting. |
 ### Check 3: vSAN Health Green
 
 vCenter → Cluster → Monitor → vSAN → Skyline Health. Every health check must show green before deploying workload VMs. Pay particular attention to:
@@ -902,9 +936,11 @@ rtt min/avg/max/stddev = 23.8/24.0/24.3/0.2 ms
 ```
 
 !!! warning "Common errors"
-    **`ping: connect: Network is unreachable`** — Verify the test VM has a default route configured with `ip route show` and the security group allows outbound traffic.
-    **`curl: (7) Failed to connect to ifconfig.me port 443: Connection timed out`** — Check that DNS resolution works with `nslookup ifconfig.me` and that the security group permits HTTPS outbound on port 443.
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Update the CA certificate bundle with `apt-get install ca-certificates` or use `curl -k` to skip verification for testing only.
+    | Error | Fix |
+    |---|---|
+    | `ping: connect: Network is unreachable` | Verify the test VM has a default route configured with `ip route show` and the security group allows outbound traffic. |
+    | `curl: (7) Failed to connect to ifconfig.me port 443: Connection timed out` | Check that DNS resolution works with `nslookup ifconfig.me` and that the security group permits HTTPS outbound on port 443. |
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Update the CA certificate bundle with `apt-get install ca-certificates` or use `curl -k` to skip verification for testing only. |
 ### Check 6: HCX Service Mesh Status
 
 HCX Manager → Interconnect → Service Mesh. All appliances (IX, WAN Opt, NE) must show `Green` under the Status column. A yellow or red status requires checking the HCX system events log.
@@ -929,8 +965,10 @@ aws secretsmanager get-secret-value \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the GetSecretValue operation: Secrets Manager can't find the specified secret.`** — Verify the secret name matches exactly and exists in the current AWS region with `aws secretsmanager list-secrets`.
-    **`jq: parse error: Invalid JSON text at line 1`** — The secret value is not valid JSON; remove the `| jq .lastRotated` pipe and inspect the raw output with `--query 'SecretString' --output text` alone.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the GetSecretValue operation: Secrets Manager can't find the specified secret.` | Verify the secret name matches exactly and exists in the current AWS region with `aws secretsmanager list-secrets`. |
+    | `jq: parse error: Invalid JSON text at line 1` | The secret value is not valid JSON; remove the `| jq .lastRotated` pipe and inspect the raw output with `--query 'SecretString' --output text` alone. |
 ### Check 8: Bidirectional DNS Resolution
 
 Verify DNS works in both directions: from a VM inside EVS to on-premises hostnames, and from on-premises hosts to EVS component names.
@@ -971,9 +1009,11 @@ Address:	172.31.1.26
 ```
 
 !!! warning "Common errors"
-    **`** server can't find <on-prem-hostname>: NXDOMAIN`** — Verify the hostname spelling and confirm the on-premises DNS server IP is correct and reachable.
-    **`curl: (7) Failed to connect to vcenter.vcf.internal port 443: Connection timed out`** — Confirm the Direct Connect virtual interface is active and the security group/firewall rules allow HTTPS traffic from on-premises to the EVS vCenter IP.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to the curl command to skip certificate validation, or import the vCenter's self-signed certificate into your system's trusted store.
+    | Error | Fix |
+    |---|---|
+    | `** server can't find <on-prem-hostname>: NXDOMAIN` | Verify the hostname spelling and confirm the on-premises DNS server IP is correct and reachable. |
+    | `curl: (7) Failed to connect to vcenter.vcf.internal port 443: Connection timed out` | Confirm the Direct Connect virtual interface is active and the security group/firewall rules allow HTTPS traffic from on-premises to the EVS vCenter IP. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to the curl command to skip certificate validation, or import the vCenter's self-signed certificate into your system's trusted store. |
 Expected: `200` for the curl check. DNS failures in either direction indicate a DHCP options or forwarder misconfiguration that must be resolved before running any migrations.
 
 ---

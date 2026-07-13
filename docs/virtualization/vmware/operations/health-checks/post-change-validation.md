@@ -76,9 +76,11 @@ Logical Routers:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to cluster manager at 192.168.1.10:443`** — Verify NSX Manager VMs are powered on and network connectivity exists from your management host.
-    **`Cluster Status: DEGRADED - Node nsx-mgr-02 unreachable`** — SSH to the unreachable node and check network interfaces with `ip link show` and restart networking if needed.
-    **`Service Router SR-01: DOWN - Last heartbeat 5m ago`** — Reboot the edge VM or check its management network connectivity and NSX Controller registration status.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to cluster manager at 192.168.1.10:443` | Verify NSX Manager VMs are powered on and network connectivity exists from your management host. |
+    | `Cluster Status: DEGRADED - Node nsx-mgr-02 unreachable` | SSH to the unreachable node and check network interfaces with `ip link show` and restart networking if needed. |
+    | `Service Router SR-01: DOWN - Last heartbeat 5m ago` | Reboot the edge VM or check its management network connectivity and NSX Controller registration status. |
 ## Backup Validation
 
 ```powershell

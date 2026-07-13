@@ -41,9 +41,11 @@ sannav-dc1:~$
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH is enabled on the SANnav appliance and the admin account exists; check network connectivity to sannav-dc1.corp.example.com.
-    **`passwd: Authentication token manipulation error`** — Ensure the admin user has sufficient privileges and the /etc/shadow file is writable; try the command again after verifying sudo access.
-    **`sudo: command not found`** — SANnav may not have sudo configured; use `su -` to switch to root directly instead, or contact Brocade support to enable sudo for the admin account.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH is enabled on the SANnav appliance and the admin account exists; check network connectivity to sannav-dc1.corp.example.com. |
+    | `passwd: Authentication token manipulation error` | Ensure the admin user has sufficient privileges and the /etc/shadow file is writable; try the command again after verifying sudo access. |
+    | `sudo: command not found` | SANnav may not have sudo configured; use `su -` to switch to root directly instead, or contact Brocade support to enable sudo for the admin account. |
 ```bash
 sudo vi /etc/ssh/sshd_config
 
@@ -75,9 +77,11 @@ maxauthtries 3
 ```
 
 !!! warning "Common errors"
-    **`sshd: no hostkeys available -- exiting.`** — Ensure `/etc/ssh/ssh_host_*_key` files exist; regenerate with `sudo ssh-keygen -A` if missing.
-    **`Job for sshd.service failed because the control process exited with error code.`** — Check syntax errors in sshd_config with `sudo sshd -t` before restarting the service.
-    **`sshd_config: line X: Bad configuration option: "AllowUsers"`** — Verify the directive name is correct (should be `AllowUsers`, not `AllowUser`) and check for typos in usernames.
+    | Error | Fix |
+    |---|---|
+    | `sshd: no hostkeys available -- exiting.` | Ensure `/etc/ssh/ssh_host_*_key` files exist; regenerate with `sudo ssh-keygen -A` if missing. |
+    | `Job for sshd.service failed because the control process exited with error code.` | Check syntax errors in sshd_config with `sudo sshd -t` before restarting the service. |
+    | `sshd_config: line X: Bad configuration option: "AllowUsers"` | Verify the directive name is correct (should be `AllowUsers`, not `AllowUser`) and check for typos in usernames. |
 ```bash
 # Check for available security updates
 sudo yum updateinfo list security
@@ -115,9 +119,11 @@ All SANnav services operational.
 ```
 
 !!! warning "Common errors"
-    **`sudo: yum: command not found`** — Verify the system uses yum (RHEL/CentOS) and not apt (Debian/Ubuntu); use `apt update && apt install -y unattended-upgrades` on Debian-based systems instead.
-    **`Error: Package kernel requires a reboot`** — Reboot the SANnav appliance with `sudo reboot` after kernel updates complete, then verify services restart automatically.
-    **`SANnav-WebServer is not running`** — Restart SANnav services with `sudo systemctl restart sannav` and check logs with `sudo tail -f /var/log/sannav/sannav.log` to diagnose startup failures.
+    | Error | Fix |
+    |---|---|
+    | `sudo: yum: command not found` | Verify the system uses yum (RHEL/CentOS) and not apt (Debian/Ubuntu); use `apt update && apt install -y unattended-upgrades` on Debian-based systems instead. |
+    | `Error: Package kernel requires a reboot` | Reboot the SANnav appliance with `sudo reboot` after kernel updates complete, then verify services restart automatically. |
+    | `SANnav-WebServer is not running` | Restart SANnav services with `sudo systemctl restart sannav` and check logs with `sudo tail -f /var/log/sannav/sannav.log` to diagnose startup failures. |
 ```bash
 # Check NTP synchronization
 timedatectl status
@@ -156,9 +162,11 @@ sudo systemctl restart sshd
 ```
 
 !!! warning "Common errors"
-    **`E325: ATTENTION`** — Close the existing vim swap file with `rm /etc/issue.net.swp` before editing, or use `vim -r` to recover.
-    **`sshd[12345]: error: /etc/ssh/sshd_config line 50: Bad configuration option: "banner"`** — Change `Banner` to use correct capitalization in sshd_config (capital B).
-    **`Job for ssh.service failed because the control process exited with error code.`** — Validate sshd_config syntax with `sudo sshd -t` before restarting to identify configuration errors.
+    | Error | Fix |
+    |---|---|
+    | `E325: ATTENTION` | Close the existing vim swap file with `rm /etc/issue.net.swp` before editing, or use `vim -r` to recover. |
+    | `sshd[12345]: error: /etc/ssh/sshd_config line 50: Bad configuration option: "banner"` | Change `Banner` to use correct capitalization in sshd_config (capital B). |
+    | `Job for ssh.service failed because the control process exited with error code.` | Validate sshd_config syntax with `sudo sshd -t` before restarting to identify configuration errors. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

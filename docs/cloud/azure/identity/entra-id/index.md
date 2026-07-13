@@ -71,8 +71,10 @@ b9d4g9f3-2c5e-5d0b-9g3f-4e6d8c0b2f5g  Partner Org           CA
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The command failed with an unexpected status code "401 Unauthorized".`** — Run `az login` to authenticate and ensure your account has permissions to read tenant information.
-    **`ERROR: No subscriptions found in account.`** — Verify the account is assigned at least one subscription in the Azure portal or contact your subscription administrator.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The command failed with an unexpected status code "401 Unauthorized".` | Run `az login` to authenticate and ensure your account has permissions to read tenant information. |
+    | `ERROR: No subscriptions found in account.` | Verify the account is assigned at least one subscription in the Azure portal or contact your subscription administrator. |
 ## User Management
 
 ```bash
@@ -141,8 +143,10 @@ a7c3f9e2-1b4d-4c8a-9f2e-3d5c7b1a9e4f
 ```
 
 !!! warning "Common errors"
-    **`The user object referenced by id does not exist or one of its referenced properties is invalid.`** — Verify the user exists and the UPN is correctly formatted; use `az ad user list` to confirm the user was created.
-    **`Insufficient privileges to complete the operation.`** — Ensure your Azure CLI account has User Administrator or Global Administrator role assigned in Entra ID.
+    | Error | Fix |
+    |---|---|
+    | `The user object referenced by id does not exist or one of its referenced properties is invalid.` | Verify the user exists and the UPN is correctly formatted; use `az ad user list` to confirm the user was created. |
+    | `Insufficient privileges to complete the operation.` | Ensure your Azure CLI account has User Administrator or Global Administrator role assigned in Entra ID. |
 ### User Types
 
 | User Type | Description |
@@ -211,9 +215,11 @@ true
 ```
 
 !!! warning "Common errors"
-    **`Operation failed with status: 'Bad Request'. Details: Code: Authorization_RequestDenied`** — Ensure your Azure account has sufficient permissions (Directory.ReadWrite.All or Group.ReadWrite.All) in Entra ID.
-    **`No group found with name 'sg-platform-engineers'.`** — Use the full group object ID instead of the display name, or verify the group exists with `az ad group list`.
-    **`Invalid object identifier '<user-object-id>'.`** — Replace `<user-object-id>` with an actual user object ID from `az ad user list --query "[].id"`.
+    | Error | Fix |
+    |---|---|
+    | `Operation failed with status: 'Bad Request'. Details: Code: Authorization_RequestDenied` | Ensure your Azure account has sufficient permissions (Directory.ReadWrite.All or Group.ReadWrite.All) in Entra ID. |
+    | `No group found with name 'sg-platform-engineers'.` | Use the full group object ID instead of the display name, or verify the group exists with `az ad group list`. |
+    | `Invalid object identifier '<user-object-id>'.` | Replace `<user-object-id>` with an actual user object ID from `az ad user list --query "[].id"`. |
 ## Hybrid Identity and Connect Sync
 
 For organisations with on-premises Active Directory, Azure AD Connect or Entra Connect Sync synchronises identities to Entra ID.
@@ -247,8 +253,10 @@ az rest \
 ```
 
 !!! warning "Common errors"
-    **`Authorization_RequestDenied`** — Ensure your service principal or user account has `Organization.Read.All` permission in Entra ID.
-    **`Invalid resource identifier`** — Verify you are authenticated to Azure with `az login` and have access to the correct tenant using `az account set --subscription <tenant-id>`.
+    | Error | Fix |
+    |---|---|
+    | `Authorization_RequestDenied` | Ensure your service principal or user account has `Organization.Read.All` permission in Entra ID. |
+    | `Invalid resource identifier` | Verify you are authenticated to Azure with `az login` and have access to the correct tenant using `az account set --subscription <tenant-id>`. |
 ## Domain Management
 
 ```bash
@@ -272,8 +280,10 @@ dev.contoso.com                 False        True
 ```
 
 !!! warning "Common errors"
-    **`Authorization_RequestDenied`** — Ensure your Azure CLI account has at least Directory Reader role or higher in the tenant.
-    **`InvalidAuthenticationToken`** — Run `az login` to refresh your authentication token, as it may have expired.
+    | Error | Fix |
+    |---|---|
+    | `Authorization_RequestDenied` | Ensure your Azure CLI account has at least Directory Reader role or higher in the tenant. |
+    | `InvalidAuthenticationToken` | Run `az login` to refresh your authentication token, as it may have expired. |
 ## Entra ID Licence Tiers
 
 | Feature | Free | P1 | P2 |

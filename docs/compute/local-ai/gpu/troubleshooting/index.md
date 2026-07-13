@@ -137,9 +137,11 @@ True
 ```
 
 !!! warning "Common errors"
-    **`command not found: nvidia-smi`** — Install NVIDIA GPU drivers using your system package manager (e.g., `apt install nvidia-driver-535` on Ubuntu).
-    **`ModuleNotFoundError: No module named 'torch'`** — Install PyTorch with CUDA support using `pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121`.
-    **`CUDA version mismatch: CUDA driver version 12.1 is insufficient for CUDA toolkit version 12.2`** — Upgrade your NVIDIA driver to version 550+ or downgrade TensorFlow to 2.14 which supports CUDA 12.1.
+    | Error | Fix |
+    |---|---|
+    | `command not found: nvidia-smi` | Install NVIDIA GPU drivers using your system package manager (e.g., `apt install nvidia-driver-535` on Ubuntu). |
+    | `ModuleNotFoundError: No module named 'torch'` | Install PyTorch with CUDA support using `pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121`. |
+    | `CUDA version mismatch: CUDA driver version 12.1 is insufficient for CUDA toolkit version 12.2` | Upgrade your NVIDIA driver to version 550+ or downgrade TensorFlow to 2.14 which supports CUDA 12.1. |
 If versions conflict:
 
 ```bash
@@ -210,9 +212,11 @@ SecureBoot enabled
 ```
 
 !!! warning "Common errors"
-    **`modprobe: FATAL: Module nvidia not found in directory /lib/modules/5.15.0-86-generic/kernel`** — Install the NVIDIA driver package matching your kernel version with `apt install nvidia-driver-XXX` or use `nvidia-driver-installer`.
-    **`lspci: command not found`** — Install the `pciutils` package with `apt install pciutils` or `yum install pciutils`.
-    **`ERROR: could not insert 'nvidia': Operation not permitted`** — Disable Secure Boot in BIOS/UEFI or enroll the NVIDIA MOK key with `mokutil --import /var/lib/shim-signed/mok/MOK.der`.
+    | Error | Fix |
+    |---|---|
+    | `modprobe: FATAL: Module nvidia not found in directory /lib/modules/5.15.0-86-generic/kernel` | Install the NVIDIA driver package matching your kernel version with `apt install nvidia-driver-XXX` or use `nvidia-driver-installer`. |
+    | `lspci: command not found` | Install the `pciutils` package with `apt install pciutils` or `yum install pciutils`. |
+    | `ERROR: could not insert 'nvidia': Operation not permitted` | Disable Secure Boot in BIOS/UEFI or enroll the NVIDIA MOK key with `mokutil --import /var/lib/shim-signed/mok/MOK.der`. |
 ## Temperature and Throttling
 
 ```bash
@@ -248,8 +252,10 @@ Every 2.0s: nvidia-smi --query-gpu=temperature.gpu,clocks.sm,power.draw --format
 ```
 
 !!! warning "Common errors"
-    **`NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.`** — Verify the NVIDIA driver is installed with `nvidia-smi` (without arguments) and reinstall if needed with `sudo apt install nvidia-driver-XXX` (replacing XXX with your driver version).
-    **`command not found: watch`** — Install the procps-ng package with `sudo apt install procps-ng` or use `nvidia-smi --loop=2` as an alternative.
+    | Error | Fix |
+    |---|---|
+    | `NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.` | Verify the NVIDIA driver is installed with `nvidia-smi` (without arguments) and reinstall if needed with `sudo apt install nvidia-driver-XXX` (replacing XXX with your driver version). |
+    | `command not found: watch` | Install the procps-ng package with `sudo apt install procps-ng` or use `nvidia-smi --loop=2` as an alternative. |
 If throttling occurs, check airflow, verify TDP power limits are set correctly, and confirm the cooling solution is adequate for sustained workloads.
 
 ---

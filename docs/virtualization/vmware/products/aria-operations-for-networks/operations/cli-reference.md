@@ -57,9 +57,11 @@ root@aon-collector:~#
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname aon-platform.corp.local: Name or service not known`** — Verify DNS resolution with `nslookup aon-platform.corp.local` or update `/etc/hosts` with the correct IP address.
-    **`Permission denied (publickey,password).`** — Confirm the ubuntu user credentials and that SSH key-based authentication is configured, or ensure the user has sudo privileges on the target VM.
-    **`Connection refused`** — Check that SSH service is running on the target VM with `systemctl status ssh` and verify the VM is powered on and network-accessible.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname aon-platform.corp.local: Name or service not known` | Verify DNS resolution with `nslookup aon-platform.corp.local` or update `/etc/hosts` with the correct IP address. |
+    | `Permission denied (publickey,password).` | Confirm the ubuntu user credentials and that SSH key-based authentication is configured, or ensure the user has sudo privileges on the target VM. |
+    | `Connection refused` | Check that SSH service is running on the target VM with `systemctl status ssh` and verify the VM is powered on and network-accessible. |
 ---
 
 ## Platform Service Management
@@ -190,9 +192,11 @@ Enter Pairing Key: ••••••••••••••••••••�
 ```
 
 !!! warning "Common errors"
-    **`ni-collector.service - Unit not found.`** — Verify the collector package is installed with `sudo apt list --installed | grep ni-collector` and reinstall if missing.
-    **`[ERROR] Failed to connect to platform at aon-platform.corp.local:443: Name or service not known`** — Confirm DNS resolution with `nslookup aon-platform.corp.local` and verify network connectivity to the platform VM.
-    **`[ERROR] Certificate validation failed: peer certificate cannot be authenticated with given CA certificates`** — Regenerate
+    | Error | Fix |
+    |---|---|
+    | `ni-collector.service - Unit not found.` | Verify the collector package is installed with `sudo apt list --installed | grep ni-collector` and reinstall if missing. |
+    | `[ERROR] Failed to connect to platform at aon-platform.corp.local:443: Name or service not known` | Confirm DNS resolution with `nslookup aon-platform.corp.local` and verify network connectivity to the platform VM. |
+    | `[ERROR] Certificate validation failed: peer certificate cannot be authenticated with given CA certificates` | Regenerate |
 ---
 
 ## Disk Usage
@@ -245,8 +249,10 @@ Vacuumed journals from 2.3G down to 1.0G.
 ```
 
 !!! warning "Common errors"
-    **`df: '/var/lib/cassandra': No such file or directory`** — Verify Cassandra is installed and the service has started at least once to create the data directory structure.
-    **`du: cannot access '/var/lib/elasticsearch/*': Permission denied`** — Run the du commands with `sudo` or ensure your user is in the elasticsearch group with `sudo usermod -aG elasticsearch $USER`.
+    | Error | Fix |
+    |---|---|
+    | `df: '/var/lib/cassandra': No such file or directory` | Verify Cassandra is installed and the service has started at least once to create the data directory structure. |
+    | `du: cannot access '/var/lib/elasticsearch/*': Permission denied` | Run the du commands with `sudo` or ensure your user is in the elasticsearch group with `sudo usermod -aG elasticsearch $USER`. |
 ---
 
 ## Network Connectivity Diagnostics
@@ -301,9 +307,11 @@ aon-collector.corp.local. 300 IN	A	10.20.15.42
 ```
 
 !!! warning "Common errors"
-    **`Connection refused`** — Verify the collector VM is running and port 443 is not blocked by firewall rules between platform and collector.
-    **`HTTP 401`** — Confirm the service account credentials are correct and the account has API access permissions on vCenter/NSX Manager.
-    **`nslookup: can't resolve 'aon-collector.corp.local': No address associated with hostname`** — Add the collector hostname and IP to /etc/hosts or ensure DNS server has the A record configured.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused` | Verify the collector VM is running and port 443 is not blocked by firewall rules between platform and collector. |
+    | `HTTP 401` | Confirm the service account credentials are correct and the account has API access permissions on vCenter/NSX Manager. |
+    | `nslookup: can't resolve 'aon-collector.corp.local': No address associated with hostname` | Add the collector hostname and IP to /etc/hosts or ensure DNS server has the A record configured. |
 ---
 
 ## IPFIX / NetFlow Diagnostics
@@ -339,9 +347,11 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 ```
 
 !!! warning "Common errors"
-    **`tcpdump: eth0: No such device`** — Verify the correct interface name with `ip link show` and replace eth0 with the appropriate NIC (e.g., ens0, ens160).
-    **`0 pps` (no packets captured)** — Confirm NetFlow/IPFIX is enabled on source switches/vDS and verify firewall rules allow UDP 2055 inbound with `sudo ufw status` or check security groups.
-    **`tcpdump: Permission denied`** — Run the command with `sudo` or add your user to the pcap group with `sudo usermod -aG pcap $USER` and restart your session.
+    | Error | Fix |
+    |---|---|
+    | `tcpdump: eth0: No such device` | Verify the correct interface name with `ip link show` and replace eth0 with the appropriate NIC (e.g., ens0, ens160). |
+    | `0 pps` (no packets captured)` | Confirm NetFlow/IPFIX is enabled on source switches/vDS and verify firewall rules allow UDP 2055 inbound with `sudo ufw status` or check security groups. |
+    | `tcpdump: Permission denied` | Run the command with `sudo` or add your user to the pcap group with `sudo usermod -aG pcap $USER` and restart your session. |
 ---
 
 ## REST API — Authentication
@@ -384,9 +394,11 @@ Token acquired: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip certificate verification, or install the AON CA certificate in your system trust store.
-    **`json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify the AON API endpoint is reachable and responding with valid JSON; check credentials and network connectivity to `aon.corp.local`.
-    **`curl: (7) Failed to connect to aon.corp.local port 443: Connection refused`** — Confirm the AON appliance is running and the hostname resolves correctly with `nslookup aon.corp.local` or `ping aon.corp.local`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl to skip certificate verification, or install the AON CA certificate in your system trust store. |
+    | `json.JSONDecodeError: Expecting value: line 1 column 1 (char 0)` | Verify the AON API endpoint is reachable and responding with valid JSON; check credentials and network connectivity to `aon.corp.local`. |
+    | `curl: (7) Failed to connect to aon.corp.local port 443: Connection refused` | Confirm the AON appliance is running and the hostname resolves correctly with `nslookup aon.corp.local` or `ping aon.corp.local`. |
 ---
 
 ## REST API — Data Sources
@@ -434,9 +446,11 @@ netflow-collector-01           NetFlow              true
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the AON server's certificate into your system trust store.
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify `${AON_TOKEN}` and `${AON_URL}` are set correctly by running `echo $AON_TOKEN` and `echo $AON_URL`.
-    **`{"error": "Unauthorized", "message": "Invalid or expired token"}`** — Regenerate the API token in Aria Operations for Networks UI and update the `AON_TOKEN` environment variable.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification, or import the AON server's certificate into your system trust store. |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify `${AON_TOKEN}` and `${AON_URL}` are set correctly by running `echo $AON_TOKEN` and `echo $AON_URL`. |
+    | `{"error": "Unauthorized", "message": "Invalid or expired token"}` | Regenerate the API token in Aria Operations for Networks UI and update the `AON_TOKEN` environment variable. |
 ---
 
 ## REST API — Flow Queries
@@ -524,9 +538,11 @@ MEDIUM     Unusual East-West traffic spike on port 445
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify AON_URL uses https and certificate is valid on the Aria Operations appliance).
-    **`jq: error (at <stdin>:1): Cannot index string with string "results"`** — Ensure the API response is valid JSON by checking AON_TOKEN is correct and the endpoint is accessible; verify with `curl -sk "${AON_URL}/api/ni/search" -H "Authorization: NetworkInsight ${AON_TOKEN}"` first.
-    **`bash: AON_URL: unbound variable`** — Export the environment variables before running the script: `export AON_URL="https://aria-ops.example.com" AON_TOKEN="your-api-token"`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if still failing, verify AON_URL uses https and certificate is valid on the Aria Operations appliance). |
+    | `jq: error (at <stdin>:1): Cannot index string with string "results"` | Ensure the API response is valid JSON by checking AON_TOKEN is correct and the endpoint is accessible; verify with `curl -sk "${AON_URL}/api/ni/search" -H "Authorization: NetworkInsight ${AON_TOKEN}"` first. |
+    | `bash: AON_URL: unbound variable` | Export the environment variables before running the script: `export AON_URL="https://aria-ops.example.com" AON_TOKEN="your-api-token"`. |
 ---
 
 ## REST API — Applications and Security Groups
@@ -589,9 +605,11 @@ app-uuid-6ba7b812-9dad-11d1-80b4-00c04fd430c8 API-Gateway
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the AON server's CA certificate into your system trust store.
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify `${AON_TOKEN}` and `${AON_URL}` are set correctly and the API endpoint is accessible by running `curl -sk -I "${AON_URL}/api/ni/groups/applications"` first.
-    **`{"error": "Unauthorized", "code": 401}`** — Ensure the NetworkInsight token has not expired and includes the correct `Authorization: NetworkInsight` header format.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the AON server's CA certificate into your system trust store. |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify `${AON_TOKEN}` and `${AON_URL}` are set correctly and the API endpoint is accessible by running `curl -sk -I "${AON_URL}/api/ni/groups/applications"` first. |
+    | `{"error": "Unauthorized", "code": 401}` | Ensure the NetworkInsight token has not expired and includes the correct `Authorization: NetworkInsight` header format. |
 ---
 
 ## REST API — Collectors and Alerts
@@ -656,9 +674,11 @@ collector-apac-01         ACTIVE          192.168.1.48
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`jq: command not found`** — Install `python3-json.tool` or use `python3 -m json.tool` instead of piping to `jq`.
-    **`401 Unauthorized`** — Verify that `${AON_TOKEN}` is set correctly and has not expired; regenerate the API token in Aria Operations for Networks UI if needed.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `jq: command not found` | Install `python3-json.tool` or use `python3 -m json.tool` instead of piping to `jq`. |
+    | `401 Unauthorized` | Verify that `${AON_TOKEN}` is set correctly and has not expired; regenerate the API token in Aria Operations for Networks UI if needed. |
 ---
 
 ## See also

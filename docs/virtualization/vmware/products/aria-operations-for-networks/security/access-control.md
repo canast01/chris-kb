@@ -94,9 +94,11 @@ curl -sk -H "Authorization: NetworkInsight <token>" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the CA certificate into your system trust store with `curl -cacert /path/to/ca.pem`.
-    **`{"error": "Unauthorized", "message": "Invalid or expired token"}`** — Regenerate the API token in Aria Operations for Networks UI and ensure it's passed correctly in the Authorization header.
-    **`curl: (7) Failed to connect to vrni.example.local port 443: Connection refused`** — Verify the VRNI appliance hostname/IP is correct and the management interface is accessible on port 443 using `ping` and `telnet vrni.example.local 443`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag (already present) or import the CA certificate into your system trust store with `curl -cacert /path/to/ca.pem`. |
+    | `{"error": "Unauthorized", "message": "Invalid or expired token"}` | Regenerate the API token in Aria Operations for Networks UI and ensure it's passed correctly in the Authorization header. |
+    | `curl: (7) Failed to connect to vrni.example.local port 443: Connection refused` | Verify the VRNI appliance hostname/IP is correct and the management interface is accessible on port 443 using `ping` and `telnet vrni.example.local 443`. |
 ---
 
 ## Network-Level Access Control

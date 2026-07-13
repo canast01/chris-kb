@@ -91,8 +91,10 @@ bluestore_compression_ratio: 0.875
 ```
 
 !!! warning "Common errors"
-    **`Error: osd.0 does not exist`** — Verify the OSD ID is correct with `ceph osd tree` and ensure the OSD is up.
-    **`Error connecting to daemon socket: No such file or directory`** — Start the OSD daemon with `systemctl start ceph-osd@0` or check that the OSD process is running.
+    | Error | Fix |
+    |---|---|
+    | `Error: osd.0 does not exist` | Verify the OSD ID is correct with `ceph osd tree` and ensure the OSD is up. |
+    | `Error connecting to daemon socket: No such file or directory` | Start the OSD daemon with `systemctl start ceph-osd@0` or check that the OSD process is running. |
 ## PG Lifecycle
 
 | State | Meaning | Operator Action |
@@ -159,8 +161,10 @@ HEALTH_WARN 2 pgs peering; 1 pg stuck inactive; 3 pgs degraded
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: pg 1.xyz not found`** — Verify the PG ID format matches output from `ceph pg stat` (use dot notation like `1.a2f`).
-    **`Error: health detail requires a connected monitor`** — Ensure the Ceph cluster is running and your `ceph.conf` points to a valid monitor address.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: pg 1.xyz not found` | Verify the PG ID format matches output from `ceph pg stat` (use dot notation like `1.a2f`). |
+    | `Error: health detail requires a connected monitor` | Ensure the Ceph cluster is running and your `ceph.conf` points to a valid monitor address. |
 ## CRUSH Deep Dive
 
 CRUSH (Controlled Replication Under Scalable Hashing) is a pseudo-random placement algorithm. Clients compute OSD targets locally — no central lookup.
@@ -239,9 +243,11 @@ updated crush map
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: invalid crush map`** — Verify the crush.txt syntax by running `crushtool -d crush.bin -o crush.txt` again and check for malformed bucket or rule definitions.
-    **`Error: osd.5 does not exist`** — Confirm the OSD ID is valid by running `ceph osd tree` before attempting to reweight.
-    **`Error EACCES: permission denied`** — Ensure you have admin privileges by running commands with `sudo` or as a user in the `ceph` group.
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: invalid crush map` | Verify the crush.txt syntax by running `crushtool -d crush.bin -o crush.txt` again and check for malformed bucket or rule definitions. |
+    | `Error: osd.5 does not exist` | Confirm the OSD ID is valid by running `ceph osd tree` before attempting to reweight. |
+    | `Error EACCES: permission denied` | Ensure you have admin privileges by running commands with `sudo` or as a user in the `ceph` group. |
 ## MON Quorum
 
 MONs use the **Paxos** consensus protocol to maintain authoritative cluster maps. A majority must agree before any map update (OSD up/down, PG changes) is committed.
@@ -297,8 +303,10 @@ removed mon.mon3
 ```
 
 !!! warning "Common errors"
-    **`Error: mon.mon3 does not exist or not in monmap`** — Verify the MON ID exists with `ceph mon dump` before attempting removal.
-    **`Error: cannot remove mon, not enough monitors in quorum`** — Ensure at least 2 MONs remain healthy; add a replacement MON before removing the failed one.
+    | Error | Fix |
+    |---|---|
+    | `Error: mon.mon3 does not exist or not in monmap` | Verify the MON ID exists with `ceph mon dump` before attempting removal. |
+    | `Error: cannot remove mon, not enough monitors in quorum` | Ensure at least 2 MONs remain healthy; add a replacement MON before removing the failed one. |
 ## OSD Heartbeat and Failure Detection
 
 OSDs send heartbeat pings to their peers and to the MONs on a regular interval.
@@ -347,9 +355,11 @@ marked osd.7 out
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: osd.7 does not exist`** — Verify the OSD number exists with `ceph osd tree` before attempting to mark it out.
-    **`Error: admin_socket: stat failed on '/var/run/ceph/ceph-osd.0.asok': No such file or directory`** — Ensure the OSD daemon is running with `systemctl status ceph-osd@0` and the socket path is correct.
-    **`Error EPERM: you do not have permission to perform this operation`** — Run commands with appropriate privileges (sudo or as ceph user) or ensure your keyring has admin capabilities.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: osd.7 does not exist` | Verify the OSD number exists with `ceph osd tree` before attempting to mark it out. |
+    | `Error: admin_socket: stat failed on '/var/run/ceph/ceph-osd.0.asok': No such file or directory` | Ensure the OSD daemon is running with `systemctl status ceph-osd@0` and the socket path is correct. |
+    | `Error EPERM: you do not have permission to perform this operation` | Run commands with appropriate privileges (sudo or as ceph user) or ensure your keyring has admin capabilities. |
 ## Storage Pool Types
 
 | Property | Replicated (size=3) | Erasure Coded (k=4 m=2) |
@@ -412,9 +422,11 @@ pools:
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: pool 'rbd-pool' does not exist`** — Run the pool creation command before attempting to set pool parameters.
-    **`Error EINVAL: allow_ec_overwrites requires BlueStore`** — Verify all OSDs use BlueStore backend with `ceph osd metadata | grep osd_objectstore`.
-    **`Error ERANGE: invalid erasure code profile: k=4 m=2 requires at least 6 OSDs`** — Ensure your cluster has at least k+m OSDs available before creating the erasure-coded pool.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: pool 'rbd-pool' does not exist` | Run the pool creation command before attempting to set pool parameters. |
+    | `Error EINVAL: allow_ec_overwrites requires BlueStore` | Verify all OSDs use BlueStore backend with `ceph osd metadata | grep osd_objectstore`. |
+    | `Error ERANGE: invalid erasure code profile: k=4 m=2 requires at least 6 OSDs` | Ensure your cluster has at least k+m OSDs available before creating the erasure-coded pool. |
 ## Cluster Health Quick Reference
 
 ```bash

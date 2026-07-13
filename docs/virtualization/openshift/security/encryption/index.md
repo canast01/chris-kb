@@ -165,9 +165,11 @@ etcd.encryption.kubernetes.io/hash: "sha256:a3f8d2c1e9b4f6a7c2d8e1f3a5b7c9d0e2f4
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "apiserver" in group "config.openshift.io"`** — Verify you are connected to an OpenShift 4.x cluster with `oc version` and confirm the API server CRD exists with `oc api-resources | grep apiserver`.
-    **`Encrypted = false in conditions after 30+ minutes`** — Check etcd pod logs with `oc logs -n openshift-etcd etcd-<node>` for encryption errors and verify sufficient disk space with `oc describe node <node>`.
-    **`etcd.encryption.kubernetes.io/hash annotation not found on secret`** — Wait for the encryption migration to complete (monitor with `oc get apiserver cluster -o jsonpath='{.status.conditions[?(@.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "apiserver" in group "config.openshift.io"` | Verify you are connected to an OpenShift 4.x cluster with `oc version` and confirm the API server CRD exists with `oc api-resources | grep apiserver`. |
+    | `Encrypted = false in conditions after 30+ minutes` | Check etcd pod logs with `oc logs -n openshift-etcd etcd-<node>` for encryption errors and verify sufficient disk space with `oc describe node <node>`. |
+    | `etcd.encryption.kubernetes.io/hash annotation not found on secret` | Wait for the encryption migration to complete (monitor with `oc get apiserver cluster -o jsonpath='{.status.conditions[?(@. |
 ### etcd Encryption Key Rotation
 
 Key rotation is automatic once encryption is enabled. OCP generates new keys periodically and re-encrypts all existing data. There is no manual rotation step required unless you are transitioning between algorithm types.
@@ -185,8 +187,10 @@ apiserver.config.openshift.io/cluster patched
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "apiserver" in group "config.openshift.io"`** — Verify you are connected to an OpenShift cluster with `oc cluster-info` and have sufficient permissions with `oc auth can-i patch apiserver`.
-    **`Error from server (Forbidden): apiservers.config.openshift.io "cluster" is forbidden: User "system:serviceaccount:default:default" cannot patch resource "apiservers" in API group "config.openshift.io" at the cluster scope`** — Switch to a user with cluster-admin role using `oc login` with appropriate credentials or `oc adm policy add-cluster-role-to-user cluster-admin <username>`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "apiserver" in group "config.openshift.io"` | Verify you are connected to an OpenShift cluster with `oc cluster-info` and have sufficient permissions with `oc auth can-i patch apiserver`. |
+    | `Error from server (Forbidden): apiservers.config.openshift.io "cluster" is forbidden: User "system:serviceaccount:default:default" cannot patch resource "apiservers" in API group "config.openshift.io" at the cluster scope` | Switch to a user with cluster-admin role using `oc login` with appropriate credentials or `oc adm policy add-cluster-role-to-user cluster-admin <username>`. |
 ## Custom Ingress (Wildcard) Certificate
 
 ```bash
@@ -221,9 +225,11 @@ notAfter=Dec 15 10:23:45 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`error: tls.crt: no such file or directory`** — Ensure wildcard.crt and wildcard.key files exist in the current directory before running the create secret command.
-    **`error: ingresscontroller.operator.openshift.io "default" not found`** — Verify the IngressController exists with `oc get ingresscontroller -n openshift-ingress-operator` and use the correct name.
-    **`unable to load certificate`** — Confirm the certificate file is valid PEM format and the key matches the cert using `openssl x509 -in wildcard.crt -text -noout`.
+    | Error | Fix |
+    |---|---|
+    | `error: tls.crt: no such file or directory` | Ensure wildcard.crt and wildcard.key files exist in the current directory before running the create secret command. |
+    | `error: ingresscontroller.operator.openshift.io "default" not found` | Verify the IngressController exists with `oc get ingresscontroller -n openshift-ingress-operator` and use the correct name. |
+    | `unable to load certificate` | Confirm the certificate file is valid PEM format and the key matches the cert using `openssl x509 -in wildcard.crt -text -noout`. |
 ## Custom API Server Certificate
 
 ```bash
@@ -272,9 +278,11 @@ data:
 ```
 
 !!! warning "Common errors"
-    **`error: unable to read certificate file "api-server.crt": no such file or directory`** — Verify the certificate and key files exist in the current directory with `ls -la api-server.crt api-server.key`.
-    **`error: the server has asked for the client to provide credentials`** — Update your kubeconfig to trust the new certificate by downloading it from the cluster or adding the CA bundle to your local trust store.
-    **`error: patch does not apply: spec.servingCerts not found`** — Ensure the APIServer CR exists and supports the servingCerts field by running `oc get apiserver cluster -o yaml` to verify the current schema.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to read certificate file "api-server.crt": no such file or directory` | Verify the certificate and key files exist in the current directory with `ls -la api-server.crt api-server.key`. |
+    | `error: the server has asked for the client to provide credentials` | Update your kubeconfig to trust the new certificate by downloading it from the cluster or adding the CA bundle to your local trust store. |
+    | `error: patch does not apply: spec.servingCerts not found` | Ensure the APIServer CR exists and supports the servingCerts field by running `oc get apiserver cluster -o yaml` to verify the current schema. |
 ## Add Custom CA Trust Bundle
 
 ```bash
@@ -303,9 +311,11 @@ Verify OK
 ```
 
 !!! warning "Common errors"
-    **`error: unable to read file "enterprise-ca.crt": no such file or directory`** — Ensure the enterprise CA certificate file exists in the current directory or provide the full path with `--from-file=ca-bundle.crt=/path/to/enterprise-ca.crt`.
-    **`error: the server doesn't have a resource type "proxy"`** — Verify the cluster has the config.openshift.io API group available; this requires OpenShift 4.3+, and check that the proxy/cluster resource exists with `oc get proxy`.
-    **`error: unable to connect to the server: dial tcp: lookup worker-node-02.prod.ocp.local on [IP]: no such host`** — Replace `<node>` with the actual node name from `oc get nodes` and ensure the node is in Ready state.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to read file "enterprise-ca.crt": no such file or directory` | Ensure the enterprise CA certificate file exists in the current directory or provide the full path with `--from-file=ca-bundle.crt=/path/to/enterprise-ca.crt`. |
+    | `error: the server doesn't have a resource type "proxy"` | Verify the cluster has the config.openshift.io API group available; this requires OpenShift 4.3+, and check that the proxy/cluster resource exists with `oc get proxy`. |
+    | `error: unable to connect to the server: dial tcp: lookup worker-node-02.prod.ocp.local on [IP]: no such host` | Replace `<node>` with the actual node name from `oc get nodes` and ensure the node is in Ready state. |
 ## Secret Management with Vault
 
 Two integration patterns: sidecar injector (annotation-driven, no app changes) and CSI driver (projected volume, works with any workload).
@@ -356,9 +366,11 @@ Success! Data written to: auth/kubernetes/role/myapp
 ```
 
 !!! warning "Common errors"
-    **`Error reading file: stat /tmp/cluster-ca.crt: no such file or directory`** — Extract the cluster CA certificate first with `oc extract secret/kube-root-ca.crt -n openshift-kube-apiserver --to=/tmp/`.
-    **`Error writing data to auth/kubernetes/config: error validating token reviewer JWT: invalid bearer token`** — Ensure the vault-0 pod is running in the vault namespace and the service account has permission to review tokens with `oc adm policy add-cluster-role-to-user system:auth-delegator -z vault`.
-    **`Error writing data to auth/kubernetes/role/myapp: permission denied`** — Verify you are authenticated to Vault with sufficient policy permissions using `vault token lookup` and check that your token has write access to `auth/kubernetes/role/*`.
+    | Error | Fix |
+    |---|---|
+    | `Error reading file: stat /tmp/cluster-ca.crt: no such file or directory` | Extract the cluster CA certificate first with `oc extract secret/kube-root-ca.crt -n openshift-kube-apiserver --to=/tmp/`. |
+    | `Error writing data to auth/kubernetes/config: error validating token reviewer JWT: invalid bearer token` | Ensure the vault-0 pod is running in the vault namespace and the service account has permission to review tokens with `oc adm policy add-cluster-role-to-user system:auth-delegator -z vault`. |
+    | `Error writing data to auth/kubernetes/role/myapp: permission denied` | Verify you are authenticated to Vault with sufficient policy permissions using `vault token lookup` and check that your token has write access to `auth/kubernetes/role/*`. |
 ### Secrets Store CSI Driver
 
 ```yaml
@@ -430,9 +442,11 @@ imagecontentsourcepolicy.operator.openshift.io/mirror-config created
 ```
 
 !!! warning "Common errors"
-    **`error: resource mapping not found for name: "require-signed-images" namespace: "" from "": no matches for kind "ClusterImagePolicy" in version "config.openshift.io/v1alpha1"`** — Verify the ClusterImagePolicy CRD is installed by running `oc get crd | grep imagepolicy` and ensure your OpenShift version supports image signature verification (4.11+).
-    **`error: unable to decode "": yaml: line 2: mapping values are not allowed in this context`** — Ensure the base64-encoded key values replace the placeholder strings exactly and contain no newlines; use `cat key.pub | base64 -w0` to encode without line breaks.
-    **`The ImageContentSourcePolicy "mirror-config" is invalid: spec.repositoryDigestMirrors[0].mirrors: Invalid value: []string{nil}: must specify at least one mirror`** — Verify that `mirror.example.com/redhat` and `mirror.example.com/quay` are valid, accessible registry hostnames and not left as placeholders.
+    | Error | Fix |
+    |---|---|
+    | `error: resource mapping not found for name: "require-signed-images" namespace: "" from "": no matches for kind "ClusterImagePolicy" in version "config.openshift.io/v1alpha1"` | Verify the ClusterImagePolicy CRD is installed by running `oc get crd | grep imagepolicy` and ensure your OpenShift version supports image signature verification (4.11+). |
+    | `error: unable to decode "": yaml: line 2: mapping values are not allowed in this context` | Ensure the base64-encoded key values replace the placeholder strings exactly and contain no newlines; use `cat key.pub | base64 -w0` to encode without line breaks. |
+    | `The ImageContentSourcePolicy "mirror-config" is invalid: spec.repositoryDigestMirrors[0].mirrors: Invalid value: []string{nil}: must specify at least one mirror` | Verify that `mirror.example.com/redhat` and `mirror.example.com/quay` are valid, accessible registry hostnames and not left as placeholders. |
 ## cert-manager Operator
 
 ```bash
@@ -495,9 +509,11 @@ Conditions:
 ```
 
 !!! warning "Common errors"
-    **`error: resource mapping not found for name: "letsencrypt-prod" namespace: "" from "STDIN": no matches for kind "ClusterIssuer" in version "cert-manager.io/v1"`** — Install cert-manager operator from OperatorHub first using `oc get operators | grep cert-manager` to verify installation.
-    **`Certificate my-app-cert in namespace my-app is not ready: Waiting for HTTP-01 challenge propagation`** — Ensure the ingress class name matches your cluster's default ingress controller with `oc get ingressclass` and update the `class` field accordingly.
-    **`error validating data: data[tls.crt] not found`** — Wait for the certificate to reach Ready status before referencing the secret; check progress with `oc describe certificaterequest -n my-app`.
+    | Error | Fix |
+    |---|---|
+    | `error: resource mapping not found for name: "letsencrypt-prod" namespace: "" from "STDIN": no matches for kind "ClusterIssuer" in version "cert-manager.io/v1"` | Install cert-manager operator from OperatorHub first using `oc get operators | grep cert-manager` to verify installation. |
+    | `Certificate my-app-cert in namespace my-app is not ready: Waiting for HTTP-01 challenge propagation` | Ensure the ingress class name matches your cluster's default ingress controller with `oc get ingressclass` and update the `class` field accordingly. |
+    | `error validating data: data[tls.crt] not found` | Wait for the certificate to reach Ready status before referencing the secret; check progress with `oc describe certificaterequest -n my-app`. |
 ## Certificate Lifecycle Reference
 
 ```bash
@@ -538,9 +554,11 @@ kube-apiserver   True        False         False      4m      Cluster operator i
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "secret" or "secrets"`** — Verify you are connected to a valid OpenShift cluster with `oc cluster-info` and have cluster-admin permissions.
-    **`error: Unexpected key in path: tls.crt`** — Use `tls\.crt` with escaped dot or change to `'{.data["tls.crt"]}'` in the jsonpath expression.
-    **`command not found: openssl`** — Install openssl on your local machine with `apt-get install openssl` (Debian/Ubuntu) or `brew install openssl` (macOS).
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "secret" or "secrets"` | Verify you are connected to a valid OpenShift cluster with `oc cluster-info` and have cluster-admin permissions. |
+    | `error: Unexpected key in path: tls.crt` | Use `tls\.crt` with escaped dot or change to `'{.data["tls.crt"]}'` in the jsonpath expression. |
+    | `command not found: openssl` | Install openssl on your local machine with `apt-get install openssl` (Debian/Ubuntu) or `brew install openssl` (macOS). |
 ## See also
 
 - [OpenShift — Hardening](../hardening/)

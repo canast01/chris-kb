@@ -98,9 +98,11 @@ Every 10.0s: ceph -s                                    Mon Dec 19 14:32:15 2024
 ```
 
 !!! warning "Common errors"
-    **`Error: No such device /dev/sdX`** — Replace `/dev/sdX` with the actual device name (e.g. `/dev/sdb`) and verify it exists with `lsblk`.
-    **`Error: OSD deployment failed: device /dev/sdx is already in use`** — Run `cephadm ceph-volume lvm zap /dev/sdx --destroy` before attempting to add the OSD.
-    **`Error: host <hostname> not found in CRUSH map`** — Ensure the hostname matches exactly what `ceph orch host ls` shows and the host is already added to the cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error: No such device /dev/sdX` | Replace `/dev/sdX` with the actual device name (e.g. `/dev/sdb`) and verify it exists with `lsblk`. |
+    | `Error: OSD deployment failed: device /dev/sdx is already in use` | Run `cephadm ceph-volume lvm zap /dev/sdx --destroy` before attempting to add the OSD. |
+    | `Error: host <hostname> not found in CRUSH map` | Ensure the hostname matches exactly what `ceph orch host ls` shows and the host is already added to the cluster. |
 ## Replace a Failed OSD
 
 ```bash
@@ -187,8 +189,10 @@ Created osd(s) 4 for ceph-node-03:/dev/sdX
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: osd.4 does not exist`** — Verify the OSD ID is correct with `ceph osd tree` before attempting to purge.
-    **`Error: device /dev/sdX is already in use by osd.X`** — Ensure the old OSD is fully purged and the device is wiped with `sgdisk --zap-all /dev/sdX` before re-adding.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: osd.4 does not exist` | Verify the OSD ID is correct with `ceph osd tree` before attempting to purge. |
+    | `Error: device /dev/sdX is already in use by osd.X` | Ensure the old OSD is fully purged and the device is wiped with `sgdisk --zap-all /dev/sdX` before re-adding. |
     **
 ## Decommission a Host (Remove All Its OSDs)
 
@@ -249,9 +253,11 @@ noout flag unset
 ```
 
 !!! warning "Common errors"
-    **`Error EBUSY: osd.2 is still in use`** — Wait longer for PGs to finish migrating before attempting purge, or check `ceph osd safe-to-destroy osd.2` first.
-    **`Error: host storage-node-04 still has daemons`** — Ensure `ceph orch host drain` completes fully before removing the host; check `ceph orch ps` to verify all daemons are stopped.
-    **`Error ENOENT: osd.2 does not exist`** — Do not re-run the purge loop; each OSD is removed only once, so verify the OSD ID is correct in the for loop.
+    | Error | Fix |
+    |---|---|
+    | `Error EBUSY: osd.2 is still in use` | Wait longer for PGs to finish migrating before attempting purge, or check `ceph osd safe-to-destroy osd.2` first. |
+    | `Error: host storage-node-04 still has daemons` | Ensure `ceph orch host drain` completes fully before removing the host; check `ceph orch ps` to verify all daemons are stopped. |
+    | `Error ENOENT: osd.2 does not exist` | Do not re-run the purge loop; each OSD is removed only once, so verify the OSD ID is correct in the for loop. |
 ## Reweight OSDs to Balance Capacity
 
 ```bash
@@ -358,8 +364,10 @@ set pool 3 nodeep-scrub to true
 ```
 
 !!! warning "Common errors"
-    **`Error EINVAL: invalid pool name '<pool>'`** — Replace `<pool>` with an actual pool name like `rbd` or `cephfs_data`, or list pools with `ceph osd pool ls`.
-    **`Error ENOENT: pool does not exist`** — Verify the pool exists and is not being deleted; check with `ceph osd pool ls`.
+    | Error | Fix |
+    |---|---|
+    | `Error EINVAL: invalid pool name '<pool>'` | Replace `<pool>` with an actual pool name like `rbd` or `cephfs_data`, or list pools with `ceph osd pool ls`. |
+    | `Error ENOENT: pool does not exist` | Verify the pool exists and is not being deleted; check with `ceph osd pool ls`. |
 ## Repair an Inconsistent PG
 
 ```bash
@@ -407,9 +415,11 @@ object recovered-object written to pool default.rgw.buckets.data
 ```
 
 !!! warning "Common errors"
-    **`error: pg 2.4c query: No such file or directory`** — Verify the PG ID format is correct (use `ceph pg ls` to list valid PGs) and ensure the cluster is in a queryable state.
-    **`error: [Errno 2] No such file or directory: '/tmp/recovered-object'`** — Create the temporary directory first with `mkdir -p /tmp` or use a writable path like `$HOME/recovered-object`.
-    **`Error: pool <pool> does not exist`** — Confirm the pool name with `ceph osd pool ls` and substitute the correct pool name in the rados commands.
+    | Error | Fix |
+    |---|---|
+    | `error: pg 2.4c query: No such file or directory` | Verify the PG ID format is correct (use `ceph pg ls` to list valid PGs) and ensure the cluster is in a queryable state. |
+    | `error: [Errno 2] No such file or directory: '/tmp/recovered-object'` | Create the temporary directory first with `mkdir -p /tmp` or use a writable path like `$HOME/recovered-object`. |
+    | `Error: pool <pool> does not exist` | Confirm the pool name with `ceph osd pool ls` and substitute the correct pool name in the rados commands. |
 ## OSD Replacement (Original Procedure — ceph orch)
 
 ```bash
@@ -469,9 +479,11 @@ Scheduled osd.6 addition for ceph-node2:/dev/sdb
 ```
 
 !!! warning "Common errors"
-    **`Error ENOENT: osd.5 does not exist`** — Verify the OSD number is correct and the daemon hasn't already been removed with `ceph osd tree`.
-    **`Error: OSD osd.5 is still in (in the cluster); must be marked out first`** — Run `ceph osd out osd.5` before attempting to remove the OSD.
-    **`Error: Device /dev/sdb is already in use or has an existing LVM/partition table`** — Wipe the disk with `sgdisk -Z /dev/sdb` or `dd if=/dev/zero of=/dev/sdb bs=1M count=100` before re-adding it to the cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error ENOENT: osd.5 does not exist` | Verify the OSD number is correct and the daemon hasn't already been removed with `ceph osd tree`. |
+    | `Error: OSD osd.5 is still in (in the cluster); must be marked out first` | Run `ceph osd out osd.5` before attempting to remove the OSD. |
+    | `Error: Device /dev/sdb is already in use or has an existing LVM/partition table` | Wipe the disk with `sgdisk -Z /dev/sdb` or `dd if=/dev/zero of=/dev/sdb bs=1M count=100` before re-adding it to the cluster. |
 ## Add New Node
 
 ```bash
@@ -533,9 +545,11 @@ ID  CLASS  WEIGHT   TYPE NAME          STATUS REWEIGHT PRI-AFF
 ```
 
 !!! warning "Common errors"
-    **`ssh-copy-id: ERROR: failed to open ID file '/etc/ceph/ceph.pub': No such file or directory`** — Generate the SSH key pair on the admin node with `ssh-keygen -t rsa -f /etc/ceph/ceph -N ''` before copying.
-    **`Error EINVAL: osd.X: device /dev/sdb does not exist or is not usable`** — Verify the device exists on the target node with `ssh root@new-node lsblk` and ensure it is not already partitioned or in use.
-    **`Error: host 'new-node' not found in CRUSH map`** — Confirm the host was successfully added with `ceph orch host ls` and check network connectivity to the new node.
+    | Error | Fix |
+    |---|---|
+    | `ssh-copy-id: ERROR: failed to open ID file '/etc/ceph/ceph.pub': No such file or directory` | Generate the SSH key pair on the admin node with `ssh-keygen -t rsa -f /etc/ceph/ceph -N ''` before copying. |
+    | `Error EINVAL: osd.X: device /dev/sdb does not exist or is not usable` | Verify the device exists on the target node with `ssh root@new-node lsblk` and ensure it is not already partitioned or in use. |
+    | `Error: host 'new-node' not found in CRUSH map` | Confirm the host was successfully added with `ceph orch host ls` and check network connectivity to the new node. |
 ## Maintenance Mode
 
 ```bash
@@ -578,9 +592,11 @@ unset noout
 ```
 
 !!! warning "Common errors"
-    **`Error EACCES: access denied`** — Ensure you have admin-level ceph credentials (typically run with `sudo` or as the `ceph` user with proper keyring permissions).
-    **`Error EINVAL: invalid command`** — Verify the cluster is healthy and reachable; check that `ceph.conf` is present and `MON_HOST` is correctly configured.
-    **`Error: no monitors available`** — Confirm at least one monitor is running and network connectivity exists to the monitor nodes (check firewall rules and DNS resolution).
+    | Error | Fix |
+    |---|---|
+    | `Error EACCES: access denied` | Ensure you have admin-level ceph credentials (typically run with `sudo` or as the `ceph` user with proper keyring permissions). |
+    | `Error EINVAL: invalid command` | Verify the cluster is healthy and reachable; check that `ceph.conf` is present and `MON_HOST` is correctly configured. |
+    | `Error: no monitors available` | Confirm at least one monitor is running and network connectivity exists to the monitor nodes (check firewall rules and DNS resolution). |
 ---
 
 ## See also

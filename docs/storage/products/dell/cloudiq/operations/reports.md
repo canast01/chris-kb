@@ -57,9 +57,11 @@ curl -sk -X GET \
 ```
 
 !!! warning "Common errors"
-    **`{"error": "INVALID_TOKEN", "message": "Access token has expired or is invalid"}`** — Regenerate a fresh access token using Dell CloudIQ authentication endpoint and update the Bearer token.
-    **`{"error": "SYSTEM_NOT_FOUND", "message": "System ID SYS-001-EMC01 not found in your account"}`** — Verify system IDs are registered in CloudIQ and match your account's managed systems list.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification or use `--cacert` with a valid CA bundle path.
+    | Error | Fix |
+    |---|---|
+    | `{"error": "INVALID_TOKEN", "message": "Access token has expired or is invalid"}` | Regenerate a fresh access token using Dell CloudIQ authentication endpoint and update the Bearer token. |
+    | `{"error": "SYSTEM_NOT_FOUND", "message": "System ID SYS-001-EMC01 not found in your account"}` | Verify system IDs are registered in CloudIQ and match your account's managed systems list. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification or use `--cacert` with a valid CA bundle path. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

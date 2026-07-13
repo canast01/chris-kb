@@ -119,9 +119,11 @@ az costmanagement query \
 ```
 
 !!! warning "Common errors"
-    **`The provided scope '/subscriptions/<subscription-id>' is invalid.`** — Replace `<subscription-id>` with your actual subscription ID from `az account show --query id -o tsv`.
-    **`Invalid value for '--time-period-from': '2026-04-01' (type: CLIError)`** — Use ISO 8601 format `YYYY-MM-DDT00:00:00Z` or ensure the date is not in the future relative to your billing period.
-    **`The dataset aggregation or grouping is malformed.`** — Validate JSON syntax in the aggregation and grouping parameters; use single quotes around the entire JSON string and escape inner quotes properly.
+    | Error | Fix |
+    |---|---|
+    | `The provided scope '/subscriptions/<subscription-id>' is invalid.` | Replace `<subscription-id>` with your actual subscription ID from `az account show --query id -o tsv`. |
+    | `Invalid value for '--time-period-from': '2026-04-01' (type: CLIError)` | Use ISO 8601 format `YYYY-MM-DDT00:00:00Z` or ensure the date is not in the future relative to your billing period. |
+    | `The dataset aggregation or grouping is malformed.` | Validate JSON syntax in the aggregation and grouping parameters; use single quotes around the entire JSON string and escape inner quotes properly. |
 ### Common Cost Dimensions
 
 | Dimension | Description |
@@ -181,9 +183,11 @@ INV-STAGING-001       Staging Environment   Active
 ```
 
 !!! warning "Common errors"
-    **`The billing account '<billing-account-id>' does not exist or you do not have access to it.`** — Verify the billing account ID with `az billing account list` and ensure your account has the required Billing Reader role.
-    **`The specified billing profile '<billing-profile-id>' was not found.`** — Confirm the billing profile ID exists under the specified billing account using `az billing profile list --billing-account-name <billing-account-id>`.
-    **`Authorization failed: User does not have permission to perform action 'Microsoft.Billing/billingAccounts/read'.`** — Request Billing Reader or higher role assignment from your Azure subscription administrator.
+    | Error | Fix |
+    |---|---|
+    | `The billing account '<billing-account-id>' does not exist or you do not have access to it.` | Verify the billing account ID with `az billing account list` and ensure your account has the required Billing Reader role. |
+    | `The specified billing profile '<billing-profile-id>' was not found.` | Confirm the billing profile ID exists under the specified billing account using `az billing profile list --billing-account-name <billing-account-id>`. |
+    | `Authorization failed: User does not have permission to perform action 'Microsoft.Billing/billingAccounts/read'.` | Request Billing Reader or higher role assignment from your Azure subscription administrator. |
 ## Billing Exports
 
 Scheduled exports push daily or monthly cost data to an Azure Storage account in CSV format. This feeds downstream BI tools, cost dashboards, and data lakes.
@@ -273,9 +277,11 @@ weekly-budget-export    Microsoft.CostManagement/exports  /subscriptions/1234567
 ```
 
 !!! warning "Common errors"
-    **`InvalidResourceId : The resource ID is invalid or does not exist.`** — Verify the storage account resource ID and subscription ID are correct and the storage account exists in the specified resource group.
-    **`StorageAccountAccessDenied : The managed identity does not have access to the storage account.`** — Ensure the storage account's access control (IAM) grants the Cost Management service principal "Storage Blob Data Contributor" role on the container.
-    **`InvalidScope : The provided scope is not valid for this operation.`** — Confirm the subscription ID in the scope parameter matches your active subscription and is formatted as
+    | Error | Fix |
+    |---|---|
+    | `InvalidResourceId : The resource ID is invalid or does not exist.` | Verify the storage account resource ID and subscription ID are correct and the storage account exists in the specified resource group. |
+    | `StorageAccountAccessDenied : The managed identity does not have access to the storage account.` | Ensure the storage account's access control (IAM) grants the Cost Management service principal "Storage Blob Data Contributor" role on the container. |
+    | `InvalidScope : The provided scope is not valid for this operation.` | Confirm the subscription ID in the scope parameter matches your active subscription and is formatted as |
 ### Export Types
 
 | Export Type | Description |
@@ -331,9 +337,11 @@ az rest \
 ```
 
 !!! warning "Common errors"
-    **`The subscription '<sub-id>' could not be found.`** — Replace `<sub-id>` with your actual subscription ID from `az account show --query id`.
-    **`Authorization failed for template deployment. The client '<client-id>' with object id '<object-id>' does not have permission to perform action 'Microsoft.CostManagement/query/action' over scope '/subscriptions/<sub-id>'.`** — Assign the "Cost Management Reader" role to your user or service principal via `az role assignment create --assignee <principal-id> --role "Cost Management Reader" --scope /subscriptions/<sub-id>`.
-    **`Invalid JSON in request body`** — Validate the JSON syntax in the `--body` parameter using a JSON linter or ensure all quotes are properly escaped.
+    | Error | Fix |
+    |---|---|
+    | `The subscription '<sub-id>' could not be found.` | Replace `<sub-id>` with your actual subscription ID from `az account show --query id`. |
+    | `Authorization failed for template deployment. The client '<client-id>' with object id '<object-id>' does not have permission to perform action 'Microsoft.CostManagement/query/action' over scope '/subscriptions/<sub-id>'.` | Assign the "Cost Management Reader" role to your user or service principal via `az role assignment create --assignee <principal-id> --role "Cost Management Reader" --scope /subscriptions/<sub-id>`. |
+    | `Invalid JSON in request body` | Validate the JSON syntax in the `--body` parameter using a JSON linter or ensure all quotes are properly escaped. |
 ## Key Metrics to Track
 
 | Metric | Description | Review Cadence |

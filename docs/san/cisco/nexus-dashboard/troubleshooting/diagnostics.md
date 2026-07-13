@@ -118,9 +118,11 @@ tmpfs          16G   0    16G   0%  /dev/shm
 ```
 
 !!! warning "Common errors"
-    **`error: metrics not available yet`** — Wait 1–2 minutes after cluster startup for metrics-server to initialize, then retry the kubectl top command.
-    **`error: unable to connect to the server: dial tcp: lookup nexus-dashboard-node-1: no such host`** — Verify DNS resolution or use the node's IP address directly instead of hostname in SSH commands.
-    **`Filesystem /dev/sdb1 is 76% full`** — Archive or delete old logs and snapshots from `/data/` directory, or expand the volume if persistent growth is expected.
+    | Error | Fix |
+    |---|---|
+    | `error: metrics not available yet` | Wait 1–2 minutes after cluster startup for metrics-server to initialize, then retry the kubectl top command. |
+    | `error: unable to connect to the server: dial tcp: lookup nexus-dashboard-node-1: no such host` | Verify DNS resolution or use the node's IP address directly instead of hostname in SSH commands. |
+    | `Filesystem /dev/sdb1 is 76% full` | Archive or delete old logs and snapshots from `/data/` directory, or expand the volume if persistent growth is expected. |
 ```bash
 # Recent cluster events (shows pod failures, scheduling issues, etc.)
 kubectl get events --all-namespaces --sort-by='.lastTimestamp' | tail -50
@@ -150,8 +152,10 @@ ndfc        ndfc-scheduler-job-5c8d9f.17a4f8c1a2b3d4e8     Normal    Completed  
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "events"`** — Verify kubectl version is 1.19+ and the API server is responding with `kubectl cluster-info`.
-    **`error: namespace "ndfc" not found`** — Confirm the ndfc namespace exists with `kubectl get namespaces | grep ndfc` and create it if missing with `
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "events"` | Verify kubectl version is 1.19+ and the API server is responding with `kubectl cluster-info`. |
+    | `error: namespace "ndfc" not found` | Confirm the ndfc namespace exists with `kubectl get namespaces | grep ndfc` and create it if missing with ` |
 ```bash
 # Check etcd cluster health
 ETCDCTL_API=3 etcdctl \
@@ -183,8 +187,10 @@ https://127.0.0.1:2379 is healthy: successfully committed proposal: took = 12.45
 ```
 
 !!! warning "Common errors"
-    **`Error: context deadline exceeded`** — Increase the timeout with `--command-timeout=10s` or verify etcd service is running with `systemctl status etcd`.
-    **`Error: x509: certificate signed by unknown authority`** — Verify certificate paths are correct and CA certificate matches the etcd server's signing CA with `openssl verify -CAfile /etc/kubernetes/pki/etcd/ca.crt /etc/kubernetes/pki/etcd/server.crt`.
+    | Error | Fix |
+    |---|---|
+    | `Error: context deadline exceeded` | Increase the timeout with `--command-timeout=10s` or verify etcd service is running with `systemctl status etcd`. |
+    | `Error: x509: certificate signed by unknown authority` | Verify certificate paths are correct and CA certificate matches the etcd server's signing CA with `openssl verify -CAfile /etc/kubernetes/pki/etcd/ca.crt /etc/kubernetes/pki/etcd/server.crt`. |
 ```bash
 # Check discovery manager logs for a specific switch
 kubectl logs -n ndfc deployment/ndfc-discovery-manager --tail=500 \
@@ -232,9 +238,11 @@ Response: Cisco Nexus Operating System (NX-OS) Software 10.1(2)
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl commands to skip certificate verification in lab/test environments, or import the ND certificate into your system trust store.
-    **`jq: command not found`** — Install jq with `apt-get install jq` or `yum install jq`, or use the provided `python3 -c` JSON parser instead.
-    **`SNMP request timed out`** — Verify the switch IP is reachable with `ping <switch-ip>`, confirm SNMP v3 credentials match the switch configuration, and check that the ndfc_poll user exists on the target device.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl commands to skip certificate verification in lab/test environments, or import the ND certificate into your system trust store. |
+    | `jq: command not found` | Install jq with `apt-get install jq` or `yum install jq`, or use the provided `python3 -c` JSON parser instead. |
+    | `SNMP request timed out` | Verify the switch IP is reachable with `ping <switch-ip>`, confirm SNMP v3 credentials match the switch configuration, and check that the ndfc_poll user exists on the target device. |
 ```bash
 # Check NDFC zone manager logs
 kubectl logs -n ndfc deployment/ndfc-zone-manager --tail=200 \
@@ -273,9 +281,11 @@ Zone Merge Failures for VSAN 10:
 ```
 
 !!! warning "Common errors"
-    **`error: unable to decode an event from the watch stream: unexpected EOF`** — Restart the ndfc-zone-manager pod with `kubectl rollout restart deployment/ndfc-zone-manager -n ndfc`.
-    **`Connection refused` or `SSH connection refused`** — Verify switch IP reachability and SSH credentials with `ssh -v admin@<switch-ip>` and check firewall rules.
-    **`Zone merge conflict detected` or `Member count mismatch`** — Manually trigger a zone merge resync from NDFC UI or run `zone merge-failure clear` on the affected switch.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to decode an event from the watch stream: unexpected EOF` | Restart the ndfc-zone-manager pod with `kubectl rollout restart deployment/ndfc-zone-manager -n ndfc`. |
+    | `Connection refused` or `SSH connection refused` | Verify switch IP reachability and SSH credentials with `ssh -v admin@<switch-ip>` and check firewall rules. |
+    | `Zone merge conflict detected` or `Member count mismatch` | Manually trigger a zone merge resync from NDFC UI or run `zone merge-failure clear` on the affected switch. |
 ```bash
 # Connect to NDFC database (PostgreSQL)
 kubectl exec -n ndfc deployment/ndfc-server -- \
@@ -327,9 +337,11 @@ List of databases
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not translate host name "localhost" to address: Name or service not known`** — Ensure the ndfc-server pod is running with `kubectl get pods -n ndfc` and verify network connectivity within the cluster.
-    **`FATAL: role "postgres" does not exist`** — Check that the PostgreSQL user exists by connecting with the correct credentials or use `kubectl exec` to verify the pod's database initialization logs.
-    **`ERROR: database "ndfc" does not exist`** — Confirm the ndfc database was created during deployment by running the first command to list all databases, or check pod startup logs for initialization errors.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not translate host name "localhost" to address: Name or service not known` | Ensure the ndfc-server pod is running with `kubectl get pods -n ndfc` and verify network connectivity within the cluster. |
+    | `FATAL: role "postgres" does not exist` | Check that the PostgreSQL user exists by connecting with the correct credentials or use `kubectl exec` to verify the pod's database initialization logs. |
+    | `ERROR: database "ndfc" does not exist` | Confirm the ndfc database was created during deployment by running the first command to list all databases, or check pod startup logs for initialization errors. |
 ```bash
 # Check NDI flow collector pod
 kubectl get pods -n ndi | grep collector
@@ -377,9 +389,11 @@ ip        node.role   disk.indices  disk.used disk.avail disk.total disk.percent
 ```
 
 !!! warning "Common errors"
-    **`error: unable to upgrade connection: container not found ("ndi-elasticsearch")`** — Verify the Elasticsearch pod is running with `kubectl get pods -n ndi | grep elasticsearch` and check pod logs for crash reasons.
-    **`curl: (7) Failed to connect to localhost port 9200: Connection refused`** — Ensure the Elasticsearch service is listening by checking if the pod is in Running state and not in CrashLoopBackOff.
-    **`{"error":{"type":"cluster_block_exception","reason":"index [.ds-ndi-flow-2024.01.15-000042] blocked for writes"}}`** — Reduce disk usage below 85% watermark by deleting old indices with `curl -X DELETE http://localhost:9200/.ds-ndi-flow-2024.01.01*` or expanding storage.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to upgrade connection: container not found ("ndi-elasticsearch")` | Verify the Elasticsearch pod is running with `kubectl get pods -n ndi | grep elasticsearch` and check pod logs for crash reasons. |
+    | `curl: (7) Failed to connect to localhost port 9200: Connection refused` | Ensure the Elasticsearch service is listening by checking if the pod is in Running state and not in CrashLoopBackOff. |
+    | `{"error":{"type":"cluster_block_exception","reason":"index [.ds-ndi-flow-2024.01.15-000042] blocked for writes"}}` | Reduce disk usage below 85% watermark by deleting old indices with `curl -X DELETE http://localhost:9200/.ds-ndi-flow-2024.01.01*` or expanding storage. |
 ```bash
 # Check anomaly engine logs
 kubectl logs -n ndi deployment/ndi-anomaly-engine --tail=200 | grep -i "error\|fail"
@@ -412,9 +426,11 @@ kubectl exec -n ndi deployment/ndi-anomaly-engine -- \
 ```
 
 !!! warning "Common errors"
-    **`error: unable to upgrade connection: container not found`** — Verify the ndi-anomaly-engine pod is running with `kubectl get pods -n ndi` and check pod logs for crash reasons.
-    **`curl: (7) Failed to connect to nd-license-service port 80: Connection refused`** — Ensure the nd-license-service is deployed and accessible by running `kubectl get svc -n ndi` and checking service DNS resolution.
-    **`jq: parse error: Invalid JSON at line 1`** — The license service returned non-JSON output; verify the service endpoint with `kubectl port-forward -n ndi svc/nd-license-service 8080:80` and test directly.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to upgrade connection: container not found` | Verify the ndi-anomaly-engine pod is running with `kubectl get pods -n ndi` and check pod logs for crash reasons. |
+    | `curl: (7) Failed to connect to nd-license-service port 80: Connection refused` | Ensure the nd-license-service is deployed and accessible by running `kubectl get svc -n ndi` and checking service DNS resolution. |
+    | `jq: parse error: Invalid JSON at line 1` | The license service returned non-JSON output; verify the service endpoint with `kubectl port-forward -n ndi svc/nd-license-service 8080:80` and test directly. |
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -464,8 +480,10 @@ listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to the server: dial tcp: lookup nd-dc1-1.corp.example.com: no such host`** — Verify the Nexus Dashboard hostname is resolvable by running `nslookup nd-dc1-1.corp.example.com` and check DNS or /etc/hosts.
-    **`Host <switch-ip>:<port> — Connection timeout (no response after 5s)`** — Confirm the switch IP is reachable with `ping <switch-ip>` and verify firewall rules allow traffic from the ND management interface to that port.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to the server: dial tcp: lookup nd-dc1-1.corp.example.com: no such host` | Verify the Nexus Dashboard hostname is resolvable by running `nslookup nd-dc1-1.corp.example.com` and check DNS or /etc/hosts. |
+    | `Host <switch-ip>:<port> — Connection timeout (no response after 5s)` | Confirm the switch IP is reachable with `ping <switch-ip>` and verify firewall rules allow traffic from the ND management interface to that port. |
     **`error: no
 ```bash
 # ND cluster resource snapshot
@@ -513,9 +531,11 @@ sys	0m0.142s
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the ND CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to nd-dc1.corp.example.com port 443: Connection refused`** — Verify ND cluster is running with `acs system status` and confirm DNS resolution with `nslookup nd-dc1.corp.example.com`.
-    **`{"error":"Invalid credentials","code":401}`** — Confirm the service account password is correct and the account has API access permissions in ND RBAC settings.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the ND CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to nd-dc1.corp.example.com port 443: Connection refused` | Verify ND cluster is running with `acs system status` and confirm DNS resolution with `nslookup nd-dc1.corp.example.com`. |
+    | `{"error":"Invalid credentials","code":401}` | Confirm the service account password is correct and the account has API access permissions in ND RBAC settings. |
 ```bash
 # Patch NDFC server log level to DEBUG
 kubectl set env deployment/ndfc-server -n ndfc LOG_LEVEL=DEBUG

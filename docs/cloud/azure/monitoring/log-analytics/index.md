@@ -61,8 +61,10 @@ devRG            devWS        centralus   PerGB2018   30               c3d4e5f6-
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) Resource 'myWorkspace' does not exist in resource group 'myRG'.`** — Verify the workspace name and resource group name are correct with `az monitor log-analytics workspace list`.
-    **`(InvalidSkuName) The provided SKU 'PerGB2018' is invalid or deprecated.`** — Use a valid SKU such as `PerGB2018`, `Standard`, or `Premium` by checking available SKUs with `az monitor log-analytics workspace list --query "[].sku.name" -o tsv`.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) Resource 'myWorkspace' does not exist in resource group 'myRG'.` | Verify the workspace name and resource group name are correct with `az monitor log-analytics workspace list`. |
+    | `(InvalidSkuName) The provided SKU 'PerGB2018' is invalid or deprecated.` | Use a valid SKU such as `PerGB2018`, `Standard`, or `Premium` by checking available SKUs with `az monitor log-analytics workspace list --query "[].sku.name" -o tsv`. |
 ## Running KQL Queries
 
 ```bash
@@ -108,9 +110,11 @@ Microsoft.Network/networkSecurityGroups/write    admin@contoso.com        2
 ```
 
 !!! warning "Common errors"
-    **`BadRequest: The workspace ID is invalid or the workspace does not exist.`** — Verify the subscription ID, resource group name, and workspace name are correct by running `az monitor log-analytics workspace list --resource-group myRG`.
-    **`AuthorizationFailed: The client does not have authorization to perform action 'Microsoft.OperationalInsights/workspaces/query/read' on resource.`** — Ensure your Azure account has the Log Analytics Reader or Contributor role assigned to the workspace using `az role assignment create --assignee <user-id> --role "Log Analytics Reader" --scope <workspace-resource-id>`.
-    **`BadRequest: The KQL query syntax is invalid.`** — Test the KQL query in the Azure Portal's Log Analytics Query Editor first to validate syntax before running via CLI.
+    | Error | Fix |
+    |---|---|
+    | `BadRequest: The workspace ID is invalid or the workspace does not exist.` | Verify the subscription ID, resource group name, and workspace name are correct by running `az monitor log-analytics workspace list --resource-group myRG`. |
+    | `AuthorizationFailed: The client does not have authorization to perform action 'Microsoft.OperationalInsights/workspaces/query/read' on resource.` | Ensure your Azure account has the Log Analytics Reader or Contributor role assigned to the workspace using `az role assignment create --assignee <user-id> --role "Log Analytics Reader" --scope <workspace-resource-id>`. |
+    | `BadRequest: The KQL query syntax is invalid.` | Test the KQL query in the Azure Portal's Log Analytics Query Editor first to validate syntax before running via CLI. |
 ## Common KQL Patterns
 
 ```kql
@@ -170,8 +174,10 @@ OfficeActivity          180                180                     0
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource 'myWorkspace' does not exist in resource group 'myRG'.`** — Verify the workspace name and resource group name match exactly using `az monitor log-analytics workspace list --resource-group myRG`.
-    **`InvalidArgument: Table 'SecurityEvent' does not exist in workspace 'myWorkspace'.`** — Check available tables with `az monitor log-analytics workspace table list --resource-group myRG --workspace-name myWorkspace` and use the correct table name.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource 'myWorkspace' does not exist in resource group 'myRG'.` | Verify the workspace name and resource group name match exactly using `az monitor log-analytics workspace list --resource-group myRG`. |
+    | `InvalidArgument: Table 'SecurityEvent' does not exist in workspace 'myWorkspace'.` | Check available tables with `az monitor log-analytics workspace table list --resource-group myRG --workspace-name myWorkspace` and use the correct table name. |
 ## Retention Tiers
 
 | Tier              | Queryable  | Cost             | Max Duration |
@@ -212,9 +218,11 @@ az monitor log-analytics query-pack query create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.OperationalInsights/queryPacks/myQueryPack' under resource group 'myRG' was not found.`** — Create the query pack first using `az monitor log-analytics query-pack create --resource-group myRG --name myQueryPack`.
-    **`InvalidTemplateDeployment : The template deployment 'queryDeploy' is not valid according to the schema.`** — Escape special characters in the KQL query body or wrap it in single quotes to prevent shell interpretation.
-    **`AuthorizationFailed : The client 'user@contoso.com' with object id '98765432-4321-4321-4321-210987654321' does not have authorization to perform action 'Microsoft.OperationalInsights/queryPacks/queries/write' over scope '/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.OperationalInsights/queryPacks/myQueryPack'.`** — Ensure your Azure account has the Log Analytics Contributor role assigned to the resource group or subscription.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.OperationalInsights/queryPacks/myQueryPack' under resource group 'myRG' was not found.` | Create the query pack first using `az monitor log-analytics query-pack create --resource-group myRG --name myQueryPack`. |
+    | `InvalidTemplateDeployment : The template deployment 'queryDeploy' is not valid according to the schema.` | Escape special characters in the KQL query body or wrap it in single quotes to prevent shell interpretation. |
+    | `AuthorizationFailed : The client 'user@contoso.com' with object id '98765432-4321-4321-4321-210987654321' does not have authorization to perform action 'Microsoft.OperationalInsights/queryPacks/queries/write' over scope '/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.OperationalInsights/queryPacks/myQueryPack'.` | Ensure your Azure account has the Log Analytics Contributor role assigned to the resource group or subscription. |
 ## Log Search Alerts
 
 ```bash
@@ -267,6 +275,8 @@ az monitor scheduled-query create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource 'Microsoft.OperationalInsights/workspaces/myWorkspace' could not be found.`** — Verify the workspace name and subscription ID are correct, and that the workspace exists in the specified resource group.
-    **`InvalidResourceId: The provided scope is invalid or malformed.`** — Ensure all resource IDs follow the exact format `/subscriptions/<sub-id>/resourceGroups/<rg>/providers/...` with no extra slashes or typos.
-    **`ActionGroupNotFound: The action group at the specified resource ID does not exist.`** — Confirm the action group name and resource group are correct, and create the action group if it doesn't exist.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource 'Microsoft.OperationalInsights/workspaces/myWorkspace' could not be found.` | Verify the workspace name and subscription ID are correct, and that the workspace exists in the specified resource group. |
+    | `InvalidResourceId: The provided scope is invalid or malformed.` | Ensure all resource IDs follow the exact format `/subscriptions/<sub-id>/resourceGroups/<rg>/providers/...` with no extra slashes or typos. |
+    | `ActionGroupNotFound: The action group at the specified resource ID does not exist.` | Confirm the action group name and resource group are correct, and create the action group if it doesn't exist. |

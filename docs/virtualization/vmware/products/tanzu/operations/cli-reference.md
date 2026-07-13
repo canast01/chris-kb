@@ -62,9 +62,11 @@ secret                  Manage secrets for Tanzu                 Standalone  def
 ```
 
 !!! warning "Common errors"
-    **`curl: (22) HTTP error 404 Not Found`** — Verify the correct version number exists on the GitHub releases page and update the URL accordingly.
-    **`sudo: install: command not found`** — Install coreutils package with `sudo apt-get install coreutils` (Debian/Ubuntu) or `sudo yum install coreutils` (RHEL/CentOS).
-    **`Error: failed to sync plugins: unable to connect to discovery source`** — Ensure internet connectivity and that GitHub is accessible, or configure an offline plugin repository if air-gapped.
+    | Error | Fix |
+    |---|---|
+    | `curl: (22) HTTP error 404 Not Found` | Verify the correct version number exists on the GitHub releases page and update the URL accordingly. |
+    | `sudo: install: command not found` | Install coreutils package with `sudo apt-get install coreutils` (Debian/Ubuntu) or `sudo yum install coreutils` (RHEL/CentOS). |
+    | `Error: failed to sync plugins: unable to connect to discovery source` | Ensure internet connectivity and that GitHub is accessible, or configure an offline plugin repository if air-gapped. |
 ---
 
 ## Tanzu Cluster Operations
@@ -130,9 +132,11 @@ Cluster deletion initiated. UUID: a7f3c2e1-9b4d-47e2-8c1a-5d6f9e2b3c4a
 ```
 
 !!! warning "Common errors"
-    **`Error: cluster-config.yaml: no such file or directory`** — Verify the YAML file path is correct and exists in the current working directory before running `tanzu cluster create`.
-    **`Error: cluster 'my-workload-cluster' not found`** — Ensure the cluster name matches exactly (case-sensitive) and the cluster has finished provisioning by checking `tanzu cluster list` first.
-    **`Error: unable to write kubeconfig: permission denied`** — Run `mkdir -p ~/.kube` and ensure write permissions on the ~/.kube directory, or set KUBECONFIG to a writable path.
+    | Error | Fix |
+    |---|---|
+    | `Error: cluster-config.yaml: no such file or directory` | Verify the YAML file path is correct and exists in the current working directory before running `tanzu cluster create`. |
+    | `Error: cluster 'my-workload-cluster' not found` | Ensure the cluster name matches exactly (case-sensitive) and the cluster has finished provisioning by checking `tanzu cluster list` first. |
+    | `Error: unable to write kubeconfig: permission denied` | Run `mkdir -p ~/.kube` and ensure write permissions on the ~/.kube directory, or set KUBECONFIG to a writable path. |
 ---
 
 ## kubectl for Supervisor (vSphere with Tanzu)
@@ -184,9 +188,11 @@ tanzukubernetescluster.run.tanzu.vmware.com/tkg-prod-03 created
 ```
 
 !!! warning "Common errors"
-    **`error: You must be logged in to the cluster (Unauthorized)`** — Run `kubectl vsphere login` with correct `--server` URL and valid vSphere credentials.
-    **`error: Unable to connect to the server: dial tcp: lookup supervisor.example.local on [IP]: no such host`** — Verify the Supervisor cluster FQDN is resolvable and accessible from your network; check DNS or add an entry to `/etc/hosts`.
-    **`error: the server has asked for the client to provide credentials`** — Add `--insecure-skip-tls-verify` flag or ensure your vCenter's SSL certificate is trusted by your system's certificate store.
+    | Error | Fix |
+    |---|---|
+    | `error: You must be logged in to the cluster (Unauthorized)` | Run `kubectl vsphere login` with correct `--server` URL and valid vSphere credentials. |
+    | `error: Unable to connect to the server: dial tcp: lookup supervisor.example.local on [IP]: no such host` | Verify the Supervisor cluster FQDN is resolvable and accessible from your network; check DNS or add an entry to `/etc/hosts`. |
+    | `error: the server has asked for the client to provide credentials` | Add `--insecure-skip-tls-verify` flag or ensure your vCenter's SSL certificate is trusted by your system's certificate store. |
 ---
 
 ## kubectl Workload Cluster Operations
@@ -316,9 +322,11 @@ Synced 2 directories successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: kapp: Error: Unauthorized (401). Unauthorized`** — Verify kubeconfig is set correctly with `export KUBECONFIG=/path/to/config` and cluster credentials are valid.
-    **`Error: imgpkg: Error: Pushing image layer: UNAUTHORIZED: authentication required`** — Authenticate to the container registry with `docker login harbor.example.local` before pushing.
-    **`Error: vendir: Error: Syncing 'config/upstream': git clone failed: repository not found`** — Verify the git repository URL in `vendir.yml` is correct and accessible from the cluster network.
+    | Error | Fix |
+    |---|---|
+    | `Error: kapp: Error: Unauthorized (401). Unauthorized` | Verify kubeconfig is set correctly with `export KUBECONFIG=/path/to/config` and cluster credentials are valid. |
+    | `Error: imgpkg: Error: Pushing image layer: UNAUTHORIZED: authentication required` | Authenticate to the container registry with `docker login harbor.example.local` before pushing. |
+    | `Error: vendir: Error: Syncing 'config/upstream': git clone failed: repository not found` | Verify the git repository URL in `vendir.yml` is correct and accessible from the cluster network. |
 ---
 
 ## Harbor CLI
@@ -380,9 +388,11 @@ Status: Downloaded newer image for harbor.example.local/myproject/myapp:v1.0
 ```
 
 !!! warning "Common errors"
-    **`Error response from daemon: Get "https://harbor.example.local/v2/": x509: certificate signed by unknown authority`** — Add `--insecure-registry harbor.example.local` to Docker daemon config or use a valid CA-signed certificate for Harbor.
-    **`401 Unauthorized`** — Verify the admin password is correct and the user has API access permissions in Harbor.
-    **`Error response from daemon: pull access denied for harbor.example.local/myproject/myapp, repository does not exist or may require 'docker login'`** — Ensure the image was successfully pushed and the project/repository name matches exactly (case-sensitive).
+    | Error | Fix |
+    |---|---|
+    | `Error response from daemon: Get "https://harbor.example.local/v2/": x509: certificate signed by unknown authority` | Add `--insecure-registry harbor.example.local` to Docker daemon config or use a valid CA-signed certificate for Harbor. |
+    | `401 Unauthorized` | Verify the admin password is correct and the user has API access permissions in Harbor. |
+    | `Error response from daemon: pull access denied for harbor.example.local/myproject/myapp, repository does not exist or may require 'docker login'` | Ensure the image was successfully pushed and the project/repository name matches exactly (case-sensitive). |
 ---
 
 ## Velero CLI (Backup)
@@ -435,9 +445,11 @@ velero-restic-7x3q2r-9m6lk              1/1     Running   0          42d
 ```
 
 !!! warning "Common errors"
-    **`Error: backup storage location is not available`** — Verify the S3/storage backend is accessible and credentials are configured with `velero backup-location get`.
-    **`Error: namespace "production" not found`** — Ensure the namespace exists on the cluster before creating the backup, or remove the `--include-namespaces` flag to back up all namespaces.
-    **`error: the server doesn't have a resource type "backups"`** — Install or reinstall Velero CRDs with `velero install` or `kubectl apply -f velero-crds.yaml`.
+    | Error | Fix |
+    |---|---|
+    | `Error: backup storage location is not available` | Verify the S3/storage backend is accessible and credentials are configured with `velero backup-location get`. |
+    | `Error: namespace "production" not found` | Ensure the namespace exists on the cluster before creating the backup, or remove the `--include-namespaces` flag to back up all namespaces. |
+    | `error: the server doesn't have a resource type "backups"` | Install or reinstall Velero CRDs with `velero install` or `kubectl apply -f velero-crds.yaml`. |
 ---
 
 ## See also

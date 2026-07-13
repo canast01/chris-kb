@@ -121,9 +121,11 @@ SP B:
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed`** — Verify the SP IP address is reachable and credentials are correct with `ping <sp-ip>` and confirm the password has no special characters requiring escaping.
-    **`Connection timed out`** — Ensure the management host has network connectivity to the SP IP on port 443 and check firewall rules with `telnet <sp-ip> 443`.
-    **`uemcli: command not found`** — Install the Dell EMC CLI package on the management host or verify the installation path is in your `$PATH` environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed` | Verify the SP IP address is reachable and credentials are correct with `ping <sp-ip>` and confirm the password has no special characters requiring escaping. |
+    | `Connection timed out` | Ensure the management host has network connectivity to the SP IP on port 443 and check firewall rules with `telnet <sp-ip> 443`. |
+    | `uemcli: command not found` | Install the Dell EMC CLI package on the management host or verify the installation path is in your `$PATH` environment variable. |
 ### 2. Capture component health and active alerts
 
 ```bash
@@ -172,9 +174,11 @@ dae_1_disk_5 | Disk 5 | DEGRADED | DEGRADED
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (111)`** — Verify the SP IP address is correct and the management interface is reachable with `ping <sp-ip>`.
-    **`Error: Authentication failed for user 'admin'`** — Confirm the password is correct and the admin account is not locked; reset credentials via the Unisphere GUI if needed.
-    **`uemcli: command not found`** — Install the UEMCLI package on your management host or run commands from a system with UEMCLI already configured.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (111)` | Verify the SP IP address is correct and the management interface is reachable with `ping <sp-ip>`. |
+    | `Error: Authentication failed for user 'admin'` | Confirm the password is correct and the admin account is not locked; reset credentials via the Unisphere GUI if needed. |
+    | `uemcli: command not found` | Install the UEMCLI package on your management host or run commands from a system with UEMCLI already configured. |
 ### 3. Capture pool and storage health
 
 ```bash
@@ -229,9 +233,11 @@ File Systems: 8
 ```
 
 !!! warning "Common errors"
-    **`Connection refused (Connection refused)`** — Verify the SP IP address is correct and reachable with `ping <sp-ip>`, and confirm the management interface is running with `uemcli -d <sp-ip> -u admin -p <password> /sys show`.
-    **`Authentication failed (Authentication failed)`** — Confirm the admin password is correct and the user account has not been locked by attempting login through the Unisphere GUI first.
-    **`Command: /stor/pool show not found`** — Ensure you are running uemcli version 4.1 or later by checking `uemcli -version` and update if necessary.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused (Connection refused)` | Verify the SP IP address is correct and reachable with `ping <sp-ip>`, and confirm the management interface is running with `uemcli -d <sp-ip> -u admin -p <password> /sys show`. |
+    | `Authentication failed (Authentication failed)` | Confirm the admin password is correct and the user account has not been locked by attempting login through the Unisphere GUI first. |
+    | `Command: /stor/pool show not found` | Ensure you are running uemcli version 4.1 or later by checking `uemcli -version` and update if necessary. |
 ### 4. Generate the service information bundle
 
 **Via Unisphere UI (preferred):**
@@ -267,9 +273,11 @@ Expiration: 2024-01-22 08:45:32
 ```
 
 !!! warning "Common errors"
-    **`Authentication failed: Invalid credentials`** — Verify the SP IP address is correct and admin credentials are current; reset the password if needed.
-    **`Connection timeout: Unable to reach <sp-ip>`** — Confirm the SP management IP is reachable with `ping <sp-ip>` and that the storage array is online.
-    **`Collection already in progress`** — Wait for the existing collection to complete or use `uemcli -d <sp-ip> -u admin -p <password> /sys/serviceinfo cancel` to abort it first.
+    | Error | Fix |
+    |---|---|
+    | `Authentication failed: Invalid credentials` | Verify the SP IP address is correct and admin credentials are current; reset the password if needed. |
+    | `Connection timeout: Unable to reach <sp-ip>` | Confirm the SP management IP is reachable with `ping <sp-ip>` and that the storage array is online. |
+    | `Collection already in progress` | Wait for the existing collection to complete or use `uemcli -d <sp-ip> -u admin -p <password> /sys/serviceinfo cancel` to abort it first. |
 ### 5. Write the timeline
 
 ```text
@@ -426,9 +434,11 @@ Pool Health:
 ```
 
 !!! warning "Common errors"
-    **`Connection refused — check that <sp-ip> is reachable and uemcli service is running on the SP.`** — Verify network connectivity with `ping <sp-ip>` and confirm the management IP is correct.
-    **`Authentication failed for user 'admin'`** — Reset the admin password via the Unisphere web UI or use the correct password in the `-p` parameter.
-    **`uemcli: command not found`** — Install the uemcli package on the management host using your distribution's package manager or download from Dell EMC support portal.
+    | Error | Fix |
+    |---|---|
+    | `Connection refused — check that <sp-ip> is reachable and uemcli service is running on the SP.` | Verify network connectivity with `ping <sp-ip>` and confirm the management IP is correct. |
+    | `Authentication failed for user 'admin'` | Reset the admin password via the Unisphere web UI or use the correct password in the `-p` parameter. |
+    | `uemcli: command not found` | Install the uemcli package on the management host using your distribution's package manager or download from Dell EMC support portal. |
 ---
 
 ## Support SLA Reference

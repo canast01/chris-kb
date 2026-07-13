@@ -70,9 +70,11 @@ Query OK, 0 rows affected (0.01 sec)
 ```
 
 !!! warning "Common errors"
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the password is correct and the user has login privileges; check MySQL user grants with `SELECT user, host FROM mysql.user;`.
-    **`ERROR 2003 (HY000): Can't connect to MySQL server on '<host>' (111)`** — Confirm the MySQL server is running on the target host with `systemctl status mysql` and verify network connectivity with `ping <host>` or `nc -zv <host> 3306`.
-    **`ERROR 1317 (70100): Query execution was interrupted`** — This occurs when killing a long-running query; it is expected behavior and the connection will close or return to the prompt.
+    | Error | Fix |
+    |---|---|
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)` | Verify the password is correct and the user has login privileges; check MySQL user grants with `SELECT user, host FROM mysql.user;`. |
+    | `ERROR 2003 (HY000): Can't connect to MySQL server on '<host>' (111)` | Confirm the MySQL server is running on the target host with `systemctl status mysql` and verify network connectivity with `ping <host>` or `nc -zv <host> 3306`. |
+    | `ERROR 1317 (70100): Query execution was interrupted` | This occurs when killing a long-running query; it is expected behavior and the connection will close or return to the prompt. |
 ## mysqladmin
 
 ```bash
@@ -118,9 +120,11 @@ mysqld is alive
 ```
 
 !!! warning "Common errors"
-    **`mysqladmin: connect to server at 'localhost' failed`** — Verify MySQL service is running with `systemctl status mysql` and check bind_address configuration.
-    **`Access denied for user 'root'@'localhost' (using password: YES)`** — Ensure the password is correct or use `mysql_config_editor set --login-path=local --user=root --password` to store credentials securely.
-    **`mysqladmin: unknown command 'extended-status'`** — Use `extended-status` without the hyphen or upgrade to a supported MySQL version; check `mysqladmin --help` for available commands.
+    | Error | Fix |
+    |---|---|
+    | `mysqladmin: connect to server at 'localhost' failed` | Verify MySQL service is running with `systemctl status mysql` and check bind_address configuration. |
+    | `Access denied for user 'root'@'localhost' (using password: YES)` | Ensure the password is correct or use `mysql_config_editor set --login-path=local --user=root --password` to store credentials securely. |
+    | `mysqladmin: unknown command 'extended-status'` | Use `extended-status` without the hyphen or upgrade to a supported MySQL version; check `mysqladmin --help` for available commands. |
 ## mysqldump
 
 ```bash
@@ -154,9 +158,11 @@ $ ls -lh *.sql*
 ```
 
 !!! warning "Common errors"
-    **`mysqldump: Got error: 1045: Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password is correct and the MySQL service is running with `mysql -u root -p -e "SELECT 1;"`.
-    **`ERROR 1064 (42000) at line 156: You have an error in your SQL syntax`** — The dump file may be corrupted or from an incompatible MySQL version; try restoring with `--force` flag or verify the dump with `head -50 mydb.sql`.
-    **`ERROR 1273 (HY000): Unknown collation: 'utf8mb4_0900_ai_ci'`** — The dump was created on MySQL 8.0+ but you're restoring to an older version; add `--compatible=mysql57` to the mysqldump command.
+    | Error | Fix |
+    |---|---|
+    | `mysqldump: Got error: 1045: Access denied for user 'root'@'localhost' (using password: YES)` | Verify the root password is correct and the MySQL service is running with `mysql -u root -p -e "SELECT 1;"`. |
+    | `ERROR 1064 (42000) at line 156: You have an error in your SQL syntax` | The dump file may be corrupted or from an incompatible MySQL version; try restoring with `--force` flag or verify the dump with `head -50 mydb.sql`. |
+    | `ERROR 1273 (HY000): Unknown collation: 'utf8mb4_0900_ai_ci'` | The dump was created on MySQL 8.0+ but you're restoring to an older version; add `--compatible=mysql57` to the mysqldump command. |
 ## mysqlcheck
 
 ```bash
@@ -188,9 +194,11 @@ mydb.logs                                      OK
 ```
 
 !!! warning "Common errors"
-    **`mysqlcheck: Got error: 1045: Access denied for user 'root'@'localhost' (using password: YES)`** — Verify the root password is correct and the user has sufficient privileges with `SHOW GRANTS FOR 'root'@'localhost';`.
-    **`mysqlcheck: Got error: 1017: Can't find file: './mydb/orders.MYI' (errno: 2)`** — Stop the MySQL service, check file permissions in the data directory with `ls -la /var/lib/mysql/mydb/`, and restart MySQL.
-    **`Table 'mydb.orders' doesn't exist`** — Confirm the database and table names are spelled correctly and exist with `SHOW TABLES FROM mydb;`.
+    | Error | Fix |
+    |---|---|
+    | `mysqlcheck: Got error: 1045: Access denied for user 'root'@'localhost' (using password: YES)` | Verify the root password is correct and the user has sufficient privileges with `SHOW GRANTS FOR 'root'@'localhost';`. |
+    | `mysqlcheck: Got error: 1017: Can't find file: './mydb/orders.MYI' (errno: 2)` | Stop the MySQL service, check file permissions in the data directory with `ls -la /var/lib/mysql/mydb/`, and restart MySQL. |
+    | `Table 'mydb.orders' doesn't exist` | Confirm the database and table names are spelled correctly and exist with `SHOW TABLES FROM mydb;`. |
 ## mysqlbinlog
 
 ```bash
@@ -227,9 +235,11 @@ DELIMITER ;
 ```
 
 !!! warning "Common errors"
-    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)`** — Add `-p` flag or provide password via `MYSQL_PWD` environment variable before piping to mysql.
-    **`ERROR: Could not find target log file`** — Verify the binlog file path exists with `ls -la /var/lib/mysql/mysql-bin.000001` and check file permissions.
-    **`ERROR 1064 (42000): You have an error in your SQL syntax`** — Ensure datetime format matches exactly `'YYYY-MM-DD HH:MM:SS'` and falls within the actual binlog event timestamps.
+    | Error | Fix |
+    |---|---|
+    | `ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)` | Add `-p` flag or provide password via `MYSQL_PWD` environment variable before piping to mysql. |
+    | `ERROR: Could not find target log file` | Verify the binlog file path exists with `ls -la /var/lib/mysql/mysql-bin.000001` and check file permissions. |
+    | `ERROR 1064 (42000): You have an error in your SQL syntax` | Ensure datetime format matches exactly `'YYYY-MM-DD HH:MM:SS'` and falls within the actual binlog event timestamps. |
 ## Percona Toolkit
 
 ```bash
@@ -280,9 +290,11 @@ Killed query 4534 (user: app_user, time: 405 sec, db: myapp)
 ```
 
 !!! warning "Common errors"
-    **`Can't connect to MySQL server on 'primary' (111)`** — Verify the primary host is reachable and MySQL is running with `mysql -h primary -u root -e "SELECT 1"`.
-    **`Table 'myapp.users' is locked by FLUSH TABLES WITH READ LOCK`** — Release the lock on the replica with `UNLOCK TABLES` before running pt-table-checksum.
-    **`Percona Toolkit not found`** — Install Percona Toolkit with `apt-get install percona-toolkit` or `yum install percona-toolkit`.
+    | Error | Fix |
+    |---|---|
+    | `Can't connect to MySQL server on 'primary' (111)` | Verify the primary host is reachable and MySQL is running with `mysql -h primary -u root -e "SELECT 1"`. |
+    | `Table 'myapp.users' is locked by FLUSH TABLES WITH READ LOCK` | Release the lock on the replica with `UNLOCK TABLES` before running pt-table-checksum. |
+    | `Percona Toolkit not found` | Install Percona Toolkit with `apt-get install percona-toolkit` or `yum install percona-toolkit`. |
 ---
 
 ## Verify

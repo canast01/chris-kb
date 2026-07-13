@@ -165,9 +165,11 @@ admin@vra-appliance01:~$ systemctl start vrms
 ```
 
 !!! warning "Common errors"
-    **`Unit hms.service not found.`** — Verify the VRA appliance version and confirm hms.service exists with `systemctl list-unit-files | grep hms`.
-    **`Failed to start vrms.service: Unit vrms.service is masked.`** — Unmask the service with `systemctl unmask vrms` before attempting to start it.
-    **`Filesystem is 95% full; cannot start services`** — Free disk space immediately by removing old logs with `journalctl --vacuum=500M` or clearing replication cache directories.
+    | Error | Fix |
+    |---|---|
+    | `Unit hms.service not found.` | Verify the VRA appliance version and confirm hms.service exists with `systemctl list-unit-files | grep hms`. |
+    | `Failed to start vrms.service: Unit vrms.service is masked.` | Unmask the service with `systemctl unmask vrms` before attempting to start it. |
+    | `Filesystem is 95% full; cannot start services` | Free disk space immediately by removing old logs with `journalctl --vacuum=500M` or clearing replication cache directories. |
 ---
 
 ## Step 2 — Check VRA REST API health
@@ -210,9 +212,11 @@ test-vm-005 | PAUSED | lag: 120
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the VRA's certificate into your system trust store.
-    **`jq: command not found` or `python3: command not found`** — Install the required JSON parser (`apt install python3` or `brew install jq`) before running the script.
-    **`{"error":"Invalid credentials","code":401}`** — Verify the username and password are correct and the admin account is not locked; check VRA audit logs for failed login attempts.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the VRA's certificate into your system trust store. |
+    | `jq: command not found` or `python3: command not found` | Install the required JSON parser (`apt install python3` or `brew install jq`) before running the script. |
+    | `{"error":"Invalid credentials","code":401}` | Verify the username and password are correct and the admin account is not locked; check VRA audit logs for failed login attempts. |
 ---
 
 ## Step 3 — Read VRA logs
@@ -316,9 +320,11 @@ vmk2          192.168.60.22  fe80::250:56ff:fe9a:b1e6    00:50:56:9a:b1:e6  1500
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 192.168.45.120 port 31031 (tcp) failed: Connection refused`** — Verify the target VRA is running with `systemctl status vmware-hbrsvc` and confirm the firewall rule allows port 31031 from the source ESXi host.
-    **`PING 192.168.45.120 (192.168.45.120): sendto: No route to host`** — Check that the replication network is properly routed between sites and that the target VRA IP is reachable from the source ESXi management network.
-    **`vmkping: Unknown option -I vmk0`** — Use the correct syntax `vmkping -I vmk0 <target-vra-ip>` or verify the VMkernel adapter name with `esxcli network ip interface list` if vmk0 does not exist.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 192.168.45.120 port 31031 (tcp) failed: Connection refused` | Verify the target VRA is running with `systemctl status vmware-hbrsvc` and confirm the firewall rule allows port 31031 from the source ESXi host. |
+    | `PING 192.168.45.120 (192.168.45.120): sendto: No route to host` | Check that the replication network is properly routed between sites and that the target VRA IP is reachable from the source ESXi management network. |
+    | `vmkping: Unknown option -I vmk0` | Use the correct syntax `vmkping -I vmk0 <target-vra-ip>` or verify the VMkernel adapter name with `esxcli network ip interface list` if vmk0 does not exist. |
 If TCP 31031 test fails:
 1. Check firewall rules between the source and target networks
 2. Verify the target VRA IP address configured in vCenter → Site Recovery → vSphere Replication
@@ -375,8 +381,10 @@ root@esx-prod-01:~# esxcli vm process list | grep -i replication
 ```
 
 !!! warning "Common errors"
-    **`hbrsvc is stopped.`** — Run `/etc/init.d/hbrsvc start` to restart the replication daemon.
-    **`ERROR: Failed to connect to target host <IP>:<port> (Connection timeout)`** — Verify network connectivity between source and target ESXi hosts, check firewall rules for port 31031, and confirm the target host is reachable and running vSphere Replication.
+    | Error | Fix |
+    |---|---|
+    | `hbrsvc is stopped.` | Run `/etc/init.d/hbrsvc start` to restart the replication daemon. |
+    | `ERROR: Failed to connect to target host <IP>:<port> (Connection timeout)` | Verify network connectivity between source and target ESXi hosts, check firewall rules for port 31031, and confirm the target host is reachable and running vSphere Replication. |
     **`/var/log/hbr.log: No such file or directory`**
 ---
 
@@ -433,9 +441,11 @@ hbr-capture.pcap                                100%  2.4MB   8.2MB/s   00:00
 ```
 
 !!! warning "Common errors"
-    **`openssl: connect: Connection refused`** — Verify the VRA service is running and the FQDN/port is correct with `netstat -tlnp | grep 443` on the VRA appliance.
-    **`notAfter=<date> GMT` (where date is in the past)** — Renew the certificate immediately via VAMI at `https://<vra-ip>:5480` under Certificate Management to restore replication connectivity.
-    **`Permission denied` (when running pktcap-uw)** — Execute the packet capture command with root privileges or add your user to the appropriate group with `sudo pktcap-uw`.
+    | Error | Fix |
+    |---|---|
+    | `openssl: connect: Connection refused` | Verify the VRA service is running and the FQDN/port is correct with `netstat -tlnp | grep 443` on the VRA appliance. |
+    | `notAfter=<date> GMT` (where date is in the past)` | Renew the certificate immediately via VAMI at `https://<vra-ip>:5480` under Certificate Management to restore replication connectivity. |
+    | `Permission denied` (when running pktcap-uw)` | Execute the packet capture command with root privileges or add your user to the appropriate group with `sudo pktcap-uw`. |
 ---
 
 ## Step 7 — Collect VRA support bundle for VMware SR
@@ -485,9 +495,11 @@ admin@vra-prod-01:/tmp$ grep "vm-prod-web-01" /var/log/vmware/hbr/hbr.log | head
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and ensure the admin account is enabled on the VRA appliance via VAMI.
-    **`Connection refused`** — Confirm network connectivity between source and target VRA sites and verify firewall rules allow ports 31031 and 44046.
-    **`No such file or directory: /tmp/vr-support-*.tar.gz`** — Run the support-bundle.sh script first and verify the output path exists before attempting SCP transfer.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and ensure the admin account is enabled on the VRA appliance via VAMI. |
+    | `Connection refused` | Confirm network connectivity between source and target VRA sites and verify firewall rules allow ports 31031 and 44046. |
+    | `No such file or directory: /tmp/vr-support-*.tar.gz` | Run the support-bundle.sh script first and verify the output path exists before attempting SCP transfer. |
 ---
 
 ## Log locations

@@ -136,8 +136,10 @@ Total: 47 snapshots | Eradication window expires: 2024-01-16 03:00:12 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection group '<pgroup>' not found`** — Verify the protection group name with `pureprotectiongroup list` and use the correct name.
-    **`Error: Command requires authentication token`** — Ensure you are authenticated to the Pure Storage array with `pureauth login` before running snapshot commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection group '<pgroup>' not found` | Verify the protection group name with `pureprotectiongroup list` and use the correct name. |
+    | `Error: Command requires authentication token` | Ensure you are authenticated to the Pure Storage array with `pureauth login` before running snapshot commands. |
 Check Veeam Hardened Repository: confirm immutability lock is active and unexpired.
 
 ## Recovery Options
@@ -174,9 +176,11 @@ Volume restore-vol-prod-01 created successfully from pgrouplist-prod-01.2024-01-
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection group '<pgroup>' not found`** — Verify the protection group name with `pureprotectiongroup list` and ensure it exists on the array.
-    **`Error: Snapshot '<snapshot>' does not exist in protection group`** — Confirm the snapshot name is correct and hasn't been purged by checking the full snapshot list output above.
-    **`Error: Volume '<restore-vol-name>' already exists`** — Remove the `--overwrite` flag if you want to preserve the existing volume, or delete it first with `purevol destroy <restore-vol-name>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection group '<pgroup>' not found` | Verify the protection group name with `pureprotectiongroup list` and ensure it exists on the array. |
+    | `Error: Snapshot '<snapshot>' does not exist in protection group` | Confirm the snapshot name is correct and hasn't been purged by checking the full snapshot list output above. |
+    | `Error: Volume '<restore-vol-name>' already exists` | Remove the `--overwrite` flag if you want to preserve the existing volume, or delete it first with `purevol destroy <restore-vol-name>`. |
 ### Option B — Veeam Restore from Hardened Repository
 
 1. Veeam Console → Home → Backups → Disk

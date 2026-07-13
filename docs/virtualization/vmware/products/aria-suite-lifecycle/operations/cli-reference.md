@@ -82,9 +82,11 @@ production-cert               CN=production.local       2027-09-20 12:00:00    V
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate file not found: /etc/ssl/certs/new-cert.pem`** — Verify the certificate file path exists and is readable by the vracli user.
-    **`Error: Alias 'aria-default-cert' is in use and cannot be deleted`** — Use a different alias or ensure the certificate is not actively bound to any service before deletion.
-    **`Error: Private key does not match certificate`** — Ensure the certificate and private key pair are from the same CSR and re-run the import command with the correct files.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate file not found: /etc/ssl/certs/new-cert.pem` | Verify the certificate file path exists and is readable by the vracli user. |
+    | `Error: Alias 'aria-default-cert' is in use and cannot be deleted` | Use a different alias or ensure the certificate is not actively bound to any service before deletion. |
+    | `Error: Private key does not match certificate` | Ensure the certificate and private key pair are from the same CSR and re-run the import command with the correct files. |
 ---
 
 ## Proxy & Network
@@ -131,9 +133,11 @@ DNS servers updated:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to proxy host proxy.corp.local:8080`** — Verify the proxy hostname/IP and port are correct, and that the appliance has network connectivity to the proxy server.
-    **`Error: vracli command not found`** — Ensure you are logged into the Aria Suite Lifecycle appliance via SSH and have appropriate permissions; vracli is only available on the appliance itself.
-    **`Error: DNS update failed - invalid server format`** — Use comma-separated IP addresses without spaces (e.g., `10.0.0.10,10.0.0.11`) for the `--servers` parameter.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to proxy host proxy.corp.local:8080` | Verify the proxy hostname/IP and port are correct, and that the appliance has network connectivity to the proxy server. |
+    | `Error: vracli command not found` | Ensure you are logged into the Aria Suite Lifecycle appliance via SSH and have appropriate permissions; vracli is only available on the appliance itself. |
+    | `Error: DNS update failed - invalid server format` | Use comma-separated IP addresses without spaces (e.g., `10.0.0.10,10.0.0.11`) for the `--servers` parameter. |
 ---
 
 ## NTP & Time
@@ -173,9 +177,11 @@ Making a step adjustment of 125.432 seconds.
 ```
 
 !!! warning "Common errors"
-    **`vracli: command not found`** — Ensure you are logged into the vRealize Automation appliance via SSH and that vracli is in your PATH, or use the full path `/opt/vmware/vrealize/bin/vracli`.
-    **`Failed to set NTP servers: Permission denied`** — Run the vracli commands with appropriate privileges (use `sudo` or ensure your user has NTP configuration permissions in vRA).
-    **`Timed out waiting for NTP synchronization`** — Check network connectivity to the NTP servers with `ping 10.20.30.40` and verify firewall rules allow UDP port 123 outbound.
+    | Error | Fix |
+    |---|---|
+    | `vracli: command not found` | Ensure you are logged into the vRealize Automation appliance via SSH and that vracli is in your PATH, or use the full path `/opt/vmware/vrealize/bin/vracli`. |
+    | `Failed to set NTP servers: Permission denied` | Run the vracli commands with appropriate privileges (use `sudo` or ensure your user has NTP configuration permissions in vRA). |
+    | `Timed out waiting for NTP synchronization` | Check network connectivity to the NTP servers with `ping 10.20.30.40` and verify firewall rules allow UDP port 123 outbound. |
 ---
 
 ## Logs
@@ -223,8 +229,10 @@ Jan 15 14:33:02 aria-lcm-01 lcm[2847]: Health check passed: all services operati
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/var/log/lcm/lcm-app.log' for reading: No such file or directory`** — Verify the LCM application is installed and running with `systemctl status lcm`, or check the correct log path in `/var/log/lcm/`.
-    **`vracli: command not found`** — Ensure the vRealize Automation CLI is installed and in your PATH by running `which vracli` or sourcing the vRA environment setup script.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/var/log/lcm/lcm-app.log' for reading: No such file or directory` | Verify the LCM application is installed and running with `systemctl status lcm`, or check the correct log path in `/var/log/lcm/`. |
+    | `vracli: command not found` | Ensure the vRealize Automation CLI is installed and in your PATH by running `which vracli` or sourcing the vRA environment setup script. |
     **`journal
 ---
 

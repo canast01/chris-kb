@@ -57,9 +57,11 @@ nutanix@NTNX-001-A ~$
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname <cvm-ip>: Name or service not known`** — Replace `<cvm-ip>` with the actual CVM IP address (e.g., `10.20.30.45`).
-    **`Permission denied (publickey,password).`** — Verify the default credentials are still active; if changed, use the correct password or SSH key configured by your administrator.
-    **`Connection refused`** — Confirm the CVM is powered on and the SSH service is running; check network connectivity to the CVM IP address.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname <cvm-ip>: Name or service not known` | Replace `<cvm-ip>` with the actual CVM IP address (e.g., `10.20.30.45`). |
+    | `Permission denied (publickey,password).` | Verify the default credentials are still active; if changed, use the correct password or SSH key configured by your administrator. |
+    | `Connection refused` | Confirm the CVM is powered on and the SSH service is running; check network connectivity to the CVM IP address. |
 ---
 
 ## ncli — Cluster Management
@@ -107,8 +109,10 @@ Cluster Information
 ```
 
 !!! warning "Common errors"
-    **`Error: Cluster is not in a healthy state. Please resolve cluster issues before making changes.`** — Run `ncli cluster get-domain-fault-tolerance-status` to identify unhealthy nodes and resolve issues before retrying the edit command.
-    **`Error: Invalid IP address format for external-ip-address: <vip>`** — Ensure the VIP is a valid IPv4 address (e.g., `10.20.30.40`) and is routable on your management network.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cluster is not in a healthy state. Please resolve cluster issues before making changes.` | Run `ncli cluster get-domain-fault-tolerance-status` to identify unhealthy nodes and resolve issues before retrying the edit command. |
+    | `Error: Invalid IP address format for external-ip-address: <vip>` | Ensure the VIP is a valid IPv4 address (e.g., `10.20.30.40`) and is routable on your management network. |
 ### Hosts (Nodes)
 
 ```bash
@@ -147,9 +151,11 @@ ncli host exit-maintenance-mode id=00058c84-1234-5678-abcd-ef1234567890
 ```
 
 !!! warning "Common errors"
-    **`Error: Host with id '<host-id>' not found`** — Verify the host ID is correct by running `ncli host list` and copy the exact UUID.
-    **`Error: Host is not in maintenance mode`** — Ensure the host is actually in maintenance mode before attempting to exit; check status with `ncli host get id=<host-id>`.
-    **`Error: Unable to enter maintenance mode - VMs are still running on this host`** — Migrate or shut down all virtual machines on the host before entering maintenance mode.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host with id '<host-id>' not found` | Verify the host ID is correct by running `ncli host list` and copy the exact UUID. |
+    | `Error: Host is not in maintenance mode` | Ensure the host is actually in maintenance mode before attempting to exit; check status with `ncli host get id=<host-id>`. |
+    | `Error: Unable to enter maintenance mode - VMs are still running on this host` | Migrate or shut down all virtual machines on the host before entering maintenance mode. |
 ### Disks
 
 ```bash
@@ -181,8 +187,10 @@ disk-005e6f7g-8h9i-0j1k-2l3m   512 GB     SSD     FAILED    node-4
 ```
 
 !!! warning "Common errors"
-    **`ncli: command not found`** — Ensure you are logged into a Nutanix cluster node or have the Nutanix CLI installed and in your PATH.
-    **`Error: Invalid disk ID format`** — Verify the disk ID exists by running `ncli disk list` first and use the exact ID from the output.
+    | Error | Fix |
+    |---|---|
+    | `ncli: command not found` | Ensure you are logged into a Nutanix cluster node or have the Nutanix CLI installed and in your PATH. |
+    | `Error: Invalid disk ID format` | Verify the disk ID exists by running `ncli disk list` first and use the exact ID from the output. |
 ### Storage Pools and Containers
 
 ```bash
@@ -223,9 +231,11 @@ Container created successfully with UUID: 9h0d3456-7890-12cd-ef01-3456789012cd
 ```
 
 !!! warning "Common errors"
-    **`Error: Storage pool 'default-storage-pool' not found`** — Verify the storage pool name with `ncli sp list` and use the correct name in the sp-name parameter.
-    **`Error: Container with name '<name>' already exists`** — Choose a unique container name or delete the existing container with `ncli ctr delete name=<name>` before recreating.
-    **`Error: Insufficient capacity in storage pool`** — Check available capacity with `ncli sp get name=<pool-name>` and reduce the container size or add more disks to the pool.
+    | Error | Fix |
+    |---|---|
+    | `Error: Storage pool 'default-storage-pool' not found` | Verify the storage pool name with `ncli sp list` and use the correct name in the sp-name parameter. |
+    | `Error: Container with name '<name>' already exists` | Choose a unique container name or delete the existing container with `ncli ctr delete name=<name>` before recreating. |
+    | `Error: Insufficient capacity in storage pool` | Check available capacity with `ncli sp get name=<pool-name>` and reduce the container size or add more disks to the pool. |
 ### Virtual Disks (vDisks)
 
 ```bash
@@ -282,8 +292,10 @@ ncli vdisk get name=vm-prod-01-disk
 ```
 
 !!! warning "Common errors"
-    **`Error: vDisk <name> not found`** — Verify the vDisk name is correct using `ncli vdisk list` and check for typos or special characters.
-    **`Error: Container <name> not found`** — Confirm the container name exists with `ncli container list` before filtering by container-name.
+    | Error | Fix |
+    |---|---|
+    | `Error: vDisk <name> not found` | Verify the vDisk name is correct using `ncli vdisk list` and check for typos or special characters. |
+    | `Error: Container <name> not found` | Confirm the container name exists with `ncli container list` before filtering by container-name. |
 ### Alerts
 
 ```bash
@@ -309,8 +321,10 @@ Alert alert-20240115-002 resolved successfully.
 ```
 
 !!! warning "Common errors"
-    **`Alert ID not found: <alert-id>`** — Verify the alert ID exists by running `ncli alert list` and copy the exact ID from the output.
-    **`Permission denied: User does not have alert management privileges`** — Request elevated permissions or use an admin account with alert management role.
+    | Error | Fix |
+    |---|---|
+    | `Alert ID not found: <alert-id>` | Verify the alert ID exists by running `ncli alert list` and copy the exact ID from the output. |
+    | `Permission denied: User does not have alert management privileges` | Request elevated permissions or use an admin account with alert management role. |
 ### Users and Authentication
 
 ```bash
@@ -343,8 +357,10 @@ User Information
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid username or password`** — Verify the current password is correct and the admin user exists with `ncli user list`.
-    **`Error: Password does not meet complexity requirements`** — Ensure the new password meets minimum length (8 characters) and includes uppercase, lowercase, numbers, and special characters.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid username or password` | Verify the current password is correct and the admin user exists with `ncli user list`. |
+    | `Error: Password does not meet complexity requirements` | Ensure the new password meets minimum length (8 characters) and includes uppercase, lowercase, numbers, and special characters. |
 ### Protection Domains (Legacy Backup)
 
 ```bash
@@ -378,9 +394,11 @@ Snapshot Time: 2024-01-15 15:08:44
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection domain 'prod-db-cluster' not found`** — Verify the PD name with `ncli pd list` and use the exact name shown in the output.
-    **`Error: Cannot activate replication - remote site unreachable`** — Check network connectivity to the remote site and confirm the remote Prism Element is accessible.
-    **`Error: Snapshot creation failed - insufficient free space on cluster`** — Free up storage space or reduce snapshot retention policy before attempting another manual snapshot.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection domain 'prod-db-cluster' not found` | Verify the PD name with `ncli pd list` and use the exact name shown in the output. |
+    | `Error: Cannot activate replication - remote site unreachable` | Check network connectivity to the remote site and confirm the remote Prism Element is accessible. |
+    | `Error: Snapshot creation failed - insufficient free space on cluster` | Free up storage space or reduce snapshot retention policy before attempting another manual snapshot. |
 ---
 
 ## acli — AHV VM Management
@@ -432,9 +450,11 @@ acli vm.clone web-prod-01 clone_vm_name=web-prod-01-backup
 ```
 
 !!! warning "Common errors"
-    **`Error: VM <vm-name> not found`** — Verify the exact VM name with `acli vm.list` and check for typos or case sensitivity.
-    **`Error: VM is already in the requested state`** — Confirm the current VM state before issuing power/pause commands; use `acli vm.get <vm-name>` to check.
-    **`Error: Operation timed out after 300 seconds`** — Increase timeout or check cluster health; ensure the Nutanix cluster is responsive with `acli cluster info`.
+    | Error | Fix |
+    |---|---|
+    | `Error: VM <vm-name> not found` | Verify the exact VM name with `acli vm.list` and check for typos or case sensitivity. |
+    | `Error: VM is already in the requested state` | Confirm the current VM state before issuing power/pause commands; use `acli vm.get <vm-name>` to check. |
+    | `Error: Operation timed out after 300 seconds` | Increase timeout or check cluster health; ensure the Nutanix cluster is responsive with `acli cluster info`. |
 ### VM Configuration
 
 ```bash
@@ -480,9 +500,11 @@ VM updated successfully. Pending restart required.
 ```
 
 !!! warning "Common errors"
-    **`Error: VM <vm-name> not found`** — Verify the VM name matches exactly and exists in the cluster using `acli vm.list`.
-    **`Error: Container VMs not found`** — Confirm the container name is correct and accessible with `acli container.list`.
-    **`Error: VM must be powered off to modify CPU/memory`** — Power off the VM first using `acli vm.off <vm-name>` before running the update command.
+    | Error | Fix |
+    |---|---|
+    | `Error: VM <vm-name> not found` | Verify the VM name matches exactly and exists in the cluster using `acli vm.list`. |
+    | `Error: Container VMs not found` | Confirm the container name is correct and accessible with `acli container.list`. |
+    | `Error: VM must be powered off to modify CPU/memory` | Power off the VM first using `acli vm.off <vm-name>` before running the update command. |
 ### VM Migration
 
 ```bash
@@ -511,8 +533,10 @@ acli host.list
 ```
 
 !!! warning "Common errors"
-    **`Error: VM <vm-name> not found`** — Verify the VM name with `acli vm.list` and ensure it is powered on before migration.
-    **`Error: Host <host-name> is not available for migration`** — Check that the target host is in Normal state and has sufficient resources using `acli host.list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: VM <vm-name> not found` | Verify the VM name with `acli vm.list` and ensure it is powered on before migration. |
+    | `Error: Host <host-name> is not available for migration` | Check that the target host is in Normal state and has sufficient resources using `acli host.list`. |
 ### Snapshots
 
 ```bash
@@ -555,9 +579,11 @@ Freed space: 48.7 GB
 ```
 
 !!! warning "Common errors"
-    **`Error: VM 'web-server-01' not found`** — Verify the VM name is correct and exists in the cluster using `acli vm.list`.
-    **`Error: Snapshot 'pre-patch-2024' does not exist`** — Check the exact snapshot name with `acli vm.snapshot_list <vm-name>` and ensure you're using the correct spelling.
-    **`Error: Cannot revert VM while it is powered on`** — Power off the VM first using `acli vm.off <vm-name>` before reverting to a snapshot.
+    | Error | Fix |
+    |---|---|
+    | `Error: VM 'web-server-01' not found` | Verify the VM name is correct and exists in the cluster using `acli vm.list`. |
+    | `Error: Snapshot 'pre-patch-2024' does not exist` | Check the exact snapshot name with `acli vm.snapshot_list <vm-name>` and ensure you're using the correct spelling. |
+    | `Error: Cannot revert VM while it is powered on` | Power off the VM first using `acli vm.off <vm-name>` before reverting to a snapshot. |
 ### Networks and Images
 
 ```bash
@@ -600,9 +626,11 @@ Image win2022-base created successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Network with name '<network-name>' already exists`** — Use a unique network name or delete the existing network with `acli net.delete <network-name>` first.
-    **`Error: Invalid VLAN ID '<vlan-id>'. VLAN ID must be between 0 and 4094`** — Specify a valid VLAN ID in the range 0–4094.
-    **`Error: Failed to download image from source_url: Connection timeout`** — Verify the URL is accessible from the cluster and the HTTP server is reachable on port 80.
+    | Error | Fix |
+    |---|---|
+    | `Error: Network with name '<network-name>' already exists` | Use a unique network name or delete the existing network with `acli net.delete <network-name>` first. |
+    | `Error: Invalid VLAN ID '<vlan-id>'. VLAN ID must be between 0 and 4094` | Specify a valid VLAN ID in the range 0–4094. |
+    | `Error: Failed to download image from source_url: Connection timeout` | Verify the URL is accessible from the cluster and the HTTP server is reachable on port 80. |
 ### Host Management (AHV)
 
 ```bash
@@ -641,9 +669,11 @@ acli host.exit_maintenance_mode Host4
 ```
 
 !!! warning "Common errors"
-    **`Error: Host '<host-name>' not found`** — Verify the exact hostname with `acli host.list` and check for typos or case sensitivity.
-    **`Error: Cannot enter maintenance mode - VMs still running on host`** — Wait for all VM migrations to complete or manually migrate remaining VMs before retrying.
-    **`Error: Connection refused - acli not authenticated`** — Authenticate with `acli` using valid Nutanix cluster credentials before executing host commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host '<host-name>' not found` | Verify the exact hostname with `acli host.list` and check for typos or case sensitivity. |
+    | `Error: Cannot enter maintenance mode - VMs still running on host` | Wait for all VM migrations to complete or manually migrate remaining VMs before retrying. |
+    | `Error: Connection refused - acli not authenticated` | Authenticate with `acli` using valid Nutanix cluster credentials before executing host commands. |
 ---
 
 ## ncc — Nutanix Cluster Check
@@ -693,9 +723,11 @@ Overall Health: GOOD (with warnings)
 ```
 
 !!! warning "Common errors"
-    **`ncc: command not found`** — Ensure NCC is installed on the CVM and the PATH includes /usr/local/bin, or run the command with full path /usr/local/nutanix/bin/ncc.
-    **`Health check <check_name> not found in registry`** — Verify the check name is correct by running `ncc --health_checks list` to see available checks.
-    **`Permission denied`** — Run the command with appropriate privileges (sudo or as nutanix user) since NCC requires elevated permissions to access cluster health data.
+    | Error | Fix |
+    |---|---|
+    | `ncc: command not found` | Ensure NCC is installed on the CVM and the PATH includes /usr/local/bin, or run the command with full path /usr/local/nutanix/bin/ncc. |
+    | `Health check <check_name> not found in registry` | Verify the check name is correct by running `ncc --health_checks list` to see available checks. |
+    | `Permission denied` | Run the command with appropriate privileges (sudo or as nutanix user) since NCC requires elevated permissions to access cluster health data. |
 ---
 
 ## allssh — Multi-CVM Commands
@@ -741,9 +773,11 @@ Network: 3/3 CVMs reachable to 8.8.8.8 (0% packet loss)
 ```
 
 !!! warning "Common errors"
-    **`allssh: command not found`** — Ensure you are running this command from a Nutanix cluster node or source the Nutanix environment setup script.
-    **`Connection refused on CVM-2 (10.0.0.11)`** — Verify the CVM is powered on and SSH is running; restart the CVM if necessary.
-    **`NTP not synchronized: stratum 16`** — Check NTP configuration and upstream NTP server connectivity; restart ntpd service with `service ntpd restart`.
+    | Error | Fix |
+    |---|---|
+    | `allssh: command not found` | Ensure you are running this command from a Nutanix cluster node or source the Nutanix environment setup script. |
+    | `Connection refused on CVM-2 (10.0.0.11)` | Verify the CVM is powered on and SSH is running; restart the CVM if necessary. |
+    | `NTP not synchronized: stratum 16` | Check NTP configuration and upstream NTP server connectivity; restart ntpd service with `service ntpd restart`. |
 ---
 
 ## genesis — AOS Service Manager
@@ -792,8 +826,10 @@ Genesis restart completed successfully in 87 seconds
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Cannot restart genesis — cluster is in rebalancing state`** — Wait for rebalancing to complete using `cluster status` before restarting services.
-    **`ERROR: genesis restart failed — insufficient disk space on /home/nutanix`** — Free up disk space on the CVM or check for log file bloat with `du -sh /home/nutanix/logs/*`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Cannot restart genesis — cluster is in rebalancing state` | Wait for rebalancing to complete using `cluster status` before restarting services. |
+    | `ERROR: genesis restart failed — insufficient disk space on /home/nutanix` | Free up disk space on the CVM or check for log file bloat with `du -sh /home/nutanix/logs/*`. |
 ---
 
 ## nodetool — Cassandra Ring Management
@@ -839,7 +875,9 @@ Row Cache Size (MB): 0
 ```
 
 !!! warning "Common errors"
-    **`nodetool: command not found`** — Ensure Cassandra is installed and the nodetool binary is in your PATH, or use the full
+    | Error | Fix |
+    |---|---|
+    | `nodetool: command not found` | Ensure Cassandra is installed and the nodetool binary is in your PATH, or use the full |
 **Status codes:** `UN` = Up/Normal (healthy), `DN` = Down, `?N` = Unknown — investigate any non-UN nodes.
 
 ---
@@ -875,9 +913,11 @@ Scan Details for scan-20240115-prod-001:
 ```
 
 !!! warning "Common errors"
-    **`curator_cli: command not found`** — Ensure Nutanix cluster tools are installed and the curator_cli binary is in your PATH, or use the full path `/opt/nutanix/bin/curator_cli`.
-    **`Error: Invalid scan_id format`** — Verify the scan ID exists by running `curator_cli get_last_successful_scans` first and use the exact ID from the output.
-    **`Error: Connection refused to Curator service`** — Confirm the Curator service is running with `systemctl status nutanix-curator` and that cluster connectivity is active.
+    | Error | Fix |
+    |---|---|
+    | `curator_cli: command not found` | Ensure Nutanix cluster tools are installed and the curator_cli binary is in your PATH, or use the full path `/opt/nutanix/bin/curator_cli`. |
+    | `Error: Invalid scan_id format` | Verify the scan ID exists by running `curator_cli get_last_successful_scans` first and use the exact ID from the output. |
+    | `Error: Connection refused to Curator service` | Confirm the Curator service is running with `systemctl status nutanix-curator` and that cluster connectivity is active. |
 ---
 
 ## Useful Diagnostics
@@ -940,7 +980,9 @@ Zeus Cluster Configuration:
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/home/nutanix/data/logs/stargate.ERROR' for reading: No such file or directory`** — Verify the log file path is correct; on some AOS versions it may be `/home/nutanix/data/
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/home/nutanix/data/logs/stargate.ERROR' for reading: No such file or directory` | Verify the log file path is correct; on some AOS versions it may be `/home/nutanix/data/ |
 ---
 
 ---

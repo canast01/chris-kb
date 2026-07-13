@@ -114,9 +114,11 @@ curl -sk $AUTH $BASE/health | python3 -m json.tool                         # VRM
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example; verify VRMS certificate is trusted or regenerate it).
-    **`curl: (7) Failed to connect to vrms port 443: Connection refused`** — Verify VRMS service is running with `systemctl status vrms` and confirm the hostname/IP and port are correct.
-    **`jq: parse error: Invalid JSON at line 1`** — Ensure the API endpoint is correct and VRMS is responding with valid JSON; check credentials with `curl -sk $AUTH $BASE/health` first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present in example; verify VRMS certificate is trusted or regenerate it). |
+    | `curl: (7) Failed to connect to vrms port 443: Connection refused` | Verify VRMS service is running with `systemctl status vrms` and confirm the hostname/IP and port are correct. |
+    | `jq: parse error: Invalid JSON at line 1` | Ensure the API endpoint is correct and VRMS is responding with valid JSON; check credentials with `curl -sk $AUTH $BASE/health` first. |
 ## See also
 
 - [vSphere Replication Operations](../../../virtualization/vmware/products/vsphere-replication/operations/procedures/)

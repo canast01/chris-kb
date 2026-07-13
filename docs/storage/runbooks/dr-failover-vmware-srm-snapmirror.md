@@ -96,9 +96,11 @@ svm_dr:vol_dr_backup   SnapMirrored  00:08:19  daily.2026-06-21_2155
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a Linux shell.
-    **`Error: No matching snapmirror relationships found`** — Verify the destination SVM name is correct and SnapMirror relationships exist with `snapmirror list-destinations`.
-    **`Error: RPC: Authentication failed`** — Confirm your ONTAP user account has the "snapmirror" capability assigned in the role.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a Linux shell. |
+    | `Error: No matching snapmirror relationships found` | Verify the destination SVM name is correct and SnapMirror relationships exist with `snapmirror list-destinations`. |
+    | `Error: RPC: Authentication failed` | Confirm your ONTAP user account has the "snapmirror" capability assigned in the role. |
 ### Verify SRM Test Run History
 
 ```bash
@@ -130,9 +132,11 @@ curl -sk -u "admin:<pass>" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the command, but if still occurring, verify SRM server certificate is trusted or use `--cacert` with the proper CA bundle).
-    **`jq: command not found`** — Install `python3-json-tool` or use `python3 -m json.tool` instead (the command already uses the latter, so ensure Python 3 is installed with `python3 --version`).
-    **`HTTP 401 Unauthorized`** — Verify the SRM admin credentials are correct and the user has API access permissions in SRM's role-based access control settings.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the command, but if still occurring, verify SRM server certificate is trusted or use `--cacert` with the proper CA bundle). |
+    | `jq: command not found` | Install `python3-json-tool` or use `python3 -m json.tool` instead (the command already uses the latter, so ensure Python 3 is installed with `python3 --version`). |
+    | `HTTP 401 Unauthorized` | Verify the SRM admin credentials are correct and the user has API access permissions in SRM's role-based access control settings. |
 ### Verify RPO for Each Protection Group
 
 ```bash
@@ -156,8 +160,10 @@ cluster1:/vol/logs_tier1   cluster2:/vol/logs_tier1   00:38:09         Transferr
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Verify you are logged into the ONTAP cluster CLI (not the hypervisor) and have appropriate admin credentials.
-    **`Error: No SnapMirror relationships found`** — Confirm SnapMirror relationships exist on the primary cluster using `snapmirror list-destinations` and verify replication is initialized.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Verify you are logged into the ONTAP cluster CLI (not the hypervisor) and have appropriate admin credentials. |
+    | `Error: No SnapMirror relationships found` | Confirm SnapMirror relationships exist on the primary cluster using `snapmirror list-destinations` and verify replication is initialized. |
 ### Final Go/No-Go Checklist
 
 ```text
@@ -227,9 +233,11 @@ svm_dr:vol_dr_logs01         Idle
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname app-server-01.prod: Name or service not known`** — Verify DNS resolution and hostname spelling, or use the FQDN with the correct domain suffix.
-    **`Error: command failed: SnapMirror relationship does not exist for destination "svm_dr:vol_dr_app01"`** — Confirm the SnapMirror relationship is initialized and the destination path matches the actual SVM and volume names exactly.
-    **`Error: command failed: This operation is not permitted: SnapMirror transfer already in progress`** — Wait for the current transfer to complete (check with `snapmirror show`) before issuing another update command.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname app-server-01.prod: Name or service not known` | Verify DNS resolution and hostname spelling, or use the FQDN with the correct domain suffix. |
+    | `Error: command failed: SnapMirror relationship does not exist for destination "svm_dr:vol_dr_app01"` | Confirm the SnapMirror relationship is initialized and the destination path matches the actual SVM and volume names exactly. |
+    | `Error: command failed: This operation is not permitted: SnapMirror transfer already in progress` | Wait for the current transfer to complete (check with `snapmirror show`) before issuing another update command. |
 ---
 
 ## Phase 2: SRM Failover
@@ -271,9 +279,11 @@ curl -sk -X POST -u "admin:<pass>" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the SRM certificate into your system's CA bundle.
-    **`{"error": "Unauthorized", "code": 401}`** — Verify the admin password is correct and URL-encoded if it contains special characters; test credentials separately with a simple GET request first.
-    **`jq: command not found`** — Install `jq` package (`apt-get install jq` on Debian/Ubuntu or `yum install jq` on RHEL) or use the provided `python3` JSON parser instead.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the SRM certificate into your system's CA bundle. |
+    | `{"error": "Unauthorized", "code": 401}` | Verify the admin password is correct and URL-encoded if it contains special characters; test credentials separately with a simple GET request first. |
+    | `jq: command not found` | Install `jq` package (`apt-get install jq` on Debian/Ubuntu or `yum install jq` on RHEL) or use the provided `python3` JSON parser instead. |
 ### 2.2 Break SnapMirror on DR Cluster
 
 SRM with NetApp ONTAP SRA breaks SnapMirror automatically during recovery plan execution. If manual intervention is required:
@@ -312,8 +322,10 @@ svm_dr   vol_dr_app01    snapmirror.c1d9e8f2-4a7b-11ee-9c2a...   01/15/2024 01:4
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: SnapMirror relationship does not exist for destination "svm_dr:vol_dr_app01"`** — Verify the destination path is correct and the relationship exists with `snapmirror show -destination-path svm_dr:vol_dr_app01`.
-    **`Error: command failed: Cannot break SnapMirror relationship in "snapmirrored" state`** — Wait for the current SnapMirror transfer to complete with `snapmirror show -destination-path svm_dr:vol_dr_app01` before attempting the break operation.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: SnapMirror relationship does not exist for destination "svm_dr:vol_dr_app01"` | Verify the destination path is correct and the relationship exists with `snapmirror show -destination-path svm_dr:vol_dr_app01`. |
+    | `Error: command failed: Cannot break SnapMirror relationship in "snapmirrored" state` | Wait for the current SnapMirror transfer to complete with `snapmirror show -destination-path svm_dr:vol_dr_app01` before attempting the break operation. |
 ### 2.3 Re-register Datastores in DR vCenter
 
 SRM re-registers datastores and VMs automatically as part of the recovery plan. If manual re-registration is needed:
@@ -404,9 +416,11 @@ svm_dr    vol_dr_app01   487.2GB    512.8GB
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused`** — Verify the PostgreSQL service is running on db-server-01.dr with `systemctl status postgresql` and check that replication has completed before testing connectivity.
-    **`ssh: Could not resolve hostname app-server-01.dr: Name or service not known`** — Ensure DNS resolution is working for DR hostnames or use IP addresses directly; verify network connectivity to the DR site is active.
-    **`Error: command failed: permission denied. Reason: User "app_user" does not have SELECT privilege on table "orders".`** — Grant SELECT permissions to app_user on the orders table using `GRANT SELECT ON orders TO app_user;` on the DR database.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection refused` | Verify the PostgreSQL service is running on db-server-01.dr with `systemctl status postgresql` and check that replication has completed before testing connectivity. |
+    | `ssh: Could not resolve hostname app-server-01.dr: Name or service not known` | Ensure DNS resolution is working for DR hostnames or use IP addresses directly; verify network connectivity to the DR site is active. |
+    | `Error: command failed: permission denied. Reason: User "app_user" does not have SELECT privilege on table "orders".` | Grant SELECT permissions to app_user on the orders table using `GRANT SELECT ON orders TO app_user;` on the DR database. |
 ### 3.3 DNS and Load Balancer Updates
 
 ```bash
@@ -444,9 +458,11 @@ curl -sk -X PATCH -u "admin:<pass>" \
 ```
 
 !!! warning "Common errors"
-    **`nsupdate: couldn't get address for 'dns-mgmt.corp.local': not found`** — Verify DNS management server hostname is resolvable and reachable on port 53, or use its IP address directly in the `server` statement.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present) or import the NSX ALB CA certificate into your system trust store.
-    **`TSIG error with server: tsig verify failure`** — Confirm the TSIG key file `/etc/dns/Kapp.key` is readable, matches the server's key, and uses the correct algorithm (typically HMAC-SHA256).
+    | Error | Fix |
+    |---|---|
+    | `nsupdate: couldn't get address for 'dns-mgmt.corp.local': not found` | Verify DNS management server hostname is resolvable and reachable on port 53, or use its IP address directly in the `server` statement. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification (already present) or import the NSX ALB CA certificate into your system trust store. |
+    | `TSIG error with server: tsig verify failure` | Confirm the TSIG key file `/etc/dns/Kapp.key` is readable, matches the server's key, and uses the correct algorithm (typically HMAC-SHA256). |
 ---
 
 ## Phase 4: Failback
@@ -491,8 +507,10 @@ svm_prod:vol_prod_db01         Snapmirrored 0B             1s
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Snapmirror relationship does not exist.`** — Verify the source and destination paths match the existing relationship direction using `snapmirror show` before attempting resync.
-    **`Error: Operation failed: Transfer already in progress for destination svm_prod:vol_prod_app01`** — Wait for the current transfer to complete or abort it with `snapmirror abort -destination-path svm_prod:vol_prod_app01` before retrying resync.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Snapmirror relationship does not exist.` | Verify the source and destination paths match the existing relationship direction using `snapmirror show` before attempting resync. |
+    | `Error: Operation failed: Transfer already in progress for destination svm_prod:vol_prod_app01` | Wait for the current transfer to complete or abort it with `snapmirror abort -destination-path svm_prod:vol_prod_app01` before retrying resync. |
 ### 4.2 Planned Failback via SRM
 
 ```bash
@@ -553,9 +571,11 @@ svm_prod:vol_prod_db01 svm_dr:vol_dr_db01 snapmirrored 00:12:15
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Snapmirror relationship does not exist.`** — Verify the relationship was actually reversed during failover by running `snapmirror show` before attempting to break it.
-    **`Error: command failed: Destination volume is not in a SnapMirror relationship.`** — Ensure the resync command uses the correct destination path format (svm_name:volume_name) and that the volume exists on the DR cluster.
-    **`Error: command failed: A SnapMirror relationship with the same source and destination already exists.`** — Delete the conflicting relationship first with `snapmirror delete -destination-path svm_dr:vol_dr_app01` before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Snapmirror relationship does not exist.` | Verify the relationship was actually reversed during failover by running `snapmirror show` before attempting to break it. |
+    | `Error: command failed: Destination volume is not in a SnapMirror relationship.` | Ensure the resync command uses the correct destination path format (svm_name:volume_name) and that the volume exists on the DR cluster. |
+    | `Error: command failed: A SnapMirror relationship with the same source and destination already exists.` | Delete the conflicting relationship first with `snapmirror delete -destination-path svm_dr:vol_dr_app01` before recreating it. |
 ---
 
 ## Rollback
@@ -596,8 +616,10 @@ svm_dr:vol_dr_app01 is now read-write.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: There is no SnapMirror relationship for destination "svm_dr:vol_dr_app01"`** — Verify the destination SVM and volume names match your topology; use `snapmirror show` without filters to list all relationships.
-    **`Error: SnapMirror relationship is in "Transferring" state and cannot be broken`** — Wait for the transfer to complete or run `snapmirror abort -destination-path svm_dr:vol_dr_app01` before attempting the break operation.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: There is no SnapMirror relationship for destination "svm_dr:vol_dr_app01"` | Verify the destination SVM and volume names match your topology; use `snapmirror show` without filters to list all relationships. |
+    | `Error: SnapMirror relationship is in "Transferring" state and cannot be broken` | Wait for the transfer to complete or run `snapmirror abort -destination-path svm_dr:vol_dr_app01` before attempting the break operation. |
 **If application validation fails on DR site:**
 
 ```bash
@@ -633,8 +655,10 @@ Restore operation completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: There is no snapshot with name "hourly.2024-01-15_2400"`** — Verify the exact snapshot name from the `snapshot show` output and use the correct timestamp.
-    **`Error: SnapMirror relationship is not in a valid state for resync`** — Confirm the primary volume is online and the SnapMirror relationship status is "snapmirrored" using `snapmirror show -destination-path svm_dr:vol_dr_app01`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: There is no snapshot with name "hourly.2024-01-15_2400"` | Verify the exact snapshot name from the `snapshot show` output and use the correct timestamp. |
+    | `Error: SnapMirror relationship is not in a valid state for resync` | Confirm the primary volume is online and the SnapMirror relationship status is "snapmirrored" using `snapmirror show -destination-path svm_dr:vol_dr_app01`. |
 ---
 
 ## Escalation Contacts Template

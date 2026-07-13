@@ -51,9 +51,11 @@ aws kms cancel-key-deletion --key-id <key-id>
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidKeyId.Malformed) when calling the EnableKeyRotation operation: 1 validation error detected: Value at 'keyId' failed to satisfy constraint: Member must satisfy regular expression pattern: [\w-]{1,2048}`** — Replace `<key-id>` placeholder with the actual key ID or ARN from the create-key output.
-    **`An error occurred (UnsupportedOperationException) when calling the EnableKeyRotation operation: The request is not valid for key spec ENCRYPT_SIGN.`** — Key rotation is only supported for symmetric keys; asymmetric or signing keys cannot have automatic rotation enabled.
-    **`An error occurred (InvalidStateException) when calling the CancelKeyDeletion operation: arn:aws:kms:us-east-1:123456789012:key/a1b2c3d4-e5f6-7890-abcd-ef1234567890 is not scheduled for deletion.`** — Verify the key is actually in PendingDeletion state before attempting cancellation.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidKeyId.Malformed) when calling the EnableKeyRotation operation: 1 validation error detected: Value at 'keyId' failed to satisfy constraint: Member must satisfy regular expression pattern: [\w-]{1,2048}` | Replace `<key-id>` placeholder with the actual key ID or ARN from the create-key output. |
+    | `An error occurred (UnsupportedOperationException) when calling the EnableKeyRotation operation: The request is not valid for key spec ENCRYPT_SIGN.` | Key rotation is only supported for symmetric keys; asymmetric or signing keys cannot have automatic rotation enabled. |
+    | `An error occurred (InvalidStateException) when calling the CancelKeyDeletion operation: arn:aws:kms:us-east-1:123456789012:key/a1b2c3d4-e5f6-7890-abcd-ef1234567890 is not scheduled for deletion.` | Verify the key is actually in PendingDeletion state before attempting cancellation. |
 ```bash
 # Check key manager status
 security key-manager show

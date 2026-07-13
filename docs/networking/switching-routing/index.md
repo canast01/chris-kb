@@ -37,8 +37,10 @@ Fa0/3          connected    up
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact command syntax for your switch model; some platforms use `show vlan brief` while others require `show vlan`.
-    **`% Incomplete command`** — Provide the complete VLAN ID number after `show vlan id` (e.g., `show vlan id 20`).
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact command syntax for your switch model; some platforms use `show vlan brief` while others require `show vlan`. |
+    | `% Incomplete command` | Provide the complete VLAN ID number after `show vlan id` (e.g., `show vlan id 20`). |
 ```bash
 interface <int>
   switchport mode trunk
@@ -51,8 +53,10 @@ interface <int>
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in interface configuration mode by running `configure terminal` then `interface <int>` before entering switchport commands.
-    **`% Incomplete command`** — Ensure all VLAN IDs are numeric and comma-separated without spaces (e.g., `switchport trunk allowed vlan 10,20,30`).
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in interface configuration mode by running `configure terminal` then `interface <int>` before entering switchport commands. |
+    | `% Incomplete command` | Ensure all VLAN IDs are numeric and comma-separated without spaces (e.g., `switchport trunk allowed vlan 10,20,30`). |
 ```bash
 switchport trunk allowed vlan add <id>
 switchport trunk allowed vlan remove <id>
@@ -63,8 +67,10 @@ switchport trunk allowed vlan remove <id>
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in interface configuration mode with `configure terminal` and `interface <port>` before running switchport commands.
-    **`% Incomplete command`** — Replace `<id>` with an actual VLAN ID number (e.g., `switchport trunk allowed vlan add 100`).
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in interface configuration mode with `configure terminal` and `interface <port>` before running switchport commands. |
+    | `% Incomplete command` | Replace `<id>` with an actual VLAN ID number (e.g., `switchport trunk allowed vlan add 100`). |
 ```bash
 # Confirm VLAN exists
 show vlan brief | include <id>
@@ -100,9 +106,11 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 1/2/4 ms
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the VLAN ID syntax matches your device OS (Cisco IOS uses `show vlan id <number>`, not `include`).
-    **`Destination Host Unreachable.`** — Confirm the target IP is actually on the same VLAN and the device is powered on and reachable.
-    **`% Ambiguous command: "show interfaces trunk"`** — Use the exact command syntax for your platform; some devices require `show trunk` or `show spanning-tree vlan`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the VLAN ID syntax matches your device OS (Cisco IOS uses `show vlan id <number>`, not `include`). |
+    | `Destination Host Unreachable.` | Confirm the target IP is actually on the same VLAN and the device is powered on and reachable. |
+    | `% Ambiguous command: "show interfaces trunk"` | Use the exact command syntax for your platform; some devices require `show trunk` or `show spanning-tree vlan`. |
 ```bash
 configure terminal
 vlan <id>
@@ -115,8 +123,10 @@ exit
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Ensure you are in privileged EXEC mode (enable) before entering configure terminal.
-    **`% VLAN <id> does not exist`** — Create the VLAN first with the global config command `vlan <id>` before attempting to name it.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Ensure you are in privileged EXEC mode (enable) before entering configure terminal. |
+    | `% VLAN <id> does not exist` | Create the VLAN first with the global config command `vlan <id>` before attempting to name it. |
 ```bash
 interface <int>
   switchport mode access
@@ -131,8 +141,10 @@ exit
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify that `<int>`, `<id>`, and `<description>` are replaced with actual values (e.g., `interface GigabitEthernet0/0/1`) and that no angle brackets remain in the command.
-    **`% Interface does not exist.`** — Confirm the interface name matches your device's nomenclature by running `show interfaces` to list available interfaces.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify that `<int>`, `<id>`, and `<description>` are replaced with actual values (e.g., `interface GigabitEthernet0/0/1`) and that no angle brackets remain in the command. |
+    | `% Interface does not exist.` | Confirm the interface name matches your device's nomenclature by running `show interfaces` to list available interfaces. |
 ```bash
 interface <int>
   switchport mode trunk
@@ -148,9 +160,11 @@ exit
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in interface configuration mode (use `configure terminal` then `interface <int>`) before entering switchport commands.
-    **`% Incomplete command`** — Ensure all VLAN IDs in the `allowed vlan` list are valid integers separated by commas with no spaces (e.g., `1,10,20` not `1, 10, 20`).
-    **`% Invalid input detected`** — Confirm the native VLAN ID exists and is not already assigned to another interface; use `show vlan` to verify available VLANs.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in interface configuration mode (use `configure terminal` then `interface <int>`) before entering switchport commands. |
+    | `% Incomplete command` | Ensure all VLAN IDs in the `allowed vlan` list are valid integers separated by commas with no spaces (e.g., `1,10,20` not `1, 10, 20`). |
+    | `% Invalid input detected` | Confirm the native VLAN ID exists and is not already assigned to another interface; use `show vlan` to verify available VLANs. |
 ```bash
 interface <int>
   switchport trunk allowed vlan add <id>
@@ -161,8 +175,10 @@ interface <int>
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the interface name syntax matches your device model (e.g., `GigabitEthernet0/0/1` or `Ethernet1/1`) and that you are in interface configuration mode.
-    **`% VLAN <id> does not exist.`** — Create the VLAN first using `vlan <id>` in global configuration mode before adding it to the trunk.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the interface name syntax matches your device model (e.g., `GigabitEthernet0/0/1` or `Ethernet1/1`) and that you are in interface configuration mode. |
+    | `% VLAN <id> does not exist.` | Create the VLAN first using `vlan <id>` in global configuration mode before adding it to the trunk. |
 ```bash
 interface <int>
   switchport trunk allowed vlan remove <id>
@@ -173,8 +189,10 @@ interface <int>
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the interface name syntax matches your device model (e.g., `GigabitEthernet0/0/1` or `Ethernet1/1`) and that you are in interface configuration mode.
-    **`% VLAN <id> is not in the allowed list for this trunk.`** — Confirm the VLAN ID exists in the current allowed list using `show interface <int> trunk` before attempting removal.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the interface name syntax matches your device model (e.g., `GigabitEthernet0/0/1` or `Ethernet1/1`) and that you are in interface configuration mode. |
+    | `% VLAN <id> is not in the allowed list for this trunk.` | Confirm the VLAN ID exists in the current allowed list using `show interface <int> trunk` before attempting removal. |
 ```bash
 copy running-config startup-config
 # or (NX-OS)
@@ -186,8 +204,10 @@ copy running-config startup-config vdc-all
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Ensure you are in privileged EXEC mode (enable) before running copy commands.
-    **`% Error opening destination file`** — Verify the startup-config file system has write permissions and sufficient space available.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Ensure you are in privileged EXEC mode (enable) before running copy commands. |
+    | `% Error opening destination file` | Verify the startup-config file system has write permissions and sufficient space available. |
 ```bash
 # Confirm VLAN exists
 show vlan brief | include <id>
@@ -225,9 +245,11 @@ VLAN ID  10
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact command syntax for your switch model (Cisco IOS uses `show vlan id <id>` instead of `include`).
-    **`% Incomplete command`** — Replace `<int>` and `<id>` with actual interface names (e.g., `Gi0/5`) and VLAN numbers (e.g., `10`).
-    **`VLAN <id> does not exist`** — Create the VLAN first using `vlan <id>` in global configuration mode before checking trunk membership.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact command syntax for your switch model (Cisco IOS uses `show vlan id <id>` instead of `include`). |
+    | `% Incomplete command` | Replace `<int>` and `<id>` with actual interface names (e.g., `Gi0/5`) and VLAN numbers (e.g., `10`). |
+    | `VLAN <id> does not exist` | Create the VLAN first using `vlan <id>` in global configuration mode before checking trunk membership. |
 ```bash
 ip route show
 ip route get <destination_ip>    # show which route would be used
@@ -271,8 +293,10 @@ Route Summary for VRF "default" (1 OSPF process):
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the destination IP address format is valid (e.g., `show ip route 192.168.1.0`).
-    **`% Incomplete command.`** — Complete the command with a valid destination address or use `show ip route` without parameters to display all routes.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the destination IP address format is valid (e.g., `show ip route 192.168.1.0`). |
+    | `% Incomplete command.` | Complete the command with a valid destination address or use `show ip route` without parameters to display all routes. |
 ```bash
 # Linux — confirm default route
 ip route show default
@@ -301,8 +325,10 @@ Network Destination        Netmask          Gateway       Interface  Metric
 ```
 
 !!! warning "Common errors"
-    **`RTNETLINK answers: Operation not permitted`** — Run the command with `sudo` or as root user.
-    **`The system cannot find the file specified.`** — On Windows, ensure you're running Command Prompt or PowerShell with administrator privileges.
+    | Error | Fix |
+    |---|---|
+    | `RTNETLINK answers: Operation not permitted` | Run the command with `sudo` or as root user. |
+    | `The system cannot find the file specified.` | On Windows, ensure you're running Command Prompt or PowerShell with administrator privileges. |
 ```bash
 # Check OSPF neighbor state
 show ip ospf neighbor
@@ -331,8 +357,10 @@ Gi0/0/2      1     0.0.0.1         192.168.2.254/24   10    DR    0/0
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the device is in privileged EXEC mode (use `enable` command) and the OSPF process is configured.
-    **`% OSPF process not running`** — Enable OSPF routing with `router ospf <process-id>` and configure at least one network statement.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the device is in privileged EXEC mode (use `enable` command) and the OSPF process is configured. |
+    | `% OSPF process not running` | Enable OSPF routing with `router ospf <process-id>` and configure at least one network statement. |
     **`Neighbor ID     Pri   State           Dead Time   Address         Interface`** (header only, no neighbors listed) — Verify OSPF is enabled on interfaces with `ip ospf <process-id> area <area-id>` and check physical link status with `show interface`.
 ```bash
 # BGP summary (neighbor states)
@@ -366,8 +394,10 @@ Origin codes: i - IGP, e - EGP, ? - incomplete
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the exact command syntax for your device OS (Cisco IOS uses `show ip bgp`, Juniper uses `show route protocol bgp`).
-    **`% BGP not enabled`** — Enable BGP with `router bgp <AS-number>` in configuration mode before running show commands.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the exact command syntax for your device OS (Cisco IOS uses `show ip bgp`, Juniper uses `show route protocol bgp`). |
+    | `% BGP not enabled` | Enable BGP with `router bgp <AS-number>` in configuration mode before running show commands. |
 ```bash
 # Linux — add a static route
 ip route add <network>/<prefix> via <gateway>
@@ -382,8 +412,10 @@ nmcli connection modify <conn> +ipv4.routes "<network>/<prefix> <gateway>"
 ```
 
 !!! warning "Common errors"
-    **`Error: unknown or ambiguous command 'route'.`** — Ensure you're using `ip route` (not just `route`) and that the iproute2 package is installed.
-    **`Error: connection '<conn>' not found.`** — Replace `<conn>` with an actual connection name from `nmcli connection show` output.
+    | Error | Fix |
+    |---|---|
+    | `Error: unknown or ambiguous command 'route'.` | Ensure you're using `ip route` (not just `route`) and that the iproute2 package is installed. |
+    | `Error: connection '<conn>' not found.` | Replace `<conn>` with an actual connection name from `nmcli connection show` output. |
 ```bash
 traceroute <destination>    # Linux
 tracert <destination>       # Windows
@@ -399,9 +431,11 @@ traceroute to example.com (93.184.216.34), 30 hops max, 60 byte packets
 ```
 
 !!! warning "Common errors"
-    **`traceroute: command not found`** — Install traceroute using `apt-get install traceroute` (Debian/Ubuntu) or `yum install traceroute` (RHEL/CentOS).
-    **`traceroute: getaddrinfo: Name or service not known`** — Verify the destination hostname or IP address is correct and that DNS resolution is working with `nslookup <destination>`.
-    **`* * *` (all hops timing out)** — Check firewall rules blocking ICMP packets; the destination or intermediate routers may be configured to drop traceroute probes.
+    | Error | Fix |
+    |---|---|
+    | `traceroute: command not found` | Install traceroute using `apt-get install traceroute` (Debian/Ubuntu) or `yum install traceroute` (RHEL/CentOS). |
+    | `traceroute: getaddrinfo: Name or service not known` | Verify the destination hostname or IP address is correct and that DNS resolution is working with `nslookup <destination>`. |
+    | `* * *` (all hops timing out)` | Check firewall rules blocking ICMP packets; the destination or intermediate routers may be configured to drop traceroute probes. |
 ```bash
 # Capture current route table
 ip route show > /tmp/routes-before.txt
@@ -432,9 +466,11 @@ traceroute to repl-peer-02.internal (10.70.20.55), 30 hops max, 60 byte packets
 ```
 
 !!! warning "Common errors"
-    **`bash: traceroute: command not found`** — Install traceroute with `apt-get install traceroute` (Debian/Ubuntu) or `yum install traceroute` (RHEL/CentOS).
-    **`traceroute: sendto: Operation not permitted`** — Run the script with `sudo` or ensure the user has CAP_NET_RAW capability.
-    **`Cannot open /tmp/routes-before.txt: Permission denied`** — Verify /tmp is writable with `ls -ld /tmp` and check disk space with `df /tmp`.
+    | Error | Fix |
+    |---|---|
+    | `bash: traceroute: command not found` | Install traceroute with `apt-get install traceroute` (Debian/Ubuntu) or `yum install traceroute` (RHEL/CentOS). |
+    | `traceroute: sendto: Operation not permitted` | Run the script with `sudo` or ensure the user has CAP_NET_RAW capability. |
+    | `Cannot open /tmp/routes-before.txt: Permission denied` | Verify /tmp is writable with `ls -ld /tmp` and check disk space with `df /tmp`. |
 ```bash
 # Compare route tables
 ip route show > /tmp/routes-after.txt
@@ -471,9 +507,11 @@ traceroute to storage-vip.internal (10.50.100.5), 30 hops max, 60 byte packets
 ```
 
 !!! warning "Common errors"
-    **`diff: /tmp/routes-before.txt: No such file or directory`** — Run `ip route show > /tmp/routes-before.txt` before making network changes to capture the baseline state.
-    **`traceroute: command not found`** — Install traceroute with `apt install traceroute` (Debian/Ubuntu) or `yum install traceroute` (RHEL/CentOS).
-    **`ICMP Host Unreachable`** — Verify the destination IP is correct and that firewall rules permit ICMP traffic to the target host.
+    | Error | Fix |
+    |---|---|
+    | `diff: /tmp/routes-before.txt: No such file or directory` | Run `ip route show > /tmp/routes-before.txt` before making network changes to capture the baseline state. |
+    | `traceroute: command not found` | Install traceroute with `apt install traceroute` (Debian/Ubuntu) or `yum install traceroute` (RHEL/CentOS). |
+    | `ICMP Host Unreachable` | Verify the destination IP is correct and that firewall rules permit ICMP traffic to the target host. |
 ```bash
 ip route show default
 ping <gateway_ip>
@@ -492,9 +530,11 @@ rtt min/avg/max/stddev = 1.89/2.11/2.34/0.18 ms
 ```
 
 !!! warning "Common errors"
-    **`ping: connect: Network is unreachable`** — Verify the default route exists with `ip route show` and check that the network interface is up with `ip link show`.
-    **`ping: Name or service not known`** — Replace `<gateway_ip>` with an actual IP address (e.g., `192.168.1.1`) instead of a placeholder variable.
-    **`PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.` followed by no responses and timeout** — Check gateway connectivity with `ip neighbor show` and verify the interface has a valid IP address using `ip addr show`.
+    | Error | Fix |
+    |---|---|
+    | `ping: connect: Network is unreachable` | Verify the default route exists with `ip route show` and check that the network interface is up with `ip link show`. |
+    | `ping: Name or service not known` | Replace `<gateway_ip>` with an actual IP address (e.g., `192.168.1.1`) instead of a placeholder variable. |
+    | `PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.` followed by no responses and timeout` | Check gateway connectivity with `ip neighbor show` and verify the interface has a valid IP address using `ip addr show`. |
 ```bash
 show ip ospf neighbor            # all neighbors in FULL state
 show ip ospf neighbor <id>       # specific neighbor detail
@@ -523,8 +563,10 @@ O IA    172.16.0.0/16 [110/256] via 192.168.1.1, 00:28:44, GigabitEthernet0/0
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the command syntax matches your IOS version; some devices use `show ip ospf neighbor detail` instead of `show ip ospf neighbor <id>`.
-    **`% Incomplete command.`** — Ensure OSPF is enabled with `router ospf <process-id>` and at least one network is configured in the OSPF process.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the command syntax matches your IOS version; some devices use `show ip ospf neighbor detail` instead of `show ip ospf neighbor <id>`. |
+    | `% Incomplete command.` | Ensure OSPF is enabled with `router ospf <process-id>` and at least one network is configured in the OSPF process. |
 ```bash
 show bgp summary                  # peer state: Established
 show bgp neighbors <ip> routes    # routes received from peer
@@ -548,9 +590,11 @@ Neighbor        Prefix Received Sent  Best Paths
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the correct syntax for your router OS (Cisco IOS uses `show ip bgp summary`, Juniper uses `show bgp summary`).
-    **`% Neighbor not found`** — Confirm the neighbor IP address is configured and the BGP session is established before querying its routes.
-    **`Connection refused` or `% Connection timeout`** — Ensure the management interface is reachable and SSH/Telnet access is enabled on the router.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the correct syntax for your router OS (Cisco IOS uses `show ip bgp summary`, Juniper uses `show bgp summary`). |
+    | `% Neighbor not found` | Confirm the neighbor IP address is configured and the BGP session is established before querying its routes. |
+    | `Connection refused` or `% Connection timeout` | Ensure the management interface is reachable and SSH/Telnet access is enabled on the router. |
 ```bash
 # Confirm key services reachable after routing change
 nc -zv <storage_vip> 443    # storage management
@@ -572,9 +616,11 @@ Connection to vcenter.prod.local 443 port [tcp/https] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to 192.168.50.45 port 443 (tcp) failed: Connection timed out`** — Verify the storage VIP is reachable by checking routing table (`ip route show`) and confirming firewall rules allow port 443 from your management network.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl (already present) or import the application's CA certificate into your system trust store if certificate validation is required.
-    **`nc: getaddrinfo for host "vcenter.prod.local" failed: Name or service not known`** — Confirm DNS resolution is working by testing `nslookup vcenter.prod.local` and verify your `/etc/resolv.conf` points to the correct nameserver.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to 192.168.50.45 port 443 (tcp) failed: Connection timed out` | Verify the storage VIP is reachable by checking routing table (`ip route show`) and confirming firewall rules allow port 443 from your management network. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl (already present) or import the application's CA certificate into your system trust store if certificate validation is required. |
+    | `nc: getaddrinfo for host "vcenter.prod.local" failed: Name or service not known` | Confirm DNS resolution is working by testing `nslookup vcenter.prod.local` and verify your `/etc/resolv.conf` points to the correct nameserver. |
 ```bash
 # Linux — ipcalc
 ipcalc 10.10.10.0/24
@@ -595,8 +641,10 @@ Hosts/Net: 254
 ```
 
 !!! warning "Common errors"
-    **`command not found: ipcalc`** — Install ipcalc with `apt-get install ipcalc` (Debian/Ubuntu) or `yum install ipcalc` (RHEL/CentOS).
-    **`ModuleNotFoundError: No module named 'ipaddress'`** — Upgrade to Python 3.3+ or install the backport with `pip install ipaddress`.
+    | Error | Fix |
+    |---|---|
+    | `command not found: ipcalc` | Install ipcalc with `apt-get install ipcalc` (Debian/Ubuntu) or `yum install ipcalc` (RHEL/CentOS). |
+    | `ModuleNotFoundError: No module named 'ipaddress'` | Upgrade to Python 3.3+ or install the backport with `pip install ipaddress`. |
 ```bash
 ipcalc 10.10.10.45/24
 # Returns: network, broadcast, first/last usable host
@@ -614,8 +662,10 @@ Hosts/Net: 254
 ```
 
 !!! warning "Common errors"
-    **`ipcalc: command not found`** — Install ipcalc with `apt-get install ipcalc` (Debian/Ubuntu) or `yum install ipcalc` (RHEL/CentOS).
-    **`ipcalc: invalid address 10.10.10.45/24`** — Verify the CIDR notation is correct; use a valid IP address and prefix length (e.g., `ipcalc 10.10.10.45/24`).
+    | Error | Fix |
+    |---|---|
+    | `ipcalc: command not found` | Install ipcalc with `apt-get install ipcalc` (Debian/Ubuntu) or `yum install ipcalc` (RHEL/CentOS). |
+    | `ipcalc: invalid address 10.10.10.45/24` | Verify the CIDR notation is correct; use a valid IP address and prefix length (e.g., `ipcalc 10.10.10.45/24`). |
 ```bash
 python3 -c "
 import ipaddress
@@ -631,8 +681,10 @@ True False
 ```
 
 !!! warning "Common errors"
-    **`ModuleNotFoundError: No module named 'ipaddress'`** — Install Python 3.3+ or use `python3 -m pip install ipaddress` on older Python versions (ipaddress is built-in for Python 3.3+, so verify your Python version with `python3 --version`).
-    **`SyntaxError: invalid syntax`** — Ensure you're using `python3` not `python` (which may point to Python 2), or check that the multi-line string is properly quoted with matching single or double quotes.
+    | Error | Fix |
+    |---|---|
+    | `ModuleNotFoundError: No module named 'ipaddress'` | Install Python 3.3+ or use `python3 -m pip install ipaddress` on older Python versions (ipaddress is built-in for Python 3.3+, so verify your Python version with `python3 --version`). |
+    | `SyntaxError: invalid syntax` | Ensure you're using `python3` not `python` (which may point to Python 2), or check that the multi-line string is properly quoted with matching single or double quotes. |
 ```bash
 # Linux — show all routes
 ip route show
@@ -658,8 +710,10 @@ Hosts/Net: 254
 ```
 
 !!! warning "Common errors"
-    **`command not found: ipcalc`** — Install ipcalc with `apt install ipcalc` (Debian/Ubuntu) or `yum install ipcalc` (RHEL/CentOS).
-    **`CIDR <new_network>/<prefix>: Invalid CIDR address`** — Verify the network address is valid (e.g., `10.20.30.0/24` not `10.20.30.5/24`).
+    | Error | Fix |
+    |---|---|
+    | `command not found: ipcalc` | Install ipcalc with `apt install ipcalc` (Debian/Ubuntu) or `yum install ipcalc` (RHEL/CentOS). |
+    | `CIDR <new_network>/<prefix>: Invalid CIDR address` | Verify the network address is valid (e.g., `10.20.30.0/24` not `10.20.30.5/24`). |
 ```bash
 ip addr show
 ip addr show <interface>
@@ -696,9 +750,11 @@ TcpTestSucceeded : True
 ```
 
 !!! warning "Common errors"
-    **`nc: getaddrinfo: Name or service not known`** — Verify the hostname is correct and resolvable with `nslookup <host>` or check DNS configuration.
-    **`Connection refused`** — Confirm the service is running on the target port with `ss -tlnp | grep <port>` on the remote host.
-    **`No route to host`** — Check network connectivity and firewall rules with `ping <host>` and verify the route exists using `ip route show`.
+    | Error | Fix |
+    |---|---|
+    | `nc: getaddrinfo: Name or service not known` | Verify the hostname is correct and resolvable with `nslookup <host>` or check DNS configuration. |
+    | `Connection refused` | Confirm the service is running on the target port with `ss -tlnp | grep <port>` on the remote host. |
+    | `No route to host` | Check network connectivity and firewall rules with `ping <host>` and verify the route exists using `ip route show`. |
 ```bash
 # Linux
 ss -tnp         # TCP connections with process info
@@ -739,9 +795,11 @@ LocalAddress      LocalPort RemoteAddress RemotePort State       OwningProcess
 ```
 
 !!! warning "Common errors"
-    **`ss: No such file or directory`** — Install iproute2 package with `apt install iproute2` (Debian/Ubuntu) or `yum install iproute2` (RHEL/CentOS).
-    **`netstat: command not found`** — Install net-tools with `apt install net-tools` or use `ss` instead, which is the modern replacement.
-    **`Access denied` (Windows)** — Run PowerShell or Command Prompt as Administrator to view all process information.
+    | Error | Fix |
+    |---|---|
+    | `ss: No such file or directory` | Install iproute2 package with `apt install iproute2` (Debian/Ubuntu) or `yum install iproute2` (RHEL/CentOS). |
+    | `netstat: command not found` | Install net-tools with `apt install net-tools` or use `ss` instead, which is the modern replacement. |
+    | `Access denied` (Windows)` | Run PowerShell or Command Prompt as Administrator to view all process information. |
 ```bash
 # Check interface MTU
 ip link show <interface>

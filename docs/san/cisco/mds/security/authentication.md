@@ -57,8 +57,10 @@ tacacs-server host 10.10.1.10 key 7 "5d41402abc4b2a76b9719d911017c592"
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch is in configuration mode (enter `config t` first) and that TACACS+ feature is enabled with `feature tacacs+`.
-    **`% Incomplete command`** — Ensure you provide a valid plaintext key value; the key cannot be empty or contain only whitespace characters.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch is in configuration mode (enter `config t` first) and that TACACS+ feature is enabled with `feature tacacs+`. |
+    | `% Incomplete command` | Ensure you provide a valid plaintext key value; the key cannot be empty or contain only whitespace characters. |
 ---
 
 ## Management Plane: RADIUS (Fallback)
@@ -115,9 +117,11 @@ RADIUS-SERVER Statistics:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the RADIUS server IP addresses are reachable and the switch has network connectivity to the RADIUS servers.
-    **`% RADIUS server group 'RADIUS-SERVERS' not found`** — Ensure the aaa group server radius command is configured before referencing it in the authentication chain.
-    **`% Authentication method 'TACACS-SERVERS' not configured`** — Define the TACACS-SERVERS group with `aaa group server tacacs+ TACACS-SERVERS` before using it in the login authentication policy.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the RADIUS server IP addresses are reachable and the switch has network connectivity to the RADIUS servers. |
+    | `% RADIUS server group 'RADIUS-SERVERS' not found` | Ensure the aaa group server radius command is configured before referencing it in the authentication chain. |
+    | `% Authentication method 'TACACS-SERVERS' not configured` | Define the TACACS-SERVERS group with `aaa group server tacacs+ TACACS-SERVERS` before using it in the login authentication policy. |
 ---
 
 ## Local Accounts
@@ -156,8 +160,10 @@ admin      vty0       Dec 10 10:23:45 +00:00  00:00:12   12847  -
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Ensure you are in the correct configuration mode; use `config t` before entering the username command.
-    **`% Incomplete command`** — Provide a strong plaintext password (minimum 8 characters with mixed case, numbers, and symbols) in place of `<strong-plaintext-password>`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Ensure you are in the correct configuration mode; use `config t` before entering the username command. |
+    | `% Incomplete command` | Provide a strong plaintext password (minimum 8 characters with mixed case, numbers, and symbols) in place of `<strong-plaintext-password>`. |
 ### Hardening Local Accounts
 
 ```bash
@@ -186,9 +192,11 @@ timestamp: 2024-01-15 14:42:11 | user: guest | event: LOGIN_FAIL | source: 192.1
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact syntax for your MDS firmware version; use `show version` to confirm and consult the Cisco MDS CLI reference guide.
-    **`% Authentication not configured`** — Enable AAA globally with `aaa new-model` before applying authentication policies.
-    **`% No accounting records found`** — Ensure accounting is enabled with `aaa accounting log enable` and that login failures have occurred since the last system restart.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact syntax for your MDS firmware version; use `show version` to confirm and consult the Cisco MDS CLI reference guide. |
+    | `% Authentication not configured` | Enable AAA globally with `aaa new-model` before applying authentication policies. |
+    | `% No accounting records found` | Ensure accounting is enabled with `aaa accounting log enable` and that login failures have occurred since the last system restart. |
 ---
 
 ## SSH Key-Based Authentication
@@ -229,8 +237,10 @@ ssh is enabled
 ```
 
 !!! warning "Common errors"
-    **`% Invalid key modulus size. Supported key sizes are 512, 768, 1024, 2048, 3072, 4096`** — Specify a supported key size; 2048 bits is the recommended minimum for security.
-    **`% SSH server is disabled. Enable it with 'feature ssh' before generating keys`** — Run `feature ssh` to enable SSH before attempting key generation.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid key modulus size. Supported key sizes are 512, 768, 1024, 2048, 3072, 4096` | Specify a supported key size; 2048 bits is the recommended minimum for security. |
+    | `% SSH server is disabled. Enable it with 'feature ssh' before generating keys` | Run `feature ssh` to enable SSH before attempting key generation. |
 ### Importing a User's SSH Public Key
 
 To allow a user to authenticate via SSH public key:
@@ -257,8 +267,10 @@ User-account Information for 'netauto':
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid key format`** — Ensure the full public key string from `~/.ssh/id_rsa.pub` is pasted exactly, including the `ssh-rsa` prefix and key comment.
-    **`Error: Username 'netauto' does not exist`** — Create the user account first with `username netauto password <password>` before assigning the SSH key.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid key format` | Ensure the full public key string from `~/.ssh/id_rsa.pub` is pasted exactly, including the `ssh-rsa` prefix and key comment. |
+    | `Error: Username 'netauto' does not exist` | Create the user account first with `username netauto password <password>` before assigning the SSH key. |
 ---
 
 ## FC-SP: Fabric-Layer Device Authentication
@@ -303,8 +315,10 @@ Interface fc1/1:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the switch supports FC-SP (requires MDS 9000 family with appropriate license); check syntax with `show fcsp ?`.
-    **`% DHCHAP secret must be 12-255 characters`** — Ensure the password meets minimum length requirements and use `password 0` for plaintext or `password 5` for pre-encrypted secrets.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the switch supports FC-SP (requires MDS 9000 family with appropriate license); check syntax with `show fcsp ?`. |
+    | `% DHCHAP secret must be 12-255 characters` | Ensure the password meets minimum length requirements and use `password 0` for plaintext or `password 5` for pre-encrypted secrets. |
 ### Verification
 
 ```bash
@@ -340,9 +354,11 @@ fc1/3        10      failed        50:00:09:73:00:1a:2b:6e    2024-01-15 14:31:4
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the device is in the correct mode (enable mode) and supports FC-SP; use `show version` to confirm MDS model.
-    **`% FCSP not enabled on interface`** — Enable FC-SP globally with `fcsp enable` and per-interface with `fcsp enable` under the interface configuration.
-    **`Authentication failed on interface fc1/3`** — Verify peer device credentials match, check DHCHAP password configuration with `show fcsp dhchap key`, and confirm peer device is reachable.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the device is in the correct mode (enable mode) and supports FC-SP; use `show version` to confirm MDS model. |
+    | `% FCSP not enabled on interface` | Enable FC-SP globally with `fcsp enable` and per-interface with `fcsp enable` under the interface configuration. |
+    | `Authentication failed on interface fc1/3` | Verify peer device credentials match, check DHCHAP password configuration with `show fcsp dhchap key`, and confirm peer device is reachable. |
 ---
 
 ## NTP (Required for AAA and Certificate Validity)
@@ -384,9 +400,11 @@ Last Update: 47 seconds ago
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode (use `configure terminal` if needed) and that NTP is licensed on your MDS switch.
-    **`% NTP server unreachable`** — Confirm the NTP server IPs are correct and reachable by pinging them from the switch management interface.
-    **`show ntp peer-status: command not found`** — Use `show ntp peer-status` or `show ntp associations` depending on your MDS NX-OS version; check with `show version` first.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode (use `configure terminal` if needed) and that NTP is licensed on your MDS switch. |
+    | `% NTP server unreachable` | Confirm the NTP server IPs are correct and reachable by pinging them from the switch management interface. |
+    | `show ntp peer-status: command not found` | Use `show ntp peer-status` or `show ntp associations` depending on your MDS NX-OS version; check with `show version` first. |
 All switches in the fabric must be synchronized to the same NTP source. Time drift between switches causes TACACS+ accounting log correlation to fail and may break certificate authentication.
 
 ---
@@ -409,8 +427,10 @@ Unauthorized access is prohibited and will be prosecuted.
 ```
 
 !!! warning "Common errors"
-    **`banner: command not found`** — Use the Cisco MDS CLI directly (enter config mode with `config t` first) or check that you're connected to the switch via SSH/console, not a local bash shell.
-    **`% Invalid command`** — The banner command must be entered in Cisco MDS configuration mode; type `config t` to enter configuration mode before running the banner command.
+    | Error | Fix |
+    |---|---|
+    | `banner: command not found` | Use the Cisco MDS CLI directly (enter config mode with `config t` first) or check that you're connected to the switch via SSH/console, not a local bash shell. |
+    | `% Invalid command` | The banner command must be entered in Cisco MDS configuration mode; type `config t` to enter configuration mode before running the banner command. |
 ---
 
 ## Authentication Checklist

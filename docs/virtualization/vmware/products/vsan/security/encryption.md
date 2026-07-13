@@ -160,8 +160,10 @@ Re-key Interval (minutes): 0
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace vsan.`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster list` to confirm vSAN membership.
-    **`grep: (standard input) is empty`** — The vSAN cluster may not have encryption configured; run `esxcli vsan cluster get` without grep to see all encryption-related fields.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace vsan.` | Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster list` to confirm vSAN membership. |
+    | `grep: (standard input) is empty` | The vSAN cluster may not have encryption configured; run `esxcli vsan cluster get` without grep to see all encryption-related fields. |
 ---
 
 ## Key Rotation
@@ -232,9 +234,11 @@ Operation completed in 47 seconds.
 ```
 
 !!! warning "Common errors"
-    **`Error: Disk group naa.5001b46d8c4a2f1e is not found`** — Verify the correct NAA identifier using `esxcli vsan storage list` before running the remove command.
-    **`Error: Cannot remove disk group while rebalance is in progress`** — Wait for any ongoing vSAN rebalance operations to complete using `esxcli vsan cluster get` before attempting removal.
-    **`Error: Permission denied`** — Run the command with root privileges or ensure your vSphere user account has the vSAN administrator role assigned.
+    | Error | Fix |
+    |---|---|
+    | `Error: Disk group naa.5001b46d8c4a2f1e is not found` | Verify the correct NAA identifier using `esxcli vsan storage list` before running the remove command. |
+    | `Error: Cannot remove disk group while rebalance is in progress` | Wait for any ongoing vSAN rebalance operations to complete using `esxcli vsan cluster get` before attempting removal. |
+    | `Error: Permission denied` | Run the command with root privileges or ensure your vSphere user account has the vSAN administrator role assigned. |
 After DEK destruction, even if the physical drive is accessed directly, the encrypted data cannot be recovered without the DEK. This satisfies NIST 800-88 crypto-erase for drive decommission.
 
 ### Audit and Compliance
@@ -275,9 +279,11 @@ Connection to kms.example.com 5696 port [tcp/*] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`nc: connect to kms.example.com port 5696 (tcp) failed: Connection refused`** — Verify the KMS server is running and listening on port 5696, and check firewall rules between the ESXi host and KMS server.
-    **`grep: /var/log/vmkernel.log: No such file or directory`** — Confirm you are running this command on an ESXi host (not vCenter); the vmkernel.log path is ESXi-specific.
-    **`WARNING: KMS: Failed to authenticate to KMS server: Certificate verification failed`** — Import the KMS server's root CA certificate into the ESXi host's certificate store using `esxcli system certificate store add -c /path/to/ca-cert.pem`.
+    | Error | Fix |
+    |---|---|
+    | `nc: connect to kms.example.com port 5696 (tcp) failed: Connection refused` | Verify the KMS server is running and listening on port 5696, and check firewall rules between the ESXi host and KMS server. |
+    | `grep: /var/log/vmkernel.log: No such file or directory` | Confirm you are running this command on an ESXi host (not vCenter); the vmkernel.log path is ESXi-specific. |
+    | `WARNING: KMS: Failed to authenticate to KMS server: Certificate verification failed` | Import the KMS server's root CA certificate into the ESXi host's certificate store using `esxcli system certificate store add -c /path/to/ca-cert.pem`. |
 ## See also
 
 - [vSAN — Hardening](../hardening/)

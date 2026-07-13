@@ -118,9 +118,11 @@ tcp           3306        3306      10.3.0.0/16          Allow MySQL from backup
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidDBInstanceIdentifier.NotFound) when calling the DescribeDBInstances operation: DBInstance not found`** — Verify the `<db-id>` parameter matches the actual RDS instance identifier shown in the AWS console.
-    **`An error occurred (InvalidGroup.NotFound) when calling the DescribeSecurityGroups operation: The security group 'sg-xxxxxxxx' does not exist`** — Confirm the `<rds-sg-id>` is correct and exists in the same region as your RDS instance.
-    **`An error occurred (UnauthorizedOperation) when calling the DescribeDBInstances operation: User is not authorized to perform: rds:DescribeDBInstances`** — Add the `rds:DescribeDBInstances` and `ec2:DescribeSecurityGroups` permissions to your IAM user or role policy.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidDBInstanceIdentifier.NotFound) when calling the DescribeDBInstances operation: DBInstance not found` | Verify the `<db-id>` parameter matches the actual RDS instance identifier shown in the AWS console. |
+    | `An error occurred (InvalidGroup.NotFound) when calling the DescribeSecurityGroups operation: The security group 'sg-xxxxxxxx' does not exist` | Confirm the `<rds-sg-id>` is correct and exists in the same region as your RDS instance. |
+    | `An error occurred (UnauthorizedOperation) when calling the DescribeDBInstances operation: User is not authorized to perform: rds:DescribeDBInstances` | Add the `rds:DescribeDBInstances` and `ec2:DescribeSecurityGroups` permissions to your IAM user or role policy. |
 **Expected output:** Status query returns `["available", {"Address": "<endpoint>", "Port": <port>}]`. If status is `modifying`, `rebooting`, or `failing-over`, connection refusal is expected — wait for status to return to `available`.
 
 ## VPC Flow Logs — Analysing Traffic
@@ -149,9 +151,11 @@ fields @timestamp, srcAddr, dstAddr, dstPort, action
 ```
 
 !!! warning "Common errors"
-    **`The specified log group does not exist.`** — Verify the Flow Logs log group name exists in CloudWatch Logs and that the IAM principal has `logs:DescribeLogGroups` permission.
-    **`Syntax error in query at position X`** — Check that the target IP in the filter is quoted as a string and that field names like `@timestamp` are correctly prefixed with `@`.
-    **`Query returned no results`** — Confirm that Flow Logs are enabled on the VPC/subnet/ENI, that the log group is receiving data, and that the target IP and time range match actual traffic.
+    | Error | Fix |
+    |---|---|
+    | `The specified log group does not exist.` | Verify the Flow Logs log group name exists in CloudWatch Logs and that the IAM principal has `logs:DescribeLogGroups` permission. |
+    | `Syntax error in query at position X` | Check that the target IP in the filter is quoted as a string and that field names like `@timestamp` are correctly prefixed with `@`. |
+    | `Query returned no results` | Confirm that Flow Logs are enabled on the VPC/subnet/ENI, that the log group is receiving data, and that the target IP and time range match actual traffic. |
 ## Lambda Timeout Issues
 
 ```bash
@@ -218,6 +222,8 @@ aws logs get-log-events --log-group-name /aws/lambda/<name> \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the GetFunctionConfiguration operation: The resource you requested does not exist.`** — Verify the function name is correct and exists in the current AWS region with `aws lambda list-functions`.
-    **`An error occurred (AccessDenied) when calling the GetLogEvents operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: logs:GetLogEvents`** — Add the `logs:GetLogEvents` permission to your IAM user or role policy.
-    **`An error occurred (InvalidParameterException) when calling the GetServiceGraph operation: 1 validation error detected: Value at 'startTime' failed to satisfy constraint: Member must not be null`** — Ensure the `date` command is installed and working; on macOS use `date -v-1H +%s` instead of `date -d '1 hour ago' +%s`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the GetFunctionConfiguration operation: The resource you requested does not exist.` | Verify the function name is correct and exists in the current AWS region with `aws lambda list-functions`. |
+    | `An error occurred (AccessDenied) when calling the GetLogEvents operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: logs:GetLogEvents` | Add the `logs:GetLogEvents` permission to your IAM user or role policy. |
+    | `An error occurred (InvalidParameterException) when calling the GetServiceGraph operation: 1 validation error detected: Value at 'startTime' failed to satisfy constraint: Member must not be null` | Ensure the `date` command is installed and working; on macOS use `date -v-1H +%s` instead of `date -d '1 hour ago' +%s`. |

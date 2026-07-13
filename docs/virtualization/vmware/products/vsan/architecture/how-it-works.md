@@ -202,8 +202,10 @@ Object UUID: 72790e62-c3d3-6e4f-0g1h-3c4d5e6f7g8h
 ```
 
 !!! warning "Common errors"
-    **`Get-SpbmStoragePolicy : The term 'Get-SpbmStoragePolicy' is not recognized`** — Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running SPBM cmdlets.
-    **`esxcli: command not found`** — Run this command directly on an ESXi host via SSH or use `esxcli -s <host> -u <user> -p <pass>` from vCenter.
+    | Error | Fix |
+    |---|---|
+    | `Get-SpbmStoragePolicy : The term 'Get-SpbmStoragePolicy' is not recognized` | Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running SPBM cmdlets. |
+    | `esxcli: command not found` | Run this command directly on an ESXi host via SSH or use `esxcli -s <host> -u <user> -p <pass>` from vCenter. |
 **When to set limits:** Noisy-neighbour workloads (backups, bulk transfers) degrading production VMs. Set a low IOPS limit on backup VMs; leave production VMs unlimited or set a floor via shares.
 
 ---

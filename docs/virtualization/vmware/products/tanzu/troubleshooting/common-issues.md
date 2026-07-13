@@ -223,8 +223,10 @@ Events:
 ```
 
 !!! warning "Common errors"
-    **`Error syncing load balancer: failed to ensure load balancer: no IPs available in NSX IP pool`** — Expand the NSX-T IP pool size or release unused LoadBalancer service IPs by deleting idle services.
-    **`There are no available nodes for LoadBalancer`** — Verify worker nodes are in Ready state with `kubectl get nodes` and check NSX segment connectivity to those nodes.
+    | Error | Fix |
+    |---|---|
+    | `Error syncing load balancer: failed to ensure load balancer: no IPs available in NSX IP pool` | Expand the NSX-T IP pool size or release unused LoadBalancer service IPs by deleting idle services. |
+    | `There are no available nodes for LoadBalancer` | Verify worker nodes are in Ready state with `kubectl get nodes` and check NSX segment connectivity to those nodes. |
 ```bash
 # Check Contour pods are running:
 kubectl get pods -n projectcontour
@@ -278,8 +280,10 @@ issuer: CN=myapp.example.local
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "httpproxy"`** — Install Contour CRDs with `kubectl apply -f https://projectcontour.io/quickstart/contour.yaml` or verify the APIGroup is registered via `kubectl api-resources | grep httpproxy`.
-    **`curl: (7) Failed to connect to 203.0.113.45 port 443: Connection refused`** — Verify the Envoy LoadBalancer service has an EXTERNAL-IP assigned and is listening on port 443 with `kubectl get svc -n projectcontour envoy -o wide`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "httpproxy"` | Install Contour CRDs with `kubectl apply -f https://projectcontour.io/quickstart/contour.yaml` or verify the APIGroup is registered via `kubectl api-resources | grep httpproxy`. |
+    | `curl: (7) Failed to connect to 203.0.113.45 port 443: Connection refused` | Verify the Envoy LoadBalancer service has an EXTERNAL-IP assigned and is listening on port 443 with `kubectl get svc -n projectcontour envoy -o wide`. |
 ---
 
 ## See also

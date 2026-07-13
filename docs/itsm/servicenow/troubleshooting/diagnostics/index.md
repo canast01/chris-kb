@@ -256,9 +256,11 @@ curl -s -u "$SN_USER:$SN_PASS" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: dev12345.service-now.com`** — Verify `$SN_INSTANCE` is set correctly and the instance hostname is accessible from your network.
-    **`{"error":{"message":"Invalid table API (ecc_agent)","status":"failure"},"status":"failure"}`** — Confirm your ServiceNow user has Table API access and the table name is correct (check instance version compatibility).
-    **`jq: parse error: Invalid JSON at line 1`** — Ensure the API response is valid JSON by removing `-m json.tool` temporarily and checking the raw response for authentication or permission errors.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: dev12345.service-now.com` | Verify `$SN_INSTANCE` is set correctly and the instance hostname is accessible from your network. |
+    | `{"error":{"message":"Invalid table API (ecc_agent)","status":"failure"},"status":"failure"}` | Confirm your ServiceNow user has Table API access and the table name is correct (check instance version compatibility). |
+    | `jq: parse error: Invalid JSON at line 1` | Ensure the API response is valid JSON by removing `-m json.tool` temporarily and checking the raw response for authentication or permission errors. |
 ---
 
 ## Step 2 — Inspect DB Activity Monitor for slow queries
@@ -356,9 +358,11 @@ tail: file /opt/servicenow/mid/agent/logs/agent0.log.0 updated
 ```
 
 !!! warning "Common errors"
-    **`tail: cannot open '/opt/servicenow/mid/agent/logs/agent0.log.0' for reading: No such file or directory`** — Verify the MID Server installation path and check that the agent is running with `ps aux | grep mid`.
-    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the log file with `sudo chmod 644 /opt/servicenow/mid/agent/logs/agent0.log.0`.
-    **`tail: inaccessible regular file '/opt/servicenow/mid/agent/logs/agent0.log.0': Permission denied`** — Execute with `sudo tail -f` or add your user to the servicenow group with `sudo usermod -a -G servicenow $USER`.
+    | Error | Fix |
+    |---|---|
+    | `tail: cannot open '/opt/servicenow/mid/agent/logs/agent0.log.0' for reading: No such file or directory` | Verify the MID Server installation path and check that the agent is running with `ps aux | grep mid`. |
+    | `grep: (standard input): Permission denied` | Run the command with `sudo` or ensure your user has read permissions on the log file with `sudo chmod 644 /opt/servicenow/mid/agent/logs/agent0.log.0`. |
+    | `tail: inaccessible regular file '/opt/servicenow/mid/agent/logs/agent0.log.0': Permission denied` | Execute with `sudo tail -f` or add your user to the servicenow group with `sudo usermod -a -G servicenow $USER`. |
 Log file locations:
 
 - **Linux:** `/opt/servicenow/mid/agent/logs/agent0.log.0` (current), `.log.1` (previous), `agent.err.0` (errors)

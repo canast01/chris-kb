@@ -74,9 +74,11 @@ Saved 12 device entries and 4 path group configurations.
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Ensure PowerPath is installed and the powermt binary is in your PATH, or use the full path `/opt/emc/powerpath/bin/powermt`.
-    **`powermt save: Permission denied`** — Run the command with sudo or as root, since PowerPath configuration changes require elevated privileges.
-    **`powermt save: Configuration file locked by another process`** — Wait for any running PowerPath operations to complete, or check for stale lock files in `/var/lock/powerpath/` and remove them if safe.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Ensure PowerPath is installed and the powermt binary is in your PATH, or use the full path `/opt/emc/powerpath/bin/powermt`. |
+    | `powermt save: Permission denied` | Run the command with sudo or as root, since PowerPath configuration changes require elevated privileges. |
+    | `powermt save: Configuration file locked by another process` | Wait for any running PowerPath operations to complete, or check for stale lock files in `/var/lock/powerpath/` and remove them if safe. |
 Run `powermt save` after every configuration change. This includes:
 - After changing the load balancing policy (`powermt set policy=...`)
 - After running `powermt config` to discover new devices
@@ -163,9 +165,11 @@ Baseline written to: storage-prod-01-powermt-baseline-2024-01-15.txt
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Install PowerPath EMC client package or verify the binary is in $PATH with `which powermt`.
-    **`powermt: error: insufficient privileges`** — Run the script with `sudo` or as root user, as PowerPath commands require elevated permissions.
-    **`Cannot open output file: Permission denied`** — Ensure write permissions on the current working directory or specify an absolute path for `OUTFILE`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Install PowerPath EMC client package or verify the binary is in $PATH with `which powermt`. |
+    | `powermt: error: insufficient privileges` | Run the script with `sudo` or as root user, as PowerPath commands require elevated permissions. |
+    | `Cannot open output file: Permission denied` | Ensure write permissions on the current working directory or specify an absolute path for `OUTFILE`. |
 Store these baseline files in a location accessible to your team:
 - Change management ticket attachments
 - A shared `baselines/` directory under the host's runbook
@@ -190,8 +194,10 @@ ls -lh /etc/powermt.custom*
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot open '/etc/powermt.custom' for reading: No such file or directory`** — Verify the PowerPath configuration file exists at `/etc/powermt.custom` before attempting backup; if missing, reinstall or restore from a known good configuration.
-    **`cp: permission denied`** — Run the command with `sudo` or as root, since `/etc/powermt.custom` requires elevated privileges to read and copy.
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot open '/etc/powermt.custom' for reading: No such file or directory` | Verify the PowerPath configuration file exists at `/etc/powermt.custom` before attempting backup; if missing, reinstall or restore from a known good configuration. |
+    | `cp: permission denied` | Run the command with `sudo` or as root, since `/etc/powermt.custom` requires elevated privileges to read and copy. |
 ---
 
 ## Configuration Restore
@@ -244,9 +250,11 @@ Dev #: 0 (c4t0d0s2)
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Verify PowerPath is installed with `rpm -qa | grep EMCpower` and install from Dell support portal if missing.
-    **`powermt restore: No such file or directory`** — Ensure the powermt.custom backup file exists in the default location `/etc/powermt/` or specify the full path with `powermt restore -f /path/to/powermt.custom`.
-    **`powermt: Permission denied`** — Run the command with `sudo` or as root user since PowerPath configuration changes require elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Verify PowerPath is installed with `rpm -qa | grep EMCpower` and install from Dell support portal if missing. |
+    | `powermt restore: No such file or directory` | Ensure the powermt.custom backup file exists in the default location `/etc/powermt/` or specify the full path with `powermt restore -f /path/to/powermt.custom`. |
+    | `powermt: Permission denied` | Run the command with `sudo` or as root user since PowerPath configuration changes require elevated privileges. |
 ### When to Run powermt restore
 
 | Situation | Action |
@@ -298,9 +306,11 @@ c3t4d0s2                emcpowerg               UP      A,0,1
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot stat '/etc/powermt.custom.bak-2025-01-15': No such file or directory`** — Verify the backup file exists with `ls -la /etc/powermt.custom.bak-*` and use the correct dated filename.
-    **`Failed to restart PowerPath: Unit PowerPath.service not found.`** — Check the correct service name with `systemctl list-units --type=service | grep -i power` and use the exact service name.
-    **`powermt: command not found`** — Ensure PowerPath is installed and its bin directory is in PATH; run `/opt/PowerPath/bin/powermt display options` with the full path.
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot stat '/etc/powermt.custom.bak-2025-01-15': No such file or directory` | Verify the backup file exists with `ls -la /etc/powermt.custom.bak-*` and use the correct dated filename. |
+    | `Failed to restart PowerPath: Unit PowerPath.service not found.` | Check the correct service name with `systemctl list-units --type=service | grep -i power` and use the exact service name. |
+    | `powermt: command not found` | Ensure PowerPath is installed and its bin directory is in PATH; run `/opt/PowerPath/bin/powermt display options` with the full path. |
 ---
 
 ## Post-Restore Validation
@@ -358,9 +368,11 @@ License Expiration: 2026-03-15
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and add `/opt/PowerPath/bin` to PATH if needed.
-    **`Registration Status: EXPIRED`** — Contact Dell EMC support to renew the PowerPath license or the array connectivity will be blocked after the grace period.
-    **`dead` count is non-zero after restore** — Run `powermt config` to rescan paths and verify all SAN fabric connectivity and array LUN masking rules are correct.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and add `/opt/PowerPath/bin` to PATH if needed. |
+    | `Registration Status: EXPIRED` | Contact Dell EMC support to renew the PowerPath license or the array connectivity will be blocked after the grace period. |
+    | `dead` count is non-zero after restore` | Run `powermt config` to rescan paths and verify all SAN fabric connectivity and array LUN masking rules are correct. |
 ### Post-Restore Checklist
 
 - [ ] `powermt display options` — policy matches pre-change baseline (CLAROpt for Dell/EMC arrays)

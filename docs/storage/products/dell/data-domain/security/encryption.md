@@ -53,9 +53,11 @@ Encryption Status:
 ```
 
 !!! warning "Common errors"
-    **`encryption: command not found`** — Verify you are logged into the Data Domain CLI (not the host shell) by running `sysconfig show` first.
-    **`Error: Encryption cannot be enabled while replication is active`** — Disable active replication jobs with `replication disable-all` before enabling encryption.
-    **`Error: Encryption already enabled on this system`** — Run `encryption status` to confirm the current state; re-enabling is not necessary.
+    | Error | Fix |
+    |---|---|
+    | `encryption: command not found` | Verify you are logged into the Data Domain CLI (not the host shell) by running `sysconfig show` first. |
+    | `Error: Encryption cannot be enabled while replication is active` | Disable active replication jobs with `replication disable-all` before enabling encryption. |
+    | `Error: Encryption already enabled on this system` | Run `encryption status` to confirm the current state; re-enabling is not necessary. |
 **Critical:** Enabling encryption on a Data Domain that already contains data requires a full filesystem rebuild (`filesys destroy` followed by `filesys create`), which deletes all existing backup data. Always enable D@RE during initial setup before any data is written.
 
 ### Encryption Algorithm
@@ -109,8 +111,10 @@ Encryption Configuration:
 ```
 
 !!! warning "Common errors"
-    **`Error: Cannot change key manager while replication is in progress`** — Wait for active replication jobs to complete using `replication show` before retrying the command.
-    **`Error: Key manager change requires system to be in maintenance mode`** — Enter maintenance mode with `system enter-maintenance-mode` before attempting the key manager change.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cannot change key manager while replication is in progress` | Wait for active replication jobs to complete using `replication show` before retrying the command. |
+    | `Error: Key manager change requires system to be in maintenance mode` | Enter maintenance mode with `system enter-maintenance-mode` before attempting the key manager change. |
 ### Configure KMIP External Key Manager
 
 ```bash
@@ -151,9 +155,11 @@ KMIP Configuration:
 ```
 
 !!! warning "Common errors"
-    **`KMIP server configuration failed: Connection refused`** — Verify the KMIP server IP address and port 5696 are correct and the server is running and accessible from the Data Domain appliance.
-    **`Certificate validation failed: certificate verify failed`** — Ensure the certificate file path is correct, the certificate is valid and not expired, and matches the KMIP server's expected client certificate.
-    **`KMIP username not set or invalid`** — Confirm the username matches an account configured on the KMIP server with appropriate key management permissions.
+    | Error | Fix |
+    |---|---|
+    | `KMIP server configuration failed: Connection refused` | Verify the KMIP server IP address and port 5696 are correct and the server is running and accessible from the Data Domain appliance. |
+    | `Certificate validation failed: certificate verify failed` | Ensure the certificate file path is correct, the certificate is valid and not expired, and matches the KMIP server's expected client certificate. |
+    | `KMIP username not set or invalid` | Confirm the username matches an account configured on the KMIP server with appropriate key management permissions. |
 ### Configure RSA DPM
 
 ```bash
@@ -192,9 +198,11 @@ Encryption Configuration:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to DPM server at 192.168.45.22:8443`** — Verify the DPM server IP address is correct and reachable from the Data Domain appliance using `ping` or `telnet`.
-    **`Error: Registration failed - Certificate validation error`** — Ensure the DPM server's SSL certificate is valid and trusted; import the CA certificate to the Data Domain appliance if using a self-signed cert.
-    **`Error: Key manager already configured with different server`** — Run `encryption change-key-manager none` first to clear the existing configuration before registering with a new DPM server.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to DPM server at 192.168.45.22:8443` | Verify the DPM server IP address is correct and reachable from the Data Domain appliance using `ping` or `telnet`. |
+    | `Error: Registration failed - Certificate validation error` | Ensure the DPM server's SSL certificate is valid and trusted; import the CA certificate to the Data Domain appliance if using a self-signed cert. |
+    | `Error: Key manager already configured with different server` | Run `encryption change-key-manager none` first to clear the existing configuration before registering with a new DPM server. |
 ---
 
 ## Key Rotation
@@ -216,8 +224,10 @@ Last Key Rotation Algorithm: AES-256-GCM
 ```
 
 !!! warning "Common errors"
-    **`command not found: encryption`** — Ensure you are logged into the Data Domain management interface or use the full path `/opt/dell/encryption status`.
-    **`grep: (standard input) is empty`** — The encryption status command produced no output; verify encryption is enabled on the system with `encryption config show`.
+    | Error | Fix |
+    |---|---|
+    | `command not found: encryption` | Ensure you are logged into the Data Domain management interface or use the full path `/opt/dell/encryption status`. |
+    | `grep: (standard input) is empty` | The encryption status command produced no output; verify encryption is enabled on the system with `encryption config show`. |
 ### Perform a Manual Key Rotation
 
 ```bash
@@ -249,8 +259,10 @@ Rekey Progress: 87%
 ```
 
 !!! warning "Common errors"
-    **`Error: Key rotation already in progress`** — Wait for the current rotation to complete or check `encryption status` to verify the previous operation finished.
-    **`Error: Insufficient permissions to rotate keys`** — Ensure your user account has the `encryption-admin` role assigned via the Data Domain administrative console.
+    | Error | Fix |
+    |---|---|
+    | `Error: Key rotation already in progress` | Wait for the current rotation to complete or check `encryption status` to verify the previous operation finished. |
+    | `Error: Insufficient permissions to rotate keys` | Ensure your user account has the `encryption-admin` role assigned via the Data Domain administrative console. |
 Key rotation does not impact backup or restore operations — it can be performed online. Schedule annual or bi-annual key rotation per your security policy.
 
 ### Key Rotation Schedule Recommendation
@@ -293,8 +305,10 @@ Serial Number: DD9500-0123456789
 ```
 
 !!! warning "Common errors"
-    **`encryption status: command not found`** — Use the correct Data Domain CLI command `show encryption-status` or access via SSH to the management interface.
-    **`grep: (standard input) is empty`** — FIPS mode may not be supported on this Data Domain model or firmware version; verify with `show system-info` and consult Dell EMC compatibility matrix.
+    | Error | Fix |
+    |---|---|
+    | `encryption status: command not found` | Use the correct Data Domain CLI command `show encryption-status` or access via SSH to the management interface. |
+    | `grep: (standard input) is empty` | FIPS mode may not be supported on this Data Domain model or firmware version; verify with `show system-info` and consult Dell EMC compatibility matrix. |
 FIPS 140-2 validation certificates for DDOS are listed on the [NIST CMVP website](https://csrc.nist.gov/projects/cryptographic-module-validation-program). Cross-reference the DDOS version against the active certificate when producing compliance evidence.
 
 ---
@@ -352,9 +366,11 @@ Serial Number: 0x2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate file not found at <certificate-pem-path>`** — Verify the PEM file path is correct and the file exists with `ls -la <certificate-pem-path>`.
-    **`Error: Certificate chain validation failed - missing intermediate certificate`** — Include the full certificate chain (root + intermediates) in the PEM file or install intermediate certificates separately before installing the leaf certificate.
-    **`Error: Certificate CN does not match system FQDN`** — Ensure the Common Name in the certificate matches the Data Domain's FQDN exactly, or regenerate the CSR with the correct FQDN.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate file not found at <certificate-pem-path>` | Verify the PEM file path is correct and the file exists with `ls -la <certificate-pem-path>`. |
+    | `Error: Certificate chain validation failed - missing intermediate certificate` | Include the full certificate chain (root + intermediates) in the PEM file or install intermediate certificates separately before installing the leaf certificate. |
+    | `Error: Certificate CN does not match system FQDN` | Ensure the Common Name in the certificate matches the Data Domain's FQDN exactly, or regenerate the CSR with the correct FQDN. |
 ### Replication Encryption
 
 By default, DDOS uses its own certificate exchange for replication authentication. Transport encryption for replication (SSL/TLS over the replication stream) can be explicitly enabled:
@@ -385,9 +401,11 @@ Replication context: finance_backup
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid mtree path format`** — Ensure the mtree path follows the format `mtree://<hostname>/data/col1/<mtree-name>` with valid hostname and mtree name.
-    **`Error: Encryption not supported on this replication context`** — Verify both source and destination Data Domain systems support encryption (requires DDOS 6.0+) and have encryption licenses enabled.
-    **`Error: Replication context already exists`** — Use `replication modify` instead of `replication add` if updating an existing replication context.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid mtree path format` | Ensure the mtree path follows the format `mtree://<hostname>/data/col1/<mtree-name>` with valid hostname and mtree name. |
+    | `Error: Encryption not supported on this replication context` | Verify both source and destination Data Domain systems support encryption (requires DDOS 6.0+) and have encryption licenses enabled. |
+    | `Error: Replication context already exists` | Use `replication modify` instead of `replication add` if updating an existing replication context. |
 Replication encryption adds CPU overhead. For high-throughput environments (>10 TB/hr), evaluate the CPU impact on the source DD before enabling on all contexts.
 
 ### DD Boost Transport Encryption
@@ -408,8 +426,10 @@ Transport-encryption: enabled
 ```
 
 !!! warning "Common errors"
-    **`ddboost: command not found`** — Install the DDBoost client package or ensure the Data Domain management tools are in your PATH.
-    **`Error: Authentication failed`** — Authenticate to the Data Domain system first using `ddboost user add` or verify your credentials are configured in the DDBoost configuration file.
+    | Error | Fix |
+    |---|---|
+    | `ddboost: command not found` | Install the DDBoost client package or ensure the Data Domain management tools are in your PATH. |
+    | `Error: Authentication failed` | Authenticate to the Data Domain system first using `ddboost user add` or verify your credentials are configured in the DDBoost configuration file. |
 Supported by Veeam (DD Boost for Veeam plug-in), NetBackup (OST plug-in), and CommVault when using DD Boost.
 
 ---
@@ -434,8 +454,10 @@ Last Key Rotation: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`tier show detail cloud | grep -i encrypt: command not found`** — Ensure you are logged into the Data Domain management interface (SSH or web console) and have appropriate admin privileges.
-    **`No such file or directory`** — Verify the cloud tier is configured and initialized; run `tier show` first to confirm cloud tiers exist.
+    | Error | Fix |
+    |---|---|
+    | `tier show detail cloud | grep -i encrypt: command not found` | Ensure you are logged into the Data Domain management interface (SSH or web console) and have appropriate admin privileges. |
+    | `No such file or directory` | Verify the cloud tier is configured and initialized; run `tier show` first to confirm cloud tiers exist. |
 Additionally, configure server-side encryption on the cloud bucket as a defence-in-depth measure:
 - **AWS S3:** Enable SSE-S3 or SSE-KMS on the target bucket
 - **Azure Blob:** Enable Storage Service Encryption (enabled by default on Azure)
@@ -473,9 +495,11 @@ Key Escrow Status: CONFIGURED
 ```
 
 !!! warning "Common errors"
-    **`encryption status: command not found`** — Verify you are logged into the Data Domain system with appropriate admin credentials and that the encryption module is installed.
-    **`Error: Key Manager unreachable - cannot verify encryption state`** — Confirm network connectivity to the key management server and that the KM service is running before proceeding with decommissioning.
-    **`Permission denied: insufficient privileges to query encryption status`** — Execute the command with root or sysadmin role privileges, or contact your Data Domain administrator.
+    | Error | Fix |
+    |---|---|
+    | `encryption status: command not found` | Verify you are logged into the Data Domain system with appropriate admin credentials and that the encryption module is installed. |
+    | `Error: Key Manager unreachable - cannot verify encryption state` | Confirm network connectivity to the key management server and that the KM service is running before proceeding with decommissioning. |
+    | `Permission denied: insufficient privileges to query encryption status` | Execute the command with root or sysadmin role privileges, or contact your Data Domain administrator. |
 Dell ProSupport manages physical disk returns. Confirm with Dell support that returned disks under ProSupport Plus are destroyed or sanitised per their data handling policy.
 
 ---

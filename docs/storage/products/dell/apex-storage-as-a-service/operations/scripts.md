@@ -198,9 +198,11 @@ Execution completed in 12.4 seconds
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid credentials. Authentication failed (401 Unauthorized)`** — Verify that APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and have not expired.
-    **`Error: Unable to connect to APEX Console at default endpoint. Connection timeout after 30s`** — Confirm network connectivity to the APEX management console and that the correct endpoint URL is configured in the script or environment.
-    **`FileNotFoundError: [Errno 2] No such file or directory: 'apex_capacity_monitor.py'`** — Ensure the script is located in the current working directory (C:\Users\YourName\Desktop) or provide the full path to the script.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid credentials. Authentication failed (401 Unauthorized)` | Verify that APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and have not expired. |
+    | `Error: Unable to connect to APEX Console at default endpoint. Connection timeout after 30s` | Confirm network connectivity to the APEX management console and that the correct endpoint URL is configured in the script or environment. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: 'apex_capacity_monitor.py'` | Ensure the script is located in the current working directory (C:\Users\YourName\Desktop) or provide the full path to the script. |
 **What you should see**
 
 A table listing each APEX subscription with committed capacity, consumed capacity, percentage used, and status (OK/WARNING/CRITICAL). The final line shows overall status. The script exits non-zero if any subscription is in WARNING or CRITICAL state.
@@ -352,9 +354,11 @@ Execution completed in 12.4 seconds
 ```
 
 !!! warning "Common errors"
-    **`'python' is not recognized as an internal or external command`** — Ensure Python is installed and added to PATH, or use the full path to python.exe (e.g., `C:\Python311\python.exe apex_alert_report.py`).
-    **`Error: Invalid credentials - APEX_CLIENT_ID or APEX_CLIENT_SECRET not set`** — Verify both environment variables are set correctly with `echo %APEX_CLIENT_ID%` and `echo %APEX_CLIENT_SECRET%`, and that they match your APEX Console credentials.
-    **`ConnectionError: Failed to connect to https://apex.dell.com/api/v2`** — Check network connectivity and firewall rules; confirm the APEX Console endpoint is reachable with `ping apex.dell.com` or `curl https://apex.dell.com/api/v2`.
+    | Error | Fix |
+    |---|---|
+    | `'python' is not recognized as an internal or external command` | Ensure Python is installed and added to PATH, or use the full path to python.exe (e.g., `C:\Python311\python.exe apex_alert_report.py`). |
+    | `Error: Invalid credentials - APEX_CLIENT_ID or APEX_CLIENT_SECRET not set` | Verify both environment variables are set correctly with `echo %APEX_CLIENT_ID%` and `echo %APEX_CLIENT_SECRET%`, and that they match your APEX Console credentials. |
+    | `ConnectionError: Failed to connect to https://apex.dell.com/api/v2` | Check network connectivity and firewall rules; confirm the APEX Console endpoint is reachable with `ping apex.dell.com` or `curl https://apex.dell.com/api/v2`. |
 **What you should see**
 
 A table with severity, resource name, and description for each active alert. The final line shows total active alert count. The script exits with a non-zero code if any CRITICAL or ERROR alerts are present.
@@ -501,9 +505,11 @@ apex-cluster-01 : ok=4 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 igno
 ```
 
 !!! warning "Common errors"
-    **`fatal: [apex-cluster-01]: FAILED! => {"msg": "Authentication failed: Invalid APEX_CLIENT_ID or APEX_CLIENT_SECRET"}`** — Verify credentials are correctly exported and have not expired by checking them in your APEX management console.
-    **`fatal: [apex-cluster-01]: FAILED! => {"msg": "Unable to reach APEX cluster at apex-cluster-01: Name or service not known"}`** — Ensure the APEX cluster hostname is resolvable and network connectivity exists from the Ansible control node.
-    **`fatal: [apex-cluster-01]: FAILED! => {"msg": "apex_health.yml: No such file or directory"}`** — Verify the playbook file exists in the current working directory and the path is correct.
+    | Error | Fix |
+    |---|---|
+    | `fatal: [apex-cluster-01]: FAILED! => {"msg": "Authentication failed: Invalid APEX_CLIENT_ID or APEX_CLIENT_SECRET"}` | Verify credentials are correctly exported and have not expired by checking them in your APEX management console. |
+    | `fatal: [apex-cluster-01]: FAILED! => {"msg": "Unable to reach APEX cluster at apex-cluster-01: Name or service not known"}` | Ensure the APEX cluster hostname is resolvable and network connectivity exists from the Ansible control node. |
+    | `fatal: [apex-cluster-01]: FAILED! => {"msg": "apex_health.yml: No such file or directory"}` | Verify the playbook file exists in the current working directory and the path is correct. |
 **What you should see**
 
 Ansible authenticates to the APEX API, lists all subscriptions, and retrieves active alerts. If any CRITICAL alerts are found the play fails with a message to investigate via the APEX Console.
@@ -639,9 +645,11 @@ fi
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Authentication failed — check APEX_CLIENT_ID and APEX_CLIENT_SECRET`** — Verify credentials are exported as environment variables and have not expired; regenerate tokens in the APEX console if needed.
-    **`curl: (28) Operation timeout was reached`** — Increase the `--max-time` parameter from 15 to 30 seconds or verify network connectivity to the Dell API endpoint.
-    **`json.decoder.JSONDecodeError: Expecting value`** — Confirm the API endpoint URL is correct and the Bearer token is still valid; re-authenticate if the token has expired.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Authentication failed — check APEX_CLIENT_ID and APEX_CLIENT_SECRET` | Verify credentials are exported as environment variables and have not expired; regenerate tokens in the APEX console if needed. |
+    | `curl: (28) Operation timeout was reached` | Increase the `--max-time` parameter from 15 to 30 seconds or verify network connectivity to the Dell API endpoint. |
+    | `json.decoder.JSONDecodeError: Expecting value` | Confirm the API endpoint URL is correct and the Bearer token is still valid; re-authenticate if the token has expired. |
 ---
 
 ## Incident Triage Script
@@ -808,8 +816,10 @@ Output saved to: /tmp/apex_triage_20240115_143247.txt
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Authentication failed`** — Verify APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and the TOKEN_URL is reachable.
-    **`curl: (28) Operation timeout was reached`** — Increase the `--max-time` value from 15 to 30 seconds or check network connectivity to api.dell.com.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Authentication failed` | Verify APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and the TOKEN_URL is reachable. |
+    | `curl: (28) Operation timeout was reached` | Increase the `--max-time` value from 15 to 30 seconds or check network connectivity to api.dell.com. |
     **`json.decoder.JSONDecodeError:
 ---
 
@@ -936,9 +946,11 @@ fi
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Auth failed`** — Verify APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and the OAuth token endpoint is reachable.
-    **`[FAIL] APEX-SYS-001: capacity headroom 18.3% (min 20%)`** — Reduce planned workload increase or add capacity to the system before proceeding.
-    **`[FAIL] APEX-SYS-002: health_score=76 (min 80)`** — Investigate and resolve the system health issues (check alerts, disk status, and replication lag) before increasing workload.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Auth failed` | Verify APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and the OAuth token endpoint is reachable. |
+    | `[FAIL] APEX-SYS-001: capacity headroom 18.3% (min 20%)` | Reduce planned workload increase or add capacity to the system before proceeding. |
+    | `[FAIL] APEX-SYS-002: health_score=76 (min 80)` | Investigate and resolve the system health issues (check alerts, disk status, and replication lag) before increasing workload. |
 ---
 
 ## Post-Change Validation Script
@@ -1060,9 +1072,11 @@ fi
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Auth failed`** — Verify APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and the token endpoint is reachable.
-    **`[FAIL] <system>: health_score=<score> dropped below 80`** — Investigate system health degradation in CloudIQ console and resolve any reported issues before proceeding.
-    **`[FAIL] <system>: consumed=<value> TiB exceeds expected max <value> TiB`** — Review actual capacity consumption against baseline and expected growth parameters; adjust EXPECTED_GROWTH_TIB or investigate unexpected data growth.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Auth failed` | Verify APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and the token endpoint is reachable. |
+    | `[FAIL] <system>: health_score=<score> dropped below 80` | Investigate system health degradation in CloudIQ console and resolve any reported issues before proceeding. |
+    | `[FAIL] <system>: consumed=<value> TiB exceeds expected max <value> TiB` | Review actual capacity consumption against baseline and expected growth parameters; adjust EXPECTED_GROWTH_TIB or investigate unexpected data growth. |
 ---
 
 ## Health Check Script
@@ -1148,9 +1162,11 @@ APEX_HEALTH system=APEX-CHI-03 health_score=45.0 committed_tib=1000.0 consumed_t
 ```
 
 !!! warning "Common errors"
-    **`APEX_HEALTH status=CRITICAL reason=auth_failed`** — Verify APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and the OAuth token endpoint is reachable.
-    **`curl: (28) Operation timeout was reached`** — Increase the `--max-time` parameter from 15 to 30 seconds or check network connectivity to api.dell.com.
-    **`json.decoder.JSONDecodeError: Expecting value`** — Confirm the API token is still valid (may have expired) and re-run the script to obtain a fresh token.
+    | Error | Fix |
+    |---|---|
+    | `APEX_HEALTH status=CRITICAL reason=auth_failed` | Verify APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and the OAuth token endpoint is reachable. |
+    | `curl: (28) Operation timeout was reached` | Increase the `--max-time` parameter from 15 to 30 seconds or check network connectivity to api.dell.com. |
+    | `json.decoder.JSONDecodeError: Expecting value` | Confirm the API token is still valid (may have expired) and re-run the script to obtain a fresh token. |
 ---
 
 ## Windows: APEX Storage Capacity Report via REST API (PowerShell)
@@ -1312,9 +1328,11 @@ Execution completed in 47 seconds.
 ```
 
 !!! warning "Common errors"
-    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
-    **`The term 'apex_capacity_report.ps1' is not recognized`** — Verify the script exists in the current directory with `dir apex_capacity_report.ps1` and check the filename spelling.
-    **`Unable to connect to APEX Management Console`** — Confirm network connectivity to the APEX management server and verify credentials in the script's configuration section.
+    | Error | Fix |
+    |---|---|
+    | `cannot be loaded because running scripts is disabled on this system` | Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script. |
+    | `The term 'apex_capacity_report.ps1' is not recognized` | Verify the script exists in the current directory with `dir apex_capacity_report.ps1` and check the filename spelling. |
+    | `Unable to connect to APEX Management Console` | Confirm network connectivity to the APEX management server and verify credentials in the script's configuration section. |
 **What you should see**
 
 For each APEX Block storage system: the system name, type, contracted capacity in TiB, and current used capacity with percentage. Any system at 80% or above of its contracted amount is flagged. The summary shows how many systems are flagged and the overall status.

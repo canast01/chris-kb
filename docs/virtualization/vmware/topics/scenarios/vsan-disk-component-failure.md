@@ -107,8 +107,10 @@ State: Degraded
 ```
 
 !!! warning "Common errors"
-    **`esxcli: Unknown command or namespace vsan`** — Verify vSAN is licensed and enabled on the host by running `esxcli vsan cluster get`.
-    **`grep: (standard input) is empty`** — Confirm the host is part of a vSAN cluster and has vSAN enabled with `esxcli vsan cluster get`.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: Unknown command or namespace vsan` | Verify vSAN is licensed and enabled on the host by running `esxcli vsan cluster get`. |
+    | `grep: (standard input) is empty` | Confirm the host is part of a vSAN cluster and has vSAN enabled with `esxcli vsan cluster get`. |
 Look for: note which host the absent component lives on, which disk group it belongs to, and whether the state is `Absent` (disk gone) or `Degraded` (disk present but component needs rebuild).
 
 ---
@@ -188,8 +190,10 @@ Status: OK
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not retrieve SMART data for device naa.<device-id>`** — Verify the NAA identifier is correct by copying it directly from the device list output and ensure the device supports SMART queries.
-    **`Error: Unknown option or syntax error in esxcli command`** — Check your ESXi version supports the `esxcli storage core device smart` command (requires ESXi 6.5+); use `esxcli storage core device list` alone if unavailable.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not retrieve SMART data for device naa.<device-id>` | Verify the NAA identifier is correct by copying it directly from the device list output and ensure the device supports SMART queries. |
+    | `Error: Unknown option or syntax error in esxcli command` | Check your ESXi version supports the `esxcli storage core device smart` command (requires ESXi 6.5+); use `esxcli storage core device list` alone if unavailable. |
 For VxRail deployments, check iDRAC before acting — OMIVV surfaces hardware events as vCenter alarms:
 
 ```bash
@@ -208,8 +212,10 @@ SEL Records:
 ```
 
 !!! warning "Common errors"
-    **`racadm: command not found`** — Install Dell OMECLI tools or use the iDRAC web UI at https://<idrac-ip> instead.
-    **`DRAC001: Authentication failed`** — Verify iDRAC credentials and ensure your user account has sufficient permissions to query system event logs.
+    | Error | Fix |
+    |---|---|
+    | `racadm: command not found` | Install Dell OMECLI tools or use the iDRAC web UI at https://<idrac-ip> instead. |
+    | `DRAC001: Authentication failed` | Verify iDRAC credentials and ensure your user account has sufficient permissions to query system event logs. |
 Look for: cross-reference **vCenter → Alarms → Triggered Alarms** for any Dell OMIVV alarm correlated with the vSAN alert to confirm the physical disk identity.
 
 ---
@@ -243,8 +249,10 @@ CompletedResyncObjects: 30
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace path vsan/debug/resync/summary.`** — Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm VSAN status first.
-    **`Error: Permission denied.`** — Ensure you are logged in with root or an account with VSAN administration privileges; use `esxcli system permission list` to verify your role.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace path vsan/debug/resync/summary.` | Verify VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm VSAN status first. |
+    | `Error: Permission denied.` | Ensure you are logged in with root or an account with VSAN administration privileges; use `esxcli system permission list` to verify your role. |
 Look for: `ResyncType = REPAIR` with decreasing `BytesToResync` confirms rebuild is in progress. For VxRail, use **VxRail Manager → Maintenance → Disk Replacement** wizard — it verifies cluster capacity before removal and monitors rebuild post-replacement.
 
 ---

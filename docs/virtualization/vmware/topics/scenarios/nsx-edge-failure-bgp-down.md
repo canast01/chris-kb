@@ -86,9 +86,11 @@ curl -sk -u admin:<password> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if error persists, verify NSX Manager hostname matches certificate CN).
-    **`jq: command not found`** — Install `python3-json-tool` or use `python3 -m json.tool` instead of piping to `jq`.
-    **`401 Unauthorized`** — Verify NSX Manager admin credentials and ensure the user has API access permissions in NSX Manager role-based access control.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if error persists, verify NSX Manager hostname matches certificate CN). |
+    | `jq: command not found` | Install `python3-json-tool` or use `python3 -m json.tool` instead of piping to `jq`. |
+    | `401 Unauthorized` | Verify NSX Manager admin credentials and ensure the user has API access permissions in NSX Manager role-based access control. |
 ---
 
 ## 3. Check BGP Neighbor State on the T0 Gateway
@@ -154,8 +156,10 @@ Destination          Gateway            Metric Type
 ```
 
 !!! warning "Common errors"
-    **`invalid vrf uuid: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`** — Verify the UUID is copied exactly from the logical-routers output and matches an active VRF.
-    **`bgp: neighbor not configured`** — Ensure BGP is enabled on the uplink VRF and neighbors are defined in the NSX Manager configuration.
+    | Error | Fix |
+    |---|---|
+    | `invalid vrf uuid: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` | Verify the UUID is copied exactly from the logical-routers output and matches an active VRF. |
+    | `bgp: neighbor not configured` | Ensure BGP is enabled on the uplink VRF and neighbors are defined in the NSX Manager configuration. |
 Look for: **Established** state and a non-zero **PfxRcd** (prefixes received from upstream router).
 
 ```bash
@@ -188,9 +192,11 @@ Interface: eth0 (uplink-interface-name)
 ```
 
 !!! warning "Common errors"
-    **`ping: unknown host <upstream-router-ip>`** — Replace `<upstream-router-ip>` with the actual IP address of your upstream router (e.g., `ping 192.168.1.1 interface eth0`).
-    **`Interface <uplink-interface-name> not found`** — Verify the uplink interface name exists by running `get interfaces` first and use the correct interface identifier.
-    **`Command not found: get interfaces`** — Use the correct CLI syntax for your hypervisor platform (e.g., `ip link show` for Linux or `show interfaces` for NSX edge nodes).
+    | Error | Fix |
+    |---|---|
+    | `ping: unknown host <upstream-router-ip>` | Replace `<upstream-router-ip>` with the actual IP address of your upstream router (e.g., `ping 192.168.1.1 interface eth0`). |
+    | `Interface <uplink-interface-name> not found` | Verify the uplink interface name exists by running `get interfaces` first and use the correct interface identifier. |
+    | `Command not found: get interfaces` | Use the correct CLI syntax for your hypervisor platform (e.g., `ip link show` for Linux or `show interfaces` for NSX edge nodes). |
 ---
 
 ## 5. Check TEP Connectivity — Edge to ESXi Host Tunnels
@@ -225,8 +231,10 @@ MTU: 1600
 ```
 
 !!! warning "Common errors"
-    **`Port <port-id> not found`** — Verify the port ID exists by running `get tunnel-ports` first and use the exact port name from the output.
-    **`Command not found: get`** — Ensure you are connected to the NSX Manager or edge node CLI; reconnect with `ssh admin@<nsx-manager-ip>` and authenticate.
+    | Error | Fix |
+    |---|---|
+    | `Port <port-id> not found` | Verify the port ID exists by running `get tunnel-ports` first and use the exact port name from the output. |
+    | `Command not found: get` | Ensure you are connected to the NSX Manager or edge node CLI; reconnect with `ssh admin@<nsx-manager-ip>` and authenticate. |
 ```bash
 # From an ESXi host — verify TEP reachability to the edge node TEP IP
 vmkping -I vmk10 <edge-tep-ip> -d -s 8972
@@ -247,9 +255,11 @@ round-trip min/avg/max = 2.156/2.278/2.412 ms
 ```
 
 !!! warning "Common errors"
-    **`Unable to route to 192.168.100.45`** — Verify the edge TEP IP is correct and the ESXi host has network connectivity to the TEP subnet; check routing tables with `esxcli network ip route ipv4 list`.
-    **`Cannot find vmk10 interface`** — Confirm the correct TEP VMkernel interface name on your ESXi host by running `esxcli network ip interface list` and adjust the `-I` parameter accordingly.
-    **`100% packet loss`** — Check that the edge node TEP interface is up and reachable; verify firewall rules and VLAN configuration allow traffic between the ESXi host and edge TEP.
+    | Error | Fix |
+    |---|---|
+    | `Unable to route to 192.168.100.45` | Verify the edge TEP IP is correct and the ESXi host has network connectivity to the TEP subnet; check routing tables with `esxcli network ip route ipv4 list`. |
+    | `Cannot find vmk10 interface` | Confirm the correct TEP VMkernel interface name on your ESXi host by running `esxcli network ip interface list` and adjust the `-I` parameter accordingly. |
+    | `100% packet loss` | Check that the edge node TEP interface is up and reachable; verify firewall rules and VLAN configuration allow traffic between the ESXi host and edge TEP. |
 Look for: failed large-packet pings between ESXi hosts and the edge node TEP IPs — this points to the underlay VLAN carrying TEP traffic; check the physical switch port.
 
 ---
@@ -308,8 +318,10 @@ Eth1/10       NSX-Edge-Uplink    connected  trunk   full  10G Ethernet
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the exact interface name with `show interface brief` and use the correct format (e.g., `Ethernet1/10` instead of `eth1/10`).
-    **`BGP neighbor not found in output`** — Confirm the edge uplink IP is correct and that BGP peering is established with `show bgp ipv4 unicast neighbors`.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the exact interface name with `show interface brief` and use the correct format (e.g., `Ethernet1/10` instead of `eth1/10`). |
+    | `BGP neighbor not found in output` | Confirm the edge uplink IP is correct and that BGP peering is established with `show bgp ipv4 unicast neighbors`. |
 ---
 
 ## Common Mistakes

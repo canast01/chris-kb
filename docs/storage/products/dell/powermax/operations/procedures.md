@@ -120,9 +120,11 @@ prod-app-mv-002                                 prod-app-sg-002
 ```
 
 !!! warning "Common errors"
-    **`Symmetrix ID <sid> is invalid`** — Verify the correct Symmetrix SID with `symcfg list` and ensure you are connected to the correct array.
-    **`Masking view <view_name> does not exist`** — Confirm the masking view name spelling and check available views with `symaccess list -sid <sid> view`.
-    **`No initiators found for WWN <wwn>`** — Verify the initiator WWN is correct and registered on the array using `symaccess list -sid <sid> initiator`.
+    | Error | Fix |
+    |---|---|
+    | `Symmetrix ID <sid> is invalid` | Verify the correct Symmetrix SID with `symcfg list` and ensure you are connected to the correct array. |
+    | `Masking view <view_name> does not exist` | Confirm the masking view name spelling and check available views with `symaccess list -sid <sid> view`. |
+    | `No initiators found for WWN <wwn>` | Verify the initiator WWN is correct and registered on the array using `symaccess list -sid <sid> initiator`. |
 ### Initiator Groups
 
 ![Initiator Groups](../../../../../assets/powermax-proc-initiator-groups.svg)
@@ -176,9 +178,11 @@ Child Initiator Group dev_esxi_cluster added to parent_cluster.
 ```
 
 !!! warning "Common errors"
-    **`Symmetrix ID <sid> does not exist`** — Verify the correct Symmetrix ID with `symcfg list` and ensure it matches your array's actual ID.
-    **`Initiator Group <ig_name> already exists`** — Use a unique initiator group name or remove the existing group with `symaccess delete -sid <sid> -name <ig_name> -type initiator` before recreating.
-    **`WWPN <wwn> is already assigned to another Initiator Group`** — Remove the WWN from its current group before adding it to a new one, or use a different HBA port.
+    | Error | Fix |
+    |---|---|
+    | `Symmetrix ID <sid> does not exist` | Verify the correct Symmetrix ID with `symcfg list` and ensure it matches your array's actual ID. |
+    | `Initiator Group <ig_name> already exists` | Use a unique initiator group name or remove the existing group with `symaccess delete -sid <sid> -name <ig_name> -type initiator` before recreating. |
+    | `WWPN <wwn> is already assigned to another Initiator Group` | Remove the WWN from its current group before adding it to a new one, or use a different HBA port. |
 ### Port Groups
 
 ![Port Groups](../../../../../assets/powermax-proc-port-groups.svg)
@@ -229,9 +233,11 @@ Port 3a:2 successfully removed from Port Group PG_PROD_FC_04
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI Error: Could not find the specified port group`** — Verify the port group name matches exactly with `symaccess list` output and check the SID is correct.
-    **`SYMAPI Error: Director port <dir_id>:<port_id> does not exist`** — Confirm the director and port IDs are valid by running `symcfg list -dir` to see available FA ports.
-    **`SYMAPI Error: Port is already a member of this port group`** — Remove the port first with the `remove` command before attempting to add it again.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI Error: Could not find the specified port group` | Verify the port group name matches exactly with `symaccess list` output and check the SID is correct. |
+    | `SYMAPI Error: Director port <dir_id>:<port_id> does not exist` | Confirm the director and port IDs are valid by running `symcfg list -dir` to see available FA ports. |
+    | `SYMAPI Error: Port is already a member of this port group` | Remove the port first with the `remove` command before attempting to add it again. |
 ### Creating a Masking View
 
 ![Creating a Masking View](../../../../../assets/powermax-proc-creating-a-masking-view.svg)
@@ -257,9 +263,11 @@ View Name: PROD_MV_001
 ```
 
 !!! warning "Common errors"
-    **`Error: Storage Group '<sg_name>' does not exist`** — Verify the storage group exists with `symsg list` and use the correct name.
-    **`Error: Initiator Group '<ig_name>' does not exist`** — Confirm the initiator group is created with `symaccess list -type initiator` before creating the masking view.
-    **`Error: Port Group '<pg_name>' does not exist`** — Check that the port group exists using `symaccess list -type port` and verify the correct spelling.
+    | Error | Fix |
+    |---|---|
+    | `Error: Storage Group '<sg_name>' does not exist` | Verify the storage group exists with `symsg list` and use the correct name. |
+    | `Error: Initiator Group '<ig_name>' does not exist` | Confirm the initiator group is created with `symaccess list -type initiator` before creating the masking view. |
+    | `Error: Port Group '<pg_name>' does not exist` | Check that the port group exists using `symaccess list -type port` and verify the correct spelling. |
 ### Deleting a Masking View
 
 ![Deleting a Masking View](../../../../../assets/powermax-proc-deleting-a-masking-view.svg)
@@ -288,9 +296,11 @@ Port group 'SYMMETRIX_PG_FC' deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Masking view 'PROD_MV_001' is still in use by storage group`** — Remove the masking view from all active storage groups before deletion using `symaccess delete view <view_name> -sid <sid> -force`.
-    **`Error: Initiator group 'LINUX_IG_GRP' is in use by masking view 'PROD_MV_002'`** — Delete or modify the masking view that references this initiator group before attempting to delete the initiator group.
-    **`Error: Port group 'SYMMETRIX_PG_FC' not found on array <sid>`** — Verify the port group name and array SID are correct using `symaccess list -sid <sid> -type port`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Masking view 'PROD_MV_001' is still in use by storage group` | Remove the masking view from all active storage groups before deletion using `symaccess delete view <view_name> -sid <sid> -force`. |
+    | `Error: Initiator group 'LINUX_IG_GRP' is in use by masking view 'PROD_MV_002'` | Delete or modify the masking view that references this initiator group before attempting to delete the initiator group. |
+    | `Error: Port group 'SYMMETRIX_PG_FC' not found on array <sid>` | Verify the port group name and array SID are correct using `symaccess list -sid <sid> -type port`. |
 ### Troubleshooting Host Access
 
 ![Troubleshooting Host Access](../../../../../assets/powermax-proc-troubleshooting-host-access.svg)
@@ -333,9 +343,11 @@ Host Mapping:
 ```
 
 !!! warning "Common errors"
-    **`SYMCFG ERROR (0): Could not open the Symmetrix device driver`** — Verify the Symmetrix CLI is installed and the daemon (symcfg_daemon) is running with `symcfg_daemon -start`.
-    **`Error: View '<view_name>' not found in Symmetrix <sid>`** — Confirm the view name is correct and exists on the array using `symaccess list view -sid <sid>`.
-    **`SYMDEV ERROR (0): Device <devname> not found`** — Verify the device name (e.g., 0ABC) is valid and exists on the array with `symdev list -sid <sid>`.
+    | Error | Fix |
+    |---|---|
+    | `SYMCFG ERROR (0): Could not open the Symmetrix device driver` | Verify the Symmetrix CLI is installed and the daemon (symcfg_daemon) is running with `symcfg_daemon -start`. |
+    | `Error: View '<view_name>' not found in Symmetrix <sid>` | Confirm the view name is correct and exists on the array using `symaccess list view -sid <sid>`. |
+    | `SYMDEV ERROR (0): Device <devname> not found` | Verify the device name (e.g., 0ABC) is valid and exists on the array with `symdev list -sid <sid>`. |
 ## Provisioning
 
 End-to-end workflow for provisioning storage on Dell PowerMax: create volumes, add to a storage group, and create (or update) a masking view so the host can see the storage.
@@ -415,8 +427,10 @@ web-app-03_SG
 ```
 
 !!! warning "Common errors"
-    **`symsg: CLI Exception: Could not connect to the Symmetrix array`** — Verify the Symmetrix ID (sid) is correct and the management station has network connectivity to the array.
-    **`symsg: CLI Exception: SRP_1 does not exist on array 000297123456789`** — Run `symcfg list -srp` to confirm available SRP names and use the correct one in the command.
+    | Error | Fix |
+    |---|---|
+    | `symsg: CLI Exception: Could not connect to the Symmetrix array` | Verify the Symmetrix ID (sid) is correct and the management station has network connectivity to the array. |
+    | `symsg: CLI Exception: SRP_1 does not exist on array 000297123456789` | Run `symcfg list -srp` to confirm available SRP names and use the correct one in the command. |
 ### Step 2 — Create Thin Devices
 
 ![Step 2 — Create Thin Devices](../../../../../assets/powermax-proc-step-2-create-thin-devices.svg)
@@ -451,8 +465,10 @@ Symmetrix Capacity Available: 2.4 TB
 ```
 
 !!! warning "Common errors"
-    **`SYMCONFIGURE: Error: Device Group <hostname>_SG does not exist`** — Create the storage group first using `symsg create -sid <sid> -sgname <hostname>_SG` before adding devices.
-    **`SYMCONFIGURE: Error: Insufficient free space in Symmetrix`** — Verify available capacity with `symcapacity -sid <sid>` and reduce device count or size accordingly.
+    | Error | Fix |
+    |---|---|
+    | `SYMCONFIGURE: Error: Device Group <hostname>_SG does not exist` | Create the storage group first using `symsg create -sid <sid> -sgname <hostname>_SG` before adding devices. |
+    | `SYMCONFIGURE: Error: Insufficient free space in Symmetrix` | Verify available capacity with `symcapacity -sid <sid>` and reduce device count or size accordingly. |
 ### Step 3 — Create the Initiator Group
 
 ![Step 3 — Create the Initiator Group](../../../../../assets/powermax-proc-step-3-create-the-initiator-group.svg)
@@ -479,9 +495,11 @@ WWN 50:00:14:40:5a:2b:c1:e4 added successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Initiator group <hostname>_IG already exists on array <sid>`** — Use a unique initiator group name or delete the existing group with `symaccess delete -sid <sid> -name <hostname>_IG -type initiator`.
-    **`Error: Invalid WWN format <wwn_port_a> for array <sid>`** — Verify the WWN is 16 hexadecimal characters (e.g., `50:00:14:40:5a:2b:c1:e3`) and matches the HBA port configuration.
-    **`Error: WWN <wwn_port_a> is already assigned to another initiator group`** — Confirm the WWN is not already in use by running `symaccess list -sid <sid> -type initiator` and remove it from the conflicting group first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Initiator group <hostname>_IG already exists on array <sid>` | Use a unique initiator group name or delete the existing group with `symaccess delete -sid <sid> -name <hostname>_IG -type initiator`. |
+    | `Error: Invalid WWN format <wwn_port_a> for array <sid>` | Verify the WWN is 16 hexadecimal characters (e.g., `50:00:14:40:5a:2b:c1:e3`) and matches the HBA port configuration. |
+    | `Error: WWN <wwn_port_a> is already assigned to another initiator group` | Confirm the WWN is not already in use by running `symaccess list -sid <sid> -type initiator` and remove it from the conflicting group first. |
 ### Step 4 — Create or Identify the Port Group
 
 ![Step 4 — Create or Identify the Port Group](../../../../../assets/powermax-proc-step-4-create-or-identify-the-port-group.svg)
@@ -518,9 +536,11 @@ _____________
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI Exception: Could not open Symmetrix <sid>`** — Verify the Symmetrix ID is correct and the array is reachable via `symcfg list -v`.
-    **`SYMCLI Exception: Port Group <fabric>_PG already exists`** — Either reuse the existing port group with `symaccess -sid <sid> -name <fabric>_PG -type port add -dirport` or choose a different name.
-    **`SYMCLI Exception: Director port 01E:4 is already assigned to another port group`** — Check existing port group assignments with `symaccess list -sid <sid> -type port -detail` and use an unassigned director:port pair.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI Exception: Could not open Symmetrix <sid>` | Verify the Symmetrix ID is correct and the array is reachable via `symcfg list -v`. |
+    | `SYMCLI Exception: Port Group <fabric>_PG already exists` | Either reuse the existing port group with `symaccess -sid <sid> -name <fabric>_PG -type port add -dirport` or choose a different name. |
+    | `SYMCLI Exception: Director port 01E:4 is already assigned to another port group` | Check existing port group assignments with `symaccess list -sid <sid> -type port -detail` and use an unassigned director:port pair. |
 ### Step 5 — Create the Masking View
 
 ![Step 5 — Create the Masking View](../../../../../assets/powermax-proc-step-5-create-the-masking-view.svg)
@@ -555,9 +575,11 @@ Num of Devices:       24
 ```
 
 !!! warning "Common errors"
-    **`Masking View <hostname>_MV already exists`** — Use a unique name or delete the existing masking view with `symaccess delete view -sid <sid> -name <hostname>_MV -force`.
-    **`Storage Group <hostname>_SG does not exist`** — Verify the storage group name exists with `symaccess show sg -sid <sid>` before creating the masking view.
-    **`Port Group <fabric>_PG not found`** — Confirm the port group name is correct and exists using `symaccess show pg -sid <sid>`.
+    | Error | Fix |
+    |---|---|
+    | `Masking View <hostname>_MV already exists` | Use a unique name or delete the existing masking view with `symaccess delete view -sid <sid> -name <hostname>_MV -force`. |
+    | `Storage Group <hostname>_SG does not exist` | Verify the storage group name exists with `symaccess show sg -sid <sid>` before creating the masking view. |
+    | `Port Group <fabric>_PG not found` | Confirm the port group name is correct and exists using `symaccess show pg -sid <sid>`. |
 ### Step 6 — Host-Side Validation
 
 ![Step 6 — Host-Side Validation](../../../../../assets/powermax-proc-step-6-host-side-validation.svg)
@@ -598,9 +620,11 @@ size=5.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
 ```
 
 !!! warning "Common errors"
-    **`bash: rescan-scsi-bus.sh: command not found`** — Install sg3-utils package with `apt-get install sg3-utils` or `yum install sg3_utils`.
-    **`bash: multipath: command not found`** — Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`.
-    **`Permission denied`** — Run the script with `sudo` or as root user.
+    | Error | Fix |
+    |---|---|
+    | `bash: rescan-scsi-bus.sh: command not found` | Install sg3-utils package with `apt-get install sg3-utils` or `yum install sg3_utils`. |
+    | `bash: multipath: command not found` | Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`. |
+    | `Permission denied` | Run the script with `sudo` or as root user. |
 ### Adding More Devices to an Existing Host
 
 ![Adding More Devices to an Existing Host](../../../../../assets/powermax-proc-adding-more-devices-to-an-existing-host.svg)
@@ -636,9 +660,11 @@ Configuration committed.
 ```
 
 !!! warning "Common errors"
-    **`Error: Storage Group '<hostname>_SG' not found`** — Verify the storage group name matches exactly with `symsg list -sid <sid>` and ensure the SID is correct.
-    **`Error: Insufficient free capacity in pool`** — Check available pool capacity with `sympools -sid <sid> -pool <pool_name>` and reduce device count or size accordingly.
-    **`Error: Invalid emulation type 'FBA'`** — Confirm the array supports FBA emulation; use `symcfg list -sid <sid> -detail` to verify supported device types.
+    | Error | Fix |
+    |---|---|
+    | `Error: Storage Group '<hostname>_SG' not found` | Verify the storage group name matches exactly with `symsg list -sid <sid>` and ensure the SID is correct. |
+    | `Error: Insufficient free capacity in pool` | Check available pool capacity with `sympools -sid <sid> -pool <pool_name>` and reduce device count or size accordingly. |
+    | `Error: Invalid emulation type 'FBA'` | Confirm the array supports FBA emulation; use `symcfg list -sid <sid> -detail` to verify supported device types. |
 ### Capacity Checks Before Provisioning
 
 ![Capacity Checks Before Provisioning](../../../../../assets/powermax-proc-capacity-checks-before-provisioning.svg)
@@ -672,8 +698,10 @@ ThinPool_03    3        102400.0         76800.0         75.0
 ```
 
 !!! warning "Common errors"
-    **`SYMCFG: Error: Invalid SID <sid>`** — Replace `<sid>` with the actual Symmetrix ID (e.g., `000297123456789`).
-    **`SYMCFG: Error: Symmetrix does not respond`** — Verify network connectivity to the PowerMax array and confirm the Symmetrix ID is reachable from the management host.
+    | Error | Fix |
+    |---|---|
+    | `SYMCFG: Error: Invalid SID <sid>` | Replace `<sid>` with the actual Symmetrix ID (e.g., `000297123456789`). |
+    | `SYMCFG: Error: Symmetrix does not respond` | Verify network connectivity to the PowerMax array and confirm the Symmetrix ID is reachable from the management host. |
 ## Create a Storage Group and Add Devices
 
 A Storage Group (SG) is the logical container that groups volumes under a common service level and host access policy. Create the SG first, then add devices to it.
@@ -709,8 +737,10 @@ Storage Group: SG-PROD-01
 ```
 
 !!! warning "Common errors"
-    **`Device 0123 is already in use by another storage group`** — Verify the device is not already assigned using `symdev -sid <sid> list` and choose an available device.
-    **`Service Level Diamond not found on SRP SRP_1`** — Confirm the SLO name with `symsloprovisioning -sid <sid> list` and use a valid service level like Gold or Silver.
+    | Error | Fix |
+    |---|---|
+    | `Device 0123 is already in use by another storage group` | Verify the device is not already assigned using `symdev -sid <sid> list` and choose an available device. |
+    | `Service Level Diamond not found on SRP SRP_1` | Confirm the SLO name with `symsloprovisioning -sid <sid> list` and use a valid service level like Gold or Silver. |
 Verify the output shows the device listed under the storage group with the correct service level applied. If adding multiple devices, repeat the `add dev` command for each device ID or use a device range: `add dev <first-id>:<last-id>`.
 
 ## Create a Masking View
@@ -748,9 +778,11 @@ Masking View Name: PROD_MV_001
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI Error: Storage Group '<sg-name>' does not exist`** — Verify the storage group name with `symsg list -sid <sid>` and ensure it exists before creating the masking view.
-    **`SYMAPI Error: Initiator Group '<initiator-group>' not found`** — Confirm the initiator group exists using `symaccess show ig -sid <sid>` and check the spelling matches exactly.
-    **`SYMAPI Error: Port Group '<port-group>' is already in use by another masking view`** — Either use a different port group or remove the existing masking view using `symaccess delete view` before reassigning the port group.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI Error: Storage Group '<sg-name>' does not exist` | Verify the storage group name with `symsg list -sid <sid>` and ensure it exists before creating the masking view. |
+    | `SYMAPI Error: Initiator Group '<initiator-group>' not found` | Confirm the initiator group exists using `symaccess show ig -sid <sid>` and check the spelling matches exactly. |
+    | `SYMAPI Error: Port Group '<port-group>' is already in use by another masking view` | Either use a different port group or remove the existing masking view using `symaccess delete view` before reassigning the port group. |
 After creating the masking view, rescan the host to confirm it sees the expected LUNs:
 
 ```bash
@@ -791,9 +823,11 @@ esxcli storage core adapter rescan --all
 ```
 
 !!! warning "Common errors"
-    **`rescan-scsi-bus.sh: command not found`** — Install sg3-utils package with `apt-get install sg3-utils` or `yum install sg3-utils`.
-    **`multipath: command not found`** — Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`.
-    **`Error: Unknown command or namespace rescan`** — Verify ESXi version supports the command and run `esxcli storage core adapter list` first to confirm adapter names.
+    | Error | Fix |
+    |---|---|
+    | `rescan-scsi-bus.sh: command not found` | Install sg3-utils package with `apt-get install sg3-utils` or `yum install sg3-utils`. |
+    | `multipath: command not found` | Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`. |
+    | `Error: Unknown command or namespace rescan` | Verify ESXi version supports the command and run `esxcli storage core adapter list` first to confirm adapter names. |
 Confirm the host sees the correct number of LUNs and paths before closing the change.
 
 ## Create a SnapVX Snapshot
@@ -844,9 +878,11 @@ prod_backup_20240115          sg_prod_db_test      Linked
 ```
 
 !!! warning "Common errors"
-    **`Symmetrix ID <sid> is not valid or not found`** — Verify the Symmetrix ID with `symcfg list` and ensure the array is reachable via the Symmetrix management interface.
-    **`Storage Group <sg-name> does not exist`** — Confirm the storage group name with `symsg list -sid <sid>` and check for typos.
-    **`Target Storage Group <target-sg> does not have sufficient free capacity`** — Ensure the target storage group has enough unallocated capacity to accommodate the snapshot size.
+    | Error | Fix |
+    |---|---|
+    | `Symmetrix ID <sid> is not valid or not found` | Verify the Symmetrix ID with `symcfg list` and ensure the array is reachable via the Symmetrix management interface. |
+    | `Storage Group <sg-name> does not exist` | Confirm the storage group name with `symsg list -sid <sid>` and check for typos. |
+    | `Target Storage Group <target-sg> does not have sufficient free capacity` | Ensure the target storage group has enough unallocated capacity to accommodate the snapshot size. |
 The target SG must already exist. Linked snapshots can be used for data validation, test/dev access, or backup offload. Unlink when no longer needed: `symsnap -sid <sid> -sg <sg-name> unlink -name <snap-name> -lnsg <target-sg>`.
 
 ## Perform SRDF Failover and Failback
@@ -911,9 +947,11 @@ Last Update: 2024-01-15 14:35:42
 ```
 
 !!! warning "Common errors"
-    **`SRDF pair is not in Synchronized or Consistent state`** — Verify link connectivity and wait for synchronization to complete before attempting failover using `symrdf query`.
-    **`Failover failed: RDF link down`** — Check network connectivity between R1 and R2 arrays and confirm the SRDF link status with `symrdf query -sid <sid> -rdfg <group>`.
-    **`Cannot perform failback: pair not in Failed Over state`** — Ensure the previous failover completed successfully and the pair is in the correct state before retrying failback.
+    | Error | Fix |
+    |---|---|
+    | `SRDF pair is not in Synchronized or Consistent state` | Verify link connectivity and wait for synchronization to complete before attempting failover using `symrdf query`. |
+    | `Failover failed: RDF link down` | Check network connectivity between R1 and R2 arrays and confirm the SRDF link status with `symrdf query -sid <sid> -rdfg <group>`. |
+    | `Cannot perform failback: pair not in Failed Over state` | Ensure the previous failover completed successfully and the pair is in the correct state before retrying failback. |
 For SRDF/A (asynchronous), allow time after failback for the delta to resync before confirming the pair as fully consistent. Monitor resync progress with `symrdf list -sid <sid> -rdfg <group>`.
 
 ---

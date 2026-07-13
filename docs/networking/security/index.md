@@ -28,9 +28,11 @@ udp        0      0 0.0.0.0:53              0.0.0.0:*               UNCONN      
 ```
 
 !!! warning "Common errors"
-    **`nc: getaddrinfo: Name or service not known`** — Verify the hostname is correct and resolvable with `nslookup destination-host` or use an IP address instead.
-    **`telnet: Unable to connect to remote host: Connection refused`** — Confirm the service is running on the target port with `ss -tulnp | grep :port` on the destination host.
-    **`Permission denied`** — Run `ss -tulnp` with `sudo` to view process names and PIDs for all listening ports.
+    | Error | Fix |
+    |---|---|
+    | `nc: getaddrinfo: Name or service not known` | Verify the hostname is correct and resolvable with `nslookup destination-host` or use an IP address instead. |
+    | `telnet: Unable to connect to remote host: Connection refused` | Confirm the service is running on the target port with `ss -tulnp | grep :port` on the destination host. |
+    | `Permission denied` | Run `ss -tulnp` with `sudo` to view process names and PIDs for all listening ports. |
 ```bash
 # From a host behind the firewall
 ping <destination>
@@ -63,9 +65,11 @@ Connection to 10.45.200.15 22 [tcp/ssh] succeeded!
 ```
 
 !!! warning "Common errors"
-    **`ping: sendto: Operation not permitted`** — Verify ICMP is not blocked by host firewall rules (check `iptables -L` or security group rules).
-    **`nc: getaddrinfo: Name or service not known`** — Confirm the hostname resolves correctly with `nslookup <host>` or use the IP address directly.
-    **`curl: (7) Failed to connect to <dest> port <port>: Connection refused`** — Verify the service is running on the target host and listening on that port with `netstat -tlnp` or `ss -tlnp`.
+    | Error | Fix |
+    |---|---|
+    | `ping: sendto: Operation not permitted` | Verify ICMP is not blocked by host firewall rules (check `iptables -L` or security group rules). |
+    | `nc: getaddrinfo: Name or service not known` | Confirm the hostname resolves correctly with `nslookup <host>` or use the IP address directly. |
+    | `curl: (7) Failed to connect to <dest> port <port>: Connection refused` | Verify the service is running on the target host and listening on that port with `netstat -tlnp` or `ss -tlnp`. |
 ```bash
 # PAN-OS
 show log traffic action=deny | last 100
@@ -99,7 +103,9 @@ Jan 15 14:30:15 web-server-01 kernel: [UFW BLOCK] IN=eth0 OUT= MAC=52:54:00:12:3
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found`** — Verify you are connected to the PAN-OS device via SSH or CLI and have proper credentials;
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found` | Verify you are connected to the PAN-OS device via SSH or CLI and have proper credentials; |
 ```bash
 # Identify which policy matched a session (PAN-OS)
 show session all filter destination <ip> destination-port <port>
@@ -117,8 +123,10 @@ Log Setting: default-log-forwarding
 ```
 
 !!! warning "Common errors"
-    **`Unknown command: show session all filter`** — Verify you are in the correct operational mode (use `set cli operational-mode normal` if in XML mode).
-    **`No matching session found`** — Confirm the destination IP and port are correct, and that an active session exists (use `show session all` to list all sessions).
+    | Error | Fix |
+    |---|---|
+    | `Unknown command: show session all filter` | Verify you are in the correct operational mode (use `set cli operational-mode normal` if in XML mode). |
+    | `No matching session found` | Confirm the destination IP and port are correct, and that an active session exists (use `show session all` to list all sessions). |
 ```bash
 show running nat-policy           # PAN-OS
 show ip nat translations          # Cisco IOS
@@ -143,8 +151,10 @@ tcp 203.0.113.48:443   192.168.1.102:443  10.20.30.50:443    10.20.30.50:443
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify the device is in the correct mode (enable mode for Cisco, operational mode for PAN-OS) and check the exact command syntax for your OS version.
-    **`% Incomplete command`** — Add required parameters or use `?` to view available options for the specific command variant.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify the device is in the correct mode (enable mode for Cisco, operational mode for PAN-OS) and check the exact command syntax for your OS version. |
+    | `% Incomplete command` | Add required parameters or use `?` to view available options for the specific command variant. |
 ```bash
 show vpn-sessiondb                  # all active VPN sessions
 show crypto ikev2 sa                # IKEv2 Phase 1 status
@@ -198,8 +208,10 @@ IKEv1 ISAKMP Status:
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the device supports these commands; older ASA/Cisco models may use different syntax like `show crypto ipsec transform-set`.
-    **`% Incomplete command.`** — Add a specific tunnel name or use `all` keyword; some devices require `show crypto ipsec sa detail` for full output.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the device supports these commands; older ASA/Cisco models may use different syntax like `show crypto ipsec transform-set`. |
+    | `% Incomplete command.` | Add a specific tunnel name or use `all` keyword; some devices require `show crypto ipsec sa detail` for full output. |
 ```bash
 show vpn ike-sa
 show vpn ipsec-sa
@@ -224,8 +236,10 @@ IPSec SA Information:
 ```
 
 !!! warning "Common errors"
-    **`show: command not found`** — Verify you are in the correct CLI mode (use `configure` or `operational` mode as appropriate for your platform).
-    **`VPN subsystem not initialized`** — Ensure VPN services are running with `systemctl status vpn` or equivalent platform command.
+    | Error | Fix |
+    |---|---|
+    | `show: command not found` | Verify you are in the correct CLI mode (use `configure` or `operational` mode as appropriate for your platform). |
+    | `VPN subsystem not initialized` | Ensure VPN services are running with `systemctl status vpn` or equivalent platform command. |
 ```bash
 ping <remote_subnet_ip> source <local_subnet_ip>
 traceroute <remote_ip>
@@ -249,8 +263,10 @@ traceroute to 203.0.113.42 (203.0.113.42), 30 hops max, 60 byte packets
 ```
 
 !!! warning "Common errors"
-    **`ping: invalid option -- 's'`** — Use `-S` (uppercase) instead of `source` for the source IP parameter: `ping -S <local_subnet_ip> <remote_subnet_ip>`.
-    **`traceroute: command not found`** — Install traceroute with `apt-get install traceroute` (Debian/Ubuntu) or `yum install traceroute` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `ping: invalid option -- 's'` | Use `-S` (uppercase) instead of `source` for the source IP parameter: `ping -S <local_subnet_ip> <remote_subnet_ip>`. |
+    | `traceroute: command not found` | Install traceroute with `apt-get install traceroute` (Debian/Ubuntu) or `yum install traceroute` (RHEL/CentOS). |
 ```bash
 # Check certificate validity
 openssl x509 -in <cert_file> -noout -dates
@@ -275,8 +291,10 @@ Certificate Information for router.example.com
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the certificate file path is correct and readable with `ls -la <cert_file>`.
-    **`error in x509 certificate`** — Ensure the file is in PEM or DER format; convert with `openssl x509 -inform DER -in <cert_file> -out cert.pem` if needed.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the certificate file path is correct and readable with `ls -la <cert_file>`. |
+    | `error in x509 certificate` | Ensure the file is in PEM or DER format; convert with `openssl x509 -inform DER -in <cert_file> -out cert.pem` if needed. |
 ```bash
 # Cisco IOS — view VTI state
 show interface tunnel <id>

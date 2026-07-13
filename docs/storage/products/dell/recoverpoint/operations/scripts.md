@@ -448,9 +448,11 @@ Execution completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`'rp-cg-health.bat' is not recognized as an internal or external command`** — Verify the script is in the current directory or add its full path (e.g., `C:\Program Files\RecoverPoint\rp-cg-health.bat`).
-    **`Access Denied: Unable to authenticate to RecoverPoint cluster`** — Ensure your Windows credentials have RecoverPoint administrator privileges and the cluster is reachable on the network.
-    **`ERROR: RecoverPoint Management Console not installed`** — Install the RecoverPoint Management Console on this workstation before running health check scripts.
+    | Error | Fix |
+    |---|---|
+    | `'rp-cg-health.bat' is not recognized as an internal or external command` | Verify the script is in the current directory or add its full path (e.g., `C:\Program Files\RecoverPoint\rp-cg-health.bat`). |
+    | `Access Denied: Unable to authenticate to RecoverPoint cluster` | Ensure your Windows credentials have RecoverPoint administrator privileges and the cluster is reachable on the network. |
+    | `ERROR: RecoverPoint Management Console not installed` | Install the RecoverPoint Management Console on this workstation before running health check scripts. |
 ```bash
 #!/bin/bash
 # rp_daily_check.sh
@@ -508,9 +510,11 @@ Daily check: 0 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password)`** — Verify RPA_USER and RPA_PASS are correct, and SSH key-based auth is disabled or the user's public key is installed on the RPA.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `curl -sk` flags (already in script) or import the RPA's CA certificate into your system's trust store if `-k` is not acceptable.
-    **`RPA_HOST is required`** — Set the RPA_HOST environment variable before running the script: `export RPA_HOST=<ip>`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password)` | Verify RPA_USER and RPA_PASS are correct, and SSH key-based auth is disabled or the user's public key is installed on the RPA. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `curl -sk` flags (already in script) or import the RPA's CA certificate into your system's trust store if `-k` is not acceptable. |
+    | `RPA_HOST is required` | Set the RPA_HOST environment variable before running the script: `export RPA_HOST=<ip>`. |
 ```bash
 #!/bin/bash
 # rp_triage.sh
@@ -581,9 +585,11 @@ Triage data saved to: /tmp/rp_triage_192.168.1.50_20250115_143218.txt
 ```
 
 !!! warning "Common errors"
-    **`RPA_HOST is required`** — Set the RPA_HOST environment variable before running the script: `export RPA_HOST=<ip>`.
-    **`Permission denied (publickey)`** — Ensure SSH key-based authentication is configured or add password authentication; verify RPA_USER and RPA_PASS are correct.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the RPA appliance's CA certificate into your system trust store.
+    | Error | Fix |
+    |---|---|
+    | `RPA_HOST is required` | Set the RPA_HOST environment variable before running the script: `export RPA_HOST=<ip>`. |
+    | `Permission denied (publickey)` | Ensure SSH key-based authentication is configured or add password authentication; verify RPA_USER and RPA_PASS are correct. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the RPA appliance's CA certificate into your system trust store. |
 ```bash
 #!/bin/bash
 # rp_precheck.sh
@@ -641,9 +647,11 @@ Pre-check: 0 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`RPA_HOST is required`** — Set the RPA_HOST environment variable before running the script: `export RPA_HOST=192.168.1.45`
-    **`RPA_PASS is required`** — Set the RPA_PASS environment variable before running the script: `export RPA_PASS=YourPassword`
-    **`Permission denied (publickey,password)`** — Verify SSH credentials and that the RPA_USER account exists on the RecoverPoint appliance, or add the public key to the authorized_keys file.
+    | Error | Fix |
+    |---|---|
+    | `RPA_HOST is required` | Set the RPA_HOST environment variable before running the script: `export RPA_HOST=192.168.1.45` |
+    | `RPA_PASS is required` | Set the RPA_PASS environment variable before running the script: `export RPA_PASS=YourPassword` |
+    | `Permission denied (publickey,password)` | Verify SSH credentials and that the RPA_USER account exists on the RecoverPoint appliance, or add the public key to the authorized_keys file. |
 ```bash
 #!/bin/bash
 # rp_postcheck.sh
@@ -700,9 +708,11 @@ Post-change validation: 0 failure(s)
 ```
 
 !!! warning "Common errors"
-    **`RPA_HOST is required`** — Set the RPA_HOST environment variable before running the script: `export RPA_HOST=192.168.1.45`
-    **`RPA_PASS is required`** — Set the RPA_PASS environment variable before running the script: `export RPA_PASS=YourPassword`
-    **`Permission denied (publickey,password)`** — Verify SSH credentials and that the RPA_USER account exists on the RecoverPoint appliance, or add the public key to authorized_keys.
+    | Error | Fix |
+    |---|---|
+    | `RPA_HOST is required` | Set the RPA_HOST environment variable before running the script: `export RPA_HOST=192.168.1.45` |
+    | `RPA_PASS is required` | Set the RPA_PASS environment variable before running the script: `export RPA_PASS=YourPassword` |
+    | `Permission denied (publickey,password)` | Verify SSH credentials and that the RPA_USER account exists on the RecoverPoint appliance, or add the public key to authorized_keys. |
 ```bash
 #!/bin/bash
 # rp_health_check.sh
@@ -736,9 +746,11 @@ rpa_host=192.168.42.15 cg_total=8 cg_active=6 cg_not_active=2
 ```
 
 !!! warning "Common errors"
-    **`RPA_HOST is required`** — Set the RPA_HOST environment variable before running the script: `export RPA_HOST=192.168.42.15`
-    **`Permission denied (publickey)`** — Add the script's SSH public key to the RecoverPoint appliance's authorized_keys file or configure password-based SSH authentication.
-    **`Connection timed out`** — Verify the RPA_HOST IP is reachable and SSH port 22 is open: `ping $RPA_HOST && ssh -v $RPA_USER@$RPA_HOST`
+    | Error | Fix |
+    |---|---|
+    | `RPA_HOST is required` | Set the RPA_HOST environment variable before running the script: `export RPA_HOST=192.168.42.15` |
+    | `Permission denied (publickey)` | Add the script's SSH public key to the RecoverPoint appliance's authorized_keys file or configure password-based SSH authentication. |
+    | `Connection timed out` | Verify the RPA_HOST IP is reachable and SSH port 22 is open: `ping $RPA_HOST && ssh -v $RPA_USER@$RPA_HOST` |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

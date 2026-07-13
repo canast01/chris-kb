@@ -62,9 +62,11 @@ dcnm-events.service - Cisco DCNM Events Service
 ```
 
 !!! warning "Common errors"
-    **`dcnm-server: command not found`** — Verify the DCNM installation path is correct and add `/usr/local/cisco/dcm/dcnm/sbin` to your PATH or use the full path.
-    **`Failed to start dcnm-pm: Unit dcnm-pm.service not found`** — Ensure systemd service files are installed in `/etc/systemd/system/` by running `systemctl daemon-reload` after DCNM installation.
-    **`Permission denied`** — Run the commands with `sudo` or ensure your user account is in the `dcnm` group with `sudo usermod -aG dcnm $USER`.
+    | Error | Fix |
+    |---|---|
+    | `dcnm-server: command not found` | Verify the DCNM installation path is correct and add `/usr/local/cisco/dcm/dcnm/sbin` to your PATH or use the full path. |
+    | `Failed to start dcnm-pm: Unit dcnm-pm.service not found` | Ensure systemd service files are installed in `/etc/systemd/system/` by running `systemctl daemon-reload` after DCNM installation. |
+    | `Permission denied` | Run the commands with `sudo` or ensure your user account is in the `dcnm` group with `sudo usermod -aG dcnm $USER`. |
 ```bash
 # Test SSH connectivity to a managed switch
 ssh -o ConnectTimeout=5 -o BatchMode=yes dcnm_mgmt@<switch-ip> 'show version' 2>&1
@@ -99,9 +101,11 @@ tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 byt
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the dcnm_mgmt user exists on the switch and SSH key or password is configured correctly in DCNM credentials.
-    **`Timeout: No Response from <switch-ip>`** — Check network connectivity to the switch IP, verify SNMP v3 user credentials match the switch configuration, and confirm firewall allows UDP 161 outbound.
-    **`tcpdump: eth0: No such device`** — Replace eth0 with the correct management interface name (use `ip link show` to list available interfaces).
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the dcnm_mgmt user exists on the switch and SSH key or password is configured correctly in DCNM credentials. |
+    | `Timeout: No Response from <switch-ip>` | Check network connectivity to the switch IP, verify SNMP v3 user credentials match the switch configuration, and confirm firewall allows UDP 161 outbound. |
+    | `tcpdump: eth0: No such device` | Replace eth0 with the correct management interface name (use `ip link show` to list available interfaces). |
 ```bash
 # Check HA status
 /usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
@@ -133,9 +137,11 @@ New Active Node: dcnm-prod-02.example.com (192.168.100.46)
 ```
 
 !!! warning "Common errors"
-    **`HA Status: UNHEALTHY — Replication lag exceeds threshold`** — Check network connectivity between nodes and verify DCNM services are running on both nodes with `systemctl status dcnm`.
-    **`ERROR: Cannot connect to standby node — Connection refused`** — Ensure the standby node is reachable and DCNM HA daemon is running; verify firewall rules allow port 7777 between cluster nodes.
-    **`inet 192.168.100.50 not found`** — Confirm the VIP address is correct and the active node has successfully claimed the virtual IP after failover.
+    | Error | Fix |
+    |---|---|
+    | `HA Status: UNHEALTHY — Replication lag exceeds threshold` | Check network connectivity between nodes and verify DCNM services are running on both nodes with `systemctl status dcnm`. |
+    | `ERROR: Cannot connect to standby node — Connection refused` | Ensure the standby node is reachable and DCNM HA daemon is running; verify firewall rules allow port 7777 between cluster nodes. |
+    | `inet 192.168.100.50 not found` | Confirm the VIP address is correct and the active node has successfully claimed the virtual IP after failover. |
 ```bash
 # Login with Basic Auth — returns session cookie
 curl -sk -c dcnm-cookie.txt -X POST \
@@ -158,9 +164,11 @@ curl -sk -b dcnm-cookie.txt -X POST "${DCNM}/rest/logout"
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed).
-    **`{"StatusCode":401,"StatusMessage":"Unauthorized"}`** — Verify the service account credentials and that the password is correctly URL-encoded if it contains special characters; use `curl -u "svc-automation:$(printf '%s' "$PASSWORD" | jq -sRr @uri)"` if needed.
-    **`curl: (7) Failed to connect to dcnm-dc1.corp.example.com port 443: Connection refused`** — Confirm the DCNM hostname/IP is reachable and the REST API service is running with `curl -sk https://dcnm-dc1.corp.example.com/rest/logon --connect-timeout 5`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed). |
+    | `{"StatusCode":401,"StatusMessage":"Unauthorized"}` | Verify the service account credentials and that the password is correctly URL-encoded if it contains special characters; use `curl -u "svc-automation:$(printf '%s' "$PASSWORD" | jq -sRr @uri)"` if needed. |
+    | `curl: (7) Failed to connect to dcnm-dc1.corp.example.com port 443: Connection refused` | Confirm the DCNM hostname/IP is reachable and the REST API service is running with `curl -sk https://dcnm-dc1.corp.example.com/rest/logon --connect-timeout 5`. |
 ```bash
 # List all switches
 curl -sk -b dcnm-cookie.txt "${DCNM}/rest/inventory/switches" \
@@ -251,9 +259,11 @@ curl -sk -b dcnm-cookie.txt "${DCNM}/rest/san/vsan" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification or import the DCNM certificate into your system trust store.
-    **`curl: (7) Failed to connect to <host>: Connection refused`** — Verify the DCNM server is running and the `${DCNM}` variable is set correctly with `echo $DCNM`.
-    **`jq: parse error: Invalid JSON at line 1`** — Ensure the authentication cookie in `dcnm-cookie.txt` is valid; re-authenticate with DCNM login endpoint and regenerate the cookie file.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification or import the DCNM certificate into your system trust store. |
+    | `curl: (7) Failed to connect to <host>: Connection refused` | Verify the DCNM server is running and the `${DCNM}` variable is set correctly with `echo $DCNM`. |
+    | `jq: parse error: Invalid JSON at line 1` | Ensure the authentication cookie in `dcnm-cookie.txt` is valid; re-authenticate with DCNM login endpoint and regenerate the cookie file. |
 ```bash
 # Get zone database for a fabric
 curl -sk -b dcnm-cookie.txt \
@@ -314,9 +324,11 @@ curl -sk -b dcnm-cookie.txt \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the DCNM certificate into your system CA bundle; verify `${DCNM}` variable is set correctly.
-    **`curl: (7) Failed to connect to <IP>: Connection refused`** — Verify DCNM server is running and accessible at the `${DCNM}` endpoint, and check firewall rules allow port 443 access.
-    **`jq: parse error: Invalid JSON`** — Ensure the authentication cookie in `dcnm-cookie.txt` is valid; re-authenticate with DCNM login endpoint and regenerate the cookie file.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag (already present) or import the DCNM certificate into your system CA bundle; verify `${DCNM}` variable is set correctly. |
+    | `curl: (7) Failed to connect to <IP>: Connection refused` | Verify DCNM server is running and accessible at the `${DCNM}` endpoint, and check firewall rules allow port 443 access. |
+    | `jq: parse error: Invalid JSON` | Ensure the authentication cookie in `dcnm-cookie.txt` is valid; re-authenticate with DCNM login endpoint and regenerate the cookie file. |
 ```bash
 # Get all active alarms
 curl -sk -b dcnm-cookie.txt \
@@ -385,9 +397,11 @@ curl -sk -b dcnm-cookie.txt \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the DCNM CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to <DCNM_IP>: Connection refused`** — Verify the DCNM server is running and the `${DCNM}` variable is set correctly with `echo $DCNM`.
-    **`jq: parse error: Invalid JSON at line 1`** — Ensure you are authenticated by running the login curl command first and that `dcnm-cookie.txt` contains a valid session cookie.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the DCNM CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to <DCNM_IP>: Connection refused` | Verify the DCNM server is running and the `${DCNM}` variable is set correctly with `echo $DCNM`. |
+    | `jq: parse error: Invalid JSON at line 1` | Ensure you are authenticated by running the login curl command first and that `dcnm-cookie.txt` contains a valid session cookie. |
 ```bash
 # List firmware images in DCNM repository
 curl -sk -b dcnm-cookie.txt "${DCNM}/rest/fm/image" \
@@ -441,9 +455,11 @@ curl -sk -b dcnm-cookie.txt -X POST "${DCNM}/rest/fm/upgrade" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the DCNM certificate into your system trust store.
-    **`{"error": "Invalid image name", "code": 400}`** — Verify the exact image filename exists in the repository by running the first curl command to list available images.
-    **`curl: (7) Failed to connect to <DCNM_IP> port 443: Connection refused`** — Confirm the DCNM server is running and accessible; check that `${DCNM}` variable is set correctly with `echo $DCNM`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification, or import the DCNM certificate into your system trust store. |
+    | `{"error": "Invalid image name", "code": 400}` | Verify the exact image filename exists in the repository by running the first curl command to list available images. |
+    | `curl: (7) Failed to connect to <DCNM_IP> port 443: Connection refused` | Confirm the DCNM server is running and accessible; check that `${DCNM}` variable is set correctly with `echo $DCNM`. |
 ```bash
 # Count switches by management state
 curl -sk -b dcnm-cookie.txt "${DCNM}/rest/inventory/switches" \
@@ -494,9 +510,11 @@ switch-edge-04,192.168.1.23,MDS 9148S,9.1(2),OUT_OF_SERVICE,legacy-fabric
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or import the DCNM certificate into your system CA bundle.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the DCNM cookie is valid by checking `dcnm-cookie.txt` exists and re-authenticate if expired.
-    **`curl: (7) Failed to connect to <DCNM_IP> port 443: Connection refused`** — Confirm the DCNM server is running and the `${DCNM}` variable is set correctly with `echo $DCNM`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl or import the DCNM certificate into your system CA bundle. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify the DCNM cookie is valid by checking `dcnm-cookie.txt` exists and re-authenticate if expired. |
+    | `curl: (7) Failed to connect to <DCNM_IP> port 443: Connection refused` | Confirm the DCNM server is running and the `${DCNM}` variable is set correctly with `echo $DCNM`. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

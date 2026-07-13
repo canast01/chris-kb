@@ -91,8 +91,10 @@ Leap status     : Normal
 ```
 
 !!! warning "Common errors"
-    **`command not found: timedatectl`** — Install systemd-container or ensure systemd is available on the system.
-    **`command not found: chronyc`** — Install chrony package using `apt-get install chrony` or `yum install chrony`.
+    | Error | Fix |
+    |---|---|
+    | `command not found: timedatectl` | Install systemd-container or ensure systemd is available on the system. |
+    | `command not found: chronyc` | Install chrony package using `apt-get install chrony` or `yum install chrony`. |
 Expected output:
 
 ```text
@@ -138,9 +140,11 @@ Thu Oct 12 14:23:47 UTC 2024
 ```
 
 !!! warning "Common errors"
-    **`NTP Enabled: false`** — Enable NTP with `esxcli system ntp set --enabled=true` and start the service with `service ntpd start`.
-    **`ntpq: read: Connection refused`** — Start the NTP daemon with `service ntpd start` and verify it is listening on port 123.
-    **`Error: Unable to connect to Management Agent`** — Ensure the ESXi host management network is configured and the management vmkernel interface is active with `esxcli network ip interface list`.
+    | Error | Fix |
+    |---|---|
+    | `NTP Enabled: false` | Enable NTP with `esxcli system ntp set --enabled=true` and start the service with `service ntpd start`. |
+    | `ntpq: read: Connection refused` | Start the NTP daemon with `service ntpd start` and verify it is listening on port 123. |
+    | `Error: Unable to connect to Management Agent` | Ensure the ESXi host management network is configured and the management vmkernel interface is active with `esxcli network ip interface list`. |
 Expected `ntpq -p` output:
 
 ```text
@@ -181,8 +185,10 @@ NTP Server:
 ```
 
 !!! warning "Common errors"
-    **`command not found: get`** — Use the correct CLI tool (e.g., `timedatectl` on Linux or `ntpq -p` for NTP queries) or access the management interface with proper credentials.
-    **`Permission denied`** — Run the command with appropriate privileges using `sudo` or log in as a user with administrative access to the system.
+    | Error | Fix |
+    |---|---|
+    | `command not found: get` | Use the correct CLI tool (e.g., `timedatectl` on Linux or `ntpq -p` for NTP queries) or access the management interface with proper credentials. |
+    | `Permission denied` | Run the command with appropriate privileges using `sudo` or log in as a user with administrative access to the system. |
 Look for: system clock time matching vCenter within 60 seconds, and NTP servers matching the environment's authoritative sources.
 
 ---
@@ -207,8 +213,10 @@ ntpdate -u ntp1.domain.local
 ```
 
 !!! warning "Common errors"
-    **`ntpdate: no servers can be used, exiting`** — Verify NTP server hostnames resolve correctly with `nslookup ntp1.domain.local` and confirm network connectivity to the NTP servers.
-    **`Error: Unknown option or flag '--server'`** — Use `esxcli system ntp set --servers=ntp1.domain.local --servers=ntp2.domain.local` (with `=` syntax) on ESXi 6.5+, or check your ESXi version with `vmware -v`.
+    | Error | Fix |
+    |---|---|
+    | `ntpdate: no servers can be used, exiting` | Verify NTP server hostnames resolve correctly with `nslookup ntp1.domain.local` and confirm network connectivity to the NTP servers. |
+    | `Error: Unknown option or flag '--server'` | Use `esxcli system ntp set --servers=ntp1.domain.local --servers=ntp2.domain.local` (with `=` syntax) on ESXi 6.5+, or check your ESXi version with `vmware -v`. |
 Confirm the fix:
 
 ```bash
@@ -228,8 +236,10 @@ Thu Mar 14 09:47:23 UTC 2024
 ```
 
 !!! warning "Common errors"
-    **`ntpq: read: Connection refused`** — Ensure ntpd or systemd-timesyncd is running with `systemctl start ntp` or `systemctl start systemd-timesyncd`.
-    **`command not found: ntpq`** — Install ntp utilities with `apt-get install ntp` or `yum install ntp`.
+    | Error | Fix |
+    |---|---|
+    | `ntpq: read: Connection refused` | Ensure ntpd or systemd-timesyncd is running with `systemctl start ntp` or `systemctl start systemd-timesyncd`. |
+    | `command not found: ntpq` | Install ntp utilities with `apt-get install ntp` or `yum install ntp`. |
 Repeat for every ESXi host in the cluster — NTP must be applied per host unless a Host Profile enforces it cluster-wide.
 
 ---
@@ -253,8 +263,10 @@ Leap status: normal.
 ```
 
 !!! warning "Common errors"
-    **`Failed to set ntp: Permission denied`** — Run the commands with `sudo` or as root user.
-    **`chronyd is not running`** — Start the chrony service with `sudo systemctl start chronyd` before running `chronyc makestep`.
+    | Error | Fix |
+    |---|---|
+    | `Failed to set ntp: Permission denied` | Run the commands with `sudo` or as root user. |
+    | `chronyd is not running` | Start the chrony service with `sudo systemctl start chronyd` before running `chronyc makestep`. |
 `chronyc makestep` forces an immediate step adjustment rather than the gradual slew — without this, SSL failures continue for minutes or hours while drift corrects naturally.
 
 Confirm:
@@ -290,8 +302,10 @@ System clock synchronized: yes
 ```
 
 !!! warning "Common errors"
-    **`chronyc: command not found`** — Install chrony with `apt-get install chrony` or `yum install chrony` depending on your distribution.
-    **`System clock synchronized: no`** — Wait for NTP synchronization to complete (typically 1-5 minutes) or check that your NTP server is reachable with `chronyc sources`.
+    | Error | Fix |
+    |---|---|
+    | `chronyc: command not found` | Install chrony with `apt-get install chrony` or `yum install chrony` depending on your distribution. |
+    | `System clock synchronized: no` | Wait for NTP synchronization to complete (typically 1-5 minutes) or check that your NTP server is reachable with `chronyc sources`. |
 ---
 
 ## 7. Fix NTP on NSX Manager
@@ -310,8 +324,10 @@ restart service ntpd
 ```
 
 !!! warning "Common errors"
-    **`Unknown command: set`** — Use the correct CLI context (e.g., `configure` mode in vSphere or ESXi) before issuing `set` commands.
-    **`Unknown command: restart`** — Use the correct restart syntax for your platform, such as `service ntpd restart` on ESXi or `/etc/init.d/ntpd restart` on Linux.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command: set` | Use the correct CLI context (e.g., `configure` mode in vSphere or ESXi) before issuing `set` commands. |
+    | `Unknown command: restart` | Use the correct restart syntax for your platform, such as `service ntpd restart` on ESXi or `/etc/init.d/ntpd restart` on Linux. |
 Verify:
 
 ```bash
@@ -331,8 +347,10 @@ Frequency adjustment: +0.000 ppm
 ```
 
 !!! warning "Common errors"
-    **`command not found: get`** — Use the correct system command such as `timedatectl`, `date`, or `hwclock` depending on your OS and what clock information you need.
-    **`timedatectl: command not found`** — Install the systemd package or use alternative commands like `date` for software clock or `hwclock` for hardware clock on systems without timedatectl.
+    | Error | Fix |
+    |---|---|
+    | `command not found: get` | Use the correct system command such as `timedatectl`, `date`, or `hwclock` depending on your OS and what clock information you need. |
+    | `timedatectl: command not found` | Install the systemd package or use alternative commands like `date` for software clock or `hwclock` for hardware clock on systems without timedatectl. |
 Look for: clock time within 60 seconds of vCenter after `ntpd` restarts.
 
 ---
@@ -354,8 +372,10 @@ VMware Security Token Service started successfully.
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Ensure you are running this command on a vCenter Server or ESXi host where VMware tools are installed, or use the full path `/usr/lib/vmware-vmafd/bin/service-control`.
-    **`Error: Failed to stop service vmware-stsd`** — Check that the service exists and is running with `service-control --status vmware-stsd`, and verify you have root or sudo privileges.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Ensure you are running this command on a vCenter Server or ESXi host where VMware tools are installed, or use the full path `/usr/lib/vmware-vmafd/bin/service-control`. |
+    | `Error: Failed to stop service vmware-stsd` | Check that the service exists and is running with `service-control --status vmware-stsd`, and verify you have root or sudo privileges. |
 Wait 60–90 seconds after restart before attempting login — STS generates new signing keys on startup, which invalidates all cached tokens; this is expected behaviour.
 
 ---
@@ -379,8 +399,10 @@ ntpdate -u ntp1.domain.local
 ```
 
 !!! warning "Common errors"
-    **`ntpdate[2847]: no server suitable for synchronization found`** — Verify the NTP server hostname resolves and is reachable with `ping ntp1.domain.local` and `nc -zv ntp1.domain.local 123`.
-    **`ntpdate: command not found`** — Install NTP utilities with `apt-get install ntp` (Debian/Ubuntu) or `yum install ntp` (RHEL/CentOS), or use `chronyc makestep` on systems with chrony instead.
+    | Error | Fix |
+    |---|---|
+    | `ntpdate[2847]: no server suitable for synchronization found` | Verify the NTP server hostname resolves and is reachable with `ping ntp1.domain.local` and `nc -zv ntp1.domain.local 123`. |
+    | `ntpdate: command not found` | Install NTP utilities with `apt-get install ntp` (Debian/Ubuntu) or `yum install ntp` (RHEL/CentOS), or use `chronyc makestep` on systems with chrony instead. |
 Then re-run the health check from vCenter.
 
 ---

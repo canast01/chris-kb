@@ -73,8 +73,10 @@ MONITORING01             250               2000        Normal
 ```
 
 !!! warning "Common errors"
-    **`Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet`** — Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running cmdlets.
-    **`Set-VMResourceConfiguration : CPU reservation of 2000 MHz exceeds available capacity on host`** — Reduce the reservation value or verify the host has sufficient CPU resources available.
+    | Error | Fix |
+    |---|---|
+    | `Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet` | Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running cmdlets. |
+    | `Set-VMResourceConfiguration : CPU reservation of 2000 MHz exceeds available capacity on host` | Reduce the reservation value or verify the host has sufficient CPU resources available. |
 **Operational concern:** Excessive reservations fragment capacity. If you reserve 8 GHz across 20 VMs on a 48 GHz host, you have committed 33 % of capacity even when all those VMs are idle. DRS cannot migrate a VM away from a host unless the destination has enough unreserved capacity to satisfy the reservation.
 
 ### Limits
@@ -129,8 +131,10 @@ Timestamp            Entity      Metric                  Value
 ```
 
 !!! warning "Common errors"
-    **`Connect to localhost:443 failed: Connection refused`** — Ensure the ESXi host SSH service is enabled and you are connecting to the correct host IP or hostname.
-    **`The term 'Get-Stat' is not recognized as the name of a cmdlet`** — Load the VMware PowerCLI module first with `Import-Module VMware.PowerCLI` before running Get-Stat commands.
+    | Error | Fix |
+    |---|---|
+    | `Connect to localhost:443 failed: Connection refused` | Ensure the ESXi host SSH service is enabled and you are connecting to the correct host IP or hostname. |
+    | `The term 'Get-Stat' is not recognized as the name of a cmdlet` | Load the VMware PowerCLI module first with `Import-Module VMware.PowerCLI` before running Get-Stat commands. |
 **Co-Stop (%CSTP):** For multi-vCPU VMs, the scheduler must find N free physical cores simultaneously. If it cannot, all vCPUs wait (co-stop). VMs with unnecessary vCPU counts suffer more co-stop. Right-size vCPU counts — a 2-vCPU VM almost always outperforms a 16-vCPU VM for single-threaded workloads.
 
 ---
@@ -214,8 +218,10 @@ Timestamp                     Entity      Metric                    Value
 ```
 
 !!! warning "Common errors"
-    **`Connect-VIServer : The specified item was not found on the 'Inventory' object.`** — Verify the vCenter server hostname/IP is correct and you have network connectivity to it before running Get-Stat.
-    **`Get-Stat : A parameter cannot be found that matches parameter name 'IntervalMins'.`** — Use `-IntervalSecs` instead of `-IntervalMins` in PowerCLI versions 12.0+.
+    | Error | Fix |
+    |---|---|
+    | `Connect-VIServer : The specified item was not found on the 'Inventory' object.` | Verify the vCenter server hostname/IP is correct and you have network connectivity to it before running Get-Stat. |
+    | `Get-Stat : A parameter cannot be found that matches parameter name 'IntervalMins'.` | Use `-IntervalSecs` instead of `-IntervalMins` in PowerCLI versions 12.0+. |
 ### Transparent Page Sharing (TPS)
 
 TPS scans VM memory pages and deduplicates identical content. Identical pages are merged into a single copy-on-write page, freeing the duplicates. Historically TPS was aggressive; since vSphere 6.0 inter-VM TPS is disabled by default for security reasons (side-channel attacks).
@@ -333,8 +339,10 @@ vnuma.nodeAffinity=0
 ```
 
 !!! warning "Common errors"
-    **`grep: /vmfs/volumes/<datastore>/<vm>/<vm>.vmx: No such file or directory`** — Verify the datastore name and VM folder path are correct by running `find /vmfs/volumes -name "*.vmx" -type f` to locate the actual VMX file.
-    **`esxcli: command not found`** — Ensure you are running this command directly on an ESXi host via SSH or console, not from vCenter or a remote system.
+    | Error | Fix |
+    |---|---|
+    | `grep: /vmfs/volumes/<datastore>/<vm>/<vm>.vmx: No such file or directory` | Verify the datastore name and VM folder path are correct by running `find /vmfs/volumes -name "*.vmx" -type f` to locate the actual VMX file. |
+    | `esxcli: command not found` | Ensure you are running this command directly on an ESXi host via SSH or console, not from vCenter or a remote system. |
 ### NUMA-Aware VM Sizing Guidelines
 
 | Guideline | Reason |
@@ -442,8 +450,10 @@ backup-service-04
 ```
 
 !!! warning "Common errors"
-    **`Get-ResourcePool : The term 'Get-ResourcePool' is not recognized`** — Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running cmdlets.
-    **`You do not have permission to read property CpuReservationMhz`** — Ensure your vSphere user account has at least "Read-only" role on the resource pools and VMs being queried.
+    | Error | Fix |
+    |---|---|
+    | `Get-ResourcePool : The term 'Get-ResourcePool' is not recognized` | Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running cmdlets. |
+    | `You do not have permission to read property CpuReservationMhz` | Ensure your vSphere user account has at least "Read-only" role on the resource pools and VMs being queried. |
 ---
 
 ## Quick Reference — Key Values

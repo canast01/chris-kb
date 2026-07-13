@@ -78,9 +78,11 @@ Jan 17 14:37:22 collector-01 keystone-collector[8422]: INFO: Collection cycle co
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname <collector_ip>: Name or service not known`** — Replace `<collector_ip>` with the actual IP address or FQDN of your Keystone Collector appliance.
-    **`Unit keystone-collector.service could not be found.`** — Verify the collector service is installed by running `dpkg -l | grep keystone` or `rpm -qa | grep keystone` and reinstall if necessary.
-    **`Failed to get unit file state for keystone-collector.service: Connection refused`** — Ensure systemd is running and you have sudo/root privileges; try `sudo systemctl status keystone-collector` instead.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname <collector_ip>: Name or service not known` | Replace `<collector_ip>` with the actual IP address or FQDN of your Keystone Collector appliance. |
+    | `Unit keystone-collector.service could not be found.` | Verify the collector service is installed by running `dpkg -l | grep keystone` or `rpm -qa | grep keystone` and reinstall if necessary. |
+    | `Failed to get unit file state for keystone-collector.service: Connection refused` | Ensure systemd is running and you have sudo/root privileges; try `sudo systemctl status keystone-collector` instead. |
 If the collector is offline, NetApp cannot generate accurate invoices — restore connectivity promptly.
 
 ## Monthly Consumption Reports
@@ -120,8 +122,10 @@ qos_standard                 vol_test        45.3              8.9
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: volume show`** — Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a local shell.
-    **`Error: No matching volumes found`** — Verify the vserver exists and contains volumes by running `vserver show` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: volume show` | Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a local shell. |
+    | `Error: No matching volumes found` | Verify the vserver exists and contains volumes by running `vserver show` first. |
 ## Reporting Discrepancies
 
 If the consumption report shows unexpected usage:

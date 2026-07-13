@@ -131,9 +131,11 @@ memberIndex:	0x00000001
 ```
 
 !!! warning "Common errors"
-    **`powermt: Command not found`** — Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and install from Dell support portal if missing.
-    **`systool: command not found`** — Install sysfsutils package with `yum install sysfsutils` or `apt-get install sysfsutils` depending on your distribution.
-    **`switchshow: command not found`** — Run this command directly on the Brocade switch via SSH or console, not from the host; alternatively verify Brocade CLI tools are installed locally with `rpm -qa | grep brocade`.
+    | Error | Fix |
+    |---|---|
+    | `powermt: Command not found` | Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and install from Dell support portal if missing. |
+    | `systool: command not found` | Install sysfsutils package with `yum install sysfsutils` or `apt-get install sysfsutils` depending on your distribution. |
+    | `switchshow: command not found` | Run this command directly on the Brocade switch via SSH or console, not from the host; alternatively verify Brocade CLI tools are installed locally with `rpm -qa | grep brocade`. |
 **Prevention:** Add a post-boot `powermt restore` to the startup sequence via a systemd oneshot service or rc.local equivalent, executed after the PowerPath service is confirmed running.
 
 ---
@@ -199,9 +201,11 @@ Total paths: 8, Dead paths: 0
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Install EMC PowerPath package (e.g., `apt-get install emc-powerpath` or equivalent for your distribution) and ensure the PowerPath daemon is running with `systemctl start powerpath`.
-    **`No such file or directory: /sys/class/fc_host/host0/issue_lip`** — Verify HBA is present and loaded with `lspci | grep -i fibre` and check actual host numbers with `ls /sys/class/fc_host/` before issuing LIP commands.
-    **`dead` still appears after restore and LIP`** — Check SAN fabric connectivity and zoning with `fcstat` or vendor tools, and verify HBA firmware is current before attempting further recovery steps.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Install EMC PowerPath package (e.g., `apt-get install emc-powerpath` or equivalent for your distribution) and ensure the PowerPath daemon is running with `systemctl start powerpath`. |
+    | `No such file or directory: /sys/class/fc_host/host0/issue_lip` | Verify HBA is present and loaded with `lspci | grep -i fibre` and check actual host numbers with `ls /sys/class/fc_host/` before issuing LIP commands. |
+    | `dead` still appears after restore and LIP` | Check SAN fabric connectivity and zoning with `fcstat` or vendor tools, and verify HBA firmware is current before attempting further recovery steps. |
 If paths still do not recover after the above steps, escalate to the SAN team to confirm the switch port and array FA port are fully online and zoned correctly.
 
 ---
@@ -264,9 +268,11 @@ Configuration saved to /etc/powermt.custom
 ```
 
 !!! warning "Common errors"
-    **`bash: /usr/bin/rescan-scsi-bus.sh: No such file or directory`** — Install sg3-utils package with `yum install sg3-utils` or remove the line if using newer kernel auto-discovery.
-    **`powermt: command not found`** — Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and source the environment with `source /etc/profile.d/emc_powerpaths.sh`.
-    **`Permission denied`** — Run the entire script with `sudo` or as root user since `/sys/class/scsi_host` writes require elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `bash: /usr/bin/rescan-scsi-bus.sh: No such file or directory` | Install sg3-utils package with `yum install sg3-utils` or remove the line if using newer kernel auto-discovery. |
+    | `powermt: command not found` | Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and source the environment with `source /etc/profile.d/emc_powerpaths.sh`. |
+    | `Permission denied` | Run the entire script with `sudo` or as root user since `/sys/class/scsi_host` writes require elevated privileges. |
 If the device still does not appear after the above, verify at the array that:
 - The LUN is fully created and not in a provisioning or error state
 - The host initiator (HBA WWN or iSCSI IQN) is correctly registered in the host group
@@ -324,9 +330,11 @@ Configuration saved to /etc/powerpath/powerpath.conf
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Ensure PowerPath is installed and `/opt/powerpath/bin` is in your PATH, or use the full path `/opt/powerpath/bin/powermt`.
-    **`Registration key invalid or expired`** — Verify the registration key format matches Dell's requirements and obtain a fresh key from the Dell support portal if it has expired.
-    **`powermt: insufficient privileges`** — Run the command with `sudo` or as root, as PowerPath operations require administrative access.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Ensure PowerPath is installed and `/opt/powerpath/bin` is in your PATH, or use the full path `/opt/powerpath/bin/powermt`. |
+    | `Registration key invalid or expired` | Verify the registration key format matches Dell's requirements and obtain a fresh key from the Dell support portal if it has expired. |
+    | `powermt: insufficient privileges` | Run the command with `sudo` or as root, as PowerPath operations require administrative access. |
 **Note:** Paths in `unlic` state are not managed by PowerPath — I/O may still flow over them via native OS multipath if DM-Multipath is active, but PowerPath provides no failover or load balancing for these paths.
 
 ---
@@ -391,9 +399,11 @@ Saved PowerPath configuration to /etc/powerpath/powerpath.conf
 ```
 
 !!! warning "Common errors"
-    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep EMCpower` and add `/opt/emc/powerpath/bin` to PATH if needed.
-    **`Error: Cannot set policy — devices in use`** — Stop I/O to affected devices or use `powermt set policy=CLAROpt class=all -force` to override (use with caution in production).
-    **`Error: Configuration not saved — permission denied`** — Run `powermt save` with root privileges using `sudo` or switch to root user.
+    | Error | Fix |
+    |---|---|
+    | `powermt: command not found` | Verify PowerPath is installed with `rpm -qa | grep EMCpower` and add `/opt/emc/powerpath/bin` to PATH if needed. |
+    | `Error: Cannot set policy — devices in use` | Stop I/O to affected devices or use `powermt set policy=CLAROpt class=all -force` to override (use with caution in production). |
+    | `Error: Configuration not saved — permission denied` | Run `powermt save` with root privileges using `sudo` or switch to root user. |
 **Impact of wrong policy:** `RoundRobin` sends I/O over all paths regardless of ALUA state. On active/passive arrays, this causes I/O to be sent over non-optimised paths (the standby storage processor), which the array then re-routes internally — causing latency and additional array-side CPU overhead.
 
 ---
@@ -463,9 +473,11 @@ cat /sys/class/fc_host/host0/statistics/loss_of_signal_count
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/messages: No such file or directory`** — Check the correct syslog location with `ls /var/log/syslog /var/log/messages /var/log/audit/audit.log` and adjust the path accordingly.
-    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep powerpath` and ensure `/opt/emc/powerpath/bin` is in your PATH.
-    **`portshow: command not found`** — SSH to the Brocade switch directly or use the switch's web interface; this command runs on the switch, not the host.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/messages: No such file or directory` | Check the correct syslog location with `ls /var/log/syslog /var/log/messages /var/log/audit/audit.log` and adjust the path accordingly. |
+    | `powermt: command not found` | Verify PowerPath is installed with `rpm -qa | grep powerpath` and ensure `/opt/emc/powerpath/bin` is in your PATH. |
+    | `portshow: command not found` | SSH to the Brocade switch directly or use the switch's web interface; this command runs on the switch, not the host. |
 **Resolution:** Replace the suspect SFP or cable. Clean dirty connectors. If the switch port is oversubscribed or showing persistent CRC errors, relocate the connection to a clean port. After physical repair, run `powermt restore` and monitor for 30 minutes to confirm the path has stabilised.
 
 ---
@@ -543,9 +555,11 @@ Logical device name(s): dev_000, dev_001, dev_002
 ```
 
 !!! warning "Common errors"
-    **`multipathd.service is not running.`** — Run `systemctl start multipathd` to start the service before attempting to reload configuration.
-    **`Cannot open /etc/multipath.conf: Permission denied`** — Edit the multipath.conf file with elevated privileges using `sudo nano /etc/multipath.conf` or ensure your user has write permissions.
-    **`powermt: command not found`** — Install the PowerPath package using `apt-get install powerpath` or `yum install powerpath` depending on your distribution.
+    | Error | Fix |
+    |---|---|
+    | `multipathd.service is not running.` | Run `systemctl start multipathd` to start the service before attempting to reload configuration. |
+    | `Cannot open /etc/multipath.conf: Permission denied` | Edit the multipath.conf file with elevated privileges using `sudo nano /etc/multipath.conf` or ensure your user has write permissions. |
+    | `powermt: command not found` | Install the PowerPath package using `apt-get install powerpath` or `yum install powerpath` depending on your distribution. |
 ---
 
 ## PowerPath Service Not Starting After Reboot
@@ -595,8 +609,10 @@ PowerPath Version: 6.1.0 Build 0247
 ```
 
 !!! warning "Common errors"
-    **`modprobe: FATAL: Module emcp not found in directory /lib/modules/5.15.0-91-generic/kernel`** — Reinstall PowerPath with `powermt install` or run the PowerPath installer with the `--repair` flag to rebuild the kernel module for the current kernel version.
-    **`Job for PowerPath.service failed because the control process exited with error code.`** — Check `journalctl -u PowerPath -n 20` for the specific startup error; common causes are missing dependencies or incompatible kernel module versions.
+    | Error | Fix |
+    |---|---|
+    | `modprobe: FATAL: Module emcp not found in directory /lib/modules/5.15.0-91-generic/kernel` | Reinstall PowerPath with `powermt install` or run the PowerPath installer with the `--repair` flag to rebuild the kernel module for the current kernel version. |
+    | `Job for PowerPath.service failed because the control process exited with error code.` | Check `journalctl -u PowerPath -n 20` for the specific startup error; common causes are missing dependencies or incompatible kernel module versions. |
 **Common cause after OS/kernel update:** A kernel update replaces the running kernel but does not rebuild the PowerPath kernel module for the new kernel. The PowerPath DKMS package should rebuild automatically, but if DKMS is not configured or fails, the module will be missing after reboot. Check `dmesg` for module load errors.
 
 ---

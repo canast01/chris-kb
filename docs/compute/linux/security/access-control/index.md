@@ -74,8 +74,10 @@ Max kernel policy version:       33
 ```
 
 !!! warning "Common errors"
-    **`setenforce: SELinux is disabled`** — Enable SELinux in `/etc/selinux/config` and reboot, or verify SELinux is not already disabled.
-    **`getenforce: command not found`** — Install the `policycoreutils` package using `yum install policycoreutils` or `apt install selinux-utils`.
+    | Error | Fix |
+    |---|---|
+    | `setenforce: SELinux is disabled` | Enable SELinux in `/etc/selinux/config` and reboot, or verify SELinux is not already disabled. |
+    | `getenforce: command not found` | Install the `policycoreutils` package using `yum install policycoreutils` or `apt install selinux-utils`. |
 ```bash
 # View file context
 ls -Z /var/www/html/
@@ -115,8 +117,10 @@ Relabeled /opt/webapp/public/script.js
 ```
 
 !!! warning "Common errors"
-    **`chcon: can't apply partial context to unlabeled file`** — Ensure SELinux is enabled with `getenforce` and the filesystem is mounted with `context=` option if needed.
-    **`restorecon: No such file or directory`** — Verify the path exists and check spelling; use `ls -d /opt/webapp/public/` to confirm the directory is present.
+    | Error | Fix |
+    |---|---|
+    | `chcon: can't apply partial context to unlabeled file` | Ensure SELinux is enabled with `getenforce` and the filesystem is mounted with `context=` option if needed. |
+    | `restorecon: No such file or directory` | Verify the path exists and check spelling; use `ls -d /opt/webapp/public/` to confirm the directory is present. |
 ```bash
 # List all booleans
 getsebool -a
@@ -149,9 +153,11 @@ httpd_can_network_connect --> off
 ```
 
 !!! warning "Common errors"
-    **`getsebool: command not found`** — Install the policycoreutils package with `yum install policycoreutils` or `apt install selinux-utils`.
-    **`Cannot set persistent booleans without SELinux policy loaded`** — Ensure SELinux is enabled and a policy is loaded by checking `getenforce` and `sestatus`.
-    **`setsebool: Cannot access policy master file`** — Run the command with `sudo` or as root, since SELinux boolean changes require elevated privileges.
+    | Error | Fix |
+    |---|---|
+    | `getsebool: command not found` | Install the policycoreutils package with `yum install policycoreutils` or `apt install selinux-utils`. |
+    | `Cannot set persistent booleans without SELinux policy loaded` | Ensure SELinux is enabled and a policy is loaded by checking `getenforce` and `sestatus`. |
+    | `setsebool: Cannot access policy master file` | Run the command with `sudo` or as root, since SELinux boolean changes require elevated privileges. |
 ```bash
 # View recent AVC denials
 ausearch -m avc --start recent | audit2why
@@ -227,9 +233,11 @@ Nov 15 09:40:12 web-prod-01 kernel: apparmor="DENIED" operation="mknod" profile=
 ```
 
 !!! warning "Common errors"
-    **`apparmor module is not loaded.`** — Load AppArmor with `sudo systemctl start apparmor` and verify with `sudo systemctl enable apparmor`.
-    **`Error: Could not open '/etc/apparmor.d/usr.sbin.nginx' for reading: No such file or directory`** — Verify the profile path exists with `ls -la /etc/apparmor.d/` and use the correct filename.
-    **`apparmor_parser: Error while loading application profiles. Skipping /etc/apparmor.d/usr.sbin.nginx`** — Check for syntax errors in the profile with `apparmor_parser -d /etc/apparmor.d/usr.sbin.nginx` and fix any rule violations.
+    | Error | Fix |
+    |---|---|
+    | `apparmor module is not loaded.` | Load AppArmor with `sudo systemctl start apparmor` and verify with `sudo systemctl enable apparmor`. |
+    | `Error: Could not open '/etc/apparmor.d/usr.sbin.nginx' for reading: No such file or directory` | Verify the profile path exists with `ls -la /etc/apparmor.d/` and use the correct filename. |
+    | `apparmor_parser: Error while loading application profiles. Skipping /etc/apparmor.d/usr.sbin.nginx` | Check for syntax errors in the profile with `apparmor_parser -d /etc/apparmor.d/usr.sbin.nginx` and fix any rule violations. |
 ```bash
 # /etc/apparmor.d/usr.local.bin.myapp
 /usr/local/bin/myapp {
@@ -250,9 +258,11 @@ Nov 15 09:40:12 web-prod-01 kernel: apparmor="DENIED" operation="mknod" profile=
 ```
 
 !!! warning "Common errors"
-    **`apparmor_parser: Error in /etc/apparmor.d/usr.local.bin.myapp at line 5: syntax error, unexpected TOK_COMMA`** — Remove the trailing comma after `r,` on the `/etc/myapp/** r,` line; AppArmor does not use commas between rules.
-    **`AppArmor parser error: Unknown mode 'rw' in /etc/apparmor.d/usr.local.bin.myapp`** — Use separate rules `r,` and `w,` instead of combined `rw,`; AppArmor requires individual mode declarations.
-    **`ERROR: Could not find profile /usr/local/bin/myapp when loading profile`** — Ensure the profile filename matches the binary path exactly (e.g., rename file to `usr.local.bin.myapp` without leading slash) and run `sudo apparmor_parser -r /etc/apparmor.d/usr.local.bin.myapp` to load it.
+    | Error | Fix |
+    |---|---|
+    | `apparmor_parser: Error in /etc/apparmor.d/usr.local.bin.myapp at line 5: syntax error, unexpected TOK_COMMA` | Remove the trailing comma after `r,` on the `/etc/myapp/** r,` line; AppArmor does not use commas between rules. |
+    | `AppArmor parser error: Unknown mode 'rw' in /etc/apparmor.d/usr.local.bin.myapp` | Use separate rules `r,` and `w,` instead of combined `rw,`; AppArmor requires individual mode declarations. |
+    | `ERROR: Could not find profile /usr/local/bin/myapp when loading profile` | Ensure the profile filename matches the binary path exactly (e.g., rename file to `usr.local.bin.myapp` without leading slash) and run `sudo apparmor_parser -r /etc/apparmor.d/usr.local.bin.myapp` to load it. |
 ```bash
 visudo   # Always use visudo — validates syntax on save
 ```
@@ -262,8 +272,10 @@ visudo   # Always use visudo — validates syntax on save
 ```
 
 !!! warning "Common errors"
-    **`visudo: /etc/sudoers.d/50-cloud-init: syntax error near line 3`** — Fix the syntax error in the specified file (check for missing colons, invalid usernames, or malformed rules) and save again.
-    **`visudo: no changes made to /etc/sudoers`** — This is informational when you exit the editor without making changes; no action needed unless you intended to modify sudoers.
+    | Error | Fix |
+    |---|---|
+    | `visudo: /etc/sudoers.d/50-cloud-init: syntax error near line 3` | Fix the syntax error in the specified file (check for missing colons, invalid usernames, or malformed rules) and save again. |
+    | `visudo: no changes made to /etc/sudoers` | This is informational when you exit the editor without making changes; no action needed unless you intended to modify sudoers. |
 ```bash
 # Separate duty: backup operator — only rsync and tar
 %backupops  ALL=(root) /usr/bin/rsync, /usr/bin/tar
@@ -283,8 +295,10 @@ jsmith  ALL=(ALL) ALL, !/bin/su, !/usr/bin/passwd root
 ```
 
 !!! warning "Common errors"
-    **`sudo: command not allowed`** — Verify the command path matches exactly in sudoers (e.g., `/usr/bin/systemctl` not `systemctl`), and check for negation rules that may block it.
-    **`sudoers: syntax error near line X`** — Run `sudo visudo` to validate sudoers syntax before applying changes, as invalid entries will lock out sudo access.
+    | Error | Fix |
+    |---|---|
+    | `sudo: command not allowed` | Verify the command path matches exactly in sudoers (e.g., `/usr/bin/systemctl` not `systemctl`), and check for negation rules that may block it. |
+    | `sudoers: syntax error near line X` | Run `sudo visudo` to validate sudoers syntax before applying changes, as invalid entries will lock out sudo access. |
 ```bash
 # Audit who has sudo access
 grep -E "^[^#]" /etc/sudoers /etc/sudoers.d/* | grep -v "^Defaults"
@@ -308,8 +322,10 @@ User jsmith may run the following commands on ip-172-31-45-12:
 ```
 
 !!! warning "Common errors"
-    **`sudo: /etc/sudoers is world writable`** — Fix file permissions with `chmod 0440 /etc/sudoers`.
-    **`sudo: parse error in /etc/sudoers.d/admins near line 3`** — Validate sudoers syntax with `visudo -c -f /etc/sudoers.d/admins` before applying changes.
+    | Error | Fix |
+    |---|---|
+    | `sudo: /etc/sudoers is world writable` | Fix file permissions with `chmod 0440 /etc/sudoers`. |
+    | `sudo: parse error in /etc/sudoers.d/admins near line 3` | Validate sudoers syntax with `visudo -c -f /etc/sudoers.d/admins` before applying changes. |
 ```bash
 # /etc/security/access.conf format:
 # permission : users/groups : origins
@@ -335,9 +351,11 @@ User jsmith may run the following commands on ip-172-31-45-12:
 ```
 
 !!! warning "Common errors"
-    **`access.conf: line 5: unknown user 'root'`** — Ensure the root user exists in /etc/passwd and PAM is properly configured to read access.conf via pam_access.so.
-    **`access.conf: syntax error at line 8: invalid CIDR notation`** — Correct malformed network ranges (e.g., change `10.0.0.0/8` to valid CIDR like `10.0.0.0/8`) and verify no trailing spaces exist.
-    **`Login denied by access.conf`** — Verify the rule order is correct (first matching rule wins) and that the user/group name and origin match the connecting source exactly using `who` or `last` to confirm the actual origin string.
+    | Error | Fix |
+    |---|---|
+    | `access.conf: line 5: unknown user 'root'` | Ensure the root user exists in /etc/passwd and PAM is properly configured to read access.conf via pam_access.so. |
+    | `access.conf: syntax error at line 8: invalid CIDR notation` | Correct malformed network ranges (e.g., change `10.0.0.0/8` to valid CIDR like `10.0.0.0/8`) and verify no trailing spaces exist. |
+    | `Login denied by access.conf` | Verify the rule order is correct (first matching rule wins) and that the user/group name and origin match the connecting source exactly using `who` or `last` to confirm the actual origin string. |
 ```bash
 # /etc/pam.d/system-auth — enable pam_access
 account     required      pam_access.so
@@ -348,8 +366,10 @@ account     required      pam_access.so
 ```
 
 !!! warning "Common errors"
-    **`pam_access.so: cannot open shared object file: No such file or directory`** — Install the libpam-modules package with `apt-get install libpam-modules` or `yum install pam`.
-    **`PAM-1.1.8 (Linux-PAM 1.1.8) 29-Apr-2014 (Red Hat 6.5)`** — This indicates pam_access.so exists but may not be properly compiled; verify with `ldd /lib64/security/pam_access.so` and reinstall if broken.
+    | Error | Fix |
+    |---|---|
+    | `pam_access.so: cannot open shared object file: No such file or directory` | Install the libpam-modules package with `apt-get install libpam-modules` or `yum install pam`. |
+    | `PAM-1.1.8 (Linux-PAM 1.1.8) 29-Apr-2014 (Red Hat 6.5)` | This indicates pam_access.so exists but may not be properly compiled; verify with `ldd /lib64/security/pam_access.so` and reinstall if broken. |
 ```bash
 # Make a file immutable
 chattr +i /etc/resolv.conf
@@ -379,8 +399,10 @@ lsattr /var/log/
 ```
 
 !!! warning "Common errors"
-    **`chattr: Operation not permitted`** — Ensure you are running as root (use `sudo chattr`) and the filesystem supports extended attributes (ext4, ext3, btrfs).
-    **`lsattr: No such file or directory`** — Verify the file or directory path exists and you have read permissions on the parent directory.
+    | Error | Fix |
+    |---|---|
+    | `chattr: Operation not permitted` | Ensure you are running as root (use `sudo chattr`) and the filesystem supports extended attributes (ext4, ext3, btrfs). |
+    | `lsattr: No such file or directory` | Verify the file or directory path exists and you have read permissions on the parent directory. |
 ```bash
 # View capabilities on a binary
 getcap /usr/bin/ping
@@ -425,9 +447,11 @@ CapAmb:	0000000000000000
 ```
 
 !!! warning "Common errors"
-    **`getcap: /usr/sbin/tcpdump: No such file or directory`** — Verify the binary exists with `which tcpdump` or install the package (e.g., `apt-get install tcpdump`).
-    **`Operation not permitted`** — Run `setcap` and `getcap` commands with `sudo` or as root, as capability manipulation requires CAP_SETFCAP.
-    **`Invalid argument`** — Ensure the capability name is valid (e.g., `cap_net_raw`, not `CAP_NET_RAW`) and the syntax uses `+ep` or `+i` for the flags.
+    | Error | Fix |
+    |---|---|
+    | `getcap: /usr/sbin/tcpdump: No such file or directory` | Verify the binary exists with `which tcpdump` or install the package (e.g., `apt-get install tcpdump`). |
+    | `Operation not permitted` | Run `setcap` and `getcap` commands with `sudo` or as root, as capability manipulation requires CAP_SETFCAP. |
+    | `Invalid argument` | Ensure the capability name is valid (e.g., `cap_net_raw`, not `CAP_NET_RAW`) and the syntax uses `+ep` or `+i` for the flags. |
 ```bash
 # Find world-writable files outside /tmp (should be none)
 find / -xdev -type f -perm -0002 -not -path "/tmp/*" -not -path "/proc/*" 2>/dev/null
@@ -474,9 +498,11 @@ admin
 ```
 
 !!! warning "Common errors"
-    **`find: '/root': Permission denied`** — Run the command with `sudo` to access all directories, or redirect stderr to /dev/null (already done in the example).
-    **`awk: can't open file /etc/shadow: Permission denied`** — Execute the awk command with `sudo` since /etc/shadow is readable only by root.
-    **`find: '/proc/[pid]/fd/[num]': No such file or directory`** — Add `-xdev` flag (already present) and increase the timeout or run during low system activity to avoid race conditions.
+    | Error | Fix |
+    |---|---|
+    | `find: '/root': Permission denied` | Run the command with `sudo` to access all directories, or redirect stderr to /dev/null (already done in the example). |
+    | `awk: can't open file /etc/shadow: Permission denied` | Execute the awk command with `sudo` since /etc/shadow is readable only by root. |
+    | `find: '/proc/[pid]/fd/[num]': No such file or directory` | Add `-xdev` flag (already present) and increase the timeout or run during low system activity to avoid race conditions. |
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

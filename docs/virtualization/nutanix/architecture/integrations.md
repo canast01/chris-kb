@@ -46,9 +46,11 @@ Last Sync Time: 2024-01-15 14:32:18
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused to Prism Central IP 10.45.67.89:9440`** — Verify Prism Central is running and accessible on the network, and confirm the IP address is correct.
-    **`Error: Authentication failed for user 'admin'`** — Ensure the Prism Central admin password is correct and the user account has cluster registration permissions.
-    **`Error: Cluster already registered to multicluster UUID 00051234-5678-9abc-def0-123456789abc`** — Unregister the cluster first using `ncli multicluster remove-from-multicluster` before re-registering.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused to Prism Central IP 10.45.67.89:9440` | Verify Prism Central is running and accessible on the network, and confirm the IP address is correct. |
+    | `Error: Authentication failed for user 'admin'` | Ensure the Prism Central admin password is correct and the user account has cluster registration permissions. |
+    | `Error: Cluster already registered to multicluster UUID 00051234-5678-9abc-def0-123456789abc` | Unregister the cluster first using `ncli multicluster remove-from-multicluster` before re-registering. |
 **Verify registration:**
 
 ```bash
@@ -73,8 +75,10 @@ Cluster Multicast Mask       : 255.255.255.0
 ```
 
 !!! warning "Common errors"
-    **`Error: Connection refused (111)`** — Verify the Prism Central or cluster management service is running with `systemctl status nutanix_cluster_manager` and check network connectivity to the cluster IP.
-    **`Error: Authentication failed: Invalid credentials`** — Ensure you are authenticated with valid Nutanix credentials using `ncli user whoami` or re-authenticate with `ncli -u admin -p <password>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Connection refused (111)` | Verify the Prism Central or cluster management service is running with `systemctl status nutanix_cluster_manager` and check network connectivity to the cluster IP. |
+    | `Error: Authentication failed: Invalid credentials` | Ensure you are authenticated with valid Nutanix credentials using `ncli user whoami` or re-authenticate with `ncli -u admin -p <password>`. |
 **Expected output:** `Cluster State: Connected`
 
 ---
@@ -125,9 +129,11 @@ Directory Services Configuration
 ```
 
 !!! warning "Common errors"
-    **`Status: Disconnected`** — Verify network connectivity to the domain controller and confirm firewall rules allow port 389 (LDAP) or 636 (LDAPS) from the CVM.
-    **`Error: Directory service configuration not found`** — Run `ncli authconfig add-directory-services` to configure directory services before attempting to query status.
-    **`Connection timeout to LDAP server`** — Check DNS resolution for the domain controller hostname and ensure the CVM can reach it with `ping` or `nslookup`.
+    | Error | Fix |
+    |---|---|
+    | `Status: Disconnected` | Verify network connectivity to the domain controller and confirm firewall rules allow port 389 (LDAP) or 636 (LDAPS) from the CVM. |
+    | `Error: Directory service configuration not found` | Run `ncli authconfig add-directory-services` to configure directory services before attempting to query status. |
+    | `Connection timeout to LDAP server` | Check DNS resolution for the domain controller hostname and ensure the CVM can reach it with `ping` or `nslookup`. |
 ### LDAP Integration (non-AD)
 
 Supported for OpenLDAP, FreeIPA, and other LDAP-compliant directories. Use `ldaps://` (TLS) for production. Configure the same way as AD but set Type = OpenLDAP and provide the user/group search base DN.
@@ -181,9 +187,11 @@ Status: Downloaded newer image for ghcr.io/nutanix/nutanix-exporter:latest
 ```
 
 !!! warning "Common errors"
-    **`Error response from daemon: Get "https://ghcr.io/v2/": net/http: request canceled`** — Verify network connectivity and ensure your Docker daemon can reach ghcr.io, or use a private registry mirror.
-    **`Error: No such image: ghcr.io/nutanix/nutanix-exporter:latest`** — Pull the image first with `docker pull ghcr.io/nutanix/nutanix-exporter:latest` before running the container.
-    **`Error response from daemon: driver failed programming external connectivity on endpoint: Bind for 0.0.0.0:9408 failed: port is already allocated`** — Change the host port mapping to an available port (e.g., `-p 9409:9408`) or stop the container using port 9408.
+    | Error | Fix |
+    |---|---|
+    | `Error response from daemon: Get "https://ghcr.io/v2/": net/http: request canceled` | Verify network connectivity and ensure your Docker daemon can reach ghcr.io, or use a private registry mirror. |
+    | `Error: No such image: ghcr.io/nutanix/nutanix-exporter:latest` | Pull the image first with `docker pull ghcr.io/nutanix/nutanix-exporter:latest` before running the container. |
+    | `Error response from daemon: driver failed programming external connectivity on endpoint: Bind for 0.0.0.0:9408 failed: port is already allocated` | Change the host port mapping to an available port (e.g., `-p 9409:9408`) or stop the container using port 9408. |
 **Key metrics exposed:**
 - `nutanix_cluster_cpu_usage_ppm` — cluster CPU utilisation (ppm = parts per million)
 - `nutanix_cluster_memory_usage_bytes` — memory utilisation
@@ -266,9 +274,11 @@ aws s3 ls s3://my-bucket/ \
 ```
 
 !!! warning "Common errors"
-    **`Unable to locate credentials`** — Configure AWS credentials via `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
-    **`SSL: CERTIFICATE_VERIFY_FAILED`** — Ensure the `--no-verify-ssl` flag is present, or add the Nutanix Objects certificate to your system's CA bundle.
-    **`An error occurred (InvalidEndpointAddress) when calling the ListBucket operation: Could not connect to the endpoint URL`** — Verify the Objects IP is correct, reachable from your client, and that port 443 is open in firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `Unable to locate credentials` | Configure AWS credentials via `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables. |
+    | `SSL: CERTIFICATE_VERIFY_FAILED` | Ensure the `--no-verify-ssl` flag is present, or add the Nutanix Objects certificate to your system's CA bundle. |
+    | `An error occurred (InvalidEndpointAddress) when calling the ListBucket operation: Could not connect to the endpoint URL` | Verify the Objects IP is correct, reachable from your client, and that port 443 is open in firewall rules. |
 ---
 
 ## VMware vCenter Plugin (ESXi-Based Clusters)

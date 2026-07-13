@@ -105,9 +105,11 @@ root@vcenter.corp.local's password:
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the root account is enabled in vCenter and the SSH service is running; check `/etc/ssh/sshd_config` for `PermitRootLogin yes`.
-    **`cat: /etc/applmgmt/appliance/update_status.json: No such file or directory`** — This file path is specific to vCenter appliance deployments; if using a Windows vCenter Server installation, SSH into the appliance management interface or use the vSphere Client GUI instead.
-    **`python3: command not found`** — Use `python` instead of `python3`, or pipe to `jq` if available: `cat /etc/applmgmt/appliance/update_status.json | jq '.version'`.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the root account is enabled in vCenter and the SSH service is running; check `/etc/ssh/sshd_config` for `PermitRootLogin yes`. |
+    | `cat: /etc/applmgmt/appliance/update_status.json: No such file or directory` | This file path is specific to vCenter appliance deployments; if using a Windows vCenter Server installation, SSH into the appliance management interface or use the vSphere Client GUI instead. |
+    | `python3: command not found` | Use `python` instead of `python3`, or pipe to `jq` if available: `cat /etc/applmgmt/appliance/update_status.json | jq '.version'`. |
 ### 2. Collect the VCSA support bundle (takes 5–20 minutes)
 
 ```bash
@@ -138,9 +140,11 @@ total 2847M
 ```
 
 !!! warning "Common errors"
-    **`ERROR: /var/core/ filesystem is full (0% available)`** — Run `vc-support -w /tmp/` to write the bundle to an alternate location with available space.
-    **`ERROR: Permission denied writing to /tmp/`** — Ensure you are running the command as root or with sudo, and verify /tmp has write permissions with `chmod 1777 /tmp`.
-    **`ERROR: Database connection failed — vCenter services may be down`** — Wait 2–3 minutes for vCenter services to fully initialize, then retry with `vc-support`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: /var/core/ filesystem is full (0% available)` | Run `vc-support -w /tmp/` to write the bundle to an alternate location with available space. |
+    | `ERROR: Permission denied writing to /tmp/` | Ensure you are running the command as root or with sudo, and verify /tmp has write permissions with `chmod 1777 /tmp`. |
+    | `ERROR: Database connection failed — vCenter services may be down` | Wait 2–3 minutes for vCenter services to fully initialize, then retry with `vc-support`. |
 Upload this .tgz file to the Broadcom case. It contains all VCSA service logs, database state, and configuration.
 
 ### 3. Collect the vpxd log (the primary vCenter daemon log)
@@ -175,9 +179,11 @@ total 3.6G
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot create regular file '/tmp/vpxd-20250115.log': No space left on device`** — Check available disk space with `df -h /tmp` and either clean up /tmp or redirect to a partition with sufficient space.
-    **`cp: /var/log/vmware/sso/vmware-sts-idmd.log: No such file or directory`** — Verify the SSO service is installed and running with `systemctl status vmware-sts-idmd`, or check the correct log path for your vCenter version.
-    **`Permission denied`** — Run the commands with `sudo` or as root, since /var/log/vmware files are typically readable only by root.
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot create regular file '/tmp/vpxd-20250115.log': No space left on device` | Check available disk space with `df -h /tmp` and either clean up /tmp or redirect to a partition with sufficient space. |
+    | `cp: /var/log/vmware/sso/vmware-sts-idmd.log: No such file or directory` | Verify the SSO service is installed and running with `systemctl status vmware-sts-idmd`, or check the correct log path for your vCenter version. |
+    | `Permission denied` | Run the commands with `sudo` or as root, since /var/log/vmware files are typically readable only by root. |
 ### 4. Check VCSA disk space (a common cause of VCSA service failures)
 
 ```bash
@@ -211,8 +217,10 @@ total 2.4G
 ```
 
 !!! warning "Common errors"
-    **`du: cannot access '/storage/db/': Permission denied`** — Run the command with `sudo` or as root to access the database directory.
-    **`ls: cannot open directory '/var/log/vmware/': No such file or directory`** — Verify the correct vCenter log path with `find /var/log -type d -name vmware` or check your vCenter installation directory.
+    | Error | Fix |
+    |---|---|
+    | `du: cannot access '/storage/db/': Permission denied` | Run the command with `sudo` or as root to access the database directory. |
+    | `ls: cannot open directory '/var/log/vmware/': No such file or directory` | Verify the correct vCenter log path with `find /var/log -type d -name vmware` or check your vCenter installation directory. |
 ### 5. Check service status and recent errors
 
 ```bash
@@ -254,9 +262,11 @@ Service vmware-analytics is running
 ```
 
 !!! warning "Common errors"
-    **`psql: could not connect to server: No such file or directory`** — Verify PostgreSQL is running with `service-control --status vmware-vpostgres` and restart if needed.
-    **`grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory`** — Check log directory exists and VCSA services are initialized; if fresh install, wait 5 minutes for services to fully start.
-    **`ERROR: role "vc" does not exist`** — Ensure the VCDB database user exists by running `/usr/lib/vmware-vpostgres/bin/psql -U postgres -c "SELECT * FROM pg_user WHERE usename='vc';"` to verify.
+    | Error | Fix |
+    |---|---|
+    | `psql: could not connect to server: No such file or directory` | Verify PostgreSQL is running with `service-control --status vmware-vpostgres` and restart if needed. |
+    | `grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory` | Check log directory exists and VCSA services are initialized; if fresh install, wait 5 minutes for services to fully start. |
+    | `ERROR: role "vc" does not exist` | Ensure the VCDB database user exists by running `/usr/lib/vmware-vpostgres/bin/psql -U postgres -c "SELECT * FROM pg_user WHERE usename='vc';"` to verify. |
 ### 6. Write the timeline
 
 ```text
@@ -422,7 +432,9 @@ Jan 15 09:52:18 vcsa-01 kernel: audit: type=1400 audit(1705318338.123:456): appa
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory`** — Verify vpxd service is running with
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vmware/vpxd/vpxd.log: No such file or directory` | Verify vpxd service is running with |
 ---
 
 ## Support Portal and SLA Reference

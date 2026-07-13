@@ -129,9 +129,11 @@ ntpq -p
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to <aria-lc-ip> port 443: Connection refused`** — Verify Aria LC is running with `systemctl status aria-lc` and confirm the IP/hostname is correct.
-    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should suppress this; if it persists, ensure curl is updated and the certificate chain is valid.
-    **`ntpq: read: Connection refused`** — Restart the NTP service with `systemctl restart ntp` or `systemctl restart chrony` depending on your distribution.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to <aria-lc-ip> port 443: Connection refused` | Verify Aria LC is running with `systemctl status aria-lc` and confirm the IP/hostname is correct. |
+    | `curl: (60) SSL certificate problem: self signed certificate` | The `-k` flag should suppress this; if it persists, ensure curl is updated and the certificate chain is valid. |
+    | `ntpq: read: Connection refused` | Restart the NTP service with `systemctl restart ntp` or `systemctl restart chrony` depending on your distribution. |
 ---
 
 ## See also

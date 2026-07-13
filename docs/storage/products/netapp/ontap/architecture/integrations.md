@@ -65,8 +65,10 @@ cluster1::> vserver services name-service ldap create -vserver svm1 -client-conf
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: CIFS server creation failed. Reason: Failed to join domain "domain.corp". Check network connectivity to domain controllers.`** — Verify network connectivity to domain controllers and ensure the ONTAP cluster can resolve the domain name via DNS.
-    **`Error: LDAP configuration "ldap-config" does not exist.`** — Create the LDAP client configuration first using `vserver services name-service ldap client-config create` before referencing it in the ldap create command.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: CIFS server creation failed. Reason: Failed to join domain "domain.corp". Check network connectivity to domain controllers.` | Verify network connectivity to domain controllers and ensure the ONTAP cluster can resolve the domain name via DNS. |
+    | `Error: LDAP configuration "ldap-config" does not exist.` | Create the LDAP client configuration first using `vserver services name-service ldap client-config create` before referencing it in the ldap create command. |
 ## Veeam Storage Integration (VeeamON / Direct Storage Access)
 
 Veeam Backup & Replication integrates with ONTAP via the Veeam Backup & Replication storage plugin, enabling:
@@ -138,9 +140,11 @@ curl -sk -u admin:<password> "https://<cluster>/api/storage/volumes?fields=name,
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; ensure both `-s` and `-k` flags are used together).
-    **`curl: (7) Failed to connect to <cluster>: Name or service not known`** — Verify the cluster hostname or IP is correct and reachable from your network; check DNS resolution with `nslookup <cluster>`.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the API endpoint is correct and the cluster is responding with valid JSON; test connectivity with `curl -sk -u admin:<password> https://<cluster>/api/cluster` first.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in example; ensure both `-s` and `-k` flags are used together). |
+    | `curl: (7) Failed to connect to <cluster>: Name or service not known` | Verify the cluster hostname or IP is correct and reachable from your network; check DNS resolution with `nslookup <cluster>`. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the API endpoint is correct and the cluster is responding with valid JSON; test connectivity with `curl -sk -u admin:<password> https://<cluster>/api/cluster` first. |
 Python SDK (`netapp-ontap` package) and Ansible (`netapp.ontap` collection) provide higher-level abstractions for automation.
 
 ## Cloud Volumes ONTAP Integration

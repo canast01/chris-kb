@@ -70,9 +70,11 @@ Antivirus Mode: Disabled
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are logged into the OneFS cluster via SSH or install the OneFS CLI tools on your local machine.
-    **`Error: Permission denied`** — Verify your user account has cluster administrator privileges or use `sudo isi` if available.
-    **`Connection refused`** — Confirm the cluster management IP is reachable and OneFS services are running with `systemctl status isilon-services`.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are logged into the OneFS cluster via SSH or install the OneFS CLI tools on your local machine. |
+    | `Error: Permission denied` | Verify your user account has cluster administrator privileges or use `sudo isi` if available. |
+    | `Connection refused` | Confirm the cluster management IP is reachable and OneFS services are running with `systemctl status isilon-services`. |
 ### Node Status
 
 ```bash
@@ -112,9 +114,11 @@ Node 2 Status:
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster management interface or have the OneFS CLI tools installed and in your PATH.
-    **`Error: Node <node_id> not found`** — Verify the node ID exists by running `isi node list` first and use a valid numeric ID from the output.
-    **`Error: Permission denied`** — Confirm your user account has administrative privileges on the PowerScale cluster.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are logged into the PowerScale cluster management interface or have the OneFS CLI tools installed and in your PATH. |
+    | `Error: Node <node_id> not found` | Verify the node ID exists by running `isi node list` first and use a valid numeric ID from the output. |
+    | `Error: Permission denied` | Confirm your user account has administrative privileges on the PowerScale cluster. |
 ### Cluster Statistics
 
 ```bash
@@ -167,8 +171,10 @@ Protocol Breakdown:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to cluster. Connection refused on port 8080`** — Verify the OneFS management interface is running with `systemctl status isi_services` and check network connectivity to the cluster IP.
-    **`Error: Permission denied. User does not have 'ISI_PRIV_STATISTICS' privilege`** — Grant the user appropriate statistics read permissions using the OneFS WebUI under Access > Users or via `isi auth users modify <username>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to cluster. Connection refused on port 8080` | Verify the OneFS management interface is running with `systemctl status isi_services` and check network connectivity to the cluster IP. |
+    | `Error: Permission denied. User does not have 'ISI_PRIV_STATISTICS' privilege` | Grant the user appropriate statistics read permissions using the OneFS WebUI under Access > Users or via `isi auth users modify <username>`. |
 ### Cluster Events and Jobs
 
 ```bash
@@ -207,9 +213,11 @@ Description:      Reprotecting data on node-5 after disk replacement
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run commands from the cluster management node.
-    **`Error: Invalid job ID '<job_id>'`** — Replace `<job_id>` with an actual numeric job ID from the `isi job jobs list` output.
-    **`Error: Permission denied`** — Verify your user account has administrative privileges on the PowerScale cluster (check with `isi auth users view`).
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run commands from the cluster management node. |
+    | `Error: Invalid job ID '<job_id>'` | Replace `<job_id>` with an actual numeric job ID from the `isi job jobs list` output. |
+    | `Error: Permission denied` | Verify your user account has administrative privileges on the PowerScale cluster (check with `isi auth users view`). |
 ### Quick Cluster Health
 
 ```bash
@@ -237,9 +245,11 @@ Job ID: job-8471-snapshot     Status: RUNNING    Progress: 67%    ETA: 45m
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the isilon package is in your PATH, or run commands directly on the cluster management interface.
-    **`Connection refused`** — Verify the cluster management IP is reachable and SSH/API access is enabled; check firewall rules and cluster network connectivity.
-    **`Permission denied`** — Confirm your user account has appropriate role-based access control (RBAC) permissions for status and event queries on the cluster.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the isilon package is in your PATH, or run commands directly on the cluster management interface. |
+    | `Connection refused` | Verify the cluster management IP is reachable and SSH/API access is enabled; check firewall rules and cluster network connectivity. |
+    | `Permission denied` | Confirm your user account has appropriate role-based access control (RBAC) permissions for status and event queries on the cluster. |
 ---
 
 ## Nodes
@@ -284,9 +294,11 @@ Disk Status:          Healthy
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster via SSH or have the OneFS CLI tools installed and in your PATH.
-    **`Error: Node <node_id> not found`** — Verify the node ID exists by running `isi node list` first and use a valid numeric ID from the output.
-    **`Error: Permission denied`** — Confirm your user account has administrative privileges; contact your cluster administrator if needed.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are logged into the PowerScale cluster via SSH or have the OneFS CLI tools installed and in your PATH. |
+    | `Error: Node <node_id> not found` | Verify the node ID exists by running `isi node list` first and use a valid numeric ID from the output. |
+    | `Error: Permission denied` | Confirm your user account has administrative privileges; contact your cluster administrator if needed. |
 ### Node Hardware
 
 ```bash
@@ -346,8 +358,10 @@ Power Supplies:
 ```
 
 !!! warning "Common errors"
-    **`Error: Node <node_id> not found or is offline`** — Verify the node ID is correct and the node is online using `isi node list`.
-    **`Error: Permission denied. User does not have read access to hardware information`** — Ensure your user account has appropriate admin or read-only hardware permissions via `isi auth roles view`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Node <node_id> not found or is offline` | Verify the node ID is correct and the node is online using `isi node list`. |
+    | `Error: Permission denied. User does not have read access to hardware information` | Ensure your user account has appropriate admin or read-only hardware permissions via `isi auth roles view`. |
 ### Disk States
 
 | State | Meaning | Action |
@@ -389,9 +403,11 @@ Last Updated: 2024-01-15 14:27:33
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the isilon_sdk package is in your PATH.
-    **`Error: Invalid node ID <node_id>`** — Replace `<node_id>` with a valid numeric node identifier (e.g., `1`, `5`) from your cluster.
-    **`Error: Bay ID out of range for node`** — Verify the bay number exists on the target node using `isi devices drive list -n <node_id>`.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the isilon_sdk package is in your PATH. |
+    | `Error: Invalid node ID <node_id>` | Replace `<node_id>` with a valid numeric node identifier (e.g., `1`, `5`) from your cluster. |
+    | `Error: Bay ID out of range for node` | Verify the bay number exists on the target node using `isi devices drive list -n <node_id>`. |
 ### Smartfailing a Node
 
 ```bash
@@ -423,9 +439,11 @@ Rebalance job initiated: Job ID 12851
 ```
 
 !!! warning "Common errors"
-    **`isi: error: node <node_id> is not in cluster or invalid node ID`** — Verify the node ID with `isi devices list` and ensure the node is currently part of the cluster.
-    **`isi: error: smartfail already in progress for this node`** — Wait for the current smartfail operation to complete before initiating another, or check `isi status` for progress.
-    **`isi: error: insufficient healthy nodes to perform smartfail operation`** — Ensure the cluster has at least N+1 healthy nodes before attempting smartfail to maintain quorum.
+    | Error | Fix |
+    |---|---|
+    | `isi: error: node <node_id> is not in cluster or invalid node ID` | Verify the node ID with `isi devices list` and ensure the node is currently part of the cluster. |
+    | `isi: error: smartfail already in progress for this node` | Wait for the current smartfail operation to complete before initiating another, or check `isi status` for progress. |
+    | `isi: error: insufficient healthy nodes to perform smartfail operation` | Ensure the cluster has at least N+1 healthy nodes before attempting smartfail to maintain quorum. |
 ### Node Network
 
 ```bash
@@ -457,8 +475,10 @@ ID    Name       Status  IP Address      Netmask         Gateway         Node
 ```
 
 !!! warning "Common errors"
-    **`Error: Node <node_id> not found`** — Verify the node ID exists by running `isi nodes list` and use the correct numeric node identifier.
-    **`Error: Authentication failed`** — Ensure your OneFS admin credentials are configured correctly via `isi auth login` or check SSH key permissions.
+    | Error | Fix |
+    |---|---|
+    | `Error: Node <node_id> not found` | Verify the node ID exists by running `isi nodes list` and use the correct numeric node identifier. |
+    | `Error: Authentication failed` | Ensure your OneFS admin credentials are configured correctly via `isi auth login` or check SSH key permissions. |
 ### Node Performance
 
 ```bash
@@ -487,8 +507,10 @@ Context Switches:  12847/sec
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are connected to the PowerScale cluster via SSH or have the OneFS CLI tools installed and in your PATH.
-    **`Error: Invalid node ID '<node_id>'`** — Replace `<node_id>` with an actual node identifier (e.g., `1`, `2`, or `node1`) from the cluster.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are connected to the PowerScale cluster via SSH or have the OneFS CLI tools installed and in your PATH. |
+    | `Error: Invalid node ID '<node_id>'` | Replace `<node_id>` with an actual node identifier (e.g., `1`, `2`, or `node1`) from the cluster. |
 ---
 
 ## Storage Pools & Tiers
@@ -532,8 +554,10 @@ ID Name Nodes Tier
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the system PATH includes the OneFS bin directory.
-    **`Error: Invalid pool name '<pool_name>'`** — Replace `<pool_name>` with an actual pool name from the list output (e.g., `pool-ssd-tier1`).
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the system PATH includes the OneFS bin directory. |
+    | `Error: Invalid pool name '<pool_name>'` | Replace `<pool_name>` with an actual pool name from the list output (e.g., `pool-ssd-tier1`). |
 ### Tiers
 
 ```bash
@@ -575,9 +599,11 @@ Successfully deleted tier 'tier-archive-cold'
 ```
 
 !!! warning "Common errors"
-    **`Error: Tier 'tier-ssd-fast' is in use by 1 file pool(s) and cannot be deleted`** — Remove the tier from all associated file pools before deletion using `isi filepool modify`.
-    **`Error: Invalid node pool 'nodepool-nonexistent' specified`** — Verify node pool names exist by running `isi storagepool nodepool list` and use correct names in the `--children` parameter.
-    **`Error: Tier name 'tier-ssd-fast' already exists`** — Choose a unique tier name or delete the existing tier first with `isi storagepool tiers delete tier-ssd-fast`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Tier 'tier-ssd-fast' is in use by 1 file pool(s) and cannot be deleted` | Remove the tier from all associated file pools before deletion using `isi filepool modify`. |
+    | `Error: Invalid node pool 'nodepool-nonexistent' specified` | Verify node pool names exist by running `isi storagepool nodepool list` and use correct names in the `--children` parameter. |
+    | `Error: Tier name 'tier-ssd-fast' already exists` | Choose a unique tier name or delete the existing tier first with `isi storagepool tiers delete tier-ssd-fast`. |
 ### File Pool Policies
 
 ```bash
@@ -635,9 +661,11 @@ Policy 'archive-old-files' deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid file matching pattern 'accessed:>30:days'`** — Verify the pattern syntax matches PowerScale documentation (e.g., `accessed:>30d` without the colon before "days").
-    **`Error: Storage target '<archive_tier>' not found`** — Confirm the storage tier name exists by running `isi filepool storage-targets list` and use the exact name from the output.
-    **`Error: Cannot delete policy 'default-policy': policy is in use`** — Only custom policies can be deleted; modify the default policy instead or reassign it before deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid file matching pattern 'accessed:>30:days'` | Verify the pattern syntax matches PowerScale documentation (e.g., `accessed:>30d` without the colon before "days"). |
+    | `Error: Storage target '<archive_tier>' not found` | Confirm the storage tier name exists by running `isi filepool storage-targets list` and use the exact name from the output. |
+    | `Error: Cannot delete policy 'default-policy': policy is in use` | Only custom policies can be deleted; modify the default policy instead or reassign it before deletion. |
 ### SmartPools Job
 
 ```bash
@@ -676,9 +704,11 @@ ID    NAME                STATE      POLICY_ID  START_TIME           END_TIME   
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run commands from the cluster management node.
-    **`Error: Job 'SmartPools' is already running`** — Wait for the current SmartPools job to complete before starting a new one, or use `isi job jobs cancel <job_id>` to stop it first.
-    **`Error: Access denied: insufficient privileges`** — Run the command with appropriate credentials or ensure your user account has job management permissions on the cluster.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run commands from the cluster management node. |
+    | `Error: Job 'SmartPools' is already running` | Wait for the current SmartPools job to complete before starting a new one, or use `isi job jobs cancel <job_id>` to stop it first. |
+    | `Error: Access denied: insufficient privileges` | Run the command with appropriate credentials or ensure your user account has job management permissions on the cluster. |
 ### Spillover Configuration
 
 ```bash
@@ -711,9 +741,11 @@ Spillover Rebalance: Enabled
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid tier name '<tier_name>'`** — Replace `<tier_name>` with an actual tier name from `isi storagepool list` output.
-    **`Error: Spillover target tier is not available or offline`** — Verify the target tier is online and healthy using `isi storagepool status`.
-    **`Error: Permission denied`** — Run the command with appropriate admin credentials or use `sudo isi storagepool settings modify`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid tier name '<tier_name>'` | Replace `<tier_name>` with an actual tier name from `isi storagepool list` output. |
+    | `Error: Spillover target tier is not available or offline` | Verify the target tier is online and healthy using `isi storagepool status`. |
+    | `Error: Permission denied` | Run the command with appropriate admin credentials or use `sudo isi storagepool settings modify`. |
 ### SSD Strategy Options
 
 | Strategy | Behaviour |
@@ -784,8 +816,10 @@ ACL: POSIX
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Install the OneFS CLI tools or ensure you are running commands on a PowerScale node with the isi utility available.
-    **`Permission denied`** — Run the command with appropriate sudo privileges or as a user with write access to the /ifs filesystem.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Install the OneFS CLI tools or ensure you are running commands on a PowerScale node with the isi utility available. |
+    | `Permission denied` | Run the command with appropriate sudo privileges or as a user with write access to the /ifs filesystem. |
 ### Quotas
 
 ```bash
@@ -841,8 +875,10 @@ Report job created with ID: 103
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid path /ifs/<path>`** — Replace `<path>` with an actual directory path like `data/projects` and verify the path exists with `isi ls /ifs/`.
-    **`Error: Hard threshold must be greater than soft threshold`** — Ensure the hard threshold value is larger than the soft threshold value in your quota creation command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid path /ifs/<path>` | Replace `<path>` with an actual directory path like `data/projects` and verify the path exists with `isi ls /ifs/`. |
+    | `Error: Hard threshold must be greater than soft threshold` | Ensure the hard threshold value is larger than the soft threshold value in your quota creation command. |
 ---
 
 ## NFS Exports
@@ -882,9 +918,11 @@ ID    Path                          Clients
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI is installed and the system PATH includes the OneFS bin directory, or run the command from the PowerScale management node.
-    **`Error: Invalid export ID <export_id>`** — Replace `<export_id>` with a valid numeric ID from the `isi nfs exports list` output.
-    **`Error: Invalid zone <zone_name>`** — Verify the zone name exists by running `isi zones list` and use the correct zone identifier.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI is installed and the system PATH includes the OneFS bin directory, or run the command from the PowerScale management node. |
+    | `Error: Invalid export ID <export_id>` | Replace `<export_id>` with a valid numeric ID from the `isi nfs exports list` output. |
+    | `Error: Invalid zone <zone_name>` | Verify the zone name exists by running `isi zones list` and use the correct zone identifier. |
 ### Create an Export
 
 ```bash
@@ -924,9 +962,11 @@ Zone: System
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid CIDR notation '<ip_or_cidr>'`** — Replace the placeholder with a valid IP address or CIDR block (e.g., 10.0.1.0/24 or 192.168.1.50).
-    **`Error: Access zone 'DeptZone1' does not exist`** — Verify the zone name exists by running `isi zone list` and use the correct zone name in the command.
-    **`Error: Path '/ifs/<path>' does not exist or is not accessible`** — Create the directory first with `mkdir -p /ifs/<path>` or verify the path is mounted and accessible.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid CIDR notation '<ip_or_cidr>'` | Replace the placeholder with a valid IP address or CIDR block (e.g., 10.0.1.0/24 or 192.168.1.50). |
+    | `Error: Access zone 'DeptZone1' does not exist` | Verify the zone name exists by running `isi zone list` and use the correct zone name in the command. |
+    | `Error: Path '/ifs/<path>' does not exist or is not accessible` | Create the directory first with `mkdir -p /ifs/<path>` or verify the path is mounted and accessible. |
 ### Modify an Export
 
 ```bash
@@ -953,9 +993,11 @@ Export 1 modified successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Export <export_id> not found`** — Verify the export ID exists by running `isi nfs exports list` and use the correct numeric ID.
-    **`Error: Invalid IP address format: <ip>`** — Ensure the IP address is in valid dotted-decimal notation (e.g., 192.168.1.50) without CIDR notation.
-    **`Error: Client <ip> is not in the export's client list`** — Confirm the client IP is currently assigned to this export before attempting removal.
+    | Error | Fix |
+    |---|---|
+    | `Error: Export <export_id> not found` | Verify the export ID exists by running `isi nfs exports list` and use the correct numeric ID. |
+    | `Error: Invalid IP address format: <ip>` | Ensure the IP address is in valid dotted-decimal notation (e.g., 192.168.1.50) without CIDR notation. |
+    | `Error: Client <ip> is not in the export's client list` | Confirm the client IP is currently assigned to this export before attempting removal. |
 ### Delete an Export
 
 ```bash
@@ -968,8 +1010,10 @@ isi nfs exports delete <export_id>
 ```
 
 !!! warning "Common errors"
-    **`Error: Export <export_id> not found`** — Verify the export ID exists by running `isi nfs exports list` and confirm the correct ID before deletion.
-    **`Error: Export is in use by active clients`** — Disconnect all NFS clients mounting this export or wait for active sessions to close before attempting deletion.
+    | Error | Fix |
+    |---|---|
+    | `Error: Export <export_id> not found` | Verify the export ID exists by running `isi nfs exports list` and confirm the correct ID before deletion. |
+    | `Error: Export is in use by active clients` | Disconnect all NFS clients mounting this export or wait for active sessions to close before attempting deletion. |
 ### Reload / Verify
 
 ```bash
@@ -1019,9 +1063,11 @@ Default Export Settings:
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to cluster. Connection refused`** — Verify the OneFS cluster IP is reachable and the isi command is properly configured with `isi auth login`.
-    **`Error: Permission denied`** — Ensure your user account has administrative privileges; use `isi auth status` to verify your current role.
-    **`Error: NFS service reload failed: Configuration syntax error in /ifs/etc/nfs/exports`** — Run `isi nfs exports check` to identify the specific export with invalid syntax and correct it before reloading.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to cluster. Connection refused` | Verify the OneFS cluster IP is reachable and the isi command is properly configured with `isi auth login`. |
+    | `Error: Permission denied` | Ensure your user account has administrative privileges; use `isi auth status` to verify your current role. |
+    | `Error: NFS service reload failed: Configuration syntax error in /ifs/etc/nfs/exports` | Run `isi nfs exports check` to identify the specific export with invalid syntax and correct it before reloading. |
 ### Client Access Levels
 
 | Client Type | Access |
@@ -1055,8 +1101,10 @@ nfsv3_write_datasync_action = datasync
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid value for --nfsv4-enabled: must be true or false`** — Ensure boolean values are lowercase (true/false) without quotes.
-    **`Error: Permission denied. You must be root or have administrative privileges`** — Run the command with `sudo isi` or ensure your user account has OneFS administrative role assigned.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid value for --nfsv4-enabled: must be true or false` | Ensure boolean values are lowercase (true/false) without quotes. |
+    | `Error: Permission denied. You must be root or have administrative privileges` | Run the command with `sudo isi` or ensure your user account has OneFS administrative role assigned. |
 ### NFS Troubleshooting
 
 | Issue | Check | Command |
@@ -1097,8 +1145,10 @@ Access-based Enumeration:      Yes
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid share name '<share_name>'`** — Replace `<share_name>` with an actual share name from the list output (e.g., `isi smb shares view finance_reports`).
-    **`Error: Permission denied`** — Ensure your user account has administrative privileges or the appropriate RBAC role to query SMB share configuration.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid share name '<share_name>'` | Replace `<share_name>` with an actual share name from the list output (e.g., `isi smb shares view finance_reports`). |
+    | `Error: Permission denied` | Ensure your user account has administrative privileges or the appropriate RBAC role to query SMB share configuration. |
 ### Create / Modify / Delete
 
 ```bash
@@ -1128,9 +1178,11 @@ SMB share '<share_name>' deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Share '<share_name>' already exists`** — Use `isi smb shares list` to verify the share name is unique before creation.
-    **`Error: Invalid path '/ifs/<path>' does not exist`** — Ensure the directory exists on the cluster with `isi fs stat /ifs/<path>` before creating the share.
-    **`Error: Access denied — insufficient privileges`** — Run commands with root or admin-equivalent credentials, or use `sudo isi` if configured.
+    | Error | Fix |
+    |---|---|
+    | `Error: Share '<share_name>' already exists` | Use `isi smb shares list` to verify the share name is unique before creation. |
+    | `Error: Invalid path '/ifs/<path>' does not exist` | Ensure the directory exists on the cluster with `isi fs stat /ifs/<path>` before creating the share. |
+    | `Error: Access denied — insufficient privileges` | Run commands with root or admin-equivalent credentials, or use `sudo isi` if configured. |
 ### Share Permissions (ACL)
 
 ```bash
@@ -1174,9 +1226,11 @@ Permission deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Share '<share_name>' not found`** — Verify the share exists with `isi smb shares list` and use the correct share name.
-    **`Error: Authority '<DOMAIN\\Group>' not found or invalid`** — Ensure the domain and group name are correct and the group exists in Active Directory using `getent group`.
-    **`Error: Permission already exists for authority '<DOMAIN\\Group>'`** — Delete the existing permission first with the delete command before creating a new one with different settings.
+    | Error | Fix |
+    |---|---|
+    | `Error: Share '<share_name>' not found` | Verify the share exists with `isi smb shares list` and use the correct share name. |
+    | `Error: Authority '<DOMAIN\\Group>' not found or invalid` | Ensure the domain and group name are correct and the group exists in Active Directory using `getent group`. |
+    | `Error: Permission already exists for authority '<DOMAIN\\Group>'` | Delete the existing permission first with the delete command before creating a new one with different settings. |
 ### SMB Service & Global Settings
 
 ```bash
@@ -1221,9 +1275,11 @@ Total Sessions: 4
 ```
 
 !!! warning "Common errors"
-    **`Error: Permission denied`** — Run the command with appropriate admin credentials or use `sudo isi` if your account lacks SMB configuration rights.
-    **`Error: SMB service is not running`** — Start the SMB service with `isi smb settings service modify --enabled true` before attempting to view or modify settings.
-    **`Error: Invalid parameter value for --support-smb2`** — Use `true` or `false` (lowercase) as the parameter value, not `yes`, `no`, or `1`/`0`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Permission denied` | Run the command with appropriate admin credentials or use `sudo isi` if your account lacks SMB configuration rights. |
+    | `Error: SMB service is not running` | Start the SMB service with `isi smb settings service modify --enabled true` before attempting to view or modify settings. |
+    | `Error: Invalid parameter value for --support-smb2` | Use `true` or `false` (lowercase) as the parameter value, not `yes`, `no`, or `1`/`0`. |
 ### Access Zones
 
 ```bash
@@ -1244,8 +1300,10 @@ Share 'share_reports' created successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid zone name '<zone_name>'`** — Replace `<zone_name>` with an actual zone name from `isi zone zones list`.
-    **`Error: Path does not exist: /ifs/<path>`** — Create the directory first with `isi filesystem mkdir /ifs/<path>` or verify the path exists.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid zone name '<zone_name>'` | Replace `<zone_name>` with an actual zone name from `isi zone zones list`. |
+    | `Error: Path does not exist: /ifs/<path>` | Create the directory first with `isi filesystem mkdir /ifs/<path>` or verify the path exists. |
 ### SMB Common Issues
 
 | Issue | Check | Action |
@@ -1299,8 +1357,10 @@ Speed: 1Gb
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid interface name '<iface>'`** — Replace `<iface>` with an actual interface name from the list output (e.g., `ext-1`).
-    **`Error: Node ID <node_id> not found`** — Verify the node ID exists in your cluster with `isi nodes list` and use the correct numeric ID.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid interface name '<iface>'` | Replace `<iface>` with an actual interface name from the list output (e.g., `ext-1`). |
+    | `Error: Node ID <node_id> not found` | Verify the node ID exists in your cluster with `isi nodes list` and use the correct numeric ID. |
 ### Subnets
 
 ```bash
@@ -1335,8 +1395,10 @@ Mtu: 1500
 ```
 
 !!! warning "Common errors"
-    **`Error: Subnet already exists`** — Choose a different subnet name or delete the existing subnet first with `isi network subnets delete <subnet_name>`.
-    **`Error: Invalid subnet mask or gateway address`** — Verify the subnet mask is in CIDR notation (e.g., /24) and the gateway IP is within the subnet range.
+    | Error | Fix |
+    |---|---|
+    | `Error: Subnet already exists` | Choose a different subnet name or delete the existing subnet first with `isi network subnets delete <subnet_name>`. |
+    | `Error: Invalid subnet mask or gateway address` | Verify the subnet mask is in CIDR notation (e.g., /24) and the gateway IP is within the subnet range. |
 ### IP Pools (SmartConnect)
 
 ```bash
@@ -1374,9 +1436,11 @@ Modified pool 'pool-prod-01': added range 10.20.1.151-10.20.1.200
 ```
 
 !!! warning "Common errors"
-    **`Error: subnet <subnet_name> not found`** — Verify the subnet exists with `isi network subnets list` before creating the pool.
-    **`Error: access zone <zone_name> does not exist`** — Confirm the access zone name is correct using `isi zone zones list`.
-    **`Error: IP range 10.20.1.100-10.20.1.150 overlaps with existing range in pool pool-prod-02`** — Choose a non-overlapping IP range or modify the existing pool's ranges instead.
+    | Error | Fix |
+    |---|---|
+    | `Error: subnet <subnet_name> not found` | Verify the subnet exists with `isi network subnets list` before creating the pool. |
+    | `Error: access zone <zone_name> does not exist` | Confirm the access zone name is correct using `isi zone zones list`. |
+    | `Error: IP range 10.20.1.100-10.20.1.150 overlaps with existing range in pool pool-prod-02` | Choose a non-overlapping IP range or modify the existing pool's ranges instead. |
 ### SmartConnect Policies
 
 | Policy | Behavior |
@@ -1425,8 +1489,10 @@ External Settings:
 ```
 
 !!! warning "Common errors"
-    **`Error: rule <rule_name> not found`** — Verify the rule name exists with `isi network rules list` and check for typos.
-    **`Error: Invalid subnet format in rule configuration`** — Ensure the subnet in the rule is specified in valid CIDR notation (e.g., 10.0.0.0/8).
+    | Error | Fix |
+    |---|---|
+    | `Error: rule <rule_name> not found` | Verify the rule name exists with `isi network rules list` and check for typos. |
+    | `Error: Invalid subnet format in rule configuration` | Ensure the subnet in the rule is specified in valid CIDR notation (e.g., 10.0.0.0/8). |
 ### Network Common Issues
 
 | Issue | Check | Action |
@@ -1484,9 +1550,11 @@ Zone 'finance_data' modified: added auth provider 'ad'
 ```
 
 !!! warning "Common errors"
-    **`Error: Zone '<zone_name>' does not exist`** — Verify the zone name with `isi zone zones list` and use the correct spelling.
-    **`Error: Path '/ifs/<path>' already in use by zone '<existing_zone>'`** — Choose a unique path that is not already assigned to another zone.
-    **`Error: Auth provider '<provider>' is not configured`** — Configure the auth provider first using `isi auth providers` commands before adding it to the zone.
+    | Error | Fix |
+    |---|---|
+    | `Error: Zone '<zone_name>' does not exist` | Verify the zone name with `isi zone zones list` and use the correct spelling. |
+    | `Error: Path '/ifs/<path>' already in use by zone '<existing_zone>'` | Choose a unique path that is not already assigned to another zone. |
+    | `Error: Auth provider '<provider>' is not configured` | Configure the auth provider first using `isi auth providers` commands before adding it to the zone. |
 ### Authentication & Users
 
 ```bash
@@ -1561,9 +1629,11 @@ ID    Source        Target        Enabled
 ```
 
 !!! warning "Common errors"
-    **`Error: Authentication provider 'corp-ad' not found`** — Verify the provider name with `isi auth providers ad list` and ensure the domain is joined.
-    **`Error: User 'username' already exists`** — Choose a different username or delete the existing user first with `isi auth users delete <username>`.
-    **`Error: Failed to connect to Active Directory server`** — Check network connectivity to the AD domain controller and verify credentials with `isi auth ads view <provider_name>`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Authentication provider 'corp-ad' not found` | Verify the provider name with `isi auth providers ad list` and ensure the domain is joined. |
+    | `Error: User 'username' already exists` | Choose a different username or delete the existing user first with `isi auth users delete <username>`. |
+    | `Error: Failed to connect to Active Directory server` | Check network connectivity to the AD domain controller and verify credentials with `isi auth ads view <provider_name>`. |
 ---
 
 ## Snapshots
@@ -1594,8 +1664,10 @@ Expires: Never
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid snapshot ID`** — Verify the snapshot ID exists by running `isi snapshot snapshots list` and use the exact ID value from the output.
-    **`Error: Permission denied`** — Ensure your user account has read permissions on the snapshot; contact your cluster administrator to grant appropriate roles.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid snapshot ID` | Verify the snapshot ID exists by running `isi snapshot snapshots list` and use the exact ID value from the output. |
+    | `Error: Permission denied` | Ensure your user account has read permissions on the snapshot; contact your cluster administrator to grant appropriate roles. |
 ### Create / Delete
 
 ```bash
@@ -1620,9 +1692,11 @@ Snapshot at path '/ifs/data/production' with name 'archive-old' deleted successf
 ```
 
 !!! warning "Common errors"
-    **`Error: Path '/ifs/<path>' does not exist or is not accessible`** — Verify the path exists and you have read permissions on the parent directory.
-    **`Error: Snapshot '<snap_name>' not found at path '/ifs/<path>'`** — Confirm the snapshot name and path are correct using `isi snapshot snapshots list --path /ifs/<path>`.
-    **`Error: Permission denied`** — Ensure your user account has snapshot management privileges in the OneFS cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error: Path '/ifs/<path>' does not exist or is not accessible` | Verify the path exists and you have read permissions on the parent directory. |
+    | `Error: Snapshot '<snap_name>' not found at path '/ifs/<path>'` | Confirm the snapshot name and path are correct using `isi snapshot snapshots list --path /ifs/<path>`. |
+    | `Error: Permission denied` | Ensure your user account has snapshot management privileges in the OneFS cluster. |
 ### Restore Files from a Snapshot
 
 ```bash
@@ -1642,9 +1716,11 @@ restore_point_prod_db
 ```
 
 !!! warning "Common errors"
-    **`cp: cannot access '/ifs/.snapshot/<snap_name>/<path>/*': No such file or directory`** — Verify the snapshot name and path exist by running `ls /ifs/.snapshot/` and confirm the exact snapshot directory name.
-    **`Permission denied`** — Ensure your user has read permissions on the snapshot directory and write permissions on the target `/ifs/<path>/` directory; use `chmod` or check RBAC settings if needed.
-    **`Disk quota exceeded`** — Check available space in the target filesystem with `df -h /ifs/` and ensure sufficient capacity exists before copying snapshot data.
+    | Error | Fix |
+    |---|---|
+    | `cp: cannot access '/ifs/.snapshot/<snap_name>/<path>/*': No such file or directory` | Verify the snapshot name and path exist by running `ls /ifs/.snapshot/` and confirm the exact snapshot directory name. |
+    | `Permission denied` | Ensure your user has read permissions on the snapshot directory and write permissions on the target `/ifs/<path>/` directory; use `chmod` or check RBAC settings if needed. |
+    | `Disk quota exceeded` | Check available space in the target filesystem with `df -h /ifs/` and ensure sufficient capacity exists before copying snapshot data. |
 ### Snapshot Schedules
 
 ```bash
@@ -1684,9 +1760,11 @@ Schedule 'daily-backup' deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid path '/ifs/<path>': No such file or directory`** — Replace `<path>` with an actual existing path under /ifs and verify it exists with `isi ls /ifs/<path>`.
-    **`Error: Schedule 'daily-backup' is not found`** — Verify the schedule name exists by running `isi snapshot schedules list` and use the exact name from the output.
-    **`Error: Invalid interval format 'every day': Use 'every N {hour|day|week|month}'`** — Use proper interval syntax like `every 1 day` or `every 7 days` instead of `every day`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid path '/ifs/<path>': No such file or directory` | Replace `<path>` with an actual existing path under /ifs and verify it exists with `isi ls /ifs/<path>`. |
+    | `Error: Schedule 'daily-backup' is not found` | Verify the schedule name exists by running `isi snapshot schedules list` and use the exact name from the output. |
+    | `Error: Invalid interval format 'every day': Use 'every N {hour|day|week|month}'` | Use proper interval syntax like `every 1 day` or `every 7 days` instead of `every day`. |
 ### Snapshot Aliases
 
 ```bash
@@ -1707,8 +1785,10 @@ hourly-sync                   1111111111-mnop-5555
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid snapshot ID format`** — Verify the snapshot ID exists by running `isi snapshot list` and use the exact ID from the output.
-    **`Error: Alias '<alias_name>' already exists`** — Choose a unique alias name or delete the existing alias with `isi snapshot aliases delete <alias_name>` before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid snapshot ID format` | Verify the snapshot ID exists by running `isi snapshot list` and use the exact ID from the output. |
+    | `Error: Alias '<alias_name>' already exists` | Choose a unique alias name or delete the existing alias with `isi snapshot aliases delete <alias_name>` before recreating it. |
 ### Snapshot Common Issues
 
 | Issue | Check | Action |
@@ -1781,9 +1861,11 @@ rule-113  bandwidth  102400         weekdays 09:00-17:00
 ```
 
 !!! warning "Common errors"
-    **`Error: Policy '<policy_name>' not found`** — Verify the policy name with `isi sync policies list` and ensure it exists before running the command.
-    **`Error: Connection refused to target host <ip>:<port>`** — Confirm the target host IP is reachable and the OneFS sync service is running with `ping <ip>` and check firewall rules.
-    **`Error: Insufficient permissions to execute command`** — Run the command with appropriate admin credentials or ensure your user account has sync policy management privileges.
+    | Error | Fix |
+    |---|---|
+    | `Error: Policy '<policy_name>' not found` | Verify the policy name with `isi sync policies list` and ensure it exists before running the command. |
+    | `Error: Connection refused to target host <ip>:<port>` | Confirm the target host IP is reachable and the OneFS sync service is running with `ping <ip>` and check firewall rules. |
+    | `Error: Insufficient permissions to execute command` | Run the command with appropriate admin credentials or ensure your user account has sync policy management privileges. |
 ---
 
 ## Jobs (Background Tasks)
@@ -1834,9 +1916,11 @@ Destination: /ifs/data/migration
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS SDK or ISI CLI tools are installed and the PATH includes the installation directory.
-    **`Error: Invalid job ID 'job-9999': Job not found`** — Verify the job ID exists by running `isi job jobs list` first to confirm the correct ID.
-    **`Error: Permission denied`** — Run the command with appropriate admin credentials or use `sudo isi job status` if your user lacks job query permissions.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS SDK or ISI CLI tools are installed and the PATH includes the installation directory. |
+    | `Error: Invalid job ID 'job-9999': Job not found` | Verify the job ID exists by running `isi job jobs list` first to confirm the correct ID. |
+    | `Error: Permission denied` | Run the command with appropriate admin credentials or use `sudo isi job status` if your user lacks job query permissions. |
 ### Key Job Types
 
 | Job | Purpose |
@@ -1881,8 +1965,10 @@ Parallelism: 8
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the system PATH includes the isi binary location.
-    **`Error: Invalid job type '<type_name>'`** — Replace `<type_name>` with a valid job type name from the list output (e.g., `isi job types view dedupe`).
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the system PATH includes the isi binary location. |
+    | `Error: Invalid job type '<type_name>'` | Replace `<type_name>` with a valid job type name from the list output (e.g., `isi job types view dedupe`). |
 ### Start, Cancel, Pause, Resume
 
 ```bash
@@ -1905,8 +1991,10 @@ Job 1236 resumed successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Job <job_id> not found`** — Verify the job ID exists by running `isi job jobs list` and use the correct ID from the output.
-    **`Error: Job is already in <state> state`** — Check the current job state with `isi job jobs view <job_id>` before attempting pause/resume operations.
+    | Error | Fix |
+    |---|---|
+    | `Error: Job <job_id> not found` | Verify the job ID exists by running `isi job jobs list` and use the correct ID from the output. |
+    | `Error: Job is already in <state> state` | Check the current job state with `isi job jobs view <job_id>` before attempting pause/resume operations. |
 ### Job History
 
 ```bash
@@ -1935,7 +2023,9 @@ evt-004     2024-01-15 04:15:22   1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p     JOB_C
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid job ID format`** — Ensure the job ID matches the UUID format shown in the job history list output (e.g., `isi job events list --job-id 1a2b3c4d-5e6f-7g8h-
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid job ID format` | Ensure the job ID matches the UUID format shown in the job history list output (e.g., `isi job events list --job-id 1a2b3c4d-5e6f-7g8h- |
 ### Job Impact Policies
 
 ```bash
@@ -1970,9 +2060,11 @@ Current impact level set to: LOW
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the PATH includes the OneFS bin directory (typically `/usr/local/bin`).
-    **`Error: Job policy 'Dedupe' not found`** — Verify the exact policy name using `isi job policies list` and check for typos or case sensitivity.
-    **`Error: Access denied. Insufficient privileges to modify job policies`** — Run the command with appropriate administrative credentials or use `sudo` if configured for passwordless execution.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the PATH includes the OneFS bin directory (typically `/usr/local/bin`). |
+    | `Error: Job policy 'Dedupe' not found` | Verify the exact policy name using `isi job policies list` and check for typos or case sensitivity. |
+    | `Error: Access denied. Insufficient privileges to modify job policies` | Run the command with appropriate administrative credentials or use `sudo` if configured for passwordless execution. |
 ### Monitoring FlexProtect
 
 ```bash
@@ -2004,8 +2096,10 @@ Node 5: Protected
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run commands from the cluster management interface.
-    **`Error: Invalid credentials or insufficient privileges`** — Verify your SSH session is authenticated to the cluster and your user account has admin or read-only access permissions.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the `isi` binary is in your PATH, or run commands from the cluster management interface. |
+    | `Error: Invalid credentials or insufficient privileges` | Verify your SSH session is authenticated to the cluster and your user account has admin or read-only access permissions. |
 ---
 
 ## Performance & Statistics
@@ -2077,9 +2171,11 @@ close           167        0.78               99.99%
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the PATH includes `/usr/local/bin` or `/opt/isilon/bin`.
-    **`Error: Invalid protocol specified`** — Use only supported protocol names like `nfs3`, `nfs4`, `smb2`, or `hdfs` in the `--protocol` filter.
-    **`Error: Permission denied - insufficient privileges`** — Run the command as root or a user with cluster administrator role to access system statistics.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure the OneFS CLI tools are installed and the PATH includes `/usr/local/bin` or `/opt/isilon/bin`. |
+    | `Error: Invalid protocol specified` | Use only supported protocol names like `nfs3`, `nfs4`, `smb2`, or `hdfs` in the `--protocol` filter. |
+    | `Error: Permission denied - insufficient privileges` | Run the command as root or a user with cluster administrator role to access system statistics. |
 ### Node-Level Stats
 
 ```bash
@@ -2101,8 +2197,10 @@ Node ID    CPU Usage (%)  Memory Usage (%)  Network In (MB/s)  Network Out (MB/s
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid node ID <node_id>`** — Verify the node ID exists in your cluster by running `isi node list` first.
-    **`Error: Permission denied`** — Ensure your user account has appropriate read permissions; contact your cluster administrator or use `sudo isi statistics node list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid node ID <node_id>` | Verify the node ID exists in your cluster by running `isi node list` first. |
+    | `Error: Permission denied` | Ensure your user account has appropriate read permissions; contact your cluster administrator or use `sudo isi statistics node list`. |
 ### Drive & Disk Stats
 
 ```bash
@@ -2123,8 +2221,10 @@ Drive                          Status    Capacity      Used          Available  
 ```
 
 !!! warning "Common errors"
-    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster via SSH or the OneFS CLI is installed on your local system.
-    **`Error: Permission denied`** — Verify your user account has read permissions for cluster statistics; contact your cluster administrator if needed.
+    | Error | Fix |
+    |---|---|
+    | `isi: command not found` | Ensure you are logged into the PowerScale cluster via SSH or the OneFS CLI is installed on your local system. |
+    | `Error: Permission denied` | Verify your user account has read permissions for cluster statistics; contact your cluster administrator if needed. |
 ### Active Client Stats
 
 ```bash
@@ -2142,8 +2242,10 @@ node.clientstats.active.smb2: 23
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid statistics name 'node.clientstats.active.nfs'`** — Verify the correct stat name using `isi statistics list` and check your OneFS version supports this metric.
-    **`Error: Connection refused to 'localhost:8080'`** — Ensure the OneFS cluster is reachable and the management interface is running; try `isi status` to verify cluster health.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid statistics name 'node.clientstats.active.nfs'` | Verify the correct stat name using `isi statistics list` and check your OneFS version supports this metric. |
+    | `Error: Connection refused to 'localhost:8080'` | Ensure the OneFS cluster is reachable and the management interface is running; try `isi status` to verify cluster health. |
 ### Historical Performance
 
 ```bash
@@ -2165,9 +2267,11 @@ Id                                   Timestamp            Cluster Name         N
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to cluster`** — Verify network connectivity to the PowerScale cluster and confirm the management IP is reachable.
-    **`Error: Permission denied`** — Ensure your user account has appropriate read permissions for statistics history on the cluster.
-    **`Error: Statistics history not available`** — Confirm that statistics collection is enabled on the cluster via cluster settings.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to cluster` | Verify network connectivity to the PowerScale cluster and confirm the management IP is reachable. |
+    | `Error: Permission denied` | Ensure your user account has appropriate read permissions for statistics history on the cluster. |
+    | `Error: Statistics history not available` | Confirm that statistics collection is enabled on the cluster via cluster settings. |
 ### Performance Thresholds
 
 | Metric | Normal | Action if Exceeded |
@@ -2271,8 +2375,10 @@ Resolution notes: Cleared after capacity threshold adjustment
 ```
 
 !!! warning "Common errors"
-    **`Error: Event not found (EVT-2024-999999)`** — Verify the event ID exists by running `isi event events list` and copy the correct event ID.
-    **`Error: Permission denied`** — Ensure your user account has administrative privileges or event management permissions on the cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error: Event not found (EVT-2024-999999)` | Verify the event ID exists by running `isi event events list` and copy the correct event ID. |
+    | `Error: Permission denied` | Ensure your user account has administrative privileges or event management permissions on the cluster. |
 ### Alert Channels
 
 ```bash
@@ -2315,9 +2421,11 @@ Enabled: yes
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid email address format`** — Verify the email address syntax matches `user@domain.local` and does not contain spaces or special characters.
-    **`Error: SMTP server unreachable or authentication failed`** — Confirm the SMTP server is accessible from the cluster and test credentials are correct if required.
-    **`Error: Channel <channel_name> does not exist`** — Run `isi event channels list` to verify the exact channel name before attempting to modify it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid email address format` | Verify the email address syntax matches `user@domain.local` and does not contain spaces or special characters. |
+    | `Error: SMTP server unreachable or authentication failed` | Confirm the SMTP server is accessible from the cluster and test credentials are correct if required. |
+    | `Error: Channel <channel_name> does not exist` | Run `isi event channels list` to verify the exact channel name before attempting to modify it. |
 ### Alert Rules
 
 ```bash
@@ -2359,8 +2467,10 @@ Alert rule 'critical-to-email' created successfully.
 ```
 
 !!! warning "Common errors"
-    **`isi: error: channel 'email-ops' does not exist`** — Create the email channel first using `isi event channels create email-ops --email-address ops@company.com`.
-    **`isi: error: invalid severity level 'critical'`** — Use valid severity values: `info`, `warning`, `error`, or `critical` (verify exact spelling and case).
+    | Error | Fix |
+    |---|---|
+    | `isi: error: channel 'email-ops' does not exist` | Create the email channel first using `isi event channels create email-ops --email-address ops@company.com`. |
+    | `isi: error: invalid severity level 'critical'` | Use valid severity values: `info`, `warning`, `error`, or `critical` (verify exact spelling and case). |
 ### SNMP Configuration
 
 ```bash
@@ -2401,8 +2511,10 @@ SNMP Settings
 ```
 
 !!! warning "Common errors"
-    **`Error: SNMP access must be enabled before enabling SNMP V3`** — Run `isi snmp settings modify --snmp-access-enable yes` first.
-    **`Error: Invalid email format for system-contact`** — Use a valid email address or descriptive text without special characters in the contact field.
+    | Error | Fix |
+    |---|---|
+    | `Error: SNMP access must be enabled before enabling SNMP V3` | Run `isi snmp settings modify --snmp-access-enable yes` first. |
+    | `Error: Invalid email format for system-contact` | Use a valid email address or descriptive text without special characters in the contact field. |
 ---
 
 ## Firmware, Upgrades & Support
@@ -2469,9 +2581,11 @@ Config dump exported to: /ifs/data/Isilon_Cluster_Config_20240120_143215.tar.gz 
 ```
 
 !!! warning "Common errors"
-    **`Error: No upgrade image loaded. Use 'isi upgrade cluster --upload-image' first.`** — Upload the OneFS upgrade image using the `--upload-image` flag before attempting to start the upgrade.
-    **`Error: Cluster is not in a stable state. Run 'isi status' and resolve any alerts before upgrading.`** — Check cluster health with `isi status` and clear any critical alerts or failed jobs before proceeding.
-    **`Error: ESRS connectivity test failed: Connection timeout to 192.0.2.100:443`** — Verify firewall rules allow outbound HTTPS to the ESRS gateway and check network connectivity with `ping` or `traceroute`.
+    | Error | Fix |
+    |---|---|
+    | `Error: No upgrade image loaded. Use 'isi upgrade cluster --upload-image' first.` | Upload the OneFS upgrade image using the `--upload-image` flag before attempting to start the upgrade. |
+    | `Error: Cluster is not in a stable state. Run 'isi status' and resolve any alerts before upgrading.` | Check cluster health with `isi status` and clear any critical alerts or failed jobs before proceeding. |
+    | `Error: ESRS connectivity test failed: Connection timeout to 192.0.2.100:443` | Verify firewall rules allow outbound HTTPS to the ESRS gateway and check network connectivity with `ping` or `traceroute`. |
 ---
 
 ## Verify

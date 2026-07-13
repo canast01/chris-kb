@@ -81,8 +81,10 @@ Processing triggers for man-db (2.10.2-1) ...
 ```
 
 !!! warning "Common errors"
-    **`E: Unable to locate package powershell`** — Add the Microsoft PowerShell repository with `curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -` and `sudo add-apt-repository https://packages.microsoft.com/ubuntu/$(lsb_release -rs)/prod` before running apt install.
-    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the command with `sudo` or ensure your user has passwordless sudo configured.
+    | Error | Fix |
+    |---|---|
+    | `E: Unable to locate package powershell` | Add the Microsoft PowerShell repository with `curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -` and `sudo add-apt-repository https://packages.microsoft.com/ubuntu/$(lsb_release -rs)/prod` before running apt install. |
+    | `E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)` | Run the command with `sudo` or ensure your user has passwordless sudo configured. |
 **Linux (RHEL/Fedora/Rocky)**
 
 ```bash
@@ -124,8 +126,10 @@ Complete!
 ```
 
 !!! warning "Common errors"
-    **`No match for argument: powershell`** — Enable the PowerShell repository with `sudo dnf copr enable petersen/powershell` before installation.
-    **`Error: Failed to download metadata for repo 'updates'`** — Check your network connectivity and ensure your DNF cache is fresh with `sudo dnf clean all && sudo dnf makecache`.
+    | Error | Fix |
+    |---|---|
+    | `No match for argument: powershell` | Enable the PowerShell repository with `sudo dnf copr enable petersen/powershell` before installation. |
+    | `Error: Failed to download metadata for repo 'updates'` | Check your network connectivity and ensure your DNF cache is fresh with `sudo dnf clean all && sudo dnf makecache`. |
 **Verify**
 
 ```bash
@@ -141,8 +145,10 @@ https://aka.ms/powershell
 ```
 
 !!! warning "Common errors"
-    **`pwsh: command not found`** — Install PowerShell Core using your package manager (e.g., `apt install powershell` on Ubuntu or `brew install powershell` on macOS).
-    **`pwsh: No such file or directory`** — Verify PowerShell is in your PATH by running `which pwsh` and add the installation directory to PATH if needed.
+    | Error | Fix |
+    |---|---|
+    | `pwsh: command not found` | Install PowerShell Core using your package manager (e.g., `apt install powershell` on Ubuntu or `brew install powershell` on macOS). |
+    | `pwsh: No such file or directory` | Verify PowerShell is in your PATH by running `which pwsh` and add the installation directory to PATH if needed. |
 ---
 
 ## Install Required Modules

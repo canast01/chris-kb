@@ -68,9 +68,11 @@ zoneset name prod_zones active
 ```
 
 !!! warning "Common errors"
-    **`Error: bootflash: space is insufficient`** — Verify available bootflash space with `show disk` and delete old images using `delete bootflash:old_image.bin` before copying.
-    **`Error: MD5 checksum mismatch`** — Re-download the NX-OS image from the Cisco repository and verify the source file integrity before copying again.
-    **`Error: Pre-check failed: Incompatible supervisor module detected`** — Ensure both supervisor modules are running compatible firmware versions using `show module` and upgrade the standby supervisor first if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: bootflash: space is insufficient` | Verify available bootflash space with `show disk` and delete old images using `delete bootflash:old_image.bin` before copying. |
+    | `Error: MD5 checksum mismatch` | Re-download the NX-OS image from the Cisco repository and verify the source file integrity before copying again. |
+    | `Error: Pre-check failed: Incompatible supervisor module detected` | Ensure both supervisor modules are running compatible firmware versions using `show module` and upgrade the standby supervisor first if needed. |
 ```bash
 # Step 1 — Move all host and storage ports to other switches
 # Step 2 — Disable the ISL port-channels to isolate the switch from the fabric
@@ -100,8 +102,10 @@ mds9710-switch1#
 ```
 
 !!! warning "Common errors"
-    **`% Invalid command`** — Verify you are in the correct configuration mode; use `config t` before entering interface mode.
-    **`% Port-channel1 does not exist`** — Create the port-channel first with `interface port-channel 1` in global config, or confirm the correct port-channel number matches your ISL configuration.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid command` | Verify you are in the correct configuration mode; use `config t` before entering interface mode. |
+    | `% Port-channel1 does not exist` | Create the port-channel first with `interface port-channel 1` in global config, or confirm the correct port-channel number matches your ISL configuration. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

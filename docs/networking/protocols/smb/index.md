@@ -154,9 +154,11 @@ Mount point /mnt/smb created successfully.
 ```
 
 !!! warning "Common errors"
-    **`Test-NetConnection : No MSDN online help found for the cmdlet`** — Run `Update-Help` or use `Get-Help Test-NetConnection -Online` in a newer PowerShell version.
-    **`System error 5 has occurred. (Access is denied)`** — Verify credentials and ensure the user has share-level permissions; run `net use` with `/user:domain\username` explicitly.
-    **`mount error(13): Permission denied`** — Check that the mount point exists (`mkdir -p /mnt/smb`), credentials are correct, and the SMB server allows the protocol version specified in `-o vers=`.
+    | Error | Fix |
+    |---|---|
+    | `Test-NetConnection : No MSDN online help found for the cmdlet` | Run `Update-Help` or use `Get-Help Test-NetConnection -Online` in a newer PowerShell version. |
+    | `System error 5 has occurred. (Access is denied)` | Verify credentials and ensure the user has share-level permissions; run `net use` with `/user:domain\username` explicitly. |
+    | `mount error(13): Permission denied` | Check that the mount point exists (`mkdir -p /mnt/smb`), credentials are correct, and the SMB server allows the protocol version specified in `-o vers=`. |
 ## Troubleshooting
 
 | Symptom | Check | Action |

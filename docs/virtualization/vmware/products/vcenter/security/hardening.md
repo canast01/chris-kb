@@ -62,9 +62,11 @@ TLS reconfiguration completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`vmafd-cli: command not found`** — Verify vmafd service is running with `systemctl status vmware-vmafd` and check the correct binary path.
-    **`ERROR: Failed to update TLS version: Service dependency error`** — Restart all vCenter services with `/etc/init.d/vmware-vpxd restart` before retrying the TLS update.
-    **`ERROR: Certificate validation failed during reconfiguration`** — Regenerate the vCenter certificate using the Certificate Manager tool before applying TLS changes.
+    | Error | Fix |
+    |---|---|
+    | `vmafd-cli: command not found` | Verify vmafd service is running with `systemctl status vmware-vmafd` and check the correct binary path. |
+    | `ERROR: Failed to update TLS version: Service dependency error` | Restart all vCenter services with `/etc/init.d/vmware-vpxd restart` before retrying the TLS update. |
+    | `ERROR: Certificate validation failed during reconfiguration` | Regenerate the vCenter certificate using the Certificate Manager tool before applying TLS changes. |
 Test TLS from outside the appliance:
 ```bash
 # Verify only TLS 1.2+ is accepted
@@ -104,9 +106,11 @@ Protocol : TLSv1.2
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify vCenter is running and listening on port 443 with `netstat -tlnp | grep 443`.
-    **`error:1409442E:SSL routines:ssl3_read_bytes:tlsv1 alert protocol version`** — This is expected output indicating TLS 1.0 is correctly rejected; no action needed.
-    **`error:14094410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure`** — This is expected output indicating TLS 1.1 is correctly rejected; no action needed.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify vCenter is running and listening on port 443 with `netstat -tlnp | grep 443`. |
+    | `error:1409442E:SSL routines:ssl3_read_bytes:tlsv1 alert protocol version` | This is expected output indicating TLS 1.0 is correctly rejected; no action needed. |
+    | `error:14094410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure` | This is expected output indicating TLS 1.1 is correctly rejected; no action needed. |
 ---
 
 ## SSO Password and Lockout Policy
@@ -202,8 +206,10 @@ syslog                           true     false
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown option or malformed command line.`** — Verify the ruleset ID exists with `esxcli network firewall ruleset list` and check for typos in the ruleset name.
-    **`Error: The IP address format is invalid.`** — Use valid CIDR notation (e.g., `10.0.1.0/24`) or a single IP without a prefix (e.g., `10.0.1.50`).
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown option or malformed command line.` | Verify the ruleset ID exists with `esxcli network firewall ruleset list` and check for typos in the ruleset name. |
+    | `Error: The IP address format is invalid.` | Use valid CIDR notation (e.g., `10.0.1.0/24`) or a single IP without a prefix (e.g., `10.0.1.50`). |
 ---
 
 ## Audit Logging Configuration

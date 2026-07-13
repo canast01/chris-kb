@@ -71,8 +71,10 @@ curl -sk -X GET \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if using a valid certificate, or ensure your CA bundle is current with `update-ca-certificates`.
-    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API endpoint is accessible and the Bearer token is valid by testing with `curl -sk https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/insights -H "Authorization: Bearer <access_token>" | head -20`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Remove the `-k` flag if using a valid certificate, or ensure your CA bundle is current with `update-ca-certificates`. |
+    | `jq: parse error: Invalid JSON text at line 1` | Verify the API endpoint is accessible and the Bearer token is valid by testing with `curl -sk https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/insights -H "Authorization: Bearer <access_token>" | head -20`. |
 ## Common Insight Issues
 
 | Issue | Likely Cause | Fix |

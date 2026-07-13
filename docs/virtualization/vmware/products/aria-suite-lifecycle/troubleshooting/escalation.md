@@ -113,9 +113,11 @@ root@lcm-prod-01.corp.local:~# systemctl status vrlcm
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self-signed certificate`** — Add the `-k` flag to curl to skip certificate verification, or import the LCM certificate into your system's trusted store.
-    **`Connection refused`** — Verify the LCM service is running with `systemctl status vrlcm` and check that port 443 is listening with `netstat -tlnp | grep 443`.
-    **`curl: (7) Failed to connect to localhost port 443: Connection refused`** — Ensure you are SSH'd directly into the LCM appliance and that the vrlcm service has fully started (check logs with `journalctl -u vrlcm -n 50`).
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self-signed certificate` | Add the `-k` flag to curl to skip certificate verification, or import the LCM certificate into your system's trusted store. |
+    | `Connection refused` | Verify the LCM service is running with `systemctl status vrlcm` and check that port 443 is listening with `netstat -tlnp | grep 443`. |
+    | `curl: (7) Failed to connect to localhost port 443: Connection refused` | Ensure you are SSH'd directly into the LCM appliance and that the vrlcm service has fully started (check logs with `journalctl -u vrlcm -n 50`). |
 In the LCM UI:
 1. Click **Settings** → **About** — note the LCM version and build.
 2. Click **Lifecycle Operations** → **Environments** → open the affected environment.
@@ -178,8 +180,10 @@ lcm-support-bundle-20240115-143022.tar.gz     100%  487MB   8.2MB/s   00:59
 ```
 
 !!! warning "Common errors"
-    **`/usr/lib/vmware-vrlcm/bin/lcm-support.sh: No such file or directory`** — Verify the LCM appliance version and confirm the script path with `find / -name lcm-support.sh 2>/dev/null`.
-    **`scp: ambiguous target`** — Use the full bundle filename instead of the wildcard, or escape it properly: `scp root@<lcm-fqdn>:/tmp/lcm-support-bundle-*.tar.gz /tmp/` with quotes around the remote path.
+    | Error | Fix |
+    |---|---|
+    | `/usr/lib/vmware-vrlcm/bin/lcm-support.sh: No such file or directory` | Verify the LCM appliance version and confirm the script path with `find / -name lcm-support.sh 2>/dev/null`. |
+    | `scp: ambiguous target` | Use the full bundle filename instead of the wildcard, or escape it properly: `scp root@<lcm-fqdn>:/tmp/lcm-support-bundle-*.tar.gz /tmp/` with quotes around the remote path. |
 The bundle includes: LCM application logs, service logs, deployment history, Locker metadata (no passwords), system diagnostics, and recent request audit trail.
 
 ### 4. Collect issue-specific additional data
@@ -360,9 +364,11 @@ Swap:          4.0Gi       1.2Gi       2.8Gi
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the provided commands).
-    **`Failed to validate product bundle: Invalid checksum detected`** — Re-download the product bundle from the VMware repository and verify the SHA checksum matches the release notes.
-    **`Connection timeout to vIDM endpoint`** — Verify network connectivity to the vIDM FQDN, confirm the vIDM appliance is running, and check firewall rules allow HTTPS (port 443) from the LCM appliance.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the provided commands). |
+    | `Failed to validate product bundle: Invalid checksum detected` | Re-download the product bundle from the VMware repository and verify the SHA checksum matches the release notes. |
+    | `Connection timeout to vIDM endpoint` | Verify network connectivity to the vIDM FQDN, confirm the vIDM appliance is running, and check firewall rules allow HTTPS (port 443) from the LCM appliance. |
 ---
 
 ## Support SLA Reference

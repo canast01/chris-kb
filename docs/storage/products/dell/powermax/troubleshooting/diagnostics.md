@@ -211,9 +211,11 @@ FA-5C  12c       FC        16Gb   72.1         8765       5432
 ```
 
 !!! warning "Common errors"
-    **`symstat: Error: Invalid SID format or SID not found`** — Verify the SID is correct and the array is online by running `symcfg list -v`.
-    **`symstat: Error: Command not found`** — Ensure Symmetrix CLI tools are installed and the `$PATH` includes the Symm CLI bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`symstat: Error: Access denied — insufficient privileges`** — Run the commands with `sudo` or ensure your user is in the `symcli` group via `usermod -aG symcli $USER`.
+    | Error | Fix |
+    |---|---|
+    | `symstat: Error: Invalid SID format or SID not found` | Verify the SID is correct and the array is online by running `symcfg list -v`. |
+    | `symstat: Error: Command not found` | Ensure Symmetrix CLI tools are installed and the `$PATH` includes the Symm CLI bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `symstat: Error: Access denied — insufficient privileges` | Run the commands with `sudo` or ensure your user is in the `symcli` group via `usermod -aG symcli $USER`. |
 ### Key Metrics and Thresholds
 
 ![Key Metrics and Thresholds](../../../../../assets/storage-dell-powermax-troubleshooting-diagnostics-mermaid-svg.svg)
@@ -279,9 +281,11 @@ Cache Flush Rate:   1247 MB/s
 ```
 
 !!! warning "Common errors"
-    **`symstat: Error: Invalid SID <sid>`** — Replace `<sid>` with the actual Symmetrix ID (e.g., `000297900001`).
-    **`symstat: Error: Device <devname> not found in array`** — Verify the device name exists in the array using `symdev list -sid <sid>` and use the correct device identifier.
-    **`symstat: command not found`** — Ensure the EMC Solutions Enabler package is installed and the `$SYMCLI_PATH` environment variable is set correctly.
+    | Error | Fix |
+    |---|---|
+    | `symstat: Error: Invalid SID <sid>` | Replace `<sid>` with the actual Symmetrix ID (e.g., `000297900001`). |
+    | `symstat: Error: Device <devname> not found in array` | Verify the device name exists in the array using `symdev list -sid <sid>` and use the correct device identifier. |
+    | `symstat: command not found` | Ensure the EMC Solutions Enabler package is installed and the `$SYMCLI_PATH` environment variable is set correctly. |
 ### Identify Performance Issues
 
 ```bash
@@ -326,8 +330,10 @@ IG_PROD_WINDOWS_01                     SG_PROD_DB_01              dev_001-dev_05
 ```
 
 !!! warning "Common errors"
-    **`symstat: Error: Invalid Symmetrix ID <sid>`** — Replace `<sid>` with the actual array serial number (e.g., `000296802151`) or verify connectivity with `symcfg list -v`.
-    **`symaccess: Error: View <view_name> not found`** — Confirm the view name exists by running `symaccess list view -sid <sid>` to see all available views.
+    | Error | Fix |
+    |---|---|
+    | `symstat: Error: Invalid Symmetrix ID <sid>` | Replace `<sid>` with the actual array serial number (e.g., `000296802151`) or verify connectivity with `symcfg list -v`. |
+    | `symaccess: Error: View <view_name> not found` | Confirm the view name exists by running `symaccess list view -sid <sid>` to see all available views. |
 ### Unisphere for PowerMax Performance Dashboard
 
 Unisphere provides 7-day rolling performance history:
@@ -369,9 +375,11 @@ Collecting performance data for port...
 ```
 
 !!! warning "Common errors"
-    **`symstat: Error: Invalid SID <sid>`** — Replace `<sid>` with the actual PowerMax array SID (e.g., `000123456789`).
-    **`symstat: Error: User does not have permission to execute command`** — Run the script with appropriate credentials or use `sudo` if the user lacks symstat privileges.
-    **`tar: /tmp/powermax-*-perf-*.txt: No such file or directory`** — Verify that symstat commands completed successfully and output files exist in `/tmp/` before the tar command executes.
+    | Error | Fix |
+    |---|---|
+    | `symstat: Error: Invalid SID <sid>` | Replace `<sid>` with the actual PowerMax array SID (e.g., `000123456789`). |
+    | `symstat: Error: User does not have permission to execute command` | Run the script with appropriate credentials or use `sudo` if the user lacks symstat privileges. |
+    | `tar: /tmp/powermax-*-perf-*.txt: No such file or directory` | Verify that symstat commands completed successfully and output files exist in `/tmp/` before the tar command executes. |
 ## Before Calling Support
 
 Collect the following before opening a Dell Support case:

@@ -140,9 +140,11 @@ System Information
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in examples, but ensure it's not removed in production variants).
-    **`curl: (7) Failed to connect to <vxrail-manager-ip> port 443: Connection refused`** — Verify VxRail Manager service is running with `systemctl status vxrail-manager` and confirm the IP/hostname is correct.
-    **`curl: (28) Operation timeout. The timeout was reached`** — Increase curl timeout with `--connect-timeout 10 --max-time 30` and verify network connectivity and firewall rules allow HTTPS traffic.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present in examples, but ensure it's not removed in production variants). |
+    | `curl: (7) Failed to connect to <vxrail-manager-ip> port 443: Connection refused` | Verify VxRail Manager service is running with `systemctl status vxrail-manager` and confirm the IP/hostname is correct. |
+    | `curl: (28) Operation timeout. The timeout was reached` | Increase curl timeout with `--connect-timeout 10 --max-time 30` and verify network connectivity and firewall rules allow HTTPS traffic. |
 ---
 
 ## See also

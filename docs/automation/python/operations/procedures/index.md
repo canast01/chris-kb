@@ -417,9 +417,11 @@ user@workstation:~/project$
 ```
 
 !!! warning "Common errors"
-    **`Error: python3: command not found`** — Install Python 3 via your system package manager (apt install python3, brew install python3, etc.).
-    **`PermissionError: [Errno 13] Permission denied: '.venv/bin/activate'`** — Run `chmod +x .venv/bin/activate` to make the activation script executable.
-    **`ModuleNotFoundError: No module named 'pip'`** — Recreate the venv with `python3 -m venv --upgrade-deps .venv` to ensure pip is installed.
+    | Error | Fix |
+    |---|---|
+    | `Error: python3: command not found` | Install Python 3 via your system package manager (apt install python3, brew install python3, etc.). |
+    | `PermissionError: [Errno 13] Permission denied: '.venv/bin/activate'` | Run `chmod +x .venv/bin/activate` to make the activation script executable. |
+    | `ModuleNotFoundError: No module named 'pip'` | Recreate the venv with `python3 -m venv --upgrade-deps .venv` to ensure pip is installed. |
 | Practice | Reason |
 |---|---|
 | One venv per project | Prevents dependency conflicts between projects |
@@ -496,9 +498,11 @@ View at: https://pypi.org/project/mypackage/1.0.0/
 ```
 
 !!! warning "Common errors"
-    **`error: invalid value for 'classifiers': [line 5] 'License :: OSI Approved :: MIT License' is not a valid classifier`** — Verify all classifiers in pyproject.toml match the official PyPI classifier list at https://pypi.org/pypi?%3Aaction=list_classifiers.
-    **`HTTPError: 403 Forbidden`** — Confirm your PyPI API token is valid and has upload permissions; regenerate the token in your PyPI account settings if needed.
-    **`FileNotFoundError: [Errno 2] No such file or directory: 'dist/mypackage-1.0.0.tar.gz'`** — Run `python -m build` first to generate the distribution files in the dist/ directory.
+    | Error | Fix |
+    |---|---|
+    | `error: invalid value for 'classifiers': [line 5] 'License :: OSI Approved :: MIT License' is not a valid classifier` | Verify all classifiers in pyproject.toml match the official PyPI classifier list at https://pypi.org/pypi?%3Aaction=list_classifiers. |
+    | `HTTPError: 403 Forbidden` | Confirm your PyPI API token is valid and has upload permissions; regenerate the token in your PyPI account settings if needed. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: 'dist/mypackage-1.0.0.tar.gz'` | Run `python -m build` first to generate the distribution files in the dist/ directory. |
 | Step | Command |
 |---|---|
 | Build | `python -m build` |
@@ -584,9 +588,11 @@ Coverage HTML written to htmlcov/index.html
 ```
 
 !!! warning "Common errors"
-    **`ERROR: file not found: tests/test_utils.py`** — Verify the test file path matches your project structure and run from the repository root directory.
-    **`ModuleNotFoundError: No module named 'mymodule'`** — Install the package in development mode with `pip install -e .` or ensure the module is in PYTHONPATH.
-    **`FAILED tests/test_utils.py::test_add_numbers_positive - AssertionError: assert 3 == 4`** — Review the test assertion logic and verify the function implementation matches expected behavior.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: file not found: tests/test_utils.py` | Verify the test file path matches your project structure and run from the repository root directory. |
+    | `ModuleNotFoundError: No module named 'mymodule'` | Install the package in development mode with `pip install -e .` or ensure the module is in PYTHONPATH. |
+    | `FAILED tests/test_utils.py::test_add_numbers_positive - AssertionError: assert 3 == 4` | Review the test assertion logic and verify the function implementation matches expected behavior. |
 | Pytest feature | Usage |
 |---|---|
 | `-v` | Verbose output — show each test name and pass/fail |
@@ -628,8 +634,10 @@ DB_HOST=db.staging.example.com python3 my_script.py
 ```
 
 !!! warning "Common errors"
-    **`python3: command not found`** — Install Python 3 with your package manager (e.g., `apt install python3` on Ubuntu or `brew install python3` on macOS).
-    **`my_script.py: No such file or directory`** — Verify the script exists in the current working directory or provide the full path to the script.
+    | Error | Fix |
+    |---|---|
+    | `python3: command not found` | Install Python 3 with your package manager (e.g., `apt install python3` on Ubuntu or `brew install python3` on macOS). |
+    | `my_script.py: No such file or directory` | Verify the script exists in the current working directory or provide the full path to the script. |
 ```bash
 # Install python-dotenv for .env file support
 pip install python-dotenv

@@ -186,8 +186,10 @@ az network vnet update \
 ```
 
 !!! warning "Common errors"
-    **`The resource 'Microsoft.Network/virtualNetworks/myVNet' under resource group 'myRG' was not found.`** — Verify the VNet name and resource group name are correct using `az network vnet list --resource-group myRG`.
-    **`Address space 10.1.0.0/16 overlaps with existing address space 10.0.0.0/16.`** — Ensure the new address space does not overlap with existing subnets; use a non-overlapping CIDR block like 10.2.0.0/16.
+    | Error | Fix |
+    |---|---|
+    | `The resource 'Microsoft.Network/virtualNetworks/myVNet' under resource group 'myRG' was not found.` | Verify the VNet name and resource group name are correct using `az network vnet list --resource-group myRG`. |
+    | `Address space 10.1.0.0/16 overlaps with existing address space 10.0.0.0/16.` | Ensure the new address space does not overlap with existing subnets; use a non-overlapping CIDR block like 10.2.0.0/16. |
 ## VNet Peering
 
 VNet peering connects two VNets so that resources can communicate using private IPs. Peering is non-transitive by default and can be regional or global (cross-region).
@@ -252,8 +254,10 @@ vnetA-to-vnetB  myRG             Connected        Succeeded
 ```
 
 !!! warning "Common errors"
-    **`The remote virtual network with id '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/vnetB' does not exist.`** — Verify the subscription ID, resource group name, and VNet name in the remote-vnet resource ID are correct.
-    **`(BadRequest) Peering between virtual networks in different subscriptions is not supported for this operation.`** — Ensure both VNets are in the same subscription, or use cross-subscription peering with appropriate permissions.
+    | Error | Fix |
+    |---|---|
+    | `The remote virtual network with id '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/vnetB' does not exist.` | Verify the subscription ID, resource group name, and VNet name in the remote-vnet resource ID are correct. |
+    | `(BadRequest) Peering between virtual networks in different subscriptions is not supported for this operation.` | Ensure both VNets are in the same subscription, or use cross-subscription peering with appropriate permissions. |
 ## Peering Flags
 
 | Flag                         | Effect                                                  |
@@ -289,8 +293,10 @@ az network vnet show \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure you're authenticated to the correct subscription.
-    **`ResourceNotFound`** — Confirm the virtual network name exists in the specified resource group using `az network vnet list --resource-group myRG`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure you're authenticated to the correct subscription. |
+    | `ResourceNotFound` | Confirm the virtual network name exists in the specified resource group using `az network vnet list --resource-group myRG`. |
 ## Checking Available Address Space
 
 ```bash
@@ -320,8 +326,10 @@ subnet-3   10.0.3.0/24      Succeeded            Regular
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Network/virtualNetworks/myVNet' under resource group 'myRG' was not found.`** — Verify the VNet name and resource group name are correct with `az network vnet list --resource-group myRG`.
-    **`(InvalidParameter) The provided IP address '10.0.1.100' is not valid for CIDR notation validation.`** — Ensure the IP address is in valid dotted-decimal format (e.g., 10.0.1.100, not 10.0.1.100/32).
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Network/virtualNetworks/myVNet' under resource group 'myRG' was not found.` | Verify the VNet name and resource group name are correct with `az network vnet list --resource-group myRG`. |
+    | `(InvalidParameter) The provided IP address '10.0.1.100' is not valid for CIDR notation validation.` | Ensure the IP address is in valid dotted-decimal format (e.g., 10.0.1.100, not 10.0.1.100/32). |
 ## Tagging and Governance
 
 ```bash
@@ -345,5 +353,7 @@ Request successful. Deleting virtual network 'myVNet'...
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) The Resource 'Microsoft.Network/virtualNetworks/myVNet' under resource group 'myRG' was not found.`** — Verify the VNet name and resource group name are correct with `az network vnet list --resource-group myRG`.
-    **`(AuthorizationFailed) The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Network/virtualNetworks/delete' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/myVNet'.`** — Request the Network Contributor or Owner role for the resource group from your subscription administrator.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) The Resource 'Microsoft.Network/virtualNetworks/myVNet' under resource group 'myRG' was not found.` | Verify the VNet name and resource group name are correct with `az network vnet list --resource-group myRG`. |
+    | `(AuthorizationFailed) The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Network/virtualNetworks/delete' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/myVNet'.` | Request the Network Contributor or Owner role for the resource group from your subscription administrator. |

@@ -70,9 +70,11 @@ ollama version is 0.1.32
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Update your CA certificates with `update-ca-certificates` or disable SSL verification temporarily with `curl -k`.
-    **`sudo: systemctl: command not found`** — Ensure you're running the commands with `sudo` (e.g., `sudo systemctl status ollama`) or as root, since systemd operations require elevated privileges.
-    **`useradd: user 'ollama' already exists`** — The ollama user already exists from a previous installation; proceed with the rest of the installation or remove it first with `userdel ollama`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: unable to get local issuer certificate` | Update your CA certificates with `update-ca-certificates` or disable SSL verification temporarily with `curl -k`. |
+    | `sudo: systemctl: command not found` | Ensure you're running the commands with `sudo` (e.g., `sudo systemctl status ollama`) or as root, since systemd operations require elevated privileges. |
+    | `useradd: user 'ollama' already exists` | The ollama user already exists from a previous installation; proceed with the rest of the installation or remove it first with `userdel ollama`. |
 ## macOS Installation
 
 ```bash
@@ -101,8 +103,10 @@ Successfully started `ollama` (label: homebrew.mxcl.ollama).
 ```
 
 !!! warning "Common errors"
-    **`Error: ollama: No such file or directory`** — Run `brew install ollama` first before attempting to start the service.
-    **`Error: homebrew.mxcl.ollama: already loaded`** — Run `brew services stop ollama` before restarting, or use `brew services restart ollama` instead.
+    | Error | Fix |
+    |---|---|
+    | `Error: ollama: No such file or directory` | Run `brew install ollama` first before attempting to start the service. |
+    | `Error: homebrew.mxcl.ollama: already loaded` | Run `brew services stop ollama` before restarting, or use `brew services restart ollama` instead. |
 ## Windows Installation
 
 Download the installer from [ollama.com](https://ollama.com). Ollama installs as a Windows service. Models are stored in `C:\Users\<user>\.ollama\models`.
@@ -134,8 +138,10 @@ systemctl restart ollama
 ```
 
 !!! warning "Common errors"
-    **`Failed to restart ollama.service: Unit ollama.service not found.`** — Install ollama first with the package manager or ensure the ollama systemd unit exists before creating overrides.
-    **`Permission denied`** — Run the entire block with `sudo` since `/etc/systemd/system/` requires root access.
+    | Error | Fix |
+    |---|---|
+    | `Failed to restart ollama.service: Unit ollama.service not found.` | Install ollama first with the package manager or ensure the ollama systemd unit exists before creating overrides. |
+    | `Permission denied` | Run the entire block with `sudo` since `/etc/systemd/system/` requires root access. |
 ## Docker Setup
 
 ```bash
@@ -177,9 +183,11 @@ a1f2b3c4d5e6f7g8h9i0j1k2l3m4n5o6
 ```
 
 !!! warning "Common errors"
-    **`Error response from daemon: driver failed programming external connectivity on endpoint ollama: Bind for 0.0.0.0:11434 failed: port is already allocated`** — Stop the existing container with `docker stop ollama && docker rm ollama`, or use a different port with `-p 11435:11434`.
-    **`docker: Error response from daemon: could not select device driver "" with capabilities: [[gpu]]`** — Install NVIDIA Docker runtime with `distribution=$(. /etc/os-release;echo $ID$VERSION_ID)` and follow nvidia-docker setup, or remove `--gpus all` for CPU-only mode.
-    **`curl: (7) Failed to connect to localhost port 11434: Connection refused`** — Wait 2-3 seconds for the container to fully start, then retry `curl http://localhost:11434/api/tags`.
+    | Error | Fix |
+    |---|---|
+    | `Error response from daemon: driver failed programming external connectivity on endpoint ollama: Bind for 0.0.0.0:11434 failed: port is already allocated` | Stop the existing container with `docker stop ollama && docker rm ollama`, or use a different port with `-p 11435:11434`. |
+    | `docker: Error response from daemon: could not select device driver "" with capabilities: [[gpu]]` | Install NVIDIA Docker runtime with `distribution=$(. /etc/os-release;echo $ID$VERSION_ID)` and follow nvidia-docker setup, or remove `--gpus all` for CPU-only mode. |
+    | `curl: (7) Failed to connect to localhost port 11434: Connection refused` | Wait 2-3 seconds for the container to fully start, then retry `curl http://localhost:11434/api/tags`. |
 ## Key Environment Variables
 
 | Variable | Default | Description |
@@ -243,9 +251,11 @@ ollama
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to ollama.com port 443: Connection refused`** — Verify network connectivity and check if ollama.com is accessible; try again after confirming DNS resolution with `nslookup ollama.com`.
-    **`Error: Homebrew must be run under Ruby 2.3.0! You're running 2.0.0.`** — Update Homebrew with `brew update` or reinstall it following the official Homebrew installation guide.
-    **`Error response from daemon: No such container: ollama`** — The container doesn't exist or has already been removed; skip the `docker stop` command and proceed directly with `docker run` to create a fresh container.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to ollama.com port 443: Connection refused` | Verify network connectivity and check if ollama.com is accessible; try again after confirming DNS resolution with `nslookup ollama.com`. |
+    | `Error: Homebrew must be run under Ruby 2.3.0! You're running 2.0.0.` | Update Homebrew with `brew update` or reinstall it following the official Homebrew installation guide. |
+    | `Error response from daemon: No such container: ollama` | The container doesn't exist or has already been removed; skip the `docker stop` command and proceed directly with `docker run` to create a fresh container. |
 ## Storage Planning
 
 Models can be large. Ensure the model storage directory has sufficient space:
@@ -275,5 +285,7 @@ Deleted model 'llama2:7b'
 ```
 
 !!! warning "Common errors"
-    **`Error: model 'llama2:7b' not found`** — Verify the exact model name and tag with `ollama list` before attempting removal.
-    **`Error: permission denied`** — Ensure the user running the command has read/write permissions to `~/.ollama/models/` directory.
+    | Error | Fix |
+    |---|---|
+    | `Error: model 'llama2:7b' not found` | Verify the exact model name and tag with `ollama list` before attempting removal. |
+    | `Error: permission denied` | Ensure the user running the command has read/write permissions to `~/.ollama/models/` directory. |

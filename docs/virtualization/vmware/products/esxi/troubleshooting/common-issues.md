@@ -37,8 +37,10 @@ Fri Nov 15 14:32:47 UTC 2024
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the host. The host may not be running, or the login credentials may not be correct.`** — Verify SSH access to the ESXi host and ensure your credentials are correct with `ssh root@<esxi-host>`.
-    **`Unknown command or namespace ntp under system.`** — Confirm you are running ESXi 5.0 or later; older versions may use different NTP configuration commands.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the host. The host may not be running, or the login credentials may not be correct.` | Verify SSH access to the ESXi host and ensure your credentials are correct with `ssh root@<esxi-host>`. |
+    | `Unknown command or namespace ntp under system.` | Confirm you are running ESXi 5.0 or later; older versions may use different NTP configuration commands. |
 3. **Check for certificate mismatch** — if the host was recently reinstalled or had its cert replaced, vCenter may not trust the new cert. Reconnect via vCenter: **Right-click host → Reconnect**
 
 4. **Check management network connectivity** — confirm vmk0 IP is reachable from vCenter:
@@ -67,8 +69,10 @@ vmk2  172.16.50.8      255.255.255.0     172.16.50.1       -             -      
 ```
 
 !!! warning "Common errors"
-    **`PING: sendto: No route to host`** — Verify vmk0 IP is configured and the management network is properly connected; check `esxcli network ip interface ipv4 get` to confirm the interface has an IP address.
-    **`Unknown command or namespace`** — Ensure you are running this command directly on the ESXi host via SSH or DCUI console, not from vCenter; the esxcli command is not available remotely without configuring vSphere CLI.
+    | Error | Fix |
+    |---|---|
+    | `PING: sendto: No route to host` | Verify vmk0 IP is configured and the management network is properly connected; check `esxcli network ip interface ipv4 get` to confirm the interface has an IP address. |
+    | `Unknown command or namespace` | Ensure you are running this command directly on the ESXi host via SSH or DCUI console, not from vCenter; the esxcli command is not available remotely without configuring vSphere CLI. |
 5. **Full services restart** (higher risk — verify no active vMotion or provisioning):
 
 ```bash
@@ -90,9 +94,11 @@ ESXi services restart completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`services.sh: command not found`** — Run the command from the correct directory (`/sbin/services.sh restart`) or ensure `/sbin` is in your PATH.
-    **`Permission denied`** — Execute the command as root or with sudo (`sudo /sbin/services.sh restart`).
-    **`Error: Failed to restart hostd service`** — Check for resource constraints or corrupted service configuration; try restarting individual services with `/sbin/services.sh restart hostd` to isolate the issue.
+    | Error | Fix |
+    |---|---|
+    | `services.sh: command not found` | Run the command from the correct directory (`/sbin/services.sh restart`) or ensure `/sbin` is in your PATH. |
+    | `Permission denied` | Execute the command as root or with sudo (`sudo /sbin/services.sh restart`). |
+    | `Error: Failed to restart hostd service` | Check for resource constraints or corrupted service configuration; try restarting individual services with `/sbin/services.sh restart hostd` to isolate the issue. |
 ---
 
 ```d2
@@ -205,8 +211,10 @@ State: dead
 ```
 
 !!! warning "Common errors"
-    **`grep: /var/log/vmkernel.log: No such file or directory`** — Verify the ESXi host is accessible via SSH and check the correct log path with `ls -la /var/log/vmk*`.
-    **`esxcli: command not found`** — Ensure you are running commands directly on the ESXi host (not a vCenter server) and that the esxcli binary is in your PATH.
+    | Error | Fix |
+    |---|---|
+    | `grep: /var/log/vmkernel.log: No such file or directory` | Verify the ESXi host is accessible via SSH and check the correct log path with `ls -la /var/log/vmk*`. |
+    | `esxcli: command not found` | Ensure you are running commands directly on the ESXi host (not a vCenter server) and that the esxcli binary is in your PATH. |
 | State | Meaning | Action |
 |---|---|---|
 | APD (All Paths Down) | Temporary — paths expected to return | Wait; ESXi will recover automatically when paths return |
@@ -249,9 +257,11 @@ Rescan of adapter vmhba2 started.
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace storage san fc list`** — Verify you are running this command on ESXi 5.5+ and that the FC HBA driver is installed and loaded.
-    **`Error: Could not get path information`** — Ensure storage paths are properly zoned in the SAN fabric and the HBA firmware is up to date.
-    **`Rescan of adapter vmhbaX started but timed out after 60 seconds`** — Check for SAN connectivity issues and verify the storage array is responding to SCSI commands.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace storage san fc list` | Verify you are running this command on ESXi 5.5+ and that the FC HBA driver is installed and loaded. |
+    | `Error: Could not get path information` | Ensure storage paths are properly zoned in the SAN fabric and the HBA firmware is up to date. |
+    | `Rescan of adapter vmhbaX started but timed out after 60 seconds` | Check for SAN connectivity issues and verify the storage array is responding to SCSI commands. |
 Investigate the root cause: SAN fabric zoning, HBA driver, storage array port failure, or cable issue.
 
 ### Resolution — PDL
@@ -286,9 +296,11 @@ GID  NAME                                   NWCPU %USED  %RDY %CSTP %WAIT %OVRLP
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Verify you are connected to an ESXi host via SSH or console; esxtop is not available on vCenter servers.
-    **`ESXTOP: Unable to open /proc/uptime`** — Restart the hostd service with `services.sh restart` or reboot the ESXi host if the monitoring subsystem is corrupted.
-    **`Error: Cannot connect to performance statistics collector`** — Wait 2-3 minutes after ESXi boot for the performance database to initialize, or check that vpxa/hostd services are running with `service-control --status`.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Verify you are connected to an ESXi host via SSH or console; esxtop is not available on vCenter servers. |
+    | `ESXTOP: Unable to open /proc/uptime` | Restart the hostd service with `services.sh restart` or reboot the ESXi host if the monitoring subsystem is corrupted. |
+    | `Error: Cannot connect to performance statistics collector` | Wait 2-3 minutes after ESXi boot for the performance database to initialize, or check that vpxa/hostd services are running with `service-control --status`. |
 | Column | Normal | Investigate |
 |---|---|---|
 | `%RDY` per vCPU | < 5% | > 10% |
@@ -342,9 +354,11 @@ GID NAME NWLD %LCPU %CSTP %MEMP SWR/s SWW/s MCTLSZ SWCUR SWTGT
 ```
 
 !!! warning "Common errors"
-    **`esxtop: command not found`** — Ensure you are logged into an ESXi host directly via SSH; esxtop is not available on vCenter or Windows systems.
-    **`Error: Unable to initialize display`** — Verify SSH session has proper terminal settings by reconnecting with `ssh -t root@<esxi-host>` to allocate a pseudo-terminal.
-    **`Memory view not displaying after pressing 'm'`** — Press Shift+M (capital M) instead, as esxtop is case-sensitive for view selection.
+    | Error | Fix |
+    |---|---|
+    | `esxtop: command not found` | Ensure you are logged into an ESXi host directly via SSH; esxtop is not available on vCenter or Windows systems. |
+    | `Error: Unable to initialize display` | Verify SSH session has proper terminal settings by reconnecting with `ssh -t root@<esxi-host>` to allocate a pseudo-terminal. |
+    | `Memory view not displaying after pressing 'm'` | Press Shift+M (capital M) instead, as esxtop is case-sensitive for view selection. |
 ### Memory Reclamation Hierarchy
 
 ESXi uses memory reclamation in this order (least impactful to most impactful):
@@ -383,8 +397,10 @@ MemOverhead:              1024 MB
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the local system`** — Ensure you are running this command directly on the ESXi host via SSH or local console, not from vCenter.
-    **`Unknown command or namespace`** — Verify the esxcli command is available by running `esxcli system` first; if unavailable, restart the hostd service with `services.sh restart`.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the local system` | Ensure you are running this command directly on the ESXi host via SSH or local console, not from vCenter. |
+    | `Unknown command or namespace` | Verify the esxcli command is available by running `esxcli system` first; if unavailable, restart the hostd service with `services.sh restart`. |
 Options:
 - Migrate VMs off the host with DRS
 - Add memory to host (requires maintenance mode)
@@ -431,8 +447,10 @@ drwxr-xr-x    5 root     root          4.0K Nov 15 09:47 ..
 ```
 
 !!! warning "Common errors"
-    **`ls: cannot access '/vmfs/volumes/<scratch-datastore>/vmkdump/': No such file or directory`** — Replace `<scratch-datastore>` with the actual datastore name (e.g., `datastore1`) or verify the scratch partition is configured via `esxcli system coredump partition list`.
-    **`find: '/vmfs/volumes/': Permission denied`** — Run the command with `sudo` or as root user to access VMFS volumes.
+    | Error | Fix |
+    |---|---|
+    | `ls: cannot access '/vmfs/volumes/<scratch-datastore>/vmkdump/': No such file or directory` | Replace `<scratch-datastore>` with the actual datastore name (e.g., `datastore1`) or verify the scratch partition is configured via `esxcli system coredump partition list`. |
+    | `find: '/vmfs/volumes/': Permission denied` | Run the command with `sudo` or as root user to access VMFS volumes. |
 4. Generate a support bundle before further investigation:
 
 ```bash
@@ -453,9 +471,11 @@ Completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Cannot write to /tmp/ - Permission denied`** — Run the command with root privileges using `sudo` or ensure the `/tmp/` directory has write permissions for the current user.
-    **`Error: Insufficient disk space on /tmp/ - need 1.2 GB, have 256 MB available`** — Specify an alternate destination with more free space, such as a mounted datastore: `vm-support -w /vmfs/volumes/datastore1/`.
-    **`Error: vm-support: command not found`** — Verify you are running this command on an ESXi host directly (via SSH or DCUI console), not on a vCenter Server or external machine.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cannot write to /tmp/ - Permission denied` | Run the command with root privileges using `sudo` or ensure the `/tmp/` directory has write permissions for the current user. |
+    | `Error: Insufficient disk space on /tmp/ - need 1.2 GB, have 256 MB available` | Specify an alternate destination with more free space, such as a mounted datastore: `vm-support -w /vmfs/volumes/datastore1/`. |
+    | `Error: vm-support: command not found` | Verify you are running this command on an ESXi host directly (via SSH or DCUI console), not on a vCenter Server or external machine. |
 5. Open a P1 case with Broadcom Support, providing:
    - PSOD screenshot (exact panic string, offset, and module)
    - vmkernel core dump file
@@ -515,8 +535,10 @@ Volume mounted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not find a matching volume for UUID <volume-uuid>`** — Verify the UUID is correct by running `esxcli storage filesystem list` and copy the exact UUID from the output.
-    **`Error: Volume is already mounted at /vmfs/volumes/<datastore-name>`** — The volume is already mounted; use `esxcli storage filesystem unmount -v <volume-uuid>` first if you need to remount it.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not find a matching volume for UUID <volume-uuid>` | Verify the UUID is correct by running `esxcli storage filesystem list` and copy the exact UUID from the output. |
+    | `Error: Volume is already mounted at /vmfs/volumes/<datastore-name>` | The volume is already mounted; use `esxcli storage filesystem unmount -v <volume-uuid>` first if you need to remount it. |
 ### Recover from Snapshot Consolidation Failure
 
 ```bash
@@ -558,9 +580,11 @@ Consolidation task completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Snapshot removal failed: The task was cancelled.`** — Ensure the VM is not actively writing to snapshots and retry after stopping any backup jobs.
-    **`find: '/vmfs/volumes/datastore1': No such file or directory`** — Verify the datastore name with `ls /vmfs/volumes/` and correct the path in the find command.
-    **`Invoke-VMConsolidation : The object 'vm-prod-01' could not be found.`** — Confirm the exact VM name with `Get-VM` and ensure you have vSphere PowerCLI module loaded with `Import-Module VMware.PowerCLI`.
+    | Error | Fix |
+    |---|---|
+    | `Snapshot removal failed: The task was cancelled.` | Ensure the VM is not actively writing to snapshots and retry after stopping any backup jobs. |
+    | `find: '/vmfs/volumes/datastore1': No such file or directory` | Verify the datastore name with `ls /vmfs/volumes/` and correct the path in the find command. |
+    | `Invoke-VMConsolidation : The object 'vm-prod-01' could not be found.` | Confirm the exact VM name with `Get-VM` and ensure you have vSphere PowerCLI module loaded with `Import-Module VMware.PowerCLI`. |
 ---
 
 ## NTP Drift Causing Authentication Failures
@@ -599,8 +623,10 @@ Fri Nov 15 14:23:47 UTC 2024
 ```
 
 !!! warning "Common errors"
-    **`ntpq: read: Connection refused`** — Restart the NTP service with `esxcli system ntp set --enabled=true && /etc/init.d/ntpd restart`.
-    **`offset column shows > 500ms drift (e.g., offset 1234.567)`** — Check network connectivity to NTP servers and increase `poll` interval; if persistent, manually sync with `ntpdate -s <ntp-server>` then restart ntpd.
+    | Error | Fix |
+    |---|---|
+    | `ntpq: read: Connection refused` | Restart the NTP service with `esxcli system ntp set --enabled=true && /etc/init.d/ntpd restart`. |
+    | `offset column shows > 500ms drift (e.g., offset 1234.567)` | Check network connectivity to NTP servers and increase `poll` interval; if persistent, manually sync with `ntpdate -s <ntp-server>` then restart ntpd. |
 ### Fix NTP Configuration
 
 ```bash
@@ -631,9 +657,11 @@ NTP daemon started
 ```
 
 !!! warning "Common errors"
-    **`ntpdate[2048]: no servers can be used, exiting`** — Verify NTP server hostnames resolve correctly with `nslookup ntp1.example.local` and confirm network connectivity to the NTP servers.
-    **`command not found: ntpq`** — Install the NTP client tools package using `esxcli software vib install -n ntpclient` or use `esxcli system ntp status` as an alternative verification method.
-    **`ntpd: unrecognized service`** — Use the correct ESXi service restart command: `esxcli system service restart --service-name=ntpd` instead of `/etc/init.d/ntpd restart`.
+    | Error | Fix |
+    |---|---|
+    | `ntpdate[2048]: no servers can be used, exiting` | Verify NTP server hostnames resolve correctly with `nslookup ntp1.example.local` and confirm network connectivity to the NTP servers. |
+    | `command not found: ntpq` | Install the NTP client tools package using `esxcli software vib install -n ntpclient` or use `esxcli system ntp status` as an alternative verification method. |
+    | `ntpd: unrecognized service` | Use the correct ESXi service restart command: `esxcli system service restart --service-name=ntpd` instead of `/etc/init.d/ntpd restart`. |
 If the ESXi host is a VM guest (rare in production), disable host-time synchronisation in the VM settings and use NTP independently.
 
 ---

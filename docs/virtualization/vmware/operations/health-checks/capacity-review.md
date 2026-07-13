@@ -65,8 +65,10 @@ Dedup and compression savings: 1.87 TB
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to connect to the vSAN cluster`** — Verify the ESXi host is part of an active vSAN cluster and network connectivity to cluster members is available.
-    **`Error: vSAN service is not running`** — Enable vSAN on the cluster or restart the vSAN service with `systemctl restart vsanvpd` on the affected host.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to connect to the vSAN cluster` | Verify the ESXi host is part of an active vSAN cluster and network connectivity to cluster members is available. |
+    | `Error: vSAN service is not running` | Enable vSAN on the cluster or restart the vSAN service with `systemctl restart vsanvpd` on the affected host. |
 vSAN capacity thresholds:
 - > 60% used: plan capacity expansion
 - > 70% used: critical — rebuild operations may fail if a disk fails

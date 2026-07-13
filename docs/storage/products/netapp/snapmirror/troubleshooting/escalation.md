@@ -108,8 +108,10 @@ Cluster UUID: 9z8y7x6w-5v4u-3t2s-1r0q-9p8o7n6m5l4k
 Cluster Name: cluster2-dr
 
 !!! warning "Common errors"
-    **`Error: command failed: permission denied`** — Verify you have cluster admin credentials and are logged in with `security login show`.
-    **`Error: This command is not supported on this release of Data ONTAP`** — Confirm both clusters are running ONTAP 9.6 or later, as SnapMirror requires minimum version compatibility.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: permission denied` | Verify you have cluster admin credentials and are logged in with `security login show`. |
+    | `Error: This command is not supported on this release of Data ONTAP` | Confirm both clusters are running ONTAP 9.6 or later, as SnapMirror requires minimum version compatibility. |
 ### 2. Invoke AutoSupport on both clusters
 
 ```bash
@@ -157,9 +159,11 @@ Index  Timestamp                   Subject                          Status
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: system node autosupport`** — Ensure you are connected to the NetApp cluster CLI (not the host shell); use `ssh admin@<cluster-mgmt-ip>` to access the ONTAP CLI.
-    **`cluster1::> Error: "sent-failed" status in autosupport history show`** — Verify network connectivity to NetApp support servers with `network ping -destination support.netapp.com` and check firewall rules allowing HTTPS outbound on port 443.
-    **`Error: This operation is not permitted: Insufficient privileges`** — Confirm your user account has admin or autosupport privileges; contact your cluster administrator to grant the required role.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: system node autosupport` | Ensure you are connected to the NetApp cluster CLI (not the host shell); use `ssh admin@<cluster-mgmt-ip>` to access the ONTAP CLI. |
+    | `cluster1::> Error: "sent-failed" status in autosupport history show` | Verify network connectivity to NetApp support servers with `network ping -destination support.netapp.com` and check firewall rules allowing HTTPS outbound on port 443. |
+    | `Error: This operation is not permitted: Insufficient privileges` | Confirm your user account has admin or autosupport privileges; contact your cluster administrator to grant the required role. |
 ### 3. Capture the SnapMirror relationship state
 
 ```bash
@@ -201,8 +205,10 @@ svm1:vol_prod svm2:vol_prod Transferring
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: More than one match found for destination-path <svm>:<volume>`** — Specify the full source and destination paths in the format `snapmirror show-history -destination-path svm:volume` or use `-source-path` to disambiguate.
-    **`Error: There is no data to display`** — The relationship does not exist or has not completed initialization; verify the relationship exists with `snapmirror show` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: More than one match found for destination-path <svm>:<volume>` | Specify the full source and destination paths in the format `snapmirror show-history -destination-path svm:volume` or use `-source-path` to disambiguate. |
+    | `Error: There is no data to display` | The relationship does not exist or has not completed initialization; verify the relationship exists with `snapmirror show` first. |
 ### 4. Capture EMS events related to SnapMirror
 
 ```bash
@@ -249,9 +255,11 @@ Time                Node             Severity      Event
 ```
 
 !!! warning "Common errors"
-    **`Error: unexpected operator "-message-name"`** — Verify ONTAP version supports event log filtering syntax; use `event log show | grep snapmirror` as fallback on older releases.
-    **`Error: time-range "24h" is not valid`** — Replace with valid time range format such as `-time-range 24h` or use `-start-time "01/14/2025 00:00:00"` depending on ONTAP version.
-    **`No events found`** — Confirm SnapMirror relationships exist with `snapmirror show` and verify the time range overlaps with actual activity; check both source and destination cluster logs.
+    | Error | Fix |
+    |---|---|
+    | `Error: unexpected operator "-message-name"` | Verify ONTAP version supports event log filtering syntax; use `event log show | grep snapmirror` as fallback on older releases. |
+    | `Error: time-range "24h" is not valid` | Replace with valid time range format such as `-time-range 24h` or use `-start-time "01/14/2025 00:00:00"` depending on ONTAP version. |
+    | `No events found` | Confirm SnapMirror relationships exist with `snapmirror show` and verify the time range overlaps with actual activity; check both source and destination cluster logs. |
 ### 5. Check intercluster network and Mediator state
 
 ```bash
@@ -302,9 +310,11 @@ Quorum Status: true
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Intercluster LIFs are not configured.`** — Create intercluster LIFs on both clusters using `network interface create -vserver <cluster> -lif <name> -role intercluster -home-node <node> -home-port <port> -address <ip> -netmask <mask>`.
-    **`Error: cluster peer ping failed: no route to host`** — Verify network connectivity between clusters and confirm firewall rules allow ICMP and port 11104 (TCP/UDP) for intercluster communication.
-    **`Error: Mediator status is 'unreachable'`** — Check mediator IP address configuration with `snapmirror mediator show` and verify network connectivity from both clusters to the mediator IP address.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Intercluster LIFs are not configured.` | Create intercluster LIFs on both clusters using `network interface create -vserver <cluster> -lif <name> -role intercluster -home-node <node> -home-port <port> -address <ip> -netmask <mask>`. |
+    | `Error: cluster peer ping failed: no route to host` | Verify network connectivity between clusters and confirm firewall rules allow ICMP and port 11104 (TCP/UDP) for intercluster communication. |
+    | `Error: Mediator status is 'unreachable'` | Check mediator IP address configuration with `snapmirror mediator show` and verify network connectivity from both clusters to the mediator IP address. |
 ### 6. Write the timeline
 
 ```text title="Timeline template"
@@ -430,9 +440,11 @@ Mediator Address          Mediator Status   Quorum Status
 ```
 
 !!! warning "Common errors"
-    **`snapmirror show: command not found`** — Ensure you are running commands on the destination ONTAP cluster, not a Linux host; SSH into the cluster management IP first.
-    **`Error: entry doesn't have a value for this field "lag-time"`** — Remove the `lag-time` field for asynchronous SnapMirror relationships that don't report lag; use `snapmirror show -fields state,status,healthy` instead.
-    **`cluster peer show: command not found`** — Verify cluster peer relationships exist before troubleshooting; run `cluster peer show` only if at least one peer cluster is configured.
+    | Error | Fix |
+    |---|---|
+    | `snapmirror show: command not found` | Ensure you are running commands on the destination ONTAP cluster, not a Linux host; SSH into the cluster management IP first. |
+    | `Error: entry doesn't have a value for this field "lag-time"` | Remove the `lag-time` field for asynchronous SnapMirror relationships that don't report lag; use `snapmirror show -fields state,status,healthy` instead. |
+    | `cluster peer show: command not found` | Verify cluster peer relationships exist before troubleshooting; run `cluster peer show` only if at least one peer cluster is configured. |
 ---
 
 ## Support SLA Reference

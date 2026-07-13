@@ -78,9 +78,11 @@ Package installed successfully in namespace 'tkg-packages'
 ```
 
 !!! warning "Common errors"
-    **`Error: management cluster not found`** — Ensure your kubeconfig is set to the management cluster context with `kubectl config use-context`.
-    **`Error: package 'cert-manager.tanzu.vmware.com' not found in repository`** — Verify the package repository is synced with `tanzu package repository list -A` and the version exists in `tanzu package available list -A`.
-    **`Error: failed to create cluster: invalid cluster configuration`** — Validate the cluster.yaml file syntax and required fields (name, controlPlaneCount, workerMachineCount) match your infrastructure provider.
+    | Error | Fix |
+    |---|---|
+    | `Error: management cluster not found` | Ensure your kubeconfig is set to the management cluster context with `kubectl config use-context`. |
+    | `Error: package 'cert-manager.tanzu.vmware.com' not found in repository` | Verify the package repository is synced with `tanzu package repository list -A` and the version exists in `tanzu package available list -A`. |
+    | `Error: failed to create cluster: invalid cluster configuration` | Validate the cluster.yaml file syntax and required fields (name, controlPlaneCount, workerMachineCount) match your infrastructure provider. |
 ## TKGs (vSphere with Tanzu — Supervisor kubeconfig)
 
 ```bash
@@ -114,9 +116,11 @@ staging-cluster-03        Ready    2/2     Normal     15d
 ```
 
 !!! warning "Common errors"
-    **`error: Unable to connect to 192.168.1.100:6443: dial tcp: lookup supervisor-ip: no such host`** — Replace `<supervisor-ip>` with the actual Supervisor cluster IP address or FQDN.
-    **`error: invalid credentials provided`** — Verify the vSphere username and password are correct, and that the account has Supervisor cluster access permissions.
-    **`error: the server doesn't have a resource type "tkc"`** — Ensure you are logged into the Supervisor cluster context (not a guest cluster), as TanzuKubernetesCluster objects only exist on the Supervisor.
+    | Error | Fix |
+    |---|---|
+    | `error: Unable to connect to 192.168.1.100:6443: dial tcp: lookup supervisor-ip: no such host` | Replace `<supervisor-ip>` with the actual Supervisor cluster IP address or FQDN. |
+    | `error: invalid credentials provided` | Verify the vSphere username and password are correct, and that the account has Supervisor cluster access permissions. |
+    | `error: the server doesn't have a resource type "tkc"` | Ensure you are logged into the Supervisor cluster context (not a guest cluster), as TanzuKubernetesCluster objects only exist on the Supervisor. |
 ## See also
 
 - [Tanzu Operations](../../../virtualization/vmware/products/tanzu/operations/procedures/)

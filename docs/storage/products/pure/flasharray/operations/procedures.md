@@ -99,8 +99,10 @@ host-backup-01                10.42.20.5       ESXi             backup-datastore
 ```
 
 !!! warning "Common errors"
-    **`Error: Array connection failed`** — Verify the array IP/hostname is reachable and your credentials are configured in `~/.purerc` or via `PURE_HOST` environment variable.
-    **`Error: No hosts found`** — Confirm hosts have been registered on the FlashArray; use `purehost add` to register new hosts before listing.
+    | Error | Fix |
+    |---|---|
+    | `Error: Array connection failed` | Verify the array IP/hostname is reachable and your credentials are configured in `~/.purerc` or via `PURE_HOST` environment variable. |
+    | `Error: No hosts found` | Confirm hosts have been registered on the FlashArray; use `purehost add` to register new hosts before listing. |
 ### Create a Host
 
 ![Create a Host](../../../../../assets/flasharray-proc-create-a-host.svg)
@@ -124,9 +126,11 @@ Created host nvmehost03 with 1 NVMe NQN
 ```
 
 !!! warning "Common errors"
-    **`Error: Host myserver01 already exists`** — Use `purehost list` to verify the hostname doesn't already exist, or choose a different hostname.
-    **`Error: Invalid WWN format <wwn1>`** — Ensure WWNs are in the correct format (16 hex characters, e.g., `50:00:14:40:12:34:56:78`).
-    **`Error: Connection failed to array <array_name>`** — Verify the Pure Storage array is reachable and your authentication credentials are valid with `pureadmin list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host myserver01 already exists` | Use `purehost list` to verify the hostname doesn't already exist, or choose a different hostname. |
+    | `Error: Invalid WWN format <wwn1>` | Ensure WWNs are in the correct format (16 hex characters, e.g., `50:00:14:40:12:34:56:78`). |
+    | `Error: Connection failed to array <array_name>` | Verify the Pure Storage array is reachable and your authentication credentials are valid with `pureadmin list`. |
 ### Add Initiators to an Existing Host
 
 ![Add Initiators to an Existing Host](../../../../../assets/flasharray-proc-add-initiators-to-an-existing-host.svg)
@@ -146,9 +150,11 @@ purehost setattr <hostname> --addiqnlist <new_iqn>
 ```
 
 !!! warning "Common errors"
-    **`Error: Host '<hostname>' not found`** — Verify the hostname exists on the array with `purehost list` and use the correct name.
-    **`Error: Invalid WWN format '<new_wwn>'`** — Ensure the WWN is in valid format (typically 16 hex characters prefixed with '0x' or standard WWN notation like '50:00:09:73:xx:xx:xx:xx').
-    **`Error: IQN '<new_iqn>' already exists`** — Check if the IQN is already assigned to another host using `purehost list --iqn` and use a unique IQN.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host '<hostname>' not found` | Verify the hostname exists on the array with `purehost list` and use the correct name. |
+    | `Error: Invalid WWN format '<new_wwn>'` | Ensure the WWN is in valid format (typically 16 hex characters prefixed with '0x' or standard WWN notation like '50:00:09:73:xx:xx:xx:xx'). |
+    | `Error: IQN '<new_iqn>' already exists` | Check if the IQN is already assigned to another host using `purehost list --iqn` and use a unique IQN. |
 ### Connect a Volume to a Host
 
 ![Connect a Volume to a Host](../../../../../assets/flasharray-proc-connect-a-volume-to-a-host.svg)
@@ -169,9 +175,11 @@ ALUA Mode: Enabled
 ```
 
 !!! warning "Common errors"
-    **`Error: Host 'prod-db-01' not found on array`** — Verify the hostname exists on the FlashArray with `purehost list` and check spelling.
-    **`Error: Volume 'data-prod-01' is already connected to host 'prod-app-02'`** — Disconnect the volume from the other host first using `purehost disconnect` or change the volume name.
-    **`Error: Connection timeout (10.42.18.1:443)`** — Verify network connectivity to the FlashArray management IP and confirm credentials are set with `purehost login`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host 'prod-db-01' not found on array` | Verify the hostname exists on the FlashArray with `purehost list` and check spelling. |
+    | `Error: Volume 'data-prod-01' is already connected to host 'prod-app-02'` | Disconnect the volume from the other host first using `purehost disconnect` or change the volume name. |
+    | `Error: Connection timeout (10.42.18.1:443)` | Verify network connectivity to the FlashArray management IP and confirm credentials are set with `purehost login`. |
 This creates the host-to-volume connection (analogous to LUN masking on traditional arrays).
 
 ### Disconnect a Volume from a Host
@@ -189,9 +197,11 @@ Volume <volume_name> is no longer accessible from host <hostname>
 ```
 
 !!! warning "Common errors"
-    **`Error: Host '<hostname>' not found`** — Verify the hostname exists on the array with `purehost list` and use the correct name.
-    **`Error: Volume '<volume_name>' not found`** — Confirm the volume name is correct and exists on the array with `purevolume list`.
-    **`Error: Host '<hostname>' is not connected to volume '<volume_name>'`** — Check current connections with `purehost list --vol <volume_name>` before attempting disconnection.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host '<hostname>' not found` | Verify the hostname exists on the array with `purehost list` and use the correct name. |
+    | `Error: Volume '<volume_name>' not found` | Confirm the volume name is correct and exists on the array with `purevolume list`. |
+    | `Error: Host '<hostname>' is not connected to volume '<volume_name>'` | Check current connections with `purehost list --vol <volume_name>` before attempting disconnection. |
 ### Host Groups
 
 ![Host Groups](../../../../../assets/flasharray-proc-host-groups.svg)
@@ -224,9 +234,11 @@ dev-testgroup         1      0        False
 ```
 
 !!! warning "Common errors"
-    **`Error: Host group 'prod-webservers' already exists`** — Use `purehgroup list` to verify the name doesn't exist, or choose a different hostgroup name.
-    **`Error: Host 'web03' not found in array`** — Ensure the hostname is registered on the Pure FlashArray using `purehost list` before adding it to a host group.
-    **`Error: Volume 'prod-db-vol' is already connected to another host group`** — Disconnect the volume from its current host group with `purehgroup disconnect` before connecting it elsewhere, or use a different volume.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host group 'prod-webservers' already exists` | Use `purehgroup list` to verify the name doesn't exist, or choose a different hostgroup name. |
+    | `Error: Host 'web03' not found in array` | Ensure the hostname is registered on the Pure FlashArray using `purehost list` before adding it to a host group. |
+    | `Error: Volume 'prod-db-vol' is already connected to another host group` | Disconnect the volume from its current host group with `purehgroup disconnect` before connecting it elsewhere, or use a different volume. |
 ### Delete a Host
 
 ![Delete a Host](../../../../../assets/flasharray-proc-delete-a-host.svg)
@@ -248,8 +260,10 @@ Host 'web-server-03' deleted successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Host 'web-server-03' not found`** — Verify the hostname exists on the FlashArray using `purehost list` and check for typos.
-    **`Error: Cannot delete host with connected volumes`** — Ensure all volumes are disconnected before deletion; re-run the disconnect command for any remaining volumes.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host 'web-server-03' not found` | Verify the hostname exists on the FlashArray using `purehost list` and check for typos. |
+    | `Error: Cannot delete host with connected volumes` | Ensure all volumes are disconnected before deletion; re-run the disconnect command for any remaining volumes. |
 ### Host Common Issues
 
 ![Host Common Issues](../../../../../assets/flasharray-proc-host-common-issues.svg)
@@ -300,8 +314,10 @@ vol-dev-test                        1.0T      (unattached)             unlimited
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid option '--space' for command 'purevol list'`** — Use the correct flag syntax for your Pure OS version; check `purevol list --help` to confirm available options.
-    **`Error: Connection refused to management IP 192.168.1.100:8084`** — Verify the FlashArray management IP is reachable and the Pure API service is running with `ping` and SSH access to the array.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid option '--space' for command 'purevol list'` | Use the correct flag syntax for your Pure OS version; check `purevol list --help` to confirm available options. |
+    | `Error: Connection refused to management IP 192.168.1.100:8084` | Verify the FlashArray management IP is reachable and the Pure API service is running with `ping` and SSH access to the array. |
 ### Create a Volume
 
 ![Create a Volume](../../../../../assets/flasharray-proc-create-a-volume.svg)
@@ -316,9 +332,11 @@ purevol create <volume_name> --size 1T
 ```
 
 !!! warning "Common errors"
-    **`Error: array not reachable`** — Verify the FlashArray management IP is configured and accessible with `ping` or check your `PURE_API_TOKEN` and array hostname environment variables.
-    **`Error: volume <volume_name> already exists`** — Choose a unique volume name or delete the existing volume with `purevol destroy <volume_name>` before recreating it.
-    **`Error: insufficient space`** — Reduce the requested size or check available capacity on the array with `purearray list --space`.
+    | Error | Fix |
+    |---|---|
+    | `Error: array not reachable` | Verify the FlashArray management IP is configured and accessible with `ping` or check your `PURE_API_TOKEN` and array hostname environment variables. |
+    | `Error: volume <volume_name> already exists` | Choose a unique volume name or delete the existing volume with `purevol destroy <volume_name>` before recreating it. |
+    | `Error: insufficient space` | Reduce the requested size or check available capacity on the array with `purearray list --space`. |
 Size suffixes: `K`, `M`, `G`, `T`, `P`.
 
 ### Resize a Volume
@@ -337,8 +355,10 @@ Provisioned: 2.0T
 ```
 
 !!! warning "Common errors"
-    **`Error: volume <volume_name> not found`** — Verify the volume name is correct and exists on the array using `purevol list`.
-    **`Error: size must be larger than current size`** — The new size must be greater than the current volume size; use a larger value or check current size with `purevol list --verbose`.
+    | Error | Fix |
+    |---|---|
+    | `Error: volume <volume_name> not found` | Verify the volume name is correct and exists on the array using `purevol list`. |
+    | `Error: size must be larger than current size` | The new size must be greater than the current volume size; use a larger value or check current size with `purevol list --verbose`. |
 Volumes can only be grown, not shrunk.
 
 ### Connect and Disconnect a Volume
@@ -364,9 +384,11 @@ Multipath device cleaned up
 ```
 
 !!! warning "Common errors"
-    **`Error: Host 'prod-db-01' not found in FlashArray inventory`** — Verify the hostname exists on the FlashArray using `purehost list` and ensure it matches exactly (case-sensitive).
-    **`Error: Volume 'data-vol-prod' is not connected to host 'prod-db-01'`** — Confirm the volume is currently connected to the host before attempting disconnect using `purehost show <hostname>`.
-    **`Error: Connection timeout to FlashArray management interface`** — Check network connectivity to the FlashArray management IP and verify credentials with `purehost login`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Host 'prod-db-01' not found in FlashArray inventory` | Verify the hostname exists on the FlashArray using `purehost list` and ensure it matches exactly (case-sensitive). |
+    | `Error: Volume 'data-vol-prod' is not connected to host 'prod-db-01'` | Confirm the volume is currently connected to the host before attempting disconnect using `purehost show <hostname>`. |
+    | `Error: Connection timeout to FlashArray management interface` | Check network connectivity to the FlashArray management IP and verify credentials with `purehost login`. |
 ### Snapshot a Volume
 
 ![Snapshot a Volume](../../../../../assets/flasharray-proc-snapshot-a-volume.svg)
@@ -394,8 +416,10 @@ prod-db-01.monthly-202312
 ```
 
 !!! warning "Common errors"
-    **`Error: volume '<volume_name>' not found`** — Verify the volume name with `purevol list` and ensure it exists on the array.
-    **`Error: Insufficient space for snapshot`** — Check available capacity on the array with `purearray list --space` and delete old snapshots if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: volume '<volume_name>' not found` | Verify the volume name with `purevol list` and ensure it exists on the array. |
+    | `Error: Insufficient space for snapshot` | Check available capacity on the array with `purearray list --space` and delete old snapshots if needed. |
 ### Restore from Snapshot
 
 ![Restore from Snapshot](../../../../../assets/flasharray-proc-restore-from-snapshot.svg)
@@ -417,9 +441,11 @@ Snapshot content restored to volume_prod
 ```
 
 !!! warning "Common errors"
-    **`Error: Volume <volume_name> not found`** — Verify the volume exists with `purevol list` and use the correct volume name.
-    **`Error: Snapshot <volume_name>.<snap_suffix> not found`** — Confirm the snapshot exists with `purevol snap --volume <volume_name>` before attempting the copy.
-    **`Error: Volume <volume_name> is in use or locked`** — Ensure no hosts have the volume mounted or in active I/O before overwriting.
+    | Error | Fix |
+    |---|---|
+    | `Error: Volume <volume_name> not found` | Verify the volume exists with `purevol list` and use the correct volume name. |
+    | `Error: Snapshot <volume_name>.<snap_suffix> not found` | Confirm the snapshot exists with `purevol snap --volume <volume_name>` before attempting the copy. |
+    | `Error: Volume <volume_name> is in use or locked` | Ensure no hosts have the volume mounted or in active I/O before overwriting. |
 ### Create a Clone
 
 ![Create a Clone](../../../../../assets/flasharray-proc-create-a-clone.svg)
@@ -438,8 +464,10 @@ Created: 2024-01-15T09:42:17Z
 ```
 
 !!! warning "Common errors"
-    **`Error: Source volume '<source_vol>' not found`** — Verify the source volume name exists with `purevol list` and use the exact volume name.
-    **`Error: Clone name '<clone_name>' already exists`** — Choose a unique clone name or delete the existing clone with `purevol destroy <clone_name>` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: Source volume '<source_vol>' not found` | Verify the source volume name exists with `purevol list` and use the exact volume name. |
+    | `Error: Clone name '<clone_name>' already exists` | Choose a unique clone name or delete the existing clone with `purevol destroy <clone_name>` first. |
 ### Delete a Volume
 
 ![Delete a Volume](../../../../../assets/flasharray-proc-delete-a-volume.svg)
@@ -459,8 +487,10 @@ Volume eradicated: volume-prod-db-01
 ```
 
 !!! warning "Common errors"
-    **`Error: Volume 'volume-prod-db-01' not found`** — Verify the volume name is correct and exists on the array using `purevol list`.
-    **`Error: Volume 'volume-prod-db-01' is not in destroyed state`** — Run `purevol destroy <volume_name>` first before attempting to eradicate, or wait for the 24-hour recovery window to pass.
+    | Error | Fix |
+    |---|---|
+    | `Error: Volume 'volume-prod-db-01' not found` | Verify the volume name is correct and exists on the array using `purevol list`. |
+    | `Error: Volume 'volume-prod-db-01' is not in destroyed state` | Run `purevol destroy <volume_name>` first before attempting to eradicate, or wait for the 24-hour recovery window to pass. |
 ### Recover a Destroyed Volume
 
 ![Recover a Destroyed Volume](../../../../../assets/flasharray-proc-recover-a-destroyed-volume.svg)
@@ -480,9 +510,11 @@ Recovery completed in 2m 34s
 ```
 
 !!! warning "Common errors"
-    **`Error: Volume 'prod-db-01' not found`** — Verify the volume name exists with `purevol list` and use the correct name.
-    **`Error: Volume 'prod-db-01' is not in a recoverable state`** — Check volume status with `purevol show <volume_name>` to confirm it's deleted or offline before attempting recovery.
-    **`Error: Authentication failed`** — Ensure you are authenticated to the Pure FlashArray with valid credentials using `pureauthenticate` or check your API token.
+    | Error | Fix |
+    |---|---|
+    | `Error: Volume 'prod-db-01' not found` | Verify the volume name exists with `purevol list` and use the correct name. |
+    | `Error: Volume 'prod-db-01' is not in a recoverable state` | Check volume status with `purevol show <volume_name>` to confirm it's deleted or offline before attempting recovery. |
+    | `Error: Authentication failed` | Ensure you are authenticated to the Pure FlashArray with valid credentials using `pureauthenticate` or check your API token. |
 ### Volume Tags
 
 ```d2
@@ -515,8 +547,10 @@ Volume: prod-db-01
 ```
 
 !!! warning "Common errors"
-    **`Error: Volume 'prod-db-01' not found`** — Verify the volume name exists with `purevol list` and check for typos.
-    **`Error: Authentication failed. Check credentials.`** — Ensure your Pure Storage API token is valid and set in your environment or configuration file.
+    | Error | Fix |
+    |---|---|
+    | `Error: Volume 'prod-db-01' not found` | Verify the volume name exists with `purevol list` and check for typos. |
+    | `Error: Authentication failed. Check credentials.` | Ensure your Pure Storage API token is valid and set in your environment or configuration file. |
 ### Volume Common Issues
 
 ![Volume Common Issues](../../../../../assets/flasharray-proc-volume-common-issues.svg)
@@ -569,8 +603,10 @@ pgroup-dr-replication         3072.1         6144.2        768.3
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid option '--schedule'`** — Use the correct flag syntax; check `purepgroup list --help` for available options specific to your Pure OS version.
-    **`Error: Connection refused to management IP`** — Verify the Pure array management IP is reachable and the `PURE_IP` environment variable or configuration file is correctly set.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid option '--schedule'` | Use the correct flag syntax; check `purepgroup list --help` for available options specific to your Pure OS version. |
+    | `Error: Connection refused to management IP` | Verify the Pure array management IP is reachable and the `PURE_IP` environment variable or configuration file is correctly set. |
 ### View Protection Group Members
 
 ![View Protection Group Members](../../../../../assets/flasharray-proc-view-protection-group-members.svg)
@@ -590,8 +626,10 @@ repl-target-vol               5i78cj36-e5g6-8h7i-3j6f-1g9e5f3h6i8j  1.5GB/s     
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid protection group name '<pg_name>'`** — Replace `<pg_name>` with an actual protection group name from your array (verify with `purepgroup list`).
-    **`Error: Pure1 session not authenticated`** — Authenticate to the FlashArray first using `pureadmin login` or ensure your session token is valid.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid protection group name '<pg_name>'` | Replace `<pg_name>` with an actual protection group name from your array (verify with `purepgroup list`). |
+    | `Error: Pure1 session not authenticated` | Authenticate to the FlashArray first using `pureadmin login` or ensure your session token is valid. |
 ### Create a Protection Group
 
 ![Create a Protection Group](../../../../../assets/flasharray-proc-create-a-protection-group.svg)
@@ -606,8 +644,10 @@ Created protection group <pg_name>
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection group <pg_name> already exists`** — Use a unique protection group name or delete the existing group with `purepgroup destroy <pg_name>` first.
-    **`Error: Command requires authentication`** — Authenticate to the Pure FlashArray with `pureadmin login` or ensure your session token is valid.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection group <pg_name> already exists` | Use a unique protection group name or delete the existing group with `purepgroup destroy <pg_name>` first. |
+    | `Error: Command requires authentication` | Authenticate to the Pure FlashArray with `pureadmin login` or ensure your session token is valid. |
 ### Add Volumes to a Protection Group
 
 ![Add Volumes to a Protection Group](../../../../../assets/flasharray-proc-add-volumes-to-a-protection-group.svg)
@@ -625,9 +665,11 @@ Replication enabled: yes
 ```
 
 !!! warning "Common errors"
-    **`Error: Volume group '<pg_name>' already exists`** — Use a different protection group name or delete the existing group with `purepgroup destroy <pg_name>` first.
-    **`Error: Volume '<vol1>' not found`** — Verify the volume exists with `puredb list --volumes` and use the correct volume name.
-    **`Error: Connection refused to management IP`** — Ensure the FlashArray management IP is reachable and you have valid credentials configured in your Pure Storage CLI session.
+    | Error | Fix |
+    |---|---|
+    | `Error: Volume group '<pg_name>' already exists` | Use a different protection group name or delete the existing group with `purepgroup destroy <pg_name>` first. |
+    | `Error: Volume '<vol1>' not found` | Verify the volume exists with `puredb list --volumes` and use the correct volume name. |
+    | `Error: Connection refused to management IP` | Ensure the FlashArray management IP is reachable and you have valid credentials configured in your Pure Storage CLI session. |
 ### Configure Snapshot Schedule
 
 ![Configure Snapshot Schedule](../../../../../assets/flasharray-proc-configure-snapshot-schedule.svg)
@@ -654,8 +696,10 @@ Schedule Details:
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection group 'prod-db-pg' not found`** — Verify the protection group name exists with `purepgroup list` and use the correct name.
-    **`Error: Invalid snap-frequency value. Must be between 300 and 86400 seconds`** — Adjust the frequency to a value between 5 minutes (300s) and 24 hours (86400s).
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection group 'prod-db-pg' not found` | Verify the protection group name exists with `purepgroup list` and use the correct name. |
+    | `Error: Invalid snap-frequency value. Must be between 300 and 86400 seconds` | Adjust the frequency to a value between 5 minutes (300s) and 24 hours (86400s). |
 ### Configure Replication Schedule (Async to Remote)
 
 ![Configure Replication Schedule (Async to Remote)](../../../../../assets/flasharray-proc-configure-replication-schedule-async-to-remote.svg)
@@ -682,9 +726,11 @@ Next scheduled replication: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection group '<pg_name>' not found on array`** — Verify the protection group exists with `purepgroup list` and use the correct name.
-    **`Error: Target array '<remote_array_name>' is unreachable or not configured`** — Confirm the remote array is registered and network connectivity exists using `purearray list --remote`.
-    **`Error: Replication license not enabled on source or target array`** — Purchase and enable the replication license on both arrays via the management console or contact Pure support.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection group '<pg_name>' not found on array` | Verify the protection group exists with `purepgroup list` and use the correct name. |
+    | `Error: Target array '<remote_array_name>' is unreachable or not configured` | Confirm the remote array is registered and network connectivity exists using `purearray list --remote`. |
+    | `Error: Replication license not enabled on source or target array` | Purchase and enable the replication license on both arrays via the management console or contact Pure support. |
 ### Take a Manual Snapshot
 
 ![Take a Manual Snapshot](../../../../../assets/flasharray-proc-take-a-manual-snapshot.svg)
@@ -704,9 +750,11 @@ Replication Status: Synced
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection group 'pg-prod-01' not found`** — Verify the protection group name with `purepgroup list` and ensure it exists on the array.
-    **`Error: Insufficient space for snapshot (required: 500GB, available: 120GB)`** — Free up space on the array or delete older snapshots before creating new ones.
-    **`Error: Protection group 'pg-prod-01' is in replication, cannot snapshot`** — Wait for the current replication cycle to complete before attempting to create a snapshot.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection group 'pg-prod-01' not found` | Verify the protection group name with `purepgroup list` and ensure it exists on the array. |
+    | `Error: Insufficient space for snapshot (required: 500GB, available: 120GB)` | Free up space on the array or delete older snapshots before creating new ones. |
+    | `Error: Protection group 'pg-prod-01' is in replication, cannot snapshot` | Wait for the current replication cycle to complete before attempting to create a snapshot. |
 ### List Snapshots
 
 ![List Snapshots](../../../../../assets/flasharray-proc-list-snapshots.svg)
@@ -727,8 +775,10 @@ pg-prod-01.2024-01-14-14:05:47                   2024-01-14 14:05:47    2.3 TB  
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection group '<pg_name>' not found`** — Verify the protection group name with `purepgroup list` and use the correct name.
-    **`Error: You must be authenticated to perform this operation`** — Authenticate to the FlashArray with `pureadmin login` before running the command.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection group '<pg_name>' not found` | Verify the protection group name with `purepgroup list` and use the correct name. |
+    | `Error: You must be authenticated to perform this operation` | Authenticate to the FlashArray with `pureadmin login` before running the command. |
 ### Delete a Protection Group
 
 ![Delete a Protection Group](../../../../../assets/flasharray-proc-delete-a-protection-group.svg)
@@ -747,9 +797,11 @@ Protection group 'prod-db-pg' eradicated successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Protection group 'prod-db-pg' not found`** — Verify the protection group name exists with `purepgroup list` before attempting destruction.
-    **`Error: Cannot destroy protection group with active snapshots`** — Delete all snapshots in the protection group using `purepgsnap destroy` before destroying the group.
-    **`Error: Permission denied`** — Ensure your Pure Storage user account has admin or appropriate role privileges to destroy protection groups.
+    | Error | Fix |
+    |---|---|
+    | `Error: Protection group 'prod-db-pg' not found` | Verify the protection group name exists with `purepgroup list` before attempting destruction. |
+    | `Error: Cannot destroy protection group with active snapshots` | Delete all snapshots in the protection group using `purepgsnap destroy` before destroying the group. |
+    | `Error: Permission denied` | Ensure your Pure Storage user account has admin or appropriate role privileges to destroy protection groups. |
 ### Protection Group Common Issues
 
 ![Protection Group Common Issues](../../../../../assets/flasharray-proc-protection-group-common-issues.svg)

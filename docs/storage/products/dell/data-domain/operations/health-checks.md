@@ -294,9 +294,11 @@ System Information:
 ```
 
 !!! warning "Common errors"
-    **`Error: Replication context 'dr-site' not found`** — Verify the replication context name with `replication show` and ensure it is configured on the system.
-    **`Error: MTree '/data/col1/<mtree-name>' does not exist`** — Run `mtree list` to confirm the exact MTree path and replace `<mtree-name>` with the actual MTree identifier.
-    **`Error: DDBoost service is not running`** — Start the DDBoost service with `ddboost start` and verify connectivity with `ddboost status`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Replication context 'dr-site' not found` | Verify the replication context name with `replication show` and ensure it is configured on the system. |
+    | `Error: MTree '/data/col1/<mtree-name>' does not exist` | Run `mtree list` to confirm the exact MTree path and replace `<mtree-name>` with the actual MTree identifier. |
+    | `Error: DDBoost service is not running` | Start the DDBoost service with `ddboost start` and verify connectivity with `ddboost status`. |
 ## Capacity Monitoring
 
 ![Capacity Monitoring](../../../../../assets/storage-dell-data-domain-hc-capacity-monitoring.svg)
@@ -346,8 +348,10 @@ Replication Statistics:
 ```
 
 !!! warning "Common errors"
-    **`error: replication context 'hotspot-04' not responding`** — Verify network connectivity to the destination system and check firewall rules between source and destination Data Domain appliances.
-    **`error: insufficient bandwidth for replication context 'archive-weekly-03'`** — Increase the bandwidth throttle limit or reduce concurrent replication contexts using `replication modify <context> -bandwidth <Mbps>`.
+    | Error | Fix |
+    |---|---|
+    | `error: replication context 'hotspot-04' not responding` | Verify network connectivity to the destination system and check firewall rules between source and destination Data Domain appliances. |
+    | `error: insufficient bandwidth for replication context 'archive-weekly-03'` | Increase the bandwidth throttle limit or reduce concurrent replication contexts using `replication modify <context> -bandwidth <Mbps>`. |
 ## Hardware Health
 
 ![Hardware Health](../../../../../assets/storage-dell-data-domain-hc-hardware-health.svg)
@@ -371,9 +375,11 @@ raid show all | grep -v "normal\|OK"
 ```
 
 !!! warning "Common errors"
-    **`disk show state: command not found`** — Verify you are logged into the Data Domain CLI (SSH to the management IP) and not a standard Linux shell.
-    **`enclosure show hardware: No such file or directory`** — Confirm the Data Domain system is online and responding; try `system show` first to verify connectivity.
-    **`raid show all: Invalid command`** — Check your Data Domain firmware version supports this syntax; use `raid show` without the `all` parameter on older versions.
+    | Error | Fix |
+    |---|---|
+    | `disk show state: command not found` | Verify you are logged into the Data Domain CLI (SSH to the management IP) and not a standard Linux shell. |
+    | `enclosure show hardware: No such file or directory` | Confirm the Data Domain system is online and responding; try `system show` first to verify connectivity. |
+    | `raid show all: Invalid command` | Check your Data Domain firmware version supports this syntax; use `raid show` without the `all` parameter on older versions. |
 ## Pre-Change Checklist
 
 - [ ] No critical or error alerts active

@@ -89,8 +89,10 @@ OtherPatches       : 3
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the VM name and resource group name are correct with `az vm list --resource-group <rg>`.
-    **`AuthorizationFailed : The client '<user>' with object id '<id>' does not have authorization to perform action 'Microsoft.Maintenance/updates/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.`** — Ensure your Azure account has the "Maintenance Reader" or "Contributor" role assigned to the resource group.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the VM name and resource group name are correct with `az vm list --resource-group <rg>`. |
+    | `AuthorizationFailed : The client '<user>' with object id '<id>' does not have authorization to perform action 'Microsoft.Maintenance/updates/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.` | Ensure your Azure account has the "Maintenance Reader" or "Contributor" role assigned to the resource group. |
 ---
 
 ## Patch Modes
@@ -162,8 +164,10 @@ az vm update \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the resource group name and VM name are correct using `az vm list --resource-group <rg>`.
-    **`InvalidApiVersionParameter : The api-version '2021-03-01' does not support 'patchSettings' for this resource type.`** — Update the Azure CLI to the latest version with `az upgrade` to support patch settings on your VM SKU.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the resource group name and VM name are correct using `az vm list --resource-group <rg>`. |
+    | `InvalidApiVersionParameter : The api-version '2021-03-01' does not support 'patchSettings' for this resource type.` | Update the Azure CLI to the latest version with `az upgrade` to support patch settings on your VM SKU. |
 | Patch Mode | Who Controls Schedule | Reboot |
 |---|---|---|
 | `AutomaticByOS` | Windows Update (Windows only) | Automatic |
@@ -237,9 +241,11 @@ prod-rg                   patch-schedule-test    westus2     InGuestPatch
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound: Resource group '<rg>' could not be found.`** — Verify the resource group name with `az group list` and ensure you are in the correct subscription.
-    **`InvalidParameter: The value of parameter 'recur-every' is invalid. Accepted values are 'Week <DayOfWeek>' or 'Month <DayOfMonth>'.`** — Use correct recurrence format such as `--recur-every "Week Saturday"` or `--recur-every "Month 15"`.
-    **`MissingRequiredParameter: --maintenance-scope is required`** — Include `--maintenance-scope InGuestPatch` or `--maintenance-scope OSImage` in the command.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound: Resource group '<rg>' could not be found.` | Verify the resource group name with `az group list` and ensure you are in the correct subscription. |
+    | `InvalidParameter: The value of parameter 'recur-every' is invalid. Accepted values are 'Week <DayOfWeek>' or 'Month <DayOfMonth>'.` | Use correct recurrence format such as `--recur-every "Week Saturday"` or `--recur-every "Month 15"`. |
+    | `MissingRequiredParameter: --maintenance-scope is required` | Include `--maintenance-scope InGuestPatch` or `--maintenance-scope OSImage` in the command. |
 ---
 
 ## Assigning VMs to Maintenance Configurations
@@ -293,9 +299,11 @@ patch-db-assign-001           prod-rg          sql-vm-prod      Microsoft.Comput
 ```
 
 !!! warning "Common errors"
-    **`The resource with id '<config-resource-id>' does not exist.`** — Verify the maintenance configuration exists in the same subscription and region using `az maintenance configuration list`.
-    **`The resource 'Microsoft.Compute/virtualMachines/<vm-name>' does not exist in resource group '<rg>'.`** — Confirm the VM name and resource group are correct with `az vm list --resource-group <rg>`.
-    **`The assignment '<assignment-name>' does not exist for resource '<vm-name>'.`** — List existing assignments with `az maintenance assignment list --resource-group <rg>` to verify the assignment name before deletion.
+    | Error | Fix |
+    |---|---|
+    | `The resource with id '<config-resource-id>' does not exist.` | Verify the maintenance configuration exists in the same subscription and region using `az maintenance configuration list`. |
+    | `The resource 'Microsoft.Compute/virtualMachines/<vm-name>' does not exist in resource group '<rg>'.` | Confirm the VM name and resource group are correct with `az vm list --resource-group <rg>`. |
+    | `The assignment '<assignment-name>' does not exist for resource '<vm-name>'.` | List existing assignments with `az maintenance assignment list --resource-group <rg>` to verify the assignment name before deletion. |
 ---
 
 ## On-Demand Patching
@@ -354,9 +362,11 @@ az vm install-patches \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the resource group name and VM name are correct using `az vm list --resource-group <rg>`.
-    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/installPatches/action' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.`** — Ensure your Azure account has the Virtual Machine Contributor or higher role assigned on the resource group.
-    **`InvalidParameter: The value of parameter 'maximum-duration' is invalid. Supplied value: 'PT2H'. Valid values are between 'PT30M' and 'PT5H'.`** — Use a duration between 30 minutes and 5 hours in ISO 8601 format (e.g., `PT1H30M`).
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.` | Verify the resource group name and VM name are correct using `az vm list --resource-group <rg>`. |
+    | `AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/installPatches/action' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.` | Ensure your Azure account has the Virtual Machine Contributor or higher role assigned on the resource group. |
+    | `InvalidParameter: The value of parameter 'maximum-duration' is invalid. Supplied value: 'PT2H'. Valid values are between 'PT30M' and 'PT5H'.` | Use a duration between 30 minutes and 5 hours in ISO 8601 format (e.g., `PT1H30M`). |
 ---
 
 ## Compliance and Reporting
@@ -395,8 +405,10 @@ KB5033456    Security          Servicing Stack Update
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (ResourceNotFound) The resource 'Microsoft.OperationalInsights/workspaces/<workspace-id>' could not be found.`** — Verify the workspace ID is correct and exists in the current subscription with `az monitor log-analytics workspace list`.
-    **`ERROR: The resource group '<rg>' could not be found.`** — Confirm the resource group name and subscription context with `az group list` and `az account show`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (ResourceNotFound) The resource 'Microsoft.OperationalInsights/workspaces/<workspace-id>' could not be found.` | Verify the workspace ID is correct and exists in the current subscription with `az monitor log-analytics workspace list`. |
+    | `ERROR: The resource group '<rg>' could not be found.` | Confirm the resource group name and subscription context with `az group list` and `az account show`. |
 | Classification | Description |
 |---|---|
 | Critical | Vulnerabilities exploitable without user interaction |

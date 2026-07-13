@@ -198,9 +198,11 @@ curl -H "Authorization: Bearer $AWX_TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or configure proper CA certificates in your AWX instance.
-    **`{"detail":"Invalid token","status":401}`** — Verify `$AWX_TOKEN` is set correctly with `echo $AWX_TOKEN` and regenerate it from AWX Settings > Users if expired.
-    **`curl: (7) Failed to connect to awx.example.com port 443: Connection refused`** — Confirm AWX service is running with `systemctl status awx` and verify the hostname/port in your curl command.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl or configure proper CA certificates in your AWX instance. |
+    | `{"detail":"Invalid token","status":401}` | Verify `$AWX_TOKEN` is set correctly with `echo $AWX_TOKEN` and regenerate it from AWX Settings > Users if expired. |
+    | `curl: (7) Failed to connect to awx.example.com port 443: Connection refused` | Confirm AWX service is running with `systemctl status awx` and verify the hostname/port in your curl command. |
 | Audit Event | AWX Log Location |
 |---|---|
 | Job launch | Activity stream + job events |

@@ -105,9 +105,11 @@ Standby Controller: dcnm-node-02
 ```
 
 !!! warning "Common errors"
-    **`cat: /var/dcnm/version: No such file or directory`** — Verify DCNM is installed by checking `/opt/dcnm/version` or running `dcnm --version` instead.
-    **`appmgr: command not found`** — SSH directly to the DCNM VM and ensure you are logged in as root; appmgr is only available on the DCNM appliance itself, not remotely.
-    **`HA Status: UNHEALTHY - Node dcnm-node-02 unreachable`** — Check network connectivity between nodes and verify both DCNM services are running with `systemctl status dcnm-*`.
+    | Error | Fix |
+    |---|---|
+    | `cat: /var/dcnm/version: No such file or directory` | Verify DCNM is installed by checking `/opt/dcnm/version` or running `dcnm --version` instead. |
+    | `appmgr: command not found` | SSH directly to the DCNM VM and ensure you are logged in as root; appmgr is only available on the DCNM appliance itself, not remotely. |
+    | `HA Status: UNHEALTHY - Node dcnm-node-02 unreachable` | Check network connectivity between nodes and verify both DCNM services are running with `systemctl status dcnm-*`. |
 ### 2. Collect the DCNM support bundle
 
 ```bash
@@ -140,9 +142,11 @@ root@dcnm-vm:/tmp/dcnm-support-202501151430.tar.gz                100% 847MB   1
 ```
 
 !!! warning "Common errors"
-    **`/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh: Permission denied`** — Run the command with `sudo` or as the root user directly.
-    **`tar: Error is not recoverable: exiting now`** — Ensure `/tmp` has at least 2GB of free space using `df -h /tmp` and clear old bundles if needed.
-    **`scp: command not found`** — Install OpenSSH client on your workstation with `apt-get install openssh-client` (Ubuntu/Debian) or `brew install openssh` (macOS).
+    | Error | Fix |
+    |---|---|
+    | `/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh: Permission denied` | Run the command with `sudo` or as the root user directly. |
+    | `tar: Error is not recoverable: exiting now` | Ensure `/tmp` has at least 2GB of free space using `df -h /tmp` and clear old bundles if needed. |
+    | `scp: command not found` | Install OpenSSH client on your workstation with `apt-get install openssh-client` (Ubuntu/Debian) or `brew install openssh` (macOS). |
 ### 3. Capture DCNM service state and resource snapshot
 
 ```bash
@@ -202,9 +206,11 @@ Swap:          16Gi       2.1Gi        13Gi
 ```
 
 !!! warning "Common errors"
-    **`jstat: command not found`** — Install the Java Development Kit (JDK) on the DCNM appliance or verify the JAVA_HOME environment variable is set correctly.
-    **`/var/log/dcnm/dcnm.log: No such file or directory`** — Confirm the DCNM service is running and the log directory exists; if using systemd-journald exclusively, the fallback to journalctl will capture logs automatically.
-    **`Permission denied`** — Run the script with sudo or ensure the user has read access to /var/log/dcnm/ and /proc/[pid]/stat for the DCNM process.
+    | Error | Fix |
+    |---|---|
+    | `jstat: command not found` | Install the Java Development Kit (JDK) on the DCNM appliance or verify the JAVA_HOME environment variable is set correctly. |
+    | `/var/log/dcnm/dcnm.log: No such file or directory` | Confirm the DCNM service is running and the log directory exists; if using systemd-journald exclusively, the fallback to journalctl will capture logs automatically. |
+    | `Permission denied` | Run the script with sudo or ensure the user has read access to /var/log/dcnm/ and /proc/[pid]/stat for the DCNM process. |
 ### 4. Capture database diagnostics
 
 ```bash
@@ -246,9 +252,11 @@ relname                     |    size
 ```
 
 !!! warning "Common errors"
-    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: role "postgres" does not exist`** — Verify the PostgreSQL superuser exists or use the correct role name with `-U dcnm_user` instead.
-    **`psql: error: database "sane" does not exist`** — Confirm the DCNM database name is correct; check with `psql -U postgres -l` to list available databases.
-    **`Permission denied`** — Ensure the user running the script has write permissions to `/tmp` or redirect output to a writable directory like `/var/log/dcnm/`.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: role "postgres" does not exist` | Verify the PostgreSQL superuser exists or use the correct role name with `-U dcnm_user` instead. |
+    | `psql: error: database "sane" does not exist` | Confirm the DCNM database name is correct; check with `psql -U postgres -l` to list available databases. |
+    | `Permission denied` | Ensure the user running the script has write permissions to `/tmp` or redirect output to a writable directory like `/var/log/dcnm/`. |
 ### 5. Collect show tech-support from affected MDS switches
 
 ```bash
@@ -277,8 +285,10 @@ mds-tech-mds-switch-01-20240115.txt                    100% |*****| 45678 KB  00
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH is enabled on the MDS switch with `show ssh server status`.
-    **`No such file or directory`** — Confirm the tech-support file was successfully created on the switch by SSH'ing back and running `ls -la /tmp/mds-tech-*.txt` before attempting the scp transfer.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the admin account credentials and ensure SSH is enabled on the MDS switch with `show ssh server status`. |
+    | `No such file or directory` | Confirm the tech-support file was successfully created on the switch by SSH'ing back and running `ls -la /tmp/mds-tech-*.txt` before attempting the scp transfer. |
 ### 6. Export the DCNM audit log
 
 In the DCNM UI:
@@ -421,9 +431,11 @@ Last Backup: 2024-01-15 02:00:15 UTC
 ```
 
 !!! warning "Common errors"
-    **`appmgr: command not found`** — Ensure you are logged into the DCNM VM directly (not a remote host) and that /opt/dcnm/bin is in your PATH.
-    **`/var/log/dcnm/dcnm.log: No such file or directory`** — The log file may not exist yet; use `journalctl -u dcnm --since "30 min ago"` instead, or verify the DCNM service started with `systemctl status dcnm`.
-    **`Database Status: UNHEALTHY`** — Check PostgreSQL process with `systemctl status postgresql` and verify /var/lib/pgsql has at least 5GB free space using `df -h`.
+    | Error | Fix |
+    |---|---|
+    | `appmgr: command not found` | Ensure you are logged into the DCNM VM directly (not a remote host) and that /opt/dcnm/bin is in your PATH. |
+    | `/var/log/dcnm/dcnm.log: No such file or directory` | The log file may not exist yet; use `journalctl -u dcnm --since "30 min ago"` instead, or verify the DCNM service started with `systemctl status dcnm`. |
+    | `Database Status: UNHEALTHY` | Check PostgreSQL process with `systemctl status postgresql` and verify /var/lib/pgsql has at least 5GB free space using `df -h`. |
 ---
 
 ## Support SLA Reference

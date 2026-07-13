@@ -74,9 +74,11 @@ TCP (Transmission Control Protocol) and UDP (User Datagram Protocol) are both tr
 ```
 
 !!! warning "Common errors"
-    **`Error: model "llama3.1:8b" not found, try pulling it first`** — Run `ollama pull llama3.1:8b` to download the model before executing commands.
-    **`Error: connection refused`** — Start the Ollama service with `ollama serve` in another terminal or ensure the Ollama daemon is running.
-    **`Error: read "prompt.txt": no such file or directory`** — Verify the prompt file exists in the current directory with `ls -la prompt.txt` before piping it.
+    | Error | Fix |
+    |---|---|
+    | `Error: model "llama3.1:8b" not found, try pulling it first` | Run `ollama pull llama3.1:8b` to download the model before executing commands. |
+    | `Error: connection refused` | Start the Ollama service with `ollama serve` in another terminal or ensure the Ollama daemon is running. |
+    | `Error: read "prompt.txt": no such file or directory` | Verify the prompt file exists in the current directory with `ls -la prompt.txt` before piping it. |
 ## REST API Testing with curl
 
 The Ollama REST API is compatible with the OpenAI API format.
@@ -140,9 +142,11 @@ neural-chat:7b
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to localhost port 11434: Connection refused`** — Ensure Ollama is running with `ollama serve` or verify it's listening on port 11434 with `netstat -tuln | grep 11434`.
-    **`jq: parse error: Cannot index number with string "response"`** — The model may still be loading; wait a few seconds and retry, or check that the model is fully downloaded with `ollama list`.
-    **`error: "model 'llama3.1:8b' not found"`** — Pull the required model first using `ollama pull llama3.1:8b`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to localhost port 11434: Connection refused` | Ensure Ollama is running with `ollama serve` or verify it's listening on port 11434 with `netstat -tuln | grep 11434`. |
+    | `jq: parse error: Cannot index number with string "response"` | The model may still be loading; wait a few seconds and retry, or check that the model is fully downloaded with `ollama list`. |
+    | `error: "model 'llama3.1:8b' not found"` | Pull the required model first using `ollama pull llama3.1:8b`. |
 ## Streaming Responses
 
 ```python
@@ -195,9 +199,11 @@ sys	0.089s
 ```
 
 !!! warning "Common errors"
-    **`error: model 'llama3.1:8b' not found, try pulling it first`** — Run `ollama pull llama3.1:8b` before executing the test.
-    **`curl: (7) Failed to connect to localhost port 11434: Connection refused`** — Ensure the Ollama service is running with `ollama serve` in another terminal or as a background service.
-    **`jq: parse error: Invalid numeric literal at line 1 column 7`** — Verify the API response is valid JSON by testing `curl -s http://localhost:11434/api/generate -d '{"model":"llama3.1:8b","prompt":"test","stream":false}'` without piping to jq first.
+    | Error | Fix |
+    |---|---|
+    | `error: model 'llama3.1:8b' not found, try pulling it first` | Run `ollama pull llama3.1:8b` before executing the test. |
+    | `curl: (7) Failed to connect to localhost port 11434: Connection refused` | Ensure the Ollama service is running with `ollama serve` in another terminal or as a background service. |
+    | `jq: parse error: Invalid numeric literal at line 1 column 7` | Verify the API response is valid JSON by testing `curl -s http://localhost:11434/api/generate -d '{"model":"llama3.1:8b","prompt":"test","stream":false}'` without piping to jq first. |
 ## Model Comparison Script
 
 ```python
@@ -258,6 +264,8 @@ curl http://localhost:11434/api/embed \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to localhost port 11434: Connection refused`** — Ensure the Ollama service is running with `ollama serve` or check that it's listening on port 11434.
-    **`jq: parse error: Cannot index number with string "embeddings"`** — The model may not support embeddings or returned an error; verify the model exists with `ollama list` and that `nomic-embed-text` is pulled.
-    **`jq: error (at <stdin>:1): Cannot iterate over null (null)`** — The API response doesn't contain the expected `embeddings` field; check the Ollama API response with `curl http://localhost:11434/api/embed -d '{"model":"nomic-embed-text","input":"test"}'` to inspect the actual structure.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to localhost port 11434: Connection refused` | Ensure the Ollama service is running with `ollama serve` or check that it's listening on port 11434. |
+    | `jq: parse error: Cannot index number with string "embeddings"` | The model may not support embeddings or returned an error; verify the model exists with `ollama list` and that `nomic-embed-text` is pulled. |
+    | `jq: error (at <stdin>:1): Cannot iterate over null (null)` | The API response doesn't contain the expected `embeddings` field; check the Ollama API response with `curl http://localhost:11434/api/embed -d '{"model":"nomic-embed-text","input":"test"}'` to inspect the actual structure. |

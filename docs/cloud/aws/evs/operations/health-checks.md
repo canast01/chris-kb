@@ -117,9 +117,11 @@ vsanDatastore       10240       7168         30.0
 ```
 
 !!! warning "Common errors"
-    **`bash: EVS_ENV_ID: parameter null or not set`** — Export the required environment variable before running the script: `export EVS_ENV_ID=env-xxxxx`.
-    **`Connect-VIServer : Cannot find a vCenter Server system at 'vcenter.example.com'. Verify the server name and that the system is running.`** — Verify the VCENTER_HOST variable is set correctly and the vCenter server is reachable: `ping $VCENTER_HOST`.
-    **`curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused`** — Confirm NSX Manager is running and accessible; check firewall rules and verify NSX_MANAGER_URL is correct: `curl -sk https://$NSX_MANAGER_URL/api/v1/cluster/status`.
+    | Error | Fix |
+    |---|---|
+    | `bash: EVS_ENV_ID: parameter null or not set` | Export the required environment variable before running the script: `export EVS_ENV_ID=env-xxxxx`. |
+    | `Connect-VIServer : Cannot find a vCenter Server system at 'vcenter.example.com'. Verify the server name and that the system is running.` | Verify the VCENTER_HOST variable is set correctly and the vCenter server is reachable: `ping $VCENTER_HOST`. |
+    | `curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused` | Confirm NSX Manager is running and accessible; check firewall rules and verify NSX_MANAGER_URL is correct: `curl -sk https://$NSX_MANAGER_URL/api/v1/cluster/status`. |
 ## Manual Checks
 
 ![Manual Checks](../../../../assets/cloud-aws-evs-hc-manual-checks.svg)
@@ -151,9 +153,11 @@ nsx-edge-03: RUNNING
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in the provided code, so ensure `$NSX_MANAGER_URL` uses https://).
-    **`jq: command not found` or `python3: command not found`** — Install the missing dependency with `apt-get install python3` or `yum install python3` on the management host.
-    **`401 Unauthorized`** — Verify `$NSX_PASSWORD` environment variable is set correctly and the admin account has API permissions with `echo $NSX_PASSWORD` and check NSX Manager audit logs.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in the provided code, so ensure `$NSX_MANAGER_URL` uses https://). |
+    | `jq: command not found` or `python3: command not found` | Install the missing dependency with `apt-get install python3` or `yum install python3` on the management host. |
+    | `401 Unauthorized` | Verify `$NSX_PASSWORD` environment variable is set correctly and the admin account has API permissions with `echo $NSX_PASSWORD` and check NSX Manager audit logs. |
 ---
 
 ## See also

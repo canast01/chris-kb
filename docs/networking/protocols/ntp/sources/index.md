@@ -112,8 +112,10 @@ Leap second     : 0
 ```
 
 !!! warning "Common errors"
-    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `sudo systemctl start chronyd` and listening on localhost.
-    **`No sources present in sourcestats output`** — Wait 30+ seconds after chronyd startup for sources to be polled and added to the measurement set.
+    | Error | Fix |
+    |---|---|
+    | `506 Cannot talk to daemon` | Ensure chronyd is running with `sudo systemctl start chronyd` and listening on localhost. |
+    | `No sources present in sourcestats output` | Wait 30+ seconds after chronyd startup for sources to be polled and added to the measurement set. |
 ## Configuring Sources (chrony)
 
 ```bash
@@ -141,8 +143,10 @@ Reloading sources.
 ```
 
 !!! warning "Common errors"
-    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `systemctl start chronyd` and listening on the socket.
-    **`Invalid minpoll/maxpoll value`** — Use values between 3 and 17 (representing 2³ to 2¹⁷ seconds); minpoll must be less than maxpoll.
+    | Error | Fix |
+    |---|---|
+    | `506 Cannot talk to daemon` | Ensure chronyd is running with `systemctl start chronyd` and listening on the socket. |
+    | `Invalid minpoll/maxpoll value` | Use values between 3 and 17 (representing 2³ to 2¹⁷ seconds); minpoll must be less than maxpoll. |
 ## Windows — w32tm Source Config
 
 ```powershell
@@ -216,9 +220,11 @@ Leap indicator: 0
 ```
 
 !!! warning "Common errors"
-    **`% Invalid input detected at '^' marker.`** — Verify the NTP server hostname is resolvable; if DNS fails, use the IP address directly instead.
-    **`NTP is not enabled`** — Enable NTP globally with `ntp enable` (Arista) or ensure `ntp enable` is configured before adding servers on Cisco.
-    **`reach value is 0 and associations show no asterisk or plus sign`** — Check network connectivity to the NTP server and verify firewall rules allow UDP port 123 bidirectionally.
+    | Error | Fix |
+    |---|---|
+    | `% Invalid input detected at '^' marker.` | Verify the NTP server hostname is resolvable; if DNS fails, use the IP address directly instead. |
+    | `NTP is not enabled` | Enable NTP globally with `ntp enable` (Arista) or ensure `ntp enable` is configured before adding servers on Cisco. |
+    | `reach value is 0 and associations show no asterisk or plus sign` | Check network connectivity to the NTP server and verify firewall rules allow UDP port 123 bidirectionally. |
 ## Common Source Issues
 
 | Symptom | Cause | Check |

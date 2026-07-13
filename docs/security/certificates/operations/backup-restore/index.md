@@ -174,9 +174,11 @@ openssl pkcs12 -export \
 ```
 
 !!! warning "Common errors"
-    **`unable to load private key`** — Verify the private key file path is correct and the file has read permissions (`chmod 600 server.key`).
-    **`Error outputting keys and certificates`** — Ensure the certificate file (server.crt) and CA chain file (ca-chain.pem) are in PEM format and not corrupted; validate with `openssl x509 -in server.crt -text -noout`.
-    **`MAC verification failure`** — The PFX file was created but cannot be read back; regenerate the PFX with a simpler passphrase or use `-passin pass:` to match the original key encryption password if the key is encrypted.
+    | Error | Fix |
+    |---|---|
+    | `unable to load private key` | Verify the private key file path is correct and the file has read permissions (`chmod 600 server.key`). |
+    | `Error outputting keys and certificates` | Ensure the certificate file (server.crt) and CA chain file (ca-chain.pem) are in PEM format and not corrupted; validate with `openssl x509 -in server.crt -text -noout`. |
+    | `MAC verification failure` | The PFX file was created but cannot be read back; regenerate the PFX with a simpler passphrase or use `-passin pass:` to match the original key encryption password if the key is encrypted. |
 ### OpenSSL — Import a PKCS#12 Bundle
 
 ```bash
@@ -198,9 +200,11 @@ openssl pkcs12 -in server.pfx -cacerts -nokeys -out ca-chain.pem -passin pass:St
 ```
 
 !!! warning "Common errors"
-    **`Error opening input file server.pfx`** — Verify the PFX file exists in the current directory with `ls -la server.pfx` and correct the path if needed.
-    **`Mac verify failure`** — Ensure the password is correct; if the PFX was created with a different passphrase, try `openssl pkcs12 -in server.pfx -passin pass:CorrectPassword` or use `-passin file:` to read from a file.
-    **`unable to load private key`** — If extracting the key fails silently, the PFX may be corrupted or the `-nodes` flag was omitted; re-export the PFX from the certificate authority or use `-nodes` to skip encryption on the output key.
+    | Error | Fix |
+    |---|---|
+    | `Error opening input file server.pfx` | Verify the PFX file exists in the current directory with `ls -la server.pfx` and correct the path if needed. |
+    | `Mac verify failure` | Ensure the password is correct; if the PFX was created with a different passphrase, try `openssl pkcs12 -in server.pfx -passin pass:CorrectPassword` or use `-passin file:` to read from a file. |
+    | `unable to load private key` | If extracting the key fails silently, the PFX may be corrupted or the `-nodes` flag was omitted; re-export the PFX from the certificate authority or use `-nodes` to skip encryption on the output key. |
 ---
 
 ## OpenSSL Private CA — Backup
@@ -244,8 +248,10 @@ x /etc/ssl/CA/newcerts/02.pem
 ```
 
 !!! warning "Common errors"
-    **`bad decrypt`** — Verify the passphrase matches exactly and that the encrypted file was not corrupted during transfer.
-    **`tar: /etc/ssl/CA/: Cannot open: Permission denied`** — Run the tar command with `sudo` to ensure read access to private key files in the CA directory.
+    | Error | Fix |
+    |---|---|
+    | `bad decrypt` | Verify the passphrase matches exactly and that the encrypted file was not corrupted during transfer. |
+    | `tar: /etc/ssl/CA/: Cannot open: Permission denied` | Run the tar command with `sudo` to ensure read access to private key files in the CA directory. |
 ### Verify CA Key Integrity
 
 ```bash
@@ -262,8 +268,10 @@ openssl x509 -noout -modulus -in /etc/ssl/CA/ca.crt | openssl md5
 ```
 
 !!! warning "Common errors"
-    **`unable to load Private Key`** — Verify the key file exists at `/etc/ssl/CA/ca.key` and you have read permissions with `ls -l /etc/ssl/CA/ca.key`.
-    **`unable to load certificate`** — Confirm the certificate file exists at `/etc/ssl/CA/ca.crt` and is in valid PEM format with `file /etc/ssl/CA/ca.crt`.
+    | Error | Fix |
+    |---|---|
+    | `unable to load Private Key` | Verify the key file exists at `/etc/ssl/CA/ca.key` and you have read permissions with `ls -l /etc/ssl/CA/ca.key`. |
+    | `unable to load certificate` | Confirm the certificate file exists at `/etc/ssl/CA/ca.crt` and is in valid PEM format with `file /etc/ssl/CA/ca.crt`. |
 ---
 
 ## Windows ADCS — Restore Procedure
@@ -367,9 +375,11 @@ x /etc/ssl/CA/serial
 ```
 
 !!! warning "Common errors"
-    **`tar: /etc/ssl/CA: Cannot open: Permission denied`** — Run the restore command with `sudo` or as root user.
-    **`openssl: error in enc`** — Verify the backup file exists at the specified path and the encryption passphrase is correct.
-    **`chown: invalid user 'ssl-cert'`** — Replace `ssl-cert` with an existing group name (e.g., `root` or check available groups with `getent group`).
+    | Error | Fix |
+    |---|---|
+    | `tar: /etc/ssl/CA: Cannot open: Permission denied` | Run the restore command with `sudo` or as root user. |
+    | `openssl: error in enc` | Verify the backup file exists at the specified path and the encryption passphrase is correct. |
+    | `chown: invalid user 'ssl-cert'` | Replace `ssl-cert` with an existing group name (e.g., `root` or check available groups with `getent group`). |
 ---
 
 ## Key Ceremony Documentation

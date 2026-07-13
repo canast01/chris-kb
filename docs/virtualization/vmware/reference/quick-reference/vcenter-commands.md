@@ -54,8 +54,10 @@ vmware-content-library                          RUNNING
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Run this command on a vCenter Server or ESXi host where service-control is available in the PATH, or use the full path `/usr/lib/vmware-vmon/service-control`.
-    **`Error: Unable to connect to the service manager`** — Ensure the VMware service manager daemon is running with `systemctl start vmware-vmon` on ESXi or vCenter.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Run this command on a vCenter Server or ESXi host where service-control is available in the PATH, or use the full path `/usr/lib/vmware-vmon/service-control`. |
+    | `Error: Unable to connect to the service manager` | Ensure the VMware service manager daemon is running with `systemctl start vmware-vmon` on ESXi or vCenter. |
 ## Start All Services
 
 ```bash
@@ -77,9 +79,11 @@ All services started successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to start service vmon: Address already in use`** — Verify no conflicting services are running on required ports with `netstat -tlnp` and stop them before retrying.
-    **`Error: Insufficient disk space to start services`** — Check available disk space with `df -h` and ensure at least 10GB free space in `/storage` before attempting restart.
-    **`Error: Service startup timeout - vmon failed to respond within 60 seconds`** — Review `/var/log/vmware/vpxa/vpxa.log` for startup errors and increase timeout with `service-control --start --all --timeout=120`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to start service vmon: Address already in use` | Verify no conflicting services are running on required ports with `netstat -tlnp` and stop them before retrying. |
+    | `Error: Insufficient disk space to start services` | Check available disk space with `df -h` and ensure at least 10GB free space in `/storage` before attempting restart. |
+    | `Error: Service startup timeout - vmon failed to respond within 60 seconds` | Review `/var/log/vmware/vpxa/vpxa.log` for startup errors and increase timeout with `service-control --start --all --timeout=120`. |
 ## Stop All Services
 
 ```bash
@@ -97,8 +101,10 @@ All services stopped successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: Unable to stop service 'vmware-workstation-server': Permission denied`** — Run the command with `sudo` or as root user.
-    **`Error: Service 'vmware-hostd' failed to stop within timeout period`** — Wait a few seconds and retry, or use `service-control --stop --all --force` to forcefully terminate services.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unable to stop service 'vmware-workstation-server': Permission denied` | Run the command with `sudo` or as root user. |
+    | `Error: Service 'vmware-hostd' failed to stop within timeout period` | Wait a few seconds and retry, or use `service-control --stop --all --force` to forcefully terminate services. |
 ## Restart All Services
 
 ```bash
@@ -124,9 +130,11 @@ All services started successfully.
 ```
 
 !!! warning "Common errors"
-    **`service-control: command not found`** — Run this command on the vCenter Server appliance directly, not a remote system; the tool is only available in /usr/lib/vmware-vise/bin/.
-    **`Error: Failed to stop service 'vpxd': Service is locked by another process`** — Wait 2-3 minutes for any ongoing tasks to complete, then retry the command.
-    **`Error: Some services failed to start. Check /var/log/vmware/vpxd/vpxd.log for details`** — Verify sufficient disk space with `df -h` and check that the vCenter database is accessible before retrying.
+    | Error | Fix |
+    |---|---|
+    | `service-control: command not found` | Run this command on the vCenter Server appliance directly, not a remote system; the tool is only available in /usr/lib/vmware-vise/bin/. |
+    | `Error: Failed to stop service 'vpxd': Service is locked by another process` | Wait 2-3 minutes for any ongoing tasks to complete, then retry the command. |
+    | `Error: Some services failed to start. Check /var/log/vmware/vpxd/vpxd.log for details` | Verify sufficient disk space with `df -h` and check that the vCenter database is accessible before retrying. |
 ## Restart a Single Service
 
 ```bash
@@ -152,9 +160,11 @@ vmware-lookupsvc started successfully
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to service-control daemon`** — Ensure you are running this command on a vCenter Server host with root/administrator privileges.
-    **`Error: Service vmware-vpxd is not installed`** — Verify the vCenter Server installation is complete and the service exists using `service-control --list`.
-    **`Error: Timeout waiting for service to stop`** — Increase the timeout or check for hung processes using `ps aux | grep vmware` and manually kill if necessary.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to service-control daemon` | Ensure you are running this command on a vCenter Server host with root/administrator privileges. |
+    | `Error: Service vmware-vpxd is not installed` | Verify the vCenter Server installation is complete and the service exists using `service-control --list`. |
+    | `Error: Timeout waiting for service to stop` | Increase the timeout or check for hung processes using `ps aux | grep vmware` and manually kill if necessary. |
 ## Check Disk Space
 
 ```bash
@@ -172,8 +182,10 @@ tmpfs           64G  8.0G   56G  13% /dev/shm
 ```
 
 !!! warning "Common errors"
-    **`df: cannot access '/vmfs/volumes/datastore1': Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the mount point.
-    **`df: /dev/sda1: No such file or directory`** — Verify the device exists with `lsblk` or `fdisk -l`; the device name may differ on your system.
+    | Error | Fix |
+    |---|---|
+    | `df: cannot access '/vmfs/volumes/datastore1': Permission denied` | Run the command with `sudo` or ensure your user has read permissions on the mount point. |
+    | `df: /dev/sda1: No such file or directory` | Verify the device exists with `lsblk` or `fdisk -l`; the device name may differ on your system. |
 ## Check Uptime
 
 ```bash

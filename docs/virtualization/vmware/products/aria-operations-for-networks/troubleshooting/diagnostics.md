@@ -132,9 +132,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBsb2NhbCIsImV4cCI6MTcwNTM
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed).
-    **`jq: command not found` or `python3: command not found`** — Install the required JSON parser (`apt-get install python3` or `brew install jq`) and use the appropriate tool for your environment.
-    **`{"error":"Invalid credentials"}` or empty `$TOKEN` output** — Verify the username, password, and domain are correct; check that the LOCAL domain exists and the admin user is configured in vRNI.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed). |
+    | `jq: command not found` or `python3: command not found` | Install the required JSON parser (`apt-get install python3` or `brew install jq`) and use the appropriate tool for your environment. |
+    | `{"error":"Invalid credentials"}` or empty `$TOKEN` output` | Verify the username, password, and domain are correct; check that the LOCAL domain exists and the admin user is configured in vRNI. |
 ---
 
 ## Step 2 — Check data source connectivity and sync status
@@ -194,9 +196,11 @@ Connection to 10.20.3.10 443 port [tcp/https] failed: Connection refused
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the VRNI platform certificate into the collector's CA bundle.
-    **`jq: command not found`** — Install `python3-json.tool` or use the provided Python one-liner instead of piping to `jq`.
-    **`Connection to <ip> 443 port [tcp/https] failed: Connection refused`** — Verify the target service is running and listening on port 443, and check firewall rules between collector and data source.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the VRNI platform certificate into the collector's CA bundle. |
+    | `jq: command not found` | Install `python3-json.tool` or use the provided Python one-liner instead of piping to `jq`. |
+    | `Connection to <ip> 443 port [tcp/https] failed: Connection refused` | Verify the target service is running and listening on port 443, and check firewall rules between collector and data source. |
 ---
 
 ## Step 3 — Verify NetFlow receipt
@@ -249,9 +253,11 @@ admin@collector-01:~$
 ```
 
 !!! warning "Common errors"
-    **`tcpdump: eth0: No such device`** — Verify the correct interface name with `ip link show` and replace eth0 with the actual interface (e.g., ens0, ens160).
-    **`tail: cannot open '/var/log/proxy.log' for reading: Permission denied`** — Run the command with `sudo` prefix: `sudo tail -100 /var/log/proxy.log | grep -i "received\|processed\|drop\|error"`.
-    **`Failed to restart sannav-event-engine: Unit sannav-event-engine.service not found`** — Confirm the correct service name with `sudo systemctl list-units --type=service | grep -i event` and use the actual service name in the restart command.
+    | Error | Fix |
+    |---|---|
+    | `tcpdump: eth0: No such device` | Verify the correct interface name with `ip link show` and replace eth0 with the actual interface (e.g., ens0, ens160). |
+    | `tail: cannot open '/var/log/proxy.log' for reading: Permission denied` | Run the command with `sudo` prefix: `sudo tail -100 /var/log/proxy.log | grep -i "received\|processed\|drop\|error"`. |
+    | `Failed to restart sannav-event-engine: Unit sannav-event-engine.service not found` | Confirm the correct service name with `sudo systemctl list-units --type=service | grep -i event` and use the actual service name in the restart command. |
 If tcpdump shows no packets:
 1. Log in to the switch that should be exporting NetFlow
 2. Verify NetFlow export is configured to the collector IP on UDP 2055
@@ -362,8 +368,10 @@ tmpfs          32G   1.2G   31G   4% /dev/shm
 ```
 
 !!! warning "Common errors"
-    **`find: '/data/backup/': Permission denied`** — Run the find command with `sudo` or ensure your user has read/execute permissions on the /data/backup directory.
-    **`rm: remove write-protected regular file 'backup_2024_01_15_143022'?`** — Add the `-f` flag to the rm command within the find exec (`-exec rm -rf {} \;` already includes this, but check file permissions with `ls -l` if the prompt appears).
+    | Error | Fix |
+    |---|---|
+    | `find: '/data/backup/': Permission denied` | Run the find command with `sudo` or ensure your user has read/execute permissions on the /data/backup directory. |
+    | `rm: remove write-protected regular file 'backup_2024_01_15_143022'?` | Add the `-f` flag to the rm command within the find exec (`-exec rm -rf {} \;` already includes this, but check file permissions with `ls -l` if the prompt appears). |
 ---
 
 ## Step 6 — Check platform certificate
@@ -400,8 +408,10 @@ issuer=CN = vrni-platform.corp.local, O = VMware, C = US
 ```
 
 !!! warning "Common errors"
-    **`unable to load certificate`** — Verify the vRNI platform IP and port are correct and the service is running on port 443.
-    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — This is expected for self-signed certificates; the certificate details are still extracted and the expiry date is valid.
+    | Error | Fix |
+    |---|---|
+    | `unable to load certificate` | Verify the vRNI platform IP and port are correct and the service is running on port 443. |
+    | `error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed` | This is expected for self-signed certificates; the certificate details are still extracted and the expiry date is valid. |
 ---
 
 ## Step 7 — Collect support bundle for VMware SR
@@ -440,9 +450,11 @@ Checksum (SHA256): a7f3e8c2d9b1e4f6a8c3d5e7f9a1b2c4d6e8f0a1b2c3d4e5f6a7b8c9d0e1f
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH key-based authentication is configured, or use the VAMI web interface as an alternative.
-    **`support-bundle: command not found`** — Confirm you are logged into the vRNI platform VM (not a proxy or collector node) and that your user has support bundle generation privileges.
-    **`/tmp/support-bundle-*.tar.gz: No such file or directory`** — Wait for the bundle generation to complete fully before attempting to download, as large bundles may take 5–10 minutes.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify the admin account credentials and ensure SSH key-based authentication is configured, or use the VAMI web interface as an alternative. |
+    | `support-bundle: command not found` | Confirm you are logged into the vRNI platform VM (not a proxy or collector node) and that your user has support bundle generation privileges. |
+    | `/tmp/support-bundle-*.tar.gz: No such file or directory` | Wait for the bundle generation to complete fully before attempting to download, as large bundles may take 5–10 minutes. |
 ---
 
 ## Log locations

@@ -137,9 +137,11 @@ vmware-vsan-health      RUNNING
 ```
 
 !!! warning "Common errors"
-    **`Error: vpxd failed to start. Dependency vmware-stsd is not running.`** — Verify vmware-stsd started successfully with `service-control --status vmware-stsd` before starting vpxd.
-    **`Error: Cannot connect to service-control daemon. Is vmon running?`** — Restart the service control daemon with `systemctl restart vmon` or reboot the vCenter appliance.
-    **`Error: vmware-vpostgres failed to start: database directory not accessible`** — Check disk space and permissions on `/storage/db` with `df -h` and `ls -la /storage/db`.
+    | Error | Fix |
+    |---|---|
+    | `Error: vpxd failed to start. Dependency vmware-stsd is not running.` | Verify vmware-stsd started successfully with `service-control --status vmware-stsd` before starting vpxd. |
+    | `Error: Cannot connect to service-control daemon. Is vmon running?` | Restart the service control daemon with `systemctl restart vmon` or reboot the vCenter appliance. |
+    | `Error: vmware-vpostgres failed to start: database directory not accessible` | Check disk space and permissions on `/storage/db` with `df -h` and `ls -la /storage/db`. |
 ---
 
 ## Sizing
@@ -370,9 +372,11 @@ VCDB=# \q
 ```
 
 !!! warning "Common errors"
-    **`psql: error: could not connect to server: No such file or directory`** — Ensure the vPostgres service is running with `systemctl status vpostgres` and verify `/opt/vmware/vpostgres/current/bin/psql` exists.
-    **`FATAL: role "postgres" does not exist`** — The embedded PostgreSQL instance may be corrupted; restart vCenter services with `service-control --stop --all` followed by `service-control --start --all`.
-    **`ERROR: relation "vc_event" does not exist`** — The VCDB schema is incomplete; restore from backup or reinitialize the vCenter database using the vCenter installer.
+    | Error | Fix |
+    |---|---|
+    | `psql: error: could not connect to server: No such file or directory` | Ensure the vPostgres service is running with `systemctl status vpostgres` and verify `/opt/vmware/vpostgres/current/bin/psql` exists. |
+    | `FATAL: role "postgres" does not exist` | The embedded PostgreSQL instance may be corrupted; restart vCenter services with `service-control --stop --all` followed by `service-control --start --all`. |
+    | `ERROR: relation "vc_event" does not exist` | The VCDB schema is incomplete; restore from backup or reinitialize the vCenter database using the vCenter installer. |
 Do not modify the vCenter database directly unless directed by VMware Support.
 
 ---
@@ -449,9 +453,11 @@ curl -sk -H "vmware-api-session-id: $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if error persists, verify vCenter hostname matches certificate CN).
-    **`{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[]}}`** — Verify credentials are correct and TOKEN variable is populated; re-run authentication command and check for shell quoting issues with special characters in password.
-    **`curl: (7) Failed to connect to vcenter.example.local port 443: Name or service not known`** — Confirm vCenter FQDN is resolvable and accessible from your network; check DNS or use IP address instead.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if error persists, verify vCenter hostname matches certificate CN). |
+    | `{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[]}}` | Verify credentials are correct and TOKEN variable is populated; re-run authentication command and check for shell quoting issues with special characters in password. |
+    | `curl: (7) Failed to connect to vcenter.example.local port 443: Name or service not known` | Confirm vCenter FQDN is resolvable and accessible from your network; check DNS or use IP address instead. |
 Swagger UI: `https://<vcenter>/apiexplorer`
 
 ---

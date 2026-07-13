@@ -89,9 +89,11 @@ Upgrade completed successfully. Current version: 6.3.1
 ```
 
 !!! warning "Common errors"
-    **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the purearray binary is in your PATH.
-    **`Error: Insufficient free space. Required: 2.5 GB, Available: 1.2 GB`** — Delete old snapshots or logs to free up space before staging the upgrade image.
-    **`Error: Replication link down on target array flasharray-03`** — Verify network connectivity and replication configuration between arrays before proceeding with the upgrade.
+    | Error | Fix |
+    |---|---|
+    | `purearray: command not found` | Install the Pure Storage CLI tools or ensure the purearray binary is in your PATH. |
+    | `Error: Insufficient free space. Required: 2.5 GB, Available: 1.2 GB` | Delete old snapshots or logs to free up space before staging the upgrade image. |
+    | `Error: Replication link down on target array flasharray-03` | Verify network connectivity and replication configuration between arrays before proceeding with the upgrade. |
 **Key rules:**
 
 - Never upgrade both controllers in an ActiveCluster pod simultaneously — upgrade one array at a time

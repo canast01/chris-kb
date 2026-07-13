@@ -85,8 +85,10 @@ svm-dr    vol_temp     750GB      45GB       6%             705.0GB
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found`** — Ensure you are connected to a NetApp ONTAP cluster via SSH or the ONTAP CLI, not a standard Linux shell.
-    **`Error: Invalid field name "percent-used"`** — Use the correct field name `percent_used` (underscore instead of hyphen) for your ONTAP version.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found` | Ensure you are connected to a NetApp ONTAP cluster via SSH or the ONTAP CLI, not a standard Linux shell. |
+    | `Error: Invalid field name "percent-used"` | Use the correct field name `percent_used` (underscore instead of hyphen) for your ONTAP version. |
 **Identify rate of growth:**
 
 ```bash
@@ -106,8 +108,10 @@ Time                 Severity Event
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: event`** — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not the local shell.
-    **`Error: No matching events found`** — Adjust the time-range parameter (e.g., `-time-range 24h`) or remove the severity filter to broaden the search.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: event` | Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not the local shell. |
+    | `Error: No matching events found` | Adjust the time-range parameter (e.g., `-time-range 24h`) or remove the severity filter to broaden the search. |
 ---
 
 ## Stop the Bleeding
@@ -162,8 +166,10 @@ find /vmfs/volumes/<UUID-or-label> -type f -exec du -sh {} \; 2>/dev/null | \
 ```
 
 !!! warning "Common errors"
-    **`find: '/vmfs/volumes/<UUID-or-label>': No such file or directory`** — Replace `<UUID-or-label>` with the actual datastore name or UUID (e.g., `/vmfs/volumes/datastore1` or `/vmfs/volumes/5a3c8e2f-1b4d-7c9a-e2f1-3d5a8c2b9e4f`).
-    **`Permission denied`** — Run the command with `sudo` or as root user since `/vmfs/volumes` requires elevated privileges on ESXi hosts.
+    | Error | Fix |
+    |---|---|
+    | `find: '/vmfs/volumes/<UUID-or-label>': No such file or directory` | Replace `<UUID-or-label>` with the actual datastore name or UUID (e.g., `/vmfs/volumes/datastore1` or `/vmfs/volumes/5a3c8e2f-1b4d-7c9a-e2f1-3d5a8c2b9e4f`). |
+    | `Permission denied` | Run the command with `sudo` or as root user since `/vmfs/volumes` requires elevated privileges on ESXi hosts. |
 ### Suspend non-critical snapshot schedules
 
 In ONTAP, temporarily suspend the SnapMirror schedule on the affected volume to stop growth from replication overhead:
@@ -183,8 +189,10 @@ Quiesce Status: Success
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Unexpected error from Data ONTAP: entry doesn't exist`** — Verify the destination path syntax matches the format `cluster-name://svm-name/volume-name` and that the SnapMirror relationship exists.
-    **`Error: This operation is not permitted on a broken SnapMirror relationship`** — Resynchronize the SnapMirror relationship using `snapmirror resync -destination-path <path>` before attempting to quiesce.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Unexpected error from Data ONTAP: entry doesn't exist` | Verify the destination path syntax matches the format `cluster-name://svm-name/volume-name` and that the SnapMirror relationship exists. |
+    | `Error: This operation is not permitted on a broken SnapMirror relationship` | Resynchronize the SnapMirror relationship using `snapmirror resync -destination-path <path>` before attempting to quiesce. |
 ---
 
 ## Diagnose
@@ -255,8 +263,10 @@ LUN resize successful: LUN "/vol/vol_name/lun_name" size extended to 1.5TB.
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: volume`** — Ensure you are connected to the NetApp cluster management interface (SSH to the cluster IP or use System Manager) rather than a standard Linux shell.
-    **`Error: LUN is mapped and cannot be resized`** — Unmount the LUN from all hosts and unmap it from igroups before resizing, then remap and remount after the operation completes.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: volume` | Ensure you are connected to the NetApp cluster management interface (SSH to the cluster IP or use System Manager) rather than a standard Linux shell. |
+    | `Error: LUN is mapped and cannot be resized` | Unmount the LUN from all hosts and unmap it from igroups before resizing, then remap and remount after the operation completes. |
 **Step 2 — Rescan storage on ESXi hosts:**
 
 ```powershell
@@ -313,9 +323,11 @@ prod-svm    vol_name     on       true      snap_reserve  10%
 ```
 
 !!! warning "Common errors"
-    **`Snapshot "hourly.2024-01-15_0200" is in use by a clone or SnapMirror relationship`** — Verify the snapshot has no dependent clones or SnapMirror destinations before deletion using `snapshot show -vserver SVM -volume vol_name -snapshot <snapshot-name> -fields owners`.
-    **`Error: command not found: volume show-space`** — Confirm you are connected to a NetApp ONTAP cluster with appropriate admin credentials and the correct SVM context is set.
-    **`Vserver "SVM" does not exist`** — Replace "SVM" with the actual SVM name from your cluster, obtainable via `vserver show`.
+    | Error | Fix |
+    |---|---|
+    | `Snapshot "hourly.2024-01-15_0200" is in use by a clone or SnapMirror relationship` | Verify the snapshot has no dependent clones or SnapMirror destinations before deletion using `snapshot show -vserver SVM -volume vol_name -snapshot <snapshot-name> -fields owners`. |
+    | `Error: command not found: volume show-space` | Confirm you are connected to a NetApp ONTAP cluster with appropriate admin credentials and the correct SVM context is set. |
+    | `Vserver "SVM" does not exist` | Replace "SVM" with the actual SVM name from your cluster, obtainable via `vserver show`. |
 ---
 
 ## vSAN-Specific Checks

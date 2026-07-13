@@ -74,9 +74,11 @@ Topology Information:
 ```
 
 !!! warning "Common errors"
-    **`switchshow: No such file or directory`** — Ensure you are logged into the switch via SSH or serial console, not a management station.
-    **`Fabric State: Offline`** — Verify all ISL cables are seated firmly and check `portshow` for link errors on ISL ports.
-    **`Switch ID mismatch detected`** — Run `fabricshow --reset` to resynchronize the fabric configuration after hardware changes.
+    | Error | Fix |
+    |---|---|
+    | `switchshow: No such file or directory` | Ensure you are logged into the switch via SSH or serial console, not a management station. |
+    | `Fabric State: Offline` | Verify all ISL cables are seated firmly and check `portshow` for link errors on ISL ports. |
+    | `Switch ID mismatch detected` | Run `fabricshow --reset` to resynchronize the fabric configuration after hardware changes. |
 5. Configure trunk groups on the ISL ports:
 ```bash
 # Verify trunking formed automatically (requires same speed on both ends)
@@ -109,8 +111,10 @@ TrunkIndex: 1
 ```
 
 !!! warning "Common errors"
-    **`trunkshow: command not found`** — Verify you are logged into the Brocade switch CLI (not the Linux shell) by checking the prompt shows `switch>` or `switch#`.
-    **`No trunks configured`** — Ensure both switch ports have matching speeds and are directly connected; use `portshow` to verify port speed compatibility before trunk formation.
+    | Error | Fix |
+    |---|---|
+    | `trunkshow: command not found` | Verify you are logged into the Brocade switch CLI (not the Linux shell) by checking the prompt shows `switch>` or `switch#`. |
+    | `No trunks configured` | Ensure both switch ports have matching speeds and are directly connected; use `portshow` to verify port speed compatibility before trunk formation. |
 6. Update CMDB and SAN design register with the new domain ID and port map.
 
 ---
@@ -153,8 +157,10 @@ Active configuration:  prod-zones
 ```
 
 !!! warning "Common errors"
-    **`nsshow: command not found`** — Ensure you are logged into the Brocade switch via SSH or serial console, not the local server; the command runs on the fabric switch itself.
-    **`cfgshow: Access denied`** — Verify your user account has fabric administrator privileges; request elevated permissions or use an admin account.
+    | Error | Fix |
+    |---|---|
+    | `nsshow: command not found` | Ensure you are logged into the Brocade switch via SSH or serial console, not the local server; the command runs on the fabric switch itself. |
+    | `cfgshow: Access denied` | Verify your user account has fabric administrator privileges; request elevated permissions or use an admin account. |
 5. Activate the zone set if it was not restored automatically:
 ```bash
 cfgenable <zoneset-name>
@@ -167,8 +173,10 @@ Zone configuration has been enabled.
 ```
 
 !!! warning "Common errors"
-    **`Error: Zone set <zoneset-name> not found`** — Verify the zoneset name exists with `cfgshow` and use the correct spelling.
-    **`Error: Operation failed - fabric locked`** — Wait for any ongoing fabric operations to complete or use `lockshow` to check lock status, then retry.
+    | Error | Fix |
+    |---|---|
+    | `Error: Zone set <zoneset-name> not found` | Verify the zoneset name exists with `cfgshow` and use the correct spelling. |
+    | `Error: Operation failed - fabric locked` | Wait for any ongoing fabric operations to complete or use `lockshow` to check lock status, then retry. |
 ---
 
 ## Firmware
@@ -216,9 +224,11 @@ Failover complete. New Principal CP: switch-fab2
 ```
 
 !!! warning "Common errors"
-    **`firmwareDownload: Server not reachable (192.168.1.50:21)`** — Verify the server IP is correct and accessible from the switch, and that FTP/SFTP service is running on the firmware server.
-    **`haFailover: HA not enabled or no standby CP available`** — Enable HA mode first using `haEnable`, or ensure a secondary control point is properly configured and synchronized.
-    **`firmwareDownloadStatus: No download in progress`** — Run `firmwareDownload` with valid server credentials and path before checking status.
+    | Error | Fix |
+    |---|---|
+    | `firmwareDownload: Server not reachable (192.168.1.50:21)` | Verify the server IP is correct and accessible from the switch, and that FTP/SFTP service is running on the firmware server. |
+    | `haFailover: HA not enabled or no standby CP available` | Enable HA mode first using `haEnable`, or ensure a secondary control point is properly configured and synchronized. |
+    | `firmwareDownloadStatus: No download in progress` | Run `firmwareDownload` with valid server credentials and path before checking status. |
 ### Firmware Standards
 
 - All switches in a fabric must run the same Fabric OS version (FOS)

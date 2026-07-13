@@ -110,8 +110,10 @@ netapp-node-04    online  true    true
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: cluster show`** — Ensure you are logged into the NetApp cluster management interface (SSH to the cluster management IP) rather than a node management IP.
-    **`Health: false`** — Check cluster event logs with `event log show` and resolve any failed disk or network issues before proceeding.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: cluster show` | Ensure you are logged into the NetApp cluster management interface (SSH to the cluster management IP) rather than a node management IP. |
+    | `Health: false` | Check cluster event logs with `event log show` and resolve any failed disk or network issues before proceeding. |
 **Create a cluster-wide service policy for management traffic (if using separated management VLANs):**
 
 ```bash
@@ -126,9 +128,11 @@ network route create -vserver <cluster_name> -destination 0.0.0.0/0 -gateway <gw
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: EINVALIDARGUMENT: Invalid value specified for "address" : <ip>`** — Verify the IP address format is valid (e.g., 192.168.1.100) and not already in use on the network.
-    **`Error: command failed: EOBJECTNOTFOUND: Vserver "<cluster_name>" does not exist.`** — Ensure the vserver name matches an existing cluster and is spelled correctly.
-    **`Error: command failed: EOBJECTNOTFOUND: Node "<node_name>" does not exist.`** — Confirm the node name is valid and part of the cluster using `cluster show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: EINVALIDARGUMENT: Invalid value specified for "address" : <ip>` | Verify the IP address format is valid (e.g., 192.168.1.100) and not already in use on the network. |
+    | `Error: command failed: EOBJECTNOTFOUND: Vserver "<cluster_name>" does not exist.` | Ensure the vserver name matches an existing cluster and is spelled correctly. |
+    | `Error: command failed: EOBJECTNOTFOUND: Node "<node_name>" does not exist.` | Confirm the node name is valid and part of the cluster using `cluster show`. |
 ---
 
 ## SVM Creation
@@ -172,9 +176,11 @@ network route create: Route created successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Vserver "svm_nfs01" already exists.`** — Delete the existing SVM with `vserver delete -vserver svm_nfs01` or use a different SVM name.
-    **`Error: command failed: Port "e0d" does not exist on node "<node_name>".`** — Verify the correct port name using `network port show -node <node_name>` and update the `-home-port` parameter.
-    **`Error: command failed: IP address 192.168.10.50 is already in use.`** — Check for address conflicts with `network interface show -address 192.168.10.50` and assign an unused IP address.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Vserver "svm_nfs01" already exists.` | Delete the existing SVM with `vserver delete -vserver svm_nfs01` or use a different SVM name. |
+    | `Error: command failed: Port "e0d" does not exist on node "<node_name>".` | Verify the correct port name using `network port show -node <node_name>` and update the `-home-port` parameter. |
+    | `Error: command failed: IP address 192.168.10.50 is already in use.` | Check for address conflicts with `network interface show -address 192.168.10.50` and assign an unused IP address. |
 **Create an iSCSI SVM:**
 
 ```bash
@@ -220,9 +226,11 @@ svm_iscsi01 iscsi_lif02 up/up    10.0.10.51/24      node2         e0e     true
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Vserver "svm_iscsi01" already exists.`** — Verify the SVM name is unique or delete the existing SVM with `vserver delete -vserver svm_iscsi01` before retrying.
-    **`Error: command failed: Port "e0e" does not exist on node "node1".`** — Confirm the correct iSCSI port names with `network port show -node <node>` and update the `-home-port` parameter accordingly.
-    **`Error: command failed: Address 10.0.10.50 is already in use.`** — Verify the IP address is not assigned to another interface using `network interface show -address 10.0.10.50` and choose an unused address.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Vserver "svm_iscsi01" already exists.` | Verify the SVM name is unique or delete the existing SVM with `vserver delete -vserver svm_iscsi01` before retrying. |
+    | `Error: command failed: Port "e0e" does not exist on node "node1".` | Confirm the correct iSCSI port names with `network port show -node <node>` and update the `-home-port` parameter accordingly. |
+    | `Error: command failed: Address 10.0.10.50 is already in use.` | Verify the IP address is not assigned to another interface using `network interface show -address 10.0.10.50` and choose an unused address. |
 ---
 
 ## Volume Provisioning
@@ -253,8 +261,10 @@ aggr3_node2
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: aggr`** — Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a Linux shell.
-    **`Error: This operation is not permitted: insufficient privileges`** — Log in with an admin-level account or request cluster administrator credentials.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: aggr` | Ensure you are connected to the NetApp cluster via SSH or the ONTAP CLI, not a Linux shell. |
+    | `Error: This operation is not permitted: insufficient privileges` | Log in with an admin-level account or request cluster administrator credentials. |
 **Create an NFS volume:**
 
 ```bash
@@ -273,9 +283,11 @@ Volume "vol_nfs_data01" has been created.
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No matching aggregates found for given criteria`** — Verify the aggregate name exists with `storage aggregate show` and ensure it belongs to the correct node.
-    **`Error: command failed: Vserver "svm_nfs01" does not exist`** — Create the SVM first using `vserver create -vserver svm_nfs01` or confirm the SVM name matches your environment.
-    **`Error: command failed: Export policy "default" does not exist`** — Create the export policy with `export-policy create -vserver svm_nfs01 -policyname default` before adding rules.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No matching aggregates found for given criteria` | Verify the aggregate name exists with `storage aggregate show` and ensure it belongs to the correct node. |
+    | `Error: command failed: Vserver "svm_nfs01" does not exist` | Create the SVM first using `vserver create -vserver svm_nfs01` or confirm the SVM name matches your environment. |
+    | `Error: command failed: Export policy "default" does not exist` | Create the export policy with `export-policy create -vserver svm_nfs01 -policyname default` before adding rules. |
 **Create an iSCSI LUN:**
 
 ```bash
@@ -294,9 +306,11 @@ Created a LUN of size 400GB (429496729600B): path /vol/vol_lun_sql01/lun_sql01_d
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No space left on device`** — Verify aggregate aggr1_node1 has sufficient free space with `storage aggregate show -aggregate aggr1_node1`.
-    **`Error: command failed: Vserver "svm_iscsi01" does not exist`** — Create the SVM first using `vserver create -vserver svm_iscsi01 -rootvolume root_svm_iscsi01 -aggregate aggr1_node1`.
-    **`Error: command failed: LUN path /vol/vol_lun_sql01/lun_sql01_data already exists`** — Use a unique LUN name or delete the existing LUN with `lun delete -vserver svm_iscsi01 -path /vol/vol_lun_sql01/lun_sql01_data`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No space left on device` | Verify aggregate aggr1_node1 has sufficient free space with `storage aggregate show -aggregate aggr1_node1`. |
+    | `Error: command failed: Vserver "svm_iscsi01" does not exist` | Create the SVM first using `vserver create -vserver svm_iscsi01 -rootvolume root_svm_iscsi01 -aggregate aggr1_node1`. |
+    | `Error: command failed: LUN path /vol/vol_lun_sql01/lun_sql01_data already exists` | Use a unique LUN name or delete the existing LUN with `lun delete -vserver svm_iscsi01 -path /vol/vol_lun_sql01/lun_sql01_data`. |
 **Verify volumes:**
 
 ```bash
@@ -319,8 +333,10 @@ svm_iscsi01      vol_iscsi_02 aggr_03      online     RW       500GB    425.1GB 
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: volume`** — Ensure you are connected to the NetApp cluster CLI (use `ssh admin@<cluster-ip>`) and not a local shell.
-    **`Error: "svm_nfs01" does not exist`** — Verify the SVM name is correct by running `vserver show` to list all available SVMs.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: volume` | Ensure you are connected to the NetApp cluster CLI (use `ssh admin@<cluster-ip>`) and not a local shell. |
+    | `Error: "svm_nfs01" does not exist` | Verify the SVM name is correct by running `vserver show` to list all available SVMs. |
 ---
 
 ## Host Connectivity
@@ -339,9 +355,11 @@ Filesystem      Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`mount.nfs: access denied by server while mounting 192.168.10.50:/nfs_data01`** — Verify the NFS export policy on the NetApp filer permits the client IP and check firewall rules allow port 2049/111.
-    **`mount.nfs: No such file or directory`** — Confirm the export path `/nfs_data01` exists on the NetApp filer and the mount point `/mnt/ontap_nfs` exists locally (create with `mkdir -p /mnt/ontap_nfs` if needed).
-    **`mount: wrong fs type, bad option, bad superblock on 192.168.10.50:/nfs_data01`** — Verify NFSv3 is enabled on the NetApp filer and the client has nfs-utils installed (`yum install nfs-utils` on RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `mount.nfs: access denied by server while mounting 192.168.10.50:/nfs_data01` | Verify the NFS export policy on the NetApp filer permits the client IP and check firewall rules allow port 2049/111. |
+    | `mount.nfs: No such file or directory` | Confirm the export path `/nfs_data01` exists on the NetApp filer and the mount point `/mnt/ontap_nfs` exists locally (create with `mkdir -p /mnt/ontap_nfs` if needed). |
+    | `mount: wrong fs type, bad option, bad superblock on 192.168.10.50:/nfs_data01` | Verify NFSv3 is enabled on the NetApp filer and the client has nfs-utils installed (`yum install nfs-utils` on RHEL/CentOS). |
 **iSCSI initiator setup (Linux):**
 
 1. Install and start the iSCSI initiator:
@@ -374,8 +392,10 @@ Created symlink from /etc/systemd/system/multi-user.target.wants/iscsid.service 
 ```
 
 !!! warning "Common errors"
-    **`No package iscsi-initiator-utils available.`** — Ensure the RHEL/CentOS base repository is enabled with `yum repolist` and update the package cache with `yum clean all && yum makecache`.
-    **`Failed to enable unit: Unit file /usr/lib/systemd/system/iscsid.service not found.`** — Verify the iscsi-initiator-utils package installed successfully and check `/usr/lib/systemd/system/` for the iscsid.service file.
+    | Error | Fix |
+    |---|---|
+    | `No package iscsi-initiator-utils available.` | Ensure the RHEL/CentOS base repository is enabled with `yum repolist` and update the package cache with `yum clean all && yum makecache`. |
+    | `Failed to enable unit: Unit file /usr/lib/systemd/system/iscsid.service not found.` | Verify the iscsi-initiator-utils package installed successfully and check `/usr/lib/systemd/system/` for the iscsid.service file. |
 2. Discover ONTAP iSCSI targets:
 
 ```bash
@@ -389,8 +409,10 @@ iscsiadm -m discovery -t st -p 10.0.10.50
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: No records found`** — Verify the iSCSI target IP address is correct and reachable with `ping 10.0.10.50`.
-    **`iscsiadm: cannot connect to discovery address 10.0.10.50 port 3260`** — Ensure the iSCSI target service is running on the NetApp array and firewall rules allow port 3260 from the initiator host.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: No records found` | Verify the iSCSI target IP address is correct and reachable with `ping 10.0.10.50`. |
+    | `iscsiadm: cannot connect to discovery address 10.0.10.50 port 3260` | Ensure the iSCSI target service is running on the NetApp array and firewall rules allow port 3260 from the initiator host. |
 3. Log in to all discovered targets:
 
 ```bash
@@ -408,8 +430,10 @@ Login to [iface: default, target: iqn.1992-08.com.netapp:sn.x9y8z7w6v5u4, portal
 ```
 
 !!! warning "Common errors"
-    **`iscsiadm: No records found`** — Ensure iSCSI discovery has been performed first with `iscsiadm -m discovery -t sendtargets -p <portal_ip>`.
-    **`iscsiadm: Could not login to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 192.168.1.50,3260]`** — Verify network connectivity to the iSCSI portal and check that the target is accessible with `ping 192.168.1.50`.
+    | Error | Fix |
+    |---|---|
+    | `iscsiadm: No records found` | Ensure iSCSI discovery has been performed first with `iscsiadm -m discovery -t sendtargets -p <portal_ip>`. |
+    | `iscsiadm: Could not login to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 192.168.1.50,3260]` | Verify network connectivity to the iSCSI portal and check that the target is accessible with `ping 192.168.1.50`. |
 4. Install and configure multipath:
 
 ```bash
@@ -447,8 +471,10 @@ size=1T features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp=r
 ```
 
 !!! warning "Common errors"
-    **`mpathconf: command not found`** — Install device-mapper-multipath first or ensure the package installation completed successfully.
-    **`multipath: command not found`** — Verify device-mapper-multipath is installed with `rpm -q device-mapper-multipath` and check your PATH environment variable.
+    | Error | Fix |
+    |---|---|
+    | `mpathconf: command not found` | Install device-mapper-multipath first or ensure the package installation completed successfully. |
+    | `multipath: command not found` | Verify device-mapper-multipath is installed with `rpm -q device-mapper-multipath` and check your PATH environment variable. |
 **Map the LUN to the host:**
 
 ```bash
@@ -479,9 +505,11 @@ size=500G features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp
 ```
 
 !!! warning "Common errors"
-    **`igroup create: entry already exists`** — Use a unique igroup name or verify the igroup doesn't already exist with `igroup show -vserver svm_iscsi01`.
-    **`lun map: LUN is already mapped to igroup`** — Check existing mappings with `lun mapping show -vserver svm_iscsi01 -path /vol/vol_lun_sql01/lun_sql01_data` and use a different LUN ID or igroup.
-    **`rescan-scsi-bus.sh: command not found`** — Install the sg3-utils package with `apt-get install sg3-utils` (Debian/Ubuntu) or `yum install sg3-utils` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `igroup create: entry already exists` | Use a unique igroup name or verify the igroup doesn't already exist with `igroup show -vserver svm_iscsi01`. |
+    | `lun map: LUN is already mapped to igroup` | Check existing mappings with `lun mapping show -vserver svm_iscsi01 -path /vol/vol_lun_sql01/lun_sql01_data` and use a different LUN ID or igroup. |
+    | `rescan-scsi-bus.sh: command not found` | Install the sg3-utils package with `apt-get install sg3-utils` (Debian/Ubuntu) or `yum install sg3-utils` (RHEL/CentOS). |
 ---
 
 ## SnapMirror
@@ -508,9 +536,11 @@ network interface create -vserver <cluster_name> -lif ic_lif02 -role intercluste
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: EINVALIDARGUMENT: Invalid home port e0f on node <node1>`** — Verify the physical port name exists on the node using `network port show -node <node1>` and correct the home-port parameter.
-    **`Error: command failed: EOBJECTNOTFOUND: Vserver <cluster_name> does not exist`** — Replace `<cluster_name>` with the actual cluster name obtained from `cluster show` or use the correct vserver name from `vserver show`.
-    **`Error: command failed: EADDRINUSE: IP address 10.0.20.50 is already in use`** — Verify the IP addresses are not already assigned to another interface using `network interface show -address 10.0.20.50` and select unused addresses.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: EINVALIDARGUMENT: Invalid home port e0f on node <node1>` | Verify the physical port name exists on the node using `network port show -node <node1>` and correct the home-port parameter. |
+    | `Error: command failed: EOBJECTNOTFOUND: Vserver <cluster_name> does not exist` | Replace `<cluster_name>` with the actual cluster name obtained from `cluster show` or use the correct vserver name from `vserver show`. |
+    | `Error: command failed: EADDRINUSE: IP address 10.0.20.50 is already in use` | Verify the IP addresses are not already assigned to another interface using `network interface show -address 10.0.20.50` and select unused addresses. |
 **Peer the clusters (run from source):**
 
 ```bash
@@ -527,9 +557,11 @@ Info: Command is running in the background. Use the "cluster peer show" command 
 ```
 
 !!! warning "Common errors"
-    **`Error: cluster peer create: command not found`** — Ensure you are connected to the NetApp cluster CLI (ssh to cluster management IP) rather than running from a local shell.
-    **`Error: Failed to authenticate with peer cluster at 10.0.20.60`** — Verify the peer cluster IP addresses are reachable and the passphrase matches exactly what was configured on the destination cluster.
-    **`Error: Cluster peering already exists with peer address 10.0.20.60`** — Check existing peer relationships with `cluster peer show` and remove the duplicate before retrying.
+    | Error | Fix |
+    |---|---|
+    | `Error: cluster peer create: command not found` | Ensure you are connected to the NetApp cluster CLI (ssh to cluster management IP) rather than running from a local shell. |
+    | `Error: Failed to authenticate with peer cluster at 10.0.20.60` | Verify the peer cluster IP addresses are reachable and the passphrase matches exactly what was configured on the destination cluster. |
+    | `Error: Cluster peering already exists with peer address 10.0.20.60` | Check existing peer relationships with `cluster peer show` and remove the duplicate before retrying. |
 **Create a SnapMirror relationship:**
 
 ```bash
@@ -553,9 +585,11 @@ Status: Snapmirrored
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Relationship already exists.`** — Verify the destination volume doesn't already have an existing SnapMirror relationship using `snapmirror show -destination-path svm_dr01:vol_nfs_dr01`.
-    **`Error: command failed: Destination volume is not empty.`** — Ensure the destination volume is initialized as an empty DP volume; if needed, destroy and recreate it with `volume destroy -vserver svm_dr01 -volume vol_nfs_dr01` then `volume create -vserver svm_dr01 -volume vol_nfs_dr01 -aggregate aggr_dr01 -size 1TB -type DP`.
-    **`Error: command failed: Source path does not exist.`** — Confirm the source volume exists and the SVM name is correct by running `volume show -vserver svm_nfs01`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Relationship already exists.` | Verify the destination volume doesn't already have an existing SnapMirror relationship using `snapmirror show -destination-path svm_dr01:vol_nfs_dr01`. |
+    | `Error: command failed: Destination volume is not empty.` | Ensure the destination volume is initialized as an empty DP volume; if needed, destroy and recreate it with `volume destroy -vserver svm_dr01 -volume vol_nfs_dr01` then `volume create -vserver svm_dr01 -volume vol_nfs_dr01 -aggregate aggr_dr01 -size 1TB -type DP`. |
+    | `Error: command failed: Source path does not exist.` | Confirm the source volume exists and the SVM name is correct by running `volume show -vserver svm_nfs01`. |
 Monitor the initial baseline transfer:
 
 ```bash
@@ -569,9 +603,11 @@ svm_prod:vol_nfs_prod svm_dr01:vol_nfs_dr01 SnapMirror Snapmirrored Idle Success
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: snapmirror`** — Ensure you are logged into the NetApp cluster CLI (via SSH or console) and not a local shell; snapmirror commands are only available in ONTAP.
-    **`Error: Invalid destination path format`** — Use the correct SVM and volume name format (svm_name:volume_name) and verify both exist with `volume show` and `svm show`.
-    **`Error: Access denied for snapmirror command`** — Confirm your user role has SnapMirror permissions; contact your cluster administrator to grant the appropriate RBAC role.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: snapmirror` | Ensure you are logged into the NetApp cluster CLI (via SSH or console) and not a local shell; snapmirror commands are only available in ONTAP. |
+    | `Error: Invalid destination path format` | Use the correct SVM and volume name format (svm_name:volume_name) and verify both exist with `volume show` and `svm show`. |
+    | `Error: Access denied for snapmirror command` | Confirm your user role has SnapMirror permissions; contact your cluster administrator to grant the appropriate RBAC role. |
 ---
 
 ## Monitoring Setup
@@ -592,9 +628,11 @@ Trap host 192.168.1.50 added successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: SNMP is already initialized`** — Run `snmp status` to verify current state; if already initialized, skip the `snmp init 1` command.
-    **`Error: Community 'public' already exists`** — Use `system snmp community modify` instead, or choose a different community name.
-    **`Error: Invalid peer address <snmp_manager_ip>`** — Replace `<snmp_manager_ip>` with a valid IPv4 address (e.g., 192.168.1.50) and verify network connectivity to that host.
+    | Error | Fix |
+    |---|---|
+    | `Error: SNMP is already initialized` | Run `snmp status` to verify current state; if already initialized, skip the `snmp init 1` command. |
+    | `Error: Community 'public' already exists` | Use `system snmp community modify` instead, or choose a different community name. |
+    | `Error: Invalid peer address <snmp_manager_ip>` | Replace `<snmp_manager_ip>` with a valid IPv4 address (e.g., 192.168.1.50) and verify network connectivity to that host. |
 **Configure SMTP alerts:**
 
 1. In System Manager, navigate to **Cluster > Settings > Notifications**.
@@ -631,8 +669,10 @@ Status: enabled
 ```
 
 !!! warning "Common errors"
-    **`Error: destination snmp-traphost does not exist`** — Create the SNMP trap destination first using `event notification destination create -name snmp-traphost -type snmp`.
-    **`Error: filter-name important-events already exists`** — Use a unique filter name or delete the existing rule with `event notification delete -filter-name important-events` before recreating it.
+    | Error | Fix |
+    |---|---|
+    | `Error: destination snmp-traphost does not exist` | Create the SNMP trap destination first using `event notification destination create -name snmp-traphost -type snmp`. |
+    | `Error: filter-name important-events already exists` | Use a unique filter name or delete the existing rule with `event notification delete -filter-name important-events` before recreating it. |
 **Enable Active IQ integration (Call Home):**
 
 ```bash
@@ -654,8 +694,10 @@ node-04: AutoSupport invocation sent successfully (ID: 99999999-8888-7777-6666-4
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid email address "admin@example.com"`** — Verify the email address format and ensure it is a valid recipient configured in your support contract.
-    **`Error: AutoSupport transport https is not supported on this cluster`** — Check cluster ONTAP version compatibility; use `system node autosupport show` to verify current transport settings and upgrade if necessary.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid email address "admin@example.com"` | Verify the email address format and ensure it is a valid recipient configured in your support contract. |
+    | `Error: AutoSupport transport https is not supported on this cluster` | Check cluster ONTAP version compatibility; use `system node autosupport show` to verify current transport settings and upgrade if necessary. |
 Verify the test AutoSupport was received by NetApp Active IQ (check the Active IQ portal for the array).
 
 ---

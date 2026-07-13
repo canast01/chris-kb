@@ -57,9 +57,11 @@ Status: SUCCEEDED
 ```
 
 !!! warning "Common errors"
-    **`SYMCLI_ERROR: Device <DEV_ID> not found in Symmetrix <SID>`** — Verify the device ID exists in the target array using `symdevice -sid <SID> list`.
-    **`SYMCLI_ERROR: Insufficient free space in pool`** — Check available capacity in the storage pool with `sympools -sid <SID> -pool <POOL_NAME> show` and ensure the requested cylinder count is available.
-    **`SYMCLI_ERROR: Cannot modify device while in use`** — Unmount or quiesce the volume on the host before attempting expansion using `umount <MOUNT_POINT>` or application-level pause commands.
+    | Error | Fix |
+    |---|---|
+    | `SYMCLI_ERROR: Device <DEV_ID> not found in Symmetrix <SID>` | Verify the device ID exists in the target array using `symdevice -sid <SID> list`. |
+    | `SYMCLI_ERROR: Insufficient free space in pool` | Check available capacity in the storage pool with `sympools -sid <SID> -pool <POOL_NAME> show` and ensure the requested cylinder count is available. |
+    | `SYMCLI_ERROR: Cannot modify device while in use` | Unmount or quiesce the volume on the host before attempting expansion using `umount <MOUNT_POINT>` or application-level pause commands. |
 **Dell Unity:**
 ```bash
 uemcli -d <ip> /stor/config/lun -id <lun_id> set -size <new_size_bytes>
@@ -77,9 +79,11 @@ Timestamp: 2024-01-15 14:32:18 UTC
 ```
 
 !!! warning "Common errors"
-    **`Error: The specified LUN is not found or is offline`** — Verify the LUN ID is correct and the storage array is reachable by running `uemcli -d <ip> /stor/config/lun list`.
-    **`Error: Insufficient space available on storage pool`** — Check available capacity on the pool with `uemcli -d <ip> /stor/config/pool -id <pool_id> show` and reduce the requested size if needed.
-    **`Error: LUN is currently in use by a host`** — Ensure the LUN is unmapped from all hosts or quiesced before expansion; use `uemcli -d <ip> /stor/config/lun -id <lun_id> show` to verify current mappings.
+    | Error | Fix |
+    |---|---|
+    | `Error: The specified LUN is not found or is offline` | Verify the LUN ID is correct and the storage array is reachable by running `uemcli -d <ip> /stor/config/lun list`. |
+    | `Error: Insufficient space available on storage pool` | Check available capacity on the pool with `uemcli -d <ip> /stor/config/pool -id <pool_id> show` and reduce the requested size if needed. |
+    | `Error: LUN is currently in use by a host` | Ensure the LUN is unmapped from all hosts or quiesced before expansion; use `uemcli -d <ip> /stor/config/lun -id <lun_id> show` to verify current mappings. |
 ## Step 2 — Rescan Storage on the Host
 
 **Linux:**
@@ -120,9 +124,11 @@ size=1.5T features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp
 ```
 
 !!! warning "Common errors"
-    **`bash: /sys/class/scsi_host/host*/: No such file or directory`** — Verify the system has SCSI HBAs present with `ls /sys/class/scsi_host/` before running the rescan loop.
-    **`multipathd: command not found`** — Install the device-mapper-multipath package with `apt-get install multipath-tools` or `yum install device-mapper-multipath`.
-    **`multipath: command not found`** — Ensure the multipath-tools package is installed and the multipathd daemon is running with `systemctl start multipathd`.
+    | Error | Fix |
+    |---|---|
+    | `bash: /sys/class/scsi_host/host*/: No such file or directory` | Verify the system has SCSI HBAs present with `ls /sys/class/scsi_host/` before running the rescan loop. |
+    | `multipathd: command not found` | Install the device-mapper-multipath package with `apt-get install multipath-tools` or `yum install device-mapper-multipath`. |
+    | `multipath: command not found` | Ensure the multipath-tools package is installed and the multipathd daemon is running with `systemctl start multipathd`. |
 **Windows:**
 ```powershell
 Update-HostStorageCache
@@ -160,9 +166,11 @@ nvme0n1  259:0  0    2T  0 disk
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not stat device /dev/<device> - No such file or block device.`** — Replace `<device>` with the actual device name (e.g., `sda`, `nvme0n1`) shown in lsblk output.
-    **`Error: Partition /dev/<device><part_number> is mounted.`** — Unmount the partition with `umount /dev/<device><part_number>` before resizing, or use `resize2fs` after parted if the filesystem supports online resizing.
-    **`Error: Could not refresh the device entry /dev/<device>: Device or resource busy`** — Ensure no processes are accessing the device and try `partprobe` again, or reboot the system if the device is the root filesystem.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not stat device /dev/<device> - No such file or block device.` | Replace `<device>` with the actual device name (e.g., `sda`, `nvme0n1`) shown in lsblk output. |
+    | `Error: Partition /dev/<device><part_number> is mounted.` | Unmount the partition with `umount /dev/<device><part_number>` before resizing, or use `resize2fs` after parted if the filesystem supports online resizing. |
+    | `Error: Could not refresh the device entry /dev/<device>: Device or resource busy` | Ensure no processes are accessing the device and try `partprobe` again, or reboot the system if the device is the root filesystem. |
 **Windows:**
 ```powershell
 $disk = Get-Disk -Number <n>
@@ -199,9 +207,11 @@ The filesystem on /dev/mapper/vg_storage-lv_data is now 196608000 (4k) blocks lo
 ```
 
 !!! warning "Common errors"
-    **`resize2fs: Device or resource busy`** — Ensure the filesystem is mounted before running resize2fs, or use the device path instead of attempting offline resize.
-    **`xfs_growfs: /dev/mapper/vg_storage-lv_data is not a mount point`** — Use the mount point path (e.g., `/data`) instead of the device path for xfs_growfs.
-    **`Physical volume /dev/mapper/mpathX not found`** — Verify the multipath device name with `multipath -ll` and confirm the device exists before running pvresize.
+    | Error | Fix |
+    |---|---|
+    | `resize2fs: Device or resource busy` | Ensure the filesystem is mounted before running resize2fs, or use the device path instead of attempting offline resize. |
+    | `xfs_growfs: /dev/mapper/vg_storage-lv_data is not a mount point` | Use the mount point path (e.g., `/data`) instead of the device path for xfs_growfs. |
+    | `Physical volume /dev/mapper/mpathX not found` | Verify the multipath device name with `multipath -ll` and confirm the device exists before running pvresize. |
 **Linux — no LVM:**
 ```bash
 resize2fs /dev/<device><part>   # ext4
@@ -214,8 +224,10 @@ xfs_growfs /mount/point          # xfs
 ```
 
 !!! warning "Common errors"
-    **`resize2fs: Bad magic number in superblock`** — Ensure the device is unmounted or use `resize2fs -f` only after confirming the filesystem is ext4 with `blkid`.
-    **`xfs_growfs: /mount/point is not a mounted XFS filesystem`** — Verify the mount point exists and the filesystem is mounted with `mount | grep xfs`.
+    | Error | Fix |
+    |---|---|
+    | `resize2fs: Bad magic number in superblock` | Ensure the device is unmounted or use `resize2fs -f` only after confirming the filesystem is ext4 with `blkid`. |
+    | `xfs_growfs: /mount/point is not a mounted XFS filesystem` | Verify the mount point exists and the filesystem is mounted with `mount | grep xfs`. |
 ## Step 4 — Validate
 
 ```bash
@@ -253,8 +265,10 @@ size=2.0T features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp
 ```
 
 !!! warning "Common errors"
-    **`lsblk: command not found`** — Install util-linux package with `apt-get install util-linux` or `yum install util-linux`.
-    **`multipath: command not found`** — Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`.
+    | Error | Fix |
+    |---|---|
+    | `lsblk: command not found` | Install util-linux package with `apt-get install util-linux` or `yum install util-linux`. |
+    | `multipath: command not found` | Install device-mapper-multipath with `apt-get install multipath-tools` or `yum install device-mapper-multipath`. |
 Write a test file to confirm the new space is accessible:
 ```bash
 dd if=/dev/zero of=/mount/point/test.tmp bs=1M count=1024 oflag=direct && rm /mount/point/test.tmp
@@ -268,9 +282,11 @@ dd if=/dev/zero of=/mount/point/test.tmp bs=1M count=1024 oflag=direct && rm /mo
 ```
 
 !!! warning "Common errors"
-    **`dd: failed to open '/mount/point/test.tmp' for writing: No such file or directory`** — Verify the mount point exists and is mounted with `mount | grep /mount/point` before running the command.
-    **`dd: error writing '/mount/point/test.tmp': No space left on device`** — Reduce the count parameter (e.g., `count=512`) or free up space on the volume before retrying.
-    **`dd: opening '/dev/zero': Permission denied`** — Run the command with `sudo` or as root to access `/dev/zero`.
+    | Error | Fix |
+    |---|---|
+    | `dd: failed to open '/mount/point/test.tmp' for writing: No such file or directory` | Verify the mount point exists and is mounted with `mount | grep /mount/point` before running the command. |
+    | `dd: error writing '/mount/point/test.tmp': No space left on device` | Reduce the count parameter (e.g., `count=512`) or free up space on the volume before retrying. |
+    | `dd: opening '/dev/zero': Permission denied` | Run the command with `sudo` or as root to access `/dev/zero`. |
 ## Rollback
 
 Online expansion of a LUN/partition/filesystem is **not reversible** without a rebuild. If something goes wrong:

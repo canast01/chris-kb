@@ -102,9 +102,11 @@ curl -u "admin:TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.corp.example.com port 443: Connection refused`** — Verify the Jira instance is running and accessible; check firewall rules and DNS resolution with `nslookup jira.corp.example.com`.
-    **`{"errorMessages":["User 'jsmith' does not exist"],"errors":{}}`** — Confirm the username exists in the Jira instance by checking User Management or using the `/rest/api/2/user/search` endpoint.
-    **`{"errorMessages":["You do not have permission to edit this project's roles"],"errors":{}}`** — Ensure the admin account has the "Administer Projects" global permission or project-level role administration rights.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.corp.example.com port 443: Connection refused` | Verify the Jira instance is running and accessible; check firewall rules and DNS resolution with `nslookup jira.corp.example.com`. |
+    | `{"errorMessages":["User 'jsmith' does not exist"],"errors":{}}` | Confirm the username exists in the Jira instance by checking User Management or using the `/rest/api/2/user/search` endpoint. |
+    | `{"errorMessages":["You do not have permission to edit this project's roles"],"errors":{}}` | Ensure the admin account has the "Administer Projects" global permission or project-level role administration rights. |
 ---
 
 ## Issue Security Schemes
@@ -185,9 +187,11 @@ curl -u "admin:TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.corp.example.com port 443: Connection refused`** — Verify the Jira instance is running and accessible at the specified hostname and port.
-    **`{"errorMessages":["You do not have permission to administer Jira."]}`** — Ensure the admin user account has global administrator permissions or use a service account with appropriate API access.
-    **`{"errorMessages":["The security level with id '10100' does not exist."]}`** — Replace the defaultSecurityLevelId with a valid existing security level ID or remove it to let Jira auto-assign.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.corp.example.com port 443: Connection refused` | Verify the Jira instance is running and accessible at the specified hostname and port. |
+    | `{"errorMessages":["You do not have permission to administer Jira."]}` | Ensure the admin user account has global administrator permissions or use a service account with appropriate API access. |
+    | `{"errorMessages":["The security level with id '10100' does not exist."]}` | Replace the defaultSecurityLevelId with a valid existing security level ID or remove it to let Jira auto-assign. |
 ---
 
 ## Group Management
@@ -251,9 +255,11 @@ curl -u "admin:TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.corp.example.com port 443: Connection refused`** — Verify the Jira instance is running and accessible at the specified hostname and port.
-    **`{"errorMessages":["User 'jsmith' does not exist."],"errors":{}}`** — Confirm the username exists in Jira before adding to a group using the user search endpoint.
-    **`{"errorMessages":["User 'jsmith' is not a member of group 'jira-administrators'."],"errors":{}}`** — Verify the user is actually a member of the group before attempting removal.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.corp.example.com port 443: Connection refused` | Verify the Jira instance is running and accessible at the specified hostname and port. |
+    | `{"errorMessages":["User 'jsmith' does not exist."],"errors":{}}` | Confirm the username exists in Jira before adding to a group using the user search endpoint. |
+    | `{"errorMessages":["User 'jsmith' is not a member of group 'jira-administrators'."],"errors":{}}` | Verify the user is actually a member of the group before attempting removal. |
 ---
 
 ## Access Audit and Review
@@ -294,9 +300,11 @@ Alice Thompson - athompson@corp.example.com
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.corp.example.com port 443: Connection refused`** — Verify the Jira instance is running and accessible; check firewall rules and DNS resolution with `nslookup jira.corp.example.com`.
-    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the API token is valid and the endpoint URL is correct; test with `curl -s -u "$TOKEN" "$JIRA_URL/rest/api/2/myself"` to verify authentication.
-    **`curl: (401) Unauthorized`** — Verify the API token has not expired and is in the correct format `username:token`; regenerate the token in Jira user settings if needed.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.corp.example.com port 443: Connection refused` | Verify the Jira instance is running and accessible; check firewall rules and DNS resolution with `nslookup jira.corp.example.com`. |
+    | `jq: parse error: Invalid JSON text at line 1` | Ensure the API token is valid and the endpoint URL is correct; test with `curl -s -u "$TOKEN" "$JIRA_URL/rest/api/2/myself"` to verify authentication. |
+    | `curl: (401) Unauthorized` | Verify the API token has not expired and is in the correct format `username:token`; regenerate the token in Jira user settings if needed. |
 **Quarterly review checklist:**
 
 - [ ] Verify jira-administrators membership matches approved admin list
@@ -365,9 +373,11 @@ curl -u "admin:TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.corp.example.com port 443: Connection refused`** — Verify the Jira instance is running and accessible; check firewall rules and DNS resolution with `nslookup jira.corp.example.com`.
-    **`{"errorMessages":["User 'admin' does not have permission to access this resource."]}`** — Ensure the admin user has the Global Permissions > Administer Jira permission, or use a service account with appropriate API access.
-    **`jq: parse error: Invalid JSON text at line 1`** — Remove `| jq '.'` and run the curl command alone to verify the API response is valid JSON before piping to jq.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.corp.example.com port 443: Connection refused` | Verify the Jira instance is running and accessible; check firewall rules and DNS resolution with `nslookup jira.corp.example.com`. |
+    | `{"errorMessages":["User 'admin' does not have permission to access this resource."]}` | Ensure the admin user has the Global Permissions > Administer Jira permission, or use a service account with appropriate API access. |
+    | `jq: parse error: Invalid JSON text at line 1` | Remove `| jq '.'` and run the curl command alone to verify the API response is valid JSON before piping to jq. |
 - Remove application links to decommissioned systems immediately.
 - Use OAuth 2.0 (not OAuth 1.0) for new integrations.
 - Audit application link permissions annually.

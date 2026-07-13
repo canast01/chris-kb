@@ -80,8 +80,10 @@ Enabled
 ```
 
 !!! warning "Common errors"
-    **`Could not connect to the local host. Error: Connection refused`** — Ensure the ESXi host SSH service is running and you have network connectivity to the management interface.
-    **`Unknown command or namespace maintenanceMode`** — Verify you are running this command on ESXi 5.0 or later; older versions use different maintenance mode syntax.
+    | Error | Fix |
+    |---|---|
+    | `Could not connect to the local host. Error: Connection refused` | Ensure the ESXi host SSH service is running and you have network connectivity to the management interface. |
+    | `Unknown command or namespace maintenanceMode` | Verify you are running this command on ESXi 5.0 or later; older versions use different maintenance mode syntax. |
 Exit maintenance mode:
 ```powershell
 Set-VMHost -VMHost (Get-VMHost "esxi-01.example.local") -State Connected
@@ -214,8 +216,10 @@ vpxa is running.
 ```
 
 !!! warning "Common errors"
-    **`vpxa is not running.`** — Check `/var/log/vpxa.log` for startup errors and verify network connectivity to vCenter Server.
-    **`Unable to connect to the local hostd agent`** — Wait 30-60 seconds for hostd to fully initialize after restart before checking vpxa status.
+    | Error | Fix |
+    |---|---|
+    | `vpxa is not running.` | Check `/var/log/vpxa.log` for startup errors and verify network connectivity to vCenter Server. |
+    | `Unable to connect to the local hostd agent` | Wait 30-60 seconds for hostd to fully initialize after restart before checking vpxa status. |
 If the host certificate has drifted from vCenter's expected thumbprint, reconnect via UI and accept the new thumbprint, or re-add the host to vCenter after removing it.
 
 ---
@@ -356,9 +360,11 @@ Entry 0
 ```
 
 !!! warning "Common errors"
-    **`Error: Certificate file not found or invalid format`** — Verify the certificate file path and ensure it is in PEM format (.crt or .cer).
-    **`Error: Private key does not match certificate`** — Regenerate the certificate signing request and ensure the private key corresponds to the signed certificate.
-    **`Error: Root CA certificate validation failed`** — Confirm the root CA certificate is valid and in the correct chain order for your custom CA.
+    | Error | Fix |
+    |---|---|
+    | `Error: Certificate file not found or invalid format` | Verify the certificate file path and ensure it is in PEM format (.crt or .cer). |
+    | `Error: Private key does not match certificate` | Regenerate the certificate signing request and ensure the private key corresponds to the signed certificate. |
+    | `Error: Root CA certificate validation failed` | Confirm the root CA certificate is valid and in the correct chain order for your custom CA. |
 Post-replacement validation:
 
 ```bash
@@ -390,9 +396,11 @@ netdump                                 RUNNING
 ```
 
 !!! warning "Common errors"
-    **`connect: Connection refused`** — Verify vCenter is running and port 443 is accessible; check firewall rules and vmon-cli --status output.
-    **`STOPPED`** — Restart the stopped service using `vmon-cli --restart <service-name>` and wait 2–3 minutes for full initialization.
-    **`unable to load certificate`** — Confirm the certificate file path is correct and readable; verify the certificate was properly imported using `certificate-manager` utility.
+    | Error | Fix |
+    |---|---|
+    | `connect: Connection refused` | Verify vCenter is running and port 443 is accessible; check firewall rules and vmon-cli --status output. |
+    | `STOPPED` | Restart the stopped service using `vmon-cli --restart <service-name>` and wait 2–3 minutes for full initialization. |
+    | `unable to load certificate` | Confirm the certificate file path is correct and readable; verify the certificate was properly imported using `certificate-manager` utility. |
 ## vCenter File-Based Backup
 
 vCenter supports scheduled file-based backups to NFS, SFTP, FTPS, HTTP, or HTTPS locations.
@@ -515,9 +523,11 @@ curl -sk -X GET "https://<vcenter-fqdn>/api/vcenter/identity/providers" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the vCenter CA certificate into your system trust store with `curl -cacert /path/to/ca.crt`.
-    **`{"type":"com.vmware.vapi.std.errors.unauthenticated","messages":["Invalid session."]}`** — Obtain a valid session ID by running `curl -sk -X POST "https://<vcenter-fqdn>/api/session" -u "administrator@vsphere.local:password"` first.
-    **`curl: (7) Failed to connect to <vcenter-fqdn> port 443: Connection refused`** — Verify vCenter is running and accessible on the network; check firewall rules and confirm the FQDN resolves correctly with `nslookup <vcenter-fqdn>`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag (already present) or import the vCenter CA certificate into your system trust store with `curl -cacert /path/to/ca.crt`. |
+    | `{"type":"com.vmware.vapi.std.errors.unauthenticated","messages":["Invalid session."]}` | Obtain a valid session ID by running `curl -sk -X POST "https://<vcenter-fqdn>/api/session" -u "administrator@vsphere.local:password"` first. |
+    | `curl: (7) Failed to connect to <vcenter-fqdn> port 443: Connection refused` | Verify vCenter is running and accessible on the network; check firewall rules and confirm the FQDN resolves correctly with `nslookup <vcenter-fqdn>`. |
 ---
 
 ## Configure a vSphere Alarm
@@ -635,9 +645,11 @@ root@vcenter.lab.local [ ~ ]#
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the vCenter CA certificate into your trusted store.
-    **`ssh: Could not resolve hostname <new-vcenter-fqdn>: Name or service not known`** — Replace `<new-vcenter-fqdn>` with the actual FQDN or IP address of your vCenter appliance.
-    **`Authentication failed for user 'administrator@vsphere.local'`** — Verify the password is correct and the user account exists; check vCenter's authentication source if using external identity provider.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to skip certificate verification, or import the vCenter CA certificate into your trusted store. |
+    | `ssh: Could not resolve hostname <new-vcenter-fqdn>: Name or service not known` | Replace `<new-vcenter-fqdn>` with the actual FQDN or IP address of your vCenter appliance. |
+    | `Authentication failed for user 'administrator@vsphere.local'` | Verify the password is correct and the user account exists; check vCenter's authentication source if using external identity provider. |
 ---
 
 ## Deploy a VM from OVA/OVF Template
@@ -661,8 +673,10 @@ d4e8f3a9c2b1e7f6a5d9c3b8e1f4a7d2c9e5b8a1f3d6c9e2b5a8f1d4e7a0c3  vendor-appliance
 ```
 
 !!! warning "Common errors"
-    **`shasum: vendor-appliance.ova: No such file or directory`** — Verify the OVA file exists in the current directory with `ls -lh vendor-appliance.ova` and correct the filename or path.
-    **`shasum: command not found`** — Install the sha utilities package with `apt-get install coreutils` (Debian/Ubuntu) or `yum install coreutils` (RHEL/CentOS), or use `sha256sum` instead.
+    | Error | Fix |
+    |---|---|
+    | `shasum: vendor-appliance.ova: No such file or directory` | Verify the OVA file exists in the current directory with `ls -lh vendor-appliance.ova` and correct the filename or path. |
+    | `shasum: command not found` | Install the sha utilities package with `apt-get install coreutils` (Debian/Ubuntu) or `yum install coreutils` (RHEL/CentOS), or use `sha256sum` instead. |
 ### Step 2 — Deploy via vCenter UI
 
 ![Step 2 — Deploy via vCenter UI](../../../../../assets/vcenter-proc-step-2-deploy-via-vcenter-ui.svg)
@@ -798,9 +812,11 @@ Replication Latency: 3ms
 ```
 
 !!! warning "Common errors"
-    **`Error: Cannot connect to localhost:389 (Connection refused)`** — Verify the vCenter SSO service is running with `systemctl status vmware-vmafd` and restart if needed.
-    **`Error: Authentication failed for user 'administrator' (Invalid credentials)`** — Confirm the SSO administrator password is correct and hasn't expired by testing login in the vSphere Client.
-    **`Error: vdcrepadmin: command not found`** — Ensure you are running this command directly on a vCenter Server appliance (not a remote host) where the vmafd tools are installed.
+    | Error | Fix |
+    |---|---|
+    | `Error: Cannot connect to localhost:389 (Connection refused)` | Verify the vCenter SSO service is running with `systemctl status vmware-vmafd` and restart if needed. |
+    | `Error: Authentication failed for user 'administrator' (Invalid credentials)` | Confirm the SSO administrator password is correct and hasn't expired by testing login in the vSphere Client. |
+    | `Error: vdcrepadmin: command not found` | Ensure you are running this command directly on a vCenter Server appliance (not a remote host) where the vmafd tools are installed. |
 ### Step 3 — Configure Cross-vCenter Permissions (Optional)
 
 ![Step 3 — Configure Cross-vCenter Permissions (Optional)](../../../../../assets/vcenter-proc-step-3-configure-cross-vcenter-permissions-optional.svg)

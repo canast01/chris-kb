@@ -73,8 +73,10 @@ example.com   myRG             ns1-08.azure-dns.com., ns2-08.azure-dns.net., ...
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure it exists in the correct subscription.
-    **`DnsZoneAlreadyExists`** — Delete the existing zone with `az network dns zone delete --resource-group myRG --name example.com` or use a different zone name.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure it exists in the correct subscription. |
+    | `DnsZoneAlreadyExists` | Delete the existing zone with `az network dns zone delete --resource-group myRG --name example.com` or use a different zone name. |
 After creation, delegate the zone by updating the registrar's NS records with the four nameservers Azure assigns.
 
 ## Record Types and CLI Commands
@@ -180,7 +182,9 @@ api     CNAME   3600   myRG
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound: Resource group 'myRG' could not be found.`** — Verify the resource group exists with `az group list` and use the correct name.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound: Resource group 'myRG' could not be found.` | Verify the resource group exists with `az group list` and use the correct name. |
     **`DnsZ
 ## Alias Records
 
@@ -218,8 +222,10 @@ az network dns record-set a create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The Resource 'Microsoft.Network/dnsZones/example.com' under resource group 'myRG' was not found.`** — Verify the DNS zone exists in the specified resource group using `az network dns zone list --resource-group myRG`.
-    **`InvalidResourceId: The provided resource ID is invalid or does not exist.`** — Confirm the public IP address resource ID is correct and exists by running `az network public-ip show --resource-group myRG --name myPIP --query id`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The Resource 'Microsoft.Network/dnsZones/example.com' under resource group 'myRG' was not found.` | Verify the DNS zone exists in the specified resource group using `az network dns zone list --resource-group myRG`. |
+    | `InvalidResourceId: The provided resource ID is invalid or does not exist.` | Confirm the public IP address resource ID is correct and exists by running `az network public-ip show --resource-group myRG --name myPIP --query id`. |
 ## Supported Record Types
 
 | Record Type | Purpose                                           |
@@ -306,9 +312,11 @@ myVNetLink    Microsoft.Network/privateDnsZones/virtualNetworkLinks             
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure it exists in your subscription.
-    **`VirtualNetworkNotFound`** — Confirm the VNet name and resource group are correct using `az network vnet list --resource-group myRG`.
-    **`PrivateDnsZoneNotFound`** — Ensure the private DNS zone was created successfully before attempting to add records or links to it.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group name with `az group list` and ensure it exists in your subscription. |
+    | `VirtualNetworkNotFound` | Confirm the VNet name and resource group are correct using `az network vnet list --resource-group myRG`. |
+    | `PrivateDnsZoneNotFound` | Ensure the private DNS zone was created successfully before attempting to add records or links to it. |
 ## DNS Delegation
 
 To delegate a subdomain to Azure DNS:
@@ -331,6 +339,8 @@ ns4-08.azure-dns.info.
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound : The Resource 'Microsoft.Network/dnsZones/example.com' under resource group 'myRG' was not found.`** — Verify the DNS zone name and resource group name are correct with `az network dns zone list --resource-group myRG`.
-    **`AuthorizationFailed : The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Network/dnsZones/read' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myRG/providers/Microsoft.Network/dnsZones/example.com'.`** — Ensure your Azure account has at least Reader role on the resource group or DNS zone.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound : The Resource 'Microsoft.Network/dnsZones/example.com' under resource group 'myRG' was not found.` | Verify the DNS zone name and resource group name are correct with `az network dns zone list --resource-group myRG`. |
+    | `AuthorizationFailed : The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Network/dnsZones/read' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myRG/providers/Microsoft.Network/dnsZones/example.com'.` | Ensure your Azure account has at least Reader role on the resource group or DNS zone. |
 Update the parent domain's registrar (e.g., Namecheap, GoDaddy) with these NS records to complete delegation.

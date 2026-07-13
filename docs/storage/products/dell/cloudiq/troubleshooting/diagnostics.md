@@ -132,9 +132,11 @@ Filesystem     Size  Used Avail Use% Mounted on
 ```
 
 !!! warning "Common errors"
-    **`ssh: connect to host 192.168.1.45 port 22: Connection refused`** — Verify the SCG appliance is powered on and the IP address is correct; check network connectivity with `ping <scg-ip>`.
-    **`● dsagw.service - Dell Storage Gateway ... Active: failed (Result: exit-code)`** — Check the dsagw service logs with `journalctl -u dsagw -n 100` to identify the root cause, then restart with `systemctl restart dsagw`.
-    **`Filesystem ... Use% Mounted on ... 95% /`** — Archive or delete old SCG logs in `/var/log/dsagw/` using `find /var/log/dsagw/ -mtime +30 -delete` to free disk space before the appliance becomes unresponsive.
+    | Error | Fix |
+    |---|---|
+    | `ssh: connect to host 192.168.1.45 port 22: Connection refused` | Verify the SCG appliance is powered on and the IP address is correct; check network connectivity with `ping <scg-ip>`. |
+    | `● dsagw.service - Dell Storage Gateway ... Active: failed (Result: exit-code)` | Check the dsagw service logs with `journalctl -u dsagw -n 100` to identify the root cause, then restart with `systemctl restart dsagw`. |
+    | `Filesystem ... Use% Mounted on ... 95% /` | Archive or delete old SCG logs in `/var/log/dsagw/` using `find /var/log/dsagw/ -mtime +30 -delete` to free disk space before the appliance becomes unresponsive. |
 **If SCG service is not running:**
 1. `systemctl start dsagw` to restart; wait 30 seconds and re-check `scg status`
 2. If service fails to start: check `/var/log/dsagw/` for startup errors
@@ -202,9 +204,11 @@ no_proxy=localhost,127.0.0.1,.corp.local
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection timed out`** — Verify firewall rules allow outbound HTTPS on port 443 and check if a proxy is required in your environment.
-    **`Server returned nothing (or only header "HTTP/1.0 407 Proxy Authentication Required")`** — Add proxy credentials to SCG via Settings → Proxy settings or configure curl with `-x http://user:pass@proxy:port`.
-    **`nslookup: can't find cloudiq.dell.com: NXDOMAIN`** — Verify DNS servers are configured correctly and can reach public DNS (try `nslookup cloudiq.dell.com 8.8.8.8`).
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection timed out` | Verify firewall rules allow outbound HTTPS on port 443 and check if a proxy is required in your environment. |
+    | `Server returned nothing (or only header "HTTP/1.0 407 Proxy Authentication Required")` | Add proxy credentials to SCG via Settings → Proxy settings or configure curl with `-x http://user:pass@proxy:port`. |
+    | `nslookup: can't find cloudiq.dell.com: NXDOMAIN` | Verify DNS servers are configured correctly and can reach public DNS (try `nslookup cloudiq.dell.com 8.8.8.8`). |
 **If connectivity test fails:**
 1. Verify the proxy is configured correctly in SCG UI → Settings → Proxy
 2. Test proxy connectivity directly: `curl -v --proxy http://<proxy-host>:<port> https://cloudiq.dell.com`
@@ -269,9 +273,11 @@ $ curl -sk -u admin:MyP@ssw0rd "https://192.168.1.50/api/rest/system?fields=name
 ```
 
 !!! warning "Common errors"
-    **`Authentication: FAILED - Invalid credentials`** — Verify the SCG credentials stored in Settings match the current array admin password, or reset the array credentials in the SCG UI.
-    **`Connection Status: TLS handshake failed`** — Confirm the array management interface certificate is valid and trusted by the SCG server, or disable certificate verification if using self-signed certs in a test environment.
-    **`curl: (7) Failed to connect to 192.168.1.45 port 443: Connection refused`** — Verify the array management IP is correct and reachable from the SCG host using `ping` or `traceroute`, and confirm the array's management interface is running.
+    | Error | Fix |
+    |---|---|
+    | `Authentication: FAILED - Invalid credentials` | Verify the SCG credentials stored in Settings match the current array admin password, or reset the array credentials in the SCG UI. |
+    | `Connection Status: TLS handshake failed` | Confirm the array management interface certificate is valid and trusted by the SCG server, or disable certificate verification if using self-signed certs in a test environment. |
+    | `curl: (7) Failed to connect to 192.168.1.45 port 443: Connection refused` | Verify the array management IP is correct and reachable from the SCG host using `ping` or `traceroute`, and confirm the array's management interface is running. |
 ---
 
 ## Step 4 — Read SCG log files
@@ -377,9 +383,11 @@ scg-bundle-2024-01-15.tar.gz                          100%  287MB   8.2MB/s   00
 ```
 
 !!! warning "Common errors"
-    **`scg: command not found`** — Verify SCG is installed and in PATH, or use the full path `/opt/dell/scg/bin/scg` instead.
-    **`Permission denied (publickey,password)`** — Ensure the admin user credentials are correct and SSH key-based auth is configured, or add `-o PubkeyAuthentication=no` to force password auth.
-    **`No such file or directory`** — Check that the bundle file was successfully created in `/tmp/` by running `ls -lh /tmp/scg-bundle-*.tar.gz` on the SCG host first.
+    | Error | Fix |
+    |---|---|
+    | `scg: command not found` | Verify SCG is installed and in PATH, or use the full path `/opt/dell/scg/bin/scg` instead. |
+    | `Permission denied (publickey,password)` | Ensure the admin user credentials are correct and SSH key-based auth is configured, or add `-o PubkeyAuthentication=no` to force password auth. |
+    | `No such file or directory` | Check that the bundle file was successfully created in `/tmp/` by running `ls -lh /tmp/scg-bundle-*.tar.gz` on the SCG host first. |
 ---
 
 ## Log locations

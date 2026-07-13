@@ -86,8 +86,10 @@ az account management-group create --name "root-mg" --display-name "Tenant Root"
 ```
 
 !!! warning "Common errors"
-    **`The user 'user@contoso.com' does not have authorization to perform action 'Microsoft.Management/managementGroups/write' over scope '/providers/Microsoft.Management/managementGroups/root-mg'.`** — Assign the user the "Management Group Contributor" role at the tenant root scope.
-    **`Management group with name 'root-mg' already exists.`** — Use a different name or delete the existing management group with `az account management-group delete --name "root-mg"`.
+    | Error | Fix |
+    |---|---|
+    | `The user 'user@contoso.com' does not have authorization to perform action 'Microsoft.Management/managementGroups/write' over scope '/providers/Microsoft.Management/managementGroups/root-mg'.` | Assign the user the "Management Group Contributor" role at the tenant root scope. |
+    | `Management group with name 'root-mg' already exists.` | Use a different name or delete the existing management group with `az account management-group delete --name "root-mg"`. |
 **Create the standard hierarchy:**
 
 ```bash
@@ -159,9 +161,11 @@ az account management-group create \
 ```
 
 !!! warning "Common errors"
-    **`Management group 'root-mg' not found`** — Ensure the root management group exists or use your tenant root group ID (typically your tenant name) as the parent.
-    **`Insufficient privileges to create management groups`** — Verify your account has the Management Group Contributor role assigned at the tenant root scope.
-    **`Management group 'platform' already exists`** — Use `az account management-group show --name platform` to verify existing groups, then skip or delete duplicates before recreating.
+    | Error | Fix |
+    |---|---|
+    | `Management group 'root-mg' not found` | Ensure the root management group exists or use your tenant root group ID (typically your tenant name) as the parent. |
+    | `Insufficient privileges to create management groups` | Verify your account has the Management Group Contributor role assigned at the tenant root scope. |
+    | `Management group 'platform' already exists` | Use `az account management-group show --name platform` to verify existing groups, then skip or delete duplicates before recreating. |
 **Move subscriptions under the correct MG:**
 
 ```bash
@@ -176,8 +180,10 @@ az account management-group subscription add \
 ```
 
 !!! warning "Common errors"
-    **`The subscription '<subscription-id>' could not be found.`** — Verify the subscription ID is correct and exists in your Azure tenant by running `az account subscription list`.
-    **`You do not have permission to perform action 'Microsoft.Management/managementGroups/subscriptions/write' on scope '/subscriptions/<subscription-id>'.`** — Ensure your Azure account has Owner or Management Group Contributor role on the "platform" management group.
+    | Error | Fix |
+    |---|---|
+    | `The subscription '<subscription-id>' could not be found.` | Verify the subscription ID is correct and exists in your Azure tenant by running `az account subscription list`. |
+    | `You do not have permission to perform action 'Microsoft.Management/managementGroups/subscriptions/write' on scope '/subscriptions/<subscription-id>'.` | Ensure your Azure account has Owner or Management Group Contributor role on the "platform" management group. |
 ---
 
 ## Configure Azure Policy at Management Group Level
@@ -220,8 +226,10 @@ az policy assignment create \
 ```
 
 !!! warning "Common errors"
-    **`The policy set definition '1f3afdf9-d0c9-4c3d-847f-89da613e70a8' could not be found.`** — Verify the policy definition ID exists in your tenant using `az policy set-definition list` and copy the correct ID.
-    **`The scope '/providers/Microsoft.Management/managementGroups/root-mg' is invalid or does not exist.`** — Confirm the management group exists and use the correct scope format from `az account management-group list`.
+    | Error | Fix |
+    |---|---|
+    | `The policy set definition '1f3afdf9-d0c9-4c3d-847f-89da613e70a8' could not be found.` | Verify the policy definition ID exists in your tenant using `az policy set-definition list` and copy the correct ID. |
+    | `The scope '/providers/Microsoft.Management/managementGroups/root-mg' is invalid or does not exist.` | Confirm the management group exists and use the correct scope format from `az account management-group list`. |
 Use `DoNotEnforce` (Audit only) initially. Switch to `Default` (Deny) after remediating existing findings.
 
 **Assign the CIS Microsoft Azure Foundations initiative:**
@@ -259,9 +267,11 @@ az policy assignment create \
 ```
 
 !!! warning "Common errors"
-    **`The policy set definition '612b5213-9160-4969-8578-1518bd2a000c' could not be found.`** — Verify the policy definition ID exists in your subscription or use `az policy set-definition list` to find the correct ID.
-    **`The user does not have permission to perform action 'Microsoft.Authorization/policyAssignments/write' on scope '/providers/Microsoft.Management/managementGroups/root-mg'.`** — Ensure your account has Owner or Policy Contributor role on the management group.
-    **`Invalid scope '/providers/Microsoft.Management/managementGroups/root-mg': management group 'root-mg' does not exist.`** — Replace the scope with a valid management group ID from `az account management-group list`.
+    | Error | Fix |
+    |---|---|
+    | `The policy set definition '612b5213-9160-4969-8578-1518bd2a000c' could not be found.` | Verify the policy definition ID exists in your subscription or use `az policy set-definition list` to find the correct ID. |
+    | `The user does not have permission to perform action 'Microsoft.Authorization/policyAssignments/write' on scope '/providers/Microsoft.Management/managementGroups/root-mg'.` | Ensure your account has Owner or Policy Contributor role on the management group. |
+    | `Invalid scope '/providers/Microsoft.Management/managementGroups/root-mg': management group 'root-mg' does not exist.` | Replace the scope with a valid management group ID from `az account management-group list`. |
 Review compliance:
 
 ```bash
@@ -297,9 +307,11 @@ az policy state summarize \
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have authorization to perform action 'Microsoft.Authorization/policyStates/queryResults/action'`** — Assign the "Policy Insights Data Writer" or "Reader" role to your user on the management group.
-    **`ERROR: Management group 'root-mg' not found.`** — Verify the management group ID with `az account management-group list` and use the correct name.
-    **`ERROR: No policy state data available for the specified scope.`** — Ensure policies are assigned to the management group and resources have been evaluated; wait 15–30 minutes after assignment for initial compliance data.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have authorization to perform action 'Microsoft.Authorization/policyStates/queryResults/action'` | Assign the "Policy Insights Data Writer" or "Reader" role to your user on the management group. |
+    | `ERROR: Management group 'root-mg' not found.` | Verify the management group ID with `az account management-group list` and use the correct name. |
+    | `ERROR: No policy state data available for the specified scope.` | Ensure policies are assigned to the management group and resources have been evaluated; wait 15–30 minutes after assignment for initial compliance data. |
 ---
 
 ## Configure Microsoft Defender for Cloud
@@ -356,9 +368,11 @@ az security pricing create --name AppServices --tier Standard --subscription <su
 ```
 
 !!! warning "Common errors"
-    **`(AuthorizationFailed) The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have authorization to perform action 'Microsoft.Security/pricings/write' over scope '/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Security/pricings/VirtualMachines'.`** — Assign the Security Admin or Owner role to the user on the target subscription.
-    **`(InvalidRequest) Pricing tier 'Standard' is not valid for resource type 'VirtualMachines'. Valid values are: 'Free', 'Standard'.`** — Verify the pricing tier name matches the exact case and valid options for the resource type.
-    **`(ResourceNotFound) The subscription 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' could not be found.`** — Replace `<subscription-id>` with a valid subscription ID from `az account list`.
+    | Error | Fix |
+    |---|---|
+    | `(AuthorizationFailed) The client 'user@contoso.com' with object id '12345678-1234-1234-1234-123456789012' does not have authorization to perform action 'Microsoft.Security/pricings/write' over scope '/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Security/pricings/VirtualMachines'.` | Assign the Security Admin or Owner role to the user on the target subscription. |
+    | `(InvalidRequest) Pricing tier 'Standard' is not valid for resource type 'VirtualMachines'. Valid values are: 'Free', 'Standard'.` | Verify the pricing tier name matches the exact case and valid options for the resource type. |
+    | `(ResourceNotFound) The subscription 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d' could not be found.` | Replace `<subscription-id>` with a valid subscription ID from `az account list`. |
 Configure security contacts:
 
 ```bash
@@ -386,9 +400,11 @@ az security contact create \
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (ResourceNotFound) The resource of type 'securityContacts' with name 'default' could not be found.`** — Ensure you are authenticated with `az login` and have the correct subscription selected via `az account set --subscription <subscription-id>`.
-    **`ERROR: Invalid email address format: security@corp.com`** — Use a valid email format; verify the domain exists and the email parameter is not malformed.
-    **`ERROR: (AuthorizationFailed) The client 'user@corp.com' with object id '...' does not have authorization to perform action 'Microsoft.Security/securityContacts/write' over scope '/subscriptions/...'`** — Grant the user the Security Admin or Owner role on the subscription using `az role assignment create`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (ResourceNotFound) The resource of type 'securityContacts' with name 'default' could not be found.` | Ensure you are authenticated with `az login` and have the correct subscription selected via `az account set --subscription <subscription-id>`. |
+    | `ERROR: Invalid email address format: security@corp.com` | Use a valid email format; verify the domain exists and the email parameter is not malformed. |
+    | `ERROR: (AuthorizationFailed) The client 'user@corp.com' with object id '...' does not have authorization to perform action 'Microsoft.Security/securityContacts/write' over scope '/subscriptions/...'` | Grant the user the Security Admin or Owner role on the subscription using `az role assignment create`. |
 ---
 
 ## Set Up Log Analytics Workspace and Sentinel
@@ -437,8 +453,10 @@ az monitor log-analytics workspace create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound: Resource group 'rg-platform-monitoring' could not be found.`** — Create the resource group first using `az group create --name rg-platform-monitoring --location eastus`.
-    **`InvalidSkuName: The provided SKU 'PerGB2018' is not valid for this subscription.`** — Verify available SKUs with `az monitor log-analytics workspace list-skus` or use a valid SKU like `PerGB2018` or `CapacityReservation`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound: Resource group 'rg-platform-monitoring' could not be found.` | Create the resource group first using `az group create --name rg-platform-monitoring --location eastus`. |
+    | `InvalidSkuName: The provided SKU 'PerGB2018' is not valid for this subscription.` | Verify available SKUs with `az monitor log-analytics workspace list-skus` or use a valid SKU like `PerGB2018` or `CapacityReservation`. |
 **Enable Microsoft Sentinel on the workspace:**
 
 ```bash
@@ -468,9 +486,11 @@ az sentinel workspace create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound : The resource group 'rg-platform-monitoring' could not be found.`** — Verify the resource group exists in your subscription using `az group list` and correct the `--resource-group` parameter.
-    **`InvalidResourceName : The value of the parameter workspaceName is invalid.`** — Ensure the workspace name contains only alphanumeric characters and hyphens, is 4-63 characters long, and doesn't start with a hyphen.
-    **`AuthorizationFailed : The client 'user@example.com' with object id '...' does not have authorization to perform action 'Microsoft.OperationalInsights/workspaces/write'.`** — Assign the "Log Analytics Contributor" role to your user account on the resource group using `az role assignment create`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound : The resource group 'rg-platform-monitoring' could not be found.` | Verify the resource group exists in your subscription using `az group list` and correct the `--resource-group` parameter. |
+    | `InvalidResourceName : The value of the parameter workspaceName is invalid.` | Ensure the workspace name contains only alphanumeric characters and hyphens, is 4-63 characters long, and doesn't start with a hyphen. |
+    | `AuthorizationFailed : The client 'user@example.com' with object id '...' does not have authorization to perform action 'Microsoft.OperationalInsights/workspaces/write'.` | Assign the "Log Analytics Contributor" role to your user account on the resource group using `az role assignment create`. |
 **Connect core data connectors via the Sentinel portal:**
 
 Navigate to Sentinel → Data Connectors and enable:
@@ -513,8 +533,10 @@ az ad identity-protection user-risk-policy update \
 ```
 
 !!! warning "Common errors"
-    **`ERROR: unrecognized arguments: --operator`** — Use `--risk-level` and `--mfa-required` only; `--operator` is not a valid parameter for this command.
-    **`ERROR: argument --risk-level: invalid choice: 'medium' (choose from 'low', 'medium', 'high')`** — Ensure the risk level value matches one of the accepted enum values exactly.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: unrecognized arguments: --operator` | Use `--risk-level` and `--mfa-required` only; `--operator` is not a valid parameter for this command. |
+    | `ERROR: argument --risk-level: invalid choice: 'medium' (choose from 'low', 'medium', 'high')` | Ensure the risk level value matches one of the accepted enum values exactly. |
 **Configure PIM for privileged roles:**
 
 1. Portal → Entra ID → Privileged Identity Management → Azure AD Roles.
@@ -680,8 +702,10 @@ az network bastion create \
 ```
 
 !!! warning "Common errors"
-    **`(ResourceNotFound) Resource 'Microsoft.Network/virtualNetworks/vnet-hub-prod' under resource group 'rg-platform-network' was not found.`** — Verify the virtual network name and resource group exist using `az network vnet list --resource-group rg-platform-network`.
-    **`(InvalidResourceReference) The subnet 'AzureBastionSubnet' does not exist in virtual network 'vnet-hub-prod'.`** — Create the required AzureBastionSubnet with address prefix /26 or larger using `az network vnet subnet create --resource-group rg-platform-network --vnet-name vnet-hub-prod --name AzureBastionSubnet --address-prefix 10.0.1.0/26`.
+    | Error | Fix |
+    |---|---|
+    | `(ResourceNotFound) Resource 'Microsoft.Network/virtualNetworks/vnet-hub-prod' under resource group 'rg-platform-network' was not found.` | Verify the virtual network name and resource group exist using `az network vnet list --resource-group rg-platform-network`. |
+    | `(InvalidResourceReference) The subnet 'AzureBastionSubnet' does not exist in virtual network 'vnet-hub-prod'.` | Create the required AzureBastionSubnet with address prefix /26 or larger using `az network vnet subnet create --resource-group rg-platform-network --vnet-name vnet-hub-prod --name AzureBastionSubnet --address-prefix 10.0.1.0/26`. |
     **`(AuthorizationFailed) The client 'user@contoso.com' with object id 'a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p' does not have permission to perform action 'Microsoft.Network/bastionHosts/write' over scope '/subscriptions/12345678-1234-1234-1234-123456789
 ---
 
@@ -753,8 +777,10 @@ az backup policy create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group exists with `az group list` and create it if needed using `az group create --name rg-platform-backup --location eastus`.
-    **`InvalidJsonInput`** — Escape the JSON policy string properly by using single quotes around the entire JSON block or save the policy to a file and reference it with `@policy.json`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group exists with `az group list` and create it if needed using `az group create --name rg-platform-backup --location eastus`. |
+    | `InvalidJsonInput` | Escape the JSON policy string properly by using single quotes around the entire JSON block or save the policy to a file and reference it with `@policy.json`. |
 Enable backup for a VM:
 
 ```bash
@@ -784,9 +810,11 @@ Request sent to enable backup protection for VM 'vm-web-prod-01'.
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource 'Microsoft.Compute/virtualMachines/vm-web-prod-01' under resource group 'rg-workload-prod' was not found.`** — Verify the VM name and resource group name are correct using `az vm list --resource-group rg-workload-prod`.
-    **`InvalidPolicyId: The policy 'DailyVMPolicy' was not found in vault 'rsv-platform-prod'.`** — List available policies with `az backup policy list --resource-group rg-workload-prod --vault-name rsv-platform-prod` and use an existing policy name.
-    **`VaultNotFound: The Recovery Services vault 'rsv-platform-prod' was not found in resource group 'rg-workload-prod'.`** — Confirm the vault exists and the resource group name is spelled correctly using `az backup vault list --resource-group rg-workload-prod`.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource 'Microsoft.Compute/virtualMachines/vm-web-prod-01' under resource group 'rg-workload-prod' was not found.` | Verify the VM name and resource group name are correct using `az vm list --resource-group rg-workload-prod`. |
+    | `InvalidPolicyId: The policy 'DailyVMPolicy' was not found in vault 'rsv-platform-prod'.` | List available policies with `az backup policy list --resource-group rg-workload-prod --vault-name rsv-platform-prod` and use an existing policy name. |
+    | `VaultNotFound: The Recovery Services vault 'rsv-platform-prod' was not found in resource group 'rg-workload-prod'.` | Confirm the vault exists and the resource group name is spelled correctly using `az backup vault list --resource-group rg-workload-prod`. |
 ---
 
 ## Validate the Deployment
@@ -812,8 +840,10 @@ az security secure-score show --name ascScore
 ```
 
 !!! warning "Common errors"
-    **`ERROR: (ResourceNotFound) The resource 'Microsoft.Security/secureScores/ascScore' under resource group '<subscription>' was not found.`** — Ensure Azure Security Center is enabled on your subscription and the secure score has been calculated at least once.
-    **`ERROR: (AuthorizationFailed) The client '<user>' with object id '<id>' does not have authorization to perform action 'Microsoft.Security/secureScores/read' over scope '/subscriptions/<id>'.`** — Grant the user or service principal the "Security Reader" or "Owner" role on the subscription using `az role assignment create`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: (ResourceNotFound) The resource 'Microsoft.Security/secureScores/ascScore' under resource group '<subscription>' was not found.` | Ensure Azure Security Center is enabled on your subscription and the secure score has been calculated at least once. |
+    | `ERROR: (AuthorizationFailed) The client '<user>' with object id '<id>' does not have authorization to perform action 'Microsoft.Security/secureScores/read' over scope '/subscriptions/<id>'.` | Grant the user or service principal the "Security Reader" or "Owner" role on the subscription using `az role assignment create`. |
 Target is 70% or higher before onboarding workloads.
 
 **Policy compliance report:**
@@ -852,8 +882,10 @@ az policy state summarize --management-group root-mg
 ```
 
 !!! warning "Common errors"
-    **`ERROR: The user does not have authorization to perform action 'Microsoft.PolicyInsights/policyStates/summarize/action' over the requested scope.`** — Ensure your Azure account has Reader or Policy Insights Data Writer role assigned at the management group scope.
-    **`ERROR: Management group 'root-mg' not found.`** — Verify the management group ID exists and use the correct name with `az account management-group list`.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: The user does not have authorization to perform action 'Microsoft.PolicyInsights/policyStates/summarize/action' over the requested scope.` | Ensure your Azure account has Reader or Policy Insights Data Writer role assigned at the management group scope. |
+    | `ERROR: Management group 'root-mg' not found.` | Verify the management group ID exists and use the correct name with `az account management-group list`. |
 **Verify Sentinel is receiving logs:**
 
 Run a KQL query in the Sentinel Logs blade:
@@ -921,8 +953,10 @@ az policy assignment list --scope "/providers/Microsoft.Management/managementGro
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Management group 'root-mg' not found.`** — Verify the management group name with `az account management-group list` and use the correct name.
-    **`ERROR: The user does not have authorization to perform action 'Microsoft.Authorization/policyAssignments/read' over scope '/providers/Microsoft.Management/managementGroups/root-mg'.`** — Ensure your Azure account has Reader or higher role assigned at the management group scope.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Management group 'root-mg' not found.` | Verify the management group name with `az account management-group list` and use the correct name. |
+    | `ERROR: The user does not have authorization to perform action 'Microsoft.Authorization/policyAssignments/read' over scope '/providers/Microsoft.Management/managementGroups/root-mg'.` | Ensure your Azure account has Reader or higher role assigned at the management group scope. |
 ---
 
 ## Verify

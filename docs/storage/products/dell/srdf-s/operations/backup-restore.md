@@ -54,9 +54,11 @@ Latency: 2.3 ms
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Command not found`** — Ensure the EMC Solutions Enabler package is installed and the `symcli` environment is properly initialized with `source /opt/emc/SYMCLI/bin/setenv.sh`.
-    **`SRDF State: Not Synchronized`** — Wait for synchronization to complete using `symrdf -sg PROD_SG wait -sync` or check for link failures with `symrdf list -rdfg <rdf_group_number> -detail`.
-    **`Error: Invalid storage group name PROD_SG`** — Verify the storage group exists and is SRDF-enabled by running `symsg list` to confirm the correct name.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Command not found` | Ensure the EMC Solutions Enabler package is installed and the `symcli` environment is properly initialized with `source /opt/emc/SYMCLI/bin/setenv.sh`. |
+    | `SRDF State: Not Synchronized` | Wait for synchronization to complete using `symrdf -sg PROD_SG wait -sync` or check for link failures with `symrdf list -rdfg <rdf_group_number> -detail`. |
+    | `Error: Invalid storage group name PROD_SG` | Verify the storage group exists and is SRDF-enabled by running `symsg list` to confirm the correct name. |
 ```bash
 # Suspend SRDF replication (I/O continues on R1, no longer replicated)
 symrdf -sg PROD_SG suspend
@@ -80,9 +82,11 @@ Last Update: 2024-01-15 14:32:18
 ```
 
 !!! warning "Common errors"
-    **`symrdf: Could not connect to the Symmetrix`** — Verify the Symmetrix ID is correct and the SRDF daemon is running with `sudo /etc/init.d/srdf start`.
-    **`symrdf: Symmetry group PROD_SG not found`** — Confirm the SRDF group name matches your configuration with `symrdf -sg list`.
-    **`symrdf: Cannot suspend - group is already in Suspended state`** — The replication is already suspended; proceed directly to the next operation or resume first with `symrdf -sg PROD_SG resume`.
+    | Error | Fix |
+    |---|---|
+    | `symrdf: Could not connect to the Symmetrix` | Verify the Symmetrix ID is correct and the SRDF daemon is running with `sudo /etc/init.d/srdf start`. |
+    | `symrdf: Symmetry group PROD_SG not found` | Confirm the SRDF group name matches your configuration with `symrdf -sg list`. |
+    | `symrdf: Cannot suspend - group is already in Suspended state` | The replication is already suspended; proceed directly to the next operation or resume first with `symrdf -sg PROD_SG resume`. |
 ```bash
 # Resume SRDF — re-syncs changed tracks from R1 to R2
 symrdf -sg PROD_SG resume
@@ -109,9 +113,11 @@ Last Update: 2024-01-15 14:32:17
 ```
 
 !!! warning "Common errors"
-    **`SRDF group PROD_SG not found`** — Verify the SRDF group name matches your configuration with `symrdf list`.
-    **`Symmetrix ID not set`** — Set the Symmetrix ID environment variable with `export SYMID=000296802151` before running the command.
-    **`SRDF pair is in a protected state and cannot be resumed`** — Check pair state with `symrdf -sg PROD_SG query` and resolve any consistency issues before resuming.
+    | Error | Fix |
+    |---|---|
+    | `SRDF group PROD_SG not found` | Verify the SRDF group name matches your configuration with `symrdf list`. |
+    | `Symmetrix ID not set` | Set the Symmetrix ID environment variable with `export SYMID=000296802151` before running the command. |
+    | `SRDF pair is in a protected state and cannot be resumed` | Check pair state with `symrdf -sg PROD_SG query` and resolve any consistency issues before resuming. |
 ```bash
 # 1. Verify R1 array and volumes are accessible
 symdev list -sid <R1_SID> | grep <device_range>
@@ -159,9 +165,11 @@ PROD_SG: R1 promoted to RW, R2 demoted to WD
 ```
 
 !!! warning "Common errors"
-    **`symdev: Command not found`** — Verify Symmetrix CLI is installed and $PATH includes the Symmetrix bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`PROD_SG: Invalid or inaccessible symmetrix group`** — Confirm the storage group name matches exactly and the R1 array SID is set in the SYMCLI_CONNECT environment variable.
-    **`Restore operation failed: R2 array unreachable`** — Verify network connectivity and Fibre Channel links between R1 and R2 arrays, and confirm R2 array is online and in a valid SRDF state.
+    | Error | Fix |
+    |---|---|
+    | `symdev: Command not found` | Verify Symmetrix CLI is installed and $PATH includes the Symmetrix bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `PROD_SG: Invalid or inaccessible symmetrix group` | Confirm the storage group name matches exactly and the R1 array SID is set in the SYMCLI_CONNECT environment variable. |
+    | `Restore operation failed: R2 array unreachable` | Verify network connectivity and Fibre Channel links between R1 and R2 arrays, and confirm R2 array is online and in a valid SRDF state. |
 ```bash
 # establish syncs from the current "source" (post-failover this is R2) to R1
 symrdf -sg PROD_SG establish -force
@@ -178,9 +186,11 @@ Sync status: SYNCHRONIZED
 ```
 
 !!! warning "Common errors"
-    **`SYMRDF ERROR: Storage group PROD_SG not found`** — Verify the storage group name with `symsg list` and ensure it exists on the current array.
-    **`SYMRDF ERROR: RDF link is not in a valid state for establish operation`** — Check current RDF link state with `symrdf -sg PROD_SG query` and ensure links are in SUSPENDED or FAILED state before attempting establish.
-    **`SYMRDF ERROR: Insufficient privileges to perform establish operation`** — Run the command with appropriate credentials or ensure your user account has RDF administrative permissions on the Symmetrix array.
+    | Error | Fix |
+    |---|---|
+    | `SYMRDF ERROR: Storage group PROD_SG not found` | Verify the storage group name with `symsg list` and ensure it exists on the current array. |
+    | `SYMRDF ERROR: RDF link is not in a valid state for establish operation` | Check current RDF link state with `symrdf -sg PROD_SG query` and ensure links are in SUSPENDED or FAILED state before attempting establish. |
+    | `SYMRDF ERROR: Insufficient privileges to perform establish operation` | Run the command with appropriate credentials or ensure your user account has RDF administrative permissions on the Symmetrix array. |
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -105,9 +105,11 @@ result: 0 Success
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked; check DC logs with `Get-EventLog -LogName Security -InstanceId 4771 -Newest 10` on the domain controller.
-    **`Can't contact LDAP server (-1)`** — Ensure the DC hostname resolves with `nslookup dc01.corp.example.com` and port 389/636 is reachable via `nc -zv dc01.corp.example.com 636`.
-    **`TLS/SSL error: certificate verify failed`** — Add the DC's CA certificate to the system trust store with `sudo cp ca.crt /etc/ssl/certs/ && sudo update-ca-certificates` or disable verification temporarily with `-o LDAPTLS_REQCERT=never`.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account is not locked; check DC logs with `Get-EventLog -LogName Security -InstanceId 4771 -Newest 10` on the domain controller. |
+    | `Can't contact LDAP server (-1)` | Ensure the DC hostname resolves with `nslookup dc01.corp.example.com` and port 389/636 is reachable via `nc -zv dc01.corp.example.com 636`. |
+    | `TLS/SSL error: certificate verify failed` | Add the DC's CA certificate to the system trust store with `sudo cp ca.crt /etc/ssl/certs/ && sudo update-ca-certificates` or disable verification temporarily with `-o LDAPTLS_REQCERT=never`. |
 ## SASL / Kerberos Bind
 
 SASL with GSSAPI uses a Kerberos ticket, avoiding password exposure. This is the preferred method for Active Directory.
@@ -163,9 +165,11 @@ Valid starting       Expires              Service principal
 ```
 
 !!! warning "Common errors"
-    **`ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)`** — Verify the DC hostname resolves and is reachable on port 389 with `nslookup dc01.corp.example.com` and `nc -zv dc01.corp.example.com 389`.
-    **`GSSAPI Error: Unspecified GSS failure. Minor code may provide more information`** — Ensure a valid Kerberos ticket exists with `klist` and the service principal `ldap/dc01.corp.example.com@CORP.EXAMPLE.COM` is registered in Active Directory.
-    **`kinit: Client not found in Kerberos database while getting initial credentials`** — Confirm the service account `svc-ldap@CORP.EXAMPLE.COM` exists in the KDC and the realm name matches your domain exactly.
+    | Error | Fix |
+    |---|---|
+    | `ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)` | Verify the DC hostname resolves and is reachable on port 389 with `nslookup dc01.corp.example.com` and `nc -zv dc01.corp.example.com 389`. |
+    | `GSSAPI Error: Unspecified GSS failure. Minor code may provide more information` | Ensure a valid Kerberos ticket exists with `klist` and the service principal `ldap/dc01.corp.example.com@CORP.EXAMPLE.COM` is registered in Active Directory. |
+    | `kinit: Client not found in Kerberos database while getting initial credentials` | Confirm the service account `svc-ldap@CORP.EXAMPLE.COM` exists in the KDC and the realm name matches your domain exactly. |
 ## Service Account Bind Configuration
 
 Service accounts used for LDAP bind should be dedicated, low-privilege accounts.
@@ -217,9 +221,11 @@ dn: CN=Domain Guests,CN=Users,DC=corp,DC=example,DC=com
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the DC hostname is reachable and anonymous binds are not already restricted; test with `-D "CN=admin,CN=Users,DC=corp,DC=example,DC=com" -W` to confirm the server is responding.
-    **`Can't contact LDAP server (-1)`** — Ensure the DC hostname resolves correctly and port 389 is accessible from your client; test with `ping dc01.corp.example.com` and `nc -zv dc01.corp.example.com 389`.
-    **`ldapsearch: command not found`** — Install the ldap-utils package with `apt-get install ldap-utils` (Debian/Ubuntu) or `yum install openldap-clients` (RHEL/CentOS).
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the DC hostname is reachable and anonymous binds are not already restricted; test with `-D "CN=admin,CN=Users,DC=corp,DC=example,DC=com" -W` to confirm the server is responding. |
+    | `Can't contact LDAP server (-1)` | Ensure the DC hostname resolves correctly and port 389 is accessible from your client; test with `ping dc01.corp.example.com` and `nc -zv dc01.corp.example.com 389`. |
+    | `ldapsearch: command not found` | Install the ldap-utils package with `apt-get install ldap-utils` (Debian/Ubuntu) or `yum install openldap-clients` (RHEL/CentOS). |
 ## Bind Test Checklist
 
 ```bash
@@ -276,6 +282,8 @@ result: 0 Success
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked; check DC event logs for failed bind attempts.
-    **`Can't contact LDAP server (-1)`** — Confirm DNS resolution works, firewall allows ports 389/636 to the DC, and the DC hostname is reachable via `ping dc01.corp.example.com`.
-    **`Connection refused`** — Verify LDAP service is running on the DC with `systemctl status slapd` (Linux) or check Active Directory is operational on Windows DC.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account is not locked; check DC event logs for failed bind attempts. |
+    | `Can't contact LDAP server (-1)` | Confirm DNS resolution works, firewall allows ports 389/636 to the DC, and the DC hostname is reachable via `ping dc01.corp.example.com`. |
+    | `Connection refused` | Verify LDAP service is running on the DC with `systemctl status slapd` (Linux) or check Active Directory is operational on Windows DC. |

@@ -46,9 +46,11 @@ OK
 ```
 
 !!! warning "Common errors"
-    **`systemctl status <service-name>: Unit <service-name>.service could not be found.`** — Replace `<service-name>` with the actual service name (e.g., `nginx`, `postgresql`, `apache2`).
-    **`curl: (7) Failed to connect to localhost port <port>: Connection refused`** — Verify the service is running with `systemctl status` and confirm the correct port number is specified.
-    **`grep: (standard input): No such file or device`** — Ensure the service name in `journalctl -u <service-name>` matches an active systemd unit; check available units with `systemctl list-units --type=service`.
+    | Error | Fix |
+    |---|---|
+    | `systemctl status <service-name>: Unit <service-name>.service could not be found.` | Replace `<service-name>` with the actual service name (e.g., `nginx`, `postgresql`, `apache2`). |
+    | `curl: (7) Failed to connect to localhost port <port>: Connection refused` | Verify the service is running with `systemctl status` and confirm the correct port number is specified. |
+    | `grep: (standard input): No such file or device` | Ensure the service name in `journalctl -u <service-name>` matches an active systemd unit; check available units with `systemctl list-units --type=service`. |
 ```bash
 # Check no active alerts after change
 # In Prometheus / Alertmanager:

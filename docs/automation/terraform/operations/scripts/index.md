@@ -217,9 +217,11 @@ Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
 ```
 
 !!! warning "Common errors"
-    **`The system cannot find the file specified.`** — Verify the batch file exists at `C:\Users\YourName\Desktop\tf-plan-apply.bat` and check the path spelling.
-    **`'terraform' is not recognized as an internal or external command`** — Ensure Terraform is installed and added to your system PATH environment variable.
-    **`Error: Failed to read state file`** — Confirm the Terraform state file has read/write permissions and the working directory is correct.
+    | Error | Fix |
+    |---|---|
+    | `The system cannot find the file specified.` | Verify the batch file exists at `C:\Users\YourName\Desktop\tf-plan-apply.bat` and check the path spelling. |
+    | `'terraform' is not recognized as an internal or external command` | Ensure Terraform is installed and added to your system PATH environment variable. |
+    | `Error: Failed to read state file` | Confirm the Terraform state file has read/write permissions and the working directory is correct. |
 **What you should see**
 
 The script runs through 6 numbered steps. After the plan output you are prompted to type `YES` to apply. A log file is saved to your Desktop with a timestamp in the filename.
@@ -352,9 +354,11 @@ Audit Complete. No critical issues found.
 ```
 
 !!! warning "Common errors"
-    **`Set-ExecutionPolicy : Windows PowerShell updated your execution policy successfully, but the setting is not applicable to the current host application because it has a Group Policy override.`** — Run PowerShell as Administrator or adjust Group Policy settings in `gpedit.msc` to allow script execution.
-    **`.\tf-state-audit.ps1 : File not found.`** — Verify the script exists in the current directory with `ls *.ps1` and check the working directory with `pwd`.
-    **`Error: Failed to read state file 'terraform.tfstate': permission denied`** — Ensure your user account has read permissions on the state file and backend storage (S3, Azure Storage, etc.) with appropriate IAM/RBAC roles.
+    | Error | Fix |
+    |---|---|
+    | `Set-ExecutionPolicy : Windows PowerShell updated your execution policy successfully, but the setting is not applicable to the current host application because it has a Group Policy override.` | Run PowerShell as Administrator or adjust Group Policy settings in `gpedit.msc` to allow script execution. |
+    | `.\tf-state-audit.ps1 : File not found.` | Verify the script exists in the current directory with `ls *.ps1` and check the working directory with `pwd`. |
+    | `Error: Failed to read state file 'terraform.tfstate': permission denied` | Ensure your user account has read permissions on the state file and backend storage (S3, Azure Storage, etc.) with appropriate IAM/RBAC roles. |
 **What you should see**
 
 A table of all resources in state (address, type, provider), a count grouped by resource type, and a tainted resources section. A `.txt` report is saved to your Desktop.

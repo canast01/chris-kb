@@ -117,8 +117,10 @@ c3d4e5f6-a7b8-9012-cdef-123456789012   esx-host-04.lab.local   naa.600508b1001c5
 ```
 
 !!! warning "Common errors"
-    **`Error: Unknown command or namespace vsan debug object`** — Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN status.
-    **`Error: Invalid object UUID format`** — Ensure the UUID is exactly 36 characters in the format `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` with no extra spaces.
+    | Error | Fix |
+    |---|---|
+    | `Error: Unknown command or namespace vsan debug object` | Verify vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to confirm vSAN status. |
+    | `Error: Invalid object UUID format` | Ensure the UUID is exactly 36 characters in the format `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` with no extra spaces. |
 ```bash
 esxcli vsan debug network test
 # Loss % > 0 indicates network issues — check switch, NIC, or vDS configuration
@@ -141,9 +143,11 @@ Network test completed successfully.
 ```
 
 !!! warning "Common errors"
-    **`Error: VSAN is not enabled on this host`** — Enable VSAN on the host via vSphere Client or run `esxcli vsan cluster join`.
-    **`Error: Could not resolve hostname esx-node-02.lab.local`** — Verify DNS resolution is working and all cluster nodes are reachable on the management network.
-    **`Error: Permission denied`** — Run the command with root privileges or as a user with vSAN administration rights.
+    | Error | Fix |
+    |---|---|
+    | `Error: VSAN is not enabled on this host` | Enable VSAN on the host via vSphere Client or run `esxcli vsan cluster join`. |
+    | `Error: Could not resolve hostname esx-node-02.lab.local` | Verify DNS resolution is working and all cluster nodes are reachable on the management network. |
+    | `Error: Permission denied` | Run the command with root privileges or as a user with vSAN administration rights. |
 ```bash
 # Check object state
 esxcli vsan debug object list | grep -i "inaccessible"
@@ -172,9 +176,11 @@ Network partition test completed. Status: DEGRADED
 ```
 
 !!! warning "Common errors"
-    **`VSAN is not enabled on this host`** — Run `esxcli vsan cluster join --cluster-uuid=<uuid>` to enable vSAN on the host.
-    **`Network partition detected: Host isolation`** — Check physical network connectivity and verify vSAN VMkernel port configuration with `esxcli vsan network list`.
-    **`Command timed out waiting for cluster response`** — Verify all cluster hosts are powered on and accessible, then retry the command.
+    | Error | Fix |
+    |---|---|
+    | `VSAN is not enabled on this host` | Run `esxcli vsan cluster join --cluster-uuid=<uuid>` to enable vSAN on the host. |
+    | `Network partition detected: Host isolation` | Check physical network connectivity and verify vSAN VMkernel port configuration with `esxcli vsan network list`. |
+    | `Command timed out waiting for cluster response` | Verify all cluster hosts are powered on and accessible, then retry the command. |
 ```bash
 # Check and remove throttle (if set too low)
 esxcli vsan debug resync throttle get
@@ -209,8 +215,10 @@ Object UUID: 6f1d3e8a-2c4b-5a9e-7b1f-3c2d8e9a1b4f
 ```
 
 !!! warning "Common errors"
-    **`Error: The VSAN service is not running on this host`** — Run `esxcli vsan cluster get` to verify VSAN is enabled, then restart the service with `systemctl restart vsanmgmt`.
-    **`Error: Permission denied`** — Ensure your account has VSAN administrator privileges; use `esxcli system permission list` to verify role assignments.
+    | Error | Fix |
+    |---|---|
+    | `Error: The VSAN service is not running on this host` | Run `esxcli vsan cluster get` to verify VSAN is enabled, then restart the service with `systemctl restart vsanmgmt`. |
+    | `Error: Permission denied` | Ensure your account has VSAN administrator privileges; use `esxcli system permission list` to verify role assignments. |
 ```bash
 # Check disk group and disk status
 esxcli vsan storage list
@@ -294,9 +302,11 @@ round-trip min/avg/max = 0.879/0.890/0.901 ms
 ```
 
 !!! warning "Common errors"
-    **`vSAN is not enabled on this host`** — Run `esxcli vsan cluster get` to verify vSAN is configured, then enable it via vCenter or `esxcli vsan cluster new`.
-    **`Unable to resolve host address <peer_vmk_ip>`** — Verify the peer ESXi hostname or IP is correct and that vmk2 is bound to the vSAN network (check with `esxcli network ip interface list`).
-    **`No route to host`** — Confirm vSAN VMkernel adapters are on the same subnet and vSAN network connectivity is not blocked by firewall rules or VLAN misconfiguration.
+    | Error | Fix |
+    |---|---|
+    | `vSAN is not enabled on this host` | Run `esxcli vsan cluster get` to verify vSAN is configured, then enable it via vCenter or `esxcli vsan cluster new`. |
+    | `Unable to resolve host address <peer_vmk_ip>` | Verify the peer ESXi hostname or IP is correct and that vmk2 is bound to the vSAN network (check with `esxcli network ip interface list`). |
+    | `No route to host` | Confirm vSAN VMkernel adapters are on the same subnet and vSAN network connectivity is not blocked by firewall rules or VLAN misconfiguration. |
 ```bash
 # Test network connectivity to all peers
 esxcli vsan debug network test
@@ -343,9 +353,11 @@ Recommendation: Check physical NIC on esx-03, verify VSAN network MTU (9000), in
 ```
 
 !!! warning "Common errors"
-    **`Error: VSAN cluster not initialized`** — Run `esxcli vsan cluster get` to verify VSAN is enabled on all hosts; reinitialize the cluster if needed.
-    **`Error: Unable to reach one or more hosts`** — Verify network connectivity and firewall rules allow VSAN multicast traffic (224.0.0.1:12345) between all hosts.
-    **`Error: Command not found`** — Ensure you are running this command on an ESXi host with VSAN enabled; this command is not available on non-VSAN clusters.
+    | Error | Fix |
+    |---|---|
+    | `Error: VSAN cluster not initialized` | Run `esxcli vsan cluster get` to verify VSAN is enabled on all hosts; reinitialize the cluster if needed. |
+    | `Error: Unable to reach one or more hosts` | Verify network connectivity and firewall rules allow VSAN multicast traffic (224.0.0.1:12345) between all hosts. |
+    | `Error: Command not found` | Ensure you are running this command on an ESXi host with VSAN enabled; this command is not available on non-VSAN clusters. |
 ```bash
 esxcli vsan storage list | grep "Format Version"
 ```
@@ -357,8 +369,10 @@ Format Version: 12
 ```
 
 !!! warning "Common errors"
-    **`Unknown command or namespace vsan`** — Ensure vSAN is licensed and enabled on the ESXi host; run `esxcli vsan cluster get` to verify vSAN is active.
-    **`grep: command not found`** — This error is unlikely on ESXi; if it occurs, use `esxcli vsan storage list | grep "Format"` or verify the ESXi shell is properly initialized.
+    | Error | Fix |
+    |---|---|
+    | `Unknown command or namespace vsan` | Ensure vSAN is licensed and enabled on the ESXi host; run `esxcli vsan cluster get` to verify vSAN is active. |
+    | `grep: command not found` | This error is unlikely on ESXi; if it occurs, use `esxcli vsan storage list | grep "Format"` or verify the ESXi shell is properly initialized. |
 ```bash
 # Check clock on each host
 esxcli system time get

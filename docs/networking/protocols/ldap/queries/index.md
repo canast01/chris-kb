@@ -108,9 +108,11 @@ userAccountControl: 512
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account has not been locked out; test with `ldapwhoami -H ldap://dc01 -D "svc@corp.example.com" -w "pass"`.
-    **`Can't contact LDAP server (-1)`** — Confirm the LDAP server hostname/IP is reachable with `ping dc01` or `nslookup dc01`, and that port 389 is open via `nc -zv dc01 389`.
-    **`Malformed filter (87)`** — Check filter syntax for unmatched parentheses and proper escaping of special characters; use online LDAP filter validators to verify the query structure.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account has not been locked out; test with `ldapwhoami -H ldap://dc01 -D "svc@corp.example.com" -w "pass"`. |
+    | `Can't contact LDAP server (-1)` | Confirm the LDAP server hostname/IP is reachable with `ping dc01` or `nslookup dc01`, and that port 389 is open via `nc -zv dc01 389`. |
+    | `Malformed filter (87)` | Check filter syntax for unmatched parentheses and proper escaping of special characters; use online LDAP filter validators to verify the query structure. |
 ## Common AD Attributes
 
 ```bash
@@ -163,9 +165,11 @@ member: CN=Michael Chen,OU=Users,DC=corp,DC=example,DC=com
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account has not been locked out.
-    **`Can't contact LDAP server (-1)`** — Confirm the DC hostname resolves and port 389 is reachable; use `nslookup dc01` and `nc -zv dc01 389` to test.
-    **`No such object (32)`** — Ensure the base DN `DC=corp,DC=example,DC=com` matches your directory structure; verify with `ldapsearch -H ldap://dc01 -x -s base -b "" namingContexts`.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account has not been locked out. |
+    | `Can't contact LDAP server (-1)` | Confirm the DC hostname resolves and port 389 is reachable; use `nslookup dc01` and `nc -zv dc01 389` to test. |
+    | `No such object (32)` | Ensure the base DN `DC=corp,DC=example,DC=com` matches your directory structure; verify with `ldapsearch -H ldap://dc01 -x -s base -b "" namingContexts`. |
 ## PowerShell: Get-ADObject
 
 ```powershell
@@ -238,9 +242,11 @@ result: 0 Success
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked; check `-D` DN and `-w` password match Active Directory.
-    **`Can't contact LDAP server (-1)`** — Confirm the LDAP server hostname `dc01` is resolvable and port 389 is accessible; use `nslookup dc01` and `nc -zv dc01 389` to test connectivity.
-    **`No such object (32)`** — Verify the search base DN `DC=corp,DC=example,DC=com` exists in the directory; use a base scope query first to confirm the root DN is correct.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account is not locked; check `-D` DN and `-w` password match Active Directory. |
+    | `Can't contact LDAP server (-1)` | Confirm the LDAP server hostname `dc01` is resolvable and port 389 is accessible; use `nslookup dc01` and `nc -zv dc01 389` to test connectivity. |
+    | `No such object (32)` | Verify the search base DN `DC=corp,DC=example,DC=com` exists in the directory; use a base scope query first to confirm the root DN is correct. |
 ## Paging Large Result Sets
 
 ```bash
@@ -294,6 +300,8 @@ agarcia                                    agarcia@corp.example.com
 ```
 
 !!! warning "Common errors"
-    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked; test with `ldapwhoami -H ldap://dc01 -x -D "svc@corp.example.com" -w "pass"`.
-    **`Can't contact LDAP server`** — Confirm the DC hostname resolves and port 389 is accessible; test with `nc -zv dc01 389`.
-    **`Export-Csv : Access to the path 'C:\Temp\all_users.csv' is denied`** — Ensure the directory exists and your user account has write permissions, or specify an alternative output path like `$env:TEMP\all_users.csv`.
+    | Error | Fix |
+    |---|---|
+    | `ldap_bind: Invalid credentials (49)` | Verify the service account password is correct and the account is not locked; test with `ldapwhoami -H ldap://dc01 -x -D "svc@corp.example.com" -w "pass"`. |
+    | `Can't contact LDAP server` | Confirm the DC hostname resolves and port 389 is accessible; test with `nc -zv dc01 389`. |
+    | `Export-Csv : Access to the path 'C:\Temp\all_users.csv' is denied` | Ensure the directory exists and your user account has write permissions, or specify an alternative output path like `$env:TEMP\all_users.csv`. |

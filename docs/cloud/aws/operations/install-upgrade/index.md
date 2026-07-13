@@ -115,8 +115,10 @@ CodeSha256: abcd1234efgh5678ijkl9012mnop3456qrst7890uv
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the ListFunctions operation: The resource you requested does not exist.`** — Verify your AWS credentials and region are configured correctly with `aws configure`.
-    **`An error occurred (InvalidParameterValueException) when calling the UpdateFunctionConfiguration operation: The runtime parameter of python3.12 is not supported.`** — Check the Lambda runtime is available in your region using `aws lambda list-runtimes` and ensure the function's architecture supports it.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the ListFunctions operation: The resource you requested does not exist.` | Verify your AWS credentials and region are configured correctly with `aws configure`. |
+    | `An error occurred (InvalidParameterValueException) when calling the UpdateFunctionConfiguration operation: The runtime parameter of python3.12 is not supported.` | Check the Lambda runtime is available in your region using `aws lambda list-runtimes` and ensure the function's architecture supports it. |
 ```bash
 # Check current EKS version
 aws eks describe-cluster --name <cluster-name> --query 'cluster.version'
@@ -193,9 +195,11 @@ aws eks update-nodegroup-version --cluster-name <cluster-name> \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (ResourceNotFoundException) when calling the DescribeCluster operation: No cluster found for name: <cluster-name>`** — Replace `<cluster-name>` with your actual EKS cluster name and verify the cluster exists in the current AWS region.
-    **`An error occurred (InvalidParameterException) when calling the UpdateClusterVersion operation: Cluster version 1.30 is not available for upgrade from version 1.29`** — Check available versions with `aws eks describe-addon-versions` and ensure you're upgrading to a version newer than your current version.
-    **`An error occurred (InvalidParameterException) when calling the UpdateNodegroupVersion operation: NodeGroup <nodegroup-name> not found`** — Verify the nodegroup name matches exactly and exists in the cluster using `aws eks list-nodegroups --cluster-name <cluster-name>`.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (ResourceNotFoundException) when calling the DescribeCluster operation: No cluster found for name: <cluster-name>` | Replace `<cluster-name>` with your actual EKS cluster name and verify the cluster exists in the current AWS region. |
+    | `An error occurred (InvalidParameterException) when calling the UpdateClusterVersion operation: Cluster version 1.30 is not available for upgrade from version 1.29` | Check available versions with `aws eks describe-addon-versions` and ensure you're upgrading to a version newer than your current version. |
+    | `An error occurred (InvalidParameterException) when calling the UpdateNodegroupVersion operation: NodeGroup <nodegroup-name> not found` | Verify the nodegroup name matches exactly and exists in the cluster using `aws eks list-nodegroups --cluster-name <cluster-name>`. |
 ```bash
 # Check RI utilisation
 aws ce get-reservation-utilization --time-period Start=2026-01-01,End=2026-01-31

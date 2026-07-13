@@ -149,9 +149,11 @@ TOKEN=$(curl -sk -X POST https://snapcenter.example.com/api/4.9/auth/login \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example; if error persists, verify snapcenter.example.com hostname matches certificate CN).
-    **`jq: parse error: Cannot index string with string "Token"`** — Ensure the login request succeeds and returns valid JSON; check credentials and SnapCenter API endpoint availability with `curl -sk https://snapcenter.example.com/api/4.9/auth/login -X OPTIONS`.
-    **`command not found: jq`** — Install jq with `apt-get install jq` (Ubuntu/Debian) or `yum install jq` (RHEL/CentOS), or use `python3 -m json.tool` to parse JSON instead.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification (already present in example; if error persists, verify snapcenter.example.com hostname matches certificate CN). |
+    | `jq: parse error: Cannot index string with string "Token"` | Ensure the login request succeeds and returns valid JSON; check credentials and SnapCenter API endpoint availability with `curl -sk https://snapcenter.example.com/api/4.9/auth/login -X OPTIONS`. |
+    | `command not found: jq` | Install jq with `apt-get install jq` (Ubuntu/Debian) or `yum install jq` (RHEL/CentOS), or use `python3 -m json.tool` to parse JSON instead. |
 ### Jobs
 
 ```bash
@@ -198,9 +200,11 @@ curl -sk -X GET "https://snapcenter.example.com/api/4.9/jobs/12345" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the SnapCenter certificate into your CA bundle.
-    **`{"error":"Invalid or expired token"}`** — Regenerate the authentication token using SnapCenter's token API and ensure `$TOKEN` variable is properly exported before running the command.
-    **`jq: parse error: Invalid JSON`** — Verify the API endpoint is accessible and responding with valid JSON; check SnapCenter service status with `systemctl status snapcenter`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip SSL verification, or import the SnapCenter certificate into your CA bundle. |
+    | `{"error":"Invalid or expired token"}` | Regenerate the authentication token using SnapCenter's token API and ensure `$TOKEN` variable is properly exported before running the command. |
+    | `jq: parse error: Invalid JSON` | Verify the API endpoint is accessible and responding with valid JSON; check SnapCenter service status with `systemctl status snapcenter`. |
 ### Backups via API
 
 ```bash
@@ -242,9 +246,11 @@ curl -sk -X POST "https://snapcenter.example.com/api/4.9/backups" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the SnapCenter CA certificate into your system trust store.
-    **`jq: error (at <stdin>:1): Cannot index null with string "Backups"`** — Verify the `$TOKEN` variable is set correctly with `echo $TOKEN` and that the SnapCenter API is responding with valid JSON.
-    **`{"error":"Invalid resource name","statusCode":400}`** — Confirm the resource name "AdventureWorks" exists in SnapCenter by listing available resources with `curl -sk -X GET "https://snapcenter.example.com/api/4.9/resources" -H "token: $TOKEN"`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag (already present) or import the SnapCenter CA certificate into your system trust store. |
+    | `jq: error (at <stdin>:1): Cannot index null with string "Backups"` | Verify the `$TOKEN` variable is set correctly with `echo $TOKEN` and that the SnapCenter API is responding with valid JSON. |
+    | `{"error":"Invalid resource name","statusCode":400}` | Confirm the resource name "AdventureWorks" exists in SnapCenter by listing available resources with `curl -sk -X GET "https://snapcenter.example.com/api/4.9/resources" -H "token: $TOKEN"`. |
 ---
 
 ## Verify

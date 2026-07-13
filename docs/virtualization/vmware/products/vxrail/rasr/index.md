@@ -184,8 +184,10 @@ Enabled: false
 ```
 
 !!! warning "Common errors"
-    **`vim-cmd: command not found`** — Ensure you are running this command on the ESXi host directly or via SSH, not from a remote client without vSphere CLI installed.
-    **`Error: Unable to change maintenanceMode state`** — Verify the host is in maintenance mode and you have administrator privileges; check `esxcli system maintenanceMode get` first to confirm current state.
+    | Error | Fix |
+    |---|---|
+    | `vim-cmd: command not found` | Ensure you are running this command on the ESXi host directly or via SSH, not from a remote client without vSphere CLI installed. |
+    | `Error: Unable to change maintenanceMode state` | Verify the host is in maintenance mode and you have administrator privileges; check `esxcli system maintenanceMode get` first to confirm current state. |
 ---
 
 ## Post-Recovery Validation
@@ -226,9 +228,11 @@ Health Check Results:
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the local hostd agent (127.0.0.1:443).`** — Ensure the ESXi host is fully booted and hostd service is running with `systemctl status hostd`.
-    **`Error: VSAN is not enabled on this cluster.`** — Enable VSAN on the cluster through vCenter or verify the host is part of a VSAN-enabled cluster.
-    **`Error: Unknown command or namespace vsan health cluster.`** — Verify you are running this command on an ESXi 6.5+ host; older versions use different VSAN health commands.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the local hostd agent (127.0.0.1:443).` | Ensure the ESXi host is fully booted and hostd service is running with `systemctl status hostd`. |
+    | `Error: VSAN is not enabled on this cluster.` | Enable VSAN on the cluster through vCenter or verify the host is part of a VSAN-enabled cluster. |
+    | `Error: Unknown command or namespace vsan health cluster.` | Verify you are running this command on an ESXi 6.5+ host; older versions use different VSAN health commands. |
 ```bash
 # Check object resync has started and is completing
 esxcli vsan resync summary
@@ -249,9 +253,11 @@ ResyncPercentage: 60.4%
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the VMware vSAN Health Service`** — Ensure vSAN is properly initialized on the cluster and all hosts are in a healthy state; run `esxcli vsan cluster get` to verify cluster membership.
-    **`Error: vSAN is not enabled on this cluster`** — Enable vSAN on the cluster through vCenter or run `esxcli vsan cluster new` on the first host if initializing a new cluster.
-    **`Resync Status: Stuck or No Progress`** — Check for network connectivity issues between hosts, verify disk health with `esxcli vsan storage list`, and ensure sufficient free capacity exists on the cluster.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the VMware vSAN Health Service` | Ensure vSAN is properly initialized on the cluster and all hosts are in a healthy state; run `esxcli vsan cluster get` to verify cluster membership. |
+    | `Error: vSAN is not enabled on this cluster` | Enable vSAN on the cluster through vCenter or run `esxcli vsan cluster new` on the first host if initializing a new cluster. |
+    | `Resync Status: Stuck or No Progress` | Check for network connectivity issues between hosts, verify disk health with `esxcli vsan storage list`, and ensure sufficient free capacity exists on the cluster. |
 **Node health in vCenter:**
 
 - vCenter → Hosts and Clusters → select rebuilt node → Monitor → Hardware Health — confirm no hardware alerts.
@@ -276,8 +282,10 @@ Dell_bootbank_DellEMCDiagnostics_7.0.100-15.0.0_19191751.vib
 ```
 
 !!! warning "Common errors"
-    **`esxcli: command not found`** — Ensure you are connected via SSH to an ESXi host with proper shell access enabled.
-    **`grep: (standard input): No such file or directory`** — Verify the node has completed the rebuild process and esxcli is responding; try running `esxcli system version get` first to confirm connectivity.
+    | Error | Fix |
+    |---|---|
+    | `esxcli: command not found` | Ensure you are connected via SSH to an ESXi host with proper shell access enabled. |
+    | `grep: (standard input): No such file or directory` | Verify the node has completed the rebuild process and esxcli is responding; try running `esxcli system version get` first to confirm connectivity. |
 - iDRAC UI → System → Firmware Inventory — confirm iDRAC, BIOS, NIC, and storage controller firmware match cluster peers.
 - If firmware is mismatched, run an LCM remediation from VxRail Manager to bring the node into compliance.
 
@@ -313,8 +321,10 @@ Node: node-4.vxrail.local
 ```
 
 !!! warning "Common errors"
-    **`vsan cluster is not healthy`** — Wait for cluster rebalancing to complete after node rebuild, then rerun the command.
-    **`Unable to connect to the local vSAN agent`** — Ensure the vSAN service is running on the node with `systemctl status vsanvpd` and restart if needed.
+    | Error | Fix |
+    |---|---|
+    | `vsan cluster is not healthy` | Wait for cluster rebalancing to complete after node rebuild, then rerun the command. |
+    | `Unable to connect to the local vSAN agent` | Ensure the vSAN service is running on the node with `systemctl status vsanvpd` and restart if needed. |
 ---
 
 ## Common Issues
@@ -344,8 +354,10 @@ Disk group status: healthy
 ```
 
 !!! warning "Common errors"
-    **`Error: Device naa.60014056b216e2b8a4e4cb8b9c3d5e7f not found`** — Verify the NAA ID is correct by running `esxcli storage core device list` and copy the exact identifier.
-    **`Error: Disk group creation failed: Device is already in use`** — Ensure both SSD and HDD are not already part of another disk group or VMFS datastore by checking `esxcli vsan storage list`.
+    | Error | Fix |
+    |---|---|
+    | `Error: Device naa.60014056b216e2b8a4e4cb8b9c3d5e7f not found` | Verify the NAA ID is correct by running `esxcli storage core device list` and copy the exact identifier. |
+    | `Error: Disk group creation failed: Device is already in use` | Ensure both SSD and HDD are not already part of another disk group or VMFS datastore by checking `esxcli vsan storage list`. |
 Contact Dell GSS before manually recreating disk groups.
 
 **RASR halts with "disk not found" error**

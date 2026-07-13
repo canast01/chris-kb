@@ -162,9 +162,11 @@ aws ec2 describe-instance-status \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID format`** — Verify the environment ID is set correctly with `echo $ENV_ID` and matches the format `env-xxxxxxxxxxxxxxxx`.
-    **`An error occurred (AccessDenied) when calling the FilterLogEvents operation: User is not authorized to perform: logs:FilterLogEvents`** — Add the `logs:FilterLogEvents` permission to your IAM policy or use an IAM role with CloudTrail log access.
-    **`An error occurred (UnauthorizedOperation) when calling the DescribeInstanceStatus operation: You are not authorized to perform this operation`** — Ensure your IAM user/role has `ec2:DescribeInstanceStatus` permission attached.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID format` | Verify the environment ID is set correctly with `echo $ENV_ID` and matches the format `env-xxxxxxxxxxxxxxxx`. |
+    | `An error occurred (AccessDenied) when calling the FilterLogEvents operation: User is not authorized to perform: logs:FilterLogEvents` | Add the `logs:FilterLogEvents` permission to your IAM policy or use an IAM role with CloudTrail log access. |
+    | `An error occurred (UnauthorizedOperation) when calling the DescribeInstanceStatus operation: You are not authorized to perform this operation` | Ensure your IAM user/role has `ec2:DescribeInstanceStatus` permission attached. |
 Get the host's event history to understand the sequence of state transitions:
 
 ```bash
@@ -204,9 +206,11 @@ eni-2e8b3c5d9f0a1b4g6     | available | None
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (InvalidParameterValue) when calling the LookupEvents operation: Invalid start time format`** — Ensure the date command uses the correct format flag for your OS (use `date -u -d "72 hours ago" +%Y-%m-%dT%H:%M:%SZ` on Linux instead of `-v-72H`).
-    **`An error occurred (ResourceNotFoundException) when calling the GetEnvironmentHost operation: Host not found`** — Verify that `$ENV_ID` and `$HOST_ID` variables are set correctly and the host exists in the specified environment.
-    **`An error occurred (UnauthorizedOperation) when calling the DescribeNetworkInterfaces operation: You are not authorized to perform this operation`** — Ensure your AWS IAM credentials have `ec2:DescribeNetworkInterfaces` and `evs:GetEnvironmentHost` permissions attached.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (InvalidParameterValue) when calling the LookupEvents operation: Invalid start time format` | Ensure the date command uses the correct format flag for your OS (use `date -u -d "72 hours ago" +%Y-%m-%dT%H:%M:%SZ` on Linux instead of `-v-72H`). |
+    | `An error occurred (ResourceNotFoundException) when calling the GetEnvironmentHost operation: Host not found` | Verify that `$ENV_ID` and `$HOST_ID` variables are set correctly and the host exists in the specified environment. |
+    | `An error occurred (UnauthorizedOperation) when calling the DescribeNetworkInterfaces operation: You are not authorized to perform this operation` | Ensure your AWS IAM credentials have `ec2:DescribeNetworkInterfaces` and `evs:GetEnvironmentHost` permissions attached. |
 Determining recovery vs replacement:
 - If ENIs are detached or the EC2 instance status shows a system failure, the host needs replacement — AWS support will coordinate.
 - If the host's EC2 instance is running and ENIs are attached, the issue may be in the EVS control plane reporting — the host may be recoverable without replacement.
@@ -327,9 +331,11 @@ link-03: DOWN
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification for self-signed HCX Manager certificates.
-    **`An error occurred (InvalidGroupId.NotFound) when calling the DescribeSecurityGroups operation: The security group 'sg-hcx' does not exist`** — Replace `sg-hcx` with the actual security group ID (e.g., `sg-0a1b2c3d4e5f6g7h8`) from your AWS console.
-    **`jq: command not found`** — Install jq with `sudo yum install jq` or `sudo apt-get install jq`, or use the provided Python JSON parser instead.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command to skip certificate verification for self-signed HCX Manager certificates. |
+    | `An error occurred (InvalidGroupId.NotFound) when calling the DescribeSecurityGroups operation: The security group 'sg-hcx' does not exist` | Replace `sg-hcx` with the actual security group ID (e.g., `sg-0a1b2c3d4e5f6g7h8`) from your AWS console. |
+    | `jq: command not found` | Install jq with `sudo yum install jq` or `sudo apt-get install jq`, or use the provided Python JSON parser instead. |
 To restart individual HCX appliances without redeploying the entire service mesh:
 
 ```bash
@@ -363,9 +369,11 @@ HCX-Link-03: UP
 ```
 
 !!! warning "Common errors"
-    **`Get-VM : The term 'Get-VM' is not recognized`** — Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the script.
-    **`curl: (7) Failed to connect to 192.168.1.45 port 443: Connection refused`** — Wait 2-3 minutes after the appliance starts for HCX services to fully initialize before monitoring the API endpoint.
-    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the HCX_PASSWORD variable is set correctly and the HCX manager IP is reachable with `ping $HCX_MANAGER_IP`.
+    | Error | Fix |
+    |---|---|
+    | `Get-VM : The term 'Get-VM' is not recognized` | Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the script. |
+    | `curl: (7) Failed to connect to 192.168.1.45 port 443: Connection refused` | Wait 2-3 minutes after the appliance starts for HCX services to fully initialize before monitoring the API endpoint. |
+    | `json.decoder.JSONDecodeError: Expecting value: line 1 column 1` | Verify the HCX_PASSWORD variable is set correctly and the HCX manager IP is reachable with `ping $HCX_MANAGER_IP`. |
 Common HCX outage causes:
 
 | Cause | Symptom | Fix |
@@ -433,9 +441,11 @@ T0-Router-Secondary: 7f3a2b1c-9d8e-4f5a-1b2c-3d4e5f6a7b8c
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command or import NSX Manager's CA certificate into your system trust store.
-    **`jq: command not found`** — Install jq with `apt-get install jq` or `yum install jq`, or use the provided Python JSON parser instead.
-    **`An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The vpc ID 'vpc-xxxxx' does not exist`** — Verify the `$EVS_VPC_ID` environment variable is set correctly with `echo $EVS_VPC_ID` and matches an actual VPC in your AWS account.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl command or import NSX Manager's CA certificate into your system trust store. |
+    | `jq: command not found` | Install jq with `apt-get install jq` or `yum install jq`, or use the provided Python JSON parser instead. |
+    | `An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The vpc ID 'vpc-xxxxx' does not exist` | Verify the `$EVS_VPC_ID` environment variable is set correctly with `echo $EVS_VPC_ID` and matches an actual VPC in your AWS account. |
 Check T0 BGP neighbor state via the NSX-T Policy API (preferred for NSX-T 3.x+):
 
 ```bash
@@ -486,9 +496,11 @@ Neighbor: 10.255.2.1 | State: ESTABLISHED | AS: 65002
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification or configure proper CA certificates in your environment.
-    **`jq: command not found`** — Install `python3-json` or use the provided Python one-liner instead of piping to `jq`.
-    **`An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The filter 'vpc-id' does not exist`** — Use `--filters Name=vpc-id,Values=$EVS_VPC_ID` with correct filter syntax or verify the VPC ID variable is set with `echo $EVS_VPC_ID`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip SSL verification or configure proper CA certificates in your environment. |
+    | `jq: command not found` | Install `python3-json` or use the provided Python one-liner instead of piping to `jq`. |
+    | `An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The filter 'vpc-id' does not exist` | Use `--filters Name=vpc-id,Values=$EVS_VPC_ID` with correct filter syntax or verify the VPC ID variable is set with `echo $EVS_VPC_ID`. |
 ## AWS EVS API Errors
 
 | Error Code | Meaning | Resolution |
@@ -560,9 +572,11 @@ aws service-quotas request-service-quota-increase \
 ```
 
 !!! warning "Common errors"
-    **`An error occurred (AccessDenied) when calling the GetServiceQuota operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: service-quotas:GetServiceQuota`** — Add `service-quotas:GetServiceQuota` and `service-quotas:RequestServiceQuotaIncrease` permissions to the IAM user or role.
-    **`An error occurred (InvalidParameterException) when calling the GetServiceQuota operation: Invalid quota code: L-XXXXXXXX`** — Replace the placeholder quota code with the actual code from the AWS console (e.g., `L-A1B2C3D4`).
-    **`An error occurred (QuotaExceededException) when calling the RequestServiceQuotaIncrease operation: You have already requested a quota increase for this quota`** — Wait for the existing quota increase request to complete or be rejected before submitting a new one.
+    | Error | Fix |
+    |---|---|
+    | `An error occurred (AccessDenied) when calling the GetServiceQuota operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: service-quotas:GetServiceQuota` | Add `service-quotas:GetServiceQuota` and `service-quotas:RequestServiceQuotaIncrease` permissions to the IAM user or role. |
+    | `An error occurred (InvalidParameterException) when calling the GetServiceQuota operation: Invalid quota code: L-XXXXXXXX` | Replace the placeholder quota code with the actual code from the AWS console (e.g., `L-A1B2C3D4`). |
+    | `An error occurred (QuotaExceededException) when calling the RequestServiceQuotaIncrease operation: You have already requested a quota increase for this quota` | Wait for the existing quota increase request to complete or be rejected before submitting a new one. |
 ---
 
 ## See also

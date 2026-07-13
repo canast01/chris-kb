@@ -113,9 +113,11 @@ oauth-openshift-5d8c9f2b4-q2lw8        1/1     Running   0          2d
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "co"`** — Ensure you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc login` and verify API availability.
-    **`Error from server (NotFound): namespaces "openshift-authentication" not found`** — Confirm the operator namespace exists with `oc get ns | grep openshift` and check that the cluster operator is actually installed.
-    **`error: expected 'logs' subcommand or flag`** — Use the correct syntax `oc logs -n <namespace> <pod-name>` or `oc logs -n <namespace> deployment/<name>` without extra flags before the resource type.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "co"` | Ensure you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc login` and verify API availability. |
+    | `Error from server (NotFound): namespaces "openshift-authentication" not found` | Confirm the operator namespace exists with `oc get ns | grep openshift` and check that the cluster operator is actually installed. |
+    | `error: expected 'logs' subcommand or flag` | Use the correct syntax `oc logs -n <namespace> <pod-name>` or `oc logs -n <namespace> deployment/<name>` without extra flags before the resource type. |
 ## Node Health
 
 ```bash
@@ -238,9 +240,11 @@ Finished defragmenting etcd member 8e9c42a7b1d5f3c2
 ```
 
 !!! warning "Common errors"
-    **`error: unable to connect to etcd: context deadline exceeded`** — Verify the etcd pod is running with `oc get pod -n openshift-etcd` and check network connectivity to the endpoint IP.
-    **`x509: certificate signed by unknown authority`** — Ensure the cacert, cert, and key paths are correct and the certificates have not expired with `oc get secret -n openshift-etcd etcd-all-certs -o yaml`.
-    **`etcdctl: command not found`** — The etcdctl binary is not available in the etcd pod image; use `oc debug node/<node-name>` and mount the etcd container to access the binary directly.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to connect to etcd: context deadline exceeded` | Verify the etcd pod is running with `oc get pod -n openshift-etcd` and check network connectivity to the endpoint IP. |
+    | `x509: certificate signed by unknown authority` | Ensure the cacert, cert, and key paths are correct and the certificates have not expired with `oc get secret -n openshift-etcd etcd-all-certs -o yaml`. |
+    | `etcdctl: command not found` | The etcdctl binary is not available in the etcd pod image; use `oc debug node/<node-name>` and mount the etcd container to access the binary directly. |
 ## Networking Health
 
 ```bash
@@ -316,9 +320,11 @@ Reason:               AsExpected
 ```
 
 !!! warning "Common errors"
-    **`Error from server (NotFound): deployments.apps "myapp" not found`** — Verify the deployment name and namespace with `oc get deployments -n mynamespace` before running debug.
-    **`Server: [::1] / Address: ::1#53 (connection timeout)`** — Ensure CoreDNS pods are running with `oc get pods -n openshift-dns` and check pod logs with `oc logs -n openshift-dns <pod-name>`.
-    **`curl: (7) Failed to connect to console-openshift-console.apps.<cluster>.<base> port 443: Name or address not known`** — Replace `<cluster>.<base>` with your actual cluster domain (e.g., `oc whoami --show-console` to verify the correct URL).
+    | Error | Fix |
+    |---|---|
+    | `Error from server (NotFound): deployments.apps "myapp" not found` | Verify the deployment name and namespace with `oc get deployments -n mynamespace` before running debug. |
+    | `Server: [::1] / Address: ::1#53 (connection timeout)` | Ensure CoreDNS pods are running with `oc get pods -n openshift-dns` and check pod logs with `oc logs -n openshift-dns <pod-name>`. |
+    | `curl: (7) Failed to connect to console-openshift-console.apps.<cluster>.<base> port 443: Name or address not known` | Replace `<cluster>.<base>` with your actual cluster domain (e.g., `oc whoami --show-console` to verify the correct URL). |
 ## Storage Health
 
 ```bash
@@ -480,9 +486,11 @@ FAIL  Monitoring stack Running
 ```
 
 !!! warning "Common errors"
-    **`error: the server doesn't have a resource type "clusterversion"`** — Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc api-resources | grep clusterversion`.
-    **`error: unable to upgrade connection: container not found`** — Ensure the etcd pod is running with `oc get pods -n openshift-etcd -l etcd=true` and verify pod name matches the rsh command.
-    **`KUBECONFIG: command not found`** — Set the KUBECONFIG variable before running the script: `export KUBECONFIG=/path/to/kubeconfig && bash ocp-health.sh`.
+    | Error | Fix |
+    |---|---|
+    | `error: the server doesn't have a resource type "clusterversion"` | Verify you are connected to an OpenShift cluster (not vanilla Kubernetes) with `oc api-resources | grep clusterversion`. |
+    | `error: unable to upgrade connection: container not found` | Ensure the etcd pod is running with `oc get pods -n openshift-etcd -l etcd=true` and verify pod name matches the rsh command. |
+    | `KUBECONFIG: command not found` | Set the KUBECONFIG variable before running the script: `export KUBECONFIG=/path/to/kubeconfig && bash ocp-health.sh`. |
 ## etcd Performance Check
 
 ```bash

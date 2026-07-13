@@ -20,8 +20,10 @@ export JIRA_AUTH=$(echo -n "${JIRA_USER}:${JIRA_TOKEN}" | base64)
 ```
 
 !!! warning "Common errors"
-    **`command not found: base64`** — Install coreutils package (`apt-get install coreutils` on Debian/Ubuntu or `brew install coreutils` on macOS).
-    **`export: not valid in this context`** — Ensure you are running these commands in a bash shell, not sh or dash; use `bash` explicitly if needed.
+    | Error | Fix |
+    |---|---|
+    | `command not found: base64` | Install coreutils package (`apt-get install coreutils` on Debian/Ubuntu or `brew install coreutils` on macOS). |
+    | `export: not valid in this context` | Ensure you are running these commands in a bash shell, not sh or dash; use `bash` explicitly if needed. |
 ```bash
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
   "${JIRA_URL}/rest/api/2/issue/PROJ-123" | python3 -m json.tool
@@ -62,9 +64,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.company.com port 443: Connection refused`** — Verify `$JIRA_URL` is correct and the Jira instance is accessible from your network.
-    **`{"errorMessages":["Issue does not exist or you do not have permission to see it."]}`** — Confirm the issue key exists and your `$JIRA_USER` account has permission to view it.
-    **`curl: (401) Unauthorized`** — Ensure `$JIRA_TOKEN` is a valid API token and `$JIRA_USER` matches the token owner.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.company.com port 443: Connection refused` | Verify `$JIRA_URL` is correct and the Jira instance is accessible from your network. |
+    | `{"errorMessages":["Issue does not exist or you do not have permission to see it."]}` | Confirm the issue key exists and your `$JIRA_USER` account has permission to view it. |
+    | `curl: (401) Unauthorized` | Ensure `$JIRA_TOKEN` is a valid API token and `$JIRA_USER` matches the token owner. |
 ```bash
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
   "${JIRA_URL}/rest/api/2/issue/PROJ-123?fields=summary,status,assignee,priority" \
@@ -104,9 +108,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.company.com port 443: Connection refused`** — Verify the JIRA_URL environment variable is correct and the Jira instance is accessible from your network.
-    **`{"errorMessages":["Issue does not exist or you do not have permission to see it."]}`** — Confirm PROJ-123 exists and your JIRA_USER has permission to view the issue.
-    **`curl: (401) Unauthorized`** — Ensure JIRA_TOKEN is a valid API token and JIRA_USER matches the token owner account.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.company.com port 443: Connection refused` | Verify the JIRA_URL environment variable is correct and the Jira instance is accessible from your network. |
+    | `{"errorMessages":["Issue does not exist or you do not have permission to see it."]}` | Confirm PROJ-123 exists and your JIRA_USER has permission to view the issue. |
+    | `curl: (401) Unauthorized` | Ensure JIRA_TOKEN is a valid API token and JIRA_USER matches the token owner account. |
 ```bash
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
   -X POST \
@@ -138,9 +144,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`"errorMessages": ["Field 'assignee' cannot be set. It is not on the appropriate screen, or unknown."]`** — Remove the assignee field from the request or verify the user exists and the field is available in your Jira workflow.
-    **`curl: (7) Failed to connect to jira.company.com port 443: Connection refused`** — Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network.
-    **`"errorMessages": ["Component with name 'Authentication' does not exist or you do not have permission to see it."]`** — Replace the component name with a valid component key or verify the component exists in the PROJ project.
+    | Error | Fix |
+    |---|---|
+    | `"errorMessages": ["Field 'assignee' cannot be set. It is not on the appropriate screen, or unknown."]` | Remove the assignee field from the request or verify the user exists and the field is available in your Jira workflow. |
+    | `curl: (7) Failed to connect to jira.company.com port 443: Connection refused` | Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network. |
+    | `"errorMessages": ["Component with name 'Authentication' does not exist or you do not have permission to see it."]` | Replace the component name with a valid component key or verify the component exists in the PROJ project. |
 ```bash
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
   -X PUT \
@@ -164,9 +172,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`"errorMessages":["Field 'assignee' cannot be set. It is not on the appropriate screen, or unknown."]`** — Verify the assignee username exists and is valid in your Jira instance; use `/rest/api/2/user/search?username=jsmith` to confirm.
-    **`curl: (7) Failed to connect to jira.company.com port 443: Connection refused`** — Ensure `${JIRA_URL}` is set correctly and the Jira server is reachable; test with `curl -I ${JIRA_URL}`.
-    **`"errorMessages":["You do not have permission to edit this issue"]`** — Verify that `${JIRA_USER}` has Edit permission on PROJ-123; check issue permissions in Jira or contact your Jira administrator.
+    | Error | Fix |
+    |---|---|
+    | `"errorMessages":["Field 'assignee' cannot be set. It is not on the appropriate screen, or unknown."]` | Verify the assignee username exists and is valid in your Jira instance; use `/rest/api/2/user/search?username=jsmith` to confirm. |
+    | `curl: (7) Failed to connect to jira.company.com port 443: Connection refused` | Ensure `${JIRA_URL}` is set correctly and the Jira server is reachable; test with `curl -I ${JIRA_URL}`. |
+    | `"errorMessages":["You do not have permission to edit this issue"]` | Verify that `${JIRA_USER}` has Edit permission on PROJ-123; check issue permissions in Jira or contact your Jira administrator. |
 ```bash
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
   "${JIRA_URL}/rest/api/2/issue/PROJ-123/transitions" \
@@ -218,9 +228,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network.
-    **`{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}`** — Confirm PROJ-123 exists, check that JIRA_USER has browse permissions on the project, and verify JIRA_TOKEN is valid and not expired.
-    **`command not found: python3`** — Install Python 3 or use `jq` instead: `curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" "${JIRA_URL}/rest/api/2/issue/PROJ-123/transitions" | jq .`
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network. |
+    | `{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}` | Confirm PROJ-123 exists, check that JIRA_USER has browse permissions on the project, and verify JIRA_TOKEN is valid and not expired. |
+    | `command not found: python3` | Install Python 3 or use `jq` instead: `curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" "${JIRA_URL}/rest/api/2/issue/PROJ-123/transitions" | jq .` |
 ```bash
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
   -X POST \
@@ -268,9 +280,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`{"errorMessages":["User 'automation' does not have permission to transition issue"],"errors":{}}`** — Verify the JIRA_USER account has the "Transition Issues" permission in the project's permission scheme.
-    **`{"errorMessages":["Field 'resolution' cannot be set. It is not on the appropriate screen, or unknown."],"errors":{}}`** — Remove the resolution field or confirm it is available on the transition screen for workflow state 31 in your JIRA configuration.
-    **`curl: (7) Failed to connect to jira.company.com port 443: Connection refused`** — Verify JIRA_URL is correct and the JIRA instance is accessible from your network (check firewall rules and VPN connectivity).
+    | Error | Fix |
+    |---|---|
+    | `{"errorMessages":["User 'automation' does not have permission to transition issue"],"errors":{}}` | Verify the JIRA_USER account has the "Transition Issues" permission in the project's permission scheme. |
+    | `{"errorMessages":["Field 'resolution' cannot be set. It is not on the appropriate screen, or unknown."],"errors":{}}` | Remove the resolution field or confirm it is available on the transition screen for workflow state 31 in your JIRA configuration. |
+    | `curl: (7) Failed to connect to jira.company.com port 443: Connection refused` | Verify JIRA_URL is correct and the JIRA instance is accessible from your network (check firewall rules and VPN connectivity). |
 ```bash
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
   -X POST \
@@ -307,9 +321,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}`** — Verify PROJ-123 exists and your JIRA_USER has browse/comment permissions on that project.
-    **`curl: (6) Could not resolve host: jira.company.com`** — Ensure JIRA_URL environment variable is set correctly and the Jira instance is reachable from your network.
-    **`{"errorMessages":["You must provide a body."],"errors":{}}`** — Confirm the JSON payload includes a non-empty "body" field in the -d argument.
+    | Error | Fix |
+    |---|---|
+    | `{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}` | Verify PROJ-123 exists and your JIRA_USER has browse/comment permissions on that project. |
+    | `curl: (6) Could not resolve host: jira.company.com` | Ensure JIRA_URL environment variable is set correctly and the Jira instance is reachable from your network. |
+    | `{"errorMessages":["You must provide a body."],"errors":{}}` | Confirm the JSON payload includes a non-empty "body" field in the -d argument. |
 ```bash
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
   -X POST \
@@ -352,9 +368,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`{"errorMessages":["Authentication failed; please check you have supplied the correct credentials."],"errors":{}}`** — Verify `JIRA_USER` and `JIRA_TOKEN` environment variables are set correctly and the token has API access permissions.
-    **`{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}`** — Confirm the issue key PROJ-123 exists in your Jira instance and your user account has permission to view and log work on it.
-    **`{"errorMessages":["You do not have permission to create worklog on this issue."],"errors":{}}`** — Ensure your Jira user role has the "Log Work" permission assigned in the project's permission scheme.
+    | Error | Fix |
+    |---|---|
+    | `{"errorMessages":["Authentication failed; please check you have supplied the correct credentials."],"errors":{}}` | Verify `JIRA_USER` and `JIRA_TOKEN` environment variables are set correctly and the token has API access permissions. |
+    | `{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}` | Confirm the issue key PROJ-123 exists in your Jira instance and your user account has permission to view and log work on it. |
+    | `{"errorMessages":["You do not have permission to create worklog on this issue."],"errors":{}}` | Ensure your Jira user role has the "Log Work" permission assigned in the project's permission scheme. |
 ```bash
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
   -X POST \
@@ -387,9 +405,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.company.com port 443: Connection refused`** — Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network.
-    **`{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}`** — Confirm PROJ-123 exists, the issue key is correct, and your JIRA_USER has permission to attach files to that issue.
-    **`curl: (26) Failed to open/read local data from "/path/to/screenshot.png"`** — Replace `/path/to/screenshot.png` with the actual absolute path to an existing file.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.company.com port 443: Connection refused` | Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network. |
+    | `{"errorMessages":["Issue does not exist or you do not have permission to see it."],"errors":{}}` | Confirm PROJ-123 exists, the issue key is correct, and your JIRA_USER has permission to attach files to that issue. |
+    | `curl: (26) Failed to open/read local data from "/path/to/screenshot.png"` | Replace `/path/to/screenshot.png` with the actual absolute path to an existing file. |
 ```bash
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
   -G "${JIRA_URL}/rest/api/2/search" \
@@ -457,9 +477,11 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.company.com port 443: Connection refused`** — Verify the JIRA_URL environment variable is set correctly and the Jira server is accessible from your network.
-    **`401 Unauthorized`** — Ensure JIRA_USER and JIRA_TOKEN environment variables are set with valid credentials and the token has API access permissions.
-    **`jq: parse error: Invalid JSON`** — Confirm the Jira API endpoint is returning valid JSON; check that the API version (rest/api/2) matches your Jira instance version.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.company.com port 443: Connection refused` | Verify the JIRA_URL environment variable is set correctly and the Jira server is accessible from your network. |
+    | `401 Unauthorized` | Ensure JIRA_USER and JIRA_TOKEN environment variables are set with valid credentials and the token has API access permissions. |
+    | `jq: parse error: Invalid JSON` | Confirm the Jira API endpoint is returning valid JSON; check that the API version (rest/api/2) matches your Jira instance version. |
 ```bash
 #!/bin/bash
 # bulk-transition.sh — Transition all matching issues to a target status
@@ -503,9 +525,11 @@ Transitioning PROJ-1854...
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify `${JIRA_URL}` is correct and the Jira instance is running and accessible from this host.
-    **`"errorMessages":["You do not have permission to transition this issue"]`** — Ensure `${JIRA_USER}` has the "Transition Issues" permission in the target project.
-    **`"errorMessages":["Transition id 21 is invalid"]`** — Verify transition ID 21 exists for the target status by running `curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" "${JIRA_URL}/rest/api/2/issue/PROJ-1847/transitions" | python3 -m json.tool` and checking the available IDs.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify `${JIRA_URL}` is correct and the Jira instance is running and accessible from this host. |
+    | `"errorMessages":["You do not have permission to transition this issue"]` | Ensure `${JIRA_USER}` has the "Transition Issues" permission in the target project. |
+    | `"errorMessages":["Transition id 21 is invalid"]` | Verify transition ID 21 exists for the target status by running `curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" "${JIRA_URL}/rest/api/2/issue/PROJ-1847/transitions" | python3 -m json.tool` and checking the available IDs. |
 ```bash
 # macOS
 brew install atlassian/taps/atlas
@@ -528,9 +552,11 @@ atlas version 2.14.3 (build 2024-01-15)
 ```
 
 !!! warning "Common errors"
-    **`Error: No available formula with the name "atlassian/taps/atlas"`** — Run `brew tap atlassian/taps` first to add the Atlassian tap repository.
-    **`curl: (7) Failed to connect to deb.cli.atlassian.com port 443`** — Verify internet connectivity and check that your firewall/proxy allows HTTPS access to Atlassian's package repository.
-    **`atlas: command not found`** — Ensure the installation completed without errors and that `/usr/local/bin` (macOS) or `/usr/local/bin` (Linux) is in your `$PATH` environment variable.
+    | Error | Fix |
+    |---|---|
+    | `Error: No available formula with the name "atlassian/taps/atlas"` | Run `brew tap atlassian/taps` first to add the Atlassian tap repository. |
+    | `curl: (7) Failed to connect to deb.cli.atlassian.com port 443` | Verify internet connectivity and check that your firewall/proxy allows HTTPS access to Atlassian's package repository. |
+    | `atlas: command not found` | Ensure the installation completed without errors and that `/usr/local/bin` (macOS) or `/usr/local/bin` (Linux) is in your `$PATH` environment variable. |
 ```bash
 atlas login
 # Opens browser for OAuth authentication
@@ -545,8 +571,10 @@ Authentication complete. You can now use atlas CLI commands.
 ```
 
 !!! warning "Common errors"
-    **`Error: Failed to open browser. Please visit https://auth.atlassian.com/authorize?client_id=abc123... manually`** — Set the `BROWSER` environment variable or manually open the provided URL in your browser and paste the verification code.
-    **`Error: Authentication timeout after 5 minutes`** — Re-run `atlas login` and complete the OAuth flow within the time limit, or check your network connectivity.
+    | Error | Fix |
+    |---|---|
+    | `Error: Failed to open browser. Please visit https://auth.atlassian.com/authorize?client_id=abc123... manually` | Set the `BROWSER` environment variable or manually open the provided URL in your browser and paste the verification code. |
+    | `Error: Authentication timeout after 5 minutes` | Re-run `atlas login` and complete the OAuth flow within the time limit, or check your network connectivity. |
 ```bash
 # List all sites
 atlas admin sites list
@@ -611,9 +639,11 @@ PROJ-367  Memory leak in worker threads              In Progress    kchen@exampl
 ```
 
 !!! warning "Common errors"
-    **`Error: authentication failed — invalid credentials`** — Verify your Jira API token is set in `~/.atlas/config.yml` or the `ATLAS_JIRA_TOKEN` environment variable.
-    **`Error: project PROJ not found`** — Confirm the project key exists and you have permission to access it by running `atlas jira project list`.
-    **`Error: user jdoe@example.com not found in this instance`** — Verify the email address is correct and the user account exists in your Jira instance.
+    | Error | Fix |
+    |---|---|
+    | `Error: authentication failed — invalid credentials` | Verify your Jira API token is set in `~/.atlas/config.yml` or the `ATLAS_JIRA_TOKEN` environment variable. |
+    | `Error: project PROJ not found` | Confirm the project key exists and you have permission to access it by running `atlas jira project list`. |
+    | `Error: user jdoe@example.com not found in this instance` | Verify the email address is correct and the user account exists in your Jira instance. |
 ```bash
 # Start / Stop / Restart
 systemctl start jira
@@ -647,9 +677,11 @@ Jan 18 14:32:46 jira-prod-01 jira[8751]: 2024-01-18 14:32:46,456 INFO [main] [co
 ```
 
 !!! warning "Common errors"
-    **`Job for jira.service failed because the control process exited with error code.`** — Check `/var/log/jira/catalina.out` for Java startup errors and verify sufficient heap memory is allocated in `setenv.sh`.
-    **`Failed to start jira.service: Unit jira.service not found.`** — Ensure the systemd service file exists at `/etc/systemd/system/jira.service` and run `systemctl daemon-reload` after creating or modifying it.
-    **`Permission denied`** — Run the command with `sudo` or ensure your user is in the `jira` group with `groups $USER`.
+    | Error | Fix |
+    |---|---|
+    | `Job for jira.service failed because the control process exited with error code.` | Check `/var/log/jira/catalina.out` for Java startup errors and verify sufficient heap memory is allocated in `setenv.sh`. |
+    | `Failed to start jira.service: Unit jira.service not found.` | Ensure the systemd service file exists at `/etc/systemd/system/jira.service` and run `systemctl daemon-reload` after creating or modifying it. |
+    | `Permission denied` | Run the command with `sudo` or ensure your user is in the `jira` group with `groups $USER`. |
 ```bash
 # Start full reindex (background)
 curl -u "${JIRA_USER}:${JIRA_TOKEN}" -X POST \
@@ -676,9 +708,11 @@ curl -u "${JIRA_USER}:${JIRA_TOKEN}" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify `${JIRA_URL}` is correct and the Jira instance is running and accessible from your network.
-    **`{"errorMessages":["User does not have permission to administer Jira"]}`** — Ensure `${JIRA_USER}` has Jira System Administrator permissions.
-    **`curl: (6) Could not resolve host: jira.example.com`** — Check DNS resolution and network connectivity to the Jira hostname.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify `${JIRA_URL}` is correct and the Jira instance is running and accessible from your network. |
+    | `{"errorMessages":["User does not have permission to administer Jira"]}` | Ensure `${JIRA_USER}` has Jira System Administrator permissions. |
+    | `curl: (6) Could not resolve host: jira.example.com` | Check DNS resolution and network connectivity to the Jira hostname. |
 ```bash
 curl -u "${JIRA_USER}:${JIRA_TOKEN}" -X POST \
   "${JIRA_URL}/rest/api/2/jql/autocomplete/request/data/refresh"
@@ -689,9 +723,11 @@ curl -u "${JIRA_USER}:${JIRA_TOKEN}" -X POST \
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network.
-    **`curl: (401) Unauthorized`** — Ensure JIRA_USER and JIRA_TOKEN environment variables are set and the API token has appropriate permissions for the autocomplete endpoint.
-    **`curl: (403) Forbidden`** — Confirm your Jira user account has the "Use REST APIs" global permission and access to the Jira instance.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify the JIRA_URL environment variable is set correctly and the Jira instance is accessible from your network. |
+    | `curl: (401) Unauthorized` | Ensure JIRA_USER and JIRA_TOKEN environment variables are set and the API token has appropriate permissions for the autocomplete endpoint. |
+    | `curl: (403) Forbidden` | Confirm your Jira user account has the "Use REST APIs" global permission and access to the Jira instance. |
 ```bash
 # Get user details
 curl -u "${JIRA_USER}:${JIRA_TOKEN}" \

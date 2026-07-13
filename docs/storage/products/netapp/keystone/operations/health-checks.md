@@ -127,8 +127,10 @@ proxy_username=keystone_svc
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to keystone.netapp.com port 443: Connection timed out`** — Verify network connectivity and firewall rules allow outbound HTTPS to keystone.netapp.com, or confirm proxy settings in config.conf if required.
-    **`[ERROR] Failed to authenticate: Invalid API key or certificate expired`** — Regenerate or renew the Keystone API credentials in /etc/keystone-collector/config.conf and restart the service with `sudo systemctl restart keystone-collector`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to keystone.netapp.com port 443: Connection timed out` | Verify network connectivity and firewall rules allow outbound HTTPS to keystone.netapp.com, or confirm proxy settings in config.conf if required. |
+    | `[ERROR] Failed to authenticate: Invalid API key or certificate expired` | Regenerate or renew the Keystone API credentials in /etc/keystone-collector/config.conf and restart the service with `sudo systemctl restart keystone-collector`. |
     **`[WARN] Collection failed
 ---
 
@@ -227,7 +229,9 @@ cluster1-02     aqos_bronze            2987       9.1          168
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: qos`** — Ensure you are connected to the ONTAP cluster management LIF via SSH or the ONTAP CLI, not a local shell.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: qos` | Ensure you are connected to the ONTAP cluster management LIF via SSH or the ONTAP CLI, not a local shell. |
     **`curl: (60) SSL certificate problem: self signed certificate
 ---
 
@@ -265,9 +269,11 @@ OK        Archive                     450.10 /    1000.00 TiB  (45.0%  burst=0.0
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: api.activeiq.netapp.com`** — Verify network connectivity and DNS resolution; check if your firewall allows HTTPS outbound to NetApp's ActiveIQ API endpoint.
-    **`{"error": "Unauthorized", "code": 401}`** — Confirm your API token is valid and not expired; regenerate a new token from your NetApp ActiveIQ account settings.
-    **`KeyError: 'service_levels'`** — Adjust the JSON parsing logic to match your API response structure; verify the correct field names by running `curl ... | python3 -m json.tool` to inspect the actual response.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: api.activeiq.netapp.com` | Verify network connectivity and DNS resolution; check if your firewall allows HTTPS outbound to NetApp's ActiveIQ API endpoint. |
+    | `{"error": "Unauthorized", "code": 401}` | Confirm your API token is valid and not expired; regenerate a new token from your NetApp ActiveIQ account settings. |
+    | `KeyError: 'service_levels'` | Adjust the JSON parsing logic to match your API response structure; verify the correct field names by running `curl ... | python3 -m json.tool` to inspect the actual response. |
 ---
 
 ## Burst Threshold Escalation
@@ -340,8 +346,10 @@ dev-svm          test_workload_04   -
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: volume`** — Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a Linux shell.
-    **`Error: No matching volumes found`** — Verify that volumes exist on the cluster and that the vserver name is correct using `vserver show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: volume` | Ensure you are connected to the ONTAP cluster via SSH or the ONTAP CLI, not a Linux shell. |
+    | `Error: No matching volumes found` | Verify that volumes exist on the cluster and that the vserver name is correct using `vserver show`. |
 ---
 
 ## Health Check Output Reference

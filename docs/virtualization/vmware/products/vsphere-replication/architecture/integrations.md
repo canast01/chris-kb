@@ -91,9 +91,11 @@ curl -k -u admin:<pass> \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vCenter/VRA SSL certificate into your system trust store.
-    **`HTTP/1.1 401 Unauthorized`** — Verify the username and password are correct; use `echo -n "password" | base64` to check for special character encoding issues in credentials.
-    **`jq: parse error: Invalid JSON`** — Ensure the VRA API endpoint is responding with valid JSON; check that the VRA service is running with `systemctl status vmware-vra` on the VRA appliance.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the vCenter/VRA SSL certificate into your system trust store. |
+    | `HTTP/1.1 401 Unauthorized` | Verify the username and password are correct; use `echo -n "password" | base64` to check for special character encoding issues in credentials. |
+    | `jq: parse error: Invalid JSON` | Ensure the VRA API endpoint is responding with valid JSON; check that the VRA service is running with `systemctl status vmware-vra` on the VRA appliance. |
 ---
 
 ## SRM Integration

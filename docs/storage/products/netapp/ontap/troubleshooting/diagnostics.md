@@ -169,9 +169,11 @@ Recent ERROR Events (last 1h):
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: cluster show`** — Ensure you are logged into the ONTAP cluster CLI (via SSH to cluster management IP) rather than the local node shell.
-    **`Error: No such file or directory`** — Verify the ONTAP version supports the `system health` commands; upgrade or use `storage show status` on older releases.
-    **`Error: Invalid query: state !online`** — Use the correct ONTAP query syntax `state !=online` (double equals with exclamation) instead of `!online`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: cluster show` | Ensure you are logged into the ONTAP cluster CLI (via SSH to cluster management IP) rather than the local node shell. |
+    | `Error: No such file or directory` | Verify the ONTAP version supports the `system health` commands; upgrade or use `storage show status` on older releases. |
+    | `Error: Invalid query: state !online` | Use the correct ONTAP query syntax `state !=online` (double equals with exclamation) instead of `!online`. |
 If any of these commands return unexpected results, follow the relevant subsystem diagnostic section below.
 
 ---
@@ -245,8 +247,10 @@ ontap-node-02 true
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: permission denied`** — Ensure your user account has cluster admin privileges using `security login show`.
-    **`Error: node not found: <node_name>`** — Verify the exact node name with `cluster show` and use the correct hostname in the `system node run -node` command.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: permission denied` | Ensure your user account has cluster admin privileges using `security login show`. |
+    | `Error: node not found: <node_name>` | Verify the exact node name with `cluster show` and use the correct hostname in the `system node run -node` command. |
 ### Storage failover diagnostics
 
 ```bash
@@ -286,9 +290,11 @@ node-02       02/08 11:05:33 +00:00  user_initiated
 ```
 
 !!! warning "Common errors"
-    **`Error: cluster ping-cluster: node "<node_name>" not found`** — Replace `<node_name>` with an actual node name from your cluster (e.g., `node-01`).
-    **`Interconnect1 Link Status: down`** — Check physical cabling between HA partners and verify interconnect ports are enabled with `storage failover interconnect show -detail`.
-    **`storage failover show: This command requires cluster administrative privileges`** — Run the command with cluster admin credentials or use `set -privilege advanced` first.
+    | Error | Fix |
+    |---|---|
+    | `Error: cluster ping-cluster: node "<node_name>" not found` | Replace `<node_name>` with an actual node name from your cluster (e.g., `node-01`). |
+    | `Interconnect1 Link Status: down` | Check physical cabling between HA partners and verify interconnect ports are enabled with `storage failover interconnect show -detail`. |
+    | `storage failover show: This command requires cluster administrative privileges` | Run the command with cluster admin credentials or use `set -privilege advanced` first. |
 HA state interpretation:
 
 | State | Meaning | Action |
@@ -421,8 +427,10 @@ Status of aggregate "aggr0":
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: storage`** — Run this command from the ONTAP CLI (SSH to the cluster management IP), not from a Linux shell.
-    **`Error: There is no entry in the Ident database for aggregate "<aggr_name>"`** — Replace `<aggr_name>` with an actual aggregate name; verify with `storage aggregate show`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: storage` | Run this command from the ONTAP CLI (SSH to the cluster management IP), not from a Linux shell. |
+    | `Error: There is no entry in the Ident database for aggregate "<aggr_name>"` | Replace `<aggr_name>` with an actual aggregate name; verify with `storage aggregate show`. |
 Typical reconstruction times:
 - NVMe SSD: hours to a day for large capacities
 - SAS HDD: 6–24 hours per TB depending on disk RPM and aggregate workload
@@ -501,8 +509,10 @@ vol_data01_move                  svm-prod    completed  100%
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No matching volumes found`** — Verify the volume name exists and the SVM context is correct using `vserver context`.
-    **`Error: Invalid field name "percent-used"`** — Use the correct field name `percent-used` (with hyphen) or check ONTAP version compatibility with `system show -instance`.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No matching volumes found` | Verify the volume name exists and the SVM context is correct using `vserver context`. |
+    | `Error: Invalid field name "percent-used"` | Use the correct field name `percent-used` (with hyphen) or check ONTAP version compatibility with `system show -instance`. |
 ---
 
 ## Step 5 — Network diagnostics
@@ -628,9 +638,11 @@ PING 192.168.10.50 from 192.168.1.100 (data0): 8972 bytes of data in 4 ICMP Echo
 ```
 
 !!! warning "Common errors"
-    **`Error: "lif <lif_name>" does not exist`** — Verify the LIF name with `network interface show` and use the correct vserver context.
-    **`PING: sendto: Message too long`** — Confirm the physical port and all intermediate switches support 9000 MTU with `network port show -fields mtu` and adjust `-packet-size` downward if needed.
-    **`Error: Invalid vserver <svm>`** — List available SVMs with `vserver show` and ensure you are in the correct cluster context.
+    | Error | Fix |
+    |---|---|
+    | `Error: "lif <lif_name>" does not exist` | Verify the LIF name with `network interface show` and use the correct vserver context. |
+    | `PING: sendto: Message too long` | Confirm the physical port and all intermediate switches support 9000 MTU with `network port show -fields mtu` and adjust `-packet-size` downward if needed. |
+    | `Error: Invalid vserver <svm>` | List available SVMs with `vserver show` and ensure you are in the correct cluster context. |
 ---
 
 ## Step 6 — Protocol-specific diagnostics
@@ -692,9 +704,11 @@ nfsv3_write_latency: 1.8ms
 ```
 
 !!! warning "Common errors"
-    **`Error: "svm-prod-01" is not a valid Vserver name`** — Verify the SVM name exists with `vserver show` and use the exact name from the Vserver column.
-    **`Error: policy "custom-policy" does not exist`** — Confirm the export policy name with `vserver export-policy show -vserver <svm>` before running the rule show command.
-    **`Error: command is ambiguous`** — Use the full command path `vserver nfs show` instead of abbreviated forms, and ensure all required parameters like `-vserver` are explicitly specified.
+    | Error | Fix |
+    |---|---|
+    | `Error: "svm-prod-01" is not a valid Vserver name` | Verify the SVM name exists with `vserver show` and use the exact name from the Vserver column. |
+    | `Error: policy "custom-policy" does not exist` | Confirm the export policy name with `vserver export-policy show -vserver <svm>` before running the rule show command. |
+    | `Error: command is ambiguous` | Use the full command path `vserver nfs show` instead of abbreviated forms, and ensure all required parameters like `-vserver` are explicitly specified. |
 ### CIFS/SMB diagnostics
 
 ```bash
@@ -773,9 +787,11 @@ smb2_session_setup_ops: 12
 ```
 
 !!! warning "Common errors"
-    **`Error: "Vserver <svm> not found"`** — Verify the SVM name is correct using `vserver show` and ensure you are connected to the correct cluster.
-    **`Error: "Domain <domain> not reachable"`** — Check network connectivity to domain controllers and verify DNS resolution with `network name-service dns show`.
-    **`Error: "Statistics object smb2 not found"`** — Ensure SMB2 protocol is enabled on the SVM with `vserver cifs show -vserver <svm>` and confirm the sample-id is unique.
+    | Error | Fix |
+    |---|---|
+    | `Error: "Vserver <svm> not found"` | Verify the SVM name is correct using `vserver show` and ensure you are connected to the correct cluster. |
+    | `Error: "Domain <domain> not reachable"` | Check network connectivity to domain controllers and verify DNS resolution with `network name-service dns show`. |
+    | `Error: "Statistics object smb2 not found"` | Ensure SMB2 protocol is enabled on the SVM with `vserver cifs show -vserver <svm>` and confirm the sample-id is unique. |
 ### iSCSI diagnostics
 
 ```bash
@@ -836,8 +852,10 @@ Vserver: svm-prod-01
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: Vserver "svm-prod-01" does not exist.`** — Verify the SVM name with `vserver show` and ensure you are connected to the correct cluster.
-    **`Error: No iSCSI sessions found for Vserver "svm-prod-01".`** — Confirm iSCSI service is running with `iscsi show -vserver <svm>` and that initiators have successfully logged in.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: Vserver "svm-prod-01" does not exist.` | Verify the SVM name with `vserver show` and ensure you are connected to the correct cluster. |
+    | `Error: No iSCSI sessions found for Vserver "svm-prod-01".` | Confirm iSCSI service is running with `iscsi show -vserver <svm>` and that initiators have successfully logged in. |
 ### FC / FCoE diagnostics
 
 ```bash
@@ -897,9 +915,11 @@ Node: node-2
 ```
 
 !!! warning "Common errors"
-    **`Invalid vserver name "<svm>"`** — Replace `<svm>` with the actual SVM name (e.g., `svm_prod`) or use `vserver show` to list available SVMs.
-    **`FCP service is not enabled on Vserver <svm>`** — Enable FCP on the SVM using `vserver fcp create -vserver <svm>` and ensure FC licenses are installed.
-    **`fabric-established: false`** — Verify FC switch connectivity, check switch zoning configuration, and confirm physical cable connections to the FC adapters.
+    | Error | Fix |
+    |---|---|
+    | `Invalid vserver name "<svm>"` | Replace `<svm>` with the actual SVM name (e.g., `svm_prod`) or use `vserver show` to list available SVMs. |
+    | `FCP service is not enabled on Vserver <svm>` | Enable FCP on the SVM using `vserver fcp create -vserver <svm>` and ensure FC licenses are installed. |
+    | `fabric-established: false` | Verify FC switch connectivity, check switch zoning configuration, and confirm physical cable connections to the FC adapters. |
 ---
 
 ## Step 7 — SnapMirror diagnostics
@@ -978,7 +998,9 @@ cluster2    ic_lif_02      intercluster up      tcp
 ```
 
 !!! warning "Common errors"
-    **`Error: command failed: No SnapMirror relationships found.`** — Verify relationships exist with `snapmirror show` and confirm source and destination SVMs are initialized.
+    | Error | Fix |
+    |---|---|
+    | `Error: command failed: No SnapMirror relationships found.` | Verify relationships exist with `snapmirror show` and confirm source and destination SVMs are initialized. |
     **`Error: command failed: Intercluster L
 ---
 
@@ -1040,9 +1062,11 @@ cluster1::> system node run -node node-01 sysstat -c 10 -x 2
 ```
 
 !!! warning "Common errors"
-    **`Error: sample-id "vol-perf" already exists`** — Use a unique sample-id or delete the existing one with `statistics delete -sample-id vol-perf` before restarting.
-    **`Error: object "volume" is not a valid statistics object`** — Verify the object name is correct; use `statistics catalog` to list available objects like `volume_ops` or `vserver_ops`.
-    **`Error: No such file or directory`** — Ensure you are in the cluster shell (not node shell) for `statistics` commands; use `exit` to return to cluster prompt if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: sample-id "vol-perf" already exists` | Use a unique sample-id or delete the existing one with `statistics delete -sample-id vol-perf` before restarting. |
+    | `Error: object "volume" is not a valid statistics object` | Verify the object name is correct; use `statistics catalog` to list available objects like `volume_ops` or `vserver_ops`. |
+    | `Error: No such file or directory` | Ensure you are in the cluster shell (not node shell) for `statistics` commands; use `exit` to return to cluster prompt if needed. |
 ### Latency interpretation
 
 | Metric | Acceptable | Warning | Critical |
@@ -1213,9 +1237,11 @@ Jan 15 09:22:15 UTC: CRITICAL - Power supply voltage fluctuation
 ```
 
 !!! warning "Common errors"
-    **`Error: Invalid node name "node_name"`** — Replace `<node_name>` with the actual node name from the cluster (e.g., `cluster-node-01`).
-    **`Error: Coredump file not found: <filename>`** — Verify the exact coredump filename using `system node coredump show` before attempting deletion.
-    **`Error: This operation requires admin or diag privileges`** — Ensure your user account has the necessary ONTAP role permissions; contact your cluster administrator if needed.
+    | Error | Fix |
+    |---|---|
+    | `Error: Invalid node name "node_name"` | Replace `<node_name>` with the actual node name from the cluster (e.g., `cluster-node-01`). |
+    | `Error: Coredump file not found: <filename>` | Verify the exact coredump filename using `system node coredump show` before attempting deletion. |
+    | `Error: This operation requires admin or diag privileges` | Ensure your user account has the necessary ONTAP role permissions; contact your cluster administrator if needed. |
 A node panic followed by an automatic HA takeover is normal ONTAP behavior — the key diagnostic information is in the panic string and the EMS log immediately preceding the panic. Always generate an AutoSupport when an unexpected panic occurs.
 
 ---
@@ -1254,8 +1280,10 @@ cluster1-01          550e8400-e29b-41d4-a716-446655440004     11/15/2024 12:08:1
 ```
 
 !!! warning "Common errors"
-    **`Error: AutoSupport is not enabled on node cluster1-01`** — Enable AutoSupport with `system node autosupport modify -node <node-name> -state enable`.
-    **`Error: Failed to send AutoSupport on cluster1-02: SMTP server unreachable`** — Verify SMTP server connectivity and configuration with `system node autosupport show -node cluster1-02` and check firewall rules.
+    | Error | Fix |
+    |---|---|
+    | `Error: AutoSupport is not enabled on node cluster1-01` | Enable AutoSupport with `system node autosupport modify -node <node-name> -state enable`. |
+    | `Error: Failed to send AutoSupport on cluster1-02: SMTP server unreachable` | Verify SMTP server connectivity and configuration with `system node autosupport show -node cluster1-02` and check firewall rules. |
 If AutoSupport delivery is failing:
 
 ```bash
@@ -1312,9 +1340,11 @@ Node: cluster1-02
 ```
 
 !!! warning "Common errors"
-    **`Error: command not found: system node autosupport show`** — Ensure you are connected to the ONTAP cluster CLI (ssh to cluster management IP) rather than the local shell.
-    **`AutoSupport Connectivity Check Results: Node: cluster1-01 Status: FAILED`** — Verify firewall rules allow outbound HTTPS (port 443) to support.netapp.com and check DNS resolution with `system services dns check`.
-    **`Error: Invalid field name "proxy-url"`** — Use the correct field name `proxy_url` (underscore instead of hyphen) in the `-fields` parameter.
+    | Error | Fix |
+    |---|---|
+    | `Error: command not found: system node autosupport show` | Ensure you are connected to the ONTAP cluster CLI (ssh to cluster management IP) rather than the local shell. |
+    | `AutoSupport Connectivity Check Results: Node: cluster1-01 Status: FAILED` | Verify firewall rules allow outbound HTTPS (port 443) to support.netapp.com and check DNS resolution with `system services dns check`. |
+    | `Error: Invalid field name "proxy-url"` | Use the correct field name `proxy_url` (underscore instead of hyphen) in the `-fields` parameter. |
 ---
 
 ## Log locations

@@ -125,8 +125,10 @@ _kerberos._tcp.dc._msdcs.corp.example.com. 600 IN SRV 0 100 88 dc01.corp.example
 ```
 
 !!! warning "Common errors"
-    **`; <<>> DiG 9.16.1-Ubuntu <<>> _kerberos._tcp.corp.example.com SRV ... status: NXDOMAIN`** — Verify the domain name is correct and that DNS SRV records exist; check with your DNS administrator or use `nslookup -type=SRV` to confirm record presence.
-    **`; connection timed out; trying next origin`** — Confirm the DNS server is reachable and responding; add `@<dns-server-ip>` to the dig command to explicitly query a specific nameserver (e.g., `dig @8.8.8.8 _kerberos._tcp.corp.example.com SRV`).
+    | Error | Fix |
+    |---|---|
+    | `; <<>> DiG 9.16.1-Ubuntu <<>> _kerberos._tcp.corp.example.com SRV ... status: NXDOMAIN` | Verify the domain name is correct and that DNS SRV records exist; check with your DNS administrator or use `nslookup -type=SRV` to confirm record presence. |
+    | `; connection timed out; trying next origin` | Confirm the DNS server is reachable and responding; add `@<dns-server-ip>` to the dig command to explicitly query a specific nameserver (e.g., `dig @8.8.8.8 _kerberos._tcp.corp.example.com SRV`). |
 ---
 
 ## DNS Server Health Checks
@@ -225,9 +227,11 @@ Jan 18 14:35:46 ns1 named[2847]: client 192.168.1.106#52847 (api.corp.example.co
 ```
 
 !!! warning "Common errors"
-    **`rndc: connect failed: 127.0.0.1#953: connection refused`** — Ensure named is running with `systemctl start named` and rndc key is configured in `/etc/rndc.conf`.
-    **`zone corp.example.com/IN: loading from master file /var/named/corp.example.com.zone failed: file not found`** — Verify the zone file path exists and the filename matches the zone name in `/etc/named.conf`.
-    **`named: error (SERVFAIL) resolving 'example.com/A/IN': 192.0.2.1#53: timed out`** — Check network connectivity to upstream nameservers and firewall rules allowing outbound DNS on port 53.
+    | Error | Fix |
+    |---|---|
+    | `rndc: connect failed: 127.0.0.1#953: connection refused` | Ensure named is running with `systemctl start named` and rndc key is configured in `/etc/rndc.conf`. |
+    | `zone corp.example.com/IN: loading from master file /var/named/corp.example.com.zone failed: file not found` | Verify the zone file path exists and the filename matches the zone name in `/etc/named.conf`. |
+    | `named: error (SERVFAIL) resolving 'example.com/A/IN': 192.0.2.1#53: timed out` | Check network connectivity to upstream nameservers and firewall rules allowing outbound DNS on port 53. |
 ---
 
 ## Zone Transfer Verification
@@ -285,8 +289,10 @@ corp.example.com.		3600	IN	SOA	dc02.corp.example.com. hostmaster.corp.example.co
 ```
 
 !!! warning "Common errors"
-    **`; Transfer failed.`** — Verify the secondary DNS server is configured as an authorized zone transfer recipient in the primary's ACL (allow-transfer directive in named.conf).
-    **`; status: SERVFAIL`** — Check that the DNS server at the specified IP is running and listening on port 53 using `netstat -tuln | grep :53` or `ss -tuln | grep :53`.
+    | Error | Fix |
+    |---|---|
+    | `; Transfer failed.` | Verify the secondary DNS server is configured as an authorized zone transfer recipient in the primary's ACL (allow-transfer directive in named.conf). |
+    | `; status: SERVFAIL` | Check that the DNS server at the specified IP is running and listening on port 53 using `netstat -tuln | grep :53` or `ss -tuln | grep :53`. |
     **`connection timed out; no servers could be reached`**
 ---
 
@@ -358,7 +364,9 @@ server.partner.com.	3600	IN	A	203.45.67.89
 ```
 
 !!! warning "Common errors"
-    **`dig: couldn't get address for 'dc01': not found`** — Use the full FQDN or IP address of the DNS server (e.g.,
+    | Error | Fix |
+    |---|---|
+    | `dig: couldn't get address for 'dc01': not found` | Use the full FQDN or IP address of the DNS server (e.g., |
 ---
 
 ## Split-Brain DNS Verification
@@ -408,8 +416,10 @@ app.example.com.		3600	IN	A	203.0.113.42
 ```
 
 !!! warning "Common errors"
-    **`dig: couldn't get address for 'dc01.corp.example.com': not known`** — Verify the internal nameserver hostname is resolvable or use its IP address directly (e.g., `dig @10.20.0.5 app.example.com`).
-    **`; <<>> DiG 9.16.1-Ubuntu <<>> @nameserver app.example.com` followed by `; connection timed out; trying next origin`** — Replace the placeholder `@nameserver` with an actual IP or hostname (e.g., `@10.20.0.5` or `@dc01.corp.example.com`).
+    | Error | Fix |
+    |---|---|
+    | `dig: couldn't get address for 'dc01.corp.example.com': not known` | Verify the internal nameserver hostname is resolvable or use its IP address directly (e.g., `dig @10.20.0.5 app.example.com`). |
+    | `; <<>> DiG 9.16.1-Ubuntu <<>> @nameserver app.example.com` followed by `; connection timed out; trying next origin` | Replace the placeholder `@nameserver` with an actual IP or hostname (e.g., `@10.20.0.5` or `@dc01.corp.example.com`). |
 ---
 
 ## PTR Record Validation
@@ -450,8 +460,10 @@ Add-DnsServerResourceRecordPtr -ZoneName "1.10.10.in-addr.arpa" `
 ```
 
 !!! warning "Common errors"
-    **`dig: couldn't get address for 'dc01.corp.example.com': not known`** — Verify the DNS server hostname is resolvable or use its IP address instead in the -ComputerName parameter.
-    **`Access Denied`** — Ensure your user account has DNS admin privileges on the domain controller or run PowerShell as Administrator.
+    | Error | Fix |
+    |---|---|
+    | `dig: couldn't get address for 'dc01.corp.example.com': not known` | Verify the DNS server hostname is resolvable or use its IP address instead in the -ComputerName parameter. |
+    | `Access Denied` | Ensure your user account has DNS admin privileges on the domain controller or run PowerShell as Administrator. |
 ---
 
 ## Common Failure Scenarios
@@ -514,9 +526,11 @@ example.com.		86400	IN	RRSIG	NS 8 2 86400 20240215120000 20240201120000 12847 ex
 ```
 
 !!! warning "Common errors"
-    **`status: SERVFAIL`** — Check that the recursive resolver has DNSSEC validation enabled and can reach the root nameservers; disable DNSSEC temporarily with `dig +no-dnssec` to isolate the issue.
-    **`dig: couldn't get address for 'corp.example.com': not found`** — Verify the domain name spelling and that the resolver can reach authoritative nameservers using `dig @8.8.8.8 corp.example.com` to test with a public resolver.
-    **`flags: qr rd ra;` (no 'ad' flag present)`** — The resolver is not validating DNSSEC; check resolver configuration with `systemctl status systemd-resolved` on Linux or enable DNSSEC in `/etc/resolv.conf`.
+    | Error | Fix |
+    |---|---|
+    | `status: SERVFAIL` | Check that the recursive resolver has DNSSEC validation enabled and can reach the root nameservers; disable DNSSEC temporarily with `dig +no-dnssec` to isolate the issue. |
+    | `dig: couldn't get address for 'corp.example.com': not found` | Verify the domain name spelling and that the resolver can reach authoritative nameservers using `dig @8.8.8.8 corp.example.com` to test with a public resolver. |
+    | `flags: qr rd ra;` (no 'ad' flag present)` | The resolver is not validating DNSSEC; check resolver configuration with `systemctl status systemd-resolved` on Linux or enable DNSSEC in `/etc/resolv.conf`. |
 ---
 
 ## Escalation Criteria

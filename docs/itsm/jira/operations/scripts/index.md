@@ -118,9 +118,11 @@ Done.
 ```
 
 !!! warning "Common errors"
-    **`curl: (6) Could not resolve host: jira.example.com`** — Verify `JIRA_URL` environment variable is set correctly and the Jira instance is reachable.
-    **`FAIL <KEY> — HTTP 401`** — Confirm `JIRA_USER` and `JIRA_TOKEN` environment variables are set and the token has not expired.
-    **`FAIL <KEY> — HTTP 403`** — Ensure the authenticated user has the "Transition Issues" permission in the target project.
+    | Error | Fix |
+    |---|---|
+    | `curl: (6) Could not resolve host: jira.example.com` | Verify `JIRA_URL` environment variable is set correctly and the Jira instance is reachable. |
+    | `FAIL <KEY> — HTTP 401` | Confirm `JIRA_USER` and `JIRA_TOKEN` environment variables are set and the token has not expired. |
+    | `FAIL <KEY> — HTTP 403` | Ensure the authenticated user has the "Transition Issues" permission in the target project. |
 ```bash
 #!/bin/bash
 # jira-project-cleanup.sh — Report stale projects and issues
@@ -202,9 +204,11 @@ Stale projects (7):
 ```
 
 !!! warning "Common errors"
-    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify `$JIRA_URL` is correct and the Jira server is accessible; check firewall rules and VPN connectivity.
-    **`Invalid JSON in response: Expecting value: line 1 column 1`** — Confirm `$JIRA_USER` and `$JIRA_TOKEN` are valid; regenerate the API token in Jira if authentication has expired.
-    **`FileNotFoundError: [Errno 2] No such file or directory: '/tmp/jira-cleanup-20250115/project-activity.csv'`** — Ensure the script has write permissions to `/tmp` and that the curl requests to fetch projects succeeded before the Python filtering step.
+    | Error | Fix |
+    |---|---|
+    | `curl: (7) Failed to connect to jira.example.com port 443: Connection refused` | Verify `$JIRA_URL` is correct and the Jira server is accessible; check firewall rules and VPN connectivity. |
+    | `Invalid JSON in response: Expecting value: line 1 column 1` | Confirm `$JIRA_USER` and `$JIRA_TOKEN` are valid; regenerate the API token in Jira if authentication has expired. |
+    | `FileNotFoundError: [Errno 2] No such file or directory: '/tmp/jira-cleanup-20250115/project-activity.csv'` | Ensure the script has write permissions to `/tmp` and that the curl requests to fetch projects succeeded before the Python filtering step. |
 ```bash
 #!/bin/bash
 # jira-plugin-list.sh — Export all installed apps with version and status
@@ -290,8 +294,10 @@ considering log file /var/log/jira/catalina.out
 ```
 
 !!! warning "Common errors"
-    **`error: stat of /var/log/jira/atlassian-jira.log failed: No such file or directory`** — Verify the log file path in `/etc/logrotate.d/jira` matches your actual JIRA installation directory.
-    **`error: error opening /etc/logrotate.d/jira: Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the logrotate configuration file.
+    | Error | Fix |
+    |---|---|
+    | `error: stat of /var/log/jira/atlassian-jira.log failed: No such file or directory` | Verify the log file path in `/etc/logrotate.d/jira` matches your actual JIRA installation directory. |
+    | `error: error opening /etc/logrotate.d/jira: Permission denied` | Run the command with `sudo` or ensure your user has read permissions on the logrotate configuration file. |
 ```bash
 #!/bin/bash
 # archive-logs.sh — Move logs older than 30 days to S3
@@ -309,9 +315,11 @@ Log archive complete: Wed Jan 15 14:32:47 UTC 2025
 ```
 
 !!! warning "Common errors"
-    **`Unable to locate credentials`** — Configure AWS credentials via `aws configure` or set `AWS_PROFILE` environment variable before running the script.
-    **`An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist`** — Verify the S3 bucket name in `S3_BUCKET` variable matches an existing bucket and that your AWS account has access to it.
-    **`find: '/opt/atlassian/jira/logs': No such file or directory`** — Confirm the `LOG_DIR` path is correct and the JIRA logs directory exists on this system.
+    | Error | Fix |
+    |---|---|
+    | `Unable to locate credentials` | Configure AWS credentials via `aws configure` or set `AWS_PROFILE` environment variable before running the script. |
+    | `An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist` | Verify the S3 bucket name in `S3_BUCKET` variable matches an existing bucket and that your AWS account has access to it. |
+    | `find: '/opt/atlassian/jira/logs': No such file or directory` | Confirm the `LOG_DIR` path is correct and the JIRA logs directory exists on this system. |
 ```bash
 #!/bin/bash
 # jira-heap-dump.sh — Capture JVM heap dump from Jira process
@@ -357,9 +365,11 @@ Analyse with: jhat, Eclipse MAT, or VisualVM
 ```
 
 !!! warning "Common errors"
-    **`ERROR: Jira process not found`** — Verify Jira is running with `systemctl status jira` or check the exact process name with `ps aux | grep jira`.
-    **`Exception in thread "main" java.io.FileNotFoundException: /var/atlassian/jira-dumps/jira-heap-*.hprof (Permission denied)`** — Ensure the output directory is writable by the jira user with `sudo chown jira:jira /var/atlassian/jira-dumps && sudo chmod 755 /var/atlassian/jira-dumps`.
-    **`sudo: jmap: command not found`** — Install the JDK (not just JRE) on the system; jmap is part of `java-*-openjdk-devel` or equivalent package.
+    | Error | Fix |
+    |---|---|
+    | `ERROR: Jira process not found` | Verify Jira is running with `systemctl status jira` or check the exact process name with `ps aux | grep jira`. |
+    | `Exception in thread "main" java.io.FileNotFoundException: /var/atlassian/jira-dumps/jira-heap-*.hprof (Permission denied)` | Ensure the output directory is writable by the jira user with `sudo chown jira:jira /var/atlassian/jira-dumps && sudo chmod 755 /var/atlassian/jira-dumps`. |
+    | `sudo: jmap: command not found` | Install the JDK (not just JRE) on the system; jmap is part of `java-*-openjdk-devel` or equivalent package. |
 ```bash
 #!/bin/bash
 # jira-thread-dump.sh — Capture 3 consecutive thread dumps (for deadlock/hang analysis)
@@ -391,9 +401,11 @@ Thread dumps extracted to: /var/atlassian/jira-dumps
 ```
 
 !!! warning "Common errors"
-    **`pgrep: no matching processes found`** — Verify JIRA is running with `ps aux | grep atlassian-jira` and check the process name matches exactly.
-    **`sudo: no tty present and no -S password option specified`** — Run the script with `sudo bash jira-thread-dump.sh` instead of calling sudo within the script, or configure passwordless sudo for the kill command.
-    **`grep: /opt/atlassian/jira/logs/catalina.out: No such file or directory`** — Verify the JIRA logs directory path with `find /opt/atlassian -name catalina.out 2>/dev/null` and update the path in the script.
+    | Error | Fix |
+    |---|---|
+    | `pgrep: no matching processes found` | Verify JIRA is running with `ps aux | grep atlassian-jira` and check the process name matches exactly. |
+    | `sudo: no tty present and no -S password option specified` | Run the script with `sudo bash jira-thread-dump.sh` instead of calling sudo within the script, or configure passwordless sudo for the kill command. |
+    | `grep: /opt/atlassian/jira/logs/catalina.out: No such file or directory` | Verify the JIRA logs directory path with `find /opt/atlassian -name catalina.out 2>/dev/null` and update the path in the script. |
 ```bash
 # Monitor GC in real time
 JIRA_PID=$(pgrep -f 'atlassian-jira' | head -1)

@@ -124,9 +124,11 @@ az role assignment create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceGroupNotFound`** — Verify the resource group exists with `az group list` and use the correct `--resource-group` name.
-    **`InvalidObjectId`** — Retrieve your object ID with `az ad signed-in-user show --query id -o tsv` and pass it to `--assignee`.
-    **`PrincipalNotFound`** — Wait 15–30 seconds for Azure AD replication to complete before assigning the role, or verify the user exists in your tenant.
+    | Error | Fix |
+    |---|---|
+    | `ResourceGroupNotFound` | Verify the resource group exists with `az group list` and use the correct `--resource-group` name. |
+    | `InvalidObjectId` | Retrieve your object ID with `az ad signed-in-user show --query id -o tsv` and pass it to `--assignee`. |
+    | `PrincipalNotFound` | Wait 15–30 seconds for Azure AD replication to complete before assigning the role, or verify the user exists in your tenant. |
 ## Managing Secrets
 
 ```bash
@@ -216,9 +218,11 @@ old-secret           2024-01-01T09:22:11Z   2024-04-01T09:22:11Z
 ```
 
 !!! warning "Common errors"
-    **`Vault not found. (VaultNotFound)`** — Verify the vault name is correct and exists in your subscription with `az keyvault list`.
-    **`The user, group or application does not have the 'get' permission on the object.`** — Ensure your user or service principal has Key Vault Secret User or Officer role assigned via `az role assignment create`.
-    **`Purge is not allowed on this vault because purge protection is enabled.`** — Disable purge protection on the vault with `az keyvault update --name <vault-name> --enable-purge-protection false` before purging.
+    | Error | Fix |
+    |---|---|
+    | `Vault not found. (VaultNotFound)` | Verify the vault name is correct and exists in your subscription with `az keyvault list`. |
+    | `The user, group or application does not have the 'get' permission on the object.` | Ensure your user or service principal has Key Vault Secret User or Officer role assigned via `az role assignment create`. |
+    | `Purge is not allowed on this vault because purge protection is enabled.` | Disable purge protection on the vault with `az keyvault update --name <vault-name> --enable-purge-protection false` before purging. |
 ## Soft Delete and Purge Protection
 
 **Soft delete** — deleted objects are retained for the configured period (7–90 days). The vault and all objects cannot be immediately destroyed; this prevents accidental loss.
@@ -240,8 +244,10 @@ true
 ```
 
 !!! warning "Common errors"
-    **`The specified vault does not exist in the specified subscription and resource group.`** — Verify the vault name is correct and you are authenticated to the correct Azure subscription with `az account show`.
-    **`Authorization failed for template deployment. The client with object id does not have permission to perform action 'Microsoft.KeyVault/vaults/read' on scope.`** — Ensure your Azure user or service principal has at least Reader role on the Key Vault resource.
+    | Error | Fix |
+    |---|---|
+    | `The specified vault does not exist in the specified subscription and resource group.` | Verify the vault name is correct and you are authenticated to the correct Azure subscription with `az account show`. |
+    | `Authorization failed for template deployment. The client with object id does not have permission to perform action 'Microsoft.KeyVault/vaults/read' on scope.` | Ensure your Azure user or service principal has at least Reader role on the Key Vault resource. |
 ## Networking — Private Endpoint
 
 Restrict Key Vault access to a private network:
@@ -300,9 +306,11 @@ az network private-endpoint create \
 ```
 
 !!! warning "Common errors"
-    **`(BadRequest) The resource with name '<vault-name>' does not exist in the resource group '<rg>'.`** — Verify the vault name and resource group name are correct and the vault exists in the specified region.
-    **`(BadRequest) The subnet '<subnet>' does not exist in virtual network '<vnet>'.`** — Confirm the subnet name and virtual network name are spelled correctly and exist in the same resource group and region.
-    **`(Conflict) The private endpoint '<vault-name>-pe' already exists in resource group '<rg>'.`** — Delete the existing private endpoint first using `az network private-endpoint delete --name <vault-name>-pe --resource-group <rg>` or use a different endpoint name.
+    | Error | Fix |
+    |---|---|
+    | `(BadRequest) The resource with name '<vault-name>' does not exist in the resource group '<rg>'.` | Verify the vault name and resource group name are correct and the vault exists in the specified region. |
+    | `(BadRequest) The subnet '<subnet>' does not exist in virtual network '<vnet>'.` | Confirm the subnet name and virtual network name are spelled correctly and exist in the same resource group and region. |
+    | `(Conflict) The private endpoint '<vault-name>-pe' already exists in resource group '<rg>'.` | Delete the existing private endpoint first using `az network private-endpoint delete --name <vault-name>-pe --resource-group <rg>` or use a different endpoint name. |
 After creating the private endpoint, add a DNS A record in the `privatelink.vaultcore.azure.net` private DNS zone pointing to the private endpoint IP.
 
 ## Audit Logging
@@ -334,9 +342,11 @@ az monitor diagnostic-settings create \
 ```
 
 !!! warning "Common errors"
-    **`ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.KeyVault/vaults/<vault-name>' could not be found.`** — Verify the subscription ID, resource group name, and Key Vault name are correct and exist in your Azure account.
-    **`InvalidResourceId: The provided resource ID is invalid or malformed.`** — Ensure the resource ID follows the exact format with correct casing for Microsoft.KeyVault and no trailing slashes.
-    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'microsoft.insights/diagnosticSettings/write' on resource '<vault-id>'.`** — Grant the user or service principal the "Monitoring Contributor" role on the Key Vault resource.
+    | Error | Fix |
+    |---|---|
+    | `ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.KeyVault/vaults/<vault-name>' could not be found.` | Verify the subscription ID, resource group name, and Key Vault name are correct and exist in your Azure account. |
+    | `InvalidResourceId: The provided resource ID is invalid or malformed.` | Ensure the resource ID follows the exact format with correct casing for Microsoft.KeyVault and no trailing slashes. |
+    | `AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'microsoft.insights/diagnosticSettings/write' on resource '<vault-id>'.` | Grant the user or service principal the "Monitoring Contributor" role on the Key Vault resource. |
 Query audit logs in Log Analytics:
 
 ```kusto

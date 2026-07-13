@@ -162,9 +162,11 @@ admin@vra-london.example.local's password:
 ```
 
 !!! warning "Common errors"
-    **`ssh: Could not resolve hostname vra-london.example.local: Name or service not known`** — Verify the hostname is correct and resolvable in DNS, or use the IP address directly instead.
-    **`Unit hms.service could not be found.`** — Confirm the vSphere Replication appliance was fully deployed and the hms service package is installed; check `/opt/vmware/hms/` directory exists.
-    **`Active: inactive (dead) since Mon 2024-01-15 14:25:03 UTC`** — Check service logs with `journalctl -u hms -n 50` to identify startup failures, typically due to port conflicts or insufficient memory.
+    | Error | Fix |
+    |---|---|
+    | `ssh: Could not resolve hostname vra-london.example.local: Name or service not known` | Verify the hostname is correct and resolvable in DNS, or use the IP address directly instead. |
+    | `Unit hms.service could not be found.` | Confirm the vSphere Replication appliance was fully deployed and the hms service package is installed; check `/opt/vmware/hms/` directory exists. |
+    | `Active: inactive (dead) since Mon 2024-01-15 14:25:03 UTC` | Check service logs with `journalctl -u hms -n 50` to identify startup failures, typically due to port conflicts or insufficient memory. |
 Check Site Recovery → Sites → both sites still Connected after upgrade.
 
 ---
@@ -213,9 +215,11 @@ curl -sk https://vra-london.example.local/api/rest/vr/health
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the VRA's CA certificate into your system trust store.
-    **`curl: (7) Failed to connect to vra-london.example.local port 443: Connection refused`** — Verify the VRA appliance is powered on and the hostname resolves correctly with `nslookup vra-london.example.local`.
-    **`Initial sync stuck at "Syncing" status after 24+ hours`** — Check network connectivity and bandwidth between sites using `ping` and `iperf`, and verify the target datastore has sufficient free space.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the VRA's CA certificate into your system trust store. |
+    | `curl: (7) Failed to connect to vra-london.example.local port 443: Connection refused` | Verify the VRA appliance is powered on and the hostname resolves correctly with `nslookup vra-london.example.local`. |
+    | `Initial sync stuck at "Syncing" status after 24+ hours` | Check network connectivity and bandwidth between sites using `ping` and `iperf`, and verify the target datastore has sufficient free space. |
 ---
 
 ## See also

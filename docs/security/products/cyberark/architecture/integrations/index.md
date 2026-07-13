@@ -167,8 +167,10 @@ PubkeyAuthentication yes
 ```
 
 !!! warning "Common errors"
-    **`grep: /home/root/.ssh/authorized_keys: No such file or directory`** — Ensure the CyberArk CPM has successfully deployed the public key and the `.ssh` directory exists on the target host.
-    **`grep: /etc/ssh/sshd_config: Permission denied`** — Run the command with `sudo` or as root to read the sshd configuration file.
+    | Error | Fix |
+    |---|---|
+    | `grep: /home/root/.ssh/authorized_keys: No such file or directory` | Ensure the CyberArk CPM has successfully deployed the public key and the `.ssh` directory exists on the target host. |
+    | `grep: /etc/ssh/sshd_config: Permission denied` | Run the command with `sudo` or as root to read the sshd configuration file. |
 ---
 
 ## Ansible Integration

@@ -46,9 +46,11 @@ Linked copy now available on proxy host: backup-proxy-01.corp.local
 ```
 
 !!! warning "Common errors"
-    **`SYMAPI Error (18) : Could not open the Symmetrix`** — Verify the target SID is correct and the Symmetrix is reachable; check `symcfg list` to confirm SID availability.
-    **`Error: Storage Group <sg_name> not found`** — Confirm the storage group name matches exactly (case-sensitive) using `symsg list -sid <target_SID>`.
-    **`Error: Insufficient space in target device group`** — Ensure the proxy storage group has adequate free capacity; check available space with `symcapacity -sid <target_SID> -sg <proxy_sg>`.
+    | Error | Fix |
+    |---|---|
+    | `SYMAPI Error (18) : Could not open the Symmetrix` | Verify the target SID is correct and the Symmetrix is reachable; check `symcfg list` to confirm SID availability. |
+    | `Error: Storage Group <sg_name> not found` | Confirm the storage group name matches exactly (case-sensitive) using `symsg list -sid <target_SID>`. |
+    | `Error: Insufficient space in target device group` | Ensure the proxy storage group has adequate free capacity; check available space with `symcapacity -sid <target_SID> -sg <proxy_sg>`. |
 Note: always snapshot the R2 while it is in `Synchronized` state to ensure consistency.
 
 ---

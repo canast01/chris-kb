@@ -63,9 +63,11 @@ notAfter=Jan 14 09:23:45 2025 GMT
 ```
 
 !!! warning "Common errors"
-    **`Certificate import initiated... Error: Unable to read certificate file /tmp/vra-prod-01.pem`** — Verify the certificate file exists and is readable with `ls -la /tmp/vra-prod-01.pem`.
-    **`Error: Private key does not match certificate`** — Ensure the key and certificate were generated as a pair; regenerate both or use the correct matching key file.
-    **`Error: Certificate chain validation failed - untrusted root`** — Verify the CA chain file contains all intermediate and root certificates in the correct order from leaf to root.
+    | Error | Fix |
+    |---|---|
+    | `Certificate import initiated... Error: Unable to read certificate file /tmp/vra-prod-01.pem` | Verify the certificate file exists and is readable with `ls -la /tmp/vra-prod-01.pem`. |
+    | `Error: Private key does not match certificate` | Ensure the key and certificate were generated as a pair; regenerate both or use the correct matching key file. |
+    | `Error: Certificate chain validation failed - untrusted root` | Verify the CA chain file contains all intermediate and root certificates in the correct order from leaf to root. |
 ---
 
 ## Service Account Principle of Least Privilege
@@ -107,8 +109,10 @@ systemctl restart sshd
 ```
 
 !!! warning "Common errors"
-    **`Job for sshd.service failed because the control process exited with error code.`** — Verify `/etc/ssh/sshd_config` syntax with `sshd -t` before restarting the service.
-    **`Permission denied (publickey,password).`** — Ensure your SSH public key is installed in `~/.ssh/authorized_keys` on the target host before disabling password authentication.
+    | Error | Fix |
+    |---|---|
+    | `Job for sshd.service failed because the control process exited with error code.` | Verify `/etc/ssh/sshd_config` syntax with `sshd -t` before restarting the service. |
+    | `Permission denied (publickey,password).` | Ensure your SSH public key is installed in `~/.ssh/authorized_keys` on the target host before disabling password authentication. |
 For the VAMI (port 5480), restrict access to the management network at the firewall level — VAMI does not natively support IP-based access control.
 
 ---
@@ -129,8 +133,10 @@ server: https://127.0.0.1:6443
 ```
 
 !!! warning "Common errors"
-    **`error: unable to read client-key /root/.kube/config for user "kubernetes-admin": permission denied`** — Ensure the kubeconfig file has correct permissions with `chmod 600 ~/.kube/config`.
-    **`The connection to the server 127.0.0.1:6443 was refused - did you mean to run "minikube start"?`** — Verify the Kubernetes API server is running on the appliance with `kubectl cluster-info` or restart the service.
+    | Error | Fix |
+    |---|---|
+    | `error: unable to read client-key /root/.kube/config for user "kubernetes-admin": permission denied` | Ensure the kubeconfig file has correct permissions with `chmod 600 ~/.kube/config`. |
+    | `The connection to the server 127.0.0.1:6443 was refused - did you mean to run "minikube start"?` | Verify the Kubernetes API server is running on the appliance with `kubectl cluster-info` or restart the service. |
 Do not expose the Kubernetes API port externally. All management is done via `kubectl` on the appliance SSH session or via the Aria Automation REST API.
 
 ---
@@ -201,9 +207,11 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vRA server's CA certificate into your system trust store.
-    **`jq: parse error: Cannot index string with string "content"`** — Verify the API endpoint returns valid JSON and check that your TOKEN is valid by testing with `curl -sk -H "Authorization: Bearer $TOKEN" "https://vra-prod-01.example.local/audit/api/events?size=1"` first.
-    **`401 Unauthorized`** — Ensure the TOKEN variable is set correctly and has not expired; regenerate a new API token from the vRA console under Administration > API Tokens.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the vRA server's CA certificate into your system trust store. |
+    | `jq: parse error: Cannot index string with string "content"` | Verify the API endpoint returns valid JSON and check that your TOKEN is valid by testing with `curl -sk -H "Authorization: Bearer $TOKEN" "https://vra-prod-01.example.local/audit/api/events?size=1"` first. |
+    | `401 Unauthorized` | Ensure the TOKEN variable is set correctly and has not expired; regenerate a new API token from the vRA console under Administration > API Tokens. |
 Forward syslog to Aria Ops for Logs or SIEM for centralised audit trail:
 
 ```bash
@@ -218,8 +226,10 @@ systemctl restart rsyslog
 ```
 
 !!! warning "Common errors"
-    **`Permission denied`** — Run the commands with `sudo` or as the root user.
-    **`Failed to restart rsyslog: Unit rsyslog.service not found.`** — Install rsyslog with `sudo apt-get install rsyslog` (Debian/Ubuntu) or `sudo yum install rsyslog` (RHEL/CentOS), or use the correct service name for your distribution.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied` | Run the commands with `sudo` or as the root user. |
+    | `Failed to restart rsyslog: Unit rsyslog.service not found.` | Install rsyslog with `sudo apt-get install rsyslog` (Debian/Ubuntu) or `sudo yum install rsyslog` (RHEL/CentOS), or use the correct service name for your distribution. |
 ---
 
 ## Hardening Checklist

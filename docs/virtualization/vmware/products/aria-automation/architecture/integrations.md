@@ -70,9 +70,11 @@ curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Set `acceptSelfSignedCertificate` to `true` in the JSON payload or use `-k` flag (already present; verify vCenter certificate chain is valid).
-    **`{"message":"Unauthorized","statusCode":401}`** — Ensure `$TOKEN` is set to a valid bearer token by running `TOKEN=$(curl -sk -X POST https://<vra-fqdn>/csp/gateway/api/tokens -d 'username=<user>&password=<pass>')` first.
-    **`{"message":"Invalid cloud account type","statusCode":400}`** — Verify the endpoint URL is correct (`/iaas/api/cloud-accounts-vsphere` not `/cloud-accounts`) and the vCenter hostname is reachable from the Aria Automation appliance.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Set `acceptSelfSignedCertificate` to `true` in the JSON payload or use `-k` flag (already present; verify vCenter certificate chain is valid). |
+    | `{"message":"Unauthorized","statusCode":401}` | Ensure `$TOKEN` is set to a valid bearer token by running `TOKEN=$(curl -sk -X POST https://<vra-fqdn>/csp/gateway/api/tokens -d 'username=<user>&password=<pass>')` first. |
+    | `{"message":"Invalid cloud account type","statusCode":400}` | Verify the endpoint URL is correct (`/iaas/api/cloud-accounts-vsphere` not `/cloud-accounts`) and the vCenter hostname is reachable from the Aria Automation appliance. |
 ```bash
 # Add ServiceNow ITSM integration
 curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
@@ -118,9 +120,11 @@ curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vRA certificate into your system's trusted CA store.
-    **`{"error":"Invalid token","statusCode":401}`** — Verify the Bearer token is valid and not expired by checking `echo $TOKEN` and regenerating from vRA authentication endpoint if needed.
-    **`{"error":"Invalid typeId","statusCode":400}`** — Confirm the ServiceNow integration typeId matches your vRA version by checking available source types in the catalog API documentation.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the vRA certificate into your system's trusted CA store. |
+    | `{"error":"Invalid token","statusCode":401}` | Verify the Bearer token is valid and not expired by checking `echo $TOKEN` and regenerating from vRA authentication endpoint if needed. |
+    | `{"error":"Invalid typeId","statusCode":400}` | Confirm the ServiceNow integration typeId matches your vRA version by checking available source types in the catalog API documentation. |
 ```bash
 # Add Ansible integration
 curl -sk -X POST -H "Authorization: Bearer $TOKEN" \

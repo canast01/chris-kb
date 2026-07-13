@@ -240,9 +240,11 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the vROps certificate into your system CA bundle.
-    **`jq: error (at <stdin>:1): Cannot index null with string "resourceList"`** — Verify the token is valid and not expired; re-run the token acquisition step and check for authentication errors in the response.
-    **`"Authorization: vRealizeOpsToken $TOKEN" returned 401 Unauthorized`** — Ensure the password in the token request is correct and the admin user account is not locked; check vROps authentication logs.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to curl (already present) or import the vROps certificate into your system CA bundle. |
+    | `jq: error (at <stdin>:1): Cannot index null with string "resourceList"` | Verify the token is valid and not expired; re-run the token acquisition step and check for authentication errors in the response. |
+    | `"Authorization: vRealizeOpsToken $TOKEN" returned 401 Unauthorized` | Ensure the password in the token request is correct and the admin user account is not locked; check vROps authentication logs. |
 ---
 
 ## Export Metrics Data via API
@@ -285,9 +287,11 @@ vc-1847:vm-2156
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification (already present in the example, but ensure it's not removed).
-    **`jq: error (at <stdin>:1): Cannot index null with string "resourceList"`** — Verify the VM name matches exactly and the resource exists in Aria Operations; check the API response with `| jq '.'` to debug.
-    **`{"error":"Invalid token","errorCode":"INVALID_TOKEN"}`** — Re-acquire the token as it may have expired; tokens typically last 24 hours, so run the first curl command again to refresh.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add the `-k` flag to curl to skip SSL verification (already present in the example, but ensure it's not removed). |
+    | `jq: error (at <stdin>:1): Cannot index null with string "resourceList"` | Verify the VM name matches exactly and the resource exists in Aria Operations; check the API response with `| jq '.'` to debug. |
+    | `{"error":"Invalid token","errorCode":"INVALID_TOKEN"}` | Re-acquire the token as it may have expired; tokens typically last 24 hours, so run the first curl command again to refresh. |
 Token lifetime is 60 minutes; re-acquire for long-running scripts.
 
 ---
@@ -326,9 +330,11 @@ curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if error persists, verify the vROps server certificate is valid).
-    **`{"error":"Invalid or expired token","statusCode":401}`** — Regenerate the authentication token using `vRealizeOpsToken` and ensure it's exported as `$TOKEN` before running the command.
-    **`{"error":"Notification rule not found","statusCode":404}`** — Verify the `<rule-id>` placeholder is replaced with an actual rule ID from `GET /suite-api/api/notifications/rules`.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification (already present; if error persists, verify the vROps server certificate is valid). |
+    | `{"error":"Invalid or expired token","statusCode":401}` | Regenerate the authentication token using `vRealizeOpsToken` and ensure it's exported as `$TOKEN` before running the command. |
+    | `{"error":"Notification rule not found","statusCode":404}` | Verify the `<rule-id>` placeholder is replaced with an actual rule ID from `GET /suite-api/api/notifications/rules`. |
 ---
 
 ## Generate a Support Bundle
@@ -365,9 +371,11 @@ vrops-prod-01-20240115-143827.zip                          100% 2847MB   45.2MB/
 ```
 
 !!! warning "Common errors"
-    **`Permission denied (publickey,password).`** — Verify SSH credentials and ensure the admin user has SSH access enabled on the vRealize Operations appliance.
-    **`vracli: command not found`** — Confirm you are logged into the vRealize Operations Manager appliance (not a standard Linux shell) and that vracli is in the PATH.
-    **`No such file or directory`** — Wait for the bundle generation to complete fully before attempting to download, as the file may still be writing to disk.
+    | Error | Fix |
+    |---|---|
+    | `Permission denied (publickey,password).` | Verify SSH credentials and ensure the admin user has SSH access enabled on the vRealize Operations appliance. |
+    | `vracli: command not found` | Confirm you are logged into the vRealize Operations Manager appliance (not a standard Linux shell) and that vracli is in the PATH. |
+    | `No such file or directory` | Wait for the bundle generation to complete fully before attempting to download, as the file may still be writing to disk. |
 ---
 
 ## Upgrade Aria Operations (via Aria Suite Lifecycle)
@@ -555,9 +563,11 @@ curl -sk -u 'admin:password' \
 ```
 
 !!! warning "Common errors"
-    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the Aria Operations CA certificate into your system trust store.
-    **`{"error":"Invalid resourceId format","statusCode":400}`** — Verify the object-id is a valid UUID by checking the resource in Aria Operations UI or via GET /suite-api/api/resources endpoint.
-    **`{"error":"Unauthorized","statusCode":401}`** — Confirm credentials are correct and the admin user has API access permissions in Aria Operations role-based access control settings.
+    | Error | Fix |
+    |---|---|
+    | `curl: (60) SSL certificate problem: self signed certificate` | Add `-k` flag to skip certificate verification, or import the Aria Operations CA certificate into your system trust store. |
+    | `{"error":"Invalid resourceId format","statusCode":400}` | Verify the object-id is a valid UUID by checking the resource in Aria Operations UI or via GET /suite-api/api/resources endpoint. |
+    | `{"error":"Unauthorized","statusCode":401}` | Confirm credentials are correct and the admin user has API access permissions in Aria Operations role-based access control settings. |
 ### Option B — Suspend Alert Notifications (For Rolling Maintenance)
 
 ![Option B — Suspend Alert Notifications (For Rolling Maintenance)](../../../../../assets/aria-operations-proc-option-b-suspend-alert-notifications-for-rolling-mainte.svg)

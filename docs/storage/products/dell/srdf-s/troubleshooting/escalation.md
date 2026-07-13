@@ -103,8 +103,10 @@ Microcode Version: 5978.669.669
 ```
 
 !!! warning "Common errors"
-    **`symcfg: Cannot find a Symmetrix`** — Verify the R1-SID and R2-SID values are correct and the arrays are online and discoverable via `symcfg discover`.
-    **`symcli: command not found`** — Ensure Solutions Enabler is installed and the bin directory is in your PATH, or use the full path `/opt/emc/SYMCLI/bin/symcli -version`.
+    | Error | Fix |
+    |---|---|
+    | `symcfg: Cannot find a Symmetrix` | Verify the R1-SID and R2-SID values are correct and the arrays are online and discoverable via `symcfg discover`. |
+    | `symcli: command not found` | Ensure Solutions Enabler is installed and the bin directory is in your PATH, or use the full path `/opt/emc/SYMCLI/bin/symcli -version`. |
 ### 2. Capture SRDF group and pair state from both arrays
 
 ```bash
@@ -149,9 +151,11 @@ pair state: Partitioned
 ```
 
 !!! warning "Common errors"
-    **`SRDF group <group-number> not found`** — Verify the group number exists on the specified array using `symdf list -sid <SID>` first.
-    **`Symmetrix ID <R1-SID> does not exist or is not accessible`** — Confirm the SID is correct and the array is reachable via `symcfg list -v`.
-    **`RDF Link Down - Cannot query pair state`** — Check physical RDF link connectivity and restart the RDF daemon with `symrdf start -g <group-number>` after verifying cable connections.
+    | Error | Fix |
+    |---|---|
+    | `SRDF group <group-number> not found` | Verify the group number exists on the specified array using `symdf list -sid <SID>` first. |
+    | `Symmetrix ID <R1-SID> does not exist or is not accessible` | Confirm the SID is correct and the array is reachable via `symcfg list -v`. |
+    | `RDF Link Down - Cannot query pair state` | Check physical RDF link connectivity and restart the RDF daemon with `symrdf start -g <group-number>` after verifying cable connections. |
 ### 3. Capture RDF director and link state
 
 ```bash
@@ -197,9 +201,11 @@ SRDF Group 1 Performance Summary:
 ```
 
 !!! warning "Common errors"
-    **`Error: Could not connect to the Symmetrix array <R1-SID>`** — Verify the SID is correct and the Symmetrix management port is reachable via `symcfg -sid <R1-SID> list -v`.
-    **`Error: RDF group <group-number> not found`** — Confirm the group number exists with `symrdf -sid <R1-SID> list -g all` and use the correct group identifier.
-    **`Error: Permission denied`** — Run the command with appropriate privileges using `sudo` or ensure your user is in the `symaccess` group.
+    | Error | Fix |
+    |---|---|
+    | `Error: Could not connect to the Symmetrix array <R1-SID>` | Verify the SID is correct and the Symmetrix management port is reachable via `symcfg -sid <R1-SID> list -v`. |
+    | `Error: RDF group <group-number> not found` | Confirm the group number exists with `symrdf -sid <R1-SID> list -g all` and use the correct group identifier. |
+    | `Error: Permission denied` | Run the command with appropriate privileges using `sudo` or ensure your user is in the `symaccess` group. |
 ### 4. Capture event log from both arrays
 
 ```bash
@@ -230,9 +236,11 @@ grep -iE "SRDF|RDF|partition|fault|link" /tmp/srdf-s-events-r1-$(date +%Y%m%d).t
 ```
 
 !!! warning "Common errors"
-    **`symevent: command not found`** — Ensure Symmetrix CLI tools are installed and the PATH includes the Symmetrix bin directory (typically `/opt/emc/SYMCLI/bin`).
-    **`grep: /tmp/srdf-s-events-r1-20240115.txt: No such file or directory`** — Verify the symevent commands completed successfully and check that `/tmp` has write permissions.
-    **`ERROR: Invalid SID <R1-SID>`** — Replace `<R1-SID>` and `<R2-SID>` with actual Symmetrix array serial numbers (e.g., `000123456789`).
+    | Error | Fix |
+    |---|---|
+    | `symevent: command not found` | Ensure Symmetrix CLI tools are installed and the PATH includes the Symmetrix bin directory (typically `/opt/emc/SYMCLI/bin`). |
+    | `grep: /tmp/srdf-s-events-r1-20240115.txt: No such file or directory` | Verify the symevent commands completed successfully and check that `/tmp` has write permissions. |
+    | `ERROR: Invalid SID <R1-SID>` | Replace `<R1-SID>` and `<R2-SID>` with actual Symmetrix array serial numbers (e.g., `000123456789`). |
 ### 5. Write the timeline
 
 ```text
@@ -370,9 +378,11 @@ Timestamp             Severity  Event Type        Message
 ```
 
 !!! warning "Common errors"
-    **`symdf: Command not found`** — Install EMC Solutions Enabler package or verify PATH includes /opt/emc/SYMCLI/bin.
-    **`Error: Invalid SID <R1-SID>`** — Replace `<R1-SID>` with actual 12-digit Symmetrix ID (e.g., `000123456789012`).
-    **`symrdf query: Group <group-number> not found`** — Verify the group number exists with `symrdf list` and confirm R1 and R2 arrays are both accessible.
+    | Error | Fix |
+    |---|---|
+    | `symdf: Command not found` | Install EMC Solutions Enabler package or verify PATH includes /opt/emc/SYMCLI/bin. |
+    | `Error: Invalid SID <R1-SID>` | Replace `<R1-SID>` with actual 12-digit Symmetrix ID (e.g., `000123456789012`). |
+    | `symrdf query: Group <group-number> not found` | Verify the group number exists with `symrdf list` and confirm R1 and R2 arrays are both accessible. |
 ---
 
 ## Support SLA Reference

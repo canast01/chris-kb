@@ -129,9 +129,11 @@ db01.prod.local            : ok=1    changed=0    unreachable=0    failed=0    s
 ```
 
 !!! warning "Common errors"
-    **`ERROR! the playbook: playbook.yml could not be found`** — Verify the playbook file exists in the current directory or provide the full path with `-i` for inventory.
-    **`fatal: [host1]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey,password)."}`** — Ensure SSH keys are configured correctly and the ansible_user has proper permissions in the inventory file.
-    **`ERROR! Syntax Error while loading YAML from "playbook.yml"`** — Fix YAML indentation and syntax errors in the playbook file using a YAML linter.
+    | Error | Fix |
+    |---|---|
+    | `ERROR! the playbook: playbook.yml could not be found` | Verify the playbook file exists in the current directory or provide the full path with `-i` for inventory. |
+    | `fatal: [host1]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey,password)."}` | Ensure SSH keys are configured correctly and the ansible_user has proper permissions in the inventory file. |
+    | `ERROR! Syntax Error while loading YAML from "playbook.yml"` | Fix YAML indentation and syntax errors in the playbook file using a YAML linter. |
 ---
 
 ## ansible-inventory
@@ -205,8 +207,10 @@ webservers:
 ```
 
 !!! warning "Common errors"
-    **`[WARNING]: Unable to parse inventory.ini as an inventory source`** — Verify the inventory file path is correct and the file exists in the current directory or provide an absolute path with `-i /path/to/inventory.ini`.
-    **`[ERROR]: Unable to find host <hostname> in inventory`** — Ensure the hostname matches exactly (case-sensitive) and exists in the inventory file; use `--graph` first to list all available hosts.
+    | Error | Fix |
+    |---|---|
+    | `[WARNING]: Unable to parse inventory.ini as an inventory source` | Verify the inventory file path is correct and the file exists in the current directory or provide an absolute path with `-i /path/to/inventory.ini`. |
+    | `[ERROR]: Unable to find host <hostname> in inventory` | Ensure the hostname matches exactly (case-sensitive) and exists in the inventory file; use `--graph` first to list all available hosts. |
 ---
 
 ## ansible-galaxy
@@ -286,9 +290,11 @@ Role Info
 ```
 
 !!! warning "Common errors"
-    **`ERROR! the specified requirements file (requirements.yml) does not exist`** — Verify the requirements.yml file exists in the current directory or provide the full path with `-r /path/to/requirements.yml`.
-    **`ERROR! - the collection community.general:99.0.0 cannot be found on any of the configured sources`** — Check the collection version exists on Ansible Galaxy and correct the version constraint in requirements.yml.
-    **`ERROR! role definition must contain a 'src' key`** — Ensure each role in requirements.yml has a properly formatted entry with at minimum a `src:` field (e.g., `src: geerlingguy.nginx`).
+    | Error | Fix |
+    |---|---|
+    | `ERROR! the specified requirements file (requirements.yml) does not exist` | Verify the requirements.yml file exists in the current directory or provide the full path with `-r /path/to/requirements.yml`. |
+    | `ERROR! - the collection community.general:99.0.0 cannot be found on any of the configured sources` | Check the collection version exists on Ansible Galaxy and correct the version constraint in requirements.yml. |
+    | `ERROR! role definition must contain a 'src' key` | Ensure each role in requirements.yml has a properly formatted entry with at minimum a `src:` field (e.g., `src: geerlingguy.nginx`). |
 ---
 
 ## ansible-vault
@@ -356,9 +362,11 @@ db-01.prod.local           : ok=2    changed=1    unreachable=0    failed=0
 ```
 
 !!! warning "Common errors"
-    **`Vault password: Decryption failed`** — Ensure you're entering the correct vault password that was used when the file was encrypted.
-    **`ERROR! Decryption failed (no vault secrets were found that could decrypt /path/to/secrets.yml)`** — Provide the vault password via `--ask-vault-pass` or `--vault-password-file` when running the playbook.
-    **`[Errno 13] Permission denied: '/home/user/.vault_pass'`** — Ensure the vault password file has read permissions (`chmod 600 ~/.vault_pass`) and is owned by the correct user.
+    | Error | Fix |
+    |---|---|
+    | `Vault password: Decryption failed` | Ensure you're entering the correct vault password that was used when the file was encrypted. |
+    | `ERROR! Decryption failed (no vault secrets were found that could decrypt /path/to/secrets.yml)` | Provide the vault password via `--ask-vault-pass` or `--vault-password-file` when running the playbook. |
+    | `[Errno 13] Permission denied: '/home/user/.vault_pass'` | Ensure the vault password file has read permissions (`chmod 600 ~/.vault_pass`) and is owned by the correct user. |
 ---
 
 ## Tools, Lint & Config
@@ -406,9 +414,11 @@ Passed: 0 warning(s), 0 error(s)
 ```
 
 !!! warning "Common errors"
-    **`ansible-lint: command not found`** — Install ansible-lint with `pip install ansible-lint` or your package manager.
-    **`[Errno 2] No such file or directory: 'playbook.yml'`** — Verify the playbook path is correct and the file exists in your current working directory.
-    **`invalid choice: 'rule-id-1' (choose from 'E101', 'E102', ...)`** — Use valid rule IDs from `ansible-lint --list-rules` output when specifying the skip-list.
+    | Error | Fix |
+    |---|---|
+    | `ansible-lint: command not found` | Install ansible-lint with `pip install ansible-lint` or your package manager. |
+    | `[Errno 2] No such file or directory: 'playbook.yml'` | Verify the playbook path is correct and the file exists in your current working directory. |
+    | `invalid choice: 'rule-id-1' (choose from 'E101', 'E102', ...)` | Use valid rule IDs from `ansible-lint --list-rules` output when specifying the skip-list. |
 ### ansible-doc
 
 Browse built-in module documentation from the command line — no browser needed.
@@ -520,9 +530,11 @@ first_found                                         return first file found from
 ```
 
 !!! warning "Common errors"
-    **`[WARNING]: Ansible is being run in a world writable /tmp directory.`** — Run ansible-doc from a non-world-writable directory or set ANSIBLE_LIBRARY to a secure path.
-    **`ERROR! No module named 'ansible'`** — Install Ansible using `pip install ansible` or your system package manager.
-    **`[ERROR]: module not found in configured module paths`** — Ensure the module exists by running `ansible-doc -l` to verify it's available in your Ansible
+    | Error | Fix |
+    |---|---|
+    | `[WARNING]: Ansible is being run in a world writable /tmp directory.` | Run ansible-doc from a non-world-writable directory or set ANSIBLE_LIBRARY to a secure path. |
+    | `ERROR! No module named 'ansible'` | Install Ansible using `pip install ansible` or your system package manager. |
+    | `[ERROR]: module not found in configured module paths` | Ensure the module exists by running `ansible-doc -l` to verify it's available in your Ansible |
 ### ansible-config
 
 Inspect Ansible's effective configuration — useful when troubleshooting unexpected behavior.
@@ -584,8 +596,10 @@ AGENTLESS_MANAGER_TIMEOUT:
 ```
 
 !!! warning "Common errors"
-    **`ansible-config: command not found`** — Install ansible with `pip install ansible` or `apt install ansible`.
-    **`Error: config file does not exist at /etc/ansible/ansible.cfg`** — Create the config file or set `ANSIBLE_CONFIG` environment variable to point to a valid configuration file.
+    | Error | Fix |
+    |---|---|
+    | `ansible-config: command not found` | Install ansible with `pip install ansible` or `apt install ansible`. |
+    | `Error: config file does not exist at /etc/ansible/ansible.cfg` | Create the config file or set `ANSIBLE_CONFIG` environment variable to point to a valid configuration file. |
 ### Common Patterns
 
 ```bash
@@ -651,9 +665,11 @@ host3                      : ok=2    changed=1    unreachable=0    failed=0    s
 ```
 
 !!! warning "Common errors"
-    **`fatal: [host1]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Verify the SSH key path is correct and the public key is installed on target hosts with `ssh-copy-id -i ~/.ssh/id_ed25519.pub user@host`.
-    **`ERROR! Vault password file not found at ~/.vault_pass`** — Create the vault password file with `echo 'your-password' > ~/.vault_pass && chmod 600 ~/.vault_pass` or use `--ask-vault-pass` instead.
-    **`fatal: [host2]: FAILED! => {"msg": "The following modules failed to execute: setup"}`** — Ensure Python 3 is installed on all target hosts and the `ansible_python_interpreter` is correctly set in inventory if using a non-standard path.
+    | Error | Fix |
+    |---|---|
+    | `fatal: [host1]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}` | Verify the SSH key path is correct and the public key is installed on target hosts with `ssh-copy-id -i ~/.ssh/id_ed25519.pub user@host`. |
+    | `ERROR! Vault password file not found at ~/.vault_pass` | Create the vault password file with `echo 'your-password' > ~/.vault_pass && chmod 600 ~/.vault_pass` or use `--ask-vault-pass` instead. |
+    | `fatal: [host2]: FAILED! => {"msg": "The following modules failed to execute: setup"}` | Ensure Python 3 is installed on all target hosts and the `ansible_python_interpreter` is correctly set in inventory if using a non-standard path. |
 ---
 
 ## Verify
